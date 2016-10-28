@@ -17,6 +17,8 @@ using System.Web.Security;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Web.Controllers.Security;
+using softWrench.sW4.Data.Entities.Audit;
+using System;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
@@ -186,7 +188,7 @@ namespace softWrench.sW4.Web.Controllers {
                 user.DBUser = await _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
-
+            
             System.Threading.Thread.CurrentPrincipal = user;
             if (_userManager.VerifyChangePassword(user)) {
                 Response.Redirect("~/UserSetup/ChangePassword");

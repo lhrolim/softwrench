@@ -19,12 +19,13 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
+using softWrench.sW4.Util.TransactionStatistics;
 
 namespace softWrench.sW4.Web.Controllers {
 
     public class ExtendedDataController : DataController {
-        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander compositionExpander, IAuditManager auditManager)
-            : base(i18NResolver, lookuper, compositionExpander, auditManager) {
+        public ExtendedDataController(I18NResolver i18NResolver, IContextLookuper lookuper,CompositionExpander compositionExpander, IAuditManager auditManager, TransactionStatisticsService txService)
+            : base(i18NResolver, lookuper, compositionExpander, auditManager, txService) {
         }
 
         /// <summary>

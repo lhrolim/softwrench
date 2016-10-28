@@ -25,6 +25,7 @@
         public const string NewKeyIssueDetailScanOrder = "/Global/Details/KeyIssue/ScanBar";
 
         public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
+        public const string TransactionStatsReportDuration = "/Global/Transactions/Report/Period";
 
         #region SW diaplayable formats
 

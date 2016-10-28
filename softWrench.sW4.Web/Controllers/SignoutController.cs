@@ -8,6 +8,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
+using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignoutController : Controller {
@@ -27,14 +28,15 @@ namespace softWrench.sW4.Web.Controllers {
                     MetadataProvider.StubReset();
                     _eventDispatcher.Dispatch(new ClearCacheEvent());
                 }
+
                 SecurityFacade.Logout(user.Login);
                 DoLogout(Session, Response);
+
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             } catch {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
-
         }
 
         public static void DoLogout(HttpSessionStateBase session, HttpResponseBase response) {
@@ -44,8 +46,7 @@ namespace softWrench.sW4.Web.Controllers {
                 session.Clear(); // This may not be needed -- but can't hurt
                 session.Abandon();
             }
-
-
+            
             // Clear authentication cookie
             HttpCookie rFormsCookie = new HttpCookie(FormsAuthentication.FormsCookieName, "");
             rFormsCookie.Path = HostingEnvironment.ApplicationVirtualPath;
@@ -56,10 +57,7 @@ namespace softWrench.sW4.Web.Controllers {
             var rSessionCookie = new HttpCookie("ASP.NET_SessionId", "");
             rSessionCookie.Expires = DateTime.Now.AddYears(-1);
             rSessionCookie.Path = HostingEnvironment.ApplicationVirtualPath;
-            response.Cookies.Add(rSessionCookie);
-
-
-
+            response.Cookies.Add(rSessionCookie);            
         }
     }
 }

@@ -1,0 +1,49 @@
+﻿<html>
+<head>
+    <title>Weekly Transaction Report</title>
+</head>
+<body style="width:600px;margin:0 auto;padding:20px;font: normal 14px/24px Arial, Helvetica, sans-serif;">
+    <p style="margin-top: 20px;">Hello, this is your periodic transaction statistics report for the customer <span>{{customer}}</span></p>
+    <table style="width:600px;border: 1px solid black;">
+        <tr>
+            <th style="width:300px;"></th>
+            <th style="width:300px;"></th>
+        </tr>
+
+        <tr style="background-color:#ffe0b3">
+            <td style="width:300px;" colspan="2">Report Period</td>            
+        </tr>
+        <tr>
+            <td style="width:300px;">From</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{periodfrom}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">To</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{periodto}}</span></td>
+        </tr>
+        <tr style="background-color:#ffe0b3">
+            <td style="width:300px;" colspan="2">Report Summary</td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Total Login Count</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{logincount}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Total Transactions</td>
+            <td style="width:300px;"><span style="font-weight:bold">{{totaltx}}</span></td>
+        </tr>
+        <tr>
+            <td style="width:300px;">Report Link</td>
+            <td style="width:300px;"><a href="{{reporturl}}">Click here to get the complete report</a></td>
+        </tr>
+    </table>
+    <br />
+    <br /> 
+    <p>
+        To get the complete report click <a href="{{reporturl}}">here</a>.
+        <br />
+        Note: You will need <span style="font-weight:bold;color:red;">sysadmin</span> access to generate the report.
+    </p>
+    
+</body>
+</html>

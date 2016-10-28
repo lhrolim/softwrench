@@ -84,7 +84,18 @@ namespace softWrench.sW4.Email {
 
         public virtual EmailAttachment CreateAttachment(string fileContent, string attachmentName) {
             try {
-                return new EmailAttachment() { AttachmentBinary = Encoding.UTF8.GetBytes(fileContent), AttachmentName = attachmentName };
+                return CreateAttachment(Encoding.UTF8.GetBytes(fileContent), attachmentName);
+            } catch (Exception e) {
+                Log.Error("error creating attachment", e);
+                throw;
+            }
+
+            
+        }
+
+        public virtual EmailAttachment CreateAttachment(Byte[] fileContent, string attachmentName) {
+            try {
+                return new EmailAttachment() { AttachmentBinary = fileContent, AttachmentName = attachmentName };
             } catch (Exception e) {
                 Log.Error("error creating attachment", e);
                 throw;

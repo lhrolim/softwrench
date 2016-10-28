@@ -22,7 +22,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
 using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
-
+using softWrench.sW4.Util.TransactionStatistics;
 
 namespace softWrench.sW4.Security.Services {
     public class SecurityFacade : ISingletonComponent, ISWEventListener<UserSavedEvent> {
@@ -42,6 +42,8 @@ namespace softWrench.sW4.Security.Services {
 
         private static UserStatisticsService _statisticsService;
 
+        private static TransactionStatisticsService _transStatisticsService;
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(SecurityFacade));
 
         private static readonly IDictionary<string, InMemoryUser> Users = new ConcurrentDictionary<string, InMemoryUser>();
@@ -51,13 +53,14 @@ namespace softWrench.sW4.Security.Services {
             return SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager, TransactionStatisticsService transStatisticsService) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
             _statisticsService = statisticsService;
             _userProfileManager = userProfileManager;
             _userSyncManager = userSyncManager;
             _userManager = userManager;
+            _transStatisticsService = transStatisticsService;
         }
 
         [CanBeNull]
@@ -94,6 +97,7 @@ namespace softWrench.sW4.Security.Services {
 
         public static void Logout(string username) {
             if (Users.ContainsKey(username)) {
+                _transStatisticsService.CloseSessionAudit(Users[username].SessionAuditId);
                 Users.Remove(username);
             }
         }
@@ -155,6 +159,11 @@ namespace softWrench.sW4.Security.Services {
                     string.Join(",", inMemoryUser.PersonGroups)
                     ));
             }
+
+            if (inMemoryUser.UserId.HasValue) {
+                _transStatisticsService.AddSessionAudit(inMemoryUser);
+            }
+            
             _statisticsService.UpdateStatistcsAsync(dbUser);
             return inMemoryUser;
         }

@@ -1,0 +1,64 @@
+﻿@using softWrench.sW4.Util.TransactionStatistics
+@using softWrench.sW4.Data.Entities.Audit
+@using softWrench.sW4.Audit
+<!DOCTYPE html>
+
+<head>
+    <base href="/">
+</head>
+<body>
+    @model softWrench.sW4.Web.Controllers.TransactionStatsReportModel
+    <article>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Login Count</th>
+                    <th>Is Active</th>
+                    <th colspan="3">Transactions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (UserStatistics stat in Model.Statistics) {
+                    <tr>
+                        <td>@stat.UserId</td>
+                        <td>@stat.FullName</td>
+                        <td>@stat.LoginCount</td>
+                        <td>@stat.IsActive</td>
+                        <td>
+                            <div class="container">
+                                @*add if*@
+                                <table class="table" style="table-layout:fixed; width:910px;">
+                                    <thead>
+                                        <tr>
+                                            <th>Session ID</th>
+                                            <th>Session Start</th>
+                                            <th>Transaction ID</th>
+                                            <th>Operation</th>
+                                            <th>Transaction Start</th>
+                                            <th>Transaction End</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (AuditTrail transaction in stat.Transactions) {
+                                            <tr>
+                                                <td style="padding:5px;width:550px; word-wrap:break-word;">@transaction.SessionId</td>
+                                                <td style="padding:5px;width:300px; word-wrap:break-word;">@transaction.Session.StartDate</td>
+                                                <td style="padding:5px;width:550px; word-wrap:break-word;">@transaction.Id</td>
+                                                <td style="padding:5px;width:300px; word-wrap:break-word;">@transaction.Operation</td>
+                                                <td style="padding:5px;width:300px; word-wrap:break-word;">@transaction.BeginTime.ToLocalTime().ToString()</td>
+                                                <td style="padding:5px;width:300px; word-wrap:break-word;">@transaction.EndTime.ToLocalTime().ToString()</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </article>
+</body>

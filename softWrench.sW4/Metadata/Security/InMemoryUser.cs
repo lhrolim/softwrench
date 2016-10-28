@@ -20,6 +20,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
+using softWrench.sW4.Data.Entities.Audit;
 
 namespace softWrench.sW4.Metadata.Security {
     public class InMemoryUser : ISWUser {
@@ -48,9 +49,7 @@ namespace softWrench.sW4.Metadata.Security {
         internal IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
         private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
-
-
-
+       
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
         internal static InMemoryUser TestInstance(string login = null) {
@@ -395,6 +394,10 @@ namespace softWrench.sW4.Metadata.Security {
             get {
                 return FirstName + " " + LastName;
             }
+        }
+
+        public int SessionAuditId {
+            get;  set;
         }
 
         public bool IsSwAdmin() {

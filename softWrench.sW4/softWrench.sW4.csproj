@@ -82,6 +82,10 @@
       <HintPath>..\packages\DocumentFormat.OpenXml.dll.1.0.2\lib\net45\DocumentFormat.OpenXml.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
@@ -215,6 +219,10 @@
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.20710.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -271,6 +279,7 @@
     <Compile Include="Data\API\Response\NotFoundResponse.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
     <Compile Include="Data\CompositeDatamap.cs" />
+    <Compile Include="Data\Entities\Audit\AuditSession.cs" />
     <Compile Include="Data\Entities\Commlog\EmailCounterHandler.cs" />
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
@@ -553,6 +562,8 @@
     <Compile Include="Scheduler\ConfigurableRateSwJob.cs" />
     <Compile Include="Scheduler\Interfaces\SWJobException.cs" />
     <Compile Include="Security\Attributes\DynamicAdminRoleAttribute.cs" />
+    <Compile Include="Security\Attributes\SwAdminAuthorizedAttribute.cs" />
+    <Compile Include="Security\Attributes\SwAdminAuthorizedMvcAttribute.cs" />
     <Compile Include="Security\Context\ApplicationLookupContext.cs" />
     <Compile Include="Configuration\Definitions\WhereClause\WhereClauseCondition.cs" />
     <Compile Include="Configuration\Util\ConfigCacheKey.cs" />
@@ -808,6 +819,10 @@
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
     <Compile Include="Util\TransactionConstants.cs" />
+    <Compile Include="Util\TransactionStatistics\Email\TransactionStatsEmailer.cs" />
+    <Compile Include="Util\TransactionStatistics\Job\TransStatsReporterJob.cs" />
+    <Compile Include="Util\TransactionStatistics\TransactionStatisticsService.cs" />
+    <Compile Include="Util\TransactionStatistics\UserStatistics.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

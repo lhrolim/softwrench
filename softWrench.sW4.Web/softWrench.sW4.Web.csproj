@@ -377,6 +377,7 @@
     <Compile Include="Controllers\RoutePageController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SqlClient\SqlClientController.cs" />
+    <Compile Include="Controllers\TransactionStatisticsController.cs" />
     <Compile Include="Controllers\Utilities\DeployValidationController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
@@ -425,6 +426,7 @@
     <Compile Include="DB_Migration\5.15.0\20161018_SWWEB_2825.cs" />
     <Compile Include="DB_Migration\5.15.0\20160819_SWWEB_2709.cs" />
     <Compile Include="DB_Migration\5.14.0\20160825_SWWEB_2710.cs" />
+    <Compile Include="DB_Migration\5.15.0\20161004_SWWEB_2795.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
@@ -672,6 +674,7 @@
     <Content Include="Content\Controller\Scripts.html" />
     <Content Include="Content\Controller\DeployValidation.html" />
     <Content Include="Content\Controller\SqlClient.html" />
+    <Content Include="Content\Controller\TransactionStatistics.html" />
     <Content Include="Content\customVendor\css\bootstrap-combobox.css" />
     <Content Include="Content\customVendor\css\bootstrap-multiselect.css" />
     <Content Include="Content\customVendor\css\bootstrap-select.css" />
@@ -768,6 +771,7 @@
     <Content Include="Content\Scripts\client\services\recursionHelper_service.js" />
     <Content Include="Content\Scripts\client\services\gridSelection_service.js" />
     <Content Include="Content\Scripts\client\adminresources\userProfileService.js" />
+    <Content Include="Content\Scripts\client\transStatisticsController.js" />
     <Content Include="Content\Scripts\client\UserStatisticsController.js" />
     <Content Include="Content\Scripts\client\SignInController.js" />
     <Content Include="Content\Scripts\client\noMenuLayoutController.js" />
@@ -1040,6 +1044,7 @@
     <Content Include="Content\modules\lookup\templates\lookupModal.html" />
     <Content Include="Content\Templates\directives\multiselectDropdown.html" />
     <Content Include="Content\Templates\searchbox.html" />
+    <Content Include="Content\Templates\txstatisticsreporttemplate.html" />
     <Content Include="Content\Templates\usefulFaqLinks.html" />
     <Content Include="Content\styles\default\_pagination.scss" />
     <Content Include="Content\styles\default\_code-editor.scss" />
@@ -1150,6 +1155,7 @@
     <Content Include="Views\UserSetup\DefinePassword.cshtml" />
     <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
     <Content Include="Views\UserSetup\SecurityException.cshtml" />
+    <Content Include="Views\TransactionStatsReport\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />

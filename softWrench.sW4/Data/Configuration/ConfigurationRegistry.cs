@@ -146,11 +146,18 @@ namespace softWrench.sW4.Data.Configuration {
                 DefaultValue = "devteam@controltechnologysolutions.com"
             });
 
+            facade.Register(ctes.TransactionStatsReportDuration, new PropertyDefinition() {
+                Description = "The default period (days) for which the transaction statistics report will be sent",
+                DataType = "int",
+                DefaultValue = "7"
+            });
+
             facade.Register(ctes.DateTimeFormat, new PropertyDefinition() {
                 Description = "The default format for DateTime",
                 DataType = "string",
                 DefaultValue = "MM/dd/yyyy hh:mm",
             });
+
 
             #region Password Config
             facade.Register(ctes.Password.MinLengthKey, new PropertyDefinition() {

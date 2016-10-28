@@ -1,0 +1,93 @@
+﻿<div class="row" style="width: 100%;margin:10px" ng-controller="TransactionStatsController" id="transaction-statistics">
+    <div class="col-md-12">
+
+        <div class="row-fluid">
+            <button type="button" class="btn btn-primary" ng-click="refresh(fromDateFilter, toDateFilter)">
+                <i class="fa fa-refresh"></i>&ensp;Refresh
+            </button>
+
+            <div class="col-sm-3">
+                <div class="row">
+                    <label>Session From:</label>
+                    <div id="datetimepicker1" style="width:200px" class="input-group" data-datepicker="true">
+                        <input type="text" ng-model="fromDateFilter"
+                               data-date-time
+                               data-show-time="true"
+                               data-show-date="true"
+                               data-allow-past="true"
+                               data-allow-future="false"
+                               data-format-string="MM/dd/yyyy HH:mm"
+                               class="form-control">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="Open the calendar popup" style="cursor: pointer;">
+                            <i class="datetime-class"></i>
+                        </span>
+                    </div>
+
+                    <label>Session To:</label>
+                    <div id="datetimepicker" style="width:200px" class="input-group" data-datepicker="true">
+                        <input type="text" ng-model="toDateFilter"
+                               data-date-time
+                               data-show-time="true"
+                               data-show-date="true"
+                               data-allow-past="true"
+                               data-allow-future="false"
+                               data-format-string="MM/dd/yyyy HH:mm"
+                               class="form-control">
+                        <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="Open the calendar popup" style="cursor: pointer;">
+                            <i class="datetime-class"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <hr />
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Login Count</th>
+                    <th>Is Active</th>
+                    <th colspan="3">Transactions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="stat in userStatistics" style="margin-bottom:10px">
+                    <td>{{stat.userId}}</td>
+                    <td>{{stat.fullName}}</td>
+                    <td>{{stat.loginCount}}</td>
+                    <td>{{stat.isActive}}</td>
+                    <td>
+                        <div class="container">
+                            <table class="table" style="table-layout:fixed; width:910px;" ng-if="stat.transactions && stat.transactions.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>Session ID</th>
+                                        <th>Session Start</th>
+                                        <th>Transaction ID</th>
+                                        <th>Operation</th>
+                                        <th>Transaction Start</th>
+                                        <th>Transaction End</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="transaction in stat.transactions">                                        
+                                        <td style="padding:5px;width:550px; word-wrap:break-word;">{{transaction.sessionId}}</td>
+                                        <td style="padding:5px;width:300px; word-wrap:break-word;">{{transaction.session.startDate | utcToLocal:'MM/dd/yyyy - HH:mm:ss'}}</td>
+                                        <td style="padding:5px;width:550px; word-wrap:break-word;">{{transaction.id}}</td>
+                                        <td style="padding:5px;width:300px; word-wrap:break-word;">{{transaction.operation}}</td>
+                                        <td style="padding:5px;width:300px; word-wrap:break-word;">{{transaction.beginTime | utcToLocal:'MM/dd/yyyy - HH:mm:ss'}}</td>
+                                        <td style="padding:5px;width:300px; word-wrap:break-word;">{{transaction.endTime | utcToLocal:'MM/dd/yyyy - HH:mm:ss'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

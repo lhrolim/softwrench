@@ -1,5 +1,6 @@
 ﻿using System;
 using NHibernate.Mapping.Attributes;
+using softWrench.sW4.Data.Entities.Audit;
 
 namespace softWrench.sW4.Audit {
 
@@ -19,5 +20,12 @@ namespace softWrench.sW4.Audit {
         [Property]
         public virtual DateTime EndTime { get; set; }
 
+        [Property]
+        public virtual string Operation { get; set; }
+
+        [Property]
+        public virtual int? SessionId { get; set; }
+
+        public AuditSession Session { get; set; }
     }
 }

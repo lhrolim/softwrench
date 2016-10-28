@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Controllers.Security;
+using softWrench.sW4.Web.Controllers;
 
 namespace softWrench.sW4.Web.Common {
     public class ClientAwareRazorViewEngine : RazorViewEngine {
@@ -45,7 +46,7 @@ namespace softWrench.sW4.Web.Common {
 
         private string FetchMasterPath(ControllerContext controllerContext, string viewPath) {
             var clientLayout = String.Format(ClientLayoutPattern, ApplicationConfiguration.ClientName);
-            if (controllerContext.Controller is UserSetupController) {
+            if (controllerContext.Controller is UserSetupController || controllerContext.Controller is TransactionStatsReportController) {
                 //TODO: create some sort of annotation here
                 return NoMenuLayout;
             }

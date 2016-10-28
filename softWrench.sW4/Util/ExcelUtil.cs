@@ -16,6 +16,8 @@ using softWrench.sW4.Security.Context;
 using SpreadsheetLight;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
+using System.Data;
+using System.IO;
 
 namespace softWrench.sW4.Util {
     public class ExcelUtil : ISingletonComponent {
@@ -134,6 +136,69 @@ namespace softWrench.sW4.Util {
                 SetColumnWidth(excelFile, applicationFields);
                 #endregion
                 return excelFile;
+            }
+        }
+
+
+        public byte[] ConvertDatasetToExcel(DataSet dataset) {
+            using (MemoryStream mem = new MemoryStream()) {
+                using (var document = SpreadsheetDocument.Create(mem, DocumentFormat.OpenXml.SpreadsheetDocumentType.Workbook)) {
+                    var workbookPart = document.AddWorkbookPart();
+
+                    document.WorkbookPart.Workbook = new DocumentFormat.OpenXml.Spreadsheet.Workbook();
+
+                    document.WorkbookPart.Workbook.Sheets = new DocumentFormat.OpenXml.Spreadsheet.Sheets();
+
+                    foreach (System.Data.DataTable table in dataset.Tables) {
+
+                        var sheetPart = document.WorkbookPart.AddNewPart<WorksheetPart>();
+                        var sheetData = new DocumentFormat.OpenXml.Spreadsheet.SheetData();
+                        sheetPart.Worksheet = new DocumentFormat.OpenXml.Spreadsheet.Worksheet(sheetData);
+
+                        DocumentFormat.OpenXml.Spreadsheet.Sheets sheets = document.WorkbookPart.Workbook.GetFirstChild<DocumentFormat.OpenXml.Spreadsheet.Sheets>();
+                        string relationshipId = document.WorkbookPart.GetIdOfPart(sheetPart);
+
+                        uint sheetId = 1;
+                        if (sheets.Elements<Sheet>().Count() > 0) {
+                            sheetId =
+                                sheets.Elements<DocumentFormat.OpenXml.Spreadsheet.Sheet>().Select(s => s.SheetId.Value).Max() + 1;
+                        }
+
+                        DocumentFormat.OpenXml.Spreadsheet.Sheet sheet = new DocumentFormat.OpenXml.Spreadsheet.Sheet() { Id = relationshipId, SheetId = sheetId, Name = table.TableName };
+                        sheets.Append(sheet);
+
+                        DocumentFormat.OpenXml.Spreadsheet.Row headerRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
+
+                        List<String> columns = new List<string>();
+                        foreach (System.Data.DataColumn column in table.Columns) {
+                            columns.Add(column.ColumnName);
+
+                            DocumentFormat.OpenXml.Spreadsheet.Cell cell = new DocumentFormat.OpenXml.Spreadsheet.Cell();
+                            cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
+                            cell.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(column.ColumnName);
+                            headerRow.AppendChild(cell);
+                        }
+
+
+                        sheetData.AppendChild(headerRow);
+
+                        foreach (System.Data.DataRow dsrow in table.Rows) {
+                            DocumentFormat.OpenXml.Spreadsheet.Row newRow = new DocumentFormat.OpenXml.Spreadsheet.Row();
+                            foreach (String col in columns) {
+                                DocumentFormat.OpenXml.Spreadsheet.Cell cell = new DocumentFormat.OpenXml.Spreadsheet.Cell();
+                                cell.DataType = DocumentFormat.OpenXml.Spreadsheet.CellValues.String;
+                                cell.CellValue = new DocumentFormat.OpenXml.Spreadsheet.CellValue(dsrow[col].ToString()); //
+                                newRow.AppendChild(cell);
+                            }
+
+                            sheetData.AppendChild(newRow);
+                        }
+                    }
+
+                    workbookPart.Workbook.Save();
+                    document.Close();
+                    return mem.ToArray();
+                }
             }
         }
 

@@ -29,6 +29,8 @@ using System.Web.Http;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
+using softWrench.sW4.Data.Entities.Audit;
+using softWrench.sW4.Util.TransactionStatistics;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -45,12 +47,14 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly I18NResolver _i18NResolver;
         protected readonly IContextLookuper ContextLookuper;
         private readonly IAuditManager _auditManager;
+        private readonly TransactionStatisticsService txService;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager, TransactionStatisticsService txService) {
             _i18NResolver = i18NResolver;
             ContextLookuper = contextLookuper;
             CompositionExpander = expander;
             _auditManager = auditManager;
+            this.txService = txService;
         }
 
         /// <summary>
@@ -203,9 +207,17 @@ namespace softWrench.sW4.Web.Controllers {
             var operation = operationDataRequest.Operation;
 
             if (!mockMaximo) {
-                //TODO: Async
+                //TODO : move this to the crud connector.
+                DateTime transactionStart, transactionEnd;
+
+                transactionStart = DateTime.UtcNow;
+
                 maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                     .Execute(applicationMetadata, json, operationDataRequest);
+
+                transactionEnd = DateTime.UtcNow;
+
+                this.txService.AuditTransaction(operationDataRequest.ApplicationName, string.Format("{0}:{1}", operationDataRequest.ApplicationName, operationDataRequest.Operation), transactionStart, transactionEnd);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

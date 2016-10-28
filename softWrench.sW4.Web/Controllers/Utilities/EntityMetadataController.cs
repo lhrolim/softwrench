@@ -433,7 +433,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                     Subject = subject
                 };
 
-                //metadataEmailer.SendMetadataChangeEmail(emailData);
+                metadataEmailer.SendMetadataChangeEmail(emailData);
             }
         }
 
