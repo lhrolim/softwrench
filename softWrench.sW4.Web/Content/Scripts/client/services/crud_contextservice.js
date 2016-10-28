@@ -202,18 +202,26 @@
             return getContext(panelid).needsServerRefresh;
         }
 
+        const getTabCountQualifier = function (tab) {
+            if (!tab.countRelationship) {
+                return tab.tabId;
+            }
+            return tab.countRelationship.endsWith("_") ? tab.countRelationship : tab.countRelationship + "_";
+        }
 
         function getTabRecordCount(tab, panelid) {
-            var context = getContext(panelid);
-            if (context.tabRecordCount && context.tabRecordCount[tab.tabId]) {
-                return context.tabRecordCount[tab.tabId];
+            const context = getContext(panelid);
+            const qualifier = getTabCountQualifier(tab);
+            if (context.tabRecordCount && context.tabRecordCount[qualifier]) {
+                return context.tabRecordCount[qualifier];
             }
             return 0;
         }
 
         function shouldShowRecordCount(tab, panelid) {
-            var context = getContext(panelid);
-            return context.tabRecordCount && context.tabRecordCount[tab.tabId];
+            const context = getContext(panelid);
+            const qualifier = getTabCountQualifier(tab);
+            return context.tabRecordCount && context.tabRecordCount[qualifier];
         }
 
         function setTabRecordCount(tabId, panelId, count) {

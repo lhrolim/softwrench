@@ -23,7 +23,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         private string _role;
 
         public ApplicationTabDefinition(string id, string applicationName, string label, List<IApplicationDisplayable> displayables, string toolTip,
-            string showExpression, string icon, string role) {
+            string showExpression, string icon, string role, string countRelathionship) {
             Id = id;
             ApplicationName = applicationName;
             Label = label;
@@ -32,6 +32,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             _displayables = displayables;
             Icon = icon;
             _role = role;
+            CountRelationship = countRelathionship;
         }
 
 
@@ -78,6 +79,10 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             get {
                 return Id;
             }
+        }
+
+        public string CountRelationship {
+            get; set;
         }
 
         public List<IApplicationDisplayable> Displayables {

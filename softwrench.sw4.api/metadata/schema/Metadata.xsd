@@ -1103,6 +1103,13 @@
     <attribute name="label" type="string"></attribute>
     <attribute name="icon" type="string"></attribute>
     <attribute name="role" type="string"></attribute>
+    <attribute name="countrelationship" type="string">
+      <annotation>
+        <documentation>
+          The relationship to be used as the count number of the tab.
+        </documentation>
+      </annotation>
+    </attribute>
 
 
   </complexType>

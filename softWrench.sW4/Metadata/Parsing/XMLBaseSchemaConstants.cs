@@ -32,6 +32,7 @@
         public const string TooltipAttribute = "tooltip";
         public const string DisplayCodeAttribute = "displaycode";
         public const string RoleAttribute = "role";
+        public const string CountRelationshipAttribute = "countrelationship";
 
         public const string ToggleButtonInitialStateExpressionAttribute = "initialstateexpression";
     }

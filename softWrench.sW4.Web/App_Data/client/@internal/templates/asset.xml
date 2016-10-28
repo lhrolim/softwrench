@@ -338,7 +338,7 @@
               <field attribute="changedate" label="Change Date" readonly="true"/>
             </section>
           </section>
-          <tab id="spareparts" label="Spare Parts" icon="fa-download">
+          <tab id="spareparts" label="Spare Parts" icon="fa-download" countrelationship="sparepart">
             <section orientation="horizontal">
               <renderer type="default" params="childinputsize=small" />
               <field attribute="assetnum" label="Asset" readonly="true"/>
@@ -360,7 +360,7 @@
             <field attribute="location" label="Location" readonly="true"/>
             <field attribute="location_.description" label="Description" readonly="true"/>
           </tab>-->
-          <tab id="meters" label="Meters" icon="fa-tachometer">
+          <tab id="meters" label="Meters" icon="fa-tachometer" countrelationship="assetmeter">
             <section orientation="horizontal">
               <field attribute="assetnum" label="Asset" readonly="true"/>
               <field attribute="description" label="Description" readonly="true"/>
