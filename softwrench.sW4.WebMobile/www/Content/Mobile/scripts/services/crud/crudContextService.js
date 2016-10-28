@@ -278,12 +278,24 @@
                         return $q.reject(validationErrors);
                     }
 
-                    return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, composition.currentTab).then(() => {
-                        crudContext.originalDetailItemDatamap = angular.copy(datamap);
-                        composition.originalDetailItemDatamap = composition.currentDetailItem;
-                        this.loadTab(composition.currentTab);
-                        return this.refreshIfLeftJoinPresent(crudContext,null);
-                    });
+                    return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, composition.currentTab)
+                        .then(() => {
+                            crudContext.originalDetailItemDatamap = angular.copy(datamap);
+                            composition.originalDetailItemDatamap = composition.currentDetailItem;
+                            return this.refreshIfLeftJoinPresent(crudContext, null);
+                        })
+                        .then(saved => {
+                            const compositionItemInList = composition.itemlist.find(c => c[constants.localIdKey] === compositionItem[constants.localIdKey]);
+                            if (!compositionItemInList) {
+                                return saved;
+                            }
+                            angular.forEach(compositionItemInList, (value, key) => {
+                                if (!compositionItem.hasOwnProperty(key) || key === "$$hashKey") return;
+                                compositionItemInList[key] = compositionItem[key];
+                            });
+                            return saved;
+                        })
+                        .then(saved => this.loadTab(composition.currentTab).then(() => saved));
                 }
 
                 return this.saveCurrentItem(showConfirmationMessage);
@@ -313,7 +325,7 @@
                     });
             },
             
-            refreshIfLeftJoinPresent: function (crudContext,saved) {
+            refreshIfLeftJoinPresent: function (crudContext, saved) {
                 const itemlist = this.itemlist();
                 const currentDetailItem = crudContext.currentDetailItem;
                 if (itemlist.length > 0) {

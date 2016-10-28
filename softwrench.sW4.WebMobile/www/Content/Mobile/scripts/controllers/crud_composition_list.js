@@ -5,7 +5,7 @@
     function ($log, $scope, $rootScope, $ionicPopup, crudContextService, fieldService, formatService, crudContextHolderService, offlineAttachmentService, $injector) {
 
         $scope.empty = function () {
-            var compositionList = crudContextService.compositionList();
+            const compositionList = crudContextService.compositionList();
             return !compositionList || compositionList.length === 0;
         }
 

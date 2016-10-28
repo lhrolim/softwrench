@@ -287,6 +287,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 })
                 .state('main.cruddetail.compositionlist', {
                     url: "/crudcompositionlist",
+                    cache: false,
                     views: {
                         'body': {
                             templateUrl: "Content/Mobile/templates/crud_composition_list.html",
