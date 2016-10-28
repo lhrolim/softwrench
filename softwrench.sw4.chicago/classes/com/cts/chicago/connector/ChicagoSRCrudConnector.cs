@@ -55,6 +55,12 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var sr = maximoTemplateData.IntegrationObject;
+            SetSwChangeBy(sr);
+            base.BeforeCreation(maximoTemplateData);
+        }
+
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterUpdate(maximoTemplateData);
 

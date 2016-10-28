@@ -15,5 +15,11 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
 
             base.BeforeUpdate(maximoTemplateData);
         }
+
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var sr = maximoTemplateData.IntegrationObject;
+            SetSwChangeBy(sr);
+            base.BeforeCreation(maximoTemplateData);
+        }
     }
 }

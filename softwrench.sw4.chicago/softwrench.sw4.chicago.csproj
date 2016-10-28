@@ -116,6 +116,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="sw_TkOwner_UpdateChangeBy.sql" />
+    <Content Include="sw_Ticket_UpdateChangeBy.sql" />
+    <Content Include="sw_TkStatus_UpdateChangeBy.sql" />
     <Content Include="auditchangedby.sql" />
     <Content Include="metadata\chicago\deploy.xml" />
     <Content Include="metadata\chicago\swdb\swdbmetadata.xml">

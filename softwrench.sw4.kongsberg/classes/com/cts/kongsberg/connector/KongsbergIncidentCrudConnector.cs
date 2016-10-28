@@ -20,6 +20,12 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            var incident = maximoTemplateData.IntegrationObject;
+            SetSwChangeBy(incident);
+            base.BeforeCreation(maximoTemplateData);
+        }
+
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             if (maximoTemplateData.Properties.ContainsKey("mailObject")) {
                 EmailService.SendEmailAsync((EmailData)maximoTemplateData.Properties["mailObject"]);
