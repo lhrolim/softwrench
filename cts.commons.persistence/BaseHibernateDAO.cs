@@ -39,7 +39,7 @@ namespace cts.commons.persistence {
             _applicationConfiguration = applicationConfiguration;
             HibernateUtil = hibernateUtil;
             if (!applicationConfiguration.IsUnitTest) {
-                _sessionManager = new SessionManagerWrapper(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies(), applicationConfiguration);
+                _sessionManager = SessionManagerWrapperFactory.GetInstance(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies(), applicationConfiguration);
             }
 
         }

@@ -19,8 +19,10 @@ namespace softWrench.sW4.Metadata.Applications {
         [NotNull]
         public static ApplicationMetadata ApplyPolicies([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user,
             ClientPlatform platform, string schemaFieldsToDisplay = null) {
-            if (application == null) throw new ArgumentNullException("application");
-            if (user == null) throw new ArgumentNullException("user");
+            if (application == null)
+                throw new ArgumentNullException("application");
+            if (user == null)
+                throw new ArgumentNullException("user");
 
             return new ApplicationMetadataPolicyApplier(application, schemaKey, user, platform, schemaFieldsToDisplay).Apply();
         }
@@ -35,7 +37,8 @@ namespace softWrench.sW4.Metadata.Applications {
 
         [NotNull]
         public static ApplicationSchemaDefinition SchemaForPlatform([NotNull] this CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey metadataSchemaKey) {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null)
+                throw new ArgumentNullException("application");
             ApplicationSchemaDefinition resultingSchema;
             if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
                 var schemaId = metadataSchemaKey.SchemaId;
@@ -58,7 +61,8 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
         public static bool IsSupportedOnPlatform([NotNull] this CompleteApplicationMetadataDefinition application, ClientPlatform platform) {
-            if (application == null) throw new ArgumentNullException("application");
+            if (application == null)
+                throw new ArgumentNullException("application");
 
             switch (platform) {
                 case ClientPlatform.Web:
@@ -73,9 +77,18 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
         [CanBeNull]
-        public static ApplicationSchemaDefinition SchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web,bool throwException = false) {
+        public static ApplicationSchemaDefinition SchemaByStereotype(this CompleteApplicationMetadataDefinition application, string stereotypeName, ClientPlatform platform = ClientPlatform.Web, bool throwException = false) {
             try {
-                return application.Schemas().Values.Single(schema => (schema.Stereotype.ToString().EqualsIc(stereotypeName) && !schema.Abstract && schema.IsPlatformSupported(platform)));
+                var results = application.Schemas().Values.Where(schema => (schema.Stereotype.ToString().EqualsIc(stereotypeName) && !schema.Abstract && schema.IsPlatformSupported(platform)));
+                var applicationSchemaDefinitions = results as IList<ApplicationSchemaDefinition> ?? results.ToList();
+                if (throwException && (!applicationSchemaDefinitions.Any() || applicationSchemaDefinitions.Count() > 1)) {
+                    throw new InvalidOperationException(string.Format(MulitpleStereotypesDeclared, stereotypeName, application.ApplicationName));
+                }
+                if (applicationSchemaDefinitions.Count() > 1) {
+                    return applicationSchemaDefinitions.FirstOrDefault(f => f.StereotypeAttr.EqualsIc(stereotypeName));
+                }
+
+                return applicationSchemaDefinitions.Any() ? applicationSchemaDefinitions[0] : null;
             } catch (Exception) {
                 if (throwException) {
                     // More than one schema found of the specified type

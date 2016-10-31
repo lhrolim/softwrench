@@ -8,6 +8,7 @@
   <property name="MSDeployPath" value="C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" />
   <!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
   <property name="SolutionFile" value="../softWrench.sW4.sln" />
+  <property name="CommonsSolutionFile" value="../CtsCommons.sln" />
   <property name="TestSettingsPath" value="../TestSettings1.testsettings" />
   <property name="TestPath" value="../softwrench.sW4.test/bin/Debug/softwrench.sW4.test.dll" />
   <if test="${environment::variable-exists('outputdir')}">
@@ -162,6 +163,21 @@
       <arg value="/nologo" />
     </exec>
     <if test="${IsWindows}"><logtimeend/></if>
+  </target>
+
+  <target name="compilecommons">
+    <logtimestart/>
+    <exec program="${MSBuildPath}">
+      <arg line='"${SolutionFile}"' />
+      <arg line="/property:Configuration=Debug" />
+      <arg value="/maxcpucount:2" />
+      <arg value="/target:Rebuild" />
+      <arg value="/verbosity:quiet" />
+      <arg value="/nologo" />
+    </exec>
+    <if test="${IsWindows}">
+      <logtimeend/>
+    </if>
   </target>
 
   <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">

@@ -6,6 +6,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Properties;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
@@ -28,6 +29,8 @@ namespace softWrench.sW4.Util {
         private static readonly DateTime _upTime = DateTime.Now;
 
         private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
+
+        private static IDictionary<DBType, ConnectionStringSettings> _connectionStringCache = new Dictionary<DBType, ConnectionStringSettings>();
 
         public static string SystemVersion {
             get {
@@ -190,7 +193,7 @@ namespace softWrench.sW4.Util {
             }
         }
 
-     
+
 
         #endregion
 
@@ -363,7 +366,7 @@ namespace softWrench.sW4.Util {
                 // SWWEB-1091 to extract the vbalue out from MAXIMO
                 // var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
                 //TODO: Asnc
-                var ext = AsyncHelper.RunSync(()=>_maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions"));
+                var ext = AsyncHelper.RunSync(() => _maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions"));
 
                 if (!string.IsNullOrWhiteSpace(ext)) {
                     return ext.Split(',');
@@ -487,10 +490,16 @@ namespace softWrench.sW4.Util {
 
 
         public static ConnectionStringSettings DBConnection(DBType dbType) {
+            if (_connectionStringCache.ContainsKey(dbType)) {
+                return _connectionStringCache[dbType];
+            }
+
             if (dbType == DBType.Maximo) {
                 var url = MetadataProvider.GlobalProperty(MetadataProperties.MaximoDBUrl, true);
                 string provider = MetadataProvider.GlobalProperty(MetadataProperties.MaximoDBProvider, true);
-                return new ConnectionStringSettings("maximo", url, provider);
+                var settings = new ConnectionStringSettings("maximo", url, provider);
+                _connectionStringCache.Add(dbType,settings);
+                return settings;
             } else {
                 if (IsLocal() && IsDev()) {
                     //this code is playing safe forcing developers to always configure a local db instead of running the risk of pointing to a wrong instance
@@ -502,12 +511,15 @@ namespace softWrench.sW4.Util {
                         var overridenLocalSwdbpRovider = localProperties.GlobalProperty("swdb_provider");
                         if (overridenLocalDB != null && overridenLocalSwdbpRovider != null) {
                             LoggingUtil.DefaultLog.Info("using customized local database {0} | {1} ".Fmt(overridenLocalDB, overridenLocalSwdbpRovider));
-                            return new ConnectionStringSettings("swdb", overridenLocalDB, overridenLocalSwdbpRovider);
+                            var settings = new ConnectionStringSettings("swdb", overridenLocalDB, overridenLocalSwdbpRovider);
+                            _connectionStringCache.Add(dbType, settings);
+                            return settings;
                         }
                     }
                     var swdbConnectionString = ConfigurationManager.ConnectionStrings["swdb"];
                     if (swdbConnectionString == null) {
                         swdbConnectionString = new ConnectionStringSettings("swdb", "Server=localhost;Database=swdb;Uid=sw;Pwd=sw;", "MySql.Data.MySqlClient");
+                        _connectionStringCache.Add(dbType, swdbConnectionString);
                     }
                     return swdbConnectionString;
                 }
@@ -516,7 +528,9 @@ namespace softWrench.sW4.Util {
                 var provider = MetadataProvider.GlobalProperty(MetadataProperties.SWDBProvider, true, false, true);
 
 
-                return new ConnectionStringSettings("swdb", url, provider);
+                var connection= new ConnectionStringSettings("swdb", url, provider);
+                _connectionStringCache.Add(dbType, connection);
+                return connection;
             }
         }
 
@@ -610,15 +624,15 @@ namespace softWrench.sW4.Util {
             var type = connectionStringSettings.ProviderName;
             switch (type) {
                 case "System.Data.SQL":
-                    return DBMS.MSSQL;
+                return DBMS.MSSQL;
                 case "System.Data.SqlClient":
-                    return DBMS.MSSQL;
+                return DBMS.MSSQL;
                 case "System.Data.OracleClient":
-                    return DBMS.ORACLE;
+                return DBMS.ORACLE;
                 case "Oracle.DataAccess.Client":
-                    return DBMS.ORACLE;
+                return DBMS.ORACLE;
                 case "IBM.Data.DB2":
-                    return DBMS.DB2;
+                return DBMS.DB2;
             }
             return DBMS.MYSQL;
         }
@@ -634,13 +648,18 @@ namespace softWrench.sW4.Util {
             _swdbType = null;
             _environment = null;
             _maximodbType = null;
+            _connectionStringCache.Clear();
         }
 
         public static bool IsClient(string clientName) {
             return ClientName.Equals(clientName);
         }
 
-        public static DateTime UpTime { get { return _upTime; }}
+        public static DateTime UpTime {
+            get {
+                return _upTime;
+            }
+        }
     }
 
 }

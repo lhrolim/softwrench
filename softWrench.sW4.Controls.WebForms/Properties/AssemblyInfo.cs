@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("softWrench.sW4.Controls.WebForms")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Module for IE9 Hapag")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("cts")]
 [assembly: AssemblyProduct("softWrench.sW4.Controls.WebForms")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]

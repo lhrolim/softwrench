@@ -24,7 +24,7 @@ namespace cts.commons.Util {
                                 break;
                             }
                         }
-                    } catch (Exception ex) {
+                    } catch (Exception) {
                         isWriteAccess = false;
                     }
 

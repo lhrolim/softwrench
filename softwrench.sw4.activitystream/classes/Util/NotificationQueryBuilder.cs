@@ -75,7 +75,7 @@ namespace softwrench.sw4.activitystream.classes.Util {
             if (convertedValue.StartsWith("where ")) {
                 convertedValue = convertedValue.Substring("where".Length);
             }
-            var whereClause = whereClauseResult.IsEmpty() ? " UNION " : " AND " + convertedValue + " UNION ";
+            var whereClause = (whereClauseResult ==null || whereClauseResult.IsEmpty()) ? " UNION " : " AND " + convertedValue + " UNION ";
 
             sb.Append(GetRoleQuery(applicationName)).Append(whereClause);
             sb.Append(GetRoleQuery(applicationName + "worklogs")).Append(whereClause);

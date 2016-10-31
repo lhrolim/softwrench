@@ -25,10 +25,14 @@ namespace cts.commons.persistence.Util {
             return x.GetHashCode();
         }
         public bool IsMutable {
-            get { return false; }
+            get {
+                return false;
+            }
         }
 
-        async Task<object>  IUserType.NullSafeGet(IDataReader rs, string[] names, object owner) {
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        async Task<object> IUserType.NullSafeGet(IDataReader rs, string[] names, object owner) {
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             var obj = NHibernateUtil.Int32.
              NullSafeGet(rs, names[0]);
             if (obj == null) {
@@ -37,7 +41,9 @@ namespace cts.commons.persistence.Util {
             return (int)obj == 1;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         async Task IUserType.NullSafeSet(IDbCommand cmd, object value, int index) {
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             if (value == null) {
                 ((IDataParameter)cmd.Parameters[index]).Value =
                       DBNull.Value;
@@ -84,7 +90,15 @@ namespace cts.commons.persistence.Util {
 
 
 
-        public SqlType[] SqlTypes { get { return new[] { NHibernateUtil.String.SqlType }; } }
-        public Type ReturnedType { get { return typeof(Boolean); } }
+        public SqlType[] SqlTypes {
+            get {
+                return new[] { NHibernateUtil.String.SqlType };
+            }
+        }
+        public Type ReturnedType {
+            get {
+                return typeof(Boolean);
+            }
+        }
     }
 }

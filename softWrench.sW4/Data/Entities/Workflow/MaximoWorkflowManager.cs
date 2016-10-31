@@ -7,6 +7,7 @@ using cts.commons.simpleinjector;
 using cts.commons.web.Util;
 using JetBrains.Annotations;
 using Microsoft.Ajax.Utilities;
+using Quartz.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association.SchemaLoading;

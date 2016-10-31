@@ -17,9 +17,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private FieldRenderer _renderer;
         private FieldFilter _filter;
 
-        //TODO: remove this, since it´s Xamarin legacy code
-        [Obsolete("Only used by unsupported Xamarin client code")]
-        private IWidgetDefinition _widgetDefinition;
 
         private readonly ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression {
@@ -56,35 +53,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string helpIcon, string toolTip,
              string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool declaredAsQueryOnEntity, string searchOperation)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, helpIcon, toolTip, attributeToServer, events, enableExpression, defaultExpression, declaredAsQueryOnEntity, searchOperation) {
-            if (widgetDefinition == null) throw new ArgumentNullException("widgetDefinition");
-            _widgetDefinition = widgetDefinition;
             _renderer = renderer;
             _filter = filter;
             DataType = datatype;
             IsHidden = isIsHidden;
-            if (renderer == null || String.IsNullOrEmpty(renderer.RendererType)) {
-                var newRenderer = BuildFromWidget();
-                if (newRenderer != null) {
-                    _renderer = newRenderer;
-                }
-            }
             _eventsSet = events;
             EvalExpression = evalExpression;
             EnableDefault = enableDefault;
             DefaultExpression = defaultExpression;
         }
         //TODO: choose one of the modes?
-        private FieldRenderer BuildFromWidget() {
-            if (_widgetDefinition is DateWidgetDefinition) {
-                var dateWidget = ((DateWidgetDefinition)_widgetDefinition);
-                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), String.Format("time={0};format={1}", dateWidget.Time, dateWidget.Format), Attribute, null);
-            }
-            if (_widgetDefinition is NumberWidgetDefinition) {
-                var numberWidget = ((NumberWidgetDefinition)_widgetDefinition);
-                return new FieldRenderer(FieldRenderer.BaseRendererType.NUMERICINPUT.ToString().ToLower(), String.Format("min={0};max={1};decimals={2}", numberWidget.Min, numberWidget.Max, numberWidget.Decimals), Attribute, null);
-            }
-            return null;
-        }
 
 
         public override bool IsHidden {
@@ -114,17 +92,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
             set {
                 _filter = value;
-            }
-        }
-
-        [Obsolete("Only used by unsupported Xamarin client code")]
-        [JsonIgnore]
-        public IWidgetDefinition WidgetDefinition {
-            get {
-                return _widgetDefinition;
-            }
-            set {
-                _widgetDefinition = value;
             }
         }
 
@@ -180,7 +147,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             var clone = new ApplicationFieldDefinition(ApplicationName, Attribute, DataType, Label, RequiredExpression, IsReadOnly, IsHidden,
-                Renderer, Filter, WidgetDefinition, DefaultValue, Qualifier, ShowExpression, HelpIcon, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity, SearchOperation);
+                Renderer, Filter, null, DefaultValue, Qualifier, ShowExpression, HelpIcon, ToolTip, AttributeToServer, _eventsSet, EnableExpression, EvalExpression, EnableDefault, DefaultExpression, DeclaredAsQueryOnEntity, SearchOperation);
             clone.PrimaryAttribute = PrimaryAttribute;
             return clone;
         }

@@ -28,7 +28,7 @@ namespace softwrench.sW4.test.SPF {
         public void TestNewSchemaRedirectingToDetail() {
             var currentApp = MetadataProvider.Application("servicerequest").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
             var nextApp = RouteParameterManager.FillNextSchema(currentApp, new RouterParametersDTO(), ClientPlatform.Web, InMemoryUser.TestInstance(), null);
-            Assert.AreEqual(nextApp.Schema.SchemaId, "editdetail");
+            Assert.AreEqual("editdetail", nextApp.Schema.SchemaId);
         }
 
         [TestMethod]
@@ -36,7 +36,7 @@ namespace softwrench.sW4.test.SPF {
         public void TestNewSchemaRedirectingToDetailEditDetailAsDefault() {
             var currentApp = MetadataProvider.Application("workorder").ApplyPoliciesWeb(new ApplicationMetadataSchemaKey("newdetail"));
             var nextApp = RouteParameterManager.FillNextSchema(currentApp, new RouterParametersDTO(), ClientPlatform.Web, InMemoryUser.TestInstance(), null);
-            Assert.AreEqual(nextApp.Schema.SchemaId, "editdetail");
+            Assert.AreEqual("editdetail", nextApp.Schema.SchemaId);
         }
 
 

@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
-using softwrench.sw4.Hapag.Data.Connector.Imac;
 
 namespace softwrench.sW4.test.Hapag.Data.Connector.Imac {
     [TestClass]

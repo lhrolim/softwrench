@@ -1,0 +1,79 @@
+﻿<div ng-controller="DashboardController" class="dashboard-page">
+
+    <div id="affixpagination" class="hiddenonprint toolbar-primary">
+        <div class="context clearfix header-menu  dashboard-toolbar">
+            <interval-trigger activate-label="Auto Refresh?"
+                              interval-configuration="refreshInterval.config"
+                              on-interval-triggered="refreshDashboards(delay)" />
+        </div>
+    </div>
+
+    <div class="dash-header">
+        <div>
+            <div class="detail-header clearfix">
+                <ul class="nav nav-tabs dashboarddetailtab hapag-composition">
+                    <li ng-repeat="dashboard in dashboards track by dashboard.id" dashboardrendered class="{{getActiveClass(dashboard.id)}}">
+                        <a ng-href="#{{dashboard.id}}" data-tabid="{{dashboard.id}}" ng-click="viewDashboard($event, dashboard.id)">
+
+                            {{dashboard.title}} &nbsp;
+
+                            <span rel="tooltip" data-original-title="Remove Dashboard"
+                                  ng-if="canDeleteDashboard(dashboard)"
+                                  ng-click="deleteDashboard(dashboard)">
+
+                                <i class="fa fa-times"></i>
+                            </span>
+
+                        </a>
+                    </li>
+                    <li ng-show="canCreateDashboards">
+                        <a ng-href="#add" data-tabid="-1" ng-click="createNewDashboard()">
+                            <i class="fa fa-plus"></i>&ensp;Create Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div ng-show="!isNewDashboard()">
+                <div class="tab-content">
+                    <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards track by dashboard.id" id="{{dashboard.id}}">
+                        <div class="tab-header clearfix">
+                            <div class="title pull-left" ng-show="!isEditing(dashboard.id)">{{dashboard.title}}</div>
+                            <input type="text" class="title pull-left" ng-show="isEditing(dashboard.id)" ng-model="dashboard.title"/>
+
+
+
+                            <div class="buttons pull-right">
+                                <button class="btn btn-default" ng-show="canEditDashboard(dashboard) && !isEditingAnyDashboard" ng-click="editDashboard(dashboard)">
+                                    <i class="fa fa-cog"></i>&ensp;Edit
+                                </button>
+                                <button class="btn" ng-show="isEditing(dashboard.id)" ng-click="finishEditingDashboard(dashboard)" ng-class="getEditButtonClass()">
+                                    <i class="fa fa-check"></i>&ensp;Save
+                                </button>
+                                <button class="btn" ng-show="isEditing(dashboard.id)" ng-click="cancelEditing(dashboard)" ng-class="getEditButtonClass()">
+                                    <i class="fa fa-times"></i>&ensp;Cancel
+                                </button>
+                                <button class="btn btn-default" ng-show="isEditing(dashboard.id)" ng-click="addpanel()">
+                                    <i class="fa fa-plus"></i>&ensp;Add Widget
+                                </button>
+                            </div>
+                        </div>
+
+                        <dashboard ng-if="dashboardSelectedAtLeastOnce(dashboard.id)"
+                                   dashboard="dashboard"
+                                   can-edit="isEditing(dashboard.id)"
+                                   on-panel-edit="editPanel(panel, dashboard)" on-panel-remove="removePanel(panelDataSource, dashboard)"/>
+
+                    </div>
+                </div>
+            </div>
+
+            <div ng-show="isNewDashboard()">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

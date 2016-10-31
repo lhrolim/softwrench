@@ -65,7 +65,7 @@ namespace softWrench.sW4.Metadata.Validator {
             IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
             var resultComponents = MergeComponents(souceAplication, overridenApplication);
             var resultFilters = SchemaFilterBuilder.ApplyFilterCustomizations(souceAplication.AppFilters, overridenApplication.AppFilters);
-            Log.InfoFormat("applying merge for application {0}".Fmt(overridenApplication.ApplicationName));
+            Log.DebugFormat("applying merge for application {0}".Fmt(overridenApplication.ApplicationName));
 
             foreach (var schema in souceAplication.Schemas()) {
 
