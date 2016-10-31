@@ -129,17 +129,21 @@
         function commonstransform(originalItem, replyMode) {
             normalizeOriginal(originalItem);
             const displayables = originalItem.schema.displayables;
-            const clonedItem = fieldService.fillDefaultValues(displayables, { commloguid: null }, null); // If KOGT, set subject to null so that the default subject from metadata will populate
+            const clonedItem = fieldService.fillDefaultValues(displayables, { commloguid: null }, null);
+
+            // If KOGT, set subject and from to null so that the default subject from metadata will populate
             const client = contextService.client();
             if (client != null && client.equalIc("kongsberg") && originalItem['ownertable'].equalIc("SR")) {
                 clonedItem['subject'] = null;
+                clonedItem['sendfrom'] = null;
             } else {
                 const subjectPrefix = replyMode ? "Re: " : "Fw: ";
                 clonedItem['subject'] = subjectPrefix + originalItem.subject;
+
+                // if there was a default value marked for the sendfrom it shall be used, otherwise fallinback to user default email
+                clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
             }
 
-            // if there was a default value marked for the sendfrom it shall be used, otherwise fallinback to user default email
-            clonedItem['sendfrom'] = clonedItem['sendfrom'] ? clonedItem['sendfrom'] : contextService.getUserData().email;
             clonedItem['cc'] = nullOrCommaSplit(originalItem.cc);
             clonedItem['message'] = buildMessage(originalItem);
             clonedItem['createdate'] = fieldService.currentDate();
