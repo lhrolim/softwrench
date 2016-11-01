@@ -38,7 +38,7 @@ angular.module('sw_layout')
         },
 
         adjustOrgId: function (event) {
-            event.orgid = event.extrafields["site_.orgid"];
+            event.orgid = event.fields.extrafields["site_.orgid"];
         },
 
         changePriority: function (datamap, schemaId, priorityField, newPriority) {
