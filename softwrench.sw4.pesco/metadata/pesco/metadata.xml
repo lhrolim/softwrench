@@ -320,6 +320,16 @@
       </schemas>
     </application>
 
+    <application entity="commlog" name="commlog" title="Communications Tab">
+      <schemas>
+        <schema id="detail" stereotype="compositiondetail" redeclaring="false">
+          <customization position="subject">
+            <field attribute="subject" label="Subject:" requiredexpression="true" defaultexpression="service:pescoCommunicationService.getSubjectDefaultExpression"/>
+          </customization>
+        </schema>
+      </schemas>
+    </application>
+
    
   </applications>
   

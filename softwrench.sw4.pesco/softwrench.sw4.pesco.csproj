@@ -163,6 +163,7 @@
     <Content Include="web_content\dashboard\templates\dashboardgridpanel.html" />
     <Content Include="web_content\pesco\images\logo-pdf.png" />
     <Content Include="web_content\pesco\scripts\aaa_pescomodule.js" />
+    <Content Include="web_content\pesco\scripts\pescocommunication_service.js" />
     <Content Include="web_content\pesco\scripts\pesco_status_service.js" />
     <EmbeddedResource Include="metadata\pesco\metadata.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
