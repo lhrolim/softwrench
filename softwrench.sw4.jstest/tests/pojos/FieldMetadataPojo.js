@@ -9,6 +9,14 @@ class FieldMetadataPojo {
         };
     }
 
+    static Hidden(attribute) {
+
+        return {
+            attribute: attribute,
+            isHidden:true
+        };
+    }
+
 
 
    

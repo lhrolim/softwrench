@@ -1025,21 +1025,18 @@
                 }
             }
 
-            var newItem = {
-                //used to make a differentiation between a compositionitem datamap and a regular datamap
-                '#datamaptype': "compositionitem",
-                '#datamapidx': idx
-            }
+          
 
             // if inside a scroll pane - to update pane size
             fixHeaderService.callWindowResize();
 
+            const newItem = compositionService.generateBatchItemDatamap(idx, $scope.compositionlistschema);
 
-            //this id will be placed on the entity so that angular can use it to track. 
-            //It has to be negative to indicate its not a maximo Id, and also a unique value to avoid collisions
-            var fakeNegativeId = -Date.now().getTime();
-            newItem[$scope.compositionlistschema.idFieldName] = fakeNegativeId;
+            const fakeNegativeId = newItem[$scope.compositionlistschema.idFieldName];
+
             $scope.compositionData().push(newItem);
+
+
             const watches = crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), $scope.compositionlistschema.displayables, fakeNegativeId);
             watches.push(watchForDirty(idx));
 

@@ -11,6 +11,16 @@ class SchemaPojo {
         };
     }
 
+    static WithIdAndDisplayables(id, displayables) {
+        return {
+            schemaId: id,
+            displayables: displayables,
+            properties: {},
+            commandSchema: {},
+            idFieldName: "id"
+        };
+    }
+
     static WithIdAndEvent(id, eventName, eventService, eventMethod) {
         let result = {
             schemaId: id,
