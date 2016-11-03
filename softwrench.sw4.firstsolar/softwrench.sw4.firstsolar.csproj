@@ -103,10 +103,6 @@
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.api, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\softWrench.sW4.Web\Bin\softwrench.sw4.api.dll</HintPath>
-    </Reference>
     <Reference Include="softwrench.sW4.audit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.audit.1.0.0\lib\net46\softwrench.sW4.audit.dll</HintPath>
       <Private>True</Private>
