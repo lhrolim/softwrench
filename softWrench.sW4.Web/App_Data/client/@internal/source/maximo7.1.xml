@@ -277,8 +277,16 @@
         <relationship to="maxuser">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
         </relationship>
+        <relationship to="email" qualifier="primaryemail" collection="true">
+          <relationshipAttribute from="personid" to="personid" primary="true"/>
+          <relationshipAttribute to="isprimary" literal="1" quoteLiteral="true"/>
+        </relationship>
         <relationship to="email" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
+        </relationship>
+        <relationship to="phone" qualifier="primaryphone" collection="true">
+          <relationshipAttribute from="personid" to="personid" primary="true"/>
+          <relationshipAttribute to="isprimary" literal="1" quoteLiteral="true"/>
         </relationship>
         <relationship to="phone" collection="true">
           <relationshipAttribute from="personid" to="personid" primary="true"/>
