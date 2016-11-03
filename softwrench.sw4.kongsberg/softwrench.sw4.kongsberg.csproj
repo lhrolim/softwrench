@@ -39,8 +39,8 @@
       <HintPath>..\packages\cts.commons.persistence.1.2.1.4\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.4\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\kongsberg\configuration\KogtGlobalPreferenceRegistry.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergProjectRequestCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergServiceRequestCrudConnector.cs" />
@@ -100,7 +101,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\kongsberg\configuration\" />
     <Folder Include="classes\com\cts\kongsberg\migration\" />
     <Folder Include="web_content\kongsberg\htmls\" />
   </ItemGroup>

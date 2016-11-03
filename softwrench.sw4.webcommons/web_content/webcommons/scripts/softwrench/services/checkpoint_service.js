@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .factory('checkpointService', ["contextService", "searchService", "previousFilterService", function (contextService, searchService, previousFilterService) {
+        .factory('checkpointService', ["contextService", "searchService", function (contextService, searchService) {
 
 
             /// <summary>
@@ -22,13 +22,17 @@
                     throw new Error('gridData should not be null');
                 }
 
-                var quickserarchDTO = null;
+                var quicksearchDTO = null;
                 if (gridData.vm) {
-                    quickserarchDTO = gridData.vm.quickSearchDTO;
+                    quicksearchDTO = gridData.vm.quickSearchDTO;
                 }
-                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quickserarchDTO, gridData.multiSort);
-                this.createGridCheckpoint(schema, searchDTO);
-                previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
+                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quicksearchDTO, gridData.multiSort);
+                var dto = new SearchDTO(searchDTO);
+                if (!dto.isDefault()) {
+                    this.createGridCheckpoint(schema, dto);
+                }
+                
+//                previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
             };
 
             function createGridCheckpoint(schema, searchDTO) {
@@ -48,9 +52,32 @@
 
             function fetchCheckpoint(applicationKey) {
                 const checkPointArray = this.fetchAllCheckpointInfo();
-                return checkPointArray.firstOrDefault(function(item) {
+                return checkPointArray.firstOrDefault(item => {
                     return item.applicationKey === applicationKey;
                 });
+            }
+
+        
+            function getCheckPointAsFilter(applicationName,schemaId) {
+                const checkPoint = this.fetchCheckpoint(applicationName + "." + schemaId);
+                if (!checkPoint) {
+                    return null;
+                }
+
+
+                // The previous filter needs to have an ID that will never be used by the regular filter creation methods
+                const previousFilterId = -2;
+                // The previous filter must be given an alias to make it stand out from the user created filters
+                const previousFilterAlias = "*Previous Unsaved Filter*";
+
+                const filter = {
+                    searchDTO : checkPoint.listContext,
+                    alias: previousFilterAlias,
+                    id: previousFilterId
+                };
+
+                return filter;
+
             }
 
             function fetchAllCheckpointInfo() {
@@ -70,12 +97,13 @@
 
             function clearCheckpoints() {
                 //just removing from the context here
-                contextService.deleteFromContext('checkpointdata');
+//                contextService.deleteFromContext('checkpointdata');
             }
 
             const api = {
                 createGridCheckpointFromGridData,
                 createGridCheckpoint,
+                getCheckPointAsFilter,
                 fetchAllCheckpointInfo,
                 fetchCheckpoint,
                 clearCheckpoints

@@ -423,13 +423,12 @@
 
                     };
 
-                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters) {
+                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters ={}) {
                         if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
                             $scope.paginationData.pageNumber = pageNumber;
                             return;
                         }
-
-                        extraparameters = extraparameters || {};
+                        
 
                         var totalCount = 0;
                         var filterFixedWhereClause = null;

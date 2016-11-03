@@ -41,8 +41,8 @@
       <HintPath>..\packages\cts.commons.persistence.1.2.1.4\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.4\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -205,10 +205,6 @@
     <Folder Include="web_content\pae\styles\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons\cts.commons.csproj">
-      <Project>{5FA34361-87B3-4094-BFBE-7DB7B4D16036}</Project>
-      <Name>cts.commons</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}</Project>
       <Name>softwrench.sw4.api</Name>

@@ -37,8 +37,8 @@
       <HintPath>..\packages\cts.commons.1.2.1.4\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.4\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -120,6 +120,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\directive\passwordvalidation.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\swlabel.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\constants\MetadataEventConstants.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\searchDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\quickSearchDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\lookupDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\CompositionOperation.js" />

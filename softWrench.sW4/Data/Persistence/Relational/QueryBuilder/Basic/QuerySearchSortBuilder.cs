@@ -20,21 +20,24 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             var searchSort = dto.SearchSort;
             //third condition due to http://stackoverflow.com/questions/39559858/mvc-4-converting-to-one-element-list-with-null
             if (string.IsNullOrWhiteSpace(searchSort) && (dto.MultiSearchSort == null || dto.MultiSearchSort.Count == 0 || dto.MultiSearchSort.All(a => a == null))) {
-                return string.Format(" order by {1} desc", entityMetadata.Name, entityMetadata.Schema.UserIdAttribute.Name);
+                return string.Format(" order by {0} desc", entityMetadata.Schema.UserIdAttribute.Name);
             }
 
             if (dto.MultiSearchSort != null && dto.MultiSearchSort.Any(a => a != null)) {
                 var builder = new StringBuilder();
-
+                //TODO: review this method
                 foreach (var column in dto.MultiSearchSort) {
                     if (!string.IsNullOrWhiteSpace(column.ColumnName)) {
                         var sort = string.Format(" {0} {1}, ", column.ColumnName, column.IsAscending ? " asc " : " desc ");
                         builder.Append(sort);
                     }
                 }
-
-                return builder.Length > 0 ? string.Format(" order by {0}", builder.ToString().TrimEnd(',', ' ')) : string.Empty;
-
+                if (builder.Length > 0) {
+                    return string.Format(" order by {0}", builder.ToString().TrimEnd(',', ' '));
+                }
+                if (string.IsNullOrWhiteSpace(searchSort)) {
+                    return string.Format(" order by {0} desc", entityMetadata.Schema.UserIdAttribute.Name);
+                }
             }
             var suffix = dto.SearchAscending ? " asc " : " desc ";
             if (searchSort.EndsWith("asc") || searchSort.EndsWith("desc")) {

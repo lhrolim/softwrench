@@ -90,8 +90,8 @@
       <HintPath>..\packages\cts.commons.persistence.1.2.1.4\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.4\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -613,6 +613,7 @@
     <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\XmlStereotypeMetadataParser.cs" />
+    <Compile Include="Preferences\GlobalUserPreferencesRegistry.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
     <Compile Include="Preferences\GridFilter.cs" />
     <Compile Include="Preferences\GridFilterController.cs" />

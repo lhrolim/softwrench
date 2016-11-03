@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,12 +15,13 @@ using cts.commons.Util;
 
 namespace softWrench.sW4.Configuration.Services {
 
-    class ConfigurationFacade : IConfigurationFacade, ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
+    class ConfigurationFacade : IConfigurationFacade, ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationFacade));
 
         private bool _appStarted;
         private readonly IDictionary<string, PropertyDefinition> _toRegister = new ConcurrentDictionary<string, PropertyDefinition>();
+        private readonly IDictionary<string, string> _toOverride = new ConcurrentDictionary<string, string>();
 
         private readonly SWDBHibernateDAO _dao;
         private readonly ConfigurationService _configService;
@@ -42,6 +44,23 @@ namespace softWrench.sW4.Configuration.Services {
 
         public void Register(string configKey, PropertyDefinition definition) {
             AsyncHelper.RunSync(() => RegisterAsync(configKey, definition));
+        }
+
+        public void Override(string configKey, string newDefaultValue) {
+            if (_appStarted) {
+                throw new InvalidOperationException("this method shouldn´t be called after the application has started");
+            }
+
+
+            if (_toRegister.ContainsKey(configKey)) {
+                Log.DebugFormat("overriding configkey {0} to new value {1}", configKey, newDefaultValue);
+                _toRegister[configKey].StringValue = newDefaultValue;
+            } else {
+                //case the override method has been called on a listener that ran before the oririnal declaration one
+                _toOverride.Add(configKey, newDefaultValue);
+            }
+
+
         }
 
         public async Task RegisterAsync(string configKey, PropertyDefinition definition) {
@@ -75,6 +94,16 @@ namespace softWrench.sW4.Configuration.Services {
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             var definitions = _toRegister.Select(entry => SetKeys(entry.Key, entry.Value)).ToList();
+            foreach (var toOverride in _toOverride) {
+                var originalDeclaration = definitions.FirstOrDefault(d => d.FullKey.Equals(toOverride.Key));
+                if (originalDeclaration != null) {
+                    Log.DebugFormat("overriding configkey {0} to new value {1}", originalDeclaration.FullKey, toOverride.Value);
+                    originalDeclaration.StringValue = toOverride.Value;
+                } else {
+                    Log.WarnFormat("definition {0} not found for override, review the implementation", toOverride.Key);
+                }
+            }
+
             _dao.BulkSave(definitions);
             _appStarted = true;
         }
@@ -90,7 +119,7 @@ namespace softWrench.sW4.Configuration.Services {
         //execute last
         public int Order {
             get {
-                return 1;
+                return 100;
             }
         }
     }

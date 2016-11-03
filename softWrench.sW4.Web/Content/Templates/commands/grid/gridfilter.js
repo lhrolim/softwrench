@@ -16,7 +16,11 @@
                 }
 
                 $scope.nonSharedFilters = function () {
-                    return gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
+                    if ($scope.cachedFilters) {
+                        return $scope.cachedFilters;
+                    }
+                    $scope.cachedFilters = gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
+                    return $scope.cachedFilters;
                 }
 
                 $scope.i18N = function (key, defaultValue, paramArray) {
@@ -61,6 +65,7 @@
                         },
                         className: "smallmodal"
                     });
+                    $scope.cachedFilters = null;
                 }
 
                 function hasAdvancedSearch() {
@@ -75,8 +80,8 @@
                 }
 
                 $scope.hasFilterData = function () {
-                    var searchData = $scope.searchData;
-                    for (var data in searchData) {
+                    const searchData = $scope.searchData;
+                    for (let data in searchData) {
                         if (!searchData.hasOwnProperty(data) || data === "lastSearchedValues") {
                             continue;
                         }
@@ -94,20 +99,23 @@
                     alertService.confirm("Are you sure that you want to remove filter {0}?".format(filter.alias)).then(function () {
                         gridPreferenceService.deleteFilter(filter.id, filter.creatorId, function () {
                             $scope.selectedfilter = null;
+                            $scope.cachedFilters = null;
                         });
                     });
+                    
                 }
 
                 $scope.createFilter = function (alias) {
-                    var id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
-                    var owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
-                    var advancedSearch = hasAdvancedSearch() ? JSON.stringify($scope.quickSearchDto) : null;
-
-                    gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, null, advancedSearch, alias, id, owner,
-                        function (filter) {
-                            $scope.selectedfilter = filter;
-                        });
+                    const id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
+                    const owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
+                    const advancedSearch = hasAdvancedSearch() ? JSON.stringify($scope.quickSearchDto) : null;
+                    gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, null, advancedSearch, alias, id, owner, (filter) => {
+                        $scope.selectedfilter = filter;
+                        $scope.cachedFilters = null;
+                    });
                 }
+
+
 
                 $scope.applyFilter = function (filter) {
                     $scope.quickSearchDto = filter.advancedSearch ? JSON.parse(filter.advancedSearch) : { compositionsToInclude: [] };
@@ -123,15 +131,23 @@
 
                 $scope.$on("sw.grid.refresh", function (event, panelid) {
                     clearFilter(panelid);
+                    $scope.cachedFilters = null;
                 });
 
-                $scope.$on("sw_redirectapplicationsuccess", function (event) {
+                $scope.$on("sw_redirectapplicationsuccess", function (event, data) {
                     $scope.selectedfilter = null;
+                    $scope.cachedFilters = null;
+                });
+
+                $scope.$on("sw.grid.setfilter", function (event, filter) {
+                    $scope.cachedFilters = null;
+                    $scope.selectedfilter = filter;
+
                 });
             }
         ])
         .directive("gridFilter", ["contextService", function (contextService) {
-            var directive = {
+            const directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl("/Content/Templates/commands/grid/gridfilter.html"),
                 scope: {

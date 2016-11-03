@@ -111,10 +111,16 @@
 
             var mode = extraParameters.mode ? extraParameters.mode : "none";
             const log = $log.getInstance("redirectService#redirectWithData");
-            const searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator);
-            searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
-            searchDTO.totalCount = 0;
-            searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+            let searchDTO = extraParameters.searchDTO;
+
+            if (!searchDTO) {
+                searchDTO = searchService.buildSearchDTO(searchData, extraParameters.searchSort, searchOperator);
+                searchDTO.quickSearchDTO = extraParameters.quickSearchDTO;
+                searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;
+                searchDTO.totalCount = 0;
+                searchDTO.pageSize = extraParameters.pageSize ? extraParameters.pageSize : 30;
+            }
+
             const restParameters = {
                 key: {
                     schemaId: schemaId,
@@ -128,10 +134,12 @@
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
             historyService.addToHistory(urlToUse);
-            $http.get(urlToUse).success(function (data) {
+            return $http.get(urlToUse).then(function (response) {
+                const data = response.data;
                 jsonData = data;
                 innerGoToApplicationGet(data, null, null, mode, applicationName, null, extraParameters);
-            }).error(function (data) { });
+                return data;
+            });
         };
 
         /**
@@ -189,8 +197,7 @@
             //including back savefn param
             parameters.savefn = savefn;
             parameters.postProcessFn = postProcessFn;
-            parameters.onloadfn = onloadfn
-            ;
+            parameters.onloadfn = onloadfn;
 
             var popupMode = parameters.popupmode;
 

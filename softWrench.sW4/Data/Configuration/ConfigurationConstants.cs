@@ -11,7 +11,14 @@
 
         public const string MyProfileEnabled = "/Global/MyProfile/Enabled";
         public const string MyProfileReadOnly = "/Global/MyProfile/ReadOnly";
+
+
+        public class Filter {
+            public const string ApplyDefaultPreviousFilter = "/Global/Grid/Filter/ApplyDefaultPrevious";
+        }
+
         
+
         public const string ClientSideLogLevel = "/Global/Logs/ClientLevel";
 
         public const string InvbalancesListScanOrder = "/Global/Grids/InvBalances/ScanBar";
@@ -26,6 +33,8 @@
 
         public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
         public const string TransactionStatsReportDuration = "/Global/Transactions/Report/Period";
+
+        
 
         #region SW diaplayable formats
 

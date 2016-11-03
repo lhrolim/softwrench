@@ -5,6 +5,7 @@ using softWrench.sW4.Configuration.Util;
 using System;
 using System.Collections.Generic;
 using cts.commons.persistence.Util;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
@@ -30,41 +31,64 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         [Id(0, Name = "FullKey")]
-        public virtual string FullKey { get; set; }
+        public virtual string FullKey {
+            get; set;
+        }
 
         [Property(Column = "key_")]
-        public virtual string SimpleKey { get; set; }
+        public virtual string SimpleKey {
+            get; set;
+        }
 
         [Property]
         [JsonIgnore]
-        public virtual string DefaultValue { get; set; }
+        public virtual string DefaultValue {
+            get; set;
+        }
 
         [Property]
-        public virtual string Description { get; set; }
+        public virtual string Description {
+            get; set;
+        }
 
         /// <summary>
         /// Available options: long, string, date, boolean --> the way the information would be presented on screen
         /// </summary>
+        //TODO: extract enum
         [Property]
-        public virtual string DataType { get; set; }
+        public virtual string DataType {
+            get; set;
+        }
 
         [Property]
-        public virtual string Renderer { get; set; }
+        public virtual string Renderer {
+            get; set;
+        }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public virtual bool Visible { get; set; }
+        public virtual bool Visible {
+            get; set;
+        }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public virtual bool Contextualized { get; set; }
+        public virtual bool Contextualized {
+            get; set;
+        }
 
         [Property(TypeType = typeof(BooleanToIntUserType))]
-        public virtual bool CachedOnClient { get; set; }
+        public virtual bool CachedOnClient {
+            get; set;
+        }
 
         //        [Property(Type = "BinaryBlob")]
-        public virtual byte[] DefaultBlobValue { get; set; }
+        public virtual byte[] DefaultBlobValue {
+            get; set;
+        }
 
         [Property(Column = "alias_")]
-        public virtual string Alias { get; set; }
+        public virtual string Alias {
+            get; set;
+        }
 
 
         public virtual string StringValue {
@@ -75,7 +99,7 @@ namespace softWrench.sW4.Configuration.Definitions {
                 return DefaultValue;
             }
             set {
-                if (value!= null && value.Length > 1000) {
+                if (value != null && value.Length > 1000) {
                     DefaultBlobValue = CompressionUtil.Compress(value.GetBytes());
                 } else {
                     DefaultValue = value;
@@ -83,7 +107,9 @@ namespace softWrench.sW4.Configuration.Definitions {
             }
         }
 
-        public PropertyValue SingleProperty { get; set; }
+        public PropertyValue SingleProperty {
+            get; set;
+        }
 
 
         //        [ManyToOne(Column = "category_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
@@ -93,7 +119,9 @@ namespace softWrench.sW4.Configuration.Definitions {
         [Set(0, Lazy = CollectionLazy.False, Inverse = true)]
         [Key(1, Column = "definition_id")]
         [OneToMany(2, ClassType = typeof(PropertyValue))]
-        public virtual ISet<PropertyValue> Values { get; set; }
+        public virtual ISet<PropertyValue> Values {
+            get; set;
+        }
 
 
         public int CompareTo(PropertyDefinition other) {
@@ -104,6 +132,6 @@ namespace softWrench.sW4.Configuration.Definitions {
             return string.Format("FullKey: {0}, Description: {1}, DataType: {2}, Renderer: {3}", FullKey, Description, DataType, Renderer);
         }
 
-       
+
     }
 }

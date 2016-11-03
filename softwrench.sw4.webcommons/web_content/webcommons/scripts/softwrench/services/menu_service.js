@@ -1,9 +1,9 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('menuService', ['$rootScope', 'redirectService', 'contextService', 'i18NService', 'securityService', 'checkpointService', '$log','userService', menuService]);
+    angular.module('sw_layout').factory('menuService', ['$rootScope', 'redirectService', 'contextService', 'i18NService', 'securityService', 'checkpointService', '$log', 'userService', 'gridPreferenceService', menuService]);
 
-    function menuService($rootScope, redirectService, contextService, i18NService, securityService, checkpointService, $log, userService) {
+    function menuService($rootScope, redirectService, contextService, i18NService, securityService, checkpointService, $log, userService, gridPreferenceService) {
 
         var cleanSelectedLeaf = function () {
             var menu = $("#applicationmenu");
@@ -85,7 +85,7 @@
             getI18nMenuLabel: getI18nMenuLabel,
             getI18nMenuIcon: getI18nMenuIcon,
             setActiveLeafByUrl: setActiveLeafByUrl,
-            parseExternalLink:parseExternalLink
+            parseExternalLink: parseExternalLink
 
         };
 
@@ -114,13 +114,13 @@
                 }
                 var value = parameters[parameter];
                 //let´s give it a chance for user properties to be set
-                value =userService.readProperty(value);
+                value = userService.readProperty(value);
                 link += parameter + "=" + value;
                 link += "&";
             }
 
 
-            return link.substr(0,link.length-1);
+            return link.substr(0, link.length - 1);
         }
 
         function executeById(menuId) {
@@ -173,7 +173,16 @@
             }
             checkpointService.clearCheckpoints();
             $rootScope.$broadcast('sw.redirect', leaf);
-            redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);
+
+            const previousFilter = gridPreferenceService.getPreviousFilterDto(leaf.application, leaf.schema);
+            if (previousFilter) {
+                const previousDTO = previousFilter.searchDTO;
+                return redirectService.redirectWithData(leaf.application, leaf.schema, previousDTO.searchData, { searchDTO: previousDTO }).then(data => {
+                    $rootScope.$broadcast('sw.grid.setfilter', previousFilter);
+                });
+            }
+            return redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);
+
         };
 
 

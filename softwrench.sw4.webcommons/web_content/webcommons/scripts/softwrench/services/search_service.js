@@ -107,7 +107,7 @@
 
         var buildSearchSortString = function (searchSort) {
             //            var searchSort = scope.searchSort;
-            var resultString = "";
+            var resultString = searchSort;
 
             if (searchSort.field != null && searchSort.field != '') {
                 resultString = searchSort.field;
@@ -410,7 +410,7 @@
                     metadataid: extraparameters.metadataid,
                     forcecleanup: extraparameters.forcecleanup
                 }, true);
-                $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
+                return $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
             },
 
             /// <summary>
