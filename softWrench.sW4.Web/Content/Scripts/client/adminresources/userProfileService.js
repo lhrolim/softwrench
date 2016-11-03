@@ -116,7 +116,7 @@
             if (!!parameters.oldValue && !!parameters.newValue) {
                 simpleLog.debug("beforeAppChange:storing updated transient data for {0}".format(parameters.oldValue));
                 storeFromDmIntoTransient({
-                    application: parameters.oldValue
+                    "#application": parameters.oldValue
                 });
             }
         }
