@@ -77,6 +77,12 @@ namespace softWrench.sW4.Util {
         }
 
 
+        public static IList<MethodInfo> FindMethodsAnnotatedWith(this Type type, Type attributeType) {
+            var methods = type.GetMethods();
+            return (from method in methods let attr = method.GetCustomAttribute(attributeType) where attr != null select method).ToList();
+        }
+
+
         /// <summary>
         /// Returns the value of a member attribute for any member in a class.
         ///     (a member is a Field, Property, Method, etc...)    

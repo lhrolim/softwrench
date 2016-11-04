@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using System.Linq;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Search;
@@ -14,10 +15,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
     public class BaseTicketDataSet : MaximoApplicationDataSet {
 
         [Import]
-        public TicketStatusHandler StatusHandler { get; set; }
+        public TicketStatusHandler StatusHandler {
+            get; set;
+        }
 
         public BaseTicketDataSet() {
-            
+
         }
 
 
@@ -29,7 +32,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return StatusHandler.FilterAvailableStatus(postFilter);
         }
 
-
+        public virtual SearchRequestDto BuildWorkLogsWhereClause(CompositionPreFilterFunctionParameters parameter) {
+            //To allow customization
+            return parameter.BASEDto;
+        }
 
 
         public virtual SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {

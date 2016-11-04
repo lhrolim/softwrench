@@ -145,13 +145,21 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             searchRequestDto.QueryAlias = collectionAssociation.To;
 
             var firstAttributeHolder = attributeHolders.First();
+            var dataSet = DataSetProvider.GetInstance().LookupDataSet(entityMetadata.ApplicationName, entityMetadata.AppSchema.SchemaId);
+            var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
             if (applicationCompositionSchema.PrefilterFunction != null) {
-                var dataSet = DataSetProvider.GetInstance().LookupDataSet(entityMetadata.ApplicationName, entityMetadata.AppSchema.SchemaId);
                 //we will call the function passing the first entry, altough this method could have been invoked for a list of items (printing)
                 //TODO: think about it
-                var preFilterParam = new CompositionPreFilterFunctionParameters(entityMetadata, searchRequestDto, firstAttributeHolder, applicationCompositionSchema);
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
-            }
+                //setting it to the baseDTO so that an eventual annotated method could be chained
+                preFilterParam.BASEDto = searchRequestDto;
+            } 
+            searchRequestDto = PrefilterInvoker.ApplyAnnotatedPreFilterFunctionIfExists(dataSet, preFilterParam, collectionAssociation.Qualifier);
+            
+
+            
+
+
 
             EntityRepository.EntityRepository.SearchEntityResult queryResult = null;
 

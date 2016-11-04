@@ -5,7 +5,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {
     public class BasePreFilterParameters<TRelationhipmetadata> {
 
         
-        private readonly SearchRequestDto _baseDto;
+        private SearchRequestDto _baseDto;
         private readonly AttributeHolder _originalEntity;
         private readonly TRelationhipmetadata _relationship;
 
@@ -19,8 +19,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {
 
      
 
-        public SearchRequestDto BASEDto {
+        public SearchRequestDto BASEDto
+        {
             get { return _baseDto; }
+            set { _baseDto = value; }
         }
 
 

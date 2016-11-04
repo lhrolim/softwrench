@@ -13,9 +13,9 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
-    public class PescoServiceRequestDataSet : BaseServiceRequestDataSet {
+    public class PescoWorkorderderDataSet : BaseWorkorderDataSet {
 
-        public PescoServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
+        public PescoWorkorderderDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
         }
 
         public override string ClientFilter() {
@@ -31,18 +31,6 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
             }
             return originalDTO;
         }
-
-
-
-        public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
-            var result = await base.GetList(application, searchDto);
-            result.ResultObject.ToList().ForEach(CopyStatus);
-            return result;
-        }
-
-        private static void CopyStatus(AttributeHolder datamap) {
-            var status = datamap.GetAttribute("status");
-            datamap.SetAttribute("pending", status);
-        }
+    
     }
 }

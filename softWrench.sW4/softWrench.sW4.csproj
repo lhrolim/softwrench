@@ -82,8 +82,8 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.1.4\lib\net46\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.2.6151.15243, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.persistence, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">

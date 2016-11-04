@@ -51,6 +51,10 @@
       <HintPath>..\packages\cts.commons.web.1.2.1.4\lib\net46\cts.commons.web.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
@@ -93,6 +97,10 @@
     </Reference>
     <Reference Include="softwrench.sw4.dashboard, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.0.0.1\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="softwrench.sw4.user, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.0.0.1\lib\net46\softwrench.sw4.user.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -139,7 +147,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\pesco\configuration\PescoRoleInitializer.cs" />
     <Compile Include="classes\com\cts\pesco\configuration\PescoDOFChartInitializer.cs" />
+    <Compile Include="classes\com\cts\pesco\dataset\PescoWorkOrderDataSet.cs" />
     <Compile Include="classes\com\cts\pesco\dataset\PescoServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\pesco\dataset\PescoTicketStatusHandler.cs" />
     <Compile Include="classes\com\cts\pesco\migration\MigrationSwweb2374.cs" />
