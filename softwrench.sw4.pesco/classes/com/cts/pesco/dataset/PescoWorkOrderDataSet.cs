@@ -7,6 +7,8 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
+using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
@@ -21,6 +23,16 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
         public override string ClientFilter() {
             return "pesco";
         }
+
+        public override TargetResult DoExecute(OperationWrapper operationWrapper) {
+            var data = operationWrapper.GetOperationData;
+            if (!data.Holder.GetAttribute("lostenergy").Equals(true)) {
+                data.Holder.SetAttribute("lostenergyamount", "");
+            }
+            return base.DoExecute(operationWrapper);
+        }
+
+
 
         [PreFilter("worklog")]
         public virtual SearchRequestDto WorkLogPreFilter(CompositionPreFilterFunctionParameters param) {

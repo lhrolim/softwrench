@@ -8,7 +8,7 @@
     <template path="@servicerequest.xml"/>
 
     <template path="@quickservicerequest.xml"/>
-    
+
     <template path="@asset.xml"/>
     <template path="@globalsearch.xml"/>
   </templates>
@@ -17,9 +17,10 @@
     <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
         <attribute name="lostenergy3" type="smallint" required="true" />
+        <attribute name="lostenergyamount" type="varchar" required="true" />
         <attribute name="pending" query="status" type="varchar"/>
       </attributes>
-      
+
       <relationships>
         <relationship to="synonymdomain" qualifier="pescosynstatus" cacheable="true">
           <relationshipAttribute from="status" to="value" primary="true"/>
@@ -31,6 +32,7 @@
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <attributes>
         <attribute name="lostenergy" type="smallint" required="true" />
+        <attribute name="lostenergyamount" type="varchar" required="true" />
       </attributes>
 
       <relationships>
@@ -66,7 +68,7 @@
         </optionfilter>
       </filters>
       <schemas>
-        
+
         <list redeclaring="false" stereotype="list.selection">
           <customization position="siteid">
             <field attribute="siteid" label="Site Id">
@@ -77,6 +79,7 @@
             <field attribute="lostenergy3" label="Lost Energy" readonly="true" enableexpression="false">
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
+            <field attribute="lostenergyamount" label="Lost Energy Amount" readonly="true" enableexpression="false" tooltip="Lost Energy Amount"/>
           </customization>
           <customization position="status">
             <field attribute="status" label="Status">
@@ -105,7 +108,7 @@
               <renderer type="default" params="maxlength=100" />
             </field>
           </customization>
-          
+
           <customization position="location"></customization>
           <customization position="assetnum"></customization>
 
@@ -114,21 +117,24 @@
               <renderer type="lookup" params="application=location;schemaId=locationLookupList;"/>
               <event type="beforechange" service="srService" method="beforeChangeLocation"/>
             </association>
-              
+
             <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
               <event type="afterchange" service="srService" method="afterChangeAsset"/>
             </association>
-              <field attribute="lostenergy3" label="Lost Energy">
-                <renderer type="checkbox" params="formatter=numberToBoolean"/>
-              </field>
+            <section orientation="horizontal">
+            <field attribute="lostenergy3" label="Lost Energy">
+              <renderer type="checkbox" params="formatter=numberToBoolean"/>
+            </field>
+            <field attribute="lostenergyamount" label="Lost Energy Amount" enableexpression="@lostenergy3 === true" showexpression="@lostenergy3 === true"/>
+            </section>
           </customization>
         </schema>
-            
+
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="false">
         </schema>
-          
+
         <schema id="editdetail" parentschema="adetail" title="Service Request Details" redeclaring="false">
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description" requiredexpression="true">
@@ -194,20 +200,20 @@
             <field attribute="pluspcustomer" label="Customer"/>
           </customization>
           <commandbars>
-            
+
           </commandbars>
         </schema>
-        
+
         <schema id="locationLookupList" stereotype="list.singleselection.modal" platform="web" title="Location List">
           <field attribute="location" label="Location" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <optionfield attribute="isproject" label="Is Project">
             <renderer type="checkbox"  params="filteronly=true;formatter=numberToBoolean"/>
             <option label="No" value="FALSE"/>
-            <option label="Yes" value="TRUE"/>  
+            <option label="Yes" value="TRUE"/>
           </optionfield>
         </schema>
-        
+
         <schema id="locationdetail" title="Location Detail" stereotype="detail" redeclaring="false">
           <customization position="+intlabrec">
             <field attribute="pluspcustomer" label="Customer" readonly="true"/>
@@ -218,10 +224,10 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application name="asset" title="Asset" entity="asset">
       <schemas>
-         <schema id="list" platform="web" redeclaring="false">
+        <schema id="list" platform="web" redeclaring="false">
           <customization position="+siteid">
             <field attribute="pluspcustomer" label="Customer"/>
           </customization>
@@ -233,7 +239,7 @@
         </schema>
       </schemas>
     </application>
-    
+
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <filters>
         <booleanfilter attribute="lostenergy"/>
@@ -244,35 +250,36 @@
       </filters>
 
       <schemas>
-       
-         <list title="Work Order Grid" platform="web" redeclaring="false" stereotype="list.selection">
+
+        <list title="Work Order Grid" platform="web" redeclaring="false" stereotype="list.selection">
           <customization position="siteid">
             <field attribute="siteid" label="Site Id">
               <renderer type="default" params="width=12%"/>
             </field>
-           </customization>
-           <customization position="status">
-             <field attribute="status" label="Status">
-               <renderer type="statuscolor" params="width=10%" />
-             </field>
-           </customization>
+          </customization>
+          <customization position="status">
+            <field attribute="status" label="Status">
+              <renderer type="statuscolor" params="width=10%" />
+            </field>
+          </customization>
           <customization position="+asset_.description">
             <field attribute="lostenergy" label="Lost Energy" readonly="true" enableexpression="false">
               <renderer type="checkbox" />
             </field>
+            <field attribute="lostenergyamount" label="Lost Energy Amount"/>
           </customization>
-         </list>
-          
+        </list>
+
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
 
           <customization position="description"></customization>
-          
+
           <customization position="+tophiddenfield">
             <field attribute="description" label="Summary" requiredexpression="true">
               <renderer type="default" params="maxlength=100" />
             </field>
           </customization>
-          
+
           <customization position="location"></customization>
           <customization position="assetnum"></customization>
 
@@ -282,24 +289,27 @@
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <renderer type="lookup" params="application=location;schemaId=locationLookupList;"/>
             </association>
-         
-           <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+
+            <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
               <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
-            <field attribute="lostenergy" label="Lost Energy">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
-            </field>
-               <!--</section>-->
+            <section orientation="horizontal">
+              <field attribute="lostenergy" label="Lost Energy">
+                <renderer type="checkbox" params="formatter=numberToBoolean"/>
+              </field>
+              <field attribute="lostenergyamount" label="Lost Energy Amount"  enableexpression="@lostenergy === true" showexpression="@lostenergy === true"/>
+            </section>
+            <!--</section>-->
           </customization>
         </schema>
-      
+
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew" redeclaring="false">
-         </schema> 
-        
+        </schema>
+
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
-          
+
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description">
               <dataprovider prefilterfunction="FilterStatusCodes"/>
@@ -315,7 +325,7 @@
               <renderer type="TABLE" params="mode=batch;inputsize=xlarge"/>
             </composition>
           </customization>
-          
+
         </schema>
       </schemas>
     </application>
@@ -330,8 +340,7 @@
       </schemas>
     </application>
 
-   
   </applications>
-  
+
 
 </metadata>
