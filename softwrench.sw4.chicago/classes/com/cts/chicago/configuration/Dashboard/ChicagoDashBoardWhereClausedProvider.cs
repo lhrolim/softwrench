@@ -21,12 +21,12 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration.Dashboard
         /// <summary>
         /// Complete SELECT statistics query for sr.dailytickets: includes the statuses's descriptions as labels.
         /// </summary>
-        private const string SRStatusDailyWhere = @"month(creationdate) = {0}";
+        private const string SRStatusDailyWhere = @"month(creationdate) = {0} and year(creationdate) = {1}";
                 
 
 
         public string GetTicketCountQuery() {
-            return SRStatusDailyWhere.Fmt(DateTime.Now.Month);
+            return SRStatusDailyWhere.Fmt(DateTime.Now.Month, DateTime.Now.Year);
         }
 
         
