@@ -114,6 +114,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             CommonTransaction(maximoTemplateData);
+            // Update or create attachments
+            AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
             base.BeforeCreation(maximoTemplateData);
         }
 

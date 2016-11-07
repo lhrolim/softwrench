@@ -86,7 +86,8 @@
                         };
                     });
                     return result;
-                });
+                //DO not remove this catch... for some chaotic reason the response is being swallowed without it.
+                }).catch(err => console.log(err));
         };
 
         function doPopulateWithCompositionData(requestDTO, datamap) {
