@@ -53,8 +53,8 @@
       <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.web, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.web.1.2.1.6\lib\net46\cts.commons.web.dll</HintPath>
+    <Reference Include="cts.commons.web, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.web.1.2.6156.25003\lib\net46\cts.commons.web.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid, Version=1.8.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c, processorArchitecture=MSIL">

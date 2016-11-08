@@ -78,6 +78,9 @@
     <Compile Include="Util\Validate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cts.commons.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
