@@ -7,11 +7,14 @@ using softWrench.sW4.Metadata.Entities;
 using System.Collections.Generic;
 using softwrench.sw4.api.classes.integration;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.API.Response;
 
 namespace softWrench.sW4.Data.Persistence.Operation {
     public sealed class CrudOperationData : Entity, IOperationData {
 
         private readonly string _userIdAttributeName;
+        public ReloadMode ReloadMode { get; set; } = ReloadMode.None;
+
 
         public CrudOperationData([CanBeNull] string id, [NotNull] IDictionary<string, object> attributes,
             [NotNull] IDictionary<string, object> associationAttributes, EntityMetadata metadata, ApplicationMetadata applicationMetadata)
@@ -26,7 +29,6 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public string SiteId {get; set;}
 
-        public bool ReloadAfterSave { get; set; }
 
         public string UserId {
             get { return GetAttribute(_userIdAttributeName) == null ? null : GetAttribute(_userIdAttributeName).ToString(); }
@@ -65,7 +67,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             {
                 SiteId = SiteId,
                 OperationType = OperationType,
-                ReloadAfterSave = ReloadAfterSave
+                ReloadMode = ReloadMode
             };
             return clone;
         }

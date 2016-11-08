@@ -13,6 +13,10 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
         public IErrorDto WarningDto { get; set; }
 
+        public bool FullRefresh {
+            get; set;
+        }
+
 
 
         public ApplicationMetadata NextApplication { get; set; }

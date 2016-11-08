@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function dynComponentService($rootScope, $q, restService, alertService, schemaCacheService, modalService, validationService, crudContextHolderService, crudextraService, redirectService) {
+    function dynComponentService($rootScope, $q, restService, alertService, schemaCacheService, modalService, validationService, crudContextHolderService, crudextraService, redirectService,applicationService) {
         const app = "_dynamic";
         const reloadContainerModalSchemaId = "reloadcontainermodal";
         const deleteComponentModalSchemaId = "deletecomponentmodal";
@@ -116,7 +116,7 @@
 
         function saveAndReload(datamap) {
             datamap["saveandreload"] = true;
-            $rootScope.$broadcast("sw_submitdata", {});
+            applicationService.save();
         }
 
         function showUsernameAndComment(datamap) {
@@ -142,7 +142,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("dynComponentService", ["$rootScope", "$q", "restService", "alertService", "schemaCacheService", "modalService", "validationService", "crudContextHolderService", "crudextraService", "redirectService", dynComponentService]);
+    angular.module("sw_layout").factory("dynComponentService", ["$rootScope", "$q", "restService", "alertService", "schemaCacheService", "modalService", "validationService", "crudContextHolderService", "crudextraService", "redirectService", "applicationService", dynComponentService]);
 
     //#endregion
 

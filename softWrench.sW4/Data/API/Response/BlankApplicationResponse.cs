@@ -16,6 +16,8 @@ namespace softWrench.sW4.Data.API.Response {
         public string SuccessMessage { get; set; }
         public string ErrorMessage { get; set; }
 
+        public bool FullRefresh { get; set; } = false;
+
         public IErrorDto ErrorDto { get; set; }
 
         public DateTime TimeStamp { get; set; }

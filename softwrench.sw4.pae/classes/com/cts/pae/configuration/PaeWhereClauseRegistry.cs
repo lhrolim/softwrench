@@ -24,7 +24,8 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.configuration {
             var transportationCondition = new WhereClauseRegisterCondition() {
                 Global = true,
                 Alias = "transportation",
-                Description = "Limits assets to transportation assets (VIN scannable)"
+                Description = "Limits assets to transportation assets (VIN scannable)",
+
             };
             _whereClauseFacade.Register("transportation", TransportationAssetWhereClause, transportationCondition);
 

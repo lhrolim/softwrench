@@ -1,6 +1,7 @@
 ﻿using System;
 using softWrench.sW4.Data.Persistence.Engine;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Data.API.Response;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -60,7 +61,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         public virtual void SetReloadAfterSave(MaximoOperationExecutionContext maximoTemplateData) {
             var crudOperationData = maximoTemplateData.OperationData as CrudOperationData;
             if (crudOperationData != null) {
-                crudOperationData.ReloadAfterSave = true;
+                crudOperationData.ReloadMode = ReloadMode.MainDetail;
             }
         }
 

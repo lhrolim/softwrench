@@ -184,6 +184,7 @@
                     scope.cancelfn({ data: data, schema: schema });
                 }
 
+
                 scope.$on("sw.modal.show", function (event, modalData) {
                     if (scope.ismodal === "true") {
                         //inline compositions inside of the modal need to be refreshed (relinked)
@@ -471,6 +472,8 @@
 
 
 
+        
+
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
 
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
@@ -504,6 +507,10 @@
             }
 
         };
+
+        $scope.$on(JavascriptEventConstants.CrudSaved, () => {
+            $scope.clearNewCompositionData();
+        });
 
         $scope.$on("sw_compositiondataresolved", $scope.onAfterCompositionResolved);
 
@@ -1204,16 +1211,6 @@
             }).catch(function (data) {
                 $scope.onSaveError(data, selecteditem);
             });
-
-            //            //TODO: refactor this, using promises
-            //            $scope.$emit("sw_submitdata", {
-            //                successCbk: afterSaveListener("onAfterSave", alwaysrefresh),
-            //                failureCbk: afterSaveListener("onSaveError", selecteditem),
-            //                dispatcherComposition: $scope.relationship,
-            //                isComposition: true,
-            //                nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
-            //                refresh: alwaysrefresh
-            //            });
         };
 
         function afterSaveListener(name, extra) {
@@ -1266,12 +1263,32 @@
 
 
         $scope.clearNewCompositionData = function () {
+
+            $scope.unWatcherArray.forEach(function (unwatcher) {
+                unwatcher();
+            });
+
+            $scope.unWatcherArray = [];
+
+
+
             $scope.compositionData().forEach(function (item) {
                 delete item["#isDirty"];
             });
-//            //TODO: there´s a bug in potential here, after we´re adding an item to a composition the parentdata is getting inconsistent
-//            //but it´s rather on the save fn
-//            $scope.parentdata.fields[$scope.relationship] = [];
+
+
+            //readding the necessary watches
+            $scope.compositionData().forEach(function (value, index, array) {
+                //for eventually already existing items
+                const itemId = schemaService.getId(value, $scope.compositionlistschema);
+                const watches = crud_inputcommons.configureAssociationChangeEvents($scope,
+                    "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, itemId);
+                watches.push(watchForDirty(index));
+
+                $scope.unWatcherArray = watches;
+            });
+
+            
         };
 
 

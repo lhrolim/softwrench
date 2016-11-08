@@ -252,26 +252,14 @@ angular.module('sw_layout')
                         var originalDatamap = {
                             fields: datamap,
                         };
-                        inventoryServiceCommons.returnConfirmation(null, transformedData, {
-                            continue: function () {
-                                // TODO: update so that mock client validation is not necessary
-                                sessionStorage.mockclientvalidation = true;
-                                $rootScope.$broadcast('sw_submitdata', {
-                                    successCbk: function (data) {
-                                        sessionStorage.mockclientvalidation = false;
-                                        $rootScope.$broadcast('sw_refreshgrid');
-                                    },
-                                    failureCbk: function (data) {
-                                        sessionStorage.mockclientvalidation = false;
-                                    },
-                                    isComposition: false,
-                                    selecteditem: transformedData,
-                                    originalDatamap: originalDatamap,
-                                });
-                            },
+                        return inventoryServiceCommons.returnConfirmation(null, transformedData).then(() => {
+                            sessionStorage.mockclientvalidation = true;
+                            return applicationService.save({ selecteditem: transformedData, originalDatamap: originalDatamap }).then(data => {
+                                $rootScope.$broadcast('sw_refreshgrid');
+                            }).finally(() => {
+                                sessionStorage.mockclientvalidation = false;
+                            });
                         });
-
-                        return;
                     } else {
                         detail = 'editinvissuedetail';
                     }

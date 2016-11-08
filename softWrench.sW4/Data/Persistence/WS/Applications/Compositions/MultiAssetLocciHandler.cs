@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -36,6 +37,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
+                //need to force refresh, otherwise a second update would fail until the page is refreshed
+                entity.ReloadMode= ReloadMode.FullRefresh;
                 // increment the value of the id for the next record in loop
                 multiid++;
             });

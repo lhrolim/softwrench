@@ -1,19 +1,16 @@
 ﻿(function (angular) {
     "use strict";
 
-    function paePrService($rootScope, crudContextHolderService, crudCrawlService) {
+    function paePrService($rootScope, crudContextHolderService, crudCrawlService, applicationService) {
         //#region Utils
         function changeStatus(status, datamap) {
             datamap["status"] = status;
-            const parameters = {
-                successCbk: function () {
-                    crudCrawlService.forwardAction();
-                },
-                failureCbk: function() {
+
+            applicationService.save().then(crudCrawlService.forwardAction)
+                .catch(() => {
                     datamap["status"] = "WAPPR";
-                }
-            }
-            $rootScope.$broadcast("sw_submitdata", parameters);
+                });
+
         }
         //#endregion
 

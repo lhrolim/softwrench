@@ -13,8 +13,8 @@ namespace softWrench.sW4.Data.API.Response {
 
 
         private readonly AssociationMainSchemaLoadResult _associationOptions;
-                    
 
+        public bool FullRefresh { get; set; } = false;
 
 
         public ApplicationDetailResult(DataMap dataMap, AssociationMainSchemaLoadResult associationOptions,

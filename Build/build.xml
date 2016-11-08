@@ -4,7 +4,7 @@
   <property name="debug" value="true" overwrite="false" />
 
   <property name="IsWindows" value="${platform::is-windows()}"/>
-  <property name="MSBuildPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe" />
+  <property name="MSBuildPath" value="C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe" />
   <property name="MSDeployPath" value="C:\Program Files (x86)\IIS\Microsoft Web Deploy V3\msdeploy.exe" />
   <!--   <property name="MSTestPath" value="c:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSTest.exe" />-->
   <property name="SolutionFile" value="../softWrench.sW4.sln" />

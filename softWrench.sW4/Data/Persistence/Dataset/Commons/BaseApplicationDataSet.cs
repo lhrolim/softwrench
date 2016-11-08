@@ -626,13 +626,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var result = DoExecute(operationWrapper);
             var operationData = operationWrapper.OperationData();
             var crudOperationData = operationData as CrudOperationData;
-            if (crudOperationData == null || !crudOperationData.ReloadAfterSave) {
+            if (crudOperationData == null || crudOperationData.ReloadMode.Equals(ReloadMode.None)) {
                 return result;
             }
-
+            if (crudOperationData.ReloadMode.Equals(ReloadMode.FullRefresh)) {
+                result.FullRefresh = true;
+                return result;
+            }
+            //Main detail reload mode... full refresh would be handled at a higher level
             var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             result.ResultObject = AsyncHelper.RunSync(() => Engine().FindById(slicedEntityMetadata, id, userIdSite));
             return result;
+
+
         }
 
         public virtual TargetResult DoExecute(OperationWrapper operationWrapper) {
@@ -717,7 +723,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     tasks.Add(DoResolveOptionFields(application, cruddata, optionField, resultObject));
 
                 } else {
-                
+
 
                     var searchRequest = BaseDataSetSearchHelper.BuildSearchDTOForAssociationSearch(request, association, cruddata);
 
@@ -727,7 +733,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         continue;
                     }
 
-                    tasks.Add(DoResolveOptionAssociations(application, cruddata,association,searchRequest,resultObject));
+                    tasks.Add(DoResolveOptionAssociations(application, cruddata, association, searchRequest, resultObject));
                 }
             }
 
@@ -750,7 +756,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
         }
 
-        private async Task DoResolveOptionAssociations(ApplicationMetadata application, AttributeHolder cruddata, ApplicationAssociationDefinition association,PaginatedSearchRequestDto searchRequest,
+        private async Task DoResolveOptionAssociations(ApplicationMetadata application, AttributeHolder cruddata, ApplicationAssociationDefinition association, PaginatedSearchRequestDto searchRequest,
          IDictionary<string, BaseAssociationUpdateResult> resultObject) {
             var associationApplicationMetadata =
                     ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);

@@ -32,7 +32,7 @@
                 }
 
                 // covers a redirect for same application and schema but to another entry
-                $rootScope.$on("sw_applicationrendered", function (event,applicationName, renderedSchema) {
+                $rootScope.$on("sw_applicationrendered", function (event, applicationName, renderedSchema) {
                     scope.schema = renderedSchema;
                     $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
                 });
@@ -107,7 +107,7 @@
 
             controller: function ($scope, $http, $q, $element, $rootScope, $filter, $injector,
             formatService, fixHeaderService, dispatcherService,
-            searchService, tabsService, crudCrawlService, 
+            searchService, tabsService, crudCrawlService,
             fieldService, commandService, i18NService,
             submitService, redirectService,
             associationService, crudContextHolderService, alertService,
@@ -451,7 +451,7 @@
                     parameters = addSchemaDataToParameters(parameters, $scope.schema);
                     const deleteParams = $.param(parameters);
                     const deleteURL = removeEncoding(url("/api/data/" + applicationName + "/" + id + "?" + deleteParams));
-                    $http.delete(deleteURL)
+                    return $http.delete(deleteURL)
                         .success(function (data) {
                             defaultSuccessFunction(data);
                         });
@@ -491,13 +491,13 @@
                         const validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap, errorForm);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
-                            return;
+                            return $q.reject();
                         }
                         const result = modalSavefn($scope.datamap, schemaToSave);
                         if (result && result.then) {
                             result.then(() => modalService.hide());
                         }
-                        return;
+                        return $q.reject();
                     }
 
                     var selecteditem = parameters.selecteditem;
@@ -517,18 +517,18 @@
                     var transformedFields = angular.copy(fields);
                     const eventParameters = {
                         originaldatamap: originalDatamap,
-                        'continue': function () {
-                            $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
-                        }
                     };
-                    const eventResult = eventService.beforesubmit_prevalidation(schemaToSave, transformedFields, eventParameters);
-                    if (eventResult === false) {
-                        //this means that the custom service should call the continue method
-                        log.debug('waiting on custom prevalidation to invoke the continue function');
-                        return;
-                    }
 
-                    $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
+                    const prevalidation = eventService.beforesubmit_prevalidation(schemaToSave, transformedFields, eventParameters);
+                    return $q.when(prevalidation).then(eventResult => {
+                        if (eventResult === false) {
+                            log.debug('Validation failed, returning');
+                            return;
+                        }
+                        $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
+                    });
+
+
                 };
 
                 $scope.validateSubmission = function (selecteditem, parameters, transformedFields, schemaToSave) {
@@ -539,7 +539,7 @@
                         const validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, transformedFields, $scope.crudform.$error);
                         if (validationErrors.length > 0) {
                             //interrupting here, can´t be done inside service
-                            return;
+                            return $q.reject();
                         }
                     }
 
@@ -557,14 +557,16 @@
                         if (eventResult === false) {
                             //this means that the custom postvalidator should call the continue method
                             log.debug('waiting on custom postvalidator to invoke the continue function');
-                            return;
+                            return $q.when();
                         }
-                        $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave);
+                        return $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave).then(httpResult => {
+                            return $scope.onServerResult(httpResult, parameters.successCbk);
+                        });
                     });
-                    
+
                 };
 
-                $scope.setSetIdAfterCreation = function (data) {
+                $scope.setIdAfterCreation = function (data) {
                     const fields = $scope.datamap;
                     if (data && data.id && fields &&
                         /* making sure not to update when it's not creation */
@@ -576,6 +578,44 @@
                     }
                 }
 
+
+                $scope.onServerResult = function (httpResult, successCbk) {
+                    crudContextHolderService.afterSave();
+                    const data = httpResult.data;
+
+                    if (data.fullRefresh) {
+                        window.location.reload();
+                        return $q.when();
+                    }
+
+                    const responseDataMap = data.resultObject;
+                    if (!data.type.equalsAny("BlankApplicationResponse")) {
+
+                        // handle the case where the datamap had lazy compositions already fetched
+                        // and the response does not have them (for performance reasons)
+                        if (!data.type.equalsAny("ApplicationListResult")) {
+                            compositionService.updateCompositionDataAfterSave($scope.schema, $scope.datamap, responseDataMap);
+                        }
+
+                        // not necessary to update the complete datamap after a composition save
+                        if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
+                            angular.extend($scope.datamap, responseDataMap);
+                        }
+                    }
+
+                    $scope.setIdAfterCreation(data);
+
+                    if (successCbk == null) {
+                        defaultSuccessFunction(data);
+                    } else {
+                        successCbk(data);
+                    }
+
+                    crudContextHolderService.updateOriginalDatamap($scope.datamap);
+                    $rootScope.$emit(JavascriptEventConstants.CrudSaved, data);
+                    $rootScope.$broadcast(JavascriptEventConstants.CrudSaved, data);
+                    return data;
+                }
 
                 $scope.submitToServer = function (selecteditem, parameters, transformedFields, schemaToSave) {
                     $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
@@ -592,12 +632,7 @@
                     associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
                     submitService.handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
 
-
-                    var successCbk = parameters.successCbk;
-                    var failureCbk = parameters.failureCbk;
                     const nextSchemaObj = parameters.nextSchemaObj;
-                    var applyDefaultSuccess = parameters.applyDefaultSuccess;
-                    const applyDefaultFailure = parameters.applyDefaultFailure;
                     const isComposition = parameters.isComposition;
                     const applicationName = schemaToSave.applicationName;
                     const idFieldName = schemaToSave.idFieldName;
@@ -615,7 +650,7 @@
                         if (formToSubmitId != null) {
                             const form = $(formToSubmitId);
                             submitService.submitForm(form, submissionParameters, jsonString, applicationName);
-                            return;
+                            return $q.when();
                         }
                     }
 
@@ -626,46 +661,12 @@
                     $log.getInstance("crud_body#submit").debug(jsonString);
                     const urlToUse = url("/api/data/" + applicationName + "/");
                     const command = id == null ? $http.post : $http.put;
-                    command(urlToUse, jsonString)
-                        .then(function (result) {
-                            crudContextHolderService.afterSave();
-                            const data = result.data;
-                            const responseDataMap = data.resultObject;
-                            if (!data.type.equalsAny("BlankApplicationResponse")) {
-
-                                // handle the case where the datamap had lazy compositions already fetched
-                                // and the response does not have them (for performance reasons)
-                                if (!data.type.equalsAny("ApplicationListResult")) {
-                                    compositionService.updateCompositionDataAfterSave($scope.schema, $scope.datamap, responseDataMap);
-                                }
-
-                                // not necessary to update the complete datamap after a composition save
-                                if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
-                                    angular.extend($scope.datamap, responseDataMap);
-                                }
-                            }
-
-                            $scope.setSetIdAfterCreation(data);
-
-                            if (successCbk == null || applyDefaultSuccess) {
-                                defaultSuccessFunction(data);
-                            }
-                            if (successCbk != null) {
-                                successCbk(data);
-                            }
-
-                            crudContextHolderService.updateOriginalDatamap($scope.datamap);
-                            $scope.$emit(JavascriptEventConstants.CrudSaved, data);
-                        })
+                    return command(urlToUse, jsonString)
                         .catch(function (result) {
                             const exceptionData = result.data;
                             const resultObject = exceptionData.resultObject;
-                            $scope.setSetIdAfterCreation(resultObject);
-
-                            if (failureCbk != null) {
-                                failureCbk(exceptionData);
-                            }
-
+                            $scope.setIdAfterCreation(resultObject);
+                            return $q.reject(result);
                         });
                 };
 

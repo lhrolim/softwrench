@@ -2,9 +2,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", "alertService", "inventorySharedService", invissueService]);
+    angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", "alertService", "inventorySharedService", "applicationService", invissueService]);
 
-    function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService, inventorySharedService) {
+    function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService, inventorySharedService, applicationService) {
 
         var service = {
             afterChangeBin: afterChangeBin,
@@ -44,31 +44,18 @@
             inventoryServiceCommons.returnTransformation(null, transformedData);
             // Get the cost type
 
-            inventoryServiceCommons.returnConfirmation(null, transformedData, {
-                continue: function () {
-                    inventoryServiceCommons.updateInventoryCosttype({ fields: transformedData }, 'storeloc').then((dm) => {
+            inventoryServiceCommons.returnConfirmation(null, transformedData).then(() => {
+                inventoryServiceCommons.updateInventoryCosttype({ fields: transformedData }, 'storeloc').then((dm) => {
 
-                        var originalDatamap = {
-                            fields: datamap,
-                        };
-
-                        // TODO: update so that mock client validation is not necessary
-                        sessionStorage.mockclientvalidation = true;
-                        $rootScope.$broadcast('sw_submitdata', {
-                            successCbk: function (data) {
-                                sessionStorage.mockclientvalidation = false;
-                                searchService.refreshGrid();
-                            },
-                            failureCbk: function (data) {
-                                sessionStorage.mockclientvalidation = false;
-                            },
-                            isComposition: false,
-                            refresh: true,
-                            selecteditem: dm.fields,
-                            originalDatamap: originalDatamap,
-                        });
+                    var originalDatamap = {
+                        fields: datamap,
+                    };
+                    return applicationService.save({ refresh: true, selecteditem: dm.fields, originalDatamap: originalDatamap }).then(data => {
+                        $rootScope.$broadcast('sw_refreshgrid');
+                    }).finally(() => {
+                        sessionStorage.mockclientvalidation = false;
                     });
-                }
+                });
             });
         };
 

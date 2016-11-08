@@ -5,10 +5,10 @@ angular.module('sw_layout')
     .factory('scannerdetectionService', [
     "$log", "$http", "$rootScope", "$timeout", "restService", "searchService", "redirectService",
     "contextService", "alertService", "associationService", "modalService",
-    "fieldService", "submitService", "validationService", "commandService", "scanningCommonsService",
+    "fieldService", "submitService", "validationService", "commandService", "scanningCommonsService", "applicationService",
     function ($log, $http, $rootScope, $timeout, restService, searchService, redirectService,
             contextService, alertService, associationService, modalService,
-            fieldService, submitService, validationService, commandService, scanningCommonsService) {
+            fieldService, submitService, validationService, commandService, scanningCommonsService, applicationService) {
 
     var validateAssocationLookupFn = function (result, searchObj) {
         if (Object.keys(result).length != 1 ||
@@ -176,13 +176,7 @@ angular.module('sw_layout')
                     //If the user scan's the string '%SUBMIT%', then the sw_submitdata event
                     //will be called using the default submit functions/process
                     if (data == '%SUBMIT%') {
-                        var parameters = {};
-
-                        scope.$emit('sw_submitdata', {
-                            isComposition: false,
-                            selecteditem: scope.datamap
-                        });
-                        return;
+                        return applicationService.save({ isComposition: false, selecteditem: scope.datamap });
                     }
                     var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
                     var scanOrder = scanOrderString.split(",");

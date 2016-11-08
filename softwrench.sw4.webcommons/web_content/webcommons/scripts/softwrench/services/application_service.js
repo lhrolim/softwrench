@@ -25,9 +25,8 @@
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
-            var currentModule = contextService.retrieveFromContext('currentmodule');
-            var currentMetadata = contextService.retrieveFromContext('currentmetadata');
-
+            const currentModule = contextService.retrieveFromContext('currentmodule');
+            const currentMetadata = contextService.retrieveFromContext('currentmetadata');
             parameters.currentmodule = currentModule;
             parameters.currentmetadata = currentMetadata;
             var params = $.param(parameters);
@@ -78,42 +77,41 @@
          * }
          * 
          * 
-         * @returns {} 
+         * @returns {Promise} 
          */
-        function save(parameters) {
+
+        const defaultSaveParams = {
+            refresh:false
+        }
+
+        function save({compositionData,dispatcherComposition,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap} = defaultSaveParams) {
             var deferred = $q.defer();
 
-            var successCallBack = function (data) {
+            const successCallBack = function (data) {
                 deferred.resolve(data);
-            }
-
-            var failureCallback = function (data) {
-                deferred.reject(data);
-            }
-
-            parameters = parameters || {
-                refresh:false
             };
-
-            var isComposition = crudContextHolderService.getActiveTab() !== null;
-            var dispatchedByModal = parameters.dispatchedByModal;
+            const failureCallback = function (data) {
+                deferred.reject(data);
+            };
+        
+            const isComposition = crudContextHolderService.getActiveTab() !== null;
 
             if (dispatchedByModal == undefined) {
                 dispatchedByModal = crudContextHolderService.isShowingModal();
             }
 
-
-
             //TODO: refactor it entirely to use promises instead
             $rootScope.$broadcast("sw_submitdata", {
                 successCbk: successCallBack,
                 failureCbk: failureCallback,
-                isComposition: isComposition,
-                compositionData: parameters.compositionData,
-                dispatcherComposition: parameters.dispatcherComposition,
-                nextSchemaObj: parameters.nextSchemaObj,
-                dispatchedByModal: dispatchedByModal,
-                refresh: parameters.refresh
+                isComposition,
+                compositionData,
+                dispatcherComposition,
+                nextSchemaObj,
+                dispatchedByModal,
+                refresh,
+                selecteditem,
+                originalDatamap
             });
 
             return deferred.promise;
@@ -128,9 +126,9 @@
         function submitData(successCallBack, failureCallback, extraParameters) {
 
             extraParameters = extraParameters || {};
-            var isComposition = extraParameters.isComposition;
-            var nextSchemaObj = extraParameters.nextSchemaObj;
-            var refresh = extraParameters.refresh;
+            const isComposition = extraParameters.isComposition;
+            const nextSchemaObj = extraParameters.nextSchemaObj;
+            const refresh = extraParameters.refresh;
 
             //TODO: refactor it entirely to use promises instead
             $rootScope.$broadcast("sw_submitdata", {
@@ -154,8 +152,7 @@
             /// <param name="parameters">@deprecated --></param>
             /// <param name="jsonData"></param>
             parameters = fillApplicationParameters(parameters, applicationName, schemaId, mode);
-
-            var pageSize = userPreferencesService.getSchemaPreference("pageSize", applicationName, schemaId);
+            const pageSize = userPreferencesService.getSchemaPreference("pageSize", applicationName, schemaId);
             if (pageSize) {
                 // searchdto added only because user pref - should mark to add preselected filters
                 if (!parameters["SearchDTO"]) {
@@ -181,14 +178,12 @@
 
         function getPostPromise(applicationName, schemaId, parameters, datamap) {
             parameters = fillApplicationParameters(parameters, applicationName, schemaId, mode);
-            var postUrl = url("/api/data/" + applicationName);
-
-            var jsonWrapper = {
+            const postUrl = url("/api/data/" + applicationName);
+            const jsonWrapper = {
                 json: datamap,
                 requestData: parameters
-            }
-
-            var jsonString = angular.toJson(jsonWrapper);
+            };
+            const jsonString = angular.toJson(jsonWrapper);
             return $http.post(postUrl, jsonString);
         };
 
@@ -197,19 +192,17 @@
             parameters.Operation = operation;
 
             parameters = fillApplicationParameters(parameters, applicationName, schemaId, null);
-            var putUrl = url("/api/data/" + applicationName);
-
-            var jsonWrapper = {
+            const putUrl = url("/api/data/" + applicationName);
+            const jsonWrapper = {
                 json: datamap,
                 requestData: parameters
-            }
-
-            var jsonString = angular.toJson(jsonWrapper);
+            };
+            const jsonString = angular.toJson(jsonWrapper);
             return $http.put(putUrl, jsonString);
         }
 
         function getApplicationDataPromise(applicationName, schemaId, parameters) {
-            var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters);
+            const url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters);
             return $http.get(url);
         };
 
@@ -219,11 +212,11 @@
             if (initialData && !isString(initialData)) {               
                 initialData = angular.toJson(initialData);
             }
-            var url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters, initialData);
+            const url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters, initialData);
             return $http.post(url, initialData);
         };
 
-        var service = {
+        const service = {
             cancelDetail: cancelDetail,
             getApplicationUrl: getApplicationUrl,
             getPostPromise: getPostPromise,
@@ -233,7 +226,6 @@
             submitData: submitData,
             save: save
         };
-
         return service;
 
     }

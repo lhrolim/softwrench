@@ -531,7 +531,7 @@
             </commandgroup>
           </commandbars>
           <!--<event type="onvalidation" service="inventoryService" method="validateReturn"/>-->
-          <!--<event type="beforesubmit.prevalidation" service="inventoryService" method="submitReturnTransformation"/>-->
+          
           <event type="beforesubmit.onvalidation" service="inventoryService" method="validateReturn"/>
           <event type="beforesubmit.postvalidation" service="inventoryService" method="submitReturnConfirmation"/>
           <properties>
