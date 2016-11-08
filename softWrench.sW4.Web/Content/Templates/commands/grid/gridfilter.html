@@ -13,7 +13,7 @@
             </button>
         </div>
         
-        <select class="hidden-phone form-control combobox" style="width:120px"
+        <select class="hidden-phone form-control combobox"
                 ng-model="selectedfilter"
                 ng-options="option.alias for option in nonSharedFilters() track by option.id"
                 ng-change="filterChanged()">

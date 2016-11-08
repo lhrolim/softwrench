@@ -288,13 +288,15 @@
                     float: left;
                     height: 32px;
                     padding-left: 24px;
+                    margin-left: -10px;
                 }
 
                 .add-column-label {
                     position: relative;
                     top: 8px;
-                    left: -130px;
+                    left: 11px;
                     pointer-events: none;
+                    float: left;
                 }
 
                 .reset-order {
