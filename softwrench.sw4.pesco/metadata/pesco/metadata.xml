@@ -70,16 +70,31 @@
       <schemas>
 
         <list redeclaring="false" stereotype="list.selection">
+          <customization position="ticketid">
+            <field attribute="ticketid" label="SR#">
+              <renderer type="default" params="width=8%" />
+            </field>
+          </customization>
+          <customization position="reportedby">
+            <field attribute="reportedby" label="Reported By">
+              <renderer type="default" params="width=12%" />
+            </field>
+          </customization>
+          <customization position="owner">
+            <field attribute="owner" label="Owner">
+              <renderer type="default" params="width=12%" />
+            </field>
+            <field attribute="lostenergy3" label="Lost Energy" readonly="true" enableexpression="false">
+              <renderer type="checkbox" params="width=5%;formatter=numberToBoolean"/>
+            </field>
+            <field attribute="lostenergyamount" label="Lost Energy Amount" readonly="true" enableexpression="false" tooltip="Lost Energy Amount">
+              <renderer type="default" params="width=8%"/>
+            </field>
+          </customization>        
           <customization position="siteid">
             <field attribute="siteid" label="Site Id">
               <renderer type="default" params="width=12%"/>
             </field>
-          </customization>
-          <customization position="+owner">
-            <field attribute="lostenergy3" label="Lost Energy" readonly="true" enableexpression="false">
-              <renderer type="checkbox" params="formatter=numberToBoolean"/>
-            </field>
-            <field attribute="lostenergyamount" label="Lost Energy Amount" readonly="true" enableexpression="false" tooltip="Lost Energy Amount"/>
           </customization>
           <customization position="status">
             <field attribute="status" label="Status">
@@ -228,9 +243,19 @@
     <application name="asset" title="Asset" entity="asset">
       <schemas>
         <schema id="list" platform="web" redeclaring="false">
-          <customization position="+siteid">
-            <field attribute="pluspcustomer" label="Customer"/>
+          <customization position="status">
+            <field attribute="status" label="Status">
+              <renderer type="default" params="width=10%" />
+            </field>
           </customization>
+          <customization position="+siteid">
+            <field attribute="pluspcustomer" label="Customer">
+              <renderer type="default" params="width=12%" />
+            </field>
+          </customization>
+          <properties>
+            <property key="list.width.min" value="1280px"/>
+          </properties>
         </schema>
         <schema id="detail" title="Asset Detail" stereotype="detail" platform="web" redeclaring="false">
           <customization position="+item_.description">
@@ -252,6 +277,11 @@
       <schemas>
 
         <list title="Work Order Grid" platform="web" redeclaring="false" stereotype="list.selection">
+          <customization position="wonum">
+            <field attribute="wonum" label="WO#" >
+              <renderer type="default" params="width=8%" />
+            </field>
+          </customization>
           <customization position="siteid">
             <field attribute="siteid" label="Site Id">
               <renderer type="default" params="width=12%"/>
@@ -262,12 +292,25 @@
               <renderer type="statuscolor" params="width=10%" />
             </field>
           </customization>
-          <customization position="+asset_.description">
-            <field attribute="lostenergy" label="Lost Energy" readonly="true" enableexpression="false">
-              <renderer type="checkbox" />
+          <customization position="location">
+            <field attribute="location" label="Location">
+              <renderer type="default" params="width=12%" />
             </field>
-            <field attribute="lostenergyamount" label="Lost Energy Amount"/>
           </customization>
+          <customization position="asset_.description">
+            <field attribute="asset_.description" label="Asset Description">
+              <renderer type="default" params="width=12%" />
+            </field>
+            <field attribute="lostenergy" label="Lost Energy" readonly="true" enableexpression="false">
+              <renderer type="checkbox" params="width=5%;formatter=numberToBoolean"/>
+            </field>
+            <field attribute="lostenergyamount" label="Lost Energy Amount">
+              <renderer type="default" params="width=8%"/>
+            </field>
+          </customization>
+          <properties>
+            <property key="list.width.min" value="1280px"/>
+          </properties>
         </list>
 
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
@@ -315,6 +358,16 @@
               <dataprovider prefilterfunction="FilterStatusCodes"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
             </association>
+          </customization>
+          <customization position="worktype">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
+              <renderer type="lookup" params="inputsize=large"/>
+            </association>
+          </customization>
+          <customization position="wopriority">
+            <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
+              <renderer type="lookup" params="inputsize=large"/>
+            </optionfield>
           </customization>
 
           <customization position="multiassetlocci_"></customization>

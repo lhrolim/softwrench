@@ -324,7 +324,7 @@
             </field>
 
             <optionfield attribute="internalpriority" label="Priority" providerattribute="_SWPriorityType">
-              <renderer type="lookup" params="inputsize=small"/>
+              <renderer type="lookup"/>
             </optionfield>
           </section>
 
