@@ -68,9 +68,10 @@ namespace softWrench.sW4.Metadata.Security {
             }
 
             if (viewingExisting) {
-                if (!permission.AllowUpdate && !permission.AllowView) {
+                if (permission.HasNoPermissions) {
                     return SecurityModeCheckResult.Block;
-                } else if (!permission.AllowUpdate) {
+                }
+                if (!permission.AllowUpdate) {
                     //users can view, but using output mode only
                     return SecurityModeCheckResult.OutPut;
                 }
