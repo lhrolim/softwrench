@@ -582,7 +582,7 @@
 
     <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
       <attributes>
-        <attribute name="allkeywords" type="varchar" required="false" query="(SELECT keyworddesc + ',' AS 'data()' FROM solnkeyword INNER JOIN keyword ON solnkeyword.keyword = keyword.keyword WHERE solnkeyword.solution = !@solution FOR XML PATH(''))" />
+        <attribute name="allkeywords" type="varchar" required="false" query="(SUBSTRING((SELECT ','+keyworddesc AS 'data()' FROM solnkeyword INNER JOIN keyword ON solnkeyword.keyword = keyword.keyword WHERE solnkeyword.solution = !@solution FOR XML PATH('')), 2, 1000))" />
         <attribute name="pluspinsertcustomer" type="varchar" required="false" />
         <attribute name="assignedownergroup" type="varchar" required="false" />
         <attribute name="expdate" type="datetime" required="false" />
@@ -1723,6 +1723,9 @@
           <customization position="status">
             <field attribute="status" label="Status">
               <renderer type="statuscolor" params="grid=solution;column=status" />
+            </field>
+            <field attribute="allkeywords" label="Keywords">
+              <renderer type="default"/>
             </field>
           </customization>
 
