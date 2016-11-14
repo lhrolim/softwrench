@@ -30,7 +30,7 @@
   <property key="ui.adminmenu.showclassic" value="false"/>
   <property key="ui.toolbars.showlabels" value="true"/>
   <property key="iiscontextpath" value=""/>
-
+  
   <!-- tableau -->
   <property key="tableau_server" value="http://10.50.100.171" />
   <property key="tableau_username" value="swadmin" />

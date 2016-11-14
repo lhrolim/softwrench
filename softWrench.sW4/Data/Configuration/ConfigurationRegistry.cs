@@ -158,6 +158,22 @@ namespace softWrench.sW4.Data.Configuration {
                 DefaultValue = "MM/dd/yyyy hh:mm",
             });
 
+            facade.Register(ctes.JsErrorShowDevKey, new PropertyDefinition()
+            {
+                Description = "Show JS Error notifications in Dev/QA by default",
+                StringValue = "true",
+                DataType = "boolean",
+                CachedOnClient = true
+            });
+
+            facade.Register(ctes.JsErrorShowProdKey, new PropertyDefinition()
+            {
+                Description = "Hide JS Error notifications in Prod by default",
+                StringValue = "false",
+                DataType = "boolean",
+                CachedOnClient = true
+            });
+
 
             #region Password Config
             facade.Register(ctes.Password.MinLengthKey, new PropertyDefinition() {

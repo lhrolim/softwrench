@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using NHibernate.Util;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Configuration.Services {
-    public class ConfigurationCache : ISingletonComponent {
+    public class ConfigurationCache : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
         private static readonly ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, string>> ConfigCache = new ConcurrentDictionary<string, ConcurrentDictionary<ContextHolder, string>>();
 
         // client cache
@@ -17,6 +18,7 @@ namespace softWrench.sW4.Configuration.Services {
         private static long _cachedOnClientTimestamp = 0;
 
         private readonly ISWDBHibernateDAO _dao;
+        private bool _appStarted;
 
         public ConfigurationCache(ISWDBHibernateDAO dao) {
             _dao = dao;
@@ -93,13 +95,17 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         private void ClearCachedOnClientIfNeeded(string key) {
-            if (_dao == null) {
+            if (_dao == null || !_appStarted) {
                 return;
             }
             var keyCache = GetCacheableOnClientKeyCache();
             if (keyCache.Contains(key)) {
                 _cachedOnClientCache = null;
             }
+        }
+
+        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+            _appStarted = true;
         }
     }
 }

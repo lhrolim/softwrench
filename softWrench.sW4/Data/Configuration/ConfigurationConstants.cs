@@ -77,5 +77,9 @@
             public const string JobRefreshRate = "/Global/BulletinBoard/RefreshRate/Job";
             public const string UiRefreshRate = "/Global/BulletinBoard/RefreshRate/Ui";
         }
+
+        public const string JsErrorShowDevKey = "/Global/JsError/ShowDev";
+        public const string JsErrorShowProdKey = "/Global/JsError/ShowProd";
+
     }
 }

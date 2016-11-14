@@ -21,7 +21,7 @@ using System.IO;
 
 namespace softWrench.sW4.Util {
     public class ExcelUtil : ISingletonComponent {
-        
+
         private readonly I18NResolver _i18NResolver;
 
         private readonly IContextLookuper _contextLookuper;
@@ -36,7 +36,7 @@ namespace softWrench.sW4.Util {
             _i18NResolver = i18NResolver;
             _contextLookuper = contextLookuper;
             _statusColorsService = statusColorsService;
-            
+
             defaultDateTimeFormat = facade != null ? facade.Lookup<string>(ConfigurationConstants.DateTimeFormat) : "dd/MM/yyyy HH:mm";
         }
 
@@ -48,7 +48,7 @@ namespace softWrench.sW4.Util {
 
             var colorStatusDict = _statusColorsService.GetColorsAsDict(application);
 
-            if(colorStatusDict == null) {
+            if (colorStatusDict == null) {
                 colorStatusDict = _statusColorsService.GetColorsAsDict(application, true);
             }
 
@@ -111,7 +111,7 @@ namespace softWrench.sW4.Util {
 
                 writer.WriteEndElement();
                 writer.Close();
-                    
+
                 // write root element
                 writer = OpenXmlWriter.Create(xl.WorkbookPart);
                 writer.WriteStartElement(new Workbook());
@@ -122,7 +122,7 @@ namespace softWrench.sW4.Util {
                     SheetId = 1,
                     Id = xl.WorkbookPart.GetIdOfPart(worksheetpart)
                 });
-                    
+
                 // end Sheets
                 writer.WriteEndElement();
                 // end Workbook
@@ -339,10 +339,10 @@ namespace softWrench.sW4.Util {
             // no color
             createCellFormat(stylesPart, 0, 0, 0, 0, true);
 
-            foreach(var kwp in _cellStyleDictionary) {
+            foreach (var kwp in _cellStyleDictionary) {
                 createCellFormat(stylesPart, 0, 0, 0, Convert.ToUInt32(kwp.Value), true);
             }
-            
+
             // header style
             createCellFormat(stylesPart, 0, 1, 0, 0, true);
 
@@ -387,8 +387,7 @@ namespace softWrench.sW4.Util {
             _cellStyleDictionary.Add("header", "2");
 
             var i = 3;
-            foreach (var kvp in colors)
-            {
+            foreach (var kvp in colors) {
                 var fill = createColor(kvp.Value.StartsWith("#") ? kvp.Value.Substring(1) : kvp.Value);
                 stylesPart.Stylesheet.Fills.AppendChild(new Fill { PatternFill = fill });
 

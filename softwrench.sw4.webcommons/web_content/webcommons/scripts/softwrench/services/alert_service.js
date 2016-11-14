@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module('webcommons_services')
-        .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", alertService]);
+        .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", "$injector", alertService]);
 
-    function alertService($rootScope, $timeout, i18NService, notificationViewModel, $log, $q) {
+    function alertService($rootScope, $timeout, i18NService, notificationViewModel, $log, $q, $injector) {
         /**
         * @param {string} msg
         * @param {string} applicationName
@@ -167,6 +167,43 @@
             notifyexception,
             notifyWarning
         };
+
+       //display notification on JS error
+        $(window).on('error', function (evt) {
+            $timeout(function() {
+                //TODO: Replace $injector with configurationService, after circular dependency
+                var configService = $injector.get("configurationService");
+                var jsErrorAlertMaxNotifications = parseInt(configService.getConfigurationValue("/Global/JsError/MaxNotifications"));
+                var showAlert = true;
+
+                //if there already is a JS error, don't show another notification
+                notificationViewModel.messages.forEach(function (notification) {
+                    if (notification.type === 'dev') {
+                        showAlert = false;
+                    }
+                });
+                if (!showAlert) {
+                    return;
+                }
+
+                //check config values
+                var jsErrorAlertShowDev = configService.getConfigurationValue("/Global/JsError/ShowDev") === 'true';
+                var jsErrorAlertShowProd = configService.getConfigurationValue("/Global/JsError/ShowProd") === 'true';
+                if ($rootScope.environment.indexOf('dev1') >= 0 || $rootScope.environment.indexOf('qa') >= 0) {
+                    if (!jsErrorAlertShowDev) {
+                        return;
+                    }
+                } else {
+                    if (!jsErrorAlertShowProd) {
+                        return;
+                    }
+                }
+
+                //get the javascript event & display message
+                var e = evt.originalEvent;
+                notificationViewModel.createNotification('dev', null, e.message, e.type, e.error.message, e.error.stack);
+            }, 2000);
+        });
 
         return service;
     }
