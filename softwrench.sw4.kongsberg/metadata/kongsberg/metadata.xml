@@ -79,7 +79,8 @@
         <attribute name="isknownerror" type="smallint" required="true" />
         <attribute name="isknownerrordate" type="datetime" required="false" />
         <attribute name="langcode" type="varchar" required="true" />
-        <attribute name="location" type="varchar" required="false" />
+        <attribute name="license" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />        
         <attribute name="oncallautoassign" type="smallint" required="true" />
         <attribute name="oncallfirstrotassnperson" type="varchar" required="false" />
         <attribute name="oncallownergroup" type="varchar" required="false" />
@@ -291,7 +292,11 @@
         <relationship to="alndomain" qualifier="servicecompanytype">
           <relationshipAttribute from="servicecompanytype" to="value" primary="true" />
           <relationshipAttribute to ="domainid" literal="SERVCOMPTYPE" quoteLiteral="true"/>        
-        </relationship>		
+        </relationship>
+        <relationship to="alndomain" qualifier="license">
+          <relationshipAttribute from="license" to="value" primary="true" />
+          <relationshipAttribute to ="domainid" literal="LICENSETYPE" quoteLiteral="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="sr" />
@@ -989,6 +994,12 @@
               </field>
               <field label="Well Name:" attribute="wellname" />
               <association label ="Service Company Type:" target="servicecompanytype" labelfield="servicecompanytype_.description">
+                <renderer type="lookup" />
+              </association>
+              <association label ="License:" target="license" labelfield="license_.description">
+                <renderer type="lookup" />
+              </association>
+              <association label="Asset" target="assetnum" labelfield="asset_.description">
                 <renderer type="lookup" />
               </association>
             </section>
