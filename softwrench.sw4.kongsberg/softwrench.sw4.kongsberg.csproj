@@ -107,6 +107,7 @@
   <ItemGroup>
     <Content Include="web_content\kongsberg\images\footer.jpg" />
     <Content Include="web_content\kongsberg\images\header-email.jpg" />
+    <Content Include="web_content\kongsberg\scripts\statusHandlerService.js" />
     <Content Include="web_content\kongsberg\scripts\kongsbergcommunication_service.js" />
     <EmbeddedResource Include="metadata\kongsberg\menu.mobile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
