@@ -12,6 +12,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
 
             HandleActualDates(maximoTemplateData);
             SetSwChangeBy(sr);
+            SetReloadAfterSave(maximoTemplateData);
 
             base.BeforeUpdate(maximoTemplateData);
         }

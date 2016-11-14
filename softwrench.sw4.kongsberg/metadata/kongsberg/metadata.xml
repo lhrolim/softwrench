@@ -351,6 +351,7 @@
 
     <entity name="incident" idAttribute="ticketuid" useridAttribute="ticketid">
       <attributes>
+        <attribute name="originalstatus" query="!@status" type="varchar"/>
         <attribute name="accumulatedholdtime" type="float" required="false" />
         <attribute name="accumulateslaholdtime" type="smallint" required="false" query="(select COALESCE(slahold, 0) from slarecords sla inner join pluspservagree on sanum = sla.slanum where ownertable = 'TICKET' and ownerid = !@ticketuid)" />
         <attribute name="actlabcost" type="double" required="true" />
@@ -1073,6 +1074,7 @@
             <field attribute="ticketid" label="SR#" readonly="true" requiredexpression="true" />
             <optionfield label="Status:" attribute="status">
               <renderer type="combo" />
+              <filter clientfunction="statusHandlerService.filterSelectableOptions"/>
               <option label="Duplicate" value="DUPLICATE"/>
               <option label="Closed" value="CLOSED"/>
               <option label="Edited in History" value="HISTEDIT"/>
@@ -1212,7 +1214,7 @@
           <properties>
             <property key="detail.showtitle" value="true"/>
           </properties>
-
+          <field attribute="originalstatus" hidden="true"/>
           <field attribute="actlabcost" default="0" hidden="true" />
           <field attribute="actlabhrs" default="0" hidden="true" />
           <field attribute="ticketuid" label="Incident Id:" hidden="true" />
@@ -1377,6 +1379,7 @@
             </field>
             <optionfield attribute="status" label="Status" requiredexpression="true" default="NEW">
               <renderer type="combo" params="inputsize=medium" />
+              <filter clientfunction="statusHandlerService.filterSelectableOptions"/>
               <option label="Closed" value="CLOSED" />
               <option label="In Progress" value="INPROG" />
               <option label="New" value="NEW" />

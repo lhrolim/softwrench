@@ -560,7 +560,7 @@
                             return $q.when();
                         }
                         return $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave).then(httpResult => {
-                            return $scope.onServerResult(httpResult, parameters.successCbk);
+                            return $scope.onServerResult(httpResult, parameters);
                         });
                     });
 
@@ -579,7 +579,7 @@
                 }
 
 
-                $scope.onServerResult = function (httpResult, successCbk) {
+                $scope.onServerResult = function (httpResult, parameters) {
                     crudContextHolderService.afterSave();
                     const data = httpResult.data;
 
@@ -605,10 +605,10 @@
 
                     $scope.setIdAfterCreation(data);
 
-                    if (successCbk == null) {
+                    if (parameters.successCbk == null) {
                         defaultSuccessFunction(data);
                     } else {
-                        successCbk(data);
+                        parameters.successCbk(data);
                     }
 
                     crudContextHolderService.updateOriginalDatamap($scope.datamap);
