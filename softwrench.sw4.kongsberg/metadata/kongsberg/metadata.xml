@@ -586,6 +586,34 @@
       </connectorParameters>
     </entity>
 
+    <entity name="solnkeyword" idAttribute="solnkeywordid">
+      <attributes>
+        <attribute name="solnkeywordid" type="bigint" required="true" />
+        <attribute name="solution" type="varchar" required="true" />
+        <attribute name="keyword" type="varchar" required="true" />
+      </attributes>
+    </entity>
+
+    <entity name="keyword" idAttribute="keywordid">
+      <attributes>
+        <attribute name="keywordid" type="bigint" required="true" />
+        <attribute name="keyword" type="varchar" required="true" />
+        <attribute name="keyworddesc" type="varchar" required="true" />
+        <attribute name="extsolnid" type="varchar"/>
+      </attributes>
+
+      <relationships>
+        <relationship to="solnkeyword">
+          <relationshipAttribute from="keyword" to="keyword" primary="true"/>
+        </relationship>
+      </relationships>
+      
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="keyword" />
+        <connectorParameter key="integration_interface" value="SWKEYWORD" />
+      </connectorParameters>
+    </entity>
+
     <entity name="solution" idAttribute="solutionid" useridAttribute="solution">
       <attributes>
         <attribute name="allkeywords" type="varchar" required="false" query="(SUBSTRING((SELECT ','+keyworddesc AS 'data()' FROM solnkeyword INNER JOIN keyword ON solnkeyword.keyword = keyword.keyword WHERE solnkeyword.solution = !@solution FOR XML PATH('')), 2, 1000))" />
@@ -630,7 +658,16 @@
           <relationshipAttribute from="status" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="SOLUTIONSTATUS" quoteLiteral="true" />
         </relationship>
+        <relationship to="solnkeyword" collection="true">
+          <relationshipAttribute from="solution" to="solution" primary="true"/>
+        </relationship>
+        <relationship to="keyword" collection="true">
+          <relationshipAttribute from="solution" to="solnkeyword_.solution" primary="true"/>
+        </relationship>
       </relationships>
+      <connectorParameters>
+        <connectorParameter key="customconnector" value="softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector.KongsbergSolutionCrudConnector" />
+      </connectorParameters>
     </entity>
 
     <entity name="worklog" idAttribute="worklogid" >
@@ -1704,6 +1741,16 @@
       </schemas>
     </application>
 
+    <application name="keyword" title="Keyword" entity="keyword">
+      <schemas>
+        <schema id="keyworddetail" stereotype="detail">
+          <field attribute="keywordid" hidden="true"/>
+          <field attribute="keyword" hidden="true"/>
+          <field attribute="keyworddesc" label="Keyword"/>
+        </schema>
+      </schemas>
+    </application>
+    
     <application name="solution" title="solution" entity="solution">
        <filters>
         <booleanfilter attribute="selfservaccess"/>
@@ -1722,7 +1769,7 @@
           </customization>
           <customization position="description">
             <field attribute="description" label="Description">
-              <renderer type="default"/>
+              <renderer type="default" params="width=33%"/>
             </field>
             <field attribute="selfservaccess" label="Self-Service">
               <renderer type="checkbox" params="filteronly=true;formatter=numberToBoolean"/>
@@ -1739,7 +1786,7 @@
               <renderer type="statuscolor" params="grid=solution;column=status" />
             </field>
             <field attribute="allkeywords" label="Keywords">
-              <renderer type="default"/>
+              <renderer type="default" params="width=20%"/>
             </field>
           </customization>
 
@@ -1790,7 +1837,7 @@
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SlnClassStructureType">
               <renderer type="autocompleteclient" />
             </optionfield>
-            <field label="Keywords" attribute="allkeywords" readonly="true">
+            <field label="Keywords" attribute="allkeywords">
               <renderer type="default" />
             </field>
           </section>

@@ -37,21 +37,14 @@
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.1.4\lib\net46\cts.commons.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cts.commons">
+      <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.1.4\lib\net46\cts.commons.persistence.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cts.commons.persistence">
+      <HintPath>..\packages\cts.commons.persistence.1.2.1.6\lib\net46\cts.commons.persistence.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.4\lib\net46\cts.commons.simpleinjector.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="cts.commons.web, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.web.1.2.1.4\lib\net46\cts.commons.web.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cts.commons.simpleinjector">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="DotLiquid">
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
@@ -100,8 +93,8 @@
       <HintPath>..\packages\softwrench.sW4.audit.1.0.0\lib\net46\softwrench.sW4.audit.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.0.0.1\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.34730, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
