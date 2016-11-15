@@ -2653,7 +2653,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </section>
           <section id="specification" showexpression="@asset!=null" resourcepath="/Content/Templates/crud/update_section.html" parameters="detaildescription=Specifications">
             <header displacement="sameline" label="Specifications"/>
-            <field attribute="asset_.computername" label="Computer Name" />
+            <field attribute="asset_.computername" label="Computer Name"  />
             <field attribute="asset_.serialnum" label="Serial Number" />
             <field attribute="asset_.item_.description" label="Product" />
             <field attribute="asset_.installdate" label="Install Date" />
