@@ -29,7 +29,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         internal const string PhoneClassStructure = "43191511";
 
 
-        private static readonly string StdClassificationPathChild = StdClassificationPath.Fmt("43211902");
+        private static readonly string StdClassificationPathChild = StdClassificationPath.Fmt("43211900");
 
         internal static readonly string StdClassificationPathParent = StdClassificationPath.Fmt("43211500");
 

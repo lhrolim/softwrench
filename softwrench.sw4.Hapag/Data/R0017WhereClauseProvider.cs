@@ -68,11 +68,17 @@ namespace softwrench.sw4.Hapag.Data {
                 sb.AppendFormat("asset.status != '{0}' and ", AssetConstants.Decommissioned);
             }
             foreach (var location in locations) {
+                if (i == 0) {
+                    sb.Append(" ( ");
+                }
+
                 i++;
                 sb.Append(String.Format("(asset.pluspcustomer in ('{0}') and {1})",
                     location.SubCustomer, location.CostCentersForQuery("asset.glaccount")));
                 if (i < locations.Count()) {
                     sb.Append(" or ");
+                } else {
+                    sb.Append(" ) ");
                 }
             }
             return sb.ToString();

@@ -237,9 +237,11 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 (string)parameters.OriginalEntity.GetAttribute("toitc"));
         }
 
-        public IEnumerable<IAssociationOption> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters) {
-
-            return LocationManager.FindCostCentersOfITC((string)parameters.OriginalEntity.GetAttribute("fromlocation"));
+        public IEnumerable<IAssociationOption> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters)
+        {
+            var subCustomer = (string)parameters.OriginalEntity.GetAttribute("fromlocation");
+            var itcOfAsset = (string)parameters.OriginalEntity.GetAttribute("asset_.primaryuser_.personid");
+            return LocationManager.FindCostCentersOfITC(subCustomer, itcOfAsset);
         }
 
         public IEnumerable<IAssociationOption> GetBuildingToLocation(OptionFieldProviderParameters parameters) {
