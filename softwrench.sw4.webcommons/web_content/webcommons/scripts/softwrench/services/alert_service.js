@@ -189,7 +189,7 @@
                 //check config values
                 var jsErrorAlertShowDev = configService.getConfigurationValue("/Global/JsError/ShowDev") === 'true';
                 var jsErrorAlertShowProd = configService.getConfigurationValue("/Global/JsError/ShowProd") === 'true';
-                if ($rootScope.environment.indexOf('dev1') >= 0 || $rootScope.environment.indexOf('qa') >= 0) {
+                if ($rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0) {
                     if (!jsErrorAlertShowDev) {
                         return;
                     }
