@@ -111,7 +111,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         }
 
-        public TargetResult CreateAndSubmit(string application, string schema, JObject datamap, string itemids = "", string alias = null) {
+        public TargetResult CreateAndSubmit(string application, string schema, JObject datamap, string itemids = "", string alias = null, BatchOptions options = null) {
             var userId = SecurityFacade.CurrentUser().DBId;
             var configurer = _configurerProvider.LookupItem(application, schema, ApplicationConfiguration.ClientName);
 
@@ -126,12 +126,12 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 ItemIds = itemids,
                 DataMapJsonAsString = datamap.ToString()
             };
-            var options = configurer.GenerateOptions(batch);
+            options = options ?? configurer.GenerateOptions(batch);
             if (options.GenerateReport) {
                 //no need to store it if there´ll be no report stored
                 batch = _dao.Save(batch);
             }
-            return Submit(batch, datamap);
+            return Submit(batch, datamap, options);
         }
 
         public void SubmitTransientBatch(TransientBatchOperationData adapter) {

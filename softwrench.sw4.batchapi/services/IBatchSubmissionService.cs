@@ -7,7 +7,7 @@ namespace softwrench.sw4.batch.api.services {
     public interface IBatchSubmissionService : ISingletonComponent {
         TargetResult Submit(MultiItemBatch multiItemBatch, JObject jsonOb = null, BatchOptions options = null);
 
-        TargetResult CreateAndSubmit(string application, string schema, JObject datamap, string itemIds = "", string alias = null);
+        TargetResult CreateAndSubmit(string application, string schema, JObject datamap, string itemIds = "", string alias = null, BatchOptions options = null);
 
         /// <summary>
         /// Invokes the list of operations in parallel, using the number of threads provided as the BatchOption parameter.

@@ -1,24 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
+using log4net;
 using softWrench.sW4.Util;
 using Local = softWrench.sW4.Web.Util.StaticFileLoad.Bundles.Local;
 using Prod = softWrench.sW4.Web.Util.StaticFileLoad.Bundles.Distribution;
 
 namespace softWrench.sW4.Web.Util.StaticFileLoad {
-    public static class StaticFileTagRenderer {
+    public static class StaticFileTagRenderer
+    {
 
-        public static ICollection<HtmlString> RenderScripts() {
+        private static ILog Log = LogManager.GetLogger(typeof (StaticFileTagRenderer));
+
+        public static ICollection<IHtmlString> RenderScripts()
+        {
+            
             var scripts = ApplicationConfiguration.IsLocal() ? Local.Scripts : Prod.Scripts;
             var scriptTags = scripts.Select(path => RowStampScriptHelper.Render(path));
-            return RenderDistinctTags(scriptTags, "</script>");
+            var watch = Stopwatch.StartNew();
+//            var renderScripts = RenderDistinctTags(scriptTags, "</script>");
+            watch.Stop();
+            Log.DebugOrInfoFormat("static rendering scripts, took {0} ms", watch.ElapsedMilliseconds);
+            return scriptTags.ToList();
         }
 
         public static ICollection<HtmlString> RenderStyles() {
+            var watch = Stopwatch.StartNew();
             var styles = ApplicationConfiguration.IsLocal() ? Local.Styles : Prod.Styles;
             var styleTags = styles.Select(path => RowStampScriptHelper.RenderCss(path));
-            return RenderDistinctTags(styleTags, "/>");
+            var renderDistinctTags = RenderDistinctTags(styleTags, "/>");
+            watch.Stop();
+            Log.DebugOrInfoFormat("static rendering styles, took {0} ms", watch.ElapsedMilliseconds);
+            return renderDistinctTags;
         }
 
         /// <summary>

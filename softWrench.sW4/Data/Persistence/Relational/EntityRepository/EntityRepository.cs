@@ -270,16 +270,21 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             return _maximoHibernateDao;
         }
 
-        public static int GetNextEntityId([NotNull] EntityMetadata entityMetadata) {
+        public static int GetNextEntityId([NotNull] EntityMetadata entityMetadata, string fieldName = null) {
             if (entityMetadata == null) throw new ArgumentNullException("entityMetadata");
-            var query = "Select MAX({0}) from {1}".FormatInvariant(entityMetadata.IdFieldName, entityMetadata.GetTableName());
+
+            fieldName = fieldName ?? entityMetadata.IdFieldName;
+            var query = "Select MAX({0}) from {1}".FormatInvariant(fieldName, entityMetadata.GetTableName());
             var id = MaximoHibernateDAO.GetInstance().FindSingleByNativeQuery<object>(query, null);
-            var rnd = new Random();
-            // To avoid concurrency issues with maximo we will use a range of 5-15 higher than the max.
-            // Using the range also lowers the chance of two users in SW submitting new records at the same time and causing a similar issue.
-            var newId = Convert.ToInt32(id) + rnd.Next(5, 15);
+            var newId = Convert.ToInt32(id) + GetRandomIncrement();
             return newId;
         }
 
+        public static int GetRandomIncrement() {
+            var rnd = new Random();
+            // To avoid concurrency issues with maximo we will use a range of 5-15 higher than the max.
+            // Using the range also lowers the chance of two users in SW submitting new records at the same time and causing a similar issue.
+            return rnd.Next(5, 15);
+        }
     }
 }

@@ -125,10 +125,10 @@ namespace softWrench.sW4.Web {
 
             // app scripts
             var appBundle = new ScriptBundle(Bundles.Local.AppScripts)
-                .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
+//                .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
                 .Include("~/Content/Scripts/client/crud/aaa_layout.js")
-                .IncludeDirectory("~/Content/Shared/webcommons/scripts/softwrench/util", "*.js")
-                .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
+//                .IncludeDirectory("~/Content/Shared/webcommons/scripts/softwrench/util", "*.js")
+//                .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/services/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/", "*.js")

@@ -165,9 +165,9 @@
     <Reference Include="SimpleInjector">
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.0.0.1\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.35358, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
@@ -1162,7 +1162,6 @@
     <Content Include="Scripts\jquery-2.1.1.min.js" />
     <Content Include="Scripts\nugetexample.js" />
     <Content Include="Util\timezonelist.txt" />
-    <Content Include="web_content\problem\templates\problemsection.html" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />

@@ -5,7 +5,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class BaseSolutionCrudConnector : CrudConnectorDecorator {
+    public class BaseSolutionCrudConnector : CrudConnectorDecorator {
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             CommonTransaction(maximoTemplateData);
         }

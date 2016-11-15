@@ -80,6 +80,13 @@
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="softwrench.sw4.batch.api">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
+    </Reference>
+    <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -90,8 +97,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\com\cts\kongsberg\configuration\KogtGlobalPreferenceRegistry.cs" />
+    <Compile Include="classes\com\cts\kongsberg\connector\KeywordBatchConverter.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergProjectRequestCrudConnector.cs" />
+    <Compile Include="classes\com\cts\kongsberg\connector\KongsbergSolutionCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergServiceRequestCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergIncidentDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergProjectRequestDataSet.cs" />
@@ -107,7 +116,9 @@
   <ItemGroup>
     <Content Include="web_content\kongsberg\images\footer.jpg" />
     <Content Include="web_content\kongsberg\images\header-email.jpg" />
+    <Content Include="web_content\kongsberg\scripts\statusHandlerService.js" />
     <Content Include="web_content\kongsberg\scripts\kongsbergcommunication_service.js" />
+    <Content Include="web_content\problem\templates\problemsection.html" />
     <EmbeddedResource Include="metadata\kongsberg\menu.mobile.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
