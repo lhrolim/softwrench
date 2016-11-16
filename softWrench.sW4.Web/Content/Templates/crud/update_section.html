@@ -19,7 +19,7 @@
             <span>{{datamap[field.attribute]}}</span>
         </td>
         <td>
-            <input type="text" class="hidden-phone form-control" ng-model="datamap[fieldMetadata.id][$index]['#newvalue']"/>
+            <input type="text" class="hidden-phone form-control" ng-if="!field.isReadOnly" ng-model="datamap[fieldMetadata.id][$index]['#newvalue']"/>
         </td>
     </tr>
 </table>
