@@ -15,7 +15,7 @@
         
         <select class="hidden-phone form-control combobox"
                 ng-model="selectedfilter"
-                ng-options="option.alias for option in nonSharedFilters() track by option.id"
+                ng-options="option.alias for option in nonSharedFilters()"
                 ng-change="filterChanged()">
             <option value=""></option>
         </select>

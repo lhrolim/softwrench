@@ -134,9 +134,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             foreach (var key in _applications.Keys.Where(k => customerApps.Any(a => a.ApplicationName.EqualsIc(k)))) {
                 var baseQuery = _baseQueries[key];
                 var whereClause = await _whereClauseFacade.LookupAsync(key);
-                if (whereClause != null) {
-                    sb.Append(baseQuery.Fmt(whereClause.Query)).Append(" UNION ");
-                }
+                var query = (whereClause == null  || whereClause.IsEmpty()) ? "1=1" : whereClause.Query;
+                sb.Append(baseQuery.Fmt(query)).Append(" UNION ");
             }
             var queryString = sb.ToString();
             if (queryString.EndsWith(" UNION ")) {

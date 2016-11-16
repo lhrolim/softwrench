@@ -36,7 +36,7 @@
                 result = result.sort(compareFilters);
                 const previousFilter = checkpointService.getCheckPointAsFilter(application,schema);
                 if (previousFilter != null && previousFilter !== {}) {
-                    log.debug(`Adding previous filter for application ${application} and schema ${schema}`);
+                    log.debug(`Adding previous filter for application ${application} and schema ${schema}: ${previousFilter}`);
                     result.push(previousFilter);
                 }
                 return result;
@@ -63,7 +63,7 @@
                     if (applyDefault === "true") {
                         const previousFilter = checkpointService.getCheckPointAsFilter(applicationName, schemaId);
                         if (previousFilter) {
-                            log.debug(`applying default filter for ${applicationName}`);
+                            log.debug(`applying default filter for ${applicationName} ${previousFilter}`);
                             return previousFilter;
                         }
                     }
@@ -151,11 +151,17 @@
                 },
 
                 applyFilter: function (filter, searchOperator = {}, quickSearchDTO = {}, panelid = null) {
-                let searchDto = filter.searchDTO;
-                if (!searchDto) {
-                    searchDto = this.buildSearchDTOFromFilter(filter, searchOperator, quickSearchDTO, panelid)
-                }
-                return searchService.refreshGrid(searchDto.searchData, searchDto.searchOperator, searchDto);
+                    let searchDto = filter.searchDTO;
+                    if (!searchDto) {
+                        searchDto = this.buildSearchDTOFromFilter(filter, searchOperator, quickSearchDTO, panelid);
+                    }
+                    let wrappedDTO = searchDto;
+                    if (!(searchDto instanceof SearchDTO)) {
+                        wrappedDTO = new SearchDTO(searchDto);
+                    }
+                    const log = $log.getInstance("#gridpreferenceservice#applyFilter",["filter"]);
+                    log.debug(`applying filter  ${wrappedDTO}`);
+                    return searchService.refreshGrid(searchDto.searchData, searchDto.searchOperator, wrappedDTO);
                 },
 
                 buildSearchDTOFromFilter: function (filter, searchOperator = {}, quickSearchDTO = {}, panelid = null) {

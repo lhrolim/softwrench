@@ -27,7 +27,7 @@
                     quicksearchDTO = gridData.vm.quickSearchDTO;
                 }
                 const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quicksearchDTO, gridData.multiSort);
-                var dto = new SearchDTO(searchDTO);
+                const dto = new SearchDTO(searchDTO);
                 if (!dto.isDefault()) {
                     this.createGridCheckpoint(schema, dto);
                 }
@@ -65,19 +65,13 @@
                 }
 
 
-                // The previous filter needs to have an ID that will never be used by the regular filter creation methods
-                const previousFilterId = -2;
-                // The previous filter must be given an alias to make it stand out from the user created filters
-                const previousFilterAlias = "*Previous Unsaved Filter*";
+             
 
-                const filter = {
-                    searchDTO : checkPoint.listContext,
-                    alias: previousFilterAlias,
-                    id: previousFilterId
-                };
+                if (!(checkPoint.listContext instanceof SearchDTO)) {
+                    checkPoint.listContext = new SearchDTO(checkPoint.listContext);
+                }
 
-                return filter;
-
+                return GridFilterDTO.PreviousDefaultFilter(applicationName, checkPoint.listContext);
             }
 
             function fetchAllCheckpointInfo() {

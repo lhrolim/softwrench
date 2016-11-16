@@ -977,7 +977,7 @@
           <section>
             <header displacement="ontop" label="Service Request Details" params="fieldset=true"/>
             <field attribute="description" label="Summary:" requiredexpression="true">
-              <renderer type="default" params="maxlength=100"/>
+              <renderer type="default" />
             </field>
             <field label="Details:" attribute="longdescription_.ldtext">
               <renderer type="richtext" />
@@ -1281,7 +1281,7 @@
             <header displacement="ontop" label="Incident Details" params="fieldset=true" />
             <field attribute="statusdate" hidden="true" />
             <field attribute="description" label="Summary:" requiredexpression="true">
-              <renderer type="default" params="maxlength=100"/>
+              <renderer type="default" />
             </field>
             <field label="Details:" attribute="longdescription_.ldtext">
               <renderer type="richtext" />
@@ -1516,7 +1516,7 @@
           <!--<field attribute="location" label="Location:"/>-->
 
           <field attribute="description" label="Summary:">
-            <renderer type="default" params="maxlength=100"/>
+            <renderer type="default" />
           </field>
           <field attribute="reportedby" label="Reported By:"/>
           <field attribute="classstructureid" label="Classification:"/>
@@ -1589,7 +1589,7 @@
           <field attribute="outservcost"       hidden="true" default="0"/>
 
           <field attribute="description" label="Summary:">
-            <renderer type="default" params="maxlength=100"/>
+            <renderer type="default" />
           </field>
           <field attribute="reportedby" label="Reported By:"/>
           <field attribute="classstructureid" label="Classification:"/>
@@ -1731,7 +1731,7 @@
 
         <detail stereotype="compositiondetail">
           <field attribute="description" label="Summary:" requiredexpression="true">
-            <renderer type="default" params="maxlength=100"/>
+            <renderer type="default" />
           </field>
           <field attribute="longdescription_.ldtext" label="Details:" >
             <renderer type="textarea"/>

@@ -11,7 +11,8 @@ namespace softWrench.sW4.Configuration.Services.Api {
     public interface IWhereClauseFacade : ISingletonComponent {
 
         //TODO: refactor it so that the evaluation is done inside of the facade and the return is already a string
-        [NotNull]
+        //TODO: make it non null
+        [CanBeNull]
         Task<WhereClauseResult> LookupAsync([NotNull]string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null);
 
         WhereClauseResult Lookup([NotNull]string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null);

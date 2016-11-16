@@ -446,20 +446,22 @@
                             pageSize = 100;
                         }
 
+                        var searchDTO;
 
-                        //TODO Improve this solution
-                        var reportDto = contextService.retrieveReportSearchDTO($scope.schema.schemaId);
-                        var searchDTO = !!reportDto
-                            ? searchService.buildReportSearchDTO(reportDto, $scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause)
-                            : searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, $scope.multiSort);
+                        if (extraparameters instanceof SearchDTO) {
+                            searchDTO = extraparameters;
+                        } else {
+                            searchDTO = 
+                                 searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, $scope.multiSort);    
+                            searchDTO.pageNumber = pageNumber;
+                            searchDTO.totalCount = totalCount;
+                            searchDTO.pageSize = pageSize;
+                            searchDTO.numberOfPages = extraparameters.numberOfPages;
+                            searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
+                            searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
+                            searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
+                        }
 
-                        searchDTO.pageNumber = pageNumber;
-                        searchDTO.totalCount = totalCount;
-                        searchDTO.pageSize = pageSize;
-                        searchDTO.numberOfPages = extraparameters.numberOfPages;
-                        searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
-                        searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
-                        searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
 
                         // Check for custom param provider
                         if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {

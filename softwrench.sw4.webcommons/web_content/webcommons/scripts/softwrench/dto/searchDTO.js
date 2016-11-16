@@ -39,6 +39,10 @@ class SearchDTO {
             });
         }
 
+        toString() {
+            return JSON.stringify(this);
+        }
+
 
     }
 
