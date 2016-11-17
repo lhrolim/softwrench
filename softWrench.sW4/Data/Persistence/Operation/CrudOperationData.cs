@@ -60,6 +60,10 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get { return UnmappedAttributes.ContainsKey("#isDirty"); }
         }
 
+        public bool IsCompositionCreation {
+            get { return UnmappedAttributes.ContainsKey("_iscreation"); }
+        }
+
         public CrudOperationData Clone() {
             var atributes = new Dictionary<string, object>(this);
             var assocAtributes = new Dictionary<string, object>(AssociationAttributes);

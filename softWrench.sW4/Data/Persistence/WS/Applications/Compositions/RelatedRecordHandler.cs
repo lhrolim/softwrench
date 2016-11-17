@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
+using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json.Linq;
@@ -21,11 +24,14 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class RelatedRecordHandler {
 
+        private const string ExistingRecordsQuery = "SELECT COUNT(*) FROM relatedrecord WHERE recordkey = :recordkey AND class = :class " +
+                                                    "AND siteid {0} AND relatedreckey = :relatedreckey AND relatedrecclass = :relatedrecclass " +
+                                                    "AND relatedrecsiteid {1}";
 
         public static void HandleRelatedRecords(MaximoOperationExecutionContext maximoOperation) {
             var parentData = (CrudOperationData)maximoOperation.OperationData;
             var relatedRecords = ((IEnumerable<CrudOperationData>)parentData.GetRelationship("relatedrecord_"))
-                                    .Where(r => r.IsDirty)
+                                    .Where(r => r.IsCompositionCreation)
                                     .ToList();
 
             if (!relatedRecords.Any()) return;
@@ -41,9 +47,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 relatedRecords.FirstOrDefault(rr => "true".Equals(rr.GetUnMappedAttribute("#createSr").ToString().ToLower())).SetAttribute("RELATEDRECKEY", newSrId);
             }
 
+            ValidateExistingRecords(parentData, relatedRecords, user);
+
+            var parentClass = parentData.GetStringAttribute("class").ToUpper();
+
             w.CloneArray(relatedRecords, ticket, "RELATEDRECORD", (relatedRecord, relatedRecordData) => {
                 w.SetValue(relatedRecord, "RELATEDRECORDID", -1);
                 w.SetValue(relatedRecord, "RELATETYPE", "FOLLOWUP");
+                w.SetValue(relatedRecord, "CLASS", parentClass);
                 // current SR data
                 w.SetValue(relatedRecord, "RECORDKEY", parentData.UserId);
                 w.CopyFromRootEntity(ticket, relatedRecord, "SITEID", user.SiteId);
@@ -60,13 +71,49 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             });
         }
 
+        private static void ValidateExistingRecords(CrudOperationData parentData, List<CrudOperationData> relatedRecords, InMemoryUser user) {
+            relatedRecords.ForEach(relatedRecord => ValidateExistingRecord(parentData, relatedRecord, user));
+        }
+
+        private static void ValidateExistingRecord(CrudOperationData parentData, CrudOperationData relatedRecord, InMemoryUser user) {
+            var dao = SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>();
+            var eo = new ExpandoObject();
+            var eoColl = (ICollection<KeyValuePair<string, object>>)eo;
+            var relatedClass = relatedRecord.GetStringAttribute("relatedrecclass").ToUpper();
+            var relatedKey = relatedRecord.GetStringAttribute("relatedreckey");
+
+            eoColl.Add(new KeyValuePair<string, object>("recordkey", parentData.UserId));
+            eoColl.Add(new KeyValuePair<string, object>("class", parentData.GetStringAttribute("class").ToUpper()));
+            var siteidToken = ManageSiteIdOrgId("siteid", parentData.GetStringAttribute("siteid"), eoColl);
+            eoColl.Add(new KeyValuePair<string, object>("relatedreckey", relatedKey));
+            eoColl.Add(new KeyValuePair<string, object>("relatedrecclass", relatedClass));
+            var relatedrecsiteidToken = ManageSiteIdOrgId("relatedrecsiteid", relatedRecord.GetStringAttribute("relatedrecsiteid"), eoColl);
+
+            var query = string.Format(ExistingRecordsQuery, siteidToken, relatedrecsiteidToken);
+            var count = dao.CountByNativeQuery(query, eo);
+            if (count <= 0) {
+                return;
+            }
+
+            var msg = string.Format("The {0} {1} is already related.", relatedClass, relatedKey);
+            throw new InvalidOperationException(msg);
+        }
+
+        private static string ManageSiteIdOrgId(string attribute, string value, ICollection<KeyValuePair<string, object>> parameters) {
+            if (value == null) {
+                return "IS NULL";
+            }
+            parameters.Add(new KeyValuePair<string, object>(attribute, value));
+            return "= :" + attribute;
+        }
+
         // Create a new SR form the Work Order and return the ID for the relaterecords
         private static string CreateSr(CrudOperationData parentData, InMemoryUser user) {
             var schemaKey = SchemaUtil.GetSchemaKeyFromString("newdetail", ClientPlatform.Web);
             var application = MetadataProvider.Application("servicerequest").ApplyPolicies(schemaKey, user, ClientPlatform.Web);
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var multiassetlocci = (List<CrudOperationData>)parentData.AssociationAttributes["multiassetlocci_"];
-            
+
 
             var srData = new JObject();
             // If there are multiassetlocci, serialize and add to the srData

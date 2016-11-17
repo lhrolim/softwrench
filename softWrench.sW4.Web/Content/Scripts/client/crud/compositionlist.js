@@ -1264,9 +1264,11 @@
 
         $scope.clearNewCompositionData = function () {
 
-            $scope.unWatcherArray.forEach(function (unwatcher) {
-                unwatcher();
-            });
+            if ($scope.unWatcherArray) {
+                $scope.unWatcherArray.forEach(function(unwatcher) {
+                    unwatcher();
+                });
+            }
 
             $scope.unWatcherArray = [];
 

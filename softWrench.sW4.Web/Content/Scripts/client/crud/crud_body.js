@@ -658,14 +658,25 @@
                         $log.info(jsonString);
                     }
 
+                    const failureCallback = parameters["failureCbk"];
+                    const successCallback = parameters["successCbk"];
+
                     $log.getInstance("crud_body#submit").debug(jsonString);
                     const urlToUse = url("/api/data/" + applicationName + "/");
                     const command = id == null ? $http.post : $http.put;
                     return command(urlToUse, jsonString)
-                        .catch(function (result) {
+                        .then(result => {
+                            const data = result.data;
+                            if (successCallback) {
+                                successCallback(data);
+                            }
+                        }).catch(result => {
                             const exceptionData = result.data;
                             const resultObject = exceptionData.resultObject;
                             $scope.setIdAfterCreation(resultObject);
+                            if (failureCallback) {
+                                failureCallback(resultObject);
+                            }
                             return $q.reject(result);
                         });
                 };
