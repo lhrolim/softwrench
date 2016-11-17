@@ -7,6 +7,11 @@
       <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
 
+    <environment key="qa-uat">
+      <property key="iispath" value="softwrench/pesco" />
+      <property key="msdeploy_url" value="https://52.36.55.169:8172/msdeploy.axd,username=pscapp\jenkins,password=J3nk1ns" />
+    </environment>
+    
   </globalproperties>
 
 </metadata>
