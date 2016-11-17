@@ -146,7 +146,9 @@
             <field attribute="lostenergy3" label="Lost Energy">
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
-            <field attribute="lostenergyamount" label="Lost Energy Amount" enableexpression="@lostenergy3 === true" showexpression="@lostenergy3 === true"/>
+            <field attribute="lostenergyamount" label="Lost Energy Amount" showexpression="@lostenergy3 === true" enableexpression="@lostenergy3 === true">
+              <renderer type="numericinput" params="width=8%;min=0;statictext=kwh" />
+            </field>
             </section>
           </customization>
         </schema>
@@ -308,9 +310,9 @@
             <field attribute="lostenergy" label="Lost Energy" readonly="true" enableexpression="false">
               <renderer type="checkbox" params="width=5%;formatter=numberToBoolean"/>
             </field>
-            <field attribute="lostenergyamount" label="Lost Energy Amount">
-              <renderer type="default" params="width=8%"/>
-            </field>
+            <field attribute="lostenergyamount" label="Lost Energy Amount" showexpression="@lostenergy === true"  enableexpression="@lostenergy === true">
+              <renderer type="numericinput" params="width=8%;min=0;statictext=kwh"/>
+            </field>      
           </customization>
           <properties>
             <property key="list.width.min" value="1280px"/>
@@ -346,7 +348,9 @@
               <field attribute="lostenergy" label="Lost Energy">
                 <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
-              <field attribute="lostenergyamount" label="Lost Energy Amount"  enableexpression="@lostenergy === true" showexpression="@lostenergy === true"/>
+              <field attribute="lostenergyamount" label="Lost Energy Amount" showexpression="@lostenergy === true" enableexpression="@lostenergy === true">
+                <renderer type="numericinput" params="width=8%;min=0;statictext=kwh" />
+              </field>   
             </section>
             <!--</section>-->
           </customization>
