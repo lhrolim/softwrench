@@ -14,7 +14,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest {
-    class DispatchOperationHandler : BaseMaximoCustomConnector {
+    public class DispatchOperationHandler : BaseMaximoCustomConnector {
         private readonly EntityMetadata _woEntity;
         private readonly ApplicationMetadata _woApplication;
         private readonly EntityMetadata _incidentEntity;
@@ -39,8 +39,19 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
         }
 
         public object DispatchWO(DispatchOperationData srData) {
-            var srCrudData = srData.CrudData;
+            var woCrudData = CreateWoCrudData(srData.CrudData);
+            var result = (TargetResult)Maximoengine.Create(woCrudData);
+            var id = result.Id ?? result.UserId;
 
+            //customization for deltadental here
+            var label = ApplicationConfiguration.ClientName.EqualsIc("deltadental") ? "dispatched" : "created";
+
+            result.SuccessMessage = "Work Order {0} sucessfully {1}.".FormatInvariant(id, label);
+
+            return result;
+        }
+
+        public virtual CrudOperationData CreateWoCrudData(CrudOperationData srCrudData) {
             var woCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _woEntity, _woApplication, new JObject(), null);
             woCrudData.SetAttribute("onbehalfof", srCrudData.GetStringAttribute("affectedperson"));
             woCrudData.SetAttribute("assetnum", srCrudData.GetStringAttribute("assetnum"));
@@ -62,16 +73,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             woCrudData.SetAttribute("origrecordclass", "SR");
             woCrudData.SetAttribute("siteid", srCrudData.GetStringAttribute("siteid"));
             woCrudData.SetAttribute("orgid", srCrudData.GetStringAttribute("orgid"));
-
-            var result = (TargetResult)Maximoengine.Create(woCrudData);
-            var id = result.Id ?? result.UserId;
-
-            //customization for deltadental here
-            var label = ApplicationConfiguration.ClientName.EqualsIc("deltadental") ? "dispatched" : "created";
-
-            result.SuccessMessage = "Work Order {0} sucessfully {1}.".FormatInvariant(id, label);
-
-            return result;
+            return woCrudData;
         }
 
         public object DispatchIncident(DispatchOperationData srData) {

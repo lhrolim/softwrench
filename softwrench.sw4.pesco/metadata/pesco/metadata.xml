@@ -28,6 +28,10 @@
           <relationshipAttribute query="(value IN ('CLOSED','HISTEDIT','INPROG','NEW','PENDING','QUEUED','RESOLVED'))"/>
         </relationship>
       </relationships>
+
+      <connectorParameters>
+        <connectorParameter key="dispatchwo_customconnector" value="softwrench.sw4.pesco.classes.com.cts.pesco.action.PescoDispatchOperationHandler" />
+      </connectorParameters>
     </entity>
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <attributes>

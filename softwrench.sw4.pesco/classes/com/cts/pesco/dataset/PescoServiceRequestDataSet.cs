@@ -34,15 +34,16 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
             return originalDTO;
         }
 
-        public override TargetResult DoExecute(OperationWrapper operationWrapper)
-        {
+        public override TargetResult DoExecute(OperationWrapper operationWrapper) {
+            if (!operationWrapper.OperationName.StartsWith("crud")) {
+                return base.DoExecute(operationWrapper);
+            }
             var data = operationWrapper.GetOperationData;
             if (!data.ApplicationMetadata.Name.Equals("quickservicerequest") && !true.Equals(data.Holder.GetAttribute("lostenergy3"))) {
-                data.Holder.SetAttribute("lostenergyamount","");
+                data.Holder.SetAttribute("lostenergyamount", "");
             }
             return base.DoExecute(operationWrapper);
         }
-
 
         public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             var result = await base.GetList(application, searchDto);
