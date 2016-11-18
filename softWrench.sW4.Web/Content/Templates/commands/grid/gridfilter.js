@@ -20,6 +20,12 @@
                         return $scope.cachedFilters;
                     }
                     $scope.cachedFilters = gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
+                    if ($scope.selectedfilter) {
+                        const matchingcachedFilter = $scope.cachedFilters.find(f => f.id === $scope.selectedfilter.id);
+                        if (matchingcachedFilter)
+                            matchingcachedFilter["$$hashKey"] = $scope.selectedfilter["$$hashKey"];
+                    }
+
                     return $scope.cachedFilters;
                 }
 
@@ -102,7 +108,7 @@
                             $scope.cachedFilters = null;
                         });
                     });
-                    
+
                 }
 
                 $scope.createFilter = function (alias) {
