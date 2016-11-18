@@ -127,6 +127,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\dto\CompositionOperation.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ModalData.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ContextData.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\error_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\globalsearch\globalsearch_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_shared.js" />

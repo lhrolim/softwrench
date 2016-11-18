@@ -2,8 +2,8 @@
 (function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('notificationViewModel', ['contextService', '$timeout', '$log', notificationViewModel]);
-    function notificationViewModel(contextService, $timeout, $log) {
+    angular.module('sw_layout').factory('notificationViewModel', ['contextService', '$timeout', '$log', '$injector', '$rootScope', notificationViewModel]);
+    function notificationViewModel(contextService, $timeout, $log, $injector, $rootScope) {
         var log = $log.getInstance('sw4.notificationViewModel');
 
         //#region Utils
@@ -82,6 +82,70 @@
                 .format(moreInfo.type, moreInfo.title, moreInfo.outline, moreInfo.stack);
 
                 return moreInfo;
+            },
+
+            /// <summary>
+            /// Display the JS error notification
+            /// </summary>
+            /// <param name="jsEvent" type="object">JS error event</param>
+            /// <param name="angularException" type="string">Angular error exception</param>
+            /// <returns></returns>
+            processJsError: function (jsEvent, angularException) {
+                //TODO: Replace $injector with configurationService, after circular dependency is fixed
+                var configService = $injector.get('configurationService');
+                var showAlert = true;
+
+                //if there already is a JS error, don't show another notification
+                this.messages.forEach(function (notification) {
+                    if (notification.type === 'dev' && notification.display) {
+                        showAlert = false;
+                    }
+                });
+                if (!showAlert) {
+                    return;
+                }
+
+                //check config values
+                var jsErrorAlertShowDev = configService.getConfigurationValue('/Global/JsError/ShowDev') === 'true';
+                var jsErrorAlertShowProd = configService.getConfigurationValue('/Global/JsError/ShowProd') === 'true';
+                if ($rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0) {
+                    if (!jsErrorAlertShowDev) {
+                        return;
+                    }
+                } else {
+                    if (!jsErrorAlertShowProd) {
+                        return;
+                    }
+                }
+
+                var body;
+                var exceptionType;
+                var exceptionOutline;
+                var exceptionStack;
+
+                //get the javascript event values
+                if (jsEvent) {
+                    var e = jsEvent.originalEvent;
+
+                    body = e.message;
+                    exceptionType = e.type;
+                    exceptionOutline = e.error.message;
+                    exceptionStack = e.error.stack;
+
+                    var parts = e.message.split(': ');
+
+
+                    if (parts[0]) {
+                        exceptionType = parts[0];
+                    }
+                }
+
+                //get the angular values
+                if (angularException) {
+                    body = angularException;
+                }
+
+                this.createNotification('dev', null, body, exceptionType, exceptionOutline, exceptionStack);
             },
 
             /// <summary>

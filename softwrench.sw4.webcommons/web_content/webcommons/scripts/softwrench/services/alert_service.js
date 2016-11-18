@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module('webcommons_services')
-        .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", "$injector", alertService]);
+        .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", alertService]);
 
-    function alertService($rootScope, $timeout, i18NService, notificationViewModel, $log, $q, $injector) {
+    function alertService($rootScope, $timeout, i18NService, notificationViewModel, $log, $q) {
         /**
         * @param {string} msg
         * @param {string} applicationName
@@ -12,7 +12,7 @@
         */
         const confirm = function (msg, applicationName, applicationId) {
             var deferred = $q.defer();
-            const defaultConfirmMsg = !applicationName ? "Are you sure you want to delete this?": "Are you sure you want to delete {0} {1}?".format(applicationName, applicationId);
+            const defaultConfirmMsg = !applicationName ? "Are you sure you want to delete this?" : "Are you sure you want to delete {0} {1}?".format(applicationName, applicationId);
             const alertMessage = !msg ? i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]) : msg;
 
             bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
@@ -44,7 +44,7 @@
             var deferred = $q.defer();
             const defaultConfirmMsg = !applicationName ? "Are you sure you want to cancel this?" : "Are you sure you want to cancel {0} {1}?".format(applicationName, applicationId);
             const alertMessage = !msg ? i18NService.get18nValue('general.defaultcommands.delete.confirmmsg', defaultConfirmMsg, [applicationName, applicationId]) : msg;
-           
+
             bootbox.setDefaults({ locale: i18NService.getCurrentLanguage() });
             bootbox.cancelDialog({
                 templates: {
@@ -146,7 +146,7 @@
                 return;
             }
             //get the message data
-            let message ="";
+            let message = "";
             //get the message data
             message += data.warningDto.warnMessage;
             const exception = this.buildException(data.warningDto);
@@ -168,41 +168,9 @@
             notifyWarning
         };
 
-       //display notification on JS error
+        //display notification on JS error
         $(window).on('error', function (evt) {
-            $timeout(function() {
-                //TODO: Replace $injector with configurationService, after circular dependency
-                var configService = $injector.get("configurationService");
-                var jsErrorAlertMaxNotifications = parseInt(configService.getConfigurationValue("/Global/JsError/MaxNotifications"));
-                var showAlert = true;
-
-                //if there already is a JS error, don't show another notification
-                notificationViewModel.messages.forEach(function (notification) {
-                    if (notification.type === 'dev') {
-                        showAlert = false;
-                    }
-                });
-                if (!showAlert) {
-                    return;
-                }
-
-                //check config values
-                var jsErrorAlertShowDev = configService.getConfigurationValue("/Global/JsError/ShowDev") === 'true';
-                var jsErrorAlertShowProd = configService.getConfigurationValue("/Global/JsError/ShowProd") === 'true';
-                if ($rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0) {
-                    if (!jsErrorAlertShowDev) {
-                        return;
-                    }
-                } else {
-                    if (!jsErrorAlertShowProd) {
-                        return;
-                    }
-                }
-
-                //get the javascript event & display message
-                var e = evt.originalEvent;
-                notificationViewModel.createNotification('dev', null, e.message, e.type, e.error.message, e.error.stack);
-            }, 2000);
+            notificationViewModel.processJsError(evt);
         });
 
         return service;

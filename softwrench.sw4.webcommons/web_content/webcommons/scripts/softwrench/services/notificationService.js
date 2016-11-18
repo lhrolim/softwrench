@@ -2,8 +2,8 @@
 (function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').factory('notificationViewModel', ['contextService', '$timeout', '$log', notificationViewModel]);
-    function notificationViewModel(contextService, $timeout, $log) {
+    angular.module('webcommons_services').factory('notificationViewModel', ['contextService', '$rootScope', '$timeout', '$log', notificationViewModel]);
+    function notificationViewModel(contextService, $rootScope, $timeout, $log) {
         var log = $log.getInstance('sw4.notificationViewModel');
 
         //#region Utils
