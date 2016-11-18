@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 

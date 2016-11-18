@@ -11,9 +11,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
     class KongsbergServiceRequestDataSet : BaseServiceRequestDataSet {
-        public KongsbergServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
-        }
-
+        
         public SearchRequestDto FilterByPersonGroup(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
 

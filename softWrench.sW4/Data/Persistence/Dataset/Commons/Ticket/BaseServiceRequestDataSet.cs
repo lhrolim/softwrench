@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
-using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.Engine;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -22,16 +20,9 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
     public class BaseServiceRequestDataSet : BaseTicketDataSet {
-        private readonly ISWDBHibernateDAO _swdbDao;
-        /* Need to add this prefilter function for the problem codes !! 
-        public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters)
-        {
 
-        }*/
 
-        public BaseServiceRequestDataSet(ISWDBHibernateDAO swdbDao) {
-            _swdbDao = swdbDao;
-        }
+
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
@@ -96,7 +87,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             if (result.Any()) {
                 foreach (var record in result) {
-                    list.Add(new AssociationOption(record["VALUE"].ToString(), string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
+                    list.Add(new AssociationOption(record["VALUE"], string.Format("{0} - {1}", record["VALUE"], record["LABEL"])));
                 }
             } else {
                 // If no values are found, then default to numeric selection 1-5

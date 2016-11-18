@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Util;
@@ -20,15 +21,15 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
 
         private readonly ToshibaRestCompositionsResolver _restCompositionsResolver;
 
-        public ToshibaServiceRequestDataSet(ISWDBHibernateDAO swdbDao, ToshibaRestCompositionsResolver restCompositionsResolver) : base(swdbDao) {
+        public ToshibaServiceRequestDataSet(ToshibaRestCompositionsResolver restCompositionsResolver)  {
             _restCompositionsResolver = restCompositionsResolver;
         }
 
-        public SearchRequestDto FilterClassification(AssociationPreFilterFunctionParameters parameters) {
-            var filter = parameters.BASEDto;
-            // Only show classifications with classstructures that have pluspcustassoc's to 'CPS-00'
-            filter.AppendWhereClause("classificationid in (select classstructure.classificationid from classstructure inner join pluspcustassoc on pluspcustassoc.ownertable = 'CLASSSTRUCTURE' and pluspcustassoc.ownerid = classstructure.classstructureuid and pluspcustassoc.customer = 'TTC-00')");
-            return filter;
+        protected override string BuildClassificationQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
+            var baseQuery = base.BuildClassificationQuery(parameters, ticketclass, searchString);
+            baseQuery +=
+                " and (c.classificationid in (select classstructure.classificationid from classstructure inner join pluspcustassoc on pluspcustassoc.ownertable = 'CLASSSTRUCTURE' and pluspcustassoc.ownerid = classstructure.classstructureuid and pluspcustassoc.customer = 'CPS-00'))";
+            return baseQuery;
         }
 
         public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {

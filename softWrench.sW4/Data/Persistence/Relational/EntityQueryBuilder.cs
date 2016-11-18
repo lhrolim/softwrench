@@ -35,10 +35,11 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             return TemplateQueryBuild(entityMetadata, new InternalQueryRequest { SearchDTO = searchDto }, QueryCacheKey.QueryMode.Count);
         }
 
-        public BindedEntityQuery CountRowsFromConstraint(EntityMetadata entityMetadata, softwrench.sw4.user.classes.entities.DataConstraint constraint) {
+        public BindedEntityQuery CountRowsFromConstraint(EntityMetadata entityMetadata) {
             var buffer = new StringBuilder(InitialStringBuilderCapacity);
             buffer.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, QueryCacheKey.QueryMode.Count, null));
             buffer.Append(QueryFromBuilder.Build(entityMetadata));
+
             var dataConstraintsWhereBuilder = SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(typeof(DataConstraintsWhereBuilder));
             var list = new List<IWhereBuilder>{
                 new EntityWhereClauseBuilder(),
@@ -46,7 +47,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 new MultiTenantCustomerWhereBuilder()
             };
             var whereBuilder = new CompositeWhereBuilder(list);
-            buffer.Append(whereBuilder.BuildWhereClause(entityMetadata.Name));
+            var whereClauseBuilt = whereBuilder.BuildWhereClause(entityMetadata.Name);
+
+            buffer.Append(whereClauseBuilt);
             return new BindedEntityQuery(buffer.ToString(), whereBuilder.GetParameters());
         }
 

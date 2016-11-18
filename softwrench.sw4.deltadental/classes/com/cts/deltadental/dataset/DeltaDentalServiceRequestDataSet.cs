@@ -14,13 +14,10 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 namespace softwrench.sw4.deltadental.classes.com.cts.deltadental.dataset {
     class DeltaDentalServiceRequestDataSet : BaseServiceRequestDataSet {
         private readonly string[] _sites = { "PA", "ALP", "SF", "RNCHO" };
-        public DeltaDentalServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
-        }
-
-        protected override string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)
+        protected override string BuildClassificationQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null)
         {
             string siteid = parameters.OriginalEntity.GetAttribute("siteid").ToString();
-            var query = base.BuildQuery(parameters, ticketclass);
+            var query = base.BuildClassificationQuery(parameters, ticketclass);
 
             // If the given site is not in the know list of sites, do not append the custom query as it will break when the new site's name is used as a column identifier
             if (!_sites.Contains(siteid)) return query;

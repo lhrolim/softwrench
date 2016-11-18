@@ -2,25 +2,34 @@
 using System.ComponentModel.Composition;
 using System.Linq;
 using cts.commons.persistence;
-using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
+using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
     public class BaseTicketDataSet : MaximoApplicationDataSet {
 
+        private readonly EntityMetadata _classificationMetadata;
+
         [Import]
         public TicketStatusHandler StatusHandler {
             get; set;
         }
 
-        public BaseTicketDataSet() {
+        [Import]
+        public WhereBuilderManager WhereBuilderManager {
+            get; set;
+        }
 
+        public BaseTicketDataSet() {
+            _classificationMetadata = MetadataProvider.Entity("classstructure");
         }
 
 
@@ -52,7 +61,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
 
             // TODO: Change the design to use a tree view component
-            var query = BuildQuery(parameters, ticketclass, searchString);
+            var query = BuildClassificationQuery(parameters, ticketclass, searchString);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
@@ -72,7 +81,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         protected virtual IEnumerable<IAssociationOption> GetClassStructureTypeDescription(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
 
             // TODO: Change the design to use a tree view component
-            var query = BuildQuery(parameters, ticketclass, searchString);
+            var query = BuildClassificationQuery(parameters, ticketclass, searchString);
 
             var result = MaxDAO.FindByNativeQuery(query, null);
 
@@ -96,7 +105,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return "classstructureid";
         }
 
-        protected virtual string BuildQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
+        protected virtual string BuildClassificationQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
 
             var classStructureQuery = string.Format(@"SELECT  c.{4} AS ID, c.classificationid as classificationid,
                                                                p3.classificationid AS CLASS_5, 
@@ -116,12 +125,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                                                                c.classstructureid in (select classusewith.classstructureid 
                                                                                         from classusewith  
                                                                                         where classusewith.classstructureid=c.classstructureid
-                                                                                        and objectname= '{2}')",
+                                                                                        and objectname= '{2}') and {5}",
                                     parameters.OriginalEntity.GetAttribute("orgid"),
                                     parameters.OriginalEntity.GetAttribute("siteid"),
                                     ReferenceEquals(parameters.OriginalEntity.GetAttribute("class"), "") ? "" : ticketclass,
                                     ApplicationConfiguration.IsOracle(DBType.Maximo) ? "" : "as",
-                                    ClassificationIdToUse()
+                                    ClassificationIdToUse(),
+                                    WhereBuilderManager.BuildWhereClause(_classificationMetadata, new InternalQueryRequest() {},true)
                                     );
             if (searchString != null) {
                 classStructureQuery += string.Format(@" and ( UPPER(COALESCE(p3.classificationid,'')) like '%{0}%' or UPPER(COALESCE(p3.description,'')) like '%{0}%' or

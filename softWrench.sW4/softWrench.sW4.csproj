@@ -382,6 +382,7 @@
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByUserIdSiteWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\IDynamicWhereBuilder.cs" />
+    <Compile Include="Data\Persistence\Relational\WhereBuilderManager.cs" />
     <Compile Include="Data\Persistence\WS\AMEX\AmexAssetConnectors.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoException.cs" />
     <Compile Include="Data\Persistence\WS\API\MaximoWebServiceNotResolvedException.cs" />
@@ -709,7 +710,6 @@
     <Compile Include="Data\Persistence\Relational\BaseQueryBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\ByIdWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\DataConstraintsWhereBuilder.cs" />
-    <Compile Include="Data\Persistence\Relational\DataConstraint\DataConstraintValidator.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\IWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\CompositeWhereBuilder.cs" />
     <Compile Include="Data\Persistence\Relational\QueryBuilder\Basic\QuerySelectBuilder.cs" />

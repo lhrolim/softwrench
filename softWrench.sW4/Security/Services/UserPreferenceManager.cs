@@ -7,7 +7,6 @@ using cts.commons.Util;
 using NHibernate;
 using log4net;
 using softwrench.sw4.user.classes.entities;
-using softWrench.sW4.Data.Persistence.Relational.DataConstraint;
 using softWrench.sW4.Data.Persistence.SWDB;
 
 

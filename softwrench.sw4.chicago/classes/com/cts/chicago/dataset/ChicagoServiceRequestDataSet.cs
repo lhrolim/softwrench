@@ -8,6 +8,7 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Security.Services;
 
@@ -15,16 +16,13 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
     class ChicagoServiceRequestDataSet : BaseServiceRequestDataSet {
 
 
-        public ChicagoServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
-        }
-
         public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
             Tuple<string, string> userIdSite) {
             var result = base.Execute(application, json, id, operation, isBatch, userIdSite);
 
             if ("servicerequest".Equals(application.Name) && "crud_update".Equals(operation)) {
                 var user = SecurityFacade.CurrentUser();
-                var detail = AsyncHelper.RunSync(()=>GetApplicationDetail(application, user, new DetailRequest(id, application.Schema.GetSchemaKey())));
+                var detail = AsyncHelper.RunSync(() => GetApplicationDetail(application, user, new DetailRequest(id, application.Schema.GetSchemaKey())));
 
                 if (detail != null) {
                     result.ResultObject = detail.ResultObject;
@@ -65,11 +63,11 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
         }
 
 
-        public SearchRequestDto FilterClassification(AssociationPreFilterFunctionParameters parameters) {
-            var filter = parameters.BASEDto;
-            // Only show classifications with classstructures that have pluspcustassoc's to 'CPS-00'
-            filter.AppendWhereClause("classificationid in (select classstructure.classificationid from classstructure inner join pluspcustassoc on pluspcustassoc.ownertable = 'CLASSSTRUCTURE' and pluspcustassoc.ownerid = classstructure.classstructureuid and pluspcustassoc.customer = 'CPS-00')");
-            return filter;
+        protected override string BuildClassificationQuery(OptionFieldProviderParameters parameters, string ticketclass, string searchString = null) {
+            var baseQuery = base.BuildClassificationQuery(parameters, ticketclass, searchString);
+            baseQuery +=
+                " and (c.classificationid in (select classstructure.classificationid from classstructure inner join pluspcustassoc on pluspcustassoc.ownertable = 'CLASSSTRUCTURE' and pluspcustassoc.ownerid = classstructure.classstructureuid and pluspcustassoc.customer = 'CPS-00'))";
+            return baseQuery;
         }
 
 

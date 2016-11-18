@@ -17,9 +17,6 @@ using softWrench.sW4.Security.Services;
 namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
     public class PescoServiceRequestDataSet : BaseServiceRequestDataSet {
 
-        public PescoServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
-        }
-
         public override string ClientFilter() {
             return "pesco";
         }

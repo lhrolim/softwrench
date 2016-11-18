@@ -46,7 +46,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
                                                      from classstructure 
                                                      where classificationid = 'PROJECT REQUEST')";
 
-        public KongsbergProjectRequestDataSet(ISWDBHibernateDAO swdbDao, IMaximoHibernateDAO maximoDao) : base(swdbDao) {
+        public KongsbergProjectRequestDataSet(IMaximoHibernateDAO maximoDao) {
             _maximoDao = maximoDao;
         }
 

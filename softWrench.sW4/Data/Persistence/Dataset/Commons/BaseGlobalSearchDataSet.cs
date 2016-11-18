@@ -18,14 +18,13 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
-using BaseQueryBuilder = softWrench.sW4.Data.Persistence.Relational.BaseQueryBuilder;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
     class BaseGlobalSearchDataSet : MaximoApplicationDataSet {
         private readonly IMaximoHibernateDAO _maximoDao;
         private readonly EntityRepository _entityRepository;
         private readonly IWhereClauseFacade _whereClauseFacade;
+        private readonly WhereBuilderManager _whereBuilderManager;
 
         private readonly IDictionary<string, string> _entities = new Dictionary<string, string>
         {
@@ -54,10 +53,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             {"location", "select location as userrecordid, CAST(locationsid AS VARCHAR(15)) as recordid, description, '' as createdate, changedate, 'location' as recordtype,'Location' as recordtypelabel, 'location' as appname, 'locationdetail' as appschema from locations WHERE {0}"}
         };
 
-        public BaseGlobalSearchDataSet(IMaximoHibernateDAO maximoDao, IWhereClauseFacade whereClauseFacade, EntityRepository entityRepository) {
+        public BaseGlobalSearchDataSet(IMaximoHibernateDAO maximoDao, IWhereClauseFacade whereClauseFacade, EntityRepository entityRepository, WhereBuilderManager whereBuilderManager) {
             _maximoDao = maximoDao;
             _whereClauseFacade = whereClauseFacade;
             _entityRepository = entityRepository;
+            _whereBuilderManager = whereBuilderManager;
         }
 
         public override async Task<ApplicationListResult> GetList(ApplicationMetadata application,
@@ -78,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var paginationData = PaginationData.GetInstance(searchDto, entityMetadata);
             // Build the applicable where clause
             var queryParameter = new InternalQueryRequest { SearchDTO = searchDto };
-            var compositeWhereBuilder = BaseQueryBuilder.GetCompositeBuilder(entityMetadata, queryParameter);
+            var compositeWhereBuilder = _whereBuilderManager.GetCompositeBuilder(entityMetadata, queryParameter);
             var whereClause = compositeWhereBuilder.BuildWhereClause(entityMetadata.Name, queryParameter.SearchDTO);
             var query = await GetWrappedUnionQuery(application, searchDto);
             var ctx = ContextLookuper.LookupContext();
