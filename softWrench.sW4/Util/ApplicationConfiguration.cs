@@ -28,9 +28,9 @@ namespace softWrench.sW4.Util {
         private static string _appPath;
         private static readonly DateTime _upTime = DateTime.Now;
 
-        private static MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
+        private static readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
 
-        private static IDictionary<DBType, ConnectionStringSettings> _connectionStringCache = new Dictionary<DBType, ConnectionStringSettings>();
+        private static readonly IDictionary<DBType, ConnectionStringSettings> _connectionStringCache = new Dictionary<DBType, ConnectionStringSettings>();
 
         public static string SystemVersion {
             get {
