@@ -46,6 +46,29 @@
 
     });
 
+    it('parse multisort test', function () {
+        // Get the record counts for the compositions
+        var result = searchService.parseMultiSort("xxx asc, yyy desc");
+        
+        // Make sure they match the values from the mockCompositionResult
+        expect(result.length).toEqual(2);
+        expect(result[0].columnName).toEqual("xxx");
+        expect(result[0].isAscending).toEqual(true);
+
+        expect(result[1].columnName).toEqual("yyy");
+        expect(result[1].isAscending).toEqual(false);
+
+
+        var result = searchService.parseMultiSort("xxx asc");
+
+        // Make sure they match the values from the mockCompositionResult
+        expect(result.length).toEqual(1);
+        expect(result[0].columnName).toEqual("xxx");
+        expect(result[0].isAscending).toEqual(true);
+
+        
+    });
+
  
 
       it('Test filter parameters response, for not contains operation', function () {

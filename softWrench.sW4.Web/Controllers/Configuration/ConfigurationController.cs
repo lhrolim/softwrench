@@ -39,9 +39,11 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         private readonly SimpleInjectorDomainEventDispatcher _dispatcher;
         private readonly EntityRepository _entityRepository;
 
+        private readonly IWhereClauseFacade _whereClauseFacade;
+
 
         public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade,
-            SimpleInjectorDomainEventDispatcher dispatcher, EntityRepository entityRepository) {
+            SimpleInjectorDomainEventDispatcher dispatcher, EntityRepository entityRepository, IWhereClauseFacade whereClauseFacade) {
             _cache = cache;
             _configService = configService;
             _resolver = resolver;
@@ -50,6 +52,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             _facade = facade;
             _dispatcher = dispatcher;
             _entityRepository = entityRepository;
+            _whereClauseFacade = whereClauseFacade;
         }
 
         [SPFRedirect("Configuration", "_headermenu.configuration")]
@@ -94,7 +97,10 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             var whereClauses = category.Definitions.Where(definition => category.FullKey.StartsWith("/_whereclauses/"));
             foreach (var definition in whereClauses) {
                 //not all categories are related to whereclauses only these need to be validated
-                ValidateWhereClause(category, definition);
+                string value;
+                if (category.ValuesToSave.TryGetValue(definition.FullKey, out value)) {
+                    _whereClauseFacade.ValidateWhereClause(category.Key, value, category.Condition);
+                }
             }
 
             var result = await _configService.UpdateDefinitions(category);
@@ -107,38 +113,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             return response;
         }
 
-        private void ValidateWhereClause(CategoryDTO category, PropertyDefinition definition) {
-            try {
-                string value;
 
-
-                if (category.ValuesToSave.TryGetValue(definition.FullKey, out value)) {
-                    var searchRequestDto = new SearchRequestDto();
-                    searchRequestDto.WhereClause = WhereClauseFacade.BuildWhereClauseResult(value).Query;
-                    var application = MetadataProvider.Application(category.Key, false, true);
-                    if (application == null) {
-                        //under some circumstances there will be no applicaiton itself, but rather just a plain entity (e.g commtemplate)
-                        var entity = MetadataProvider.Entity(category.Key);
-                        _entityRepository.Get(entity, searchRequestDto);
-                    } else {
-                        if (category.Condition != null) {
-                            //TODO: improve schema filtering, to validate only against the proper schema, considering offline conditions, etc
-                        } else {
-                            //let´s start by validating all list schemas
-                            var schemas = application.AllSchemasByStereotype("list");
-                            schemas.ForEach(s => {
-                                var entityMetadata = MetadataProvider.SlicedEntityMetadata(s);
-                                _entityRepository.Get(entityMetadata, searchRequestDto);
-                            });
-                        }
-                    }
-                }
-            } catch (NHibernate.Exceptions.GenericADOException ex) {
-                throw new InvalidWhereClauseException("Error validating where clause", ex.InnerException);
-            } catch (Exception ex) {
-                throw new InvalidWhereClauseException(ex.Message);
-            }
-        }
 
         [HttpPut]
         public IGenericResponseResult CreateCondition(WhereClauseRegisterCondition condition) {

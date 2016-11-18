@@ -150,7 +150,7 @@
                     focusService.resetFocusToCurrent($scope.schema, key);
                 });
 
-                $scope.$on("sw.modal.show", function (event, modalData) {
+                $scope.$on(JavascriptEventConstants.ModalShown, function (event, modalData) {
                     if ($scope.ismodal === "true") {
                         if (modalData && modalData.schema) {
                             $scope.schema = modalData.schema;

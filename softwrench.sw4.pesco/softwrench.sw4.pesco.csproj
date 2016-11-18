@@ -96,8 +96,8 @@
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.0.0.1\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.1.6166.24580, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.1.6166.24580\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.user, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -160,19 +160,6 @@
   <ItemGroup>
     <Content Include="metadata\pesco\deploy.xml" />
     <Content Include="metadata\pesco\menu.web.xml" />
-    <Content Include="web_content\dashboard\scripts\dashboardauxService.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
-    <Content Include="web_content\dashboard\scripts\dashboarddirective.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardgraphicpanel.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardgridpanel.js" />
-    <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
-    <Content Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
-    <Content Include="web_content\dashboard\templates\Dashboard.html" />
-    <Content Include="web_content\dashboard\templates\dashboarddirective.html" />
-    <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
-    <Content Include="web_content\dashboard\templates\dashboardgridpanel.html" />
     <Content Include="web_content\pesco\images\logo-pdf.png" />
     <Content Include="web_content\pesco\scripts\aaa_pescomodule.js" />
     <Content Include="web_content\pesco\scripts\pescocommunication_service.js" />

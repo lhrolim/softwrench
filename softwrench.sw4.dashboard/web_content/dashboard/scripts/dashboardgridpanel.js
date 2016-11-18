@@ -17,7 +17,12 @@ angular.module('sw_layout')
         };
         scope.application = scope.paneldatasource.panel.application;
         // TODO: We'll need to define an unique name for it. 
-        scope.metadataid = scope.paneldatasource.panel.alias || null;
+
+        const panelAlias = scope.paneldatasource.panel.alias;
+        if (panelAlias) {
+            scope.metadataid = "dashboard:" + panelAlias;
+        }
+        
         scope.fieldstodisplay = scope.paneldatasource.panel['appFields'];
         scope.datamap = {};
     }
@@ -39,6 +44,7 @@ angular.module('sw_layout')
                     pageSize: $scope.paneldatasource.panel['limit'],
                     searchSort: $scope.paneldatasource.panel['defaultSortField'],
                     fieldstodisplay: $scope.paneldatasource.panel['appFields'],
+                    multiSort: searchService.parseMultiSort($scope.paneldatasource.panel['defaultSortField'])
                 });
             }
 
@@ -49,6 +55,10 @@ angular.module('sw_layout')
                 init();
                
             }, true);
+
+            $scope.getMetadataId = function(paneldatasource) {
+                return "dashboard:" + paneldatasource.panel.alias;
+            }
 
         }],
 

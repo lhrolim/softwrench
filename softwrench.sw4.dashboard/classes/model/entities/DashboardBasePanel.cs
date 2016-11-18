@@ -9,7 +9,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     /// BAse class for panels that can go inside of dashboards. Implementations can be grids, graphics, etc
     /// </summary>
     [Class(Table = "DASH_BASEPANEL", Lazy = false)]
-    public class DashboardBasePanel : IBaseAuditEntity {
+    public abstract class DashboardBasePanel : IBaseAuditEntity {
 
         public static string ByUser(string panelType, int?[] enumerable) {
             return "from {0} where (userid is null or userid = ?) and (userprofiles is null or {0})".Fmt(panelType, DashboardFilter.GetUserProfileString(enumerable));
@@ -65,6 +65,10 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             get; set;
         }
 
+        public virtual string WhereClause {
+            get; set;
+        }
+
         /// <summary>
         /// Transient property that can make the panel invisible due to a presence of a role blocking it, for instance, or some other business logic
         /// </summary>
@@ -86,6 +90,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         protected bool Equals(DashboardBasePanel other) {
             return string.Equals(Alias, other.Alias);
         }
+
+        public abstract string GetApplicationName();
 
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;

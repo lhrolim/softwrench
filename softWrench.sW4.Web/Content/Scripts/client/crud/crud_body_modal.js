@@ -82,7 +82,7 @@
                 }
             };
 
-            $scope.$on('sw.modal.show', function (event, modaldata) {
+            $scope.$on(JavascriptEventConstants.ModalShown, function (event, modaldata) {
                 $scope.showModal(modaldata);
                 $scope.modalshown = true;
             });

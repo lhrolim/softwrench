@@ -1,7 +1,6 @@
 ﻿(function (angular) {
     "use strict";
-
-    var app = angular.module('sw_layout');
+    const app = angular.module('sw_layout');
     app.directive('dashboardrendered', function ($timeout, $log, $rootScope, eventService) {
         "ngInject";
         return {
@@ -11,18 +10,18 @@
                 if (scope.$last === false) {
                     return;
                 }
-                var log = $log.getInstance('dashboardrendered');
+                const log = $log.getInstance('dashboardrendered');
                 log.debug("finished rendering dashboards");
 
                 $rootScope.$broadcast('sw_titlechanged', 'Dashboard');
-                $rootScope.$broadcast('dash_finishloading');
+                $rootScope.$broadcast(DashboardEventConstants.FinishLoading);
             }
         };
     });
 
     app.controller("DashboardController", [
-        "$scope", "$log", "$timeout", "modalService", "fieldService", "dashboardAuxService", "contextService", "alertService", "crudContextHolderService", "redirectService",
-    function ($scope, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService, redirectService) {
+        "$scope","$q", "$log", "$timeout", "modalService", "fieldService", "dashboardAuxService", "contextService", "alertService", "crudContextHolderService", "redirectService",
+    function ($scope,$q, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService, redirectService) {
 
         // #region Utils (state control)
         var selectedDashboardIds = [];
@@ -44,21 +43,21 @@
 
         var dashboardCheckpoint = {};
         function createDashboardCheckPoint(dashboard) {
-            var checkpoint = angular.copy(dashboard);
+            const checkpoint = angular.copy(dashboard);
             dashboardCheckpoint[dashboard.id] = checkpoint;
         }
         function restoreDashboardCheckpoint(dashboardId) {
             $scope.currentdashboardid = dashboardId;
-            var checkpoint = angular.copy(dashboardCheckpoint[dashboardId]);
+            const checkpoint = angular.copy(dashboardCheckpoint[dashboardId]);
 
             // for some reason, simple assgnment doesn't work -> has to be done property by property
             // $scope.dashboard = checkpoint;
-            angular.forEach(checkpoint, function(val, key) {
+            angular.forEach(checkpoint, function (val, key) {
                 $scope.dashboard[key] = val;
             });
         }
         function isDashboardChanged(dashboard) {
-            var checkpoint = dashboardCheckpoint[dashboard.id];
+            const checkpoint = dashboardCheckpoint[dashboard.id];
             return !angular.equals(dashboard, checkpoint);
         }
         function deleteDashboardCheckpoint(dashboardId) {
@@ -105,13 +104,13 @@
             $scope.dashboard = $scope.getCurrentDashboardById($scope.currentdashboardid);
             $scope.dashboards.forEach(sortPanels);
             $scope.dashboards.forEach(createDashboardCheckPoint);
-            var userData = contextService.getUserData();
+            const userData = contextService.getUserData();
             $scope.userid = userData.id;
         };
 
         $scope.getCurrentDashboardById = function (id) {
-            var dashboards = $scope.dashboards;
-            for (var i = 0; i < dashboards.length; i++) {
+            const dashboards = $scope.dashboards;
+            for (let i = 0; i < dashboards.length; i++) {
                 if (dashboards[i].id == id) {
                     return dashboards[i];
                 }
@@ -121,8 +120,8 @@
         };
 
         $scope.getCurrentIndexById = function (id) {
-            var dashboards = $scope.dashboards;
-            for (var i = 0; i < dashboards.length; i++) {
+            const dashboards = $scope.dashboards;
+            for (let i = 0; i < dashboards.length; i++) {
                 if (dashboards[i].id == id) {
                     return i;
                 }
@@ -136,7 +135,7 @@
         };
 
         $scope.addpanel = function () {
-            var dm = {};
+            const dm = {};
             $scope.dashboard.panels = $scope.dashboard.panels || [];
             dm.numberofpanels = $scope.dashboard.panels.length;
             modalService.show($scope.newpanelschema, dm, {
@@ -155,9 +154,8 @@
         }
 
         $scope.createNewPanel = function () {
-            var schema = $scope.panelschemas[$scope.paneltype];
-            var title = "Create " + panelTypeLabel($scope.paneltype) + " Widget";
-
+            const schema = $scope.panelschemas[$scope.paneltype];
+            const title = "Create " + panelTypeLabel($scope.paneltype) + " Widget";
             modalService.show(schema, null, {
                 title: title, cssclass: "dashboardmodal", onloadfn: function (scope) {
                     crudContextHolderService.updateEagerAssociationOptions("applications", $scope.applications);
@@ -174,16 +172,16 @@
         $scope.refreshInterval = {
             // hardcoded with 'expected' values > TODO: change (fetch from somewhere) when requirements are clearer
             config: {
-                'min'    : 5,
-                'max'    : 60,
+                'min': 5,
+                'max': 60,
                 'default': 5,
-                'unit'   : "minute"
+                'unit': "minute"
             }
         };
 
         $scope.refreshDashboards = function (delay) {
-            dashboardAuxService.loadDashboards($scope.currentdashboardid).then(function(data) {
-                $scope.dashboards.forEach(function(dashboard) {
+            dashboardAuxService.loadDashboards($scope.currentdashboardid).then(function (data) {
+                $scope.dashboards.forEach(function (dashboard) {
                     markDashboardNotSelected(dashboard.id);
                 });
                 $scope.resultData = data.resultObject;
@@ -196,9 +194,8 @@
         $scope.doInit();
 
         $scope.$on("dash_createpanel", function (event, paneltype) {
-            var schema = $scope.panelschemas[paneltype];
-            var title = "Create " + panelTypeLabel(paneltype) + " Widget";
-
+            const schema = $scope.panelschemas[paneltype];
+            const title = "Create " + panelTypeLabel(paneltype) + " Widget";
             modalService.show(schema, null, {
                 title: title, cssclass: "dashboardmodal", onloadfn: function (scope) {
                     // scope.associationOptions['applications'] = $scope.applications;
@@ -211,12 +208,11 @@
             $scope.currentdashboardid = dashboardid;
         });
 
-        $scope.$on("dash_dashsaved", function (event, dashboard) {
+        $scope.$on(DashboardEventConstants.DashboardSaved, function (event, dashboard) {
             modalService.hide();
 
             // Lazy load of the dashboards - also set focus to the new dashboard
-            var preexistingdashboardIdx = $scope.getCurrentIndexById(dashboard.id, true);
-
+            const preexistingdashboardIdx = $scope.getCurrentIndexById(dashboard.id, true);
             if (preexistingdashboardIdx === -1) {
                 $scope.dashboards.push(dashboard);
             } else {
@@ -231,15 +227,15 @@
             $scope.isEditingAnyDashboard = false;
         });
 
-        $scope.$on("dash_panelcreated", function (event, dashboard) {
-            modalService.hide();
-        });
+//        $scope.$on("dash_panelcreated", function (event, dashboard) {
+//            modalService.hide();
+//        });
+//
+//        $scope.$on("dash_changedashboard", function (event, dashboardid) {
+//            $scope.currentdashboardid = dashboardid;
+//        });
 
-        $scope.$on("dash_changedashboard", function (event, dashboardid) {
-            $scope.currentdashboardid = dashboardid;
-        });
-
-        $scope.$on("dash_finishloading", function (event, dashboardid) {
+        $scope.$on(DashboardEventConstants.FinishLoading, function (event, dashboardid) {
             $timeout(function () {
                 $(".dashboarddetailtab li>a").each(function () {
                     var $this = $(this);
@@ -251,25 +247,23 @@
                             return false;
                         }
                         $this.tab("show");
-                        var dashid = $(this).data("tabid");
-
+                        const dashid = $(this).data("tabid");
                         $scope.currentdashboardid = dashid;
                         $scope.dashboard = $scope.getCurrentDashboardById(dashid);
-
-                        var log = $log.getInstance("dashboardrendered");
+                        const log = $log.getInstance("dashboardrendered");
                         log.trace("lazy loading dashboard {0}".format(dashid));
                     });
                 });
             }, 0, false);
         });
 
-        $scope.$on("dash_panelassociated", function (event, panel) {
+        $scope.$on(DashboardEventConstants.PanelAssociated, function (event, panel) {
             modalService.hide();
             dashboardAuxService.addPanelToDashboard($scope.dashboard, panel);
         });
 
         $scope.getEditButtonClass = function () {
-            var buttonClass = "btn-default";
+            const buttonClass = "btn-default";
 
             //TODO: if dashboard has changes
             //if (haschanges) {
@@ -291,7 +285,7 @@
             $scope.dashboard = $scope.getCurrentDashboardById(id);
 
             $scope.$broadcast("sw:dashboard:selected", id);
-            var log = $log.getInstance("dashboardrendered", ["dashboard"]);
+            const log = $log.getInstance("dashboardrendered", ["dashboard"]);
             log.trace("lazy loading dashboard {0}".format(id));
         };
 
@@ -303,23 +297,21 @@
             // Update display to show a new dashboard
             $scope.newDashboard = true;
             $scope.dashboard = {};
-
-            var schema = $scope.saveDashboardSchema;
-
+            const schema = $scope.saveDashboardSchema;
             return redirectService.openAsModal(schema.applicationName, schema.schemaId, {
                 title: "New Dashboard",
                 cssclass: "dashboardmodal"
-            }).then(function() {
+            }).then(function () {
                 crudContextHolderService.updateEagerAssociationOptions("#applications", $scope.applications, { schemaId: "#modal" });
             });
 
 
-//            modalService.show(schema, null, {
-//                
-//                // onloadfn: function (scope) {
-//                //  scope.associationOptions['applications'] = ;
-//                // }
-//            });
+            //            modalService.show(schema, null, {
+            //                
+            //                // onloadfn: function (scope) {
+            //                //  scope.associationOptions['applications'] = ;
+            //                // }
+            //            });
         };
 
         $scope.isNewDashboard = function () {
@@ -327,15 +319,14 @@
         };
 
         $scope.finishCreatingDashboard = function () {
-            var log = $log.getInstance("dashboardController#saveDashboard");
-
+            const log = $log.getInstance("dashboardController#saveDashboard");
             if (!$scope.canCreateBoth) {
                 //this is personal only
                 log.debug("saving personal dashboard");
                 dashboardAuxService.saveDashboard($scope.dashboard);
                 return;
             }
-            var datamap = $scope.dashboard;
+            const datamap = $scope.dashboard;
             datamap.canCreateBoth = $scope.canCreateBoth;
 
             modalService.show($scope.saveDashboardSchema, datamap, {
@@ -362,7 +353,7 @@
                     "There are unsaved changes to the current dashboard. " +
                     "Any unsaved changes will be discarded. " +
                     "Are you sure sure you want to cancel editting.")
-                .then(function() {
+                .then(function () {
                     restoreDashboardCheckpoint(dashboard.id);
                     $scope.isEditingAnyDashboard = false;
                 });
@@ -393,13 +384,13 @@
 
         function panelDatamap(panel) {
             var datamap = angular.copy(panel);
+            datamap["#edit"] = true;
             if (!panel.type.contains("graphic") && !panel.type.contains("Graphic")) {
                 return datamap;
             }
             angular.forEach(panel.configurationDictionary, function (value, key) {
                 datamap[key] = value;
             });
-            datamap["#edit"] = true;
 
             return datamap;
         }
@@ -409,13 +400,16 @@
         }
 
         $scope.editPanel = function (panel, dashboard) {
-            var schema = $scope.panelschemas[panelSimpleType(panel)];
-            var title = "Edit " + panelTypeLabel($scope.paneltype) + " Widget";
+            const schema = $scope.panelschemas[panelSimpleType(panel)];
+            const title = "Edit " + panelTypeLabel($scope.paneltype) + " Widget";
             var datamap = panelDatamap(panel);
 
             modalService.show(schema, datamap, {
                 title: title, cssclass: "dashboardmodal", onloadfn: function (scope) {
                     crudContextHolderService.updateEagerAssociationOptions("applications", $scope.applications);
+                    const p1 = dashboardAuxService.lookupFields({ fields: datamap, scope: $scope });
+                    const p2 = dashboardAuxService.lookupWhereClause({ fields: datamap });
+                    return $q.all([p1, p2]);
                 }
             });
         };

@@ -1,7 +1,9 @@
 ﻿using System;
+using JetBrains.Annotations;
 
 namespace softWrench.sW4.Configuration.Definitions.WhereClause {
     public class WhereClauseResult {
+        [CanBeNull]
         public string Query { get; set; }
         public string ServiceName { get; set; }
         public string MethodName { get; set; }

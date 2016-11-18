@@ -1,9 +1,9 @@
 (function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').factory('validationService', ['$log', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', 'crudContextHolderService', "passwordValidationService", validationService]);
+    angular.module('webcommons_services').factory('validationService', ['$log','$q', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', 'crudContextHolderService', "passwordValidationService", validationService]);
 
-    function validationService($log, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService, crudContextHolderService, passwordValidationService) {
+    function validationService($log,$q, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService, crudContextHolderService, passwordValidationService) {
 
         /**
          * Similar to the validate method, but only returning the array of items, for custom handling
@@ -75,8 +75,33 @@
             return this.validate(schema, schema.displayables, datamap);
         }
 
-        function validate(schema, displayables, datamap, angularformerrors, innerValidation) {
-            angularformerrors = angularformerrors || {};
+        function validateCurrentPromise(panelId) {
+
+            const arr = this.validateCurrent(panelId);
+            const deferred =$q.defer();
+            if (arr.length > 0) {
+                return deferred.reject(arr);
+            } else {
+                deferred.resolve();
+            }
+            return deferred.promise;
+        }
+
+        function validatePromise(schema,datamap) {
+            if (schema == null || datamap == null) {
+                return $q.when();
+            }
+            const arr = this.validate(schema, schema.displayables, datamap);
+            const deferred =$q.defer();
+            if (arr.length > 0) {
+                return deferred.reject(arr);
+            } else {
+                deferred.resolve();
+            }
+            return deferred.promise;
+        }
+
+        function validate(schema, displayables, datamap, angularformerrors={}, innerValidation=false) {
             const log = $log.get("validationService#validate");
             let validationArray = [];
             const allDisplayables = schemaService.flattenDisplayables(displayables, null, datamap);
@@ -149,7 +174,7 @@
                         return;
                     }
 
-                    if (label.endsWith("s") || label.endsWith("S")) {
+                    if (!label.equalIc("alias") && (label.endsWith("s") || label.endsWith("S"))) {
                         validationArray.push(i18NService.get18nValue("messagesection.validation.requiredExpression", "<strong>{0}{1}</strong> are required", [label, qualifier]));
                     } else {
                         validationArray.push(i18NService.get18nValue("messagesection.validation.requiredExpression", "<strong>{0}{1}</strong> is required", [label, qualifier]));
@@ -173,10 +198,12 @@
             return validationArray;
         };
 
-        var service = {
+        const service = {
             getInvalidLabels,
             validate,
+            validateCurrentPromise,
             validateCurrent,
+            validatePromise,
             validateInlineComposition,
             getValidationPattern
         };

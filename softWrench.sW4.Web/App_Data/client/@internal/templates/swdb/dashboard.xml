@@ -15,11 +15,13 @@
             <option label="Restore" value="restore"/>
           </optionfield>
 
-          <optionfield attribute="application" providerattribute="#applications" 
+          <optionfield attribute="application" providerattribute="#applications"
                        skipvalidation="true"
                        label="Application" tooltip="Restrict the dashboard to an application. Useful for filtering dashboards by application permission."
                        requiredexpression="false"
-                       showexpression="@mode === 'brandnew'" default="" />
+                       showexpression="@mode === null || @mode === 'brandnew'" default="" >
+            <renderer type="combo" params="showmissingoption=false"/>
+          </optionfield>
 
           <optionfield attribute="dashboardid" label="Select Dashboard" providerattribute="existingDashboards" showexpression="@mode!='brandnew'">
             <filter clientfunction="dashboardAuxService.filterSelectableDashboards"/>
@@ -102,19 +104,21 @@
           </optionfield>
           <section showexpression="@application!=null">
 
-            <optionfield label="Fields" attribute="fields" providerattribute="appfields" skipvalidation="true">
+            <optionfield label="Fields" attribute="fields" providerattribute="appFields" skipvalidation="true">
               <renderer type="checkbox"/>
             </optionfield>
 
-            <optionfield label="Sort By" attribute="sortby" providerattribute="appfields" skipvalidation="true">
-              <renderer type="autocompleteclient"/>
-            </optionfield>
+            <section resourcepath="/Content/Shared/dashboard/templates/gridpanelsortsection.html" showexpression="@appFields!=null">
+<!--              <header displacement="ontop" label="Sort Order" />-->
+            </section>
 
-            <field attribute="limit" label="Limit" default="30" defaultexpression="30">
-              <renderer type="numericinput"/>
+            
+
+            <field attribute="limit" label="Limit" default="30" defaultexpression="30" helpicon="right" tooltip="Max number of entries per page to show on the dashboard">
+              <renderer type="numericinput" params="min=5"/>
             </field>
 
-            <optionfield label="Width" attribute="size" requiredexpression="true" tooltip="Panel's width">
+            <optionfield label="Width" attribute="size" requiredexpression="true" tooltip="Panel's width" helpicon="right" >
               <renderer type="combo" params="min=1;max=12" />
               <option label="3"   value="3" />
               <option label="4"   value="4" />
@@ -124,13 +128,17 @@
               <option label="12"  value="12" />
             </optionfield>
 
+            <field label="Where Clause" attribute="whereClause" tooltip="A where Clause to use on the dashboard. Remember to fully qualify the tables (ex: workorder.wonum)" helpicon="right">
+              <renderer type="textarea"/>
+            </field>
+
           </section>
           <commandbars>
             <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
-              <command id="save" icon="fa-check" service="dashboardAuxService" method="createAndAssociateGridPanel"
+              <command id="save" icon="fa-check" service="dashboardAuxService" method="savePanel"
                        parameters="datamap"
-                       label="Add Grid Widget" tooltip="Add Grid Widget" position="&lt;cancel" />
+                       label="service:dashboardAuxService.getPanelModalLabel" tooltip="Add Grid Widget" position="&lt;cancel" />
             </commandgroup>
           </commandbars>
           <properties>

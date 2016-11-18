@@ -69,6 +69,10 @@
             return $scope.invokeOuterScopeFn(label);
         }
 
+        if (label.startsWith("service:")) {
+            return expressionService.evaluate(label, $scope.datamap, $scope);
+        }
+
         return label;
     }
 

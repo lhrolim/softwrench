@@ -106,7 +106,7 @@
             }
         });
 
-        $scope.$on('sw.modal.show', function (event, modaldata) {
+        $scope.$on(JavascriptEventConstants.ModalShown, function (event, modaldata) {
             if (!$scope.modalincluded) {
                 $scope.modalincluded = true;
                 //required because we need to store somewhere while the directive is not yet compiled, and retrieve on postcompile...

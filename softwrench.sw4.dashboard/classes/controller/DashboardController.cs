@@ -17,6 +17,9 @@ using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Configuration.Definitions.WhereClause;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.SPF;
 
 namespace softwrench.sw4.dashboard.classes.controller {
@@ -31,17 +34,22 @@ namespace softwrench.sw4.dashboard.classes.controller {
         private readonly IEventDispatcher _dispatcher;
         private readonly GraphicStorageSystemFacadeProvider _graphicServiceProvider;
 
-        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager, IEventDispatcher dispatcher, GraphicStorageSystemFacadeProvider graphicServiceProvider) {
+        private readonly IWhereClauseFacade _whereClauseFacade;
+
+        public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager, IEventDispatcher dispatcher, GraphicStorageSystemFacadeProvider graphicServiceProvider,
+            IWhereClauseFacade whereClauseFacade) {
             _dao = dao;
             _userDashboardManager = userDashboardManager;
             _dispatcher = dispatcher;
             _graphicServiceProvider = graphicServiceProvider;
+            _whereClauseFacade = whereClauseFacade;
         }
 
         [HttpPost]
-        public IGenericResponseResult SaveDashboard(Dashboard dashboard) {
+        public IGenericResponseResult SaveDashboard([FromBody]Dashboard dashboard) {
             //TODO: update menu, clear caching
             var user = SecurityFacade.CurrentUser();
+            dashboard.PopulatePanelRelationshipsForStorage();
 
             Dashboard savedDashboard;
             dashboard.Active = true;
@@ -118,6 +126,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
             var panelSchemas = new Dictionary<string, ApplicationSchemaDefinition> {
                 { "dashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("detail")) },
+                { "editdashboardgrid", MetadataProvider.Application("_dashboardgrid").Schema(new ApplicationMetadataSchemaKey("editdetail")) },
                 { "dashboardgraphic", MetadataProvider.Application("_dashboardgraphic").Schema(new ApplicationMetadataSchemaKey("detail")) }
             };
 
@@ -131,10 +140,12 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 // swadmin.MergedUserProfile has empty Permissions
                 ? MetadataProvider.FetchSecuredTopLevelApps(ClientPlatform.Web, user).Select(a => a.ApplicationName)
                 : user.MergedUserProfile.Permissions.Where(p => !p.HasNoPermissions).Select(p => p.ApplicationName);
-                                            
+
             var applications = applicationNames.Select(name => new GenericAssociationOption(name, name))
                                             .Cast<IAssociationOption>()
                                             .ToList();
+            applications.Sort();
+
 
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
@@ -167,7 +178,13 @@ namespace softwrench.sw4.dashboard.classes.controller {
         [HttpGet]
         public IGenericResponseResult LoadFields([FromUri]string applicationName) {
             var app = MetadataProvider.Application(applicationName);
-            ApplicationSchemaDefinition schema = app.GetListSchema();
+            var schema = app.GetListSchema();
+            if (schema == null){
+                //sometimes this method is getting called using _dashboard as application.
+                //TODO: fix it.
+                return new GenericResponseResult<IEnumerable<IAssociationOption>>(new List<IAssociationOption>());
+            }
+
             var options = schema.Fields.Select(f => new GenericAssociationOption(f.Attribute, f.Label)).Where(f => !string.IsNullOrEmpty(f.Label))
                 .Cast<IAssociationOption>()
                 .ToList();
@@ -175,6 +192,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
 
+        [HttpGet]
+        public async Task<string> LoadPanelWhereClause([FromUri]string applicationName, [FromUri]string panelAlias) {
+            var queryResult = await _whereClauseFacade.LookupAsync(applicationName,new ApplicationLookupContext() { MetadataId = "dashboard:" + panelAlias });
+            return queryResult?.Query ;
+        }
 
         [HttpGet]
         public IGenericResponseResult LoadPanel([FromUri]string panel) {
@@ -191,13 +213,29 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
 
+
+
+
+
         [HttpPost]
-        public IGenericResponseResult SaveGridPanel(DashboardGridPanel panel) {
+        public async Task<IGenericResponseResult> SaveGridPanel(DashboardGridPanel panel) {
             var app = MetadataProvider.Application(panel.Application);
-            ApplicationSchemaDefinition schema = app.GetListSchema();
+            var schema = app.GetListSchema();
+            //TODO make it transactional
+
+            await _whereClauseFacade.RegisterAsync(app.ApplicationName, panel.WhereClause, new WhereClauseRegisterCondition() {
+                AppContext = new ApplicationLookupContext() {
+                    MetadataId = "dashboard:" + panel.Alias
+                }
+            }, true);
+
+
             panel.SchemaRef = schema.SchemaId;
             panel.Filter = new DashboardFilter();
-            return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
+            var gridPanel = await _dao.SaveAsync(panel);
+            gridPanel.WhereClause = panel.WhereClause;
+
+            return new GenericResponseResult<DashboardBasePanel>(gridPanel);
         }
 
         [HttpPost]

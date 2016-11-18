@@ -26,17 +26,18 @@
                 checked: '=',
                 timestamp: '@',
                 panelid: "@",
+                metadataid: "@",
                 forprint: "@"
             },
 
-            controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log",
+            controller: ["$scope", "$http", "$q", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService", "gridPreferenceService",
                 "searchService", "tabsService", "userPreferencesService", "printService", 
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService", "schemaService",
-                function ($scope, $http, $rootScope, $filter, $injector, $log,
+                function ($scope, $http,$q, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService, printService,
                     fieldService, commandService, i18NService, modalService,
@@ -276,69 +277,79 @@
                         $scope.$broadcast("sw_griddatachanged", datamap, $scope.schema, $scope.panelid);
                     }
 
-                    $scope.refreshGridRequested = function (searchData, searchOperator, extraparameters) {
-                        /// <summary>
-                        ///  implementation of searchService#refreshgrid see there for details
-                        /// </summary>
-                        extraparameters = extraparameters || {};
-                        if (extraparameters.panelid && extraparameters.panelid.toString() !== $scope.panelid) {
+
+                    $scope.cleanup = function() {
+                        $scope.paginationData.filterFixedWhereClause = null;
+                        $scope.searchData = {};
+                        $scope.searchSort = {};
+                        $scope.multiSort = [];
+                        $scope.searchOperator = {};
+                        $scope.searchValues = "";
+                        $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
+                        crudContextHolderService.setSelectedFilter({}, $scope.panelid);
+                    }
+
+                    /**
+                     * This method might get called during the initialization of the controller itself (i.e page F5), or during a call to searchService#refreshgrid
+                     * 
+                     * @param {} searchData 
+                     * @param {} searchOperator 
+                     * @param {} panelid 
+                     * @param {} searchSort 
+                     * @param {} quickSearchDTO 
+                     * @param {} metadataid 
+                     * @param {} pageNumber 
+                     * @param {} pageSize 
+                     * @param {} printMode 
+                     * @param {} forcecleanup 
+                     * @param {} avoidspin 
+                     * @param {} addPreSelectedFilters 
+                     * @param {} numberOfPages 
+                     * @param {Array} multiSort 
+                     * @returns {} 
+                     */
+                    $scope.refreshGridRequested = function (searchData, searchOperator, 
+                    {panelid,searchSort,quickSearchDTO,metadataid,pageNumber,pageSize,printMode,forcecleanup,avoidspin,addPreSelectedFilters,numberOfPages, multiSort} = {}) {
+
+                        if (panelid && panelid.toString() !== $scope.panelid) {
                             //this is none of my business --> another dashboard will handle it
                             return;
                         }
-                        
 
                         contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""));
 
                         $scope.paginationData = $scope.paginationData || {};
                         $scope.searchData = $scope.searchData || {};
-                        $scope.searchSort = extraparameters.searchSort || $scope.searchSort || {};
-                        $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO || $scope.vm.quickSearchDTO;
-                        if (extraparameters.quickSearchDTO) {
-                            $scope.vm.quickSearchDTO = extraparameters.quickSearchDTO;
-                        } else {
-                            $scope.vm.quickSearchDTO = $scope.vm.quickSearchDTO || { compositionsToInclude: [] };
-                        }
+                        $scope.searchSort = searchSort || $scope.searchSort || {};
+                        $scope.multiSort = multiSort || $scope.multiSort;
+                        $scope.vm.quickSearchDTO = quickSearchDTO || $scope.vm.quickSearchDTO || { compositionsToInclude: [] };
 
-
-                        $scope.metadataid = extraparameters.metadataid;
+                        $scope.metadataid = metadataid;
                         
 
-                        var pagetogo = extraparameters.pageNumber ? extraparameters.pageNumber : $scope.paginationData.pageNumber;
-                        const pageSize = extraparameters.pageSize ? extraparameters.pageSize : $scope.paginationData.pageSize;
-                        const printmode = extraparameters.printMode;
-                        const keepfilterparameters = extraparameters.keepfilterparameters;
+                        var pagetogo = pageNumber ? pageNumber : $scope.paginationData.pageNumber;
+                        const newPageSize = pageSize ? pageSize : $scope.paginationData.pageSize;
+
                         // $scope.searchTemplate = extraparameters.searchTemplate;
 
                         // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
                         if (searchData) {
-                            //if (keepfilterparameters) {
-                            //    angular.forEach(searchData, function(data, key) {
-                            //        $scope.searchData[key] = data;
-                            //    });
-                            //} else {
                             $scope.searchData = searchData;
-                            //}
                             pagetogo = 1;
                         }
                         if (searchOperator) {
                             $scope.searchOperator = searchOperator;
                             pagetogo = 1;
                         }
-                        if (extraparameters.avoidspin) {
+                        if (avoidspin) {
                             contextService.set("avoidspin", true, true);
                         }
-                        if (extraparameters.forcecleanup) {
-                            $scope.paginationData.filterFixedWhereClause = null;
-                            $scope.searchData = {};
-                            $scope.searchSort = {};
-                            $scope.multiSort = [];
-                            $scope.searchOperator = {};
-                            $scope.searchValues = "";
-                            $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
-                            crudContextHolderService.setSelectedFilter({}, $scope.panelid);
+                        
+                        if (forcecleanup) {
+                            $scope.cleanup();
                         }
 
-                        $scope.selectPage(pagetogo, pageSize, printmode, extraparameters);
+                        $scope.selectPage(pagetogo, newPageSize, printMode, {addPreSelectedFilters,numberOfPages});
                     };
 
                     $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
@@ -423,15 +434,39 @@
 
                     };
 
+                    $scope.handleCustomParamProvider = function(searchDTO) {
+                        if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
+                            const customParamProviderString = $scope.schema.properties['schema.customparamprovider'];
+                            const customParamProvider = dispatcherService.loadServiceByString(customParamProviderString);
+                            if (customParamProvider != null) {
+                                const customParams = customParamProvider();
+                                if (customParams != null) {
+                                    const customParameters = {};
+                                    for (let param in customParams) {
+                                        if (!customParams.hasOwnProperty(param)) {
+                                            continue;
+                                        }
+                                        customParameters[param] = {};
+                                        customParameters[param]["key"] = customParams[param]["key"];
+                                        customParameters[param]["value"] = customParams[param]["value"];
+                                    }
+                                    searchDTO.CustomParameters = customParameters;
+                                }
+                            }
+                        }
+                    }
+
+
                     $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters ={}) {
+                        
                         if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
                             $scope.paginationData.pageNumber = pageNumber;
-                            return;
+                            return $q.when();
                         }
-                        
 
                         var totalCount = 0;
                         var filterFixedWhereClause = null;
+                  
                         if ($scope.paginationData != null) {
                             totalCount = $scope.paginationData.totalCount;
                             //if pageSize is specified, use it... this is used for printing function
@@ -461,53 +496,29 @@
                             searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
                             searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
                         }
-
-
+                   
                         // Check for custom param provider
-                        if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
-                            var customParamProviderString = $scope.schema.properties['schema.customparamprovider'];
-                            var customParamProvider = dispatcherService.loadServiceByString(customParamProviderString);
-                            if (customParamProvider != null) {
-                                var customParams = customParamProvider();
-                                if (customParams != null) {
-                                    var customParameters = {};
-                                    for (var param in customParams) {
-                                        if (!customParams.hasOwnProperty(param)) {
-                                            continue;
-                                        }
-                                        customParameters[param] = {};
-                                        customParameters[param]["key"] = customParams[param]["key"];
-                                        customParameters[param]["value"] = customParams[param]["value"];
-                                    }
-                                    searchDTO.CustomParameters = customParameters;
-                                }
-                            }
-                        }
+                        $scope.handleCustomParamProvider(searchDTO);
 
                         //avoids table flickering
                         fixHeaderService.unfix();
+                        let listSchemaId = "list";
 
-                        $scope.$parent.multipleSchema = false;
-                        $scope.$parent.schemas = null;
-                        var listSchema = "list";
                         if ($scope.schema != null && $scope.schema.stereotype.isEqual("list", true)) {
                             //if we have a list schema already declared, keep it
-                            listSchema = $scope.schema.schemaId;
+                            listSchemaId = $scope.schema.schemaId;
                         }
 
                         $rootScope.printRequested = printMode;
-
-                        var searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchema,
-                        {
+                        return searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchemaId,{
                             searchDTO: searchDTO,
                             printMode: printMode,
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
                             metadataid: $scope.metadataid,
                             saveSwGlobalRedirectURL: typeof $scope.panelid === "undefined" && $scope.ismodal !== "true",
                             addToHistory: typeof $scope.panelid === "undefined" && !printMode
-                        });
-
-                        searchPromise.success(function (data) {
+                        }).then(response => {
+                            var data = response.data;
                             // Set the scroll position to the top of the new page
                             contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                             if (!printMode) {
@@ -701,6 +712,7 @@
                             //DO NOT use !== here to avoid undefined and null comparisons to fail
                             return;
                         }
+                        //enforcing correct schema
                         $scope.schema = crudContextHolderService.currentSchema($scope.panelid);
                         $scope.refreshGridRequested(searchData, searchOperator, extraparameters);
                     });

@@ -61,7 +61,7 @@ namespace softWrench.sW4.Configuration.Definitions {
                 return SystemBlobValue != null ? StringExtensions.GetString(CompressionUtil.Decompress(SystemBlobValue)) : SystemValue;
             }
             set {
-                if (value.Length > 1000) {
+                if (value !=null && value.Length > 1000) {
                     SystemBlobValue = CompressionUtil.Compress(value.GetBytes());
                 } else {
                     SystemValue = value;

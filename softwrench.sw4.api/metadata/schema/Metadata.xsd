@@ -802,6 +802,7 @@
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="evalexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
+    <attribute name="helpicon" type="tns:HelpIcon" use="optional" default="right"></attribute>
 
     <attribute name="providerattribute" type="string"
 			use="optional">

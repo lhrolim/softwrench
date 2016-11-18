@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using log4net;
@@ -7,6 +9,11 @@ using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Configuration.Util;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Exceptions;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -16,6 +23,8 @@ namespace softWrench.sW4.Configuration.Services {
 
         private readonly ISWDBHibernateDAO _dao;
         private readonly UserProfileManager _userProfileManager;
+        private readonly EntityRepository _entityRepository;
+        private readonly ConfigurationCache _configurationCache;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WhereClauseRegisterService));
 
@@ -25,10 +34,45 @@ namespace softWrench.sW4.Configuration.Services {
 
 
 
-        public WhereClauseRegisterService(ISWDBHibernateDAO dao, UserProfileManager userProfileManager) {
+        public WhereClauseRegisterService(ISWDBHibernateDAO dao, UserProfileManager userProfileManager, EntityRepository entityRepository, ConfigurationCache configurationCache) {
             _dao = dao;
             _userProfileManager = userProfileManager;
+            _entityRepository = entityRepository;
+            _configurationCache = configurationCache;
         }
+
+        public void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
+
+            var searchRequestDto = new SearchRequestDto {
+                WhereClause = WhereClauseFacade.BuildWhereClauseResult(whereClause).Query
+            };
+            var application = MetadataProvider.Application(applicationName, false, true);
+            if (application == null) {
+                //under some circumstances there will be no applicaiton itself, but rather just a plain entity (e.g commtemplate)
+                var entity = MetadataProvider.Entity(applicationName);
+                _entityRepository.GetSync(entity, searchRequestDto);
+                return;
+            }
+
+
+            if (conditionToValidateAgainst != null && conditionToValidateAgainst.HasSchemaCondition) {
+                //TODO: improve schema filtering, to validate only against the proper schema, considering offline conditions, etc
+            } else {
+                //let´s start by validating all list schemas
+                var schemas = application.AllSchemasByStereotype("list");
+                try {
+                    foreach (var entityMetadata in schemas.Select(MetadataProvider.SlicedEntityMetadata)) {
+                        _entityRepository.GetSync(entityMetadata, searchRequestDto);
+                    }
+                } catch (NHibernate.Exceptions.GenericADOException ex) {
+                    throw new InvalidWhereClauseException("Error validating where clause", ex.InnerException);
+                } catch (Exception ex) {
+                    throw new InvalidWhereClauseException(ex.Message);
+                }
+            }
+
+        }
+
 
         public async Task<WCRegisterOperation> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
 
@@ -38,7 +82,7 @@ namespace softWrench.sW4.Configuration.Services {
             }
 
             //if the condition is null, we need to apply the default value inside the definition itself
-            var definition = GetDefinitionToSave(configKey, query,  condition==null);
+            var definition = GetDefinitionToSave(configKey, query, condition == null);
 
             var savedDefinition = await _dao.SaveAsync(definition);
 
@@ -65,7 +109,7 @@ namespace softWrench.sW4.Configuration.Services {
                 }
             }
 
-            var id = storedCondition == null ? null : storedCondition.Id;
+            var id = storedCondition?.Id;
 
             var storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(
                   PropertyValue.ByDefinitionConditionIdModuleProfile,
@@ -86,6 +130,8 @@ namespace softWrench.sW4.Configuration.Services {
             Log.DebugFormat("updating existing PropertyValue for {0}", configKey);
             storedValue.SystemStringValue = query;
             await _dao.SaveAsync(storedValue);
+            //TODO: investigate a way to populate cache immediately
+            _configurationCache.ClearCache(configKey);
             return WCRegisterOperation.ValueUpdate;
 
         }

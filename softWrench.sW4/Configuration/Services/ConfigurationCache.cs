@@ -46,7 +46,7 @@ namespace softWrench.sW4.Configuration.Services {
             ClearCachedOnClientIfNeeded(key);
         }
 
-        public void ClearCache(string key) {
+        public virtual void ClearCache(string key) {
             ConcurrentDictionary<ContextHolder, string> fromContext;
             if (ConfigCache.TryGetValue(key, out fromContext)) {
                 //clear entire cache of definion

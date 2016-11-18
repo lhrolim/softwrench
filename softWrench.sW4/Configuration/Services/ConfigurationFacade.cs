@@ -63,6 +63,8 @@ namespace softWrench.sW4.Configuration.Services {
 
         }
 
+      
+
         public async Task RegisterAsync(string configKey, PropertyDefinition definition) {
             if (!_appStarted) {
                 _toRegister.Add(configKey, definition);

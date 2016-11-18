@@ -200,20 +200,24 @@
     <Folder Include="classes\util\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="web_content\dashboard\scripts\dashboardgraphicpanel.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardgridpanel.js" />
-    <Content Include="web_content\dashboard\scripts\dashboarddirective.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardauxService.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
+    <None Include="web_content\dashboard\scripts\constants\DashboardConstants.js" />
+    <None Include="web_content\dashboard\scripts\gridpanelsortcontroller.js" />
+    <None Include="web_content\dashboard\scripts\dashboardgraphicpanel.js" />
+    <None Include="web_content\dashboard\scripts\dashboardgridpanel.js" />
+    <None Include="web_content\dashboard\scripts\dashboarddirective.js" />
+    <None Include="web_content\dashboard\scripts\dashboardauxService.js" />
+    <None Include="web_content\dashboard\scripts\dashboardcontroller.js" />
+    <None Include="softwrench.sw4.dashboard.nuspec" />
     <None Include="web_content\dashboard\styles\dashboards.scss" />
-    <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
-    <Content Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
-    <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
-    <Content Include="web_content\dashboard\templates\dashboardgridpanel.html" />
-    <Content Include="web_content\dashboard\templates\dashboarddirective.html" />
-    <Content Include="web_content\dashboard\templates\Dashboard.html" />
+    <None Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
+    <None Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
+    <None Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
+    <None Include="web_content\dashboard\templates\createnewpanelbutton.html" />
+    <None Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
+    <None Include="web_content\dashboard\templates\gridpanelsortsection.html" />
+    <None Include="web_content\dashboard\templates\dashboardgridpanel.html" />
+    <None Include="web_content\dashboard\templates\dashboarddirective.html" />
+    <None Include="web_content\dashboard\templates\Dashboard.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

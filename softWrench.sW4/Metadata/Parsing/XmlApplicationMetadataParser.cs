@@ -343,6 +343,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var rendererElement = xElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement);
             var evalExpression = xElement.Attribute(XmlMetadataSchema.BaseDisplayableEvalExpressionAttribute).ValueOrDefault((string)null);
             var searchOperation = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableSearchOperation).ValueOrDefault((string)null);
+            var helpIcon = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableHelpIconAttribute).ValueOrDefault((string)null);
             var renderer = new OptionFieldRenderer();
             if (rendererElement != null) {
                 renderer = (OptionFieldRenderer)ParseRendererNew(rendererElement, attribute, FieldRendererType.OPTION);
@@ -351,7 +352,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var events = ParseEvents(xElement, attribute);
             return new OptionField(applicationName, label, attribute, qualifier, requiredExpression, isReadOnly, isHidden, renderer, ParseFilterNew(filterElement, attribute),
                                    xElement.Elements().Where(e => e.Name.LocalName == XmlMetadataSchema.OptionElement).Select(ParseOption).ToList(),
-                                   defaultValue, sort, showExpression, toolTip, attributeToServer, events, providerAttribute, dependantFields, enableExpression, evalExpression, extraParameter, defaultExpression, searchOperation, extraProjectionFields);
+                                   defaultValue, sort, showExpression, helpIcon, toolTip, attributeToServer, events, providerAttribute, dependantFields, enableExpression, evalExpression, extraParameter, defaultExpression, searchOperation, extraProjectionFields);
         }
 
         private static IAssociationOption ParseOption(XElement xElement) {

@@ -14,12 +14,18 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     public class DashboardGraphicPanel : DashboardBasePanel {
 
         [Key(-1, Column = "GPID")]
-        public virtual int? GpId { get; set; }
+        public virtual int? GpId {
+            get; set;
+        }
 
         [Property]
-        public string Provider { get; set; }
+        public string Provider {
+            get; set;
+        }
 
-        public IDictionary<string, object> ConfigurationDictionary { get; set; }
+        public IDictionary<string, object> ConfigurationDictionary {
+            get; set;
+        }
 
         public DashboardGraphicPanel() : base() {
             ConfigurationDictionary = new Dictionary<string, object>();
@@ -39,7 +45,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
                 return ConfigurationDictionary.Any() ? string.Join(";", ConfigurationDictionary.Select(entry => entry.Key + "=" + entry.Value).ToList()) : null;
             }
             set {
-                if (string.IsNullOrEmpty(value)) return;
+                if (string.IsNullOrEmpty(value))
+                    return;
                 value.Split(';').Where(s => !string.IsNullOrEmpty(s))
                     .Select(config => {
                         var entry = config.Split('=');
@@ -74,5 +81,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             return ConfigurationDictionary.TryGetValue(key, out value) ? value : null;
         }
 
+        public override string GetApplicationName() {
+            return ConfigurationValue("application") as string;
+        }
     }
 }

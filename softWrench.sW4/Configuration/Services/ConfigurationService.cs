@@ -12,7 +12,14 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
+using NHibernate.Util;
+using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Exceptions;
+using softWrench.sW4.Metadata;
+using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Configuration.Services {
@@ -27,11 +34,13 @@ namespace softWrench.sW4.Configuration.Services {
         private readonly ISWDBHibernateDAO _dao;
         private readonly ConfigurationCache _cache;
         private readonly IEventDispatcher _eventDispatcher;
+        private readonly EntityRepository _entityRepository;
 
-        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache, IEventDispatcher eventDispatcher) {
+        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache, IEventDispatcher eventDispatcher, EntityRepository entityRepository) {
             _dao = dao;
             _cache = cache;
             _eventDispatcher = eventDispatcher;
+            _entityRepository = entityRepository;
         }
 
         [CanBeNull]
@@ -299,11 +308,14 @@ namespace softWrench.sW4.Configuration.Services {
             }
 
             var cacheableOnClientValues = new Dictionary<string, string>();
-            foreach (var key in cache){
+            foreach (var key in cache) {
                 cacheableOnClientValues.Add(key, await Lookup<string>(key, lookupContex));
             }
             return _cache.UpdateCachedOnClient(cacheableOnClientValues, CurrentTimestamp());
         }
+
+
+      
 
         public void ClearCache(string configKey) {
             _cache.ClearCache(configKey);

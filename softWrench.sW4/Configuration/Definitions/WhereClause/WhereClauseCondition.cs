@@ -41,6 +41,8 @@ namespace softWrench.sW4.Configuration.Definitions.WhereClause {
             return AppContext.MatchesCondition(superMatches, context);
         }
 
+        public bool HasSchemaCondition => AppContext?.Schema != null;
+
         protected bool Equals(WhereClauseCondition other) {
             return base.Equals(other) && Equals(AppContext, other.AppContext) && OfflineOnly == other.OfflineOnly;
         }

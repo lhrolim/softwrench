@@ -262,47 +262,6 @@
             border-top: 1px solid #999;
             margin-top: 11px;
             padding-top: 10px;
-
-            .wrap {
-                padding: 0 40px 0 10px;
-
-                #sortcolumns {
-                    padding-left: 0;
-                    margin-bottom: 0;
-                    float: left;
-
-                    li {
-                        list-style: none;
-                        float: left;
-                        margin-right: 10px;
-
-                        .btn {
-                            .remove-column {
-                                color: #a0a0a0;
-                            }
-                        }
-                    }
-                }
-
-                .add-column {
-                    float: left;
-                    height: 32px;
-                    padding-left: 24px;
-                    margin-left: -10px;
-                }
-
-                .add-column-label {
-                    position: relative;
-                    top: 8px;
-                    left: 11px;
-                    pointer-events: none;
-                    float: left;
-                }
-
-                .reset-order {
-                    float: right;
-                }
-            }
         }
     }
 }

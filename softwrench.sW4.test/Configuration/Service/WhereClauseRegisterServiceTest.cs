@@ -10,6 +10,7 @@ using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 
@@ -20,14 +21,18 @@ namespace softwrench.sW4.test.Configuration.Service {
         private WhereClauseRegisterService _service;
 
         private Mock<ISWDBHibernateDAO> _swdbDAO;
+        private Mock<EntityRepository> _entityRepository;
+        private Mock<ConfigurationCache> _configurationCache;
 
 
         [TestInitialize]
         public void Init()
         {
             _swdbDAO = TestUtil.CreateMock<ISWDBHibernateDAO>();
-            TestUtil.ResetMocks(_swdbDAO);
-            _service = new WhereClauseRegisterService(_swdbDAO.Object, null);
+            _entityRepository = TestUtil.CreateMock<EntityRepository>();
+            _configurationCache = TestUtil.CreateMock<ConfigurationCache>();
+            TestUtil.ResetMocks(_swdbDAO, _entityRepository,_configurationCache);
+            _service = new WhereClauseRegisterService(_swdbDAO.Object, null, _entityRepository.Object, _configurationCache.Object);
         }
 
 
@@ -138,11 +143,13 @@ namespace softwrench.sW4.test.Configuration.Service {
 
             _swdbDAO.Setup(f => f.SaveAsync(newValue)).ReturnsAsync(newValue);
 
+            _configurationCache.Setup(s => s.ClearCache("test"));
+
             //second time system starts
             var result = await _service.DoRegister("test", "newvalue", conditionToRegister);
             Assert.AreEqual(WhereClauseRegisterService.WCRegisterOperation.ValueUpdate, result);
 
-            TestUtil.VerifyMocks(_swdbDAO);
+            TestUtil.VerifyMocks(_swdbDAO, _configurationCache);
 
 
         }

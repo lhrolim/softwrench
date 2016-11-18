@@ -1,0 +1,46 @@
+multi-sort {
+    .wrap {
+        padding: 0 40px 0 10px;
+
+        #sortcolumns {
+            padding-left: 0;
+            margin-bottom: 0;
+            float: left;
+
+            li {
+                list-style: none;
+                float: left;
+                margin-right: 10px;
+                margin-bottom: 5px;
+
+                .btn {
+                    .remove-column {
+                        color: #a0a0a0;
+                    }
+                }
+            }
+        }
+
+        .add-column {
+            float: left;
+            margin-bottom: 5px;
+
+            .btn {
+                height: 32px;
+                padding-left: 24px;
+                margin-left: -14px;
+            }
+
+            label {
+                position: relative;
+                top: 2px;
+                left: 10px;
+                pointer-events: none;
+            }
+        }
+
+        .reset-order {
+            float: right;
+        }
+    }
+}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
@@ -14,7 +15,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         private const string BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE = BY_USER_PROFILES_APPLICATIONS_TEMPLATE + " and active is true";
 
         public static string ByUserAndApplications(IEnumerable<int?> profiles, bool includeInactive = false) {
-            return includeInactive 
+            return includeInactive
                 ? string.Format(BY_USER_PROFILES_APPLICATIONS_TEMPLATE, DashboardFilter.GetUserProfileString(profiles))
                 : string.Format(BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE, DashboardFilter.GetUserProfileString(profiles));
         }
@@ -26,36 +27,58 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public int? Id { get; set; }
+        public int? Id {
+            get; set;
+        }
 
         [Property]
-        public string Title { get; set; }
+        public string Title {
+            get; set;
+        }
 
         [Property]
-        public DateTime CreationDate { get; set; }
+        public DateTime CreationDate {
+            get; set;
+        }
 
         [Property]
-        public DateTime? UpdateDate { get; set; }
+        public DateTime? UpdateDate {
+            get; set;
+        }
 
         [Property]
-        public int? CreatedBy { get; set; }
+        public int? CreatedBy {
+            get; set;
+        }
 
         [Property]
-        public bool Active { get; set; }
+        public bool Active {
+            get; set;
+        }
 
         [Property]
-        public bool System { get; set; }
+        public bool System {
+            get; set;
+        }
 
         [Property]
-        public string Alias { get; set; }
+        public string Alias {
+            get; set;
+        }
 
         [Property]
-        public string Application { get; set; }
+        public string Application {
+            get; set;
+        }
 
         [Property]
-        public int PreferredOrder { get; set; }
+        public int PreferredOrder {
+            get; set;
+        }
 
-        public bool Cloning { get; set; }
+        public bool Cloning {
+            get; set;
+        }
 
         /// <summary>
         /// comma separated list of columns. (3,1,2 means 3 columns on first row, 1 on the second and 2 on the third).
@@ -68,7 +91,9 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         [Key(1, Column = "dashboard_id")]
         [OneToMany(2, ClassType = typeof(DashboardPanelRelationship))]
         [JsonIgnore]
-        public ISet<DashboardPanelRelationship> PanelsSet { get; set; }
+        public ISet<DashboardPanelRelationship> PanelsSet {
+            get; set;
+        }
 
         //Adapter cause asp.net won´t serialize interfaces
         public List<DashboardPanelRelationship> Panels {
@@ -80,7 +105,26 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             }
         }
 
+        public void PopulatePanelRelationshipsForStorage() {
+            if (Panels == null) {
+                return;
+            }
+
+            foreach (var panelRelationship in Panels) {
+                if (panelRelationship.Panel == null && panelRelationship.PanelType != null) {
+                    panelRelationship.Panel = panelRelationship.PanelType.EqualsIc(typeof(DashboardGridPanel).Name)
+                        ? (DashboardBasePanel)new DashboardGridPanel { Id = panelRelationship.PanelId }
+                        : new DashboardGraphicPanel { Id = panelRelationship.PanelId };
+                }
+            }
+        }
+
+
+
+
         [ComponentProperty]
-        public DashboardFilter Filter { get; set; }
+        public DashboardFilter Filter {
+            get; set;
+        }
     }
 }

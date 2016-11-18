@@ -279,6 +279,8 @@
                 if (paginationData) {
                     searchDto.pageNumber = paginationData.pageNumber;
                     searchDto.pageSize = paginationData.pageSize;
+                    searchDto.totalCount = paginationData.totalCount;
+                    searchDto.numberOfPages = paginationData.numberOfPages;
                 }
                 return searchDto;
 
@@ -386,6 +388,7 @@
              * @param {} searchData dictionary for modifying the grid query that is present on the screen e.g. { 'param1' : 'value1', 'param2' : 'value2' }
              * @param {} extraparameters accepts:
              *              pageNumber: the page to go
+             *              multiSort: an array containing 
              *              pageSize: a different page size than the scope one
              *              printMode: if we need to refresh the grid for printmode
              *              avoidspin: if true, we wont show the busy indicator on the screen
@@ -411,6 +414,37 @@
                     forcecleanup: extraparameters.forcecleanup
                 }, true);
                 return $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
+            },
+
+
+            parseMultiSort  : function(searchSortString) {
+                if (!searchSortString) {
+                    return [];
+                }
+
+                return searchSortString.split(",").map(i => {
+                    var asc = true;
+
+                    if (i.containsIgnoreCase(" desc")) {
+                        i = i.replace(" desc", "");
+                        asc = false;
+                    } else if (i.containsIgnoreCase(" asc")) {
+                        i = i.replace(" asc", "");
+                    }
+                    return { columnName: i.trim(), isAscending: asc };
+                });
+
+            },
+
+            convertToString: function (searchSortArray) {
+                if (!searchSortArray) {
+                    return "";
+                }
+
+                return searchSortArray.map(i => {
+                    return i.columnName + i.isAscending ? " asc" : " desc";
+                }).join(",");
+
             },
 
             /// <summary>

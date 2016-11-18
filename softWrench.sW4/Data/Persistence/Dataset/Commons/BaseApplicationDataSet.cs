@@ -180,6 +180,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             throw new InvalidOperationException("could not determine which operation to take upon request");
         }
 
+        /// <summary>
+        /// Convenience map for extending only the main datamap loading, instead of the whole composition logic
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="user"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
         protected virtual async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             return (DataMap)await Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);

@@ -87,6 +87,10 @@ namespace softWrench.sW4.Configuration.Services {
             return result;
         }
 
+        public void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null) {
+             _whereClauseRegisterService.ValidateWhereClause(applicationName, whereClause, condition);
+        }
+
         private static string GetConvertedWhereClause(WhereClauseResult whereClauseResult, InMemoryUser user, string defaultValue = DefaultWhereClause) {
             if (!string.IsNullOrEmpty(whereClauseResult.Query)) {
                 return DefaultValuesBuilder.ConvertAllValues(whereClauseResult.Query, user);
@@ -104,12 +108,14 @@ namespace softWrench.sW4.Configuration.Services {
             return defaultValue;
         }
 
+       
+
         public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
             AsyncHelper.RunSync(() => RegisterAsync(applicationName, query, condition, validate));
         }
 
         public async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false) {
-            var result = Validate(applicationName, validate);
+            var result = Validate(applicationName,query, validate, condition);
             if (!result) {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
                 return;
@@ -121,6 +127,8 @@ namespace softWrench.sW4.Configuration.Services {
                 await _whereClauseRegisterService.DoRegister(configKey, query, condition);
             }
         }
+
+
 
         public async Task<ISet<UserProfile>> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
 
@@ -166,7 +174,7 @@ namespace softWrench.sW4.Configuration.Services {
             return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName.ToLower());
         }
 
-        private static bool Validate(string applicationName, bool throwException = true) {
+        private bool Validate(string applicationName, string whereClause, bool throwException = true, WhereClauseRegisterCondition condition=null) {
             var items = MetadataProvider.FetchAvailableAppsAndEntities();
             if (!items.Contains(applicationName)) {
                 if (throwException) {
@@ -174,6 +182,10 @@ namespace softWrench.sW4.Configuration.Services {
                 }
                 return false;
             }
+            if (!string.IsNullOrEmpty(whereClause) && throwException) {
+                ValidateWhereClause(applicationName, whereClause, condition);
+            }
+
             return true;
         }
 

@@ -129,7 +129,7 @@
                     scope.lookupAssociationsDescription = {};
 
                     if (scope.ismodal === "true") {
-                        scope.$on('sw.modal.show', function (event, modaldata) {
+                        scope.$on(JavascriptEventConstants.ModalShown, function (event, modaldata) {
                             scope.lookupAssociationsCode = {};
                             scope.lookupAssociationsDescription = {};
                             scope.crudInputForm.$setPristine();

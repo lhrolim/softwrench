@@ -60,7 +60,7 @@
                     cmpComboDropdown.refreshList(attribute);
                 } else if (rendererType === 'combo') {
                     var value = scope.datamap[displayable.target];
-                    cmpCombo.refreshFromAttribute(value, options);
+                    cmpCombo.refreshFromAttribute(value, options, displayable);
                 }
             }
 

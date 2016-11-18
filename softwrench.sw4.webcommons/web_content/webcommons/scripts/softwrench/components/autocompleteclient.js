@@ -39,6 +39,9 @@ angular.module('sw_layout')
             const attribute = displayable.attribute;
             
             var labelValue = value;
+
+            const showMissingValues = displayable.rendererParameters && "false" !== displayable.rendererParameters["showmissingoption"];
+
             if (!nullOrEmpty(value) && availableoptions) {
                 //Fixing SWWEB-1349--> the underlying selects have only the labels, so we need to fetch the entries using the original array instead
                 let valueMissing = true;
@@ -49,7 +52,7 @@ angular.module('sw_layout')
                         break;
                     }
                 }
-                if (valueMissing) {
+                if (valueMissing && showMissingValues) {
                     const missingValue = {
                         "type": "AssociationOption",
                         "value": value,

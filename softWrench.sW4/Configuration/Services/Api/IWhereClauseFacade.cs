@@ -5,6 +5,7 @@ using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Configuration.Services.Api {
@@ -19,7 +20,12 @@ namespace softWrench.sW4.Configuration.Services.Api {
 
         Task RegisterAsync([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null,bool validate=false);
 
+
         void Register([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null, bool validate = false);
+
+
+
+        void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null);
 
         /// <summary>
         /// Given an application returns a list of associated profiles that have different whereclauses on it, constrained to the ones that the current user have

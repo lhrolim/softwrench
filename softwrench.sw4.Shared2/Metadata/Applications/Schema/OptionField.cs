@@ -32,10 +32,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string EvalExpression { get; set; }
 
         public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
-            OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression,
+            OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression, string helpIcon,
             string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, 
             string evalExpression, string extraParameter, string defaultExpression, string searchOperation, string extraProjectionFields = null)
-            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, null, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
+            : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, helpIcon, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
             _renderer = renderer;
             _filter = filter;
             _options = options;
@@ -107,7 +107,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             var optionField = new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression,
                 IsReadOnly, IsHidden, _renderer, _filter,
                 _options,
-                DefaultValue, _sort, ShowExpression, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
+                DefaultValue, _sort, ShowExpression,HelpIcon, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
                 _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter, DefaultExpression,
                 SearchOperation) {
                 ExtraProjectionFields = ExtraProjectionFields

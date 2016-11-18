@@ -185,7 +185,7 @@
                 }
 
 
-                scope.$on("sw.modal.show", function (event, modalData) {
+                scope.$on(JavascriptEventConstants.ModalShown, function (event, modalData) {
                     if (scope.ismodal === "true") {
                         //inline compositions inside of the modal need to be refreshed (relinked)
                         const datamap = modalData.datamap;
