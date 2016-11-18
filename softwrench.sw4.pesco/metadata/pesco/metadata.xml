@@ -147,7 +147,7 @@
               <renderer type="checkbox" params="formatter=numberToBoolean"/>
             </field>
             <field attribute="lostenergyamount" label="Lost Energy Amount" showexpression="@lostenergy3 === true" enableexpression="@lostenergy3 === true">
-              <renderer type="numericinput" params="width=8%;min=0;statictext=kwh" />
+              <renderer type="numericinput" params="width=8%;min=0;append=kwh" />
             </field>
             </section>
           </customization>
@@ -311,7 +311,7 @@
               <renderer type="checkbox" params="width=5%;formatter=numberToBoolean"/>
             </field>
             <field attribute="lostenergyamount" label="Lost Energy Amount" showexpression="@lostenergy === true"  enableexpression="@lostenergy === true">
-              <renderer type="numericinput" params="width=8%;min=0;statictext=kwh"/>
+              <renderer type="numericinput" params="width=8%;min=0;append=kwh"/>
             </field>      
           </customization>
           <properties>
@@ -349,7 +349,7 @@
                 <renderer type="checkbox" params="formatter=numberToBoolean"/>
               </field>
               <field attribute="lostenergyamount" label="Lost Energy Amount" showexpression="@lostenergy === true" enableexpression="@lostenergy === true">
-                <renderer type="numericinput" params="width=8%;min=0;statictext=kwh" />
+                <renderer type="numericinput" params="width=8%;min=0;append=kwh" />
               </field>   
             </section>
             <!--</section>-->

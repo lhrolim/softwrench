@@ -382,28 +382,35 @@
                         </div>
 
                         <!--#region numericinput-->
-                        <div ng-switch-when="numericinput" style="display:inline-block">
+                        <div ng-switch-when="numericinput">
+                            <span style="display:inline-block" ng-if="fieldMetadata.rendererParameters['prepend']!=null">
+                                {{fieldMetadata.rendererParameters['prepend']}}
+                            </span>
+                            <div style="display:inline-block">
+                                <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float'"
+                                       data-field="{{fieldMetadata.attribute}}"
+                                       id="spinner"
+                                       class="hidden-phone form-control"
+                                       ng-model="datamap[fieldMetadata.attribute]"
+                                       ng-init="initField(fieldMetadata)"
+                                       min="{{fieldMetadata.rendererParameters['min']}}"
+                                       max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
+                                       number-spinner ng-model-options="{ debounce : 500 }"
+                                       float-converter />
 
-                            <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float'"
-                                   data-field="{{fieldMetadata.attribute}}"
-                                   id="spinner"
-                                   class="hidden-phone form-control"
-                                   ng-model="datamap[fieldMetadata.attribute]"
-                                   ng-init="initField(fieldMetadata)"
-                                   min="{{fieldMetadata.rendererParameters['min']}}"
-                                   max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
-                                   number-spinner ng-model-options="{ debounce : 500 }"
-                                   float-converter />
-
-                            <input ng-if="fieldMetadata.rendererParameters['numberType'] !== 'double' && fieldMetadata.rendererParameters['numberType'] !== 'float'"
-                                   data-field="{{fieldMetadata.attribute}}"
-                                   id="spinner"
-                                   class="hidden-phone form-control"
-                                   ng-model="datamap[fieldMetadata.attribute]"
-                                   ng-init="initField(fieldMetadata)"
-                                   min="{{fieldMetadata.rendererParameters['min']}}"
-                                   max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
-                                   number-spinner />
+                                <input ng-if="fieldMetadata.rendererParameters['numberType'] !== 'double' && fieldMetadata.rendererParameters['numberType'] !== 'float'"
+                                       data-field="{{fieldMetadata.attribute}}"
+                                       id="spinner"
+                                       class="hidden-phone form-control"
+                                       ng-model="datamap[fieldMetadata.attribute]"
+                                       ng-init="initField(fieldMetadata)"
+                                       min="{{fieldMetadata.rendererParameters['min']}}"
+                                       max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
+                                       number-spinner />
+                            </div>                            
+                            <span style="display:inline-block" ng-if="fieldMetadata.rendererParameters['append']!=null">
+                                {{fieldMetadata.rendererParameters['append']}}
+                            </span>
                         </div>
                         <!--#endregion-->
 
@@ -599,9 +606,6 @@
                                                    islabelless="{{isSectionWithoutLabel(fieldMetadata)}}">
                             </section-element-input>
                         </div>
-                        <label style="display:inline-block" ng-if="fieldMetadata.rendererParameters['statictext']!=null">
-                            {{fieldMetadata.rendererParameters['statictext']}}
-                        </label>
                 </div>
             </fieldset>
         </div>
