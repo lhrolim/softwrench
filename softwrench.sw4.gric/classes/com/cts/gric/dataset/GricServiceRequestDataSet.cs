@@ -8,9 +8,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 namespace softwrench.sw4.gric.classes.com.cts.gric.dataset {
     class GricServiceRequestDataSet : BaseServiceRequestDataSet {
 
-        public GricServiceRequestDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
-        }
-
+        
         public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
             filter.AppendWhereClauseFormat("( MAXVALUE != 'HISTEDIT' )");
