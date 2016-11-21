@@ -43,7 +43,8 @@
 
                 $scope.vm = {
                     activated: false,
-                    userInterval: $scope.config.intervalConfig.default
+                    userInterval: $scope.config.intervalConfig.default,
+                    timer: $scope.config.intervalConfig.default * $scope.config.intervalConfig.multiplier / 1000
                 };
 
                 var currentIntervalPromise = null;
@@ -56,15 +57,42 @@
                     }
                 }
 
+                $scope.resetInterval = function() {
+                    console.log($scope.vm, $scope.config.intervalConfig.default);
+                    $scope.vm.userInterval = $scope.config.intervalConfig.default;
+
+                    cancelInterval();
+                    scheduleInterval($scope.vm.userInterval);
+                }
+
                 function scheduleInterval(delay) {
+                    //console.log('scheduleInterval');
                     if (!angular.isNumber(delay) || delay <= 0) {
                         cancelInterval();
                         return;
                     }
+                    $scope.vm.activated = true;
                     currentIntervalDelay = delay * $scope.config.intervalConfig.multiplier;
-                    currentIntervalPromise = $interval(function() {
-                        $scope.onIntervalTriggered({ delay: currentIntervalDelay });
-                    }, currentIntervalDelay, 0, false);
+                    $scope.vm.timer = currentIntervalDelay / 1000;
+
+                    $('.interval-trigger .knob').trigger(
+                        'configure',
+                        {
+                            'max': currentIntervalDelay / 1000
+                        }
+                    );
+
+                    currentIntervalPromise = $interval(function () {
+                        $scope.vm.timer--;
+
+                        var scrollKnob = $('.interval-trigger .knob');
+                        scrollKnob.val($scope.vm.timer).trigger('change');
+
+                        if ($scope.vm.timer === 0) {
+                            $scope.vm.timer = currentIntervalDelay / 1000;
+                            $scope.onIntervalTriggered({ delay: currentIntervalDelay });
+                        }
+                    }, 1000);
                 }
 
                 $scope.onActivateChanged = function (activate) {
@@ -88,12 +116,26 @@
                     scheduleInterval($scope.vm.userInterval);
                 };
 
-                $scope.intervalChanged = function(delay) {
+                $scope.intervalChanged = function (delay) {
                     scheduleInterval(delay);
                     $scope.config.configuring = false;
                 };
 
-            }]
+            }],
+
+            link: function (scope, element, attr) {
+                $('.knob', element).knob({
+                    'min': 0,
+                    'max': 300,
+                    'bgColor': '#dedede',
+                    'fgColor': '#333',
+                    'width': 17,
+                    'height': 17,
+                    'thickness': .2,
+                    'displayInput': false,
+                    'readOnly': true
+                });
+            }
         };
 
         return directive;

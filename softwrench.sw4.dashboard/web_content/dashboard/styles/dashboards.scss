@@ -124,27 +124,52 @@ sw-chart {
 }
 
 .dashboard-page {
-
     .dashboard-toolbar {
         padding: 10px;
 
         .interval-trigger {
-            > div {
-                display: inline-block;
+            .trigger {
+                cursor: pointer;
+                margin: 0;
             }
 
-            .configure-box {
-                padding: 5px;
-                border: 1px solid black;
-                border-radius: 5px;
+            .dial {
+                margin-left: 15px;
+                position: relative;
+                top: 3px;
+            }
 
-                > div {
-                    display: inline-block;
+            .dropdown-menu {
+                margin-left: 25px;
+                padding: 0;
+                min-width: 260px;
+
+                .main {
+                    padding: 15px;
                 }
 
-                .configure-interval-input {
-                    > input[type=number] {
-                        width: 50px;
+                .buttons {
+                    width: 100%;
+                    border-top: 1px solid #ddd;
+                    margin: 0;
+                    display: block;
+
+                    .button {
+                        float: left;
+                        width: 50%;
+                        text-align: center;
+                        cursor: pointer;
+                        padding: 10px 0;
+                        font-weight: bold;
+
+                        &.apply {
+                            color: #3a7ebd;
+                            border-right: 1px solid #ddd;
+                        }
+
+                        &:hover {
+                            background: #ddd;
+                        }
                     }
                 }
             }

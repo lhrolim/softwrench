@@ -171,6 +171,8 @@ module.exports = function (grunt) {
                     "dx.vectormap.usa.js": "devextreme-web/js/vectormap-data/usa.js",
                     // colorbox
                     "jquery-colorbox.js": "colorbox/jquery.colorbox-min.js",
+                    // knob
+                    "jquery-knob.js": "jquery-knob/dist/jquery.knob.min.js",
                     // tinymce
                     "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     // unminified vendors
@@ -247,6 +249,7 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-ui.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/jquery-colorbox.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/jquery-knob.js",
 
                     // bootstrap
                     "<%= bowercopy.scripts.options.destPrefix %>/bootstrap.js",
