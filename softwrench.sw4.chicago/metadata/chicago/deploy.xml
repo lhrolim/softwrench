@@ -10,7 +10,7 @@
 
   <environment key="uat">
     <property key="iispath" value="softwrench" />
-    <property key="msdeploy_url" value="https://10.37.19.69:8172/msdeploy.axd,username=cts\Jenkins,password=J3nk1ns" />
+    <property key="msdeploy_url" value="https://173.193.44.6:8172/msdeploy.axd,username=cts\Jenkins,password=J3nk1ns" />
   </environment>
   
 </globalproperties>
