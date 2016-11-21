@@ -48,9 +48,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return Constants.WsProvider.MIF;
         }
 
-        public static bool Is75() {
+        public static bool Is75OrNewer() {
             var target = MetadataProvider.TargetMapping();
-            return target.Contains("7.5");
+            return target.Contains("7.5") || target.Contains("7.6");
         }
 
         public static bool Is71() {

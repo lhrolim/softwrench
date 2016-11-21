@@ -93,6 +93,7 @@ module.exports = function (grunt) {
                     "jquery/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
                     "jquery/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
                     "jquery/jquery-colorbox.js": "colorbox/jquery.colorbox.js",
+                    "jquery/jquery-knob.js": "jquery-knob/js/jquery.knob.js",
                     // bootstrap
                     "bootstrap/bootstrap.js": "bootstrap/dist/js/bootstrap.js",
                     // angular

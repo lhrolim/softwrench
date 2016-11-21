@@ -220,8 +220,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
                 WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1.0);
-                WsUtil.SetValue(integrationObject, "TRANSDATE", DateTime.Now.FromServerToRightKind(), true);
-                WsUtil.SetValue(integrationObject, "ACTUALDATE", DateTime.Now.FromServerToRightKind(), true);
+                
+                // Actual date must be in the past - thus we made it a minute behind the current time.   
+                // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
+                var lastMinute = DateTime.Now.AddMinutes(-1).FromServerToRightKind();
+                WsUtil.SetValue(integrationObject, "TRANSDATE", lastMinute, true);
+                WsUtil.SetValue(integrationObject, "ACTUALDATE", lastMinute, true);
+
                 WsUtil.SetValue(integrationObject, "ACTUALCOST", unitcost);
                 WsUtil.SetValue(integrationObject, "QUANTITY", -1 * quantity);
                 WsUtil.SetValue(integrationObject, "LINECOST", quantity * unitcost);

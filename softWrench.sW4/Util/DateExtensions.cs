@@ -85,7 +85,7 @@ namespace softWrench.sW4.Util {
 
         public static DateTime FromUserToRightKind(this DateTime date, InMemoryUser user) {
             var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
-            if (WsUtil.Is75()) {
+            if (WsUtil.Is75OrNewer()) {
                 kind = DateTimeKind.Unspecified;
             }
             date = DateTime.SpecifyKind(date, kind);
@@ -98,7 +98,7 @@ namespace softWrench.sW4.Util {
         public static DateTime FromServerToRightKind(this DateTime date) {
 
             var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
-            if (WsUtil.Is75()) {
+            if (WsUtil.Is75OrNewer()) {
                 kind = DateTimeKind.Unspecified;
             }
             date = DateTime.SpecifyKind(date, kind);
@@ -170,7 +170,7 @@ namespace softWrench.sW4.Util {
             }
             Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
             date = date.AddMinutes(offset);
-            if (WsUtil.Is75()) {
+            if (WsUtil.Is75OrNewer()) {
                 //TODO: is this ever needed again?
                 date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
             }

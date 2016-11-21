@@ -1,47 +1,32 @@
 ﻿<div class="interval-trigger">
-    <div class="activateBox">
-        <input type="checkbox"
-               ng-model="vm.activated"
-               ng-disabled="config.configuring"
-               ng-change="onActivateChanged(vm.activated)" />
-        &nbsp;{{ activateLabel }}
-    </div>
-    <div ng-show="vm.activated"
-         class="configure-box">
-
-        <div class="configure-interval-input">
-            <span>Interval</span>
-            <input type="number"
-                   rel="tooltip" data-original-title="Interval in {{ config.intervalConfig.unit + 's' }} (zero means it won't run)"
-                   ng-enabled="config.configuring"
-                   ng-model="vm.userInterval"
-                   min="{{ config.intervalConfig.min }}"
-                   max="{{ config.intervalConfig.max }}" />
+    <input type="checkbox"
+           ng-model="vm.activated"
+           ng-change="onActivateChanged(vm.activated)"/>&ensp;<label class="trigger" data-toggle="dropdown" aria-expanded="false">{{ activateLabel }}&ensp;<i class="fa fa-caret-down"></i></label><span class="dial" ng-show="vm.activated"><input class="knob"></span>
+    <div class="dropdown-menu" role="menu">
+        <div class="main">
+            <div class="form-group">
+                <label class="control-label">Refresh Interval</label>
+                <input type="number"
+                       class="form-control"
+                       rel="tooltip" data-original-title="Interval in {{ config.intervalConfig.unit + 's' }} (zero means it won't run)"
+                       ng-model="vm.userInterval" />
+                <!--min="{{ config.intervalConfig.min }}"
+                max="{{ config.intervalConfig.max }}" />-->
+            </div>
         </div>
-        <div ng-hide="config.configuring"
-             class="configure-toggle">
-            <span rel="tooltip" data-original-title="Configure Interval Value">
-                Configure
-            </span>
-            <input type="checkbox"
-                   ng-disabled="config.configuring"
-                   ng-model="config.configuring"
-                   ng-change="onConfigurationFlagChanged(config.configuring)" />
+        <div class="buttons">
+            <div class="button apply"
+                 ng-click="intervalChanged(vm.userInterval)">
+                <div class="lbl">
+                    <i class="fa fa-check"></i>&ensp;Apply
+                </div>
+            </div>
+            <div class="button reset"
+                 ng-click="resetInterval()">
+                <div class="lbl">
+                    <i class="fa fa-undo"></i>&ensp;Reset
+                </div>
+            </div>
         </div>
-        
-        <div ng-show="config.configuring"
-             class="configure-box-buttons">
-            <span ng-click="intervalChanged(vm.userInterval)"
-                  rel="tooltip" data-original-title="Save Interval"
-                  style="cursor: pointer; padding: 5px">
-                <i class="fa fa-check"></i>
-            </span>
-            <span ng-click="intervalConfigCancel()"
-                  rel="tooltip" data-original-title="Cancel Interval Changes"
-                  style="cursor: pointer; padding: 5px">
-                <i class="fa fa-times"></i>
-            </span>
-        </div>
-
     </div>
 </div>
