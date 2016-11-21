@@ -14,10 +14,11 @@ using softWrench.sW4.Metadata;
 using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Util;
 using LogManager = log4net.LogManager;
-
+using Polly;
 
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
+        private const int TRY_AGAIN_COUNT = 3;
 
         private static readonly Regex HtmlInlineImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]\\s*data:([^'\"]+)['\"][^>]*>");
 
@@ -69,13 +70,36 @@ namespace softWrench.sW4.Email {
             Task.Run(() => SendEmail(emailData));
         }
 
+        /// <summary>
+        /// Sends email synchronously
+        /// </summary>
+        /// <param name="emailData">The email data</param>
         public virtual void SendEmail(EmailData emailData) {
             try {
-                Log.DebugFormat("start sending email");
-                var smtpClient = ConfiguredSmtpClient();
-                var email = BuildMailMessage(emailData);
-                // Send the email message synchronously
-                smtpClient.Send(email);
+                Policy.Handle<SmtpFailedRecipientsException>(ex => {
+                    var tryAgain = CheckEmailClientMailboxBusy(ex.StatusCode);
+
+                    if (!tryAgain) {
+                        for (int i = 0; i < ex.InnerExceptions.Length; i++) {
+                            tryAgain = CheckEmailClientMailboxBusy(ex.InnerExceptions[i].StatusCode);
+                            if (tryAgain) {
+                                break;
+                            }
+                        }
+                    }
+                    
+                    return tryAgain;
+                })
+                .WaitAndRetry(TRY_AGAIN_COUNT, retryAttempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                )
+                .Execute(() => {
+                    Log.DebugFormat("start sending email");
+                    var smtpClient = ConfiguredSmtpClient();
+                    var email = BuildMailMessage(emailData);
+                    // Send the email message synchronously
+                    smtpClient.Send(email);
+                });
             } catch (Exception ex) {
                 Log.Error(ex);
                 throw;
@@ -100,6 +124,10 @@ namespace softWrench.sW4.Email {
                 Log.Error("error creating attachment", e);
                 throw;
             }
+        }
+
+        private bool CheckEmailClientMailboxBusy(SmtpStatusCode status) {
+            return (status == SmtpStatusCode.MailboxBusy || status == SmtpStatusCode.MailboxUnavailable);
         }
 
         private MailMessage BuildMailMessage(EmailData emailData) {
