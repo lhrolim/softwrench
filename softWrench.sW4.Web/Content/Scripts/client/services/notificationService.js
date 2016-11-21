@@ -51,8 +51,9 @@
                 if (message.body) {
                     log.debug('createNotification', message);
 
+                    vm.messages.push(message);
                     $timeout(function() {
-                        vm.messages.push(message);
+                        //timeout to display messages
                     });
 
                     //add automatic timeout for success messages
