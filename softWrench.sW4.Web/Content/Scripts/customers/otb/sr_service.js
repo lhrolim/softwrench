@@ -43,9 +43,10 @@ angular.module('sw_layout')
         },
 
         afterChangeAsset: function (event) {
-            if (event.fields['location'] == null && event.assetnum!=null) {
-                var location = event.fields['asset_.location'];
-                event.fields['location'] = location;
+            const fields = event.fields;
+            if (fields['location'] == null && fields.assetnum != null) {
+                const location = fields['asset_.location'];
+                fields['location'] = location;
             }
         },
 
