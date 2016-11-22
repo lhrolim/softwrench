@@ -7,6 +7,11 @@
       <property key="msdeploy_url" value="https://10.50.100.218:8172/msdeploy.axd,username=cts\jenkins,password=J3nk1ns" />
     </environment>
 
+    <environment key="uat">
+      <property key="iispath" value="swtoshiba/tgcs" />
+      <property key="msdeploy_url" value="https://173.193.44.6:8172/msdeploy.axd,username=IIS\jenkins,password=J3nk1ns" />
+    </environment>
+    
   </globalproperties>
 
 </metadata>
