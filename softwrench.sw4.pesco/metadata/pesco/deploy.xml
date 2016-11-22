@@ -8,8 +8,8 @@
     </environment>
 
     <environment key="qa-uat">
-      <property key="iispath" value="softwrench/pesco" />
-      <property key="msdeploy_url" value="https://52.36.55.169:8172/msdeploy.axd,username=pscapp\jenkins,password=J3nk1ns" />
+      <property key="iispath" value="softwrench/softwrench" />
+      <property key="msdeploy_url" value="https://52.37.88.231:8172/msdeploy.axd,username=pscapp\jenkins,password=J3nk1ns" />
     </environment>
     
   </globalproperties>
