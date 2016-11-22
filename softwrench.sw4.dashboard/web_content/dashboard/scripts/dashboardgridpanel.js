@@ -66,6 +66,19 @@ angular.module('sw_layout')
             //building a schema object representation to propagate to crud_list.html
             doInit(scope);
 
+            function setPaginationWidth() {
+                var pagination = $('.affix-pagination-panel:visible', element);
+                var grid = $('#listgrid', element);
+
+                if (!pagination || !grid) {
+                    return;
+                }
+
+                pagination.width(grid[0].clientWidth);
+            }
+
+            $(window).resize(window.debounce(setPaginationWidth, 250));
+
             //update pagination width
             scope.$watch(
                 function () {
@@ -73,14 +86,7 @@ angular.module('sw_layout')
                 },
                 function (newValue, oldValue) {
                     if (newValue !== oldValue) {
-                        var pagination = $('.affix-pagination-panel', element);
-                        var grid = $('#listgrid', element);
-
-                        if (!pagination || !grid) {
-                            return;
-                        }
-
-                        pagination.width(grid[0].clientWidth);
+                        setPaginationWidth();
                     }
                 }
             );
