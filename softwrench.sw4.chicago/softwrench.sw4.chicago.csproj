@@ -185,6 +185,7 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="web_content\chicago\images\logo-pdf.png" />
     <Content Include="web_content\chicago\scripts\aaa_chicagomodule.js" />
     <Content Include="web_content\chicago\scripts\chicago_chart_service.js" />
     <Content Include="web_content\chicago\scripts\chicagosr_service.js" />

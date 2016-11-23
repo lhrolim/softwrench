@@ -119,6 +119,7 @@
     <Content Include="web_content\deltadental\images\header.jpg" />
     <Content Include="web_content\deltadental\images\logo-byline.png" />
     <Content Include="web_content\deltadental\images\logo-main.png" />
+    <Content Include="web_content\deltadental\images\logo-pdf.png" />
     <Content Include="web_content\deltadental\images\signin-lg.jpg" />
     <Content Include="web_content\deltadental\images\signin-md.jpg" />
     <Content Include="web_content\deltadental\images\signin-sm.jpg" />

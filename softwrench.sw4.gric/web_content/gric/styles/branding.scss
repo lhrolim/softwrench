@@ -1,6 +1,20 @@
-﻿﻿﻿.page-signin .form-signin .logo.main img {
-    max-width: 100%;
-    margin-bottom: 60px;
+﻿﻿﻿.page-signin {
+    .form-signin {
+        .logo.main {
+            img {
+                max-width: 100%;
+                margin-bottom: 60px;
+            }
+        }
+    }
+}
+
+.page-signin .form-signin {
+    .logo.byline {
+        img {
+            width: 250px;
+        }
+    }
 }
 
 @media all and (min-width: 480px) {

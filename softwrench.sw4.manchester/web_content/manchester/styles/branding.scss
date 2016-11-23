@@ -7,6 +7,14 @@
     .page-overlay {
         background-color: $form_background;
     }
+
+    .form-signin {
+        .logo.byline {
+            img {
+                width: 250px;
+            }
+        }
+    }
 }
 
 .page-signin .form-signin .logo.main img {

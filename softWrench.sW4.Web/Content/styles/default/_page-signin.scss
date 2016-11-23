@@ -26,7 +26,6 @@
             }
 
             .modal-body {
-                /*height: 60vh;*/
                 overflow-y: auto;
             }
 
@@ -40,7 +39,7 @@
             text-align: center;
 
             img {
-                max-width: 100%;
+                width: 500px;
                 height: auto;
             }
         }
@@ -54,6 +53,10 @@
             .login {
                 margin-left: 15px;
                 margin-right: 15px;
+            }
+
+            .buttons {
+                margin-left: calc(25% + 10px);
             }
         }
 

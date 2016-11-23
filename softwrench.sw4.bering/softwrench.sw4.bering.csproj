@@ -88,6 +88,7 @@
     <Content Include="web_content\bering\images\header.jpg" />
     <Content Include="web_content\bering\images\logo-byline.png" />
     <Content Include="web_content\bering\images\logo-main.png" />
+    <Content Include="web_content\bering\images\logo-pdf.png" />
     <Content Include="web_content\bering\images\signin.jpg" />
     <None Include="packages.config" />
     <None Include="web_content\bering\styles\branding.scss" />

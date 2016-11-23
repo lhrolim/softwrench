@@ -3,6 +3,14 @@
 .page-signin {
     background: #b0dae9 url(../Images/signin.jpg) no-repeat center top fixed;
     background-size: cover;
+
+    .form-signin {
+        .logo.byline {
+            img {
+                width: 250px;
+            }
+        }
+    }
 }
 
 .page-signin .form-signin .logo.main img {

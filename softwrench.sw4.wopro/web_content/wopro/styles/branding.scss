@@ -13,7 +13,13 @@ $asset_path: "../images";
             padding: 40px 0;
 
             img {
-                height: auto;
+                height: 90px;
+            }
+        }
+
+        .logo.byline {
+            img {
+                width: 250px;
             }
         }
     }

@@ -189,6 +189,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="metadata\tgcs\metadata.xml" />
+    <Content Include="metadata\tgcs\properties.xml" />
     <Content Include="web_content\dashboard\scripts\dashboardauxService.js" />
     <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
     <Content Include="web_content\dashboard\scripts\dashboarddirective.js" />
@@ -206,12 +208,10 @@
     <Content Include="web_content\tgcs\scripts\toshibasr_service.js" />
     <Content Include="web_content\tgcs\scripts\toshiba_attachmentservice.js" />
     <EmbeddedResource Include="metadata\tgcs\deploy.xml" />
-    <EmbeddedResource Include="metadata\tgcs\properties.xml" />
     <EmbeddedResource Include="metadata\tgcs\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
-    <Content Include="metadata\tgcs\metadata.xml" />
     <Content Include="metadata\tgcs\readme.txt" />
     <Content Include="web_content\tgcs\images\footer.jpg" />
     <Content Include="web_content\tgcs\images\header-email.jpg" />

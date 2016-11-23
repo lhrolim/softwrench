@@ -58,6 +58,7 @@
     <Content Include="web_content\apachegold\images\header.jpg" />
     <Content Include="web_content\apachegold\images\logo-byline.png" />
     <Content Include="web_content\apachegold\images\logo-main.png" />
+    <Content Include="web_content\apachegold\images\logo-pdf.png" />
     <Content Include="web_content\apachegold\images\signin-lg.jpg" />
     <Content Include="web_content\apachegold\images\signin-md.jpg" />
     <Content Include="web_content\apachegold\images\signin-sm.jpg" />

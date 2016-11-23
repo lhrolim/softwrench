@@ -17,6 +17,12 @@ $asset_path: "../images";
                 width: auto;
             }
         }
+
+        .logo.byline {
+            img {
+                width: 250px;
+            }
+        }
     }
 }
 

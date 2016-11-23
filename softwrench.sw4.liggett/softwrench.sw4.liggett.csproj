@@ -58,6 +58,7 @@
     <Content Include="web_content\liggett\images\header.jpg" />
     <Content Include="web_content\liggett\images\logo-byline.png" />
     <Content Include="web_content\liggett\images\logo-main.png" />
+    <Content Include="web_content\liggett\images\logo-pdf.png" />
     <Content Include="web_content\liggett\images\signin-lg.jpg" />
     <Content Include="web_content\liggett\images\signin-md.jpg" />
     <Content Include="web_content\liggett\images\signin-sm.jpg" />

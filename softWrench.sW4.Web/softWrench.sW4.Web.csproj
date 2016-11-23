@@ -1243,6 +1243,10 @@
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj">
+      <Project>{83d9b360-0879-487f-b03c-62044846192c}</Project>
+      <Name>softwrench.sw4.tgcs</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
       <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
       <Name>softwrench.sw4.umc</Name>

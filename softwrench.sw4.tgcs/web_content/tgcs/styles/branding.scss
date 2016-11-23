@@ -28,6 +28,12 @@ $asset_path: "../images";
                 background-color: rgba(#333, 0.6);
             }
         }
+
+        .logo.byline {
+            img {
+                width: 250px;
+            }
+        }
     }
 }
 
