@@ -226,13 +226,13 @@
             <option label="SPARE PART" value="SPAREPART"/>
           </optionfield>
          
-          <association label="Item" target="itemnum" labelfield="sparepart_.description" extraprojectionvalues="description" showexpression="@linetype == 'SPAREPART'">
+          <association label="Item" target="itemnum" labelfield="sparepart_.description" extraprojectionvalues="description" showexpression="@linetype == 'SPAREPART'" requiredexpression="true">
             <dataprovider prefilterfunction="filterSpareParts"/>
             <renderer type="lookup" params="application=sparepart;schemaId=sparepartlist;"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>
           </association>
           
-          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'" requiredexpression="true">
             <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="matusetranService" method="afteritemchange"/>

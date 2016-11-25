@@ -57,6 +57,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 WsUtil.SetValueIfNull(integrationObject, "TOOLRATE", 0.00);
                 WsUtil.SetValueIfNull(integrationObject, "TOOLQTY", 0);
                 WsUtil.SetValueIfNull(integrationObject, "TOOLHRS", 0);
+                WsUtil.SetValueIfNull(integrationObject, "LINECOST", 0.00);
 
                 WsUtil.SetValue(integrationObject, "ORGID", entity.GetAttribute("orgid"));
                 WsUtil.SetValue(integrationObject, "SITEID", entity.GetAttribute("siteid"));
