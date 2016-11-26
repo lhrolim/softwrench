@@ -559,6 +559,7 @@
                             log.debug('waiting on custom postvalidator to invoke the continue function');
                             return $q.when();
                         }
+
                         return $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave).then(httpResult => {
                             return $scope.onServerResult(httpResult, parameters);
                         });
@@ -670,6 +671,7 @@
                             if (successCallback) {
                                 successCallback(data);
                             }
+                            return result;
                         }).catch(result => {
                             const exceptionData = result.data;
                             const resultObject = exceptionData.resultObject;

@@ -533,6 +533,7 @@
           <properties>
             <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>
+            <property key="nextschema.schemaid" value="invIssueList"/>
           </properties>
           <event type="beforesubmit.onvalidation" service="invissueService" method="validateInvIssue"/>
           <event type="beforesubmit.postvalidation" service="checkpointService" method="clearCheckpoints"/>
