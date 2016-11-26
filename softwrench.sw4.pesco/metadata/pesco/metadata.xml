@@ -151,6 +151,18 @@
             </field>
             </section>
           </customization>
+        
+          <customization position="actualstart">
+            <field attribute="actualstart" label="Actual Start Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy;allowfuture=false;"/>
+            </field>
+          </customization>
+          
+          <customization position="actualfinish">
+            <field attribute="actualfinish" label="Actual Finish Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy;allowfuture=false;"/>
+            </field>
+          </customization>
         </schema>
 
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="false">
@@ -353,6 +365,18 @@
               </field>   
             </section>
             <!--</section>-->
+          </customization>
+
+          <customization position="actstart">
+            <field attribute="actstart" label="Actual Start Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy;allowfuture=false;"/>
+            </field>
+          </customization>
+
+          <customization position="actfinish">
+            <field attribute="actfinish" label="Actual Finish Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy;allowfuture=false;"/>
+            </field>
           </customization>
         </schema>
 
