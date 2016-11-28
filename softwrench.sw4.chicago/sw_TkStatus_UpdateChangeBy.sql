@@ -5,6 +5,7 @@
 --              which will have a value of MXINTADM
 -- Update: 20151104-KH: check ownergroup to fix issue with Maximo CHAT SR creation.
 -- Update: 20161027-EM: status and owner changeby not correctly set
+-- Update: 20161128-EM: avoid null @changebyNewValue
 -- =============================================
 CREATE TRIGGER [dbo].[sw_TkStatus_UpdateChangeBy]
    ON  [dbo].[tkstatus] 
@@ -26,7 +27,7 @@ BEGIN
 	SELECT @ticketid = ticketid, @class = class, @siteid = siteid,  @tkstatusid = tkstatusid, @changebyOldValue = changeby FROM inserted
 	SELECT @changebyNewValue = swchangeby, @ownergroup = ownergroup FROM ticket where (ticketid = @ticketid) AND (class = @class) AND (siteid = @siteid)
 
-	IF (@changebyOldValue = 'MXINTADM' AND @ownergroup <> 'CHAT_Q') 
+	IF (@changebyOldValue = 'MXINTADM' AND @changebyNewValue IS NOT NULL AND @ownergroup <> 'CHAT_Q') 
 	BEGIN
 		UPDATE tkstatus set changeby = @changebyNewValue where tkstatusid = @tkstatusid
 	END
