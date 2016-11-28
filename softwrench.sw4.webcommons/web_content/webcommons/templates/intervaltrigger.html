@@ -9,9 +9,9 @@
                 <input type="number"
                        class="form-control"
                        rel="tooltip" data-original-title="Interval in {{ config.intervalConfig.unit + 's' }} (zero means it won't run)"
-                       ng-model="vm.userInterval" />
-                <!--min="{{ config.intervalConfig.min }}"
-                max="{{ config.intervalConfig.max }}" />-->
+                       ng-model="vm.userInterval"
+                       min="{{ config.intervalConfig.min }}"
+                       max="{{ config.intervalConfig.max }}" />
             </div>
         </div>
         <div class="buttons">

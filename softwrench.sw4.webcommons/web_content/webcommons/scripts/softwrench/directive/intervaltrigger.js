@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("webcommons_services").directive("intervalTrigger", ["contextService", function (contextService) {
+    angular.module("webcommons_services").directive("intervalTrigger", ["contextService", "userPreferencesService", "$timeout", function (contextService, userPreferencesService, $timeout) {
         var directive = {
             templateUrl: contextService.getResourceUrl("Content/Shared/webcommons/templates/intervaltrigger.html"),
             restrict: "E",
@@ -25,6 +25,8 @@
                     'minute': 60 * 1000,
                     'hour'  : 60 * 60 * 1000
                 };
+                var timmerActivePreferenceKey = "dashboardTimmerActive";
+                var timmerIntervalPreferenceKey = "dashboardTimmerInterval";
 
                 function normalizeIntervalConfig() {
                     var config = angular.copy($scope.intervalConfiguration) || {};
@@ -41,24 +43,31 @@
                     intervalConfig: normalizeIntervalConfig()
                 };
 
+                var userActive = userPreferencesService.getPreference(timmerActivePreferenceKey);
+                var userInterval = userPreferencesService.getPreference(timmerIntervalPreferenceKey);
+                var interval = userInterval ? userInterval : $scope.config.intervalConfig.default;
+                var timer = interval * $scope.config.intervalConfig.multiplier / 1000;
+
                 $scope.vm = {
-                    activated: false,
-                    userInterval: $scope.config.intervalConfig.default,
-                    timer: $scope.config.intervalConfig.default * $scope.config.intervalConfig.multiplier / 1000
+                    activated: userActive,
+                    userInterval: interval,
+                    timer: timer
                 };
 
                 var currentIntervalPromise = null;
                 var currentIntervalDelay = $scope.vm.userInterval;
-                var intervalDelayCheckpoint = null;
+
+                if ($scope.vm.activated) {
+                    scheduleInterval($scope.vm.userInterval);
+                }
 
                 function cancelInterval() {
-                    if (!!currentIntervalPromise && angular.isFunction(currentIntervalPromise.then)) {
+                    if (!!currentIntervalPromise) {
                         $interval.cancel(currentIntervalPromise);
                     }
                 }
 
                 $scope.resetInterval = function() {
-                    console.log($scope.vm, $scope.config.intervalConfig.default);
                     $scope.vm.userInterval = $scope.config.intervalConfig.default;
 
                     cancelInterval();
@@ -66,7 +75,6 @@
                 }
 
                 function scheduleInterval(delay) {
-                    //console.log('scheduleInterval');
                     if (!angular.isNumber(delay) || delay <= 0) {
                         cancelInterval();
                         return;
@@ -85,6 +93,7 @@
                     currentIntervalPromise = $interval(function () {
                         $scope.vm.timer--;
 
+                        var currentIntervalDelay = $scope.vm.userInterval * $scope.config.intervalConfig.multiplier;
                         var scrollKnob = $('.interval-trigger .knob');
                         scrollKnob.val($scope.vm.timer).trigger('change');
 
@@ -92,6 +101,7 @@
                             $scope.vm.timer = currentIntervalDelay / 1000;
                             $scope.onIntervalTriggered({ delay: currentIntervalDelay });
                         }
+
                     }, 1000);
                 }
 
@@ -99,34 +109,26 @@
                     if (!activate) {
                         cancelInterval();
                     } else {
+                        
                         scheduleInterval($scope.vm.userInterval);
                     }
-                };
 
-                $scope.onConfigurationFlagChanged = function(configure) {
-                    if (configure) {
-                        intervalDelayCheckpoint = $scope.vm.userInterval;
-                        cancelInterval();
-                    }
-                };
-
-                $scope.intervalConfigCancel = function() {
-                    $scope.vm.userInterval = intervalDelayCheckpoint;
-                    $scope.config.configuring = false;
-                    scheduleInterval($scope.vm.userInterval);
+                    userPreferencesService.setPreference(timmerActivePreferenceKey, activate);
                 };
 
                 $scope.intervalChanged = function (delay) {
-                    scheduleInterval(delay);
-                    $scope.config.configuring = false;
+                    $timeout(function () {
+                        scheduleInterval(delay);
+                        $scope.config.configuring = false;
+                        userPreferencesService.setPreference(timmerIntervalPreferenceKey, delay);
+                    });
                 };
 
             }],
-
             link: function (scope, element, attr) {
                 $('.knob', element).knob({
                     'min': 0,
-                    'max': 300,
+                    'max': scope.vm.userInterval * scope.config.intervalConfig.multiplier / 1000,
                     'bgColor': '#dedede',
                     'fgColor': '#333',
                     'width': 17,
