@@ -28,6 +28,8 @@ namespace softwrench.sw4.user.Migration {
 
             Create.UniqueConstraint("usr_uq_authattempt").OnTable("USER_AUTHATTEMPT").Column("userid");
 
+            Execute.Sql("delete from PREF_GENERALUSER where user_id is null");
+
             Create.UniqueConstraint("usr_uq_prefuser").OnTable("PREF_GENERALUSER").Column("user_id");
 
             Alter.Table("SW_USERPROFILE").AddColumn("applybydefault").AsBoolean().WithDefaultValue(false);
