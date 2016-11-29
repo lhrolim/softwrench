@@ -32,7 +32,7 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
             
             // Submit the requested record back to the database with updated audit date
             var json = JObject.Parse(JsonConvert.SerializeObject(result.ResultObject.Fields));
-            Execute(application, json, request.Id, "update", false, null);
+            await Execute(application, json, request.Id, "update", false, null);
             // Create an audit entry for the updated asset record
             _auditManager.CreateAuditEntry("scan", application.Name, request.Id, result.ResultObject.GetAttribute(result.Schema.UserIdFieldName) as string, JsonConvert.SerializeObject(result.ResultObject.Fields), DateTime.Now.FromServerToRightKind());
 

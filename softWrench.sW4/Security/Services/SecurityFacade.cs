@@ -31,7 +31,6 @@ namespace softWrench.sW4.Security.Services {
     public class SecurityFacade : ISingletonComponent, ISWEventListener<UserSavedEvent> {
         private const string LoginQuery = "from User where userName =? and IsActive=1";
 
-        private static SecurityFacade _instance = null;
 
         private static IEventDispatcher _eventDispatcher;
 

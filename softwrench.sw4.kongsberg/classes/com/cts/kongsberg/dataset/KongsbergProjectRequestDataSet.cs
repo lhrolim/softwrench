@@ -19,9 +19,8 @@ using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
     class KongsbergProjectRequestDataSet : BaseServiceRequestDataSet {
-        private IMaximoHibernateDAO _maximoDao;
+        private readonly IMaximoHibernateDAO _maximoDao;
 
-        private string refobject = "SR";
 
         private string ticketspecByUidQuery = @"select * 
                                                 from ticketspec 

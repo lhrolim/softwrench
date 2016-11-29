@@ -178,7 +178,7 @@ namespace softWrench.sW4.Security.Services {
             if (save) {
                 try {
                     return await _dao.SaveAsync(user);
-                } catch (Exception e) {
+                } catch (Exception) {
                     if (await _ldapManager.IsLdapSetup()) {
                         //recovering from scenarios where there might have been an already created user on softwrench with a personid equal to an existing user in maximo
                         var legacyUser = _dao.FindSingleByQuery<User>(User.UserByUserNameOrPerson, user.UserName, user.MaximoPersonId);
@@ -227,7 +227,7 @@ namespace softWrench.sW4.Security.Services {
         public async Task<string> ForgotPassword(string userNameOrEmail) {
             var isEmail = new EmailAddressAttribute().IsValid(userNameOrEmail);
             User user;
-            string emailToSend = null;
+            string emailToSend;
             if (!isEmail) {
                 user = _dao.FindSingleByQuery<User>(User.UserByUserName, userNameOrEmail);
                 if (user == null) {

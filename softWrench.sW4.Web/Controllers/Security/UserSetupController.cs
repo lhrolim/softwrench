@@ -101,7 +101,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 await _userManager.ActivateAndDefinePassword(user, password);
                 var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
                 AfterPasswordSet(inMemoryUser, password, userTimezoneOffset, System.Web.HttpContext.Current);
-            } catch (PasswordException.PasswordHistoryException e) {
+            } catch (PasswordException.PasswordHistoryException) {
                 return View("DefinePassword", new DefinePasswordModel {
                     RepeatedPassword = true,
                     Title = "Define Password",
@@ -157,7 +157,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 await _userManager.ActivateAndDefinePassword(user, password);
                 var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
                 AfterPasswordSet(inMemoryUser, password, userTimezoneOffset, System.Web.HttpContext.Current);
-            } catch (PasswordException.PasswordHistoryException e) {
+            } catch (PasswordException.PasswordHistoryException) {
                 return View("DefinePassword", new DefinePasswordModel {
                     Title = "Expired Password",
                     ChangePasswordScenario = true,

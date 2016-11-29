@@ -13,8 +13,6 @@ namespace softWrench.sW4.Data {
         public UnboundedDatamap([NotNull] string application, [NotNull] IDictionary<string, object> fields, string idFieldName) : base(application, fields, idFieldName) {
         }
 
-        public string Type {get {return GetType().Name;}
-        }
 
 
     }

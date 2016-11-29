@@ -24,8 +24,6 @@ namespace softWrench.sW4.Util {
 
         private static string _clientName;
         private static string _environment;
-        private static string _serverPath;
-        private static string _appPath;
         private static readonly DateTime _upTime = DateTime.Now;
 
         private static readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();

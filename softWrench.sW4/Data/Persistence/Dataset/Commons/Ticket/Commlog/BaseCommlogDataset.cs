@@ -19,7 +19,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
 
         private readonly ISWDBHibernateDAO _swdbDAO;
         private readonly AttachmentDao _attachmentDAO;
-        private AttachmentHandler _attachmentHandler;
 
 
         public BaseCommlogDataset(ISWDBHibernateDAO swdbDAO, AttachmentDao attachmentDAO) {

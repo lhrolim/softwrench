@@ -188,7 +188,7 @@ namespace softWrench.sW4.Web.Controllers {
         private static CompleteApplicationMetadataDefinition GetAppMetadata(string applicationName) {
             try {
                 return MetadataProvider.Application(applicationName);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return null;
             }
         }

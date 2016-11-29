@@ -22,7 +22,7 @@ namespace softWrench.sW4.Util {
                 }
                 try {
                     return Convert.ToInt32(stValue);
-                } catch (System.OverflowException e) {
+                } catch (System.OverflowException) {
                     return Convert.ToInt64(stValue);
                 }
             }

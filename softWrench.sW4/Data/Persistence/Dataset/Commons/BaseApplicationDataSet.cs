@@ -642,7 +642,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             //Main detail reload mode... full refresh would be handled at a higher level
             var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            result.ResultObject = AsyncHelper.RunSync(() => Engine().FindById(slicedEntityMetadata, id, userIdSite));
+            result.ResultObject = await Engine().FindById(slicedEntityMetadata, id, userIdSite);
             return result;
 
 

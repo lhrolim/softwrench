@@ -169,7 +169,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return result;
         }
 
+#pragma warning disable 1998
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+#pragma warning restore 1998
             var profile = UserProfile.FromJson(json);
             SecurityFacade.GetInstance().SaveUserProfile(profile);
             return new TargetResult("" + profile.Id, "" + profile.Name, profile);

@@ -32,7 +32,6 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
         private readonly SlicedEntityMetadata _slicedEntityMetadata;
         private readonly EntityMetadata _metadata;
         private readonly ApplicationMetadata _applicationMetadata;
-        private readonly bool _instanceConfigured;
         private readonly IBatchSubmissionService _batchService;
 
         public ToshibaSRSyncJob(IConfigurationFacade configurationFacade, JobManager jobManager, RestEntityRepository restEntityRepository, EntityRepository entityRepository, IBatchSubmissionService batchService) : base(configurationFacade, jobManager) {
@@ -50,7 +49,6 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             }
             _applicationMetadata = application.StaticFromSchema("editdetail");
             _slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(_applicationMetadata);
-            _instanceConfigured = true;
         }
 
         /// <summary>

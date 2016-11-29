@@ -39,7 +39,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
 
 
         [TestInitialize]
-        public void Init() {
+        public override void Init() {
             base.Init();
             _applicationMetadata = MetadataProvider.Application("person").StaticFromSchema("newPersonDetail");
 

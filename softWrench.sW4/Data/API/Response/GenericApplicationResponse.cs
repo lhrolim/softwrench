@@ -8,13 +8,9 @@ namespace softWrench.sW4.Data.API.Response {
     public class GenericApplicationResponse : BlankApplicationResponse {
         public object ResultObject { get; set; }
 
-        public bool FullRefresh { get; set; } = false;
+        public new bool FullRefresh { get; set; } = false;
 
 
-        public override string Type {
-            get {
-                return typeof(GenericApplicationResponse).Name;
-            }
-        }
+        public override string Type => typeof(GenericApplicationResponse).Name;
     }
 }

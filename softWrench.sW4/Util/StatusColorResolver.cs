@@ -36,7 +36,7 @@ namespace softWrench.sW4.Util {
                 try {
                     statusColorJson = JSonUtil.BuildJSon(statusColorJsonPath);
                     ReplaceWithColorValues(statusColorJson);
-                } catch (Exception e) {
+                } catch (Exception) {
                     Log.Error("Error reading Status Color fallback JSON");
                     statusColorJson = new JObject();
                 }
@@ -63,7 +63,7 @@ namespace softWrench.sW4.Util {
                 try {
                     statusColorJson = JSonUtil.BuildJSon(statusColorJsonPath);
                     ReplaceWithColorValues(statusColorJson);
-                } catch (Exception e) {
+                } catch (Exception) {
                     Log.Error("Error reading Status Color JSON");
                     statusColorJson = new JObject();
                 }

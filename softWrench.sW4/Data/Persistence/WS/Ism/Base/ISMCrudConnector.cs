@@ -16,7 +16,7 @@ using WcfSamples.DynamicProxy;
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Base {
     internal sealed class IsmCrudConnector : BaseMaximoCrudConnector {
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof(IsmCrudConnector));
+        private new static readonly ILog Log = LogManager.GetLogger(typeof(IsmCrudConnector));
 
         public override DynamicObject CreateProxy(EntityMetadata metadata) {
             //for ISM we have only a single wsdl for all the web-services
