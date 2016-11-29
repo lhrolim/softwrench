@@ -46,7 +46,7 @@ angular.module('sw_layout')
         resetFocusToCurrent: function (schema, attribute) {
             var log = $log.get("focusService#resetFocusToCurrent");
             log.debug("resetting focus to {0}".format(attribute));
-            var idx = fieldService.getDisplayableIdxByKey(schema, attribute);
+            var idx = fieldService.getVisiableDisplayableIdxByKey(schema, attribute);
             currentFocusedIdx = idx;
         },
 
@@ -87,7 +87,7 @@ angular.module('sw_layout')
             log.debug("moving focus to item next to {0}".format(attribute));
 
             var nextFieldIdx = fieldService.getNextVisibleDisplayableIdx(datamap, schema, attribute);
-            if (nextFieldIdx == -1) {
+            if (nextFieldIdx === -1) {
                 return;
             }
 
