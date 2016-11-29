@@ -159,6 +159,16 @@ namespace cts.commons.persistence {
             }
         }
 
+        public async Task<IList<T>> FindByQueryWithLimitAsync<T>(string queryst, int limit, params object[] parameters) where T : class {
+            using (var session = GetSession()) {
+                using (await session.BeginTransactionAsync()) {
+                    var query = BuildQuery(queryst, parameters, session);
+                    query.SetMaxResults(limit);
+                    return await query.ListAsync<T>();
+                }
+            }
+        }
+
         public async Task<IList<T>> FindAllAsync<T>() where T : class {
             var type = typeof(T);
             using (var session = GetSession()) {

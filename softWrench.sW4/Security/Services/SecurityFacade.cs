@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Runtime.Remoting.Messaging;
 using System.Security.Principal;
 using System.Threading;
@@ -12,9 +13,11 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
+using softwrench.sw4.user.classes.config;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Exceptions;
@@ -48,12 +51,14 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly IDictionary<string, InMemoryUser> Users = new ConcurrentDictionary<string, InMemoryUser>();
 
+        [Import]
+        public UserPasswordService UserPasswordService { get; set; }
 
         public static SecurityFacade GetInstance() {
             return SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
         }
 
-        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager, TransactionStatisticsService transStatisticsService) {
+        public SecurityFacade(IEventDispatcher dispatcher, GridFilterManager gridFilterManager, UserStatisticsService statisticsService, UserProfileManager userProfileManager, UserSyncManager userSyncManager, UserManager userManager, TransactionStatisticsService transStatisticsService, IConfigurationFacade configurationFacade) {
             _eventDispatcher = dispatcher;
             _gridFilterManager = gridFilterManager;
             _statisticsService = statisticsService;
@@ -68,7 +73,7 @@ namespace softWrench.sW4.Security.Services {
 
             if (!dbUser.UserName.Equals("swadmin") && dbUser.IsActive.HasValue && dbUser.IsActive == false) {
                 //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
-                return InMemoryUser.NewAnonymousInstance(false);
+                return InMemoryUser.NewAnonymousInstance(false, dbUser.Locked.HasValue && dbUser.Locked.Value);
             }
             //ensuring to get a clear instance upon login
             ClearUserFromCache(dbUser.UserName);
@@ -88,7 +93,8 @@ namespace softWrench.sW4.Security.Services {
 
         [CanBeNull]
         public async Task<InMemoryUser> LoginCheckingPassword(User dbUser, string typedPassword, string userTimezoneOffset) {
-            if (dbUser == null || !MatchPassword(dbUser, typedPassword)) {
+            if (dbUser == null || !await UserPasswordService.MatchPassword(dbUser, typedPassword)) {
+
                 return null;
             }
             return await DoLogin(dbUser, userTimezoneOffset);
@@ -103,15 +109,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
 
-        private bool MatchPassword(User dbUser, string password) {
-            var encryptedPassword = "";
-            var criptoProperties = dbUser.CriptoProperties;
-            if (String.IsNullOrEmpty(criptoProperties)) {
-                encryptedPassword = AuthUtils.GetSha1HashData(password);
-            }
-            //TODO: read criptoProperties and apply custom logic
-            return dbUser.Password.Equals(encryptedPassword);
-        }
+    
 
         public static InMemoryUser UpdateUserCacheStatic(User dbUser, string userTimezoneOffset) {
             int? userTimezoneOffsetInt = null;
@@ -120,7 +118,7 @@ namespace softWrench.sW4.Security.Services {
                 userTimezoneOffsetInt = tmp;
             }
 
-            var profiles = AsyncHelper.RunSync(()=>_userProfileManager.FindUserProfiles(dbUser));
+            var profiles = AsyncHelper.RunSync(() => _userProfileManager.FindUserProfiles(dbUser));
             var gridPreferences = new GridPreferences() {
                 GridFilters = _gridFilterManager.LoadAllOfUser(dbUser.Id)
             };
@@ -163,7 +161,7 @@ namespace softWrench.sW4.Security.Services {
             if (inMemoryUser.UserId.HasValue) {
                 _transStatisticsService.AddSessionAudit(inMemoryUser);
             }
-            
+
             _statisticsService.UpdateStatistcsAsync(dbUser);
             return inMemoryUser;
         }
@@ -242,7 +240,7 @@ namespace softWrench.sW4.Security.Services {
             CallContext.LogicalSetData("executinglogin", "true");
             if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
                 //TODO: Async this method
-                fullUser = AsyncHelper.RunSync(()=>_userSyncManager.GetUserFromMaximoBySwUser(swUser));
+                fullUser = AsyncHelper.RunSync(() => _userSyncManager.GetUserFromMaximoBySwUser(swUser));
                 if (fullUser == null) {
                     Log.WarnFormat("user {0} not found on database", swUser.MaximoPersonId);
                     fullUser = new User();
@@ -296,11 +294,11 @@ namespace softWrench.sW4.Security.Services {
             return SWDBHibernateDAO.GetInstance().Save(user);
         }
 
-        public User SaveUser(User user) {
+        public async Task<User> SaveUser(User user) {
             var loginUser = CurrentUser();
 
             user.UserName = user.UserName.ToLower();
-            var saveUser = _userManager.SaveUser(user);
+            var saveUser = await _userManager.SaveUser(user);
             ClearUserFromCache(user.UserName);
 
             if (saveUser.UserName.Equals(loginUser.Login)) {

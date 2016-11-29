@@ -51,16 +51,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return parameter.BASEDto;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
             if (!string.Equals(operation, OperationConstants.CRUD_CREATE) || isBatch) {
-                return base.Execute(application, json, id, operation, isBatch, userIdSite);
+                return await base.Execute(application, json, id, operation, isBatch, userIdSite);
             }
 
             var relatedOriginId = json.StringValue("#relatedrecord_recordkey");
 
             return string.IsNullOrEmpty(relatedOriginId)
                 // regular CREATE 
-                ? base.Execute(application, json, id, operation, isBatch, userIdSite)
+                ? await base.Execute(application, json, id, operation, isBatch, userIdSite)
                 // CREATE as relatedrecord
                 : CreateAsRelated(application, json, relatedOriginId);
         }

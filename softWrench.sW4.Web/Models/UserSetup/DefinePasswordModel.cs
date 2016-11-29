@@ -11,6 +11,16 @@ namespace softWrench.sW4.Web.Models.UserSetup {
 
         public bool ChangePasswordScenario { get; set; }
 
+        /// <summary>
+        /// This password doesn´t match the required policies of the system
+        /// </summary>
+        public bool InvalidPassword { get; set; }
+
+        /// <summary>
+        /// This password although valid cannot be choosen cause it was used recently. 
+        /// </summary>
+        public bool RepeatedPassword {get; set;}
+
         public string FullName { get; set; }
 
         public string Username { get; set; }

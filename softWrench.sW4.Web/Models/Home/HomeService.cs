@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Web;
 using cts.commons.simpleinjector;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -51,11 +52,11 @@ namespace softWrench.sW4.Web.Models.Home {
         }
 
         protected virtual string GetUrlFromApplication(string application, string schemaId, SchemaMode? mode, ClientPlatform? platform, string id = null, string userid = null, string siteid = null) {
-            var actionURL = string.Format("api/data/{0}", application);
+            var actionURL = $"api/data/{application}";
             //TODO: fix WEBAPIUTIL method
             var modeStr = mode.ToString().ToLower();
             var platformStr = platform.ToString().ToLower();
-            var queryString = string.Format("key[schemaId]={0}&key[mode]={1}&key[platform]={2}", schemaId, modeStr, platformStr);
+            var queryString = $"key[schemaId]={schemaId}&key[mode]={modeStr}&key[platform]={platformStr}";
             if (!string.IsNullOrEmpty(id)) {
                 queryString += "&id=" + id;
             }
@@ -68,8 +69,8 @@ namespace softWrench.sW4.Web.Models.Home {
             return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
         }
 
-        public virtual bool VerifyChangePassword(InMemoryUser user, HttpResponseBase response) {
-            if (!_userManager.VerifyChangePassword(user)) {
+        public virtual async Task<bool> VerifyChangePassword(InMemoryUser user, HttpResponseBase response) {
+            if (!await _userManager.VerifyChangePassword(user)) {
                 return false;
             }
             response.Redirect("~/UserSetup/ChangePassword");

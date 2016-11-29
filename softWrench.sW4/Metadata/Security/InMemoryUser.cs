@@ -6,8 +6,6 @@ using softWrench.sW4.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sw4.Shared2.Metadata.Applications.Command;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
-using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
-using softWrench.sW4.Metadata.Menu.Containers;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,74 +15,52 @@ using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
-using softWrench.sW4.Data.Entities.Audit;
 
 namespace softWrench.sW4.Metadata.Security {
     public class InMemoryUser : ISWUser {
-        private readonly int? _dbId;
-        private String _login;
-        private readonly string _firstName;
-        private readonly string _lastName;
-        private readonly string _email;
-        private readonly string _orgId;
-        private readonly string _department;
-        private readonly string _phone;
-        private readonly string _language;
-        private readonly string _maximoPersonId;
-        private readonly string _storeloc;
-        private string _signature;
-        private readonly bool _changePassword;
-        private Boolean? _active;
-        private int? _timezoneOffset;
-        private readonly GridPreferences _gridPreferences;
-        private readonly UserPreferences _userPreferences;
-        private readonly IList<Role> _roles;
-        private readonly ICollection<UserProfile> _profiles;
         private MergedUserProfile _mergedUserProfile;
-        private readonly ISet<PersonGroupAssociation> _personGroups;
-        private readonly IList<DataConstraint> _dataConstraints;
-        internal IDictionary<ClientPlatform, MenuDefinition> _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+        internal IDictionary<ClientPlatform, MenuDefinition> CachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
-        private IDictionary<string, object> _genericproperties = new Dictionary<string, object>();
-       
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
         internal static InMemoryUser TestInstance(string login = null) {
-            return new InMemoryUser { _login = login, _timezoneOffset = 420 };
+            return new InMemoryUser { Login = login, TimezoneOffset = 420 };
         }
 
         private InMemoryUser() {
-            _roles = new List<Role>();
-            _personGroups = new LinkedHashSet<PersonGroupAssociation>();
-            _profiles = new List<UserProfile>();
-            _dataConstraints = new List<DataConstraint>();
+            Roles = new List<Role>();
+            PersonGroups = new LinkedHashSet<PersonGroupAssociation>();
+            Profiles = new List<UserProfile>();
+            DataConstraints = new List<DataConstraint>();
         }
 
-        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, GridPreferences gridPreferences, UserPreferences userPreferences, int? timezoneOffset, MergedUserProfile mergedProfile) {
+        public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, [CanBeNull]GridPreferences gridPreferences, [CanBeNull]UserPreferences userPreferences, int? timezoneOffset, MergedUserProfile mergedProfile) {
             DBUser = dbUser;
-            _login = dbUser.UserName;
+            Login = dbUser.UserName;
             SiteId = dbUser.Person.SiteId ?? dbUser.SiteId;
-            _firstName = dbUser.Person.FirstName ?? dbUser.FirstName;
-            _lastName = dbUser.Person.LastName ?? dbUser.LastName;
-            _email = dbUser.Person.Email ?? dbUser.Email;
-            _orgId = dbUser.Person.OrgId ?? dbUser.OrgId;
-            _storeloc = dbUser.Person.Storeloc;
-            _department = dbUser.Person.Department;
-            _phone = dbUser.Person.Phone;
-            _language = dbUser.Person.Language;
-            _dbId = dbUser.Id;
-            _timezoneOffset = timezoneOffset;
-            _maximoPersonId = dbUser.MaximoPersonId;
-            _personGroups = (dbUser.PersonGroups ?? new LinkedHashSet<PersonGroupAssociation>());
+            FirstName = dbUser.Person.FirstName ?? dbUser.FirstName;
+            LastName = dbUser.Person.LastName ?? dbUser.LastName;
+            Email = dbUser.Person.Email ?? dbUser.Email;
+            OrgId = dbUser.Person.OrgId ?? dbUser.OrgId;
+            Storeloc = dbUser.Person.Storeloc;
+            Department = dbUser.Person.Department;
+            Phone = dbUser.Person.Phone;
+            Language = dbUser.Person.Language;
+            DBId = dbUser.Id;
+            TimezoneOffset = timezoneOffset;
+            MaximoPersonId = dbUser.MaximoPersonId;
+            PersonGroups = (dbUser.PersonGroups ?? new LinkedHashSet<PersonGroupAssociation>());
             _mergedUserProfile = mergedProfile;
-            _changePassword = dbUser.ChangePassword ?? false;
+            ChangePassword = dbUser.ChangePassword ?? false;
+            PasswordExpirationTime = dbUser.PasswordExpirationTime;
             var userProfiles = initializedProfiles as UserProfile[] ?? initializedProfiles.ToArray();
-            _profiles = userProfiles;
+            Profiles = userProfiles;
             var roles = new List<Role>(mergedProfile.Roles);
             var dataConstraints = new List<DataConstraint>();
+            Locked = dbUser.Locked ?? false;
 
             if (dbUser.CustomRoles != null) {
                 foreach (var role in dbUser.CustomRoles) {
@@ -110,21 +86,21 @@ namespace softWrench.sW4.Metadata.Security {
                     }
                 }
             }
-            _roles = roles;
-            _dataConstraints = dataConstraints;
-            Identity = new GenericIdentity(_login);
-            _gridPreferences = gridPreferences;
-            _userPreferences = userPreferences;
+            Roles = roles;
+            DataConstraints = dataConstraints;
+            Identity = new GenericIdentity(Login);
+            GridPreferences = gridPreferences;
+            UserPreferences = userPreferences;
             HandleUserPreferences(userPreferences);
             _mergedUserProfile = mergedProfile;
-            _active = dbUser.IsActive;
+            Active = dbUser.IsActive;
         }
 
         private void HandleUserPreferences(UserPreferences userPreferences) {
             if (userPreferences != null) {
-                _signature = userPreferences.Signature;
-                if (_userPreferences.GenericProperties != null) {
-                    foreach (var genericProperty in _userPreferences.GenericProperties) {
+                Signature = userPreferences.Signature;
+                if (UserPreferences.GenericProperties != null) {
+                    foreach (var genericProperty in UserPreferences.GenericProperties) {
                         Genericproperties.Add(genericProperty.Key, genericProperty.Convert());
                     }
                 }
@@ -132,146 +108,72 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         private InMemoryUser(string mock) : this() {
-            _login = mock;
-            _firstName = mock;
-            _lastName = mock;
-            _maximoPersonId = mock;
+            Login = mock;
+            FirstName = mock;
+            LastName = mock;
+            MaximoPersonId = mock;
             SiteId = mock;
-            _dbId = int.MinValue;
-            _timezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
+            DBId = int.MinValue;
+            TimezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
         }
 
-        public static InMemoryUser NewAnonymousInstance(bool active = true) {
-            return new InMemoryUser("anonymous") { _active = active };
+        public static InMemoryUser NewAnonymousInstance(bool active = true, bool locked=false) {
+            return new InMemoryUser("anonymous") { Active = active, Locked = locked};
         }
 
         public Boolean IsAnonymous() {
-            return _login == "anonymous" && _dbId.HasValue && _dbId.Value == int.MinValue;
+            return Login == "anonymous" && DBId.HasValue && DBId.Value == int.MinValue;
         }
 
-        public string Login {
-            get {
-                return _login;
-            }
-            set {
-                _login = value;
-            }
-        }
+        public string Login { get; set; }
 
         public string SiteId {
             get; set;
         }
 
-        public string FirstName {
-            get {
-                return _firstName;
-            }
-        }
+        public string FirstName { get; }
 
-        public string LastName {
-            get {
-                return _lastName;
-            }
-        }
+        public string LastName { get; }
 
-        public string Email {
-            get {
-                return _email;
-            }
-        }
+        public string Email { get; }
 
-        public string OrgId {
-            get {
-                return _orgId;
-            }
-        }
+        public string OrgId { get; }
 
-        public ISet<PersonGroupAssociation> PersonGroups {
-            get {
-                return _personGroups;
-            }
-        }
+        public ISet<PersonGroupAssociation> PersonGroups { get; }
 
-        public string Department {
-            get {
-                return _department;
-            }
-        }
+        public string Department { get; }
 
-        public string Phone {
-            get {
-                return _phone;
-            }
-        }
+        public string Phone { get; }
 
-        public string Language {
-            get {
-                return _language;
-            }
-        }
+        public string Language { get; }
 
-        public string Storeloc {
-            get {
-                return _storeloc;
-            }
-        }
+        public string Storeloc { get; }
 
-        public string MaximoPersonId {
-            get {
-                return _maximoPersonId;
-            }
-        }
+        public string MaximoPersonId { get; }
 
-        public string Signature {
-            get {
-                return _signature;
-            }
-        }
+        public string Signature { get; private set; }
 
-        public GridPreferences GridPreferences {
-            get {
-                return _gridPreferences;
-            }
-        }
+        public GridPreferences GridPreferences { get; }
 
-        public UserPreferences UserPreferences {
-            get {
-                return _userPreferences;
-            }
-        }
+        public UserPreferences UserPreferences { get; }
 
-        public bool? Active {
-            get {
-                return _active;
-            }
-        }
+        public bool? Active { get; private set; }
+
+        public bool Locked {get; private set; }
 
         /// <summary>
         /// Time difference between UTC time and the user local time, in minutes
         /// (UTCTime - ClientTime)
         /// </summary>
-        public int? TimezoneOffset {
-            get {
-                return _timezoneOffset;
-            }
-        }
+        public int? TimezoneOffset { get; private set; }
 
-        public IList<Role> Roles {
-            get {
-                return _roles;
-            }
-        }
+        public IList<Role> Roles { get; }
 
-        public int? DBId {
-            get {
-                return _dbId;
-            }
-        }
-        public bool ChangePassword {
-            get {
-                return _changePassword;
-            }
-        }
+        public int? DBId { get; }
+
+        public bool ChangePassword { get; }
+
+        public DateTime? PasswordExpirationTime {get;}
 
         [JsonIgnore]
         public User DBUser {
@@ -291,20 +193,11 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
-        public IList<DataConstraint> DataConstraints {
-            get {
-                return _dataConstraints;
-            }
-        }
-
+        public IList<DataConstraint> DataConstraints { get; }
 
 
         [NotNull]
-        public ICollection<UserProfile> Profiles {
-            get {
-                return _profiles;
-            }
-        }
+        public ICollection<UserProfile> Profiles { get; }
 
         public bool IsAllowedInApp(string applicationName) {
             if (IsInRolInternal(applicationName)) {
@@ -327,11 +220,11 @@ namespace softWrench.sW4.Metadata.Security {
                 return true;
             }
 
-            return _roles.Any(r => r.Name.EqualsIc(role));
+            return Roles.Any(r => r.Name.EqualsIc(role));
         }
 
         public bool IsInGroup(string groupName) {
-            return _personGroups.Any(g => g.GroupName.Equals(groupName));
+            return PersonGroups.Any(g => g.GroupName.Equals(groupName));
         }
 
         [JsonIgnore]
@@ -361,14 +254,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
-        public IDictionary<string, object> Genericproperties {
-            get {
-                return _genericproperties;
-            }
-            set {
-                _genericproperties = value;
-            }
-        }
+        public IDictionary<string, object> Genericproperties { get; set; } = new Dictionary<string, object>();
 
         public IDictionary<string, object> GenericSyncProperties {
             get {
@@ -416,7 +302,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public void ClearMenu() {
-            _cachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
+            CachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
             Genericproperties.Remove("menumanagerscached");
         }
 

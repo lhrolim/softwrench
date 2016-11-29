@@ -40,7 +40,6 @@ namespace softWrench.sW4.Security.Services {
         private readonly EntityMetadata _entityMetadata;
         private readonly ISWDBHibernateDAO _dao;
         private readonly IMappingResolver _mappingResolver;
-        private readonly IEntityRepository _entityRepositoryForProfileTranslation;
 
         public UserProfileManager(ISWDBHibernateDAO dao, IMappingResolver mappingResolver) {
             _dao = dao;
@@ -105,6 +104,12 @@ namespace softWrench.sW4.Security.Services {
             }
         }
 
+        public ISet<UserProfile> GetDefaultGroups() {
+            var allPRofiles = FetchAllProfiles(false);
+            return new HashSet<UserProfile>(allPRofiles.Where(f => f.ApplyByDefault));
+        }
+
+
         public UserProfile SaveUserProfile(UserProfile profile) {
 
 
@@ -156,7 +161,9 @@ namespace softWrench.sW4.Security.Services {
         }
 
         protected virtual IEntityRepository EntityRepositoryForTranslation {
-            get { return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(); }
+            get {
+                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>();
+            }
         }
 
         public virtual async Task<List<UserProfile>> FindUserProfiles(User dbUser) {
@@ -290,5 +297,7 @@ namespace softWrench.sW4.Security.Services {
                 Roles = roles
             };
         }
+
+
     }
 }

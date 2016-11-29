@@ -65,10 +65,10 @@ namespace softWrench.sW4.Web.Common {
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
 
-            filterContext.ExceptionHandled = true;
-            filterContext.HttpContext.Response.Clear();
-            filterContext.HttpContext.Response.StatusCode = (int)CodeOf(rootException);
-            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+//            filterContext.ExceptionHandled = true;
+//            filterContext.HttpContext.Response.Clear();
+//            filterContext.HttpContext.Response.StatusCode = (int)CodeOf(rootException);
+//            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
 
             if (filterContext.HttpContext.Request.IsAjaxRequest()) {
                 // if Ajax: json response
@@ -85,12 +85,13 @@ namespace softWrench.sW4.Web.Common {
                 var actionName = (string)filterContext.RouteData.Values["action"];
                 var model = new HandleErrorInfo(rootException, controllerName, actionName);
                 var result = new ViewResult {
+                    ViewName = "~/Views/Shared/Error.cshtml",
                     ViewData = new ViewDataDictionary<HandleErrorInfo>(model),
                     TempData = filterContext.Controller.TempData
                 };
                 filterContext.Result = result;
             }
-            filterContext.HttpContext.Response.End();
+//            filterContext.HttpContext.Response.End();
         }
     }
 }

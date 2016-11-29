@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
@@ -16,9 +17,9 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
     class ChicagoServiceRequestDataSet : BaseServiceRequestDataSet {
 
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
             Tuple<string, string> userIdSite) {
-            var result = base.Execute(application, json, id, operation, isBatch, userIdSite);
+            var result = await base.Execute(application, json, id, operation, isBatch, userIdSite);
 
             if ("servicerequest".Equals(application.Name) && "crud_update".Equals(operation)) {
                 var user = SecurityFacade.CurrentUser();

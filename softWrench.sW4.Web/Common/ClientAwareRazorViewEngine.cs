@@ -24,11 +24,12 @@ namespace softWrench.sW4.Web.Common {
             if (String.IsNullOrEmpty(masterPath)) {
                 masterPath = FetchMasterPath(controllerContext, viewPath);
             }
-            var clientPath = String.Format(ClientPattern, ApplicationConfiguration.ClientName);
+            var clientPath = string.Format(ClientPattern, ApplicationConfiguration.ClientName);
 
 
-            if (base.FileExists(controllerContext,
-                viewPath.Replace("%1", clientPath))) {
+            var pathExists = base.FileExists(controllerContext,viewPath.Replace("%1", clientPath));
+
+            if (pathExists) {
                 return base.CreateView(
                     controllerContext,
                     viewPath.Replace("%1", clientPath),
@@ -59,7 +60,7 @@ namespace softWrench.sW4.Web.Common {
                 //FIX for HAP-780
                 return "";
             }
-           
+
 
             if (base.FileExists(controllerContext, clientLayout)) {
                 return clientLayout;

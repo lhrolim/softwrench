@@ -28,12 +28,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             _dynComponentEmailer = dynComponentEmailer;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             if (operationData.Operation.EqualsIc(OperationConstants.CRUD_DELETE)) {
                 json["comment"] = operationData.Comment;
                 json["username"] = operationData.Username;
             }
-            return base.Execute(application, json, operationData);
+            return await base.Execute(application, json, operationData);
         }
 
         public override TargetResult DoExecute(OperationWrapper operationWrapper) {

@@ -109,6 +109,16 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+        [Property]
+        public DateTime? PasswordExpirationTime {
+            get; set;
+        }
+
+        [Property]
+        public bool? Locked {
+            get; set;
+        }
+
         [JsonIgnore]
         [Set(0, Table = "SEC_PERSONGROUPASSOCIATION",
         Lazy = CollectionLazy.False, Cascade = "all")]
@@ -148,6 +158,9 @@ namespace softwrench.sw4.user.classes.entities {
         public UserPreferences UserPreferences {
             get; set;
         }
+
+        [OneToOne(ClassType = typeof(AuthenticationAttempt), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "none")]
+        public AuthenticationAttempt AuthenticationAttempts { get; set; }
 
         //public string DisplayName {
         //    get { return Person.FirstName + " " + Person.LastName; }
@@ -207,10 +220,11 @@ namespace softwrench.sw4.user.classes.entities {
             IsActive = IsActive ?? dbUSer.IsActive;
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
-            UserPreferences = dbUSer.UserPreferences;
+            UserPreferences = UserPreferences ?? dbUSer.UserPreferences;
             Profiles = Profiles.Any() ? Profiles : dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
             ChangePassword = ChangePassword ?? dbUSer.ChangePassword;
+            Locked = Locked ?? dbUSer.Locked;
         }
 
         public void MergeMaximoWithNewUser(User newUser) {

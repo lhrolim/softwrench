@@ -2,12 +2,13 @@
 (function (angular) {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['$rootScope',"$log", 'alertService', 'redirectService', 'applicationService', 'contextService', 'crudContextHolderService', 'historyService','$q', personService]);
+    angular.module('maximo_applications').factory('personService', ['$rootScope', "$log", 'alertService', 'redirectService', 'applicationService',
+        'contextService', 'crudContextHolderService', 'historyService', 'restService', '$q', personService]);
 
-    function personService($rootScope, $log, alertService, redirectService, applicationService, contextService, crudContextHolderService, historyService,$q) {
-     
+    function personService($rootScope, $log, alertService, redirectService, applicationService, contextService, crudContextHolderService, historyService, restService, $q) {
 
-        function handlePrimaryForCreation(compositionDatamap,type) {
+
+        function handlePrimaryForCreation(compositionDatamap, type) {
             //phone creation
             const personData = crudContextHolderService.rootDataMap();
             if (!personData[type] || personData[type].length === 0) {
@@ -77,7 +78,7 @@
             var currentSchema = crudContextHolderService.currentSchema();
             const fields = datamap;
 
-            applicationService.save().then(function (response) {
+            return applicationService.save().then(function (response) {
 
                 if (currentSchema.schemaId === "myprofiledetail") {
                     const ro = response.resultObject;
@@ -102,6 +103,7 @@
                     contextService.loadUserContext(updatedUser);
 
                 }
+                return response;
             });
         }
 
@@ -119,15 +121,75 @@
             }
         }
 
+
+        const forcePasswordReset = () => {
+            const dm = crudContextHolderService.rootDataMap();
+            const username = dm["personid"];
+            alertService.confirm(`are you sure you want to prompt user ${username} to change his password`).then(r => {
+
+                restService.postPromise("UserSetupWebApi", "ForceResetPassword", { username }).then(r => {
+                    alertService.success("User will be prompted to reset his password upon next login");
+                });
+            });
+        }
+
+        const unlock = () => {
+            const dm = crudContextHolderService.rootDataMap();
+            const username = dm["personid"];
+
+            alertService.confirm(`are you sure you want to unlock user ${username}`).then(r => {
+                restService.postPromise("UserSetupWebApi", "UnLock", { username }).then(r => {
+                    alertService.success("User unlocked. User will be prompted to reset their password next time they login");
+                    dm["locked"] = false;
+                });
+            });
+
+
+        }
+
+        const activate = () => {
+            const dm = crudContextHolderService.rootDataMap();
+            const username = dm["personid"];
+
+            const userid = dm["#userid"];
+
+
+            alertService.confirm(`are you sure you want to activate user ${username}`).then(r => {
+                restService.postPromise("UserSetupWebApi", "Activate", { userid }).then(r => {
+                    alertService.success("User Activated");
+                    dm["isactive"] = true;
+                });
+            });
+        }
+
+        
+        const inactivate = () => {
+            const dm = crudContextHolderService.rootDataMap();
+            const username = dm["personid"];
+            const userid = dm["#userid"];
+
+            alertService.confirm(`are you sure you want to inactivate user ${username}`).then(r => {
+                restService.postPromise("UserSetupWebApi", "Inactivate", { userid }).then(r => {
+                    alertService.success("User Inactivated");
+                    dm["isactive"] = false;
+                });
+            });
+        }
+
+
         const service = {
             afterChangeUsername,
+            activate,
+            inactivate,
             validatePerson,
             cancelEdition,
+            forcePasswordReset,
             submitPerson,
             loadPhone,
             loadEmail,
             onSiteSelected,
-            onOrganizationSelected
+            onOrganizationSelected,
+            unlock
         };
         return service;
 

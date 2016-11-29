@@ -169,7 +169,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return result;
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
             var profile = UserProfile.FromJson(json);
             SecurityFacade.GetInstance().SaveUserProfile(profile);
             return new TargetResult("" + profile.Id, "" + profile.Name, profile);

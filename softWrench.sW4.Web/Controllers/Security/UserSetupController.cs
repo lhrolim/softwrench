@@ -12,6 +12,7 @@ using cts.commons.persistence;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Util;
+using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.services.setup;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API;
@@ -41,12 +42,17 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly UserManager _userManager;
         private readonly SecurityFacade _facade;
 
-        public UserSetupController(UserManager userManager, SecurityFacade facade)
-        {
+        public UserSetupController(UserManager userManager, SecurityFacade facade) {
             _userManager = userManager;
             _facade = facade;
         }
 
+
+        /// <summary>
+        /// This action is called upon user activation after he receives an email with a link to login into the system, and clicks that link
+        /// </summary>
+        /// <param name="tokenLink"></param>
+        /// <returns></returns>
         [System.Web.Http.HttpGet]
         public ActionResult DefinePassword(string tokenLink) {
             Validate.NotNull(tokenLink, "tokenLink");
@@ -67,7 +73,16 @@ namespace softWrench.sW4.Web.Controllers.Security {
             });
         }
 
-
+        /// <summary>
+        /// This actions is called after the user received the link, and has choosen a new password.
+        /// 
+        /// If the new password is accepted it will be stored and the user will be redirected to the system, logged in.
+        /// 
+        /// </summary>
+        /// <param name="tokenLink"></param>
+        /// <param name="password"></param>
+        /// <param name="userTimezoneOffset"></param>
+        /// <returns></returns>
         [System.Web.Http.HttpPost]
         [SPFRedirect(URL = "DefinePassword")]
         public async Task<ActionResult> DoSetPassword(string tokenLink, string password, string userTimezoneOffset) {
@@ -82,18 +97,38 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (hasExpired) {
                 throw new SecurityException(ExpiredLinkException);
             }
-            _userManager.ActivateAndDefinePassword(user, password);
-            await AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
+            try {
+                await _userManager.ActivateAndDefinePassword(user, password);
+                var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
+                AfterPasswordSet(inMemoryUser, password, userTimezoneOffset, System.Web.HttpContext.Current);
+            } catch (PasswordException.PasswordHistoryException e) {
+                return View("DefinePassword", new DefinePasswordModel {
+                    RepeatedPassword = true,
+                    Title = "Define Password",
+                    ChangePasswordScenario = false,
+                    Token = tokenLink,
+                    FullName = user.FullName,
+                    Username = user.UserName
+                });
+            }
+
             return null;
         }
 
+        /// <summary>
+        /// This actions handles the scenario where the user successfully logged in but was asked to change his password due to the changepassword policy out of the configuration system.
+        /// 
+        /// This is the initial action that will redirect him to the form
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [System.Web.Http.Authorize]
         [System.Web.Http.HttpGet]
-        public ActionResult ChangePassword() {
+        public async Task<ActionResult> ChangePassword() {
             var user = SecurityFacade.CurrentUser();
 
             // avoids a changing the password without the flag set
-            if (!VerifyChangePassword(user)) {
+            if (!await VerifyChangePassword(user)) {
                 return null;
             }
 
@@ -108,18 +143,29 @@ namespace softWrench.sW4.Web.Controllers.Security {
         [System.Web.Http.Authorize]
         [System.Web.Http.HttpPost]
         [SPFRedirect(URL = "ChangePassword")]
-        public async Task<ActionResult> DoChangePassword(string password, string userTimezoneOffset) {
+        public async Task<ActionResult> DoChangePassword([FromBody]string password, [FromUri]string userTimezoneOffset) {
             Validate.NotNull(password, "password");
             var memoryUser = SecurityFacade.CurrentUser();
 
             // avoids a changing the password without the flag set
-            if (!VerifyChangePassword(memoryUser)) {
+            if (!await VerifyChangePassword(memoryUser)) {
                 return null;
             }
 
             var user = memoryUser.DBUser;
-            _userManager.ActivateAndDefinePassword(user, password);
-            await AfterPasswordSet(user, password, userTimezoneOffset, System.Web.HttpContext.Current);
+            try {
+                await _userManager.ActivateAndDefinePassword(user, password);
+                var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
+                AfterPasswordSet(inMemoryUser, password, userTimezoneOffset, System.Web.HttpContext.Current);
+            } catch (PasswordException.PasswordHistoryException e) {
+                return View("DefinePassword", new DefinePasswordModel {
+                    Title = "Expired Password",
+                    ChangePasswordScenario = true,
+                    FullName = user.FullName,
+                    Username = user.UserName,
+                    RepeatedPassword = true
+                });
+            }
             return null;
         }
 
@@ -133,24 +179,24 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return json;
         }
 
-        private bool VerifyChangePassword(InMemoryUser user) {
+        private async Task<bool> VerifyChangePassword(InMemoryUser user) {
             // avoids a changing the password without the flag set
-            if (_userManager.VerifyChangePassword(user)) {
+            if (await _userManager.VerifyChangePassword(user)) {
                 return true;
             }
             Response.Redirect(FormsAuthentication.GetRedirectUrl(user.Login, false));
             return false;
         }
 
-        private async Task AfterPasswordSet(SwUser user, string password, string userTimezoneOffset, HttpContext context) {
+        private void AfterPasswordSet(InMemoryUser user, string password, string userTimezoneOffset, HttpContext context) {
             //logining in the user and redirecting him to home page
-            var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
-            AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
+            
+            AuthenticationCookie.SetSessionCookie(user.Login, userTimezoneOffset, Response);
 
             System.Web.HttpContext.Current = context; // async method run in another thread so this is needed
-            FormsAuthentication.RedirectFromLoginPage(user.UserName, false);
+            FormsAuthentication.RedirectFromLoginPage(user.Login, false);
 
-            Thread.CurrentPrincipal = inMemoryUser;
+            Thread.CurrentPrincipal = user;
         }
 
         protected override void OnException(ExceptionContext filterContext) {
@@ -159,11 +205,16 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 base.OnException(filterContext);
                 return;
             }
+
+            filterContext.HttpContext.Response.Clear();
+
             filterContext.ExceptionHandled = true;
             filterContext.Result = new ViewResult() {
                 ViewName = "~/Views/UserSetup/Error.cshtml",
                 ViewData = new ViewDataDictionary(new UserSetupError(exception))
             };
+
+            filterContext.HttpContext.Response.End();
         }
     }
 
@@ -179,7 +230,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IMaximoHibernateDAO _maxdao;
 
-        public UserSetupWebApiController(UserManager userManager, UserSetupEmailService userSetupEmailService, 
+        public UserSetupWebApiController(UserManager userManager, UserSetupEmailService userSetupEmailService,
             ISWDBHibernateDAO swdao, IMaximoHibernateDAO maxdao) {
             _userManager = userManager;
             _userSetupEmailService = userSetupEmailService;
@@ -190,8 +241,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         [System.Web.Http.HttpPost]
         public async Task<IGenericResponseResult> ForgotPassword([FromUri]string userNameOrEmail) {
             Validate.NotNull(userNameOrEmail, "userNameOrEmail");
-            var exception =await _userManager.ForgotPassword(userNameOrEmail);
-            if (exception != null){
+            var exception = await _userManager.ForgotPassword(userNameOrEmail);
+            if (exception != null) {
                 throw new SecurityException(exception);
             }
             return null;
@@ -201,6 +252,32 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public async Task<IGenericResponseResult> SendActivationEmail([FromUri]int userId, [FromUri]string email) {
             await _userManager.SendActivationEmail(userId, email);
             return null;
+        }
+
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Authorize]
+        public async Task ForceResetPassword([FromUri]string username) {
+            await _userManager.ForcePasswordReset(username);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Authorize]
+        public async Task UnLock([FromUri]string username) {
+            await _userManager.Unlock(username);
+        }
+
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Authorize]
+        public async Task Activate([FromUri]int userId) {
+            await _userManager.Activate(userId);
+        }
+
+        [System.Web.Http.HttpPost]
+        [System.Web.Http.Authorize]
+        public async Task Inactivate([FromUri]int userId) {
+            await _userManager.InActivate(userId);
         }
 
         [System.Web.Http.AllowAnonymous]
@@ -221,9 +298,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             const string application = "person";
             const string schemaId = "newPersonDetail";
-            
+
             // pre-signin action --> use anonymous user
-            var user = InMemoryUser.NewAnonymousInstance(); 
+            var user = InMemoryUser.NewAnonymousInstance();
 
             // create user
             var username = json.GetValue("personid").Value<string>();
@@ -264,9 +341,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             return _maxdao.FindByNativeQuery(@"select emailaddress 
                                                 from email 
-                                                where emailaddress is not null and isprimary = 1 and personid in (:personIds)", 
+                                                where emailaddress is not null and isprimary = 1 and personid in (:personIds)",
                                                 parameters)
-                .Cast<IDictionary<string,object>>()
+                .Cast<IDictionary<string, object>>()
                 .Select(e => e["emailaddress"].ToString());
         }
 

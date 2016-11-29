@@ -70,6 +70,8 @@
             public const string PlacementSpecialLastKey = "/Global/Password/PlacementSpecialLast";
             public const string BlackListKey = "/Global/Password/BlackList";
             public const string LoginKey = "/Global/Password/Login";
+            
+            
         }
 
         public class BulletinBoard {

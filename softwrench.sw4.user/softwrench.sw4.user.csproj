@@ -39,16 +39,16 @@
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.1.4\lib\net46\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.2.6151.15243, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.1.4\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.4\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.6156.25003\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -59,8 +59,8 @@
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -102,6 +102,10 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices">
+      <HintPath>..\packages\System.DirectoryServices.4.0.0\lib\System.DirectoryServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
       <Private>True</Private>
@@ -151,8 +155,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\config\UserConfigurationConstants.cs" />
+    <Compile Include="classes\config\UserConfigurationRegistry.cs" />
+    <Compile Include="classes\entities\AuthenticationAttempt.cs" />
     <Compile Include="classes\entities\GenericProperty.cs" />
     <Compile Include="classes\entities\MergedUserProfile.cs" />
+    <Compile Include="classes\entities\PasswordHistory.cs" />
     <Compile Include="classes\entities\security\ContainerPermission.cs" />
     <Compile Include="classes\entities\security\FieldPermission.cs" />
     <Compile Include="classes\entities\security\ActionPermission.cs" />
@@ -174,6 +181,11 @@
     <Compile Include="classes\entities\UserCustomConstraint.cs" />
     <Compile Include="classes\entities\UserCustomRole.cs" />
     <Compile Include="classes\entities\UserProfile.cs" />
+    <Compile Include="classes\exceptions\UserActivationException.cs" />
+    <Compile Include="classes\exceptions\PasswordException.cs" />
+    <Compile Include="classes\ldap\LdapAuthArgs.cs" />
+    <Compile Include="classes\ldap\LdapManager.cs" />
+    <Compile Include="classes\services\UserPasswordService.cs" />
     <Compile Include="classes\services\setup\UserSavedEvent.cs" />
     <Compile Include="classes\services\setup\UserSetupEmailService.cs" />
     <Compile Include="classes\services\setup\UserLinkManager.cs" />
@@ -182,6 +194,7 @@
     <Compile Include="Migration\MigrationSwweb1216.cs" />
     <Compile Include="Migration\MigrationSwweb2284.cs" />
     <Compile Include="Migration\MigrationSwoff197.cs" />
+    <Compile Include="Migration\MigrationSWWEB2827.cs" />
     <Compile Include="Migration\MigrationSWWEB2356.cs" />
     <Compile Include="Migration\MigrationSWWEB2355.cs" />
     <Compile Include="Migration\MigrationSwweb1340.cs" />
@@ -204,7 +217,9 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="classes\job\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

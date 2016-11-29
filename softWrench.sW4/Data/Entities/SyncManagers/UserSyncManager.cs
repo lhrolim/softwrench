@@ -16,6 +16,7 @@ using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Util;
 using softwrench.sw4.problem.classes;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.ldap;
 using softWrench.sW4.AUTH;
 
 namespace softWrench.sW4.Data.Entities.SyncManagers {
@@ -44,8 +45,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                 //nothing to update
                 return;
             }
-            var usersToSave = ConvertMaximoUsersToUserEntity(attributeHolders);
-            SaveOrUpdateUsers(usersToSave);
+            var usersToSave = await ConvertMaximoUsersToUserEntity(attributeHolders);
+            await SaveOrUpdateUsers(usersToSave);
             await SetRowstampIfBigger(ConfigurationConstants.UserRowstampKey, GetLastRowstamp(attributeHolders, new[] { "rowstamp", "maxuser_.rowstamp", "email_.rowstamp", "phone_.rowstamp" }), rowstamp);
         }
 
@@ -76,11 +77,11 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         [CanBeNull]
         public virtual async Task<User> GetUserFromMaximoBySwUser(User swUser, bool forceUserShouldExist = false) {
             if (swUser == null)
-                throw new ArgumentNullException("swUser");
+                throw new ArgumentNullException(nameof(swUser));
             User fullUser = null;
 
             var whereClause = (" (person.personid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )").Fmt(swUser.MaximoPersonId).ToUpper();
-            if (_ldapManager.IsLdapSetup() && forceUserShouldExist) {
+            if (await _ldapManager.IsLdapSetup() && forceUserShouldExist) {
                 //if ldap is setup user need to exist on Maximo side
                 whereClause = (" (maxuser_.loginid = '{0}') and (email_.isprimary is null or email_.isprimary = 1 )")
                         .Fmt(swUser.UserName).ToUpper();
@@ -100,7 +101,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             if (!attributeHolders.Any()) {
                 return null;
             }
-            var userFromMaximo = GetUserFromMaximoUsers(attributeHolders);
+            var userFromMaximo = await GetUserFromMaximoUsers(attributeHolders);
             if (userFromMaximo == null || !userFromMaximo.Any()) {
                 return null;
             }
@@ -146,10 +147,10 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             return dto;
         }
 
-        private IEnumerable<User.UserNameEqualityUser> ConvertMaximoUsersToUserEntity(IEnumerable<AttributeHolder> maximoUsers) {
+        private async Task<IEnumerable<User.UserNameEqualityUser>> ConvertMaximoUsersToUserEntity(IEnumerable<AttributeHolder> maximoUsers) {
             var usersToIntegrate = new HashSet<User.UserNameEqualityUser>();
             try {
-                var enumerable = GetUserFromMaximoUsers(maximoUsers);
+                var enumerable = await GetUserFromMaximoUsers(maximoUsers);
                 if (enumerable == null) {
                     return usersToIntegrate;
                 }
@@ -165,11 +166,11 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        private static IList<User> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser = false) {
+        private async Task <IList<User>> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser = false) {
             IList<User> result = new List<User>();
             foreach (var maximoPerson in maximoPersons) {
                 var userName = (string)maximoPerson.GetAttribute("maxuser_.loginid");
-                if (userName == null && _ldapManager.IsLdapSetup() && forceUser) {
+                if (userName == null && await _ldapManager.IsLdapSetup() && forceUser) {
                     //disabling non users if ldap is turned on
                     continue;
                 }
@@ -198,12 +199,12 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
             return result;
         }
 
-        private void SaveOrUpdateUsers(IEnumerable<User.UserNameEqualityUser> usersToIntegrate) {
+        private async Task SaveOrUpdateUsers(IEnumerable<User.UserNameEqualityUser> usersToIntegrate) {
             try {
 
                 foreach (var userToIntegrate in usersToIntegrate.Where(IsValidUser)) {
                     //TODO this could be accomplished by a in query to make it (way) faster
-                    var user = DAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, userToIntegrate.user.MaximoPersonId);
+                    var user = await DAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, userToIntegrate.user.MaximoPersonId);
                     if (user != null) {
                         user.MergeMaximoWithNewUser(userToIntegrate.user);
                         DAO.Save(user);

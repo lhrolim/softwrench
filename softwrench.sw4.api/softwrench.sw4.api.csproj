@@ -75,6 +75,8 @@
     <Compile Include="classes\application\ApplicationFiltereableProvider.cs" />
     <Compile Include="classes\application\ApplicationFiltereableKey.cs" />
     <Compile Include="classes\application\IApplicationFiltereable.cs" />
+    <Compile Include="classes\configuration\IConfigurationFacadeCommons.cs" />
+    <Compile Include="classes\configuration\PropertyDefinitionRegistry.cs" />
     <Compile Include="classes\email\EmailAttachment.cs" />
     <Compile Include="classes\email\EmailData.cs" />
     <Compile Include="classes\exception\BaseSwException.cs" />

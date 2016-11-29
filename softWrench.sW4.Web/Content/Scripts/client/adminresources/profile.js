@@ -55,9 +55,9 @@
         function initUser() {
             $scope.parentDatamap = $scope.datamap;
             $scope.availableprofiles = $scope.parentDatamap['#availableprofiles'];
-            $scope.selectedavailableprofiles = {};
+            $scope.selectedavailableprofiles = [];
             $scope.profiles = $scope.parentDatamap['#profiles'];
-            $scope.selectedprofiles = {};
+            $scope.selectedprofiles = [];
             $scope.availableprofilesOriginal = $scope.parentDatamap['#availableprofiles'];
         };
 

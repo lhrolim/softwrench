@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
+using softwrench.sw4.user.classes.config;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
@@ -20,6 +21,9 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
                 StringValue = "",
                 DataType = "string",
             });
+
+            facade.Override(UserConfigurationConstants.ChangePasswordUponStart,"true");
+            facade.Override(UserConfigurationConstants.MinPasswordHistorySize,"8");
 
 
         }

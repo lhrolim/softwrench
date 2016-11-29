@@ -12,6 +12,7 @@ using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
+using softwrench.sw4.api.classes.configuration;
 
 namespace softWrench.sW4.Configuration.Services {
 
@@ -42,6 +43,15 @@ namespace softWrench.sW4.Configuration.Services {
             return await _configService.Lookup<T>(configKey, lookupContext);
         }
 
+        public async Task RegisterAsync(string configKey, PropertyDefinitionRegistry definition) {
+            await RegisterAsync(configKey, new PropertyDefinition {
+                CachedOnClient = definition.CachedOnClient,
+                Description = definition.Description,
+                DataType = definition.DataType,
+                StringValue = definition.DefaultValue
+            });
+        }
+
         public void Register(string configKey, PropertyDefinition definition) {
             AsyncHelper.RunSync(() => RegisterAsync(configKey, definition));
         }
@@ -63,7 +73,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         }
 
-      
+
 
         public async Task RegisterAsync(string configKey, PropertyDefinition definition) {
             if (!_appStarted) {

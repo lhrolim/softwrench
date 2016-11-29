@@ -29,9 +29,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             _userFacilityBuilder = userFacilityBuilder;
         }
 
-        protected override User PopulateSwdbUser(ApplicationMetadata application, JObject json, string id,
+        protected override async Task<User> PopulateSwdbUser(ApplicationMetadata application, JObject json, string id,
             string operation) {
-            var baseUser = base.PopulateSwdbUser(application, json, id, operation);
+            var baseUser = await base.PopulateSwdbUser(application, json, id, operation);
             var facilitiesToken = ParseFacilities(json);
             _userFacilityBuilder.PopulatePreferredFacilities(baseUser, facilitiesToken);
             return baseUser;

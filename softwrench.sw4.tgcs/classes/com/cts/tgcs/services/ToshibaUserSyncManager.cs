@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using softwrench.sw4.problem.classes;
 using softwrench.sw4.user.classes.entities;
-using softWrench.sW4.AUTH;
+using softwrench.sw4.user.classes.ldap;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -58,7 +58,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
                 NormalizeISMPerson(ismPerson);
                 var ds = _dsProvider.LookupDataSet("person", "newPersonDetail");
                 Log.InfoFormat("creating person and user on the fly on Maximo");
-                var result = ds.Execute(_applicationMetadata, new JObjectDatamapAdapter(ismPerson), null, OperationConstants.CRUD_CREATE, false, new Tuple<string, string>(ismPerson.GetStringAttribute("personid"), ismPerson.GetStringAttribute("siteid")));
+                var result = await ds.Execute(_applicationMetadata, new JObjectDatamapAdapter(ismPerson), null, OperationConstants.CRUD_CREATE, false, new Tuple<string, string>(ismPerson.GetStringAttribute("personid"), ismPerson.GetStringAttribute("siteid")));
                 return (User)result.ResultObject;
             }
 
@@ -72,7 +72,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
         private static void NormalizeISMPerson(DataMap ismPerson) {
             ismPerson.SetAttribute("#apicall", true);
             //inactivating user
-            ismPerson.SetAttribute("#isactive", ismPerson.GetStringAttribute("STATUS").Equals("ACTIVE"));
+            ismPerson.SetAttribute("isactive", ismPerson.GetStringAttribute("STATUS").Equals("ACTIVE"));
             ismPerson.SetAttribute("#primaryemail", ismPerson.GetStringAttribute("primaryemail"));
         }
 

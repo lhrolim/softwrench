@@ -15,22 +15,24 @@ namespace cts.commons.persistence
         void DeleteCollection(IEnumerable<object> collection);
         Task DeleteCollectionAsync(IEnumerable<object> collection);
 
-        void Delete(Object ob);
+        void Delete(object ob);
 
-        Task DeleteAsync(Object ob);
+        Task DeleteAsync(object ob);
 
 
         T FindByPK<T>(Type type, object id, params string[] toEager);
 
         Task<T> FindByPKAsync<T>(object id, params string[] toEager);
 
-        T FindSingleByQuery<T>(String queryst, params object[] parameters);
+        T FindSingleByQuery<T>(string queryst, params object[] parameters);
 
-        Task<T> FindSingleByQueryAsync<T>(String queryst, params object[] parameters);
+        Task<T> FindSingleByQueryAsync<T>(string queryst, params object[] parameters);
 
 
-        IList<T> FindByQuery<T>(String queryst, params object[] parameters) where T : class;
-        Task<IList<T>> FindByQueryAsync<T>(String queryst, params object[] parameters) where T : class;
+        IList<T> FindByQuery<T>(string queryst, params object[] parameters) where T : class;
+        Task<IList<T>> FindByQueryAsync<T>(string queryst, params object[] parameters) where T : class;
+
+        Task<IList<T>> FindByQueryWithLimitAsync<T>(string queryst,int limit, params object[] parameters) where T : class;
 
         IList<T> FindAll<T>(Type type) where T : class;
 

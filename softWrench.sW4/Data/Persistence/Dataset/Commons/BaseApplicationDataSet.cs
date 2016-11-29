@@ -547,18 +547,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //        public virtual SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData) {
         //            return Engine().Sync(applicationMetadata, applicationSyncData);
         //        }
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
+        public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
             if (compositionData == null || compositionData.Operation == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
                 //not a composition deletion/update, no need for any further checking
-                return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
                     new Tuple<string, string>(operationData.UserId, operationData.SiteId));
             }
 
             var clientComposition = compositionData.DispatcherComposition;
             var composition = application.Schema.Compositions().FirstOrDefault(f => f.Relationship.Equals(EntityUtil.GetRelationshipName(clientComposition)));
             if (composition == null) {
-                return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
                   new Tuple<string, string>(operationData.UserId, operationData.SiteId));
             }
             var compositionListSchema = composition.Schema.Schemas.List;
@@ -567,7 +567,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var maximoWebServiceName = compositionEntity.ConnectorParameters.GetWSEntityKey();
             if (maximoWebServiceName == null) {
                 //let parent web-service handle it
-                return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
                     new Tuple<string, string>(operationData.UserId, operationData.SiteId));
             }
 
@@ -575,7 +575,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var validOperations = compositionEntity.ConnectorParameters.Parameters["integration_interface_operations"].Split(',');
                 if (!validOperations.Any(a => a.EqualsIc(compositionData.Operation))) {
                     //not to be handled by composed web-service either
-                    return Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
+                    return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
                         new Tuple<string, string>(operationData.UserId, operationData.SiteId));
                 }
 
@@ -591,7 +591,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var ds = DataSetProvider.GetInstance().LookupDataSet(compositionApplication.Name, compositionSchemaToUse.SchemaId);
             if (ds.GetType() != typeof(BaseApplicationDataSet)) {
                 //if there´s an overriden DataSet for the composition, let´s use it
-                var targetResult = ds.Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
+                var targetResult = await ds.Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
                     operationData.Batch, new Tuple<string, string>(operationData.UserId, operationData.SiteId));
 
                 //let's make sure the success message receives the right userId, which is the parent userid
@@ -600,7 +600,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return targetResult;
             }
             //otherwise let´s stick with the main app dataset
-            return Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
+            return await Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
                 operationData.Batch,
                 new Tuple<string, string>(operationData.UserId, operationData.SiteId));
 
@@ -618,7 +618,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return val[0] as JObject;
         }
 
-        public virtual TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
+        public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
             if (userIdSite != null) {

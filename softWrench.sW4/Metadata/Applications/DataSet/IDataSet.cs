@@ -36,9 +36,9 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
         //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
-        TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch,[CanBeNull]Tuple<string,string>userIdSite );
+        Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch,[CanBeNull]Tuple<string,string>userIdSite );
 
-        TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData);
+        Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData);
 
         Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData);

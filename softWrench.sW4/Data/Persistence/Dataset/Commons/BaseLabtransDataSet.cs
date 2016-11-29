@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
@@ -13,7 +14,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
     public class BaseLabtransDataSet : MaximoApplicationDataSet {
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
 
             TargetResult result;
 
@@ -27,14 +28,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 json.Remove("labtransid");
                 operation = "crud_create";
                 // Submit to create the new lab trans
-                result = base.Execute(application, json, null, operation, isBatch, null);
+                result = await base.Execute(application, json, null, operation, isBatch, null);
                 result.ResultObject = null;
                 result.SuccessMessage = "Labor successfully updated";
                 // Delete the original if it was an edit
                 MaximoHibernateDAO.GetInstance()
                     .ExecuteSql("delete from labtrans where labtransid = ? ", labtransId.ToString());
             } else {
-                result = base.Execute(application, json, id, operation, isBatch, userIdSite);
+                result = await base.Execute(application, json, id, operation, isBatch, userIdSite);
             }
 
             return result;

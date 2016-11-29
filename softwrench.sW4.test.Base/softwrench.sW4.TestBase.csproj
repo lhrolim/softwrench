@@ -95,6 +95,7 @@
     <Compile Include="Extensions\ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="TestSimpleInjectorScanner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\TestUtil.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">

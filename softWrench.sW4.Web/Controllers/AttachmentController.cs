@@ -25,10 +25,10 @@ namespace softWrench.sW4.Web.Controllers {
                     fileTuple = await _attachmentHandler.DownloadViaHttpById(id);
                     break;
                 case "ws":
-                    fileTuple = _attachmentHandler.DownloadViaParentWS(id, request.ParentId, request.ParentApplication, request.ParentSchemaId);
+                    fileTuple = await _attachmentHandler.DownloadViaParentWS(id, request.ParentId, request.ParentApplication, request.ParentSchemaId);
                     break;
                 default:
-                    throw new NotImplementedException(string.Format("{0} mode not implemented. Please use 'http' or 'ws'", mode));
+                    throw new NotImplementedException($"{mode} mode not implemented. Please use 'http' or 'ws'");
             }
 
             if (fileTuple == null) return null;

@@ -39,7 +39,7 @@
                 data: { password: newPassword }
             }).then(response => {
                 if (response.data.samePassword === "true") {
-                    $scope.passwordErrors.push("The new password have to be different from the current one.");
+                    $scope.passwordErrors.push("The new password has to be different from the current one.");
                 }
                 if ($scope.passwordErrors.length > 0) {
                     spinService.stop();

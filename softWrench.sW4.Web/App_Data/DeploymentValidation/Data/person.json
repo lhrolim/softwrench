@@ -16,7 +16,7 @@
       "location": "ADDR2001",
       "rowstamp": 42848703,
       "maxuser_.active": 0,
-      "#isactive": false,
+      "isactive": false,
       "#signature": "",
       "#profiles": [ ],
       "#availableprofiles": [
@@ -73,7 +73,7 @@
       "location": "ADDR2001",
       "rowstamp": 42850391,
       "maxuser_.active": 0,
-      "#isactive": false,
+      "isactive": false,
       "#signature": "",
       "#profiles": [ ],
       "#availableprofiles": [
@@ -195,7 +195,7 @@
       "location": "ADDR2001",
       "rowstamp": 42850391,
       "maxuser_.active": 0,
-      "#isactive": false,
+      "isactive": false,
       "#signature": "",
       "#profiles": [ ],
       "#availableprofiles": [

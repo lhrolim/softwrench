@@ -157,27 +157,7 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
-        #region Ldap
-
-        public static string LdapServer {
-            get {
-                return MetadataProvider.GlobalProperty("ldapServer");
-            }
-        }
-
-        public static int LdapPortNumber {
-            get {
-                return Convert.ToInt32(MetadataProvider.GlobalProperty("ldapPortNumber"));
-            }
-        }
-
-        public static string LdapBaseDn {
-            get {
-                return MetadataProvider.GlobalProperty("ldapBaseDn");
-            }
-        }
-
-        #endregion
+      
 
         #region Mif Credentials
 

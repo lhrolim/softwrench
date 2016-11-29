@@ -62,6 +62,9 @@
             <header displacement="ontop" label="General" params="fieldset=true" />
             <field label="Name" attribute="name" requiredexpression="true"/>
             <field label="Description" attribute="description" requiredexpression="true"/>
+            <field label="Apply By Default" attribute="applybydefault"  tooltip="If true this security group will get applied to every newly created user" helpicon="right">
+              <renderer type="checkbox"/>
+            </field>
           </section>
           <tab label="Extra Permissions" id="basicroles">
             <composition detailschema="" fetchtype="eager"  relationship="#basicroles"  printschema="" inline="true">

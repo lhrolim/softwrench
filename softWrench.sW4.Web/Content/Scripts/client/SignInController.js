@@ -75,7 +75,7 @@
                     '#primaryemail': data.email,
                     '#primaryphone': data.phone,
                     '#signature': "",
-                    '#isactive': false
+                    'isactive': false
                 };
             }
 

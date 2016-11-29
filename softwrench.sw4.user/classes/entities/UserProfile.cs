@@ -30,6 +30,15 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+        /// <summary>
+        /// If true this profile will get applied to every newly created user
+        /// </summary>
+        [Property(Column = "applybydefault", TypeType = typeof(BooleanToIntUserType))]
+        public virtual bool ApplyByDefault {
+            get; set;
+        }
+
+
         [Property(Column = "description")]
         public virtual string Description {
             get; set;
