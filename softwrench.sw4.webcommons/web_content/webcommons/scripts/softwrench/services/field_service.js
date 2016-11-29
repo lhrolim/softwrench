@@ -278,7 +278,10 @@
                 return -1;
             },
 
-            getDisplayableIdxByKey: function (schema, attribute) {
+            getVisiableDisplayableIdxByKey: function (schema, attribute) {
+                /// <summary>
+                /// Get the index for the supplied attribute key, skipping hidden fields.
+                /// </summary>
                 if (!schema) {
                     return -1;
                 }
@@ -286,7 +289,7 @@
                 var results = this.getLinearDisplayables(schema);
                 for (var i = 0; i < results.length; i++) {
                     var result = results[i];
-                    if (result.associationKey == attribute || result.target == attribute || result.attribute == attribute) {
+                    if (result.associationKey === attribute || result.target === attribute || result.attribute === attribute && !result.isHidden) {
                         return i;
                     }
                 }
@@ -318,13 +321,11 @@
                 return result;
             },
 
-
-
             getNextVisibleDisplayableIdx: function (datamap, schema, key) {
-
                 //all fields, regardless of sections
                 var displayables = this.getLinearDisplayables(schema);
-                var fieldIdx = this.getDisplayableIdxByKey(schema, key);
+                var fieldIdx = this.getVisiableDisplayableIdxByKey(schema, key);
+
                 if (fieldIdx == -1 || fieldIdx == displayables.length) {
                     //no such field, or last field
                     return -1;
