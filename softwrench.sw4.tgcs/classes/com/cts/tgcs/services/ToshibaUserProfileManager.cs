@@ -21,7 +21,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
         }
 
 
-        protected virtual IEntityRepository EntityRepositoryForTranslation {
+        protected override IEntityRepository EntityRepositoryForTranslation {
             get {
                 return SimpleInjectorGenericFactory.Instance.GetObject<RestEntityRepository>();
             }

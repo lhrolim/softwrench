@@ -10,7 +10,9 @@ using softWrench.sW4.Web.Models.Home;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softWrench.sW4.Web.Controllers {
     [System.Web.Mvc.Authorize]
@@ -24,16 +26,11 @@ namespace softWrench.sW4.Web.Controllers {
             _homeService = homeService;
         }
 
-        public ActionResult Index(string application, string schemaid, string id) {
+        public async Task<ActionResult> Index(string application, string schemaid, string id) {
             var user = SecurityFacade.CurrentUser();
             //TODO: allow mobile
             var menuModel = _menuHelper.BuildMenu(ClientPlatform.Web);
-            var indexItemId = menuModel.Menu.ItemindexId;
-            var indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
-            if (indexItem == null) {
-                //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
-                indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
-            }
+            var indexItem = GetMenuIndex(menuModel);
             //if still null logout the user, or an external link that would cause a redirect loop
             if (indexItem == null || (indexItem is ExternalLinkMenuItemDefinition)) {
                 SignoutController.DoLogout(Session, Response);
@@ -57,7 +54,7 @@ namespace softWrench.sW4.Web.Controllers {
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
 
-            if (_homeService.VerifyChangePassword(user, Response)) {
+            if (await _homeService.VerifyChangePassword(user, Response)) {
                 return null;
             }
 
@@ -66,6 +63,17 @@ namespace softWrench.sW4.Web.Controllers {
             model.Title = title;
 
             return View(model);
+        }
+
+        private MenuBaseDefinition GetMenuIndex(MenuModel menuModel) {
+            MenuBaseDefinition indexItem = null;
+            var indexItemId = menuModel.Menu.ItemindexId;
+            indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
+            if (indexItem == null) {
+                //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
+                indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
+            }
+            return indexItem;
         }
 
         public ActionResult RedirectToAction(string application, string controllerToRedirect, string popupmode, string actionToRedirect, string queryString, string message) {

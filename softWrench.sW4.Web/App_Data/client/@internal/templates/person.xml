@@ -138,10 +138,14 @@
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>
           <field attribute="lastname" label="Last Name"/>
-          <field attribute="#isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
+          <field attribute="isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
             <renderer type="checkbox"/>
           </field>
           <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
+            <renderer type="checkbox" />
+          </field>
+
+          <field attribute="locked" label="Locked" readonly="true" enableexpression="false">
             <renderer type="checkbox" />
           </field>
 
@@ -178,7 +182,11 @@
           </association>
           <field attribute="department" label="Department"/>
           <field attribute="langcode" label="Language"/>
-          <field attribute="#isactive" label="Active (softWrench)">
+          <field attribute="isactive" label="Active (softWrench)" readonly="true" enableexpression="false">
+            <renderer type="checkbox"/>
+          </field>
+
+          <field attribute="locked" label="Locked " helpicon="right" tooltip="The user has been temporarily locked as a result of too many wrong login attemps" enableexpression="false">
             <renderer type="checkbox"/>
           </field>
 
@@ -213,6 +221,20 @@
               <command id="save" icon="fa fa-check" label="Save" service="personService" method="submitPerson" position="left" parameters="schema,datamap" cssclasses="large-button"/>
               <command id="cancel" icon="fa-times" service="personService" method="cancelEdition" label="Cancel" tooltip="Cancel" cssclasses="large-button"/>
             </commandgroup>
+            <commandgroup position="actions">
+              <command label="Expire Password" icon="fa-refresh" tooltip="User will be prompted to reset his password upon next login" 
+                       id="resetpassword" service="personService" method="forcePasswordReset" cssclasses="large-button" showexpression="!@ldapEnabled"/>
+
+              <command label="Unlock" icon="fa-unlock" tooltip="Unlocks the current user His password will be reset upon next login"
+                    id="unlock" service="personService" method="unlock" cssclasses="large-button" showexpression="@locked"/>
+
+              <command label="Activate" icon="fa-check-circle-o" tooltip="Activate current user"
+                    id="activate" service="personService" method="activate" cssclasses="large-button" showexpression="!@isactive"/>
+
+              <command label="Inactivate" icon="fa-check-circle" tooltip="Inactivate current user"
+                 id="inactivate" service="personService" method="inactivate" cssclasses="large-button" showexpression="@isactive"/>
+            </commandgroup>
+            
           </commandbars>
         </schema>
 
@@ -237,7 +259,7 @@
             <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
           </field>
 
-          <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled"
+          <optionfield attribute="passwordmode" default="auto" label="Password Generation" showexpression="!@ldapEnabled" helpicon="right"
                        tooltip="If Automatic an email with a link will be sent to the new users where they will be able to select a password. 
                        On manual mode the user will receive the assigned password via email">
             <renderer type="radio"/>
@@ -275,7 +297,7 @@
             <option label="English" value="EN"/>
             <option label="Spanish" value="ES"/>
           </optionfield>
-          <field attribute="#isactive" label="Active" default="1">
+          <field attribute="isactive" label="Active" default="1">
             <renderer type="checkbox"/>
           </field>
 
@@ -305,7 +327,7 @@
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>
           <field attribute="lastname" label="Last Name"/>
-          <field attribute="#isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
+          <field attribute="isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
             <renderer type="checkbox"/>
           </field>
           <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
@@ -324,7 +346,7 @@
           <field attribute="personid" label="Username"/>
           <field attribute="firstname" label="First Name"/>
           <field attribute="lastname" label="Last Name"/>
-          <field attribute="#isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
+          <field attribute="isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
             <renderer type="checkbox"/>
           </field>
           <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">

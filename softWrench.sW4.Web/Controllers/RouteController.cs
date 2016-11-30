@@ -38,7 +38,7 @@ namespace softWrench.sW4.Web.Controllers {
             var user = SecurityFacade.CurrentUser();
 
             // redirects if change password is needed
-            if (_homeService.VerifyChangePassword(user, Response)) {
+            if (await _homeService.VerifyChangePassword(user, Response)) {
                 return null;
             }
 
@@ -188,7 +188,7 @@ namespace softWrench.sW4.Web.Controllers {
         private static CompleteApplicationMetadataDefinition GetAppMetadata(string applicationName) {
             try {
                 return MetadataProvider.Application(applicationName);
-            } catch (Exception e) {
+            } catch (Exception) {
                 return null;
             }
         }

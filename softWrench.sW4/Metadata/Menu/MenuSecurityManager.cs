@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
 using log4net;
@@ -30,9 +31,9 @@ namespace softWrench.sW4.Metadata.Menu {
         [CanBeNull]
         public MenuDefinition Menu([NotNull]InMemoryUser user, ClientPlatform platform, out bool fromCache) {
 
-            if (user._cachedMenu.ContainsKey(platform)) {
+            if (user.CachedMenu.ContainsKey(platform)) {
                 fromCache = true;
-                return user._cachedMenu[platform];
+                return user.CachedMenu[platform];
             }
             fromCache = false;
 
@@ -66,7 +67,7 @@ namespace softWrench.sW4.Metadata.Menu {
             }
             var menuDefinition = new MenuDefinition(secureLeafs, unsecureMenu.MainMenuDisplacement.ToString(), unsecureMenu.ItemindexId);
             try {
-                user._cachedMenu.Add(platform, menuDefinition);
+                user.CachedMenu.Add(platform, menuDefinition);
                 // ReSharper disable once EmptyGeneralCatchClause
             } catch {
                 _log.Warn(string.Format(MenuConcurrencyIssue));
@@ -74,6 +75,24 @@ namespace softWrench.sW4.Metadata.Menu {
             return menuDefinition;
         }
 
+
+        public MenuBaseDefinition GetIndexMenuForUser(ClientPlatform platform, InMemoryUser user) {
+
+            bool fromCache;
+            var menu = this.Menu(user, platform, out fromCache);
+            if (menu == null) {
+                return null;
+            }
+
+            MenuBaseDefinition indexItem = null;
+            var indexItemId = menu.ItemindexId;
+            indexItem = menu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
+            if (indexItem == null) {
+                //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
+                indexItem = menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
+            }
+            return indexItem;
+        }
 
     }
 }

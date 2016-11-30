@@ -90,7 +90,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         protected class OffLineMatchResultWrapper : CollectionMatchingResultWrapper {
-            internal CollectionMatchingResultKey FetchKey(AttributeHolder entity) {
+            public override CollectionMatchingResultKey FetchKey(AttributeHolder entity) {
                 //doesnt matter for offline
                 return new CollectionMatchingResultKey();
             }

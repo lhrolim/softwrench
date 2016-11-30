@@ -2,15 +2,14 @@
 using softWrench.sW4.Configuration.Definitions;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
+using softwrench.sw4.api.classes.configuration;
 
 namespace softWrench.sW4.Configuration.Services.Api {
 
-    public interface IConfigurationFacade : ISingletonComponent {
+    public interface IConfigurationFacade : IConfigurationFacadeCommons {
 
         [CanBeNull]
         T Lookup<T>([NotNull]string configKey);
-
-        Task<T> LookupAsync<T>([NotNull]string configKey);
 
         Task RegisterAsync([NotNull]string configKey, [NotNull]PropertyDefinition definition);
 

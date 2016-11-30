@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -11,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using Quartz.Util;
 using softwrench.sw4.api.classes.exception;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.ldap;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -26,6 +28,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Menu;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -41,7 +44,23 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         private readonly UserManager _userManager;
         private readonly SecurityFacade _securityFacade;
 
-        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService, UserProfileManager userProfileManager, UserManager userManager, SecurityFacade securityFacade) {
+        [Import]
+        public LdapManager LdapManager {
+            get; set;
+        }
+
+        [Import]
+        public MenuSecurityManager MenuSecurityManager {
+            get; set;
+        }
+
+        [Import]
+        public UserPasswordService UserPasswordService {
+            get; set;
+        }
+
+        public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService,
+            UserProfileManager userProfileManager, UserManager userManager, SecurityFacade securityFacade) {
             _swdbDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
             _userLinkManager = userLinkManager;
@@ -85,7 +104,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 if (swuser == null) {
                     continue;
                 }
-                record.Add("#isactive", swuser.IsActive);
+                record.Add("isactive", swuser.IsActive);
+                record.Add("locked", swuser.Locked);
             }
             return result;
         }
@@ -115,7 +135,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 swUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, personId);
                 if (swUser == null) {
                     //lets try with username then
-                    swUser =await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByUserName, personId);
+                    swUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByUserName, personId);
                     if (swUser == null) {
                         swUser = new User {
                             MaximoPersonId = personId,
@@ -136,7 +156,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 dataMap.SetAttribute("phone_", new JArray());
                 swUser.Profiles = new LinkedHashSet<UserProfile>();
                 //for new users lets make them active by default
-                dataMap.SetAttribute("#isactive", "1");
+                dataMap.SetAttribute("isactive", "1");
                 dataMap.SetAttribute("#signature", "");
                 dataMap.SetAttribute("locationorg", ApplicationConfiguration.DefaultOrgId);
                 dataMap.SetAttribute("locationsite", ApplicationConfiguration.DefaultSiteId);
@@ -150,7 +170,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dataMap.SetAttribute("#availableprofiles", availableprofiles);
 
             // Hide the password inputs if using LDAP
-            var ldapEnabled = ApplicationConfiguration.LdapServer != null;
+            var ldapEnabled = await LdapManager.IsLdapSetup();
             dataMap.SetAttribute("ldapEnabled", ldapEnabled);
             dataMap.SetAttribute("statistics", statistics);
             dataMap.SetAttribute("activationlink", activationLink);
@@ -161,7 +181,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         protected virtual void AdjustDatamapFromUser(User swUser, DataMap dataMap) {
             var isActive = (swUser.IsActive.HasValue && swUser.IsActive == false) ? "false" : "true";
-            dataMap.SetAttribute("#isactive", isActive);
+            var isLocked = !swUser.Locked.HasValue || swUser.Locked.Value == false ? "false" : "true";
+
+            dataMap.SetAttribute("isactive", isActive);
+            dataMap.SetAttribute("locked", isLocked);
+
             var preferences = swUser.UserPreferences;
             var signature = preferences != null ? preferences.Signature : "";
             dataMap.SetAttribute("#signature", signature);
@@ -177,13 +201,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         /// <param name="isBatch"></param>
         /// <param name="userIdSite"></param>
         /// <returns></returns>
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
-            var isactive = json.StringValue("#isactive").EqualsAny("1", "true");
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+            var isactive = json.StringValue("isactive").EqualsAny("1", "true");
+            var isLocked = json.StringValue("locked").EqualsAny("1", "true");
             var primaryEmail = json.StringValue("#primaryemail");
             var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
 
-            var user = PopulateSwdbUser(application, json, id, operation);
-            var passwordString = HandlePassword(json, user);
+            var user = await PopulateSwdbUser(application, json, id, operation);
+            var passwordString = await HandlePassword(json, user);
 
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
@@ -201,10 +226,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
-            user = _userManager.SaveUser(user, false);
+            user = await _userManager.SaveUser(user, false);
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
                 //TODO: Async
-                var fullUser = AsyncHelper.RunSync(()=>_securityFacade.FetchUser(user.Id.Value));
+                var fullUser = AsyncHelper.RunSync(() => _securityFacade.FetchUser(user.Id.Value));
                 var userResult = _securityFacade.UpdateUserCache(fullUser, currentUser.TimezoneOffset.ToString());
                 targetResult.ResultObject = new UnboundedDatamap(application.Name, ToDictionary(userResult));
             }
@@ -215,7 +240,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 return targetResult;
             }
 
-            if (isCreation && isactive) {
+            if (isCreation && isactive && !isLocked) {
+
                 _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
 
@@ -227,7 +253,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
         //saving user on SWDB first
-        protected virtual User PopulateSwdbUser(ApplicationMetadata application, JObject json, string id, string operation) {
+        protected virtual async Task<User> PopulateSwdbUser(ApplicationMetadata application, JObject json, string id, string operation) {
             // Save the updated sw user record
             var username = json.StringValue("personid");
             if (username == null) {
@@ -236,9 +262,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             var firstName = json.StringValue("firstname");
             var lastName = json.StringValue("lastname");
-            var isactive = json.StringValue("#isactive").EqualsAny("1", "true");
+            var isactive = json.StringValue("isactive").EqualsAny("1", "true");
+            var isLocked = json.StringValue("locked").EqualsAny("1", "true");
             var signature = json.StringValue("#signature");
-            var dbUser = _swdbDAO.FindSingleByQuery<User>(User.UserByMaximoPersonId, username);
+            var dbUser =await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, username);
 
             var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
@@ -246,10 +273,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 MaximoPersonId = username
             };
             user.IsActive = isactive;
+            user.Locked = isLocked;
             if (user.UserPreferences == null) {
-                user.UserPreferences = new UserPreferences() {
-                    UserId = user.Id
-                };
+                var userPreferences = await _swdbDAO.FindSingleByQueryAsync<UserPreferences>(UserPreferences.PreferenesByUserId, user.Id);
+                if (userPreferences == null) {
+                    user.UserPreferences = new UserPreferences {
+                        UserId = user.Id
+                    };
+                } else {
+                    user.UserPreferences = userPreferences;
+                }
             }
             user.UserPreferences.Signature = signature;
             user.SiteId = json.StringValue("locationsite") ?? user.SiteId;
@@ -306,12 +339,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return searchDto;
         }
 
-        private static string HandlePassword(JObject json, User user) {
+        private async Task<string> HandlePassword(JObject json, User user) {
             var password = json.StringValue("#password");
 
             if (!password.NullOrEmpty() &&
                 !ApplicationConfiguration.Profile.EqualsIc("demo")) {
-                user.Password = AuthUtils.GetSha1HashData(password);
+                var criptedPassword = AuthUtils.GetSha1HashData(password);
+                await UserPasswordService.HandlePasswordHistory(user, criptedPassword);
+                user.Password = criptedPassword;
             }
             return password;
         }

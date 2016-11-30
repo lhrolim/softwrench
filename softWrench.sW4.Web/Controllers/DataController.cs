@@ -212,7 +212,7 @@ namespace softWrench.sW4.Web.Controllers {
 
                 transactionStart = DateTime.UtcNow;
 
-                maximoResult = DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
+                maximoResult = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                     .Execute(applicationMetadata, json, operationDataRequest);
 
                 transactionEnd = DateTime.UtcNow;

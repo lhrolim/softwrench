@@ -99,7 +99,7 @@
 
     <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest-uat/rest/os/" />
     <property key="restcredentials.user" value="cts3@cps.tds"/>
-    <property key="restcredentials.password" value="$@$Pass123"/> 
+    <property key="restcredentials.password" value="$@$Pass2016"/> 
   </environment>
   ​
   <environment key="prod">
@@ -120,7 +120,7 @@
 <!-- NEED TO CONFIRM THE FOLLOWING	
     <property key="basewsRestURL" value="https://ism.smi.ibm.com/maxrest/rest/os/" />
     <property key="restcredentials.user" value="cts3@cps.tds"/>
-    <property key="restcredentials.password" value="$@$Pass1234"/> 
+    <property key="restcredentials.password" value="$@$Pass112016"/> 
 //-->	
   </environment>
 

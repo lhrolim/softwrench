@@ -2,20 +2,9 @@
 (function (angular) {
     'use strict';
 
-    function userStatisticsController($scope, restService, alertService, formatService) {
+    function userStatisticsController($scope, restService, alertService, formatService, userService) {
 
-        var locatePrimaryEmail = function (compositionEmails) {
-            if (!compositionEmails) {
-                return null;
-            }
-            for (var i = 0; i < compositionEmails.length; i++) {
-                var email = compositionEmails[i];
-                if (email.isprimary) {
-                    return email.emailaddress;
-                }
-            }
-            return null;
-        };
+      
 
         $scope.activationlink = $scope.datamap["activationlink"];
 
@@ -33,19 +22,16 @@
         }
 
         $scope.sendActivationEmail = function () {
-            var userid = $scope.datamap["#userid"];
-            var email = locatePrimaryEmail($scope.datamap["email_"]);
-
+            const userid = $scope.datamap["#userid"];
+            const email = userService.locatePrimaryEmail($scope.datamap["email_"]);
             if (email == null) {
                 alertService.alert("This user has no email registered. Please setup a primary email first");
                 return;
             }
-
-            var params = {
+            const params = {
                 userId: userid,
                 email: email
-            }
-
+            };
             restService.postPromise("UserSetupWebApi", "SendActivationEmail", params)
                 .then(function() {
                     alertService.notifymessage("success", "An email has been sent with instructions to reset the password", "Email Sent");
@@ -54,7 +40,7 @@
     }
 
     angular.module("sw_layout")
-        .controller("UserStatisticsController", ["$scope", "restService", "alertService", "formatService", userStatisticsController]);
+        .controller("UserStatisticsController", ["$scope", "restService", "alertService", "formatService", "userService", userStatisticsController]);
 
 })(angular);
 

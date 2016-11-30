@@ -21,7 +21,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string WhereClauseAttribute = "whereclause";
         public const string ProviderAttribute = "provider";
         public const string AllowBlankAttribute = "allowblank";
-        public const string DisplayCodeAttribute = "displaycode";
         public const string EagerAttribute = "eager";
         public const string DefaultSelectionAttribute = "defaultselection";
         public const string TrueLabelAttribute = "truelabel";
@@ -30,7 +29,6 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string FalseValueAttribute = "falsevalue";
         public const string RemoveAttribute = "remove";
         public const string TargetSchemaAttribute = "targetschema";
-        public const string ServiceAttribute = "service";
         public const string AdvancedFilterSchemaAttribute = "advancedfilterschema";
         public const string AllowFutureAttribute = "allowfuture";
         public const string DateOnlyAttribute = "dateonly";

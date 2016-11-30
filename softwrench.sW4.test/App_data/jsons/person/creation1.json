@@ -14,7 +14,7 @@
   "location": null,
   "department": null,
   "langcode": "EN",
-  "#isactive": true,
+  "isactive": true,
   "application": "person",
   "email_": [ ],
   "phone_": [ ],

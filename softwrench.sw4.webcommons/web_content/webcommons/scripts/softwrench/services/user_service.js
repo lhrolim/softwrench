@@ -6,6 +6,19 @@
     function userService(contextService) {
 
 
+        function locatePrimaryEmail(compositionEmails) {
+
+            if (!compositionEmails) {
+                return null;
+            }
+            for (var i = 0; i < compositionEmails.length; i++) {
+                var email = compositionEmails[i];
+                if (email.isprimary) {
+                    return email.emailaddress;
+                }
+            }
+            return null;
+        };
 
         function readProperty(propertyExpression) {
             if (propertyExpression == null) {
@@ -86,6 +99,7 @@
         const service = {
             getPersonId,
             hasRole,
+            locatePrimaryEmail,
             inGroup,
             readProperty
         };

@@ -31,7 +31,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             try {
                 var compositionListPair = crudOperationData.UnmappedAttributes.First(pair => compositionSchemaId.Equals(pair.Key));
                 compositionListString = compositionListPair.Value;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 // just ignores
             }
 

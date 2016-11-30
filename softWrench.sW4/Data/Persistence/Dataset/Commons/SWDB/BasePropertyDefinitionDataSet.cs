@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
-using NHibernate.Linq;
 using NHibernate.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services;
-using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Configuration.Util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Relationship.Composition;
-using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -90,14 +84,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             resultList.Add(dict);
         }
 
-        public override TargetResult Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
             var id = compositionData.Id;
             var newValue = json
                 .Value<JArray>("#properties_")
                 .First(t => id.Equals(t.Value<string>("fullkey")) && t.Value<string>("#edited") != null)
                 .Value<string>("value");
-            _configService.UpdateGlobalDefinition(id, newValue);
+            await _configService.UpdateGlobalDefinition(id, newValue);
             return new TargetResult(id, null, null, "Configuration " + id + " successfully updated.");
         }
 

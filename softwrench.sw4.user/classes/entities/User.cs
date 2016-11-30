@@ -15,6 +15,8 @@ namespace softwrench.sw4.user.classes.entities {
 
         private string _userName;
 
+        private bool? _locked;
+
 
         public const string ActiveUserByUserName = "from User where lower(UserName) = lower(?) and IsActive = true";
         public const string UserByUserName = "from User where lower(UserName) = lower(?)";
@@ -35,7 +37,7 @@ namespace softwrench.sw4.user.classes.entities {
         [Property]
         public string UserName {
             get {
-                return _userName == null ? null : _userName.ToLower();
+                return _userName?.ToLower();
             }
             set {
                 _userName = value;
@@ -109,6 +111,24 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
+        [Property]
+        public DateTime? PasswordExpirationTime {
+            get; set;
+        }
+
+        [Property]
+        public bool? Locked {
+            get {
+                if (Systemuser) {
+                    return false;
+                }
+                return _locked;
+            }
+            set {
+                _locked = value;
+            }
+        }
+
         [JsonIgnore]
         [Set(0, Table = "SEC_PERSONGROUPASSOCIATION",
         Lazy = CollectionLazy.False, Cascade = "all")]
@@ -146,6 +166,11 @@ namespace softwrench.sw4.user.classes.entities {
 
         [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "all")]
         public UserPreferences UserPreferences {
+            get; set;
+        }
+
+        [OneToOne(ClassType = typeof(AuthenticationAttempt), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "none")]
+        public AuthenticationAttempt AuthenticationAttempts {
             get; set;
         }
 
@@ -207,10 +232,11 @@ namespace softwrench.sw4.user.classes.entities {
             IsActive = IsActive ?? dbUSer.IsActive;
             PersonGroups = dbUSer.PersonGroups;
             CustomRoles = dbUSer.CustomRoles;
-            UserPreferences = dbUSer.UserPreferences;
+            UserPreferences = UserPreferences ?? dbUSer.UserPreferences;
             Profiles = Profiles.Any() ? Profiles : dbUSer.Profiles;
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
             ChangePassword = ChangePassword ?? dbUSer.ChangePassword;
+            Locked = Locked ?? dbUSer.Locked;
         }
 
         public void MergeMaximoWithNewUser(User newUser) {

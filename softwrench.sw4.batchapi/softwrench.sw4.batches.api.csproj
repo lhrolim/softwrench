@@ -36,8 +36,9 @@
     <Reference Include="cts.commons">
       <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence">
-      <HintPath>..\packages\cts.commons.persistence.1.2.1.6\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.simpleinjector">
       <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
@@ -106,6 +107,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

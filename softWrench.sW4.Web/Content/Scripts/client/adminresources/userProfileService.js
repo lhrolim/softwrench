@@ -656,6 +656,7 @@
                 return { id: selectedRole.id, name: selectedRole.name };
             });
             const ob = {
+                applybydefault: dm["applybydefault"],
                 id: dm["id"],
                 name: dm["name"],
                 description: dm["description"],

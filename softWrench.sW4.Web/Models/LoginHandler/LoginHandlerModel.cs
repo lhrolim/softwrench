@@ -14,6 +14,8 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         public bool Forbidden { get; set; }
         public bool UserNotActive { get; set; }
 
+        public bool UserLocked {get; set;}
+
 
         public LoginHandlerModel(bool isLoginEnabled, string loginMessage) {
             _isLoginEnabled = isLoginEnabled;

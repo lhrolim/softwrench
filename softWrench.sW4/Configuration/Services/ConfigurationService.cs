@@ -12,14 +12,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
-using NHibernate.Util;
-using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Search;
-using softWrench.sW4.Exceptions;
-using softWrench.sW4.Metadata;
-using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Configuration.Services {
@@ -34,19 +27,17 @@ namespace softWrench.sW4.Configuration.Services {
         private readonly ISWDBHibernateDAO _dao;
         private readonly ConfigurationCache _cache;
         private readonly IEventDispatcher _eventDispatcher;
-        private readonly EntityRepository _entityRepository;
 
-        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache, IEventDispatcher eventDispatcher, EntityRepository entityRepository) {
+        public ConfigurationService(ISWDBHibernateDAO dao, ConfigurationCache cache, IEventDispatcher eventDispatcher) {
             _dao = dao;
             _cache = cache;
             _eventDispatcher = eventDispatcher;
-            _entityRepository = entityRepository;
         }
 
         [CanBeNull]
         public async Task<T> Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
             var ignoreCache = cacheContext != null && cacheContext.IgnoreCache;
-            var preDefinition = cacheContext != null ? cacheContext.PreDefinition : null;
+            var preDefinition = cacheContext?.PreDefinition;
 
             if (!ignoreCache) {
                 var fromCache = _cache.GetFromCache(configKey, lookupContext);
@@ -57,7 +48,7 @@ namespace softWrench.sW4.Configuration.Services {
             }
             var definition = preDefinition ?? await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
-                Log.Warn(string.Format("property {0} not found", configKey));
+                Log.Warn($"property {configKey} not found");
                 return default(T);
             }
             var values = definition.Values;
@@ -78,15 +69,17 @@ namespace softWrench.sW4.Configuration.Services {
         public async Task SetValue(string configKey, object value) {
             var definition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
-                throw new InvalidOperationException(string.Format("Property {0} not found", configKey));
+                throw new InvalidOperationException($"Property {configKey} not found");
             }
             if (definition.Contextualized) {
-                throw new InvalidOperationException(string.Format("Cannot modify value of a contextualized definition {0} programatically", configKey));
+                throw new InvalidOperationException(
+                    $"Cannot modify value of a contextualized definition {configKey} programatically");
             }
             var foundValue = definition.Values.FirstOrDefault(d => d.Condition == null);
             if (foundValue == null) {
                 foundValue = new PropertyValue { Definition = definition };
             }
+
             if (foundValue.Definition.DataType.EqualsAny("date", "datetime")) {
                 HandleDateTimeValue(configKey, value, foundValue);
             } else {
@@ -104,8 +97,7 @@ namespace softWrench.sW4.Configuration.Services {
             } else {
                 var convertedDate = DateUtil.Parse(value.ToString());
                 if (convertedDate == null) {
-                    throw new InvalidOperationException(string.Format("Cannot convert value {0} of key {1} to date type", value,
-                        configKey));
+                    throw new InvalidOperationException($"Cannot convert value {value} of key {configKey} to date type");
                 }
                 foundValue.StringValue = convertedDate.Value.ToString(DateUtil.DefaultUsaDateTimeFormat);
             }

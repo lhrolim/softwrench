@@ -24,8 +24,6 @@ namespace softWrench.sW4.Util {
 
         private static string _clientName;
         private static string _environment;
-        private static string _serverPath;
-        private static string _appPath;
         private static readonly DateTime _upTime = DateTime.Now;
 
         private static readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
@@ -157,27 +155,7 @@ namespace softWrench.sW4.Util {
 
         #endregion
 
-        #region Ldap
-
-        public static string LdapServer {
-            get {
-                return MetadataProvider.GlobalProperty("ldapServer");
-            }
-        }
-
-        public static int LdapPortNumber {
-            get {
-                return Convert.ToInt32(MetadataProvider.GlobalProperty("ldapPortNumber"));
-            }
-        }
-
-        public static string LdapBaseDn {
-            get {
-                return MetadataProvider.GlobalProperty("ldapBaseDn");
-            }
-        }
-
-        #endregion
+      
 
         #region Mif Credentials
 

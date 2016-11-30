@@ -70,9 +70,13 @@
                             </div>
 
                             @if (Model.IncorrectLogin) {
-                                if (Model.UserNotActive) {
+                                if (Model.UserLocked) {
                                     <div class="text-danger" style="margin-bottom: 2em">
-                                    Your user is not active.Please contact support.
+                                        Your user has been temporarily locked.Please contact support.
+                                    </div>
+                                } else if (Model.UserNotActive) {
+                                    <div class="text-danger" style="margin-bottom: 2em">
+                                        Your user is not active.Please contact support.
                                     </div>
                                 } else if (string.IsNullOrEmpty(Model.LoginMessage)) {
                                     <div class="text-danger" style="margin-bottom: 2em">
@@ -122,9 +126,9 @@
                                         </div>
                                         <input id="userTimezoneOffset" type="hidden" name="userTimezoneOffset" />
                                     </div>
-                                <div class="demo user-links col-sm-6">
-                                    <div class="row">
-                                        Use the following credentials to login:
+                                    <div class="demo user-links col-sm-6">
+                                        <div class="row">
+                                            Use the following credentials to login:
                                         </div>
                                         <div class="row">
                                             <div class="name">
@@ -134,7 +138,7 @@
                                                 <b>enduser</b> \\ <b>password</b>
                                             </div>
                                         </div>
-                                        <div  class="row">
+                                        <div class="row">
                                             <div class="name">
                                                 <i class="fa fa-user"></i>&ensp;Supervisor:
                                             </div>
@@ -151,8 +155,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    }
-                                </div>
+                                }
+                            </div>
                             @if (@Model.ProfileName != "demo") {
                                 <div class="buttons submit-button col-sm-offset-3 col-sm-6">
                                     <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><i class="fa fa-sign-in"></i>&ensp;Login</button>
@@ -177,10 +181,10 @@
                                     </div>
                                 </div>
                             }
-                            </form>
+                        </form>
 
                         <!-- #region New User Registration Modal -->
-                        <div id="newUserRegistrationModal" 
+                        <div id="newUserRegistrationModal"
                              class="modal fade new-user-registration-modal" tabindex="-1" role="dialog">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">
@@ -213,15 +217,15 @@
                                                 </fieldset>
                                             </div>
                                             @*<div class="row">
-                                                <fieldset class="form-group col-xs-12">
-                                                    <span class="requiredfieldmark">*</span>&nbsp;
-                                                    <label class="control-label" rel="tooltip" data-original-title="Automatically created from first and last names">
-                                                        Username
-                                                    </label>
-                                                    <input name="username" ng-model="registration.data.username" required disabled="disabled"
-                                                           type="text" class="form-control">
-                                                </fieldset>
-                                            </div>*@
+                                                    <fieldset class="form-group col-xs-12">
+                                                        <span class="requiredfieldmark">*</span>&nbsp;
+                                                        <label class="control-label" rel="tooltip" data-original-title="Automatically created from first and last names">
+                                                            Username
+                                                        </label>
+                                                        <input name="username" ng-model="registration.data.username" required disabled="disabled"
+                                                               type="text" class="form-control">
+                                                    </fieldset>
+                                                </div>*@
                                             <div class="row">
                                                 <fieldset class="form-group col-xs-12 col-sm-6">
                                                     <span class="requiredfieldmark">*</span>&nbsp;
@@ -304,28 +308,28 @@
                         <!-- #endregion -->
 
 
-                            <form class="forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm" ng-cloak>
-                                <div class="row">
-                                    <div id="diverrormessagelist" class="alert alert-danger" ng-show="errorMessage!=null" ng-cloak>
-                                        <a class="close" ng-click="errorMessage=null" style="color: black"><i class="fa fa-times"></i></a>
-                                        <span class="">
-                                            {{errorMessage}}.
-                                        </span>
-                                    </div>
+                        <form class="forgotpasswordform col-sm-offset-1 col-sm-10" ng-show="showforgotPasswordForm" ng-cloak>
+                            <div class="row">
+                                <div id="diverrormessagelist" class="alert alert-danger" ng-show="errorMessage!=null" ng-cloak>
+                                    <a class="close" ng-click="errorMessage=null" style="color: black"><i class="fa fa-times"></i></a>
+                                    <span class="">
+                                        {{errorMessage}}.
+                                    </span>
                                 </div>
+                            </div>
 
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control" ng-model="userNameOrEmail" placeholder="Enter your email or username" />
-                                    </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" ng-model="userNameOrEmail" placeholder="Enter your email or username" />
                                 </div>
-                                <div class="row buttons">
-                                    <button class="btn col-xs-4 col-sm-2" type="submit" ng-click="forgotPassword()"><i class="fa fa-check"></i>&ensp;Submit</button>
-                                    <button class="btn password-cancel col-xs-4 col-sm-2" type="submit" ng-click="showforgotPasswordForm=false"><i class="fa fa-times"></i>&ensp;Cancel</button>
-                                </div>
-                            </form>
+                            </div>
+                            <div class="row buttons">
+                                <button class="btn col-xs-4 col-sm-2" type="submit" ng-click="forgotPassword()"><i class="fa fa-check"></i>&ensp;Submit</button>
+                                <button class="btn password-cancel col-xs-4 col-sm-2" type="submit" ng-click="showforgotPasswordForm=false"><i class="fa fa-times"></i>&ensp;Cancel</button>
+                            </div>
+                        </form>
 
-                        </div>
+                    </div>
                         <div class="row divider bottom"></div>
                         <div class="row logo byline">
                             <div class="col-sm-offset-1 col-sm-10">
@@ -341,9 +345,9 @@
                 }
             </div>
         </div>
-        </div>
+    </div>
 
 
 
-    </body>
+</body>
 </html>

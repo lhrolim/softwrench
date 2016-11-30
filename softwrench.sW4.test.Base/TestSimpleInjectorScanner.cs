@@ -26,6 +26,7 @@ namespace softwrench.sW4.TestBase {
         public TestSimpleInjectorScanner() {
             Container = new Container();
             Container.Options.AllowOverridingRegistrations = true;
+            Container.Options.PropertySelectionBehavior = new ImportPropertySelectionBehavior();
         }
 
 

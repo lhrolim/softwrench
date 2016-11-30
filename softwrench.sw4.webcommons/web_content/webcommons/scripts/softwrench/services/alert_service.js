@@ -94,6 +94,10 @@
             notificationViewModel.createNotification(type, null, body, exceptionType, exceptionOutline, exceptionStack);
         };
 
+        const success = (body) => {
+            notificationViewModel.createNotification("success", null, body);
+        };
+
         const buildException = function (data) {
             //process the innerException, if present
             var innerException;
@@ -165,7 +169,8 @@
             alert,
             notifymessage,
             notifyexception,
-            notifyWarning
+            notifyWarning,
+            success
         };
 
         //display notification on JS error

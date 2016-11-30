@@ -5,8 +5,8 @@ using System.Linq;
 using Moq;
 
 namespace softwrench.sW4.test.Util {
-    class TestUtil {
-        internal static IEnumerable<string> ClientNames() {
+    public class TestUtil {
+        public static IEnumerable<string> ClientNames() {
             var baseDir = AppDomain.CurrentDomain.BaseDirectory + "\\Client\\";
             var clients = Directory.GetDirectories(baseDir);
             IList<string> clientNames = new List<string>();
@@ -16,7 +16,7 @@ namespace softwrench.sW4.test.Util {
             return new List<string>(clientNames).Where(c => !c.Contains("@internal"));
         }
 
-        internal static void ResetMocks(params Mock[] mocks) {
+        public static void ResetMocks(params Mock[] mocks) {
             if (mocks == null) {
                 return;
             }
@@ -51,7 +51,7 @@ namespace softwrench.sW4.test.Util {
         }
 
 
-        internal static void VerifyMocks(params Mock[] mocks) {
+        public static void VerifyMocks(params Mock[] mocks) {
             if (mocks == null) {
                 return;
             }

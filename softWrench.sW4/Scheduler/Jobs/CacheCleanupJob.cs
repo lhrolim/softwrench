@@ -32,7 +32,9 @@ namespace softWrench.sW4.Scheduler.Jobs {
             return "0 15 10 15 * ?";
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         public async Task ExecuteJob() {
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
             _log = LogManager.GetLogger(typeof(CacheCleanupJob));
             _log.Info(string.Format("Executed in : {0}", DateTime.Now));
 

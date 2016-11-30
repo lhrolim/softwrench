@@ -19,6 +19,8 @@ using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Web.Controllers.Security;
 using softWrench.sW4.Data.Entities.Audit;
 using System;
+using softwrench.sw4.user.classes.exceptions;
+using softwrench.sw4.user.classes.ldap;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
@@ -95,7 +97,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
             userName = userName.ToLower();
             var user = await GetUser(userName, password, userTimezoneOffset);
-            if (user != null && user.Active == true) {
+            if (user != null && user.Active == true && !user.Locked) {
                 return await AuthSucceeded(userName, userTimezoneOffset, user, context);
             }
             return AuthFailed(user);
@@ -129,7 +131,7 @@ namespace softWrench.sW4.Web.Controllers {
                 }
 
                 //if this flag is true, we will create the user on the fly
-                var ldapResult = _ldapManager.LdapAuth(userName, password);
+                var ldapResult = await _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
                     userAux = await _userManager.CreateMissingDBUser(userName);
                     if (userAux == null) {
@@ -141,18 +143,18 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
-            if (!userAux.UserName.Equals("swadmin") && userAux.IsActive.HasValue && userAux.IsActive == false) {
-                //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
-                return InMemoryUser.NewAnonymousInstance(false);
-            }
+//            if (!userAux.UserName.Equals("swadmin") && userAux.IsActive.HasValue && userAux.IsActive == false) {
+//                //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
+//                return InMemoryUser.NewAnonymousInstance(false);
+//            }
 
             //this will trigger default ldap auth ==> The user already exists in our database
             if (userAux.Password == null) {
-                if (!_ldapManager.IsLdapSetup()) {
+                if (!await _ldapManager.IsLdapSetup()) {
                     return null;
                 }
 
-                var ldapResult = _ldapManager.LdapAuth(userName, password);
+                var ldapResult = await _ldapManager.LdapAuth(userName, password);
                 if (ldapResult.Success) {
                     return await _facade.DoLogin(userAux, userTimezoneOffset);
                 }
@@ -167,17 +169,22 @@ namespace softWrench.sW4.Web.Controllers {
 
         private ActionResult AuthFailed(InMemoryUser user) {
             string validationMessage = null;
-            bool active = true;
-            if (user != null && user.Active.HasValue && user.Active.Value == false) {
-                active = false;
-            } else {
+            var active = true;
+            var locked = false;
+            if (user == null)
                 validationMessage = ApplicationConfiguration.LoginErrorMessage != null
-                    ? ApplicationConfiguration.LoginErrorMessage.Replace("\\n", "\n")
-                    : null;
+                  ? ApplicationConfiguration.LoginErrorMessage.Replace("\\n", "\n")
+                  : null;
+            else {
+                if (user.Active.HasValue && user.Active.Value == false) {
+                    active = false;
+                }
+                locked = user.Locked;
             }
 
             var model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName(), ProfileName()) {
-                UserNotActive = !active
+                UserNotActive = !active,
+                UserLocked = locked
             };
             return View(model);
         }
@@ -185,12 +192,12 @@ namespace softWrench.sW4.Web.Controllers {
         private async Task<ActionResult> AuthSucceeded(string userName, string userTimezoneOffset, InMemoryUser user, HttpContext context) {
             var syncEveryTime = "true".Equals(MetadataProvider.GlobalProperty(SwUserConstants.LdapSyncAlways));
             if (syncEveryTime) {
-                user.DBUser = await _userManager.SyncLdapUser(user.DBUser, _ldapManager.IsLdapSetup());
+                user.DBUser = await _userManager.SyncLdapUser(user.DBUser, await _ldapManager.IsLdapSetup());
             }
             AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
-            
+
             System.Threading.Thread.CurrentPrincipal = user;
-            if (_userManager.VerifyChangePassword(user)) {
+            if (await _userManager.VerifyChangePassword(user)) {
                 Response.Redirect("~/UserSetup/ChangePassword");
                 return null;
             }
@@ -207,8 +214,7 @@ namespace softWrench.sW4.Web.Controllers {
             return ApplicationConfiguration.ClientName;
         }
 
-        private string ProfileName()
-        {
+        private string ProfileName() {
             return ApplicationConfiguration.Profile;
         }
 
@@ -228,7 +234,7 @@ namespace softWrench.sW4.Web.Controllers {
             return null;
         }
 
-    
+
 
         private static bool IsLoginEnabled([CanBeNull] ref string loginMessage) {
             var enabled = true;

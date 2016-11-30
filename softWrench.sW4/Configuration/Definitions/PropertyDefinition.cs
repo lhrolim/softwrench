@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using cts.commons.persistence.Util;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using softwrench.sw4.api.classes.configuration;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
 namespace softWrench.sW4.Configuration.Definitions {

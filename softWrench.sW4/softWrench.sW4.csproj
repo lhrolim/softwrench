@@ -86,12 +86,12 @@
       <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.1.6\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.2.1.5, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.6156.25003\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
@@ -106,8 +106,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -177,8 +177,8 @@
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.user, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.user.1.0.0.1\lib\net46\softwrench.sw4.user.dll</HintPath>
+    <Reference Include="softwrench.sw4.user, Version=1.1.6177.40622, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.1.6177.40622\lib\net46\softwrench.sw4.user.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
@@ -210,7 +210,10 @@
       <HintPath>..\packages\System.Diagnostics.StackTrace.4.0.1\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices">
+      <HintPath>..\packages\System.DirectoryServices.4.0.0\lib\System.DirectoryServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Ix-Async.1.2.5\lib\net45\System.Interactive.Async.dll</HintPath>
@@ -471,8 +474,6 @@
     <Compile Include="Metadata\Parsing\XmlNotificationMetadataSchema.cs" />
     <Compile Include="Audit\AuditTrail.cs" />
     <Compile Include="Audit\ISMAuditTrail.cs" />
-    <Compile Include="AUTH\LdapAuthArgs.cs" />
-    <Compile Include="AUTH\LdapManager.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatch.cs" />
     <Compile Include="Configuration\Definitions\ConditionMatchResult.cs" />
     <Compile Include="Configuration\Services\Api\WhereClauseRegisterCondition.cs" />
