@@ -37,6 +37,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
 
             maximoTicket.Change.Description = description;
 
+            maximoTicket.Change.CustomerID = entity.GetAttribute("pluspcustomer") as string;
+
+
             HandleWorkLog(entity, maximoTicket);
             HandleDescription(operationData,description, maximoTicket);
             Log.Debug("Now the description will be: " + maximoTicket.Change.Description);

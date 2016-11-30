@@ -101,8 +101,12 @@ app.factory('submitService', function ($rootScope, fieldService,contextService,r
                 data = datamap;
             }
             $.each(data, function (key, value) {
+                //TODO: replace this gambi
+                var isAssociatedData = key.indexOf(".") === -1;
+                var isSafeKeyNeeded = key === "asset_.primaryuser_.personid";
                 if (data.extrafields[key] != undefined) {
-                    if (fieldService.getDisplayableByKey(schema, key) == undefined) {
+
+                    if (fieldService.getDisplayableByKey(schema, key) == undefined && !isSafeKeyNeeded) {
                         delete data[key];
                     }
 
