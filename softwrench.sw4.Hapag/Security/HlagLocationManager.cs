@@ -431,6 +431,10 @@ namespace softwrench.sw4.Hapag.Security {
 
         public HlagGroupedLocation[] GetLocationsOfLoggedUser(bool forceXITCContext = false) {
             var user = SecurityFacade.CurrentUser();
+            if (!user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationProperty)) {
+                //TODO: investigate this issue
+                return null;
+            }
             var locations = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
             Log.DebugFormat("locations of user {0}: {1}", user.Login, locations);
             var ctx = _contextLookuper.LookupContext();
