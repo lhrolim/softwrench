@@ -52,7 +52,9 @@ namespace softwrench.sw4.user.classes.services {
                 return matchPassword;
             }
 
-
+            if (dbUser.Systemuser) {
+                return matchPassword;
+            }
 
             var attempts = dbUser.AuthenticationAttempts;
 
@@ -151,7 +153,7 @@ namespace softwrench.sw4.user.classes.services {
         /// <param name="criptedPassword"></param>
         /// <returns></returns>
         public virtual async Task SetFirstPasswordHistory(User user, [NotNull] string criptedPassword) {
-            
+
             if (user?.Id == null) {
                 throw new InvalidOperationException("user cannot be null or transient");
             }

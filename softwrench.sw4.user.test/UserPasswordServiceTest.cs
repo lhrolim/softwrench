@@ -126,6 +126,22 @@ namespace softwrench.sw4.user.test {
             TestUtil.VerifyMocks(_facade, _dao);
         }
 
+        [TestMethod]
+        public async Task TestPasswordOnLockingPreventSwAdmin() {
+            var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, IsActive = true,Locked = false,Systemuser = true };
+
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(5);
+
+            //asserting that the entry has been saved
+
+            var result = await _service.MatchPassword(user, "wrong");
+            Assert.IsFalse(result);
+            Assert.IsFalse(user.Locked.Value);
+            Assert.IsNull(user.AuthenticationAttempts);
+            
+            TestUtil.VerifyMocks(_facade, _dao);
+        }
+
 
         [TestMethod]
         public async Task UnLockUsersIfLimitGotHigher() {

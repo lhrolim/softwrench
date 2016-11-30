@@ -90,6 +90,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
             Validate.NotNull(password, "password");
             bool hasExpired;
             var user = _userManager.FindUserByLink(tokenLink, out hasExpired);
+            //context cannot be invoked inside async method
+            var context = System.Web.HttpContext.Current;
             if (user == null) {
                 throw new SecurityException(WrongLinkException);
             }
@@ -99,8 +101,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
             try {
                 await _userManager.ActivateAndDefinePassword(user, password);
-                var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
-                AfterPasswordSet(inMemoryUser, password, userTimezoneOffset, System.Web.HttpContext.Current);
+                await AfterPasswordSet(user, password, userTimezoneOffset,context);
             } catch (PasswordException.PasswordHistoryException) {
                 return View("DefinePassword", new DefinePasswordModel {
                     RepeatedPassword = true,
@@ -151,12 +152,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (!await VerifyChangePassword(memoryUser)) {
                 return null;
             }
-
+            //context cannot be invoked inside async method
+            var context = System.Web.HttpContext.Current;
             var user = memoryUser.DBUser;
             try {
                 await _userManager.ActivateAndDefinePassword(user, password);
-                var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
-                AfterPasswordSet(inMemoryUser, password, userTimezoneOffset, System.Web.HttpContext.Current);
+                await AfterPasswordSet(user, password, userTimezoneOffset, context);
             } catch (PasswordException.PasswordHistoryException) {
                 return View("DefinePassword", new DefinePasswordModel {
                     Title = "Expired Password",
@@ -188,15 +189,16 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return false;
         }
 
-        private void AfterPasswordSet(InMemoryUser user, string password, string userTimezoneOffset, HttpContext context) {
+        private async Task AfterPasswordSet(SwUser user, string password, string userTimezoneOffset, HttpContext context) {
+            var inMemoryUser = await _facade.LoginCheckingPassword(user, password, userTimezoneOffset);
             //logining in the user and redirecting him to home page
-            
-            AuthenticationCookie.SetSessionCookie(user.Login, userTimezoneOffset, Response);
+
+            AuthenticationCookie.SetSessionCookie(user.UserName, userTimezoneOffset, Response);
 
             System.Web.HttpContext.Current = context; // async method run in another thread so this is needed
-            FormsAuthentication.RedirectFromLoginPage(user.Login, false);
+            FormsAuthentication.RedirectFromLoginPage(user.UserName, false);
 
-            Thread.CurrentPrincipal = user;
+            Thread.CurrentPrincipal = inMemoryUser;
         }
 
         protected override void OnException(ExceptionContext filterContext) {

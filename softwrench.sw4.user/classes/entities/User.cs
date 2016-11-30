@@ -15,6 +15,8 @@ namespace softwrench.sw4.user.classes.entities {
 
         private string _userName;
 
+        private bool? _locked;
+
 
         public const string ActiveUserByUserName = "from User where lower(UserName) = lower(?) and IsActive = true";
         public const string UserByUserName = "from User where lower(UserName) = lower(?)";
@@ -35,7 +37,7 @@ namespace softwrench.sw4.user.classes.entities {
         [Property]
         public string UserName {
             get {
-                return _userName == null ? null : _userName.ToLower();
+                return _userName?.ToLower();
             }
             set {
                 _userName = value;
@@ -116,7 +118,15 @@ namespace softwrench.sw4.user.classes.entities {
 
         [Property]
         public bool? Locked {
-            get; set;
+            get {
+                if (Systemuser) {
+                    return false;
+                }
+                return _locked;
+            }
+            set {
+                _locked = value;
+            }
         }
 
         [JsonIgnore]
@@ -160,7 +170,9 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
         [OneToOne(ClassType = typeof(AuthenticationAttempt), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "none")]
-        public AuthenticationAttempt AuthenticationAttempts { get; set; }
+        public AuthenticationAttempt AuthenticationAttempts {
+            get; set;
+        }
 
         //public string DisplayName {
         //    get { return Person.FirstName + " " + Person.LastName; }
