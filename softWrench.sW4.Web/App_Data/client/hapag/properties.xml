@@ -99,8 +99,8 @@
     <property key="globalwsdlpath" value="https://170.225.28.205/MPWSNTestProxyWS/DocHandler?wsdl"/>
     <property key="globaservletpath_inc" value="https://195.183.78.161/HAPAGLLOYDSNINCWS/DocHandlerServlet"/>
     <property key="globaservletpath_chg" value="https://195.183.78.161/HAPAGLLOYDSNCHGWS/DocHandlerServlet"/>
-    <property key="maximo_DB_url" value="Server=10.132.160.132:5102;Database=maximo;UID=maxsas;PWD=xmax4sas;currentSchema=maximo;" />
-    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb;User Id=sw;password=hapag123;" />
+    <property key="maximo_DB_url" value="Server=10.132.160.133:5101;Database=maximo;UID=maxsas;PWD=cD2g3nik;currentSchema=maximo;" />
+    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb;User Id=swdb;password=U25GHZxNauvK;" />
     <property key="swdb_provider" value="System.Data.SQL" />
     <property key="ldapServer" value="adquery.hlag.com"/>
     <property key="ldapPortNumber" value="389"/>
