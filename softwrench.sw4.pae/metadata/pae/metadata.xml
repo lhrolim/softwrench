@@ -112,7 +112,7 @@
   <applications>
     <application entity="pr" name ="pr" title="Purchase Requests">
       <filters>
-        <optionfilter attribute="status" eager="true" provider="prstatus_.description" displaycode="false" preselected="WAPPR"/>
+        <optionfilter attribute="status" eager="true" provider="prstatus_.description" displaycode="false" preselected="WAAA"/>
       </filters>
 
       <properties>
@@ -168,7 +168,7 @@
             </field>
             <field attribute="totalcost" label="Total Cost" default="0"/>
             <field attribute="supervisor" label="Supervisor"/>
-            <field label="Details" attribute="ld_.ldtext">
+            <field label="PR Long Description" attribute="ld_.ldtext">
               <renderer type="richtext" params="inputsize=xlarge"/>
             </field>
           </section>
@@ -188,6 +188,26 @@
               <removecommand id="save"/>
               <command id="approve" icon="fa-thumbs-up" label="Approve" service="paePrService" cssclasses="large-button" method="approve" parameters="datamap" position="+save" enableexpression="paePrService.areButtonsEnabled"/>
               <command id="reject" icon="fa-thumbs-down" label="Reject" service="paePrService" cssclasses="large-button" method="reject" parameters="datamap" position="+save" enableexpression="paePrService.areButtonsEnabled"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="memomodalapprove" stereotype="detail" mode="input" title="PR Approval">
+          <field attribute="memo" label="Memo" requiredexpression="true"/>
+          <commandbars>
+            <commandgroup position="modal.detail.primary" platform="web">
+              <removecommand id="save"/>
+              <command id="approve" icon="fa-thumbs-up" label="Approve" service="paePrService" method="modalapprove" parameters="datamap" position="+save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="memomodalreject" stereotype="detail" mode="input" title="PR Rejection">
+          <field attribute="memo" label="Memo" requiredexpression="true"/>
+          <commandbars>
+            <commandgroup position="modal.detail.primary" platform="web">
+              <removecommand id="save"/>
+              <command id="approve" icon="fa-thumbs-down" label="Reject" service="paePrService" method="modalreject" parameters="datamap" position="+save"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -222,7 +242,7 @@
           <field attribute="location" label="Location"/>
           <field attribute="loadedcost" label="Loaded Cost"/>
           <field attribute="assetnum" label="Asset"/>
-          <field label="Details" attribute="ld_.ldtext">
+          <field label="PR Line Long Description" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
         </detail>

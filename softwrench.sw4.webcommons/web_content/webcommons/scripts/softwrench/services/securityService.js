@@ -19,6 +19,11 @@ angular.module('sw_layout')
             var user = contextService.getUserData();
             var userroles = user.roles;
             var foundRole = null;
+
+            if (!userroles) {
+                return true;
+            }
+
             for (var i = 0; i < userroles.length; i++) {
                 var userrole = userroles[i];
                 if (userrole.name == role) {

@@ -1,31 +1,14 @@
 ﻿(function (angular) {
     "use strict";
 
-    function dynComponentService($rootScope, $q, restService, alertService, schemaCacheService, modalService, validationService, crudContextHolderService, crudextraService, redirectService,applicationService) {
+    function dynComponentService($rootScope, $q, restService, alertService, schemaService, modalService, validationService, crudContextHolderService, crudextraService, redirectService, applicationService) {
         const app = "_dynamic";
         const reloadContainerModalSchemaId = "reloadcontainermodal";
         const deleteComponentModalSchemaId = "deletecomponentmodal";
 
         //#region Utils
-        function getModalSchema(modalSchemaId) {
-            const cachedSchema = schemaCacheService.getCachedSchema(app, modalSchemaId);
-            if (cachedSchema) {
-                return $q.when(cachedSchema);
-            }
-
-            const parameters = {
-                applicationName: app,
-                targetSchemaId: modalSchemaId
-            }
-            const promise = restService.getPromise("Metadata", "GetSchemaDefinition", parameters);
-            return promise.then(function (result) {
-                schemaCacheService.addSchemaToCache(result.data);
-                return result.data;
-            });
-        }
-
         function openModal(modalSchemaId) {
-            getModalSchema(modalSchemaId).then((schema) => {
+            schemaService.getSchema(app, modalSchemaId).then((schema) => {
                 modalService.show(schema, {
                     dummy: "dummy" // to force datamap load
                 });
@@ -142,7 +125,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("dynComponentService", ["$rootScope", "$q", "restService", "alertService", "schemaCacheService", "modalService", "validationService", "crudContextHolderService", "crudextraService", "redirectService", "applicationService", dynComponentService]);
+    angular.module("sw_layout").factory("dynComponentService", ["$rootScope", "$q", "restService", "alertService", "schemaService", "modalService", "validationService", "crudContextHolderService", "crudextraService", "redirectService", "applicationService", dynComponentService]);
 
     //#endregion
 

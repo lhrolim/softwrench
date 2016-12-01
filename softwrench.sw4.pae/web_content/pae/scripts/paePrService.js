@@ -1,32 +1,57 @@
 ﻿(function (angular) {
     "use strict";
 
-    function paePrService($rootScope, crudContextHolderService, crudCrawlService, applicationService) {
+    function paePrService($rootScope, crudContextHolderService, crudCrawlService, applicationService, schemaService, modalService, validationService) {
         //#region Utils
-        function changeStatus(status, datamap) {
+        function openModal(modalschemaid) {
+            schemaService.getSchema("pr", modalschemaid).then((schema) => {
+                modalService.show(schema, {
+                    memo: ""
+                }, {});
+            });
+        }
+
+        function changeStatus(status, memo) {
+            if (validationService.validateCurrent("#modal").length !== 0) {
+                return;
+            }
+
+            const datamap = crudContextHolderService.rootDataMap();
             datamap["status"] = status;
+            datamap["memo"] = memo;
 
-            applicationService.save().then(crudCrawlService.forwardAction)
-                .catch(() => {
-                    datamap["status"] = "WAPPR";
-                });
-
+            applicationService.save({
+                dispatchedByModal : false
+            }).then(() => {
+                modalService.hide();
+                crudCrawlService.forwardAction();
+            }).catch(() => {
+                datamap["status"] = "WAAA";
+            });
         }
         //#endregion
 
         //#region Public methods
 
-        function approve(datamap) {
-            changeStatus("APPR", datamap);
+        function approve() {
+            openModal("memomodalapprove");
         }
 
-        function reject(datamap) {
-            changeStatus("PRREJ", datamap);
+        function reject() {
+            openModal("memomodalreject");
+        }
+
+        function modalapprove(modaldatamap) {
+            changeStatus("APPR", modaldatamap["memo"]);
+        }
+
+        function modalreject(modaldatamap) {
+            changeStatus("PRREJ", modaldatamap["memo"]);
         }
 
         function areButtonsEnabled() {
             const datamap = crudContextHolderService.rootDataMap();
-            return datamap["status"] === "WAPPR";
+            return datamap["status"] === "WAAA";
         }
 
         //#endregion
@@ -35,7 +60,9 @@
         const service = {
             approve,
             reject,
-            areButtonsEnabled
+            areButtonsEnabled,
+            modalapprove,
+            modalreject
         };
         return service;
         //#endregion
@@ -43,7 +70,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("paePrService", ["$rootScope", "crudContextHolderService", "crudCrawlService", paePrService]);
+    angular.module("sw_layout").factory("paePrService", ["$rootScope", "crudContextHolderService", "crudCrawlService", "applicationService", "schemaService", "modalService", "validationService", paePrService]);
 
     //#endregion
 

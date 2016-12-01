@@ -1,7 +1,7 @@
 ﻿(function (modules, angular) {
     "use strict";
 
-    modules.webcommons.factory('schemaService', ["fieldService", "expressionService", function (fieldService, expressionService) {
+    modules.webcommons.factory('schemaService', ["$q", "fieldService", "expressionService", "schemaCacheService", "restService", function ($q, fieldService, expressionService, schemaCacheService, restService) {
 
         //#region private methods
 
@@ -280,6 +280,23 @@
             return flattenDisplayables(schema.displayables);
         }
 
+        function getSchema(application, schemaId) {
+            const cachedSchema = schemaCacheService.getCachedSchema(application, schemaId);
+            if (cachedSchema) {
+                return $q.when(cachedSchema);
+            }
+
+            const parameters = {
+                applicationName: application,
+                targetSchemaId: schemaId
+            }
+            const promise = restService.getPromise("Metadata", "GetSchemaDefinition", parameters);
+            return promise.then(function (result) {
+                schemaCacheService.addSchemaToCache(result.data);
+                return result.data;
+            });
+        }
+
         return {
             areTheSame: areTheSame,
             buildApplicationKey: buildApplicationKey,
@@ -300,7 +317,8 @@
             isList: isList,
             isSameSchema: isSameSchema,
             allDisplayables: allDisplayables,
-            flattenDisplayables: flattenDisplayables
+            flattenDisplayables: flattenDisplayables,
+            getSchema: getSchema
         };
 
     }]);

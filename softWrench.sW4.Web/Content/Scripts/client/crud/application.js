@@ -85,7 +85,8 @@
 
 
         $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
-            if (!crudContextHolderService.getDirty() || parameters.skipDirtyMessage) {
+            const skipDirtyMessage = parameters.customParameters ? parameters.customParameters.skipDirtyMessage : false;
+            if (!crudContextHolderService.getDirty() || skipDirtyMessage) {
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
                 return;
             }

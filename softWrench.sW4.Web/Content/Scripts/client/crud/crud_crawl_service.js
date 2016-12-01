@@ -8,7 +8,8 @@
 			if (!data) {
 			    return;
 			}
-		    data.skipDirtyMessage = true;
+		    data.customParameters = data.customParameters || {};
+		    data.customParameters.skipDirtyMessage = true;
 			$rootScope.$broadcast("sw_navigaterequest", data.applicationname, data.schemaid, "input", null, { id: data.id, popupmode: "none", customParameters: data.customParameters });
 		}
 		//#endregion

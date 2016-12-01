@@ -76,6 +76,7 @@
     <Compile Include="classes\com\cts\pae\configuration\PaeWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\pae\dataset\PaeAssetDataSet.cs" />
     <Compile Include="classes\com\cts\pae\dataset\PaeAuditDataSet.cs" />
+    <Compile Include="classes\com\cts\pae\dataset\PaePrDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
