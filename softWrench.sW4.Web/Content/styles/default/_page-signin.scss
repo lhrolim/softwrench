@@ -58,6 +58,10 @@
             .buttons {
                 margin-left: calc(25% + 10px);
             }
+
+            .row.buttons {
+                margin: 0 10px;
+            }
         }
 
         @media all and (min-width: 480px) {
