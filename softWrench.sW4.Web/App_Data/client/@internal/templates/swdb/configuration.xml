@@ -29,6 +29,9 @@
         <schema id="list" stereotype="list">
           <field attribute="fullkey" label="Full Key"/>
           <field attribute="description" label="Description"/>
+          <field attribute="datatype" hidden="true"/>
+          <field attribute="minvalue" hidden="true" />
+          <field attribute="maxvalue" hidden="true" />
           <section attribute="currentvalue" resourcepath="/Content/Templates/crud/configuration/configuration_grid_value.html">
             <header label="Current Value"/>
           </section>
@@ -37,7 +40,11 @@
         <schema id="trueDetail"  stereotype="compositiondetail" title="Configuration Entry">
           <field attribute="fullkey" label="Full Key" readonly="true"/>
           <field attribute="description" label="Description" readonly="true"/>
+          <field attribute="minvalue_" hidden="true" />
+          <field attribute="maxvalue_" hidden="true" />
           <section attribute="value" resourcepath="/Content/Templates/crud/configuration/configuration_detail_value.html"/>
+          <event type="beforesubmit.onvalidation" service="configurationService" method="validateValue"/>
+          
         </schema>
       </schemas>
     </application>

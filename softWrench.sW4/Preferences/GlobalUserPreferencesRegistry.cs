@@ -24,7 +24,7 @@ namespace softWrench.sW4.Preferences {
             _configFacade.Register(ConfigurationConstants.Filter.ApplyDefaultPreviousFilter, new PropertyDefinition {
                 Description = "Whether the previous filter criteria should be applied by default or not",
                 StringValue = "false",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 CachedOnClient = true
             });
         }

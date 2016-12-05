@@ -629,8 +629,7 @@
                         crud_inputcommons.initField($scope, fieldMetadata, "datamap");
                     };
 
-                    $scope.getValidationPattern = function (fieldMetadata) {
-                        var type = fieldMetadata.rendererParameters['valtype'];
+                    $scope.getValidationPattern = function (type) {
                         return validationService.getValidationPattern(type);
                     };
 

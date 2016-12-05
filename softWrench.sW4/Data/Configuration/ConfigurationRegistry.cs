@@ -19,99 +19,99 @@ namespace softWrench.sW4.Data.Configuration {
             facade.Register(ctes.UserRowstampKey, new PropertyDefinition {
                 Description = "current user rowstamp from maximo",
                 StringValue = "0",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
             facade.Register(ctes.PersonGroupRowstampKey, new PropertyDefinition {
                 Description = "current person group rowstamp from maximo",
                 StringValue = "0",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
             facade.Register(ctes.PersonGroupAssociationRowstampKey, new PropertyDefinition {
                 Description = "current person group association rowstamp from maximo",
                 StringValue = "0",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
             facade.Register(ctes.MyProfileEnabled, new PropertyDefinition {
                 Description = "Is My Profile Module Enabled for the system",
                 StringValue = "true",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
             });
 
             facade.Register(ctes.MyProfileReadOnly, new PropertyDefinition {
                 Description = "Is My Profile Module ReadOnly for the system",
                 StringValue = "true",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
             });
 
 
             facade.Register(ctes.ClientSideLogLevel, new PropertyDefinition {
                 Description = "Level of client side logs",
                 StringValue = "warn",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
             });
 
             facade.Register(ctes.InvbalancesListScanOrder, new PropertyDefinition {
                 Description = "Inventory grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.PhysicalcountListScanOrder, new PropertyDefinition {
                 Description = "Physical count grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.PhysicaldeviationListScanOrder, new PropertyDefinition {
                 Description = "Physical deviation grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.MatrectransTransfersListScanOrder, new PropertyDefinition {
                 Description = "Inventory transfer grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.ReservedMaterialsListScanOrder, new PropertyDefinition {
                 Description = "Reserved materials grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.InvIssueListScanOrder, new PropertyDefinition {
                 Description = "Inv issue grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.InvIssueListBeringScanOrder, new PropertyDefinition {
                 Description = "Inv issue grid filter field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "assetnum",
                 Visible = false,
             });
 
             facade.Register(ctes.NewInvIssueDetailScanOrder, new PropertyDefinition {
                 Description = "Inv issue detail field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "itemnum",
                 Visible = false,
             });
 
             facade.Register(ctes.NewKeyIssueDetailScanOrder, new PropertyDefinition {
                 Description = "Inv issue detail field scan order",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "laborcode,storeroom,itemnum,rotassetnum",
                 Visible = false,
             });
@@ -125,51 +125,53 @@ namespace softWrench.sW4.Data.Configuration {
             // default values of gmaps addresses
             facade.Register(ctes.MapsDefaultCityKey, new PropertyDefinition {
                 Description = "The default value to city property to use for locate addresses on google maps",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 CachedOnClient = true
             });
 
             facade.Register(ctes.MapsDefaultStateKey, new PropertyDefinition {
                 Description = "The default value to state/province property to use for locate addresses on google maps",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 CachedOnClient = true
             });
 
             facade.Register(ctes.MapsDefaultCountryKey, new PropertyDefinition {
                 Description = "The default value to country property to use for locate addresses on google maps",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 CachedOnClient = true
             });
 
             facade.Register(ctes.MetadataChangeReportEmailId, new PropertyDefinition {
                 Description = "The default email address for metadata change reporting",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "devteam@controltechnologysolutions.com"
             });
 
             facade.Register(ctes.TransactionStatsReportDuration, new PropertyDefinition {
                 Description = "The default period (days) for which the transaction statistics report will be sent",
-                DataType = "int",
-                DefaultValue = "7"
+                PropertyDataType = PropertyDataType.INT,
+                DefaultValue = "7",
+                MinValue_ = "1",
+                MaxValue_ = "15"
             });
 
             facade.Register(ctes.DateTimeFormat, new PropertyDefinition {
                 Description = "The default format for DateTime",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "MM/dd/yyyy hh:mm",
             });
 
             facade.Register(ctes.JsErrorShowDevKey, new PropertyDefinition {
                 Description = "Show JS Error notifications in Dev/QA by default",
                 StringValue = "true",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 CachedOnClient = true
             });
 
             facade.Register(ctes.JsErrorShowProdKey, new PropertyDefinition {
                 Description = "Hide JS Error notifications in Prod by default",
                 StringValue = "false",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 CachedOnClient = true
             });
 
@@ -177,72 +179,72 @@ namespace softWrench.sW4.Data.Configuration {
             #region Password Config
             facade.Register(ctes.Password.MinLengthKey, new PropertyDefinition {
                 Description = "Password's minimum required length",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
                 StringValue = "6",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.MaxAdjacentKey, new PropertyDefinition {
                 Description = "Number of identical adjancent characters allowed in password",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
                 StringValue = "null",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.RequiresUppercaseKey, new PropertyDefinition {
                 Description = "Password requires uppercase characters ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.RequiresLowercaseKey, new PropertyDefinition {
                 Description = "Password requires lowercase characters ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.RequiresNumberKey, new PropertyDefinition {
                 Description = "Password requires number characters ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.RequiresSpecialKey, new PropertyDefinition {
                 Description = "Password requires special characters ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.PlacementNumberFirstKey, new PropertyDefinition {
                 Description = "Password's first character can be a number ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.PlacementNumberLastKey, new PropertyDefinition {
                 Description = "Password's last character can be a number ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.PlacementSpecialFirstKey, new PropertyDefinition {
                 Description = "Password's first character can be a special character ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.PlacementSpecialLastKey, new PropertyDefinition {
                 Description = "Password's last character can be a special character ?",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.BlackListKey, new PropertyDefinition {
                 Description = "Forbidden password list (comma separated)",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 CachedOnClient = true
             });
             facade.Register(ctes.Password.LoginKey, new PropertyDefinition {
                 Description = "Password can contain user's username",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false",
                 CachedOnClient = true
             });
@@ -255,19 +257,19 @@ namespace softWrench.sW4.Data.Configuration {
             #region Bulletin Board
             facade.Register(ctes.BulletinBoard.Enabled, new PropertyDefinition {
                 Description = "Whether or not the bulletin board feature is enabled in softWrench",
-                DataType = "boolean",
+                PropertyDataType = PropertyDataType.BOOLEAN,
                 DefaultValue = "false",
                 CachedOnClient = true
             });
             facade.Register(ctes.BulletinBoard.JobRefreshRate, new PropertyDefinition {
                 Description = "Interval in minutes to run the job that caches active bulletinboard records from the database",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
                 DefaultValue = "5",
                 CachedOnClient = true
             });
             facade.Register(ctes.BulletinBoard.UiRefreshRate, new PropertyDefinition {
                 Description = "Interval in minutes to refresh the bulletin board messages displayed in the side-panel",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
                 DefaultValue = "5",
                 CachedOnClient = true
             });

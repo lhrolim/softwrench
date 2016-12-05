@@ -53,6 +53,15 @@
             return restService.get("Configuration", "GetConfigurations", { fullKeys: keys }).then(r => r.data);
         }
 
+
+        function validateValue(schema, datamap, parameters) {
+            if (datamap.value === undefined) {
+                //ng-min and ng-max validators set the value to undefined, instead of null
+                return ["please fix the form validation errors"];
+            }
+            return true;
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -60,7 +69,8 @@
             getConfigurationValue,
             updateConfigurations,
             loadConfigsComposition,
-            fetchConfigurations
+            fetchConfigurations,
+            validateValue
         };
         return service;
         //#endregion

@@ -141,7 +141,7 @@ namespace softWrench.sW4.Configuration.Services {
                 FullKey = configKey,
                 SimpleKey = CategoryUtil.GetPropertyKey(configKey),
                 StringValue = hasDefaultValue ? query : null,
-                DataType = typeof(string).Name,
+                PropertyDataType = PropertyDataType.STRING,
                 Renderer = "whereclause",
                 Alias = "",
                 Contextualized = true

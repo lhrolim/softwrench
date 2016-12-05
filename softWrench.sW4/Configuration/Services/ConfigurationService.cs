@@ -79,8 +79,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (foundValue == null) {
                 foundValue = new PropertyValue { Definition = definition };
             }
-
-            if (foundValue.Definition.DataType.EqualsAny("date", "datetime")) {
+            if (foundValue.Definition.PropertyDataType.Equals(PropertyDataType.DATE)) {
                 HandleDateTimeValue(configKey, value, foundValue);
             } else {
                 foundValue.StringValue = value.ToString();
@@ -205,7 +204,7 @@ namespace softWrench.sW4.Configuration.Services {
         // global property, ignores module, profile and conditions
         public async Task UpdateGlobalDefinition(string fullKey, string value) {
             var definition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, fullKey);
-            if ("boolean".Equals(definition.DataType) && value != null) {
+            if (definition.PropertyDataType.Equals(PropertyDataType.BOOLEAN) && value != null) {
                 value = value.ToLower(); // newtonsoft json workaround it converts bool true to string "True" same for false
             }
             var propValue = InnerGetGlobalPropertyValue(definition);

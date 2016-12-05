@@ -553,7 +553,7 @@
                                         <div ng-switch-default ng-if="fieldMetadata.rendererType != 'lookup' &&  fieldMetadata.rendererType != 'modal'">
 
                                             <div ng-class="{'input-group': fieldMetadata.rendererParameters['prepend'] || fieldMetadata.rendererParameters['append'] }"
-                                                 ng-init="inputType = getInputType(fieldMetadata); pattern = getValidationPattern(fieldMetadata);">
+                                                 ng-init="inputType = getInputType(fieldMetadata); pattern = getValidationPattern(fieldMetadata.rendererParameters['valtype']);">
                                                 <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['prepend']!=null">{{fieldMetadata.rendererParameters['prepend']}}</span>
                                                 <input ng-if="inputType === 'password'"
                                                        type="{{inputType}}"

@@ -19,7 +19,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
             facade.Register(ProblemEmails, new PropertyDefinition() {
                 Description = "Comma separated list of emails receipients to send in case of synchronization failure",
                 StringValue = "",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
             });
 
             facade.Override(UserConfigurationConstants.ChangePasswordUponStart,"true");

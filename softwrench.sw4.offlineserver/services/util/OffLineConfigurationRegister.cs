@@ -16,12 +16,12 @@ namespace softwrench.sw4.offlineserver.services.util {
             _configFacade.Register(OfflineConstants.AsyncBatchMinSize, new PropertyDefinition {
                 Description = "minimum size of the batch so that it executes asynchronously",
                 StringValue = "2",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
             _configFacade.Register(OfflineConstants.SupportContactEmail, new PropertyDefinition() {
                 Description = "Support email the offline app should contact",
-                DataType = "string",
+                PropertyDataType = PropertyDataType.STRING,
                 StringValue = "support@controltechnologysolutions.com",
                 DefaultValue = "support@controltechnologysolutions.com"
             });

@@ -27,32 +27,32 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.configuration {
             _configurationFacade.Register(ToshibaSyncSrStatusDate, new PropertyDefinition {
                 Description = "Start point statusdate after which ISM SR updates would be synced. If null, no sync would be performed",
                 StringValue = null,
-                DataType = "date",
+                PropertyDataType = PropertyDataType.DATE,
             });
 
             _configurationFacade.Register(ToshibaSyncPersonUId, new PropertyDefinition {
                 Description = "Start point personuid after which ISM SR updates would be synced. If null, no sync would be performed",
                 StringValue = null,
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
             _configurationFacade.Register(ToshibaPersonSyncRefreshrate, new PropertyDefinition {
                 Description = "ISM Person Sync Job Default Refresh Rate",
                 StringValue = "12",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
             _configurationFacade.Register(ToshibaSyncMaximoThreads, new PropertyDefinition {
                 Description = "Maximo number of threads to execute on Maximo side upon the sync operation",
                 StringValue = "5",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
 
 
             _configurationFacade.Register(ToshibaSRSyncRefreshrate, new PropertyDefinition {
                 Description = "ISM SR Sync Job Default Refresh Rate",
                 StringValue = "5",
-                DataType = "long",
+                PropertyDataType = PropertyDataType.LONG,
             });
         }
     }

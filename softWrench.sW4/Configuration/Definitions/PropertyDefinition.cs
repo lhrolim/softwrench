@@ -9,6 +9,11 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softwrench.sw4.api.classes.configuration;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
+using NHibernate.UserTypes;
+using NHibernate.SqlTypes;
+using System.Data;
+using System.Threading.Tasks;
+using NHibernate;
 
 namespace softWrench.sW4.Configuration.Definitions {
 
@@ -27,7 +32,7 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public PropertyDefinition() {
-            DataType = "string";
+            DataType = PropertyDataType.STRING.ToString().ToLower();
             Visible = true;
         }
 
@@ -53,9 +58,29 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         /// <summary>
+        /// Enum Data representing the datatype of the <see cref="PropertyDefinition"/>
+        /// Available options: string, int, long, date, boolean.
+        /// The information would be presented on screen using the datatype.
+        /// </summary>
+        public virtual PropertyDataType PropertyDataType {
+            get {
+                PropertyDataType outdata;
+                if(Enum.TryParse(DataType, true, out outdata)) {
+                    return outdata;
+                }
+
+                return PropertyDataType.STRING;
+            }
+            set {
+                DataType = value.ToString().ToLower();
+            }
+        }
+
+        /// <summary>
+        /// DO NOT USE THIS PROPERTY TO SET THE DATATYPE 
+        /// Use <see cref="PropertyDataType"/> Enum property to define the datatype for this property definition
         /// Available options: long, string, date, boolean --> the way the information would be presented on screen
         /// </summary>
-        //TODO: extract enum
         [Property]
         public virtual string DataType {
             get; set;
@@ -91,6 +116,15 @@ namespace softWrench.sW4.Configuration.Definitions {
             get; set;
         }
 
+        [Property(Column = "minvalue_")]
+        public virtual string MinValue_ {
+            get; set;
+        }
+
+        [Property(Column = "maxvalue_")]
+        public virtual string MaxValue_ {
+            get; set;
+        }
 
         public virtual string StringValue {
             get {
@@ -129,10 +163,19 @@ namespace softWrench.sW4.Configuration.Definitions {
             return string.Compare(SimpleKey, other.SimpleKey, System.StringComparison.Ordinal);
         }
 
-        public override string ToString() {
-            return string.Format("FullKey: {0}, Description: {1}, DataType: {2}, Renderer: {3}", FullKey, Description, DataType, Renderer);
-        }
+        public override string ToString() {            
+            return string.Format("FullKey: {0}, Description: {1}, DataType: {2}, Renderer: {3}", FullKey, Description, DataType, Renderer);           
+        }        
+    }
 
-
+    /// <summary>
+    /// The datatype enum for the <see cref="PropertyDefinition" class./>
+    /// </summary>
+    public enum PropertyDataType {
+        STRING = 0,
+        INT = 1,
+        LONG = 2,
+        DATE = 3,
+        BOOLEAN = 4
     }
 }
