@@ -97,8 +97,8 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
             }
             public static AssetQueryResult FromDictionary(IDictionary<string, object> dict) {
                 var assetId = dict["assetid"].ToString();
-                var serialNum = dict.ContainsKey("serialnum") ? dict["serialnum"].ToString() : null;
-                var description = dict.ContainsKey("description") ? dict["description"].ToString() : null;
+                var serialNum = dict.ContainsKey("serialnum") ? dict["serialnum"] as string : null;
+                var description = dict.ContainsKey("description") ? dict["description"] as string : null;
                 return new AssetQueryResult(assetId, serialNum, description);
             }
         }
