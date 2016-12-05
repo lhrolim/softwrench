@@ -55,19 +55,24 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
             // get extra asset information to display 
             var assetInfo = await GetAssetInfo(indexedScanResults.Keys);
 
-            // set info in the result
-            foreach (var asset in assetInfo) {
-                foreach (var entry in indexedScanResults[asset.AssetId]) {
-                    entry["#asset_description"] = asset.Description;
-                    entry["#asset_serialnum"] = asset.SerialNum;
-                    entry["#asset_assetnum"] = entry["refUserId"];
+            if (assetInfo != null) {
+                // set info in the result
+                foreach (var asset in assetInfo) {
+                    foreach (var entry in indexedScanResults[asset.AssetId]) {
+                        entry["#asset_description"] = asset.Description;
+                        entry["#asset_serialnum"] = asset.SerialNum;
+                        entry["#asset_assetnum"] = entry["refUserId"];
+                    }
                 }
             }
+
+
+
         }
 
         private async Task<IEnumerable<AssetQueryResult>> GetAssetInfo(IEnumerable<string> assetIds) {
             var parameters = new ExpandoObject();
-            var parametersCollection = ((ICollection<KeyValuePair<string, object>>) parameters);
+            var parametersCollection = ((ICollection<KeyValuePair<string, object>>)parameters);
             parametersCollection.Add(new KeyValuePair<string, object>("ids", assetIds.ToList()));
 
             var assetInfo = await _dao.FindByNativeQueryAsync("select assetid,description,serialnum from asset where assetid in (:ids)", parameters);
@@ -76,9 +81,15 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.dataset {
         }
 
         private class AssetQueryResult {
-            public string AssetId { get; private set; }
-            public string SerialNum { get; private set; }
-            public string Description { get; private set; }
+            public string AssetId {
+                get; private set;
+            }
+            public string SerialNum {
+                get; private set;
+            }
+            public string Description {
+                get; private set;
+            }
             public AssetQueryResult(string assetId, string serialNum, string description) {
                 AssetId = assetId;
                 SerialNum = serialNum;
