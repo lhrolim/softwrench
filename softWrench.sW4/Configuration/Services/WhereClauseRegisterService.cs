@@ -171,7 +171,7 @@ namespace softWrench.sW4.Configuration.Services {
 
             Log.DebugFormat("updating existing condition");
             //updating existing condition of same alias
-            return (WhereClauseCondition)await _dao.SaveAsync(realValue);
+            return await _dao.SaveAsync(realValue);
 
         }
     }
