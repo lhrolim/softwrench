@@ -178,7 +178,7 @@ namespace softwrench.sw4.Hapag.Security {
             if (user.IsInGroup(HapagPersonGroupConstants.XITC) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
                 //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
                 //TODO: move to a better place...
-                var allGroups = GetLocationsOfLoggedUser(true);
+                var allGroups = GetLocationsOfUser(user,true);
                 var xitcgroups = new HashSet<string>();
                 foreach (var hlagGroupedLocation in allGroups) {
                     var descriptions = hlagGroupedLocation.GetGroupDescriptions();
@@ -429,17 +429,23 @@ namespace softwrench.sw4.Hapag.Security {
             return options;
         }
 
+      
+
         public HlagGroupedLocation[] GetLocationsOfLoggedUser(bool forceXITCContext = false) {
             var user = SecurityFacade.CurrentUser();
+            return GetLocationsOfUser(user, forceXITCContext);
+        }
+
+        public HlagGroupedLocation[] GetLocationsOfUser(InMemoryUser user, bool forceXITCContext = false) {
             if (!user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationProperty)) {
                 //TODO: investigate this issue
-                return null;
+                return new HlagGroupedLocation[] { };
             }
             var locations = user.Genericproperties[HapagPersonGroupConstants.HlagLocationProperty] as UserHlagLocation;
             Log.DebugFormat("locations of user {0}: {1}", user.Login, locations);
             var ctx = _contextLookuper.LookupContext();
             if (locations == null) {
-                return null;
+                return new HlagGroupedLocation[] { };
             }
             //            var groupedLocations = locations.GroupedLocations;
             if (ctx.MetadataParameters.ContainsKey("region") && HlagLocationUtil.ValidateRegionSelectionIsAllowed(ctx, user, forceXITCContext)) {

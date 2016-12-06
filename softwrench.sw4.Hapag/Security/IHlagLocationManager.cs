@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Entities;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.SimpleInjector;
 
 namespace softwrench.sw4.Hapag.Security {
@@ -22,7 +24,11 @@ namespace softwrench.sw4.Hapag.Security {
 
         IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId = null);
 
+        [NotNull]
         HlagGroupedLocation[] GetLocationsOfLoggedUser(Boolean forceXITCContext=false);
+
+        [NotNull]
+        HlagGroupedLocation[] GetLocationsOfUser(InMemoryUser user,Boolean forceXITCContext = false);
 
 
     }
