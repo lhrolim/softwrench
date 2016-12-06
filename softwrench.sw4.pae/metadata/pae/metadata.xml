@@ -357,7 +357,7 @@
           <field attribute="location_.description" label="Location" readonly="true"/>
           <field attribute="vehorg" label="Vehicle Org" readonly="true"/>
           <field attribute="status" label="Status" readonly="true"/>
-          <field attribute="bcn" label="BCN" readonly="true" />
+          <field attribute="bcn" label="BCN" />
           <field attribute="invdate" label="Inventory Date" readonly="true" />
           <field attribute="invpostdate" label="Inventory Post Date" readonly="true" />
           <field attribute="invpostdateby" label="Inventory Posted By" readonly="true"/>
