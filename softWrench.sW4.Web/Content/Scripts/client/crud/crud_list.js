@@ -319,7 +319,9 @@
                         contextService.deleteFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""));
 
                         $scope.paginationData = $scope.paginationData || {};
-                        $scope.searchData = $scope.searchData || {};
+                        $scope.searchData = searchData || $scope.searchData || {};
+                        $scope.searchOperator = searchOperator || $scope.searchOperator || {};
+
                         $scope.searchSort = searchSort || $scope.searchSort || {};
                         $scope.multiSort = multiSort || $scope.multiSort;
                         $scope.vm.quickSearchDTO = quickSearchDTO || $scope.vm.quickSearchDTO || { compositionsToInclude: [] };
@@ -333,14 +335,10 @@
                         // $scope.searchTemplate = extraparameters.searchTemplate;
 
                         // if search data is present, we should go back to first page, as we wont know exactly the new number of pages available
-                        if (searchData) {
-                            $scope.searchData = searchData;
+                        if (searchData || searchOperator) {
                             pagetogo = 1;
                         }
-                        if (searchOperator) {
-                            $scope.searchOperator = searchOperator;
-                            pagetogo = 1;
-                        }
+
                         if (avoidspin) {
                             contextService.set("avoidspin", true, true);
                         }

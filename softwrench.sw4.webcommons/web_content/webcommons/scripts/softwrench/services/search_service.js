@@ -466,15 +466,15 @@
             /// searchDTO --> the built in searchDTO, íf present, won´t be built inside here
             /// 
             /// </param>
-            searchWithData: function (application, searchData, schema, extraParameters) {
+            searchWithData: function (application, searchData ={}, schema = "list", extraParameters={}) {
                 if (application == null) {
                     throw new Error("application cannot be null");
                 }
-                extraParameters = extraParameters || {};
-                searchData = searchData || {};
                 const log = $log.getInstance('searchService#searchWithData');
+
                 var searchDTO = extraParameters.searchDTO;
                 if (!searchDTO) {
+                    log.debug("searchDTO not present, building it");
                     searchDTO = this.buildSearchDTO(searchData, extraParameters.searchSort, extraParameters.searchOperators, null);
                     searchDTO.searchTemplate = extraParameters.searchTemplate;
                     searchDTO.pageNumber = extraParameters.pageNumber ? extraParameters.pageNumber : 1;

@@ -2,13 +2,16 @@
     "use strict";
 
     angular.module("sw_layout")
-        .controller("GridFilterController", ["$scope", "$rootScope", "gridPreferenceService", "searchService", "i18NService", "alertService", "userPreferencesService", "crudContextHolderService",
-            function ($scope, $rootScope, gridPreferenceService, searchService, i18NService, alertService, userPreferencesService, crudContextHolderService) {
+        .controller("GridFilterController", ["$scope", "$rootScope", "gridPreferenceService", "searchService", "i18NService", "alertService", "userPreferencesService", "crudContextHolderService","$log",
+            function ($scope, $rootScope, gridPreferenceService, searchService, i18NService, alertService, userPreferencesService, crudContextHolderService, $log) {
                 $scope.selectedfilter = null;
+                const log = $log.get("gridfilter#filterchanged", ["filter"]);
+
 
                 $scope.filterChanged = function () {
                     crudContextHolderService.setSelectedFilter($scope.selectedfilter, $scope.panelid);
                     if (!$scope.selectedfilter) {
+                        log.debug("selected filter not defined, applying blank filter");
                         searchService.refreshGrid({}, null, { panelid: $scope.panelid, forcecleanup: true, addPreSelectedFilters: true });
                         return;
                     }
