@@ -2080,12 +2080,14 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <componentdisplayable id="costcenter">
           <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,fromlocation"
-									providerattribute="costCentersByPrimaryUser" showexpression="@asset!=null" />
+									providerattribute="costCentersByPrimaryUser" showexpression="@asset!=null" qualifier="costcenterOriginal_new" />
+          <field hidden="true" attribute="costcenterOriginal" label="Cost Center"/>
         </componentdisplayable>
 
         <componentdisplayable id="itccostcenter">
           <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,toitc" 
-                       providerattribute="costCentersByToItc" />
+                       providerattribute="costCentersByToItc" qualifier="costcenterOriginal_new"/>
+        <field hidden="true" attribute="costcenterOriginal" label="Cost Center"/>
         </componentdisplayable>
 
 

@@ -72,6 +72,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
         setOriginalDataFromAttribute(schema, datamap, associationOptions, 'building2');
         setOriginalDataFromAttribute(schema, datamap, associationOptions, 'floor2');
         setOriginalDataFromAttribute(schema, datamap, associationOptions, 'room2');
+        setOriginalDataFromAttribute(schema, datamap, associationOptions, 'costcenter');
 
     }
 
@@ -143,7 +144,8 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
                 event.fields['macaddress'] = event.fields['asset_.assetspecmacaddress_.alnvalue'];
             }
 
-            var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser;
+            var availablecostcenters = event.scope.associationOptions.costCentersByPrimaryUser || event.scope.associationOptions.costCentersByToItc;
+            event.fields['costcenteroriginal'] = costCenter;
             if (schemaId.startsWith('install') || schemaId.startsWith('move') || schemaId.startsWith("update")) {
                 //if there´s an association, then, we set the value, and the label would be picked from the associationOptions list
                 //if the asset had a costcenter that is not one of the user´s costcentes, we need to remove it
@@ -186,6 +188,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
             $("input[data-association-key=person_]").typeahead('val', event.fields['asset_.primaryuser_.person_.hlagdisplayname']);
             var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
             event.fields['costcenter'] = costCenter;
+            setOriginalDataFromAttribute(event.scope.schema, event.fields, event.scope.associationOptions, 'costcenter');
         },
 
         validatedecommission: function (schema, datamap) {
