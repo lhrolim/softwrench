@@ -792,6 +792,11 @@
                             if (pageSize) {
                                 searchDTO.pageSize = pageSize;
                             }
+
+                            if ($scope.forprint === "true") {
+                                return;
+                            }
+
                             const searchPromise = searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
                                 searchDTO: searchDTO,
                                 printMode: false,

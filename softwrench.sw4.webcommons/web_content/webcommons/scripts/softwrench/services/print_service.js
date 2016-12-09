@@ -71,8 +71,7 @@ angular.module('sw_layout')
             });
 
             if (printOptions.pageOption === "current") {
-                $rootScope.printRequested = true;
-                this.readyToPrintList();
+                searchPrintGrid(1, paginationData.pageSize);
                 return;
             }
 
