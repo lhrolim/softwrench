@@ -55,10 +55,12 @@ function SchedulerSetupController($scope, $http, $templateCache, i18NService) {
                 method: "GET",
                 url: url(urlAux)
             })
-            .success(function (dataAux) {
+            .then(function (response) {
+                const dataAux = response.data;
                 toList(dataAux.resultObject);
             })
-            .error(function (dataAux) {
+            .catch(function (response) {
+                const dataAux = response.data;
                 $scope.title = dataAux || i18NService.get18nValue('general.requestfailed', 'Request failed');
             });
         }

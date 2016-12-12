@@ -20,7 +20,7 @@ angular.module('sw_layout')
                 var urlToUse = url("api/data/operation/servicerequest/SubmitAction?platform=web&id=" + parameters.ticketid);
                 parameters = addCurrentSchemaDataToJson(parameters, schema);
                 var json = angular.toJson(parameters);
-                $http.post(urlToUse, json).success(function () {
+                $http.post(urlToUse, json).then(function () {
                     datamap.status = datamap.customAction;
                     alertService.alert("Status changed successfully");
                 });

@@ -452,9 +452,6 @@
             }
         };
 
-        function markAssociationProcessComplete() {
-            $rootScope.$broadcast("sw_optionsretrievedFromServerEnded");
-        };
 
         function getEagerAssociations(scope, options) {
             const associations = fieldService.getDisplayablesOfTypes(scope.schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
@@ -566,7 +563,7 @@
                         //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                         //had to put a bigger timeout so that the watches doesn´t get evaluated.
                         //TODO: investigate it
-                        scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
+                        scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
                     }, 300, false);
                 }
 
@@ -600,7 +597,8 @@
             if (options.avoidspin) {
                 config.avoidspin = true;
             }
-            return $http.post(urlToUse, jsonString, config).success(function (data) {
+            return $http.post(urlToUse, jsonString, config).then(function (response) {
+                const data = response.data;
                 const options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
                 updateAssociationOptionsRetrievedFromServer(scope, options, fields, postAssociationHook);
@@ -615,18 +613,16 @@
                         //and so the listeners
                         contextService.insertIntoContext("associationsresolved", true, true);
                     }, 100, false);
-                    scope.$broadcast("sw_associationsupdated", scope.associationOptions);
+                    scope.$broadcast(JavascriptEventConstants.AssociationUpdated, scope.associationOptions);
 
                     //TODO: Is this needed, I couldn't find where it's used, I was not able to test if needed
                     //move input focus to the next field
                     if (triggerFieldName !== "#eagerassociations") {
                         $timeout(function () {
                             //this timeout is required because there´s already a digest going on, so this emit would throw an exception
-                            scope.$emit("sw_movefocus", scope.datamap, scope.schema, triggerFieldName);
+                            scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
                         }, 0, false);
-                    } else {
-                        scope.$emit("sw_setFocusToInitial", scope.schema, fields);
-                    }
+                    } 
                 }
             });
         };
@@ -810,7 +806,6 @@
             insertAssocationLabelsIfNeeded,
             lookupAssociation,
             lookupSingleAssociationByValue,
-            markAssociationProcessComplete,
             parseLabelText,
             onAssociationChange,
             postAssociationHook,

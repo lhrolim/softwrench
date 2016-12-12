@@ -32,8 +32,8 @@
         "blueimp-file-upload": "~9.11.2",
         "spin.js": "~2.3.2",
         "angular-file-upload": "1.1.5",
-        "angular": "1.5.8",
-        "angular-sanitize": "1.5.8",
+        "angular": "1.6.0",
+        "angular-sanitize": "1.6.0",
         "angular-strap": "0.7.4",
         "angular-bindonce": "~0.3.3",
         "angular-animate": "~1.5.6",
@@ -50,7 +50,7 @@
         "angular-ui-grid": "^3.2.9"
     },
   "resolutions": {
-    "angular": "1.5.8"
+    "angular": "1.6.0"
   },
   "devDependencies": {
     "angular-ui-tinymce": "^0.0.16"

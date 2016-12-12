@@ -30,7 +30,7 @@ app.directive('multiselectDropdown', function (contextService, $log, $timeout, c
                 }
 
                 $scope.showOnlySelected = !$scope.showOnlySelected;
-                dispatcherService.dispatchevent('sw.crud.list.toggleselected', $scope.panelid);
+                dispatcherService.dispatchevent(JavascriptEventConstants.ToggleSelected, $scope.panelid);
             };
 
             $scope.toggleSelectedEnabled = function () {

@@ -138,17 +138,17 @@
                     $scope.selectedfilter = null;
                 }
 
-                $scope.$on("sw.grid.refresh", function (event, panelid) {
+                $scope.$on(JavascriptEventConstants.GRID_REFRESH2, function (event, panelid) {
                     clearFilter(panelid);
                     $scope.cachedFilters = null;
                 });
 
-                $scope.$on("sw_redirectapplicationsuccess", function (event, data) {
+                $scope.$on(JavascriptEventConstants.REDIRECT_AFTER, function (event, data) {
                     $scope.selectedfilter = null;
                     $scope.cachedFilters = null;
                 });
 
-                $scope.$on("sw.grid.setfilter", function (event, filter) {
+                $scope.$on(JavascriptEventConstants.GRID_SETFILTER, function (event, filter) {
                     $scope.cachedFilters = null;
                     $scope.selectedfilter = filter;
 

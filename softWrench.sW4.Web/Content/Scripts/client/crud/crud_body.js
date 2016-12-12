@@ -28,13 +28,13 @@
                 log.debug("finished rendering tabs of detail screen");
                 if (scope.$last === undefined) {
                     //0 tabs scenario
-                    return $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
+                    return $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, null, scope.panelid);
                 }
 
                 // covers a redirect for same application and schema but to another entry
-                $rootScope.$on("sw_applicationrendered", function (event, applicationName, renderedSchema) {
+                $rootScope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
                     scope.schema = renderedSchema;
-                    $rootScope.$broadcast("sw_alltabsloaded", null, scope.panelid);
+                    $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, null, scope.panelid);
                 });
 
                 $timeout(function () {
@@ -55,7 +55,7 @@
                         });
 
                     });
-                    $rootScope.$broadcast("sw_alltabsloaded", firstTabId, scope.panelid);
+                    $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, firstTabId, scope.panelid);
 
                 }, 0, false);
 
@@ -159,7 +159,7 @@
                     }
                 });
 
-                $scope.$on("sw_alltabsloaded", function (event, firstTabId, panelId) {
+                $scope.$on(JavascriptEventConstants.TabsLoaded, function (event, firstTabId, panelId) {
                     if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema, crudContextHolderService.currentSchema()))) {
                         return;
                     }
@@ -220,7 +220,7 @@
                 * Listener responsible for invoking providerloaded events.
                 *  
                 */
-                $rootScope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
+                $rootScope.$on(JavascriptEventConstants.Association_EagerOptionUpdated, function (event, associationKey, options, contextData) {
                     if (contextData && contextData.schemaId === "#modal" && "true" !== $scope.ismodal) {
                         //ignoring 
                         return $q.reject();
@@ -250,7 +250,7 @@
                 }
             );
 
-                $scope.$on("sw_submitdata", function (event, parameters) {
+                $scope.$on(JavascriptEventConstants.CrudSubmitData, function (event, parameters) {
                     if ($scope.ismodal !== "true" && !!parameters.dispatchedByModal) {
                         return;
                     } else if ($scope.ismodal === "true" && !parameters.dispatchedByModal) {
@@ -262,14 +262,14 @@
 
 
 
-                $scope.$on('sw_compositiondataresolved', function (event, data) {
+                $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, function (event, data) {
                     const tab = crudContextHolderService.getActiveTab();
                     if (tab != null && data[tab] != null) {
                         redirectService.redirectToTab(tab);
                     }
                 });
 
-                $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                $scope.$on(JavascriptEventConstants.BodyRendered, function (ngRepeatFinishedEvent, parentElementId) {
                     const log = $log.getInstance('on#sw_bodyrenderedevent');
                     log.debug('enter');
                     const onLoadMessage = contextService.fetchFromContext("onloadMessage", false, false, true);
@@ -435,7 +435,7 @@
                     const mode = $scope.$parent.mode;
                     const popupmode = $scope.$parent.popupmode;
                     const title = $scope.$parent.title;
-                    $scope.$emit("sw_navigaterequest", data.applicationname, data.schemaid, mode, title, { id: data.id, popupmode: popupmode, customParameters: data.customParameters });
+                    $scope.$emit(JavascriptEventConstants.NavigateRequestCrawl, data.applicationname, data.schemaid, mode, title, { id: data.id, popupmode: popupmode, customParameters: data.customParameters });
                 };
 
                 $scope.delete = function () {
@@ -452,7 +452,8 @@
                     const deleteParams = $.param(parameters);
                     const deleteURL = removeEncoding(url("/api/data/" + applicationName + "/" + id + "?" + deleteParams));
                     return $http.delete(deleteURL)
-                        .success(function (data) {
+                        .then(function (response) {
+                            const data = response.data;
                             defaultSuccessFunction(data);
                         });
                 };

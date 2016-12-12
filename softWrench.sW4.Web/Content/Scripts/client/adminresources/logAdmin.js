@@ -24,8 +24,8 @@
                 pattern: ''
             };
             var urlToInvoke = redirectService.getActionUrl('LogAdmin', 'ChangeLevel', parameters);
-            $http.post(urlToInvoke).success(function (data) {
-                init(data.resultObject);
+            return $http.post(urlToInvoke).then(function (response) {
+                init(response.data.resultObject);
             });
         };
 
@@ -36,8 +36,8 @@
                 logName: ''
             };
             var urlToInvoke = redirectService.getActionUrl('LogAdmin', 'ChangeLevel', parameters);
-            $http.post(urlToInvoke).success(function (data) {
-                init(data.resultObject);
+            return $http.post(urlToInvoke).then(function (response) {
+                init(response.data.resultObject);
             });
         };
 

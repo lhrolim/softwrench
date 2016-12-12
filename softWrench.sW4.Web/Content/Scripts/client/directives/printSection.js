@@ -11,7 +11,7 @@ app.directive('printsectionrendered', function ($timeout) {
         link: function (scope, element, attr) {
             if (scope.$last === true || attr.list === "true") {
                 $timeout(function () {
-                    scope.$emit('sw_printsectionrendered');
+                    scope.$emit(JavascriptEventConstants.PrintSectionRendered);
                 }, 1000);
             }
         }
@@ -107,12 +107,12 @@ app.directive('printSection', function (contextService) {
                 fixHeaderService.fixThead($scope.schema);
             }
 
-            $scope.$on('sw_readytoprintevent', function (event, compositionData, shouldPageBreak, shouldPrintMain, printCallback) {
+            $scope.$on(JavascriptEventConstants.ReadyToPrint, function (event, compositionData, shouldPageBreak, shouldPrintMain, printCallback) {
                 $scope.isList = false;
                 $scope.doStartPrint(compositionData, shouldPageBreak, shouldPrintMain, printCallback);
             });
 
-            $scope.$on('sw_readytoprintdetailedlistevent', function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain) {
+            $scope.$on(JavascriptEventConstants.PrintReadyForDetailedList, function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain) {
                 $scope.isList = false;
                 var compositionstoprint = [];
                 $scope.shouldPageBreak = shouldPageBreak;
@@ -123,7 +123,7 @@ app.directive('printSection', function (contextService) {
                     var compositionToPrint = {};
                     compositionToPrint.schema = value.schema;
                     compositionToPrint.key = key;
-                    if (value.schema.type == 'ApplicationTabDefinition') {
+                    if (value.schema.type === 'ApplicationTabDefinition') {
                         compositionToPrint.title = value.schema.label;
                     } else {
                         compositionToPrint.title = compositionService.getTitle($scope.printSchema, key);
@@ -137,7 +137,7 @@ app.directive('printSection', function (contextService) {
                 $scope.showPrintSectionCompostions = compositionstoprint.length > 0;
             });
 
-            $scope.$on("sw_readytoprintlistevent", function (event, datamap) {
+            $scope.$on(JavascriptEventConstants.PrintReadyForList, function (event, datamap) {
                 $scope.isList = true;
                 $scope.doStartPrint({}, false, false, null, datamap);
             });
@@ -146,7 +146,7 @@ app.directive('printSection', function (contextService) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
             };
 
-            $scope.$on('sw_printsectionrendered', function () {
+            $scope.$on(JavascriptEventConstants.PrintSectionRendered, function () {
                 const promise = printService.awaitToPrint();
                 promise.then(() => {
                     if (sessionStorage.mockprint) {

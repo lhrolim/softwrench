@@ -38,7 +38,7 @@
                     reader.readAsDataURL(fileNew);
                 };
 
-            scope.$on("sw.modal.hide", function (event) {
+                scope.$on(JavascriptEventConstants.HideModal, function (event) {
                 //making sure to clean up the file 
                 scope.fileread = undefined;
                 scope.path = undefined;

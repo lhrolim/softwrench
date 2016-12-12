@@ -17,7 +17,7 @@
          * @returns {} 
          */
         function initGridFromServerResult(applicationListResultObj, panelId) {
-            return $rootScope.$broadcast("sw_gridrefreshed", applicationListResultObj, panelId);
+            return $rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
         }
 
         function initGridFromDatamapAndSchema(datamap, schema, panelId) {
@@ -27,7 +27,7 @@
                 schema: schema
             }
 
-            return $rootScope.$broadcast("sw_gridrefreshed", applicationListResultObj, panelId);
+            return $rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
         }
 
         const service = {

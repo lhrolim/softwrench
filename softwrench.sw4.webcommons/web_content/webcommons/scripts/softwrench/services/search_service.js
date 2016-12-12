@@ -1,6 +1,9 @@
 (function (angular) {
     "use strict";
     const module = angular.module('sw_layout');
+
+    
+
     module.factory('searchService', function (i18NService, $log, $rootScope, contextService, fieldService, $http, historyService) {
         "ngInject";
 
@@ -397,8 +400,7 @@
              *              forcecleanup: used to mark that the any stateful scope data needs to be clean, including filterwhereclauses
              *              quickSearchDTO: 
              */
-            refreshGrid: function (searchData, searchOperator, extraparameters) {
-                extraparameters = extraparameters || {};
+            refreshGrid: function (searchData, searchOperator, extraparameters ={}) {
                 const key = "poll_refreshgridaction" + (extraparameters.panelid ? extraparameters.panelid : "");
 
                 //this is needed because the crud_list handler may not yet be in place when this method is called, 
@@ -411,7 +413,7 @@
                     metadataid: extraparameters.metadataid,
                     forcecleanup: extraparameters.forcecleanup
                 }, true);
-                return $rootScope.$broadcast("sw_refreshgrid", searchData, searchOperator, extraparameters);
+                return $rootScope.$broadcast(JavascriptEventConstants.RefreshGrid, searchData, searchOperator, extraparameters);
             },
 
 

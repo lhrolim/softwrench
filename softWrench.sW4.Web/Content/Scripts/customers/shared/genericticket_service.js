@@ -24,9 +24,8 @@ angular.module('sw_layout')
          * @returns {} 
          */
         changeStatus: function (datamap,schemaId, newStatus) {
-
-            var schema = crudContextHolderService.currentSchema();
-            var dm = {};
+            const schema = crudContextHolderService.currentSchema();
+            const dm = {};
             if (newStatus) {
                 dm["newStatus"] = newStatus;
                 dm["crud"] = datamap;
@@ -42,11 +41,11 @@ angular.module('sw_layout')
         },
 
         changePriority: function (datamap, schemaId, priorityField, newPriority) {
-            var schema = crudContextHolderService.currentSchema();
-            var dm = datamap;
-            var extraParameters = {
+            const schema = crudContextHolderService.currentSchema();
+            const dm = datamap;
+            const extraParameters = {
                 id: datamap.ticketid
-            }
+            };
             if (newPriority) {
                 dm[priorityField] = newPriority;
                 return applicationService.invokeOperation(schema.applicationName, schemaId, "ChangePriority", dm, extraParameters).then(function (httpResponse) {
@@ -102,9 +101,8 @@ angular.module('sw_layout')
             if (event.assetnum == null) {
                 return;
             }
-
-            var assetLocation = event["asset_.location"];
-            var location = event["location"];
+            const assetLocation = event["asset_.location"];
+            const location = event["location"];
             if (assetLocation !== location) {
                 event["location"] = assetLocation;
             }
@@ -166,8 +164,7 @@ angular.module('sw_layout')
         }, 
 
         validateCloseStatus: function (schema, datamap, parameters) {
-            var status = parameters.originaldatamap['synstatus_.description'] == null ? parameters.originaldatamap['status'] : parameters.originaldatamap['synstatus_.description'];
-
+            const status = parameters.originaldatamap['synstatus_.description'] == null ? parameters.originaldatamap['status'] : parameters.originaldatamap['synstatus_.description'];
             if (status.equalIc('CLOSED') || status.equalIc('CLOSE')) {
                 alertService.alert("You cannot submit this ticket because it is already closed.");
                 return false;
@@ -178,7 +175,7 @@ angular.module('sw_layout')
                 if (!datamap["multiassetlocci_"]) {
                     return true;
                 }
-                var anyIncomplete = datamap["multiassetlocci_"].some(function(currentValue) {
+                const anyIncomplete = datamap["multiassetlocci_"].some(function(currentValue) {
                     return (currentValue.progress2 == "0" || currentValue.progress2 == 0);
                 });
                 if (anyIncomplete) {
@@ -190,18 +187,22 @@ angular.module('sw_layout')
 
         afterChangeReportedBy: function (event) {
             var datamap = event;
-            var searchData = {
+            const searchData = {
                 personid: datamap['reportedby'],
                 isprimary: '1'
             };
-            searchService.searchWithData("email", searchData, "list").success(function (data) {
-                var resultObject = data.resultObject[0];
+            const p1 = searchService.searchWithData("email", searchData, "list").then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject[0];
                 datamap['reportedemail'] = resultObject ? resultObject['emailaddress'] : '';
             });
-            searchService.searchWithData("phone", searchData, "list").success(function (data) {
-                var resultObject = data.resultObject[0];
+            const p2 =searchService.searchWithData("phone", searchData, "list").then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject[0];
                 datamap['reportedphone'] = resultObject ? resultObject['phonenum'] : '';
+                return $q.when();
             });
+            return $q.all([p1, p2]).catch(err=>console.log(err));
         },
 
         isDeleteAllowed: function (datamap, schema) {

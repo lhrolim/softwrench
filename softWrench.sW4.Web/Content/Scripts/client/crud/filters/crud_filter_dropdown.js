@@ -109,7 +109,7 @@
                             $(".dropdown.open").removeClass("open");
                             $scope.selectOperator(filterAttribute, config.noopoperator);
                             $scope.filterApplied();
-                            $scope.$broadcast("sw.filter.clear", filterAttribute);
+                            $scope.$broadcast(JavascriptEventConstants.GRID_CLEARFILTER, filterAttribute);
                         };
 
                         /**
@@ -299,7 +299,7 @@
                                 // if the modal is a grid clears the selection and refreshs the grid
                                 if (modalSchema.stereotype.toLocaleLowerCase().startsWith("list")) {
                                     gridSelectionService.clearSelection(null, null, modalService.panelid);
-                                    dispatcherService.dispatchevent("sw.crud.list.clearQuickSearch", modalService.panelid);
+                                    dispatcherService.dispatchevent(JavascriptEventConstants.ClearQuickSearch, modalService.panelid);
                                     searchService.refreshGrid({}, null, { panelid: modalService.panelid });
                                 }
 
@@ -411,7 +411,7 @@
 
                     $timeout(prepareUi, 0, false);
 
-                    scope.$on("sw_griddatachanged", function () {
+                    scope.$on(JavascriptEventConstants.GridDataChanged, function () {
                         // need to register this call for whenever the grid changes
                         $timeout(prepareUi, 0, false);
                     });

@@ -101,7 +101,7 @@
             }
 
             //TODO: refactor it entirely to use promises instead
-            $rootScope.$broadcast("sw_submitdata", {
+            $rootScope.$broadcast(JavascriptEventConstants.CrudSubmitData, {
                 successCbk: successCallBack,
                 failureCbk: failureCallback,
                 isComposition,
@@ -131,7 +131,7 @@
             const refresh = extraParameters.refresh;
 
             //TODO: refactor it entirely to use promises instead
-            $rootScope.$broadcast("sw_submitdata", {
+            $rootScope.$broadcast(JavascriptEventConstants.CrudSubmitData, {
                 successCbk: successCallBack,
                 failureCbk: failureCallback,
                 isComposition: isComposition,

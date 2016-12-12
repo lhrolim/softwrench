@@ -111,7 +111,7 @@
 
                 $scope.doAction = function (leaf) {
                     //update title when switching to dashboard
-                    $scope.$emit('sw_titlechanged', null);
+                    $scope.$emit(JavascriptEventConstants.TitleChanged, null);
 
                     var msg = "Are you sure you want to leave the page?";
                     if (crudContextHolderService.getDirty()) {

@@ -5,8 +5,7 @@
         .directive("filterMultipleOption", ["$log", "contextService", "restService", "filterModelService", "cmpAutocompleteServer", "$timeout", "searchService", "schemaService", "modalFilterService", "modalService", "crudContextHolderService",
             function ($log, contextService, restService, filterModelService,
             cmpAutocompleteServer, $timeout, searchService, schemaService, modalFilterService, modalService, crudContextHolderService) {
-
-                var directive = {
+                const directive = {
                     restrict: "E",
                     templateUrl: contextService.getResourceUrl("/Content/Templates/crud/filter/crud_filter_multipleoptions.html"),
                     scope: {
@@ -27,10 +26,8 @@
                         scope.filter.options = scope.filter.options || [];
 
                         //this is also static
-                        var schema = scope.schema;
-                        var filter = scope.filter;
-
-
+                        const schema = scope.schema;
+                        const filter = scope.filter;
                         scope.selectedOptions = [];
                         scope.filteroptions = [];
                         scope.suggestedoptions = [];
@@ -39,12 +36,12 @@
 
 
                         if (filter.allowBlank) {
-                            var item = {
+                            const item = {
                                 label: "No " + filter.label,
                                 //SearchUtils.cs#NullOrPrefix
                                 value: "nullor:",
                                 nonstoreable: true
-                            }
+                            };
                             if (scope.filter.lazy) {
                                 scope.suggestedoptions.push(item);
                             } else {
@@ -69,14 +66,13 @@
                         if (!filter.lazy && filter.provider) {
                             //let´s get the whole list from the server 
                             //FilterData#GetFilterOptions(string application, ApplicationMetadataSchemaKey key, string filterProvider, string filterAttribute, string labelSearchString)
-                            var parameters = {
+                            const parameters = {
                                 application: schema.applicationName,
                                 key: schemaService.buildApplicationMetadataSchemaKey(schema),
                                 labelSearchString: '',
                                 filterProvider: filter.provider,
                                 filterAttribute: filter.attribute
-                            }
-
+                            };
                             restService.getPromise("FilterData", "GetFilterOptions", parameters).then(function (result) {
                                 scope.filteroptions = scope.filteroptions.concat(result.data);
                                 scope.filteroptions = removeDuplicatesOnArray(scope.filteroptions, "value");
@@ -94,7 +90,7 @@
                                 cmpAutocompleteServer.init(element, null, scope.schema, scope);
 
                                 $('input.typeahead', element).each(function (index, element) {
-                                    var jelement = $(element);
+                                    const jelement = $(element);
                                     //caching element to later access it on controlle fns
                                     scope.jelement = jelement;
                                     jelement.on("keydown", function (e) {
@@ -106,7 +102,7 @@
 
                                     jelement.on("keyup", function (e) {
                                         //if filter is applied, let´s not show recently used filters
-                                        var newShowRecently = $(e.target).val() === "";
+                                        const newShowRecently = $(e.target).val() === "";
                                         //let´s try to avoid useless digest calls
                                         var shouldDigest = newShowRecently !== scope.vm.showRecently;
                                         if (newShowRecently) {
@@ -127,8 +123,8 @@
                                         //seems like the autocomplete is returning the list when it reaches 0 sometimes
                                         return;
                                     }
-                                    for (var i = response.length - 1; i >= 0; i--) {
-                                        var item = response[i];
+                                    for (let i = response.length - 1; i >= 0; i--) {
+                                        const item = response[i];
                                         item.removable = true;
                                     }
                                     if (response.length === 21) {
@@ -158,7 +154,7 @@
                                 return option.label;
                             }
                             // verifies if the display code is set on option, if not verifies on filter
-                            var displaycodeOptionDefined = typeof (option.displayCode) != "undefined";
+                            const displaycodeOptionDefined = typeof (option.displayCode) != "undefined";
                             if ((displaycodeOptionDefined && !option.displayCode) || (!displaycodeOptionDefined && filter.displayCode === false)) {
                                 return option.label;
                             }
@@ -173,9 +169,9 @@
                         }
 
                         $scope.executeAsFreeText = function () {
-                            var searchData = $scope.searchData;
-                            var searchOperator = $scope.searchOperator;
-                            var val = $scope.jelement.val();
+                            const searchData = $scope.searchData;
+                            const searchOperator = $scope.searchOperator;
+                            const val = $scope.jelement.val();
                             if (val === "") {
                                 $('.dropdown.open').removeClass('open');
                                 //not calling the filter if nothing was selected
@@ -187,7 +183,7 @@
                         }
 
                         //clear button of the filter clicked
-                        $scope.$on("sw.filter.clear", function (event, filterAttribute) {
+                        $scope.$on(JavascriptEventConstants.GRID_CLEARFILTER, function (event, filterAttribute) {
                             if (filterAttribute === $scope.filter.attribute) {
                                 $scope.vm.allSelected = 0;
                                 $scope.toggleSelectAll();
@@ -200,7 +196,7 @@
                         });
 
                         $scope.getAllAvailableOptions = function () {
-                            var allOptions = $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
+                            const allOptions = $scope.filteroptions.concat($scope.suggestedoptions).concat($scope.vm.recentlyOptions);
                             return removeDuplicatesOnArray(allOptions, "value");
                         }
 
@@ -211,7 +207,7 @@
                             var value = changedOption.value;
 
                             // if the option was selected or unselected
-                            var selected = selectedItems.some(function (item) {
+                            const selected = selectedItems.some(function (item) {
                                 return value === item.value;
                             });
 
@@ -226,10 +222,10 @@
                             // if selected add an entry to lookup modal grid buffer
                             // when lookup modal is opened the lookup modal grid buffer is passed
                             // and any selected option will be selected on modal too
-                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            const promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
-                                var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
-                                var datamap = { };
+                                const attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
+                                const datamap = { };
                                 datamap[attFieldName] = value;
                                 $scope.lookupModalBuffer[value] = datamap;
                             });
@@ -243,12 +239,11 @@
                             if (!selectedValues || selectedValues.length === 0) {
                                 return;
                             }
-
-                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            const promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
                                 var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
                                 selectedValues.forEach(function (value) {
-                                    var datamap = { };
+                                    const datamap = { };
                                     datamap[attFieldName] = value;
                                     $scope.lookupModalBuffer[value] = datamap;
                                 });
@@ -271,16 +266,16 @@
                         // matches the search data with the select options, gives priority to options that have
                         // more search data (ex. "a,b,c,f" > "c,f")
                         function innerParseSearchData(dataOptions) {
-                            var allOptions = $scope.getAllAvailableOptions();
+                            const allOptions = $scope.getAllAvailableOptions();
                             var optionsWithParsedValues = [];
 
                             // parse the value of the option ("1,2,3" -> [1, 2, 3])
                             // and sort the optios by the number of values desc
                             allOptions.forEach(function (option) {
-                                var parsedOption = {
+                                const parsedOption = {
                                     option: option,
                                     parsedValues: filterModelService.parseOptions(option.value)
-                                }
+                                };
                                 optionsWithParsedValues.push(parsedOption);
                             });
                             optionsWithParsedValues.sort(compareSelectionOptions);
@@ -293,7 +288,7 @@
                                 }
 
                                 // verifies if option value is entirely on search data
-                                var containsAllData = parsedOption.parsedValues.every(function(data) {
+                                const containsAllData = parsedOption.parsedValues.every(function(data) {
                                     return dataOptions.indexOf(data) >= 0;
                                 });
                                 if (!containsAllData) {
@@ -330,7 +325,7 @@
                             }
 
                             $scope.cacheAtributeSearchData = data;
-                            var dataOptions = data && typeof data == "string" ? filterModelService.parseOptions(data) : [];
+                            const dataOptions = data && typeof data == "string" ? filterModelService.parseOptions(data) : [];
                             if (dataOptions.length > 0) {
                                 // clones the array data to enable array customization
                                 innerParseSearchData([].concat(dataOptions));
@@ -347,10 +342,8 @@
                             var searchOperator = $scope.searchOperator;
                             searchData[filter.attribute] = null;
                             searchOperator[filter.attribute] = null;
-
-                            var selectedItems = filterModelService.buildSelectedItemsArray($scope.getAllAvailableOptions(), $scope.selectedOptions);
-                            var result = filterModelService.buildSearchValueFromOptions(selectedItems);
-
+                            const selectedItems = filterModelService.buildSelectedItemsArray($scope.getAllAvailableOptions(), $scope.selectedOptions);
+                            const result = filterModelService.buildSearchValueFromOptions(selectedItems);
                             $scope.vm.recentlyOptions = filterModelService.updateRecentlyUsed($scope.schema, $scope.filter.attribute, selectedItems);
 
                             if (result) {
@@ -363,7 +356,7 @@
                                 searchOperator[filter.attribute] = null;
 
                                 //remove all search data (prevent unselected options from remaining)
-                                var availableOptions = $scope.getAllAvailableOptions();
+                                const availableOptions = $scope.getAllAvailableOptions();
                                 availableOptions.forEach(function (option) {
                                     delete searchData[option.value];
                                     delete searchOperator[option.value];
@@ -371,7 +364,7 @@
 
                                 //add all checked otopions
                                 if (result) {
-                                    var optionList = result.split(',');
+                                    const optionList = result.split(',');
 
                                     //if multiple options selected
                                     if (optionList.length > 0) {
@@ -396,10 +389,10 @@
                         }
 
                         $scope.toggleSelectAll = function () {
-                            var value = $scope.vm.allSelected ? 1 : 0;
-                            var availableOptions = $scope.getAllAvailableOptions();
-                            for (var i = 0; i < availableOptions.length; i++) {
-                                var el = availableOptions[i];
+                            const value = $scope.vm.allSelected ? 1 : 0;
+                            const availableOptions = $scope.getAllAvailableOptions();
+                            for (let i = 0; i < availableOptions.length; i++) {
+                                const el = availableOptions[i];
                                 $scope.selectedOptions[el.value] = value;
                             }
                             $scope.modifySearchData();
@@ -407,9 +400,9 @@
                         }
 
                         $scope.removeItem = function (item) {
-                            var arr = $scope.vm.recentlyOptions;
+                            const arr = $scope.vm.recentlyOptions;
                             var idx = -1;
-                            for (var i = 0; i < arr.length; i++) {
+                            for (let i = 0; i < arr.length; i++) {
                                 if (arr[i].value === item.value) {
                                     idx = i;
                                     break;
@@ -424,7 +417,7 @@
 
                         $scope.lookup = function () {
                             // sets the modal grid buffer from the local buffer
-                            var selectionModel = crudContextHolderService.getSelectionModel(modalService.panelid);
+                            const selectionModel = crudContextHolderService.getSelectionModel(modalService.panelid);
                             selectionModel.selectionBuffer = $scope.lookupModalBuffer;
                             $rootScope.$broadcast("sw.crud.list.filter.modal.show", filter);
                             // sets the id column to use on buffer in case the filter value is not the id column
@@ -449,7 +442,7 @@
                         }
 
                         $scope.preSelectOptionIfNeeded = function (option, log) {
-                            var searchValue = $scope.searchData[filter.attribute];
+                            const searchValue = $scope.searchData[filter.attribute];
                             if (option.preSelected && searchValue && searchValue.indexOf(option.value) >= 0) {
                                 log.debug("Option pre selected: (" + option.value + ") " + option.label);
                                 $scope.selectedOptions[option.value] = 1;
@@ -465,7 +458,7 @@
                             //cleaning up jquery element
                             $scope.jelement.typeahead('val', '');
                             if ($scope.filteroptions.some(function (el) {
-                                    return el.value === item.value;
+                                return el.value === item.value;
                             })) {
                                 //to avoid duplications
                                 return;
@@ -489,17 +482,17 @@
                         */
                         function addLookupOption(value, label) {
                             // searchs for itens with same value on filter options
-                            var alreadyExists = $scope.vm.recentlyOptions.some(function (existingItem) {
+                            const alreadyExists = $scope.vm.recentlyOptions.some(function (existingItem) {
                                 return value === existingItem.value;
                             });
                             // if there is not one adds a new item
                             if (!alreadyExists) {
-                                var item = {
+                                const item = {
                                     label: label,
                                     value: value,
                                     nonstoreable: false,
                                     removable: true
-                                }
+                                };
                                 $scope.vm.recentlyOptions.push(item);
                             }
 
@@ -512,15 +505,15 @@
                             $scope.selectedOptions = [];
 
                             // adds an option for each row on modal's grid buffer
-                            var buffer = crudContextHolderService.getSelectionModel(modalService.panelid).selectionBuffer;
-                            var attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
-                            for (var id in buffer) {
+                            const buffer = crudContextHolderService.getSelectionModel(modalService.panelid).selectionBuffer;
+                            const attFieldName = $scope.filter.advancedFilterAttribute || modalSchema.idFieldName;
+                            for (let id in buffer) {
                                 if (!buffer.hasOwnProperty(id)) {
                                     continue;
                                 }
-                                var datamap = buffer[id];
-                                var value = datamap[attFieldName];
-                                var label = value;
+                                const datamap = buffer[id];
+                                const value = datamap[attFieldName];
+                                let label = value;
                                 if (datamap.hasOwnProperty("description")) {
                                     //TODO: receive this from metadata somehow
                                     label = datamap["description"];
@@ -546,7 +539,7 @@
                             if (!isOptionFilter) {
                                 return;
                             }
-                            var promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
+                            const promise = modalFilterService.getModalFilterSchema($scope.filter, $scope.schema);
                             promise.then(function (modalSchema) {
                                 if (modalSchema !== args[0]) {
                                     return;
@@ -556,7 +549,7 @@
                         });
 
                         // When changing grids the selection should be restarted
-                        $scope.$on("sw_gridchanged", function () {
+                        $scope.$on(JavascriptEventConstants.GRID_CHANGED, function () {
                             var log = $log.getInstance("filterMultipleOption#sw_gridchanged", ["grid"]);
                             log.debug("grid change, reset of selected options of filter: " + filter.attribute);
                             $scope.selectedOptions = [];
@@ -571,13 +564,13 @@
                         // This listener is designed to update the selected options after anything indirectely changes the searchdata besides the user selecting a filter option.
                         // It's called everytime the grid receives data from server and updates the grid data.
                         // To avoid changes that are directly made to the filter and changes to another filters $scope.cacheAtributeSearchData is used.
-                        $scope.$on("sw_griddatachanged", function (event, datamap, schema, panelid) {
+                        $scope.$on(JavascriptEventConstants.GridDataChanged, function (event, datamap, schema, panelid) {
                             if ($scope.paneild != panelid) {
                                 return;
                             }
                             // timeout is used to enables $scope.searchData from this scope to be updated with $scope.searchData from crud_list
                             $timeout(function () {
-                                var atributeSearchData = $scope.filter && $scope.searchData && $scope.searchData[$scope.filter.attribute];
+                                const atributeSearchData = $scope.filter && $scope.searchData && $scope.searchData[$scope.filter.attribute];
                                 if ($scope.cacheAtributeSearchData == atributeSearchData) {
                                     return;
                                 }
@@ -587,7 +580,6 @@
                     }]
 
                 };
-
                 return directive;
             }]);
 })(angular);

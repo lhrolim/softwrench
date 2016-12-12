@@ -13,12 +13,13 @@ function ReceivingController($scope, contextService, alertService, searchService
         if (compositionitem['receivedqty'] == null) {
             //need to perform the query to get the total quantity due -- Extract everything into a function of poreceiving service later
             var qtydue = 0;
-            var searchData = {
+            const searchData = {
                 ponum: compositionitem['ponum'],
                 polinenum: String(compositionitem['polinenum'])
             };
-            searchService.searchWithData("materialrecords", searchData).success(function(data) {
-                var resultObject = data.resultObject;
+            searchService.searchWithData("materialrecords", searchData).then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject;
                 var totalquantityreceived = 0;
                 var i = 0;
                 for (i = 0;i< resultObject.length;i++) {
@@ -26,13 +27,13 @@ function ReceivingController($scope, contextService, alertService, searchService
                 }
                 qtydue = compositionitem['orderqty'] - totalquantityreceived;
                 // prepopulate the values for the matrectrans record
-                var clonedItem = {};
+                const clonedItem = {};
                 angular.copy(compositionitem, clonedItem);
-                var originalPoNum = clonedItem['ponum'];
-                var originalPoLineNum = String(clonedItem['polinenum']);
+                const originalPoNum = clonedItem['ponum'];
+                const originalPoLineNum = String(clonedItem['polinenum']);
                 clonedItem['polinenum'] = originalPoLineNum;
                 clonedItem['#qtydue'] = qtydue;
-                $scope.$emit("sw.composition.edit", clonedItem);
+                $scope.$emit(JavascriptEventConstants.CompositionEdit, clonedItem);
             });
             //open a schema to submit a matrectrans record
         }

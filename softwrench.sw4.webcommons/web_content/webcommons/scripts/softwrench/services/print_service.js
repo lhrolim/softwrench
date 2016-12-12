@@ -62,7 +62,7 @@ angular.module('sw_layout')
 
         printList: function (paginationData, schema, printOptions) {
             if (!printOptions) {
-                $rootScope.$broadcast("sw_showprintmodal", schema, true, paginationData);
+                $rootScope.$broadcast(JavascriptEventConstants.PrintShowModal, schema, true, paginationData);
                 return;
             }
 
@@ -92,7 +92,7 @@ angular.module('sw_layout')
         },
 
         readyToPrintList: function (datamap) {
-            $rootScope.$broadcast("sw_readytoprintlistevent", datamap);
+            $rootScope.$broadcast(JavascriptEventConstants.PrintReadyForList, datamap);
         },
 
         printDetail: function (schema, datamap, printOptions) {
@@ -100,7 +100,7 @@ angular.module('sw_layout')
             if (schema.hasNonInlineComposition && printOptions === undefined) {
                 //this case, we have to choose which extra compositions to choose, so we will open the print modal
                 //open print modal...
-                $rootScope.$broadcast("sw_showprintmodal", schema, false);
+                $rootScope.$broadcast(JavascriptEventConstants.PrintShowModal, schema, false);
                 return;
             }
             var params = {};
@@ -138,14 +138,14 @@ angular.module('sw_layout')
             if (params.options.compositionsToExpand == undefined || params.options.compositionsToExpand == "") {
                 //no need to hit the server, just print the main detail
                 log.debug('sw_readytoprintevent dispatched');
-                $rootScope.$broadcast("sw_readytoprintevent", mergeCompositionData(datamap, notExpansibleCompositions, emptyCompositions), shouldPageBreak, shouldPrintMain, printCallback);
+                $rootScope.$broadcast(JavascriptEventConstants.ReadyToPrint, mergeCompositionData(datamap, notExpansibleCompositions, emptyCompositions), shouldPageBreak, shouldPrintMain, printCallback);
                 return;
             }
 
             log.info('calling expanding compositions on service; params: {0}'.format(params));
             var urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(params)));
-            $http.get(urlToInvoke).success(function (result) {
-
+            $http.get(urlToInvoke).then(function (response) {
+                const result = response.data;
                 var compositions = result.resultObject;
                 $.each(emptyCompositions, function (key, obj) {
                     compositions[key] = obj;
@@ -153,7 +153,7 @@ angular.module('sw_layout')
 
                 log.debug('sw_readytoprintevent dispatched after server return');
                 var compositionsToPrint = mergeCompositionData(datamap, notExpansibleCompositions, compositions);
-                $rootScope.$broadcast("sw_readytoprintevent", compositionsToPrint, shouldPageBreak, shouldPrintMain, printCallback);
+                $rootScope.$broadcast(JavascriptEventConstants.ReadyToPrint, compositionsToPrint, shouldPageBreak, shouldPrintMain, printCallback);
             });
         },
 
@@ -164,7 +164,7 @@ angular.module('sw_layout')
             if (printSchema.hasNonInlineComposition && printOptions === undefined) {
                 //this case, we have to choose which extra compositions to choose, so we will open the print modal
                 //open print modal...
-                $rootScope.$broadcast("sw_showprintmodal", printSchema);
+                $rootScope.$broadcast(JavascriptEventConstants.PrintShowModal, printSchema);
                 return;
             }
 
@@ -205,8 +205,9 @@ angular.module('sw_layout')
             var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;
             var shouldPrintMain = printOptions == undefined ? true : printOptions.shouldPrintMain;
 
-            $http.get(getDetailsUrl).success(function (data) {
-                $rootScope.$broadcast("sw_readytoprintdetailedlistevent", data.resultObject, compositionsToFetch, shouldPageBreak, shouldPrintMain);
+            $http.get(getDetailsUrl).then(function (response) {
+                const data = response.data;
+                $rootScope.$broadcast(JavascriptEventConstants.PrintReadyForDetailedList, data.resultObject, compositionsToFetch, shouldPageBreak, shouldPrintMain);
             });
 
             // to remove the crud_body grid from printing page
@@ -215,7 +216,7 @@ angular.module('sw_layout')
 
 
         hidePrintModal: function () {
-            $rootScope.$broadcast("sw_hideprintmodal");
+            $rootScope.$broadcast(JavascriptEventConstants.PrintHideModal);
         },
 
         registerAwaitable: function(awaitable) {

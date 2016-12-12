@@ -95,7 +95,7 @@
             return fetchCompositions(requestDTO, datamap)
                 .then(result => {
                     $timeout(() => {
-                        $rootScope.$broadcast("sw_compositiondataresolved", result);
+                        $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, result);
                         crudContextHolderService.compositionsLoaded(result);
                     });
                     return result;
@@ -300,7 +300,7 @@
                 crudContextHolderService.compositionQueue()[relationship] = { [relationship]: compositionData[relationship] };
             });
             
-            $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+            $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, compositionData);
         }
 
         function pollCompositionEvent(relationship) {

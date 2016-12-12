@@ -18,7 +18,7 @@
                         }
                         const deleteParams = $.param(parameters);
                         const deleteUrl = removeEncoding(url(`/api/data/${applicationName}/?${deleteParams}`));
-                        $http.delete(deleteUrl).success(() => {
+                        $http.delete(deleteUrl).then(() => {
                             //TODO: improve this solution, since not every app would have a list schema
                             redirectService.goToApplication(applicationName, "list");
                         });

@@ -5,8 +5,7 @@
     angular.module('sw_layout').factory('invissueService', ["$rootScope", "$log", 'searchService', "inventoryServiceCommons", "redirectService", "alertService", "inventorySharedService", "applicationService", invissueService]);
 
     function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService, inventorySharedService, applicationService) {
-
-        var service = {
+        const service = {
             afterChangeBin: afterChangeBin,
             afterchangeItem: afterchangeItem,
             afterChangeRotAsset: afterChangeRotAsset,
@@ -20,7 +19,6 @@
             validateInvIssue: validateInvIssue,
             afterChangeStoreloc: afterChangeStoreloc
         };
-
         return service;
 
 
@@ -51,7 +49,7 @@
                         fields: datamap,
                     };
                     return applicationService.save({ refresh: true, selecteditem: dm.fields, originalDatamap: originalDatamap }).then(data => {
-                        $rootScope.$broadcast('sw_refreshgrid');
+                        $rootScope.$broadcast(JavascriptEventConstants.RefreshGrid);
                     }).finally(() => {
                         sessionStorage.mockclientvalidation = false;
                     });
@@ -61,12 +59,12 @@
 
 
         function validateInvIssue(schema, datamap) {
-            var errors = [];
-            var refwo = datamap['refwo'];
-            var location = datamap['location'];
-            var assetnum = datamap['assetnum'];
-            var gldebitacct = datamap['gldebitacct'];
-            var itemtype = datamap['inventory_.item_.itemtype'];
+            const errors = [];
+            const refwo = datamap['refwo'];
+            const location = datamap['location'];
+            const assetnum = datamap['assetnum'];
+            const gldebitacct = datamap['gldebitacct'];
+            const itemtype = datamap['inventory_.item_.itemtype'];
             if (itemtype == 'ITEM' &&
                 nullOrEmpty(refwo) &&
                 nullOrEmpty(location) &&
@@ -78,7 +76,7 @@
         };
 
         function afterChangeLocation(parameters) {
-            var fields = parameters.fields;
+            const fields = parameters.fields;
             if (nullOrEmpty(fields['location'])) {
                 fields['refwo'] = null;
                 fields['workorder'] = null;
@@ -87,26 +85,26 @@
         };
 
         function afterChangeCurbal(parameters) {
-            var fields = parameters['fields'];
+            const fields = parameters['fields'];
             fields['#curbal'] = fields['binbalances_.curbal'];
             fields['lotnum'] = fields['binbalances_.lotnum'];
         };
 
         function afterChangeLotnum(parameters) {
-            var fields = parameters['fields'];
+            const fields = parameters['fields'];
             fields['#curbal'] = fields['binbalances_.curbal'];
             fields['lotnum'] = fields['binbalances_.lotnum'];
         }
 
         function afterChangeLaborCode(parameters) {
-            var fields = parameters.fields;
+            const fields = parameters.fields;
             if (fields['labor_']) {
                 fields['issueto'] = fields['labor_']['personid'];
             }
         };
 
         function afterChangeWorkorder(parameters) {
-            var fields = parameters.fields;
+            const fields = parameters.fields;
             if (nullOrEmpty(fields['refwo'])) {
                 fields['refwo'] = null;
                 fields['workorder'] = null;
@@ -131,7 +129,7 @@
 
 
         function afterChangeAsset(parameters) {
-            var fields = parameters.fields;
+            const fields = parameters.fields;
             var refwo = fields['refwo'];
             var location = fields['location'];
             if (!nullOrEmpty(fields['assetnum'])) {
@@ -161,7 +159,7 @@
 
 
         function afterChangeRotAsset(parameters) {
-            var fields = parameters.fields;
+            const fields = parameters.fields;
             if (fields['rotassetnum'].trim() != "") {
                 fields['binbalances_.binnum'] = fields['rotatingasset_.binnum'];
                 fields['binnum'] = fields['rotatingasset_.binnum'];
@@ -194,18 +192,19 @@
             // fields to find an applicable lotnum and curbal. If the binnum
             // has been cleared, clear the lot and curbal
             if (fields['binnum'] != null && fields['binnum'] != " ") {
-                var searchData = {
+                const searchData = {
                     orgid: fields['orgid'],
                     siteid: fields['siteid'],
                     itemnum: fields['itemnum'],
                     location: fields['storeloc'],
                     binnum: fields['binnum']
                 };
-                searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
-                    var resultObject = data.resultObject;
-                    var resultFields = resultObject[0];
-                    var lotnum = resultFields['lotnum'];
-                    var curbal = resultFields['curbal'];
+                return searchService.searchWithData("invbalances", searchData, "invbalancesList").then(function (response) {
+                    const data = response.data;
+                    const resultObject = data.resultObject;
+                    const resultFields = resultObject[0];
+                    const lotnum = resultFields['lotnum'];
+                    const curbal = resultFields['curbal'];
                     fields['lotnum'] = lotnum;
                     fields['#curbal'] = curbal == null ? 0 : curbal;
                     fields['curbal'] = curbal == null ? 0 : curbal;
@@ -222,12 +221,10 @@
 
 
         function afterchangeItem(parameters) {
-            var fields = parameters['fields'];
-
+            const fields = parameters['fields'];
             fields['lotnum'] = null;
             fields['#curbal'] = null;
-
-            var itemnum = fields['itemnum'];
+            const itemnum = fields['itemnum'];
             if (nullOrEmpty(itemnum)) {
                 fields['binnum'] = null;
                 fields['unitcost'] = null;
@@ -245,9 +242,8 @@
         };
 
         function afterChangeStoreloc(parameters) {
-            var fields = parameters['fields'];
-            var parentdata = parameters['parentdata'];
-
+            const fields = parameters['fields'];
+            const parentdata = parameters['parentdata'];
             if (fields['storeloc'] == null) {
                 nullifyProperties(fields, ['unitcost', 'binnum', 'inventory_.issueunit', '#curbal', 'matusetransid']);
                 return;
@@ -255,8 +251,7 @@
 
             fields['lotnum'] = null;
             fields['#curbal'] = null;
-
-            var invParams = {
+            const invParams = {
                 itemnum: parentdata['itemnum'],
                 storeloc: fields['storeloc'],
                 siteid: parentdata['siteid'],
@@ -268,15 +263,16 @@
 
         function doUpdateUnitCostFromInventoryCost(parameters, unitCostFieldName, locationFieldName) {
             var fields = parameters['fields'];
-            var searchData = {
+            const searchData = {
                 itemnum: parameters['parentdata']['itemnum'],
                 location: fields[locationFieldName],
                 siteid: parameters['parentdata']['siteid']
             };
-            searchService.searchWithData("invcost", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var resultFields = resultObject[0].fields;
-                var costtype = fields['inventory_.costtype'];
+            searchService.searchWithData("invcost", searchData).then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject;
+                const resultFields = resultObject[0].fields;
+                const costtype = fields['inventory_.costtype'];
                 if (costtype === 'STANDARD') {
                     parameters.fields[unitCostFieldName] = resultFields.stdcost;
                 } else if (costtype === 'AVERAGE') {
@@ -286,17 +282,18 @@
         };
 
         function updateInventoryCosttype(parameters, storelocation) {
-            var searchData = {
+            const searchData = {
                 itemnum: parameters['parentdata']['itemnum'],
                 location: parameters['fields'][storelocation],
                 siteid: parameters['parentdata']['siteid'],
                 orgid: parameters['parentdata']['orgid'],
                 itemsetid: parameters['fields']['itemsetid']
             };
-            searchService.searchWithData("inventory", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0].fields;
-                var costtype = fields['costtype'];
+            searchService.searchWithData("inventory", searchData).then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject;
+                const fields = resultObject[0].fields;
+                const costtype = fields['costtype'];
                 if (costtype.equalIc("fifo") || costtype.equalIc("lifo")) {
                     // TODO: Add support for FIFO / LIFO cost types
                     alertService.error("FIFO and LIFO cost types are not supported at this time");

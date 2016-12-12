@@ -29,7 +29,7 @@
 
                         if (!spinAvoided) {
                             activeRequests++;
-                            $rootScope.$broadcast('sw_ajaxinit');
+                            $rootScope.$broadcast(JavascriptEventConstants.AjaxInit);
                             activeRequestsArr.push(config.url);
                         }
                     }
@@ -56,7 +56,7 @@
 
 
                         log.info("Requests ended");
-                        $rootScope.$broadcast('sw_ajaxend', response.data);
+                        $rootScope.$broadcast(JavascriptEventConstants.AjaxFinished, response.data);
                         successMessageHandler(response.data);
                         //this has to be renewed per operation
                         contextService.insertIntoContext("avoidspin", null, true);
@@ -100,12 +100,11 @@
                     unLockCommandBars();
                     unLockTabs();
                     //            if (activeRequests <= 0) {
-                    $rootScope.$broadcast('sw_ajaxerror', rejection.data);
+                    $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax, rejection.data);
                     if (rejection.data.notifyException !== false) {
                         alertService.notifyexception(rejection.data);
                     }
-                    
-                    //            }
+
                 };
 
                 return {

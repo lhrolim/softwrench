@@ -29,7 +29,7 @@ angular.module('sw_layout')
     };
 
     var createInvUse = function (schema, useType) {
-        var invuse = {};
+        const invuse = {};
         invuse.usetype = useType;
         contextService.insertIntoContext("invuse", invuse, false);
         redirectService.goToApplicationView("invuse", "newdetail", "Input", null, null, null);
@@ -49,8 +49,7 @@ angular.module('sw_layout')
         if (fields['binnum'] == null) {
             fields['binnum'] = "";
         }
-
-        var newIssueItem = {};
+        const newIssueItem = {};
         newIssueItem['matusetransid'] = null;
         newIssueItem['rowstamp'] = null;
         newIssueItem['quantity'] = fields['quantity'];
@@ -66,9 +65,8 @@ angular.module('sw_layout')
         newIssueItem['assetnum'] = datamap['#assetnum'];
         newIssueItem['gldebitacct'] = (fields['gldebitacct'] == null) ?
         datamap['#gldebitacct'] : fields['gldebitacct'];
-
-        var jsonString = angular.toJson(newIssueItem);
-        var httpParameters = {
+        const jsonString = angular.toJson(newIssueItem);
+        const httpParameters = {
             application: "invissue",
             platform: "web",
             currentSchemaKey: "editinvissuedetail.input.web"
@@ -84,13 +82,13 @@ angular.module('sw_layout')
     };
 
     var setBatchIssueBin = function (parameters) {
-        var itemnum = parameters['fields']['itemnum'];
-        var siteid = parameters['fields']['siteid'];
-        var storeloc = parameters['fields']['storeloc'];
+        const itemnum = parameters['fields']['itemnum'];
+        const siteid = parameters['fields']['siteid'];
+        const storeloc = parameters['fields']['storeloc'];
         if (itemnum != null && itemnum.trim() != "" &&
             siteid != null && siteid.trim() != "" &&
             storeloc != null && storeloc.trim() != "") {
-            var searchData = {
+            const searchData = {
                 itemnum: itemnum,
                 siteid: siteid,
                 location: parameters['fields']['storeloc']
@@ -103,11 +101,11 @@ angular.module('sw_layout')
     };
 
     var getBinQuantity = function (searchData, parameters, balanceField, binnum, lotnum) {
-        searchService.searchWithData("invbalances", searchData, "invbalancesList").success(function (data) {
-            var resultObject = data.resultObject;
-
-            for (var i = 0; i < resultObject.length; i++) {
-                var fields = resultObject[i];
+        searchService.searchWithData("invbalances", searchData, "invbalancesList").then(function (response) {
+            const data = response.data;
+            const resultObject = data.resultObject;
+            for (let i = 0; i < resultObject.length; i++) {
+                const fields = resultObject[i];
                 if (fields['binnum'] == binnum && fields['lotnum'] == lotnum) {
                     parameters.fields[balanceField] = fields.curbal;
                     // Exit the loop
@@ -126,17 +124,17 @@ angular.module('sw_layout')
         if (nullOrEmpty(parameters['fields']['itemnum']) || nullOrEmpty(parameters['fields']['storeloc'])) {
             return;
         }
-        var maxvarsSearchData = {
+        const maxvarsSearchData = {
             varname: 'DEFISSUECOST',
             siteid: parameters['fields']['siteid']
         };
-        searchService.searchWithData("maxvars", maxvarsSearchData).success(function (maxvarsData) {
-            var resultObject = maxvarsData.resultObject;
-            var fields = resultObject[0];
+        return searchService.searchWithData("maxvars", maxvarsSearchData).then(function (response) {
+            const maxvarsData = response.data;
+            const resultObject = maxvarsData.resultObject;
+            const fields = resultObject[0];
             var costtype = fields['varvalue'];
             parameters['fields']['inventory_.costtype'] = costtype;
-
-            var itemnum = parameters['fields']['itemnum'];
+            const itemnum = parameters['fields']['itemnum'];
             if (nullOrEmpty(itemnum)) {
                 parameters['fields']['itemnum'] = null;
                 parameters['fields']['unitcost'] = null;
@@ -145,15 +143,15 @@ angular.module('sw_layout')
                 parameters['fields']['#curbal'] = null;
                 return;
             }
-
-            var searchData = {
+            const searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 location: parameters['fields']['storeloc'],
                 siteid: parameters['fields']['siteid']
             };
-            searchService.searchWithData("invcost", searchData).success(function (data) {
-                var invcostRo = data.resultObject;
-                var invcostFields = invcostRo[0];
+            searchService.searchWithData("invcost", searchData).then(function (response) {
+                const data = response.data;
+                const invcostRo = data.resultObject;
+                const invcostFields = invcostRo[0];
                 if (costtype === 'STDCOST') {
                     parameters.fields['unitcost'] = invcostFields.stdcost;
                 } else if (costtype === 'AVGCOST') {
@@ -175,27 +173,25 @@ angular.module('sw_layout')
         },
 
         formatQtyReturnedList: function (parameters) {
-            var value = parameters.value;
-            var column = parameters.column;
-            var dm = parameters.datamap;
-           
+            const value = parameters.value;
+            const column = parameters.column;
+            const dm = parameters.datamap;
             return formatQtyReturned(dm, value, column);
         },
 
         formatQtyList: function (parameters) {
-            var value = parameters.value;
-            var column = parameters.column;
-            var dm = parameters.datamap;
-           
+            const value = parameters.value;
+            const column = parameters.column;
+            const dm = parameters.datamap;
             return formatQty(dm, value, column);
         },
 
         formatQtyReturnedDetail: function (parameters) {
-            var value = parameters.value;
-            var column = parameters.column;
-            var dm = parameters.datamap;
+            const value = parameters.value;
+            const column = parameters.column;
+            const dm = parameters.datamap;
             if (dm != undefined) {
-                var formattedValue = formatQtyReturned(dm, value, column);
+                const formattedValue = formatQtyReturned(dm, value, column);
                 dm[column.attribute] = formattedValue;
                 return formattedValue;
             }
@@ -203,11 +199,11 @@ angular.module('sw_layout')
         },
 
         formatQtyDetail: function (parameters) {
-            var value = parameters.value;
-            var column = parameters.column;
-            var dm = parameters.datamap;
+            const value = parameters.value;
+            const column = parameters.column;
+            const dm = parameters.datamap;
             if (dm != undefined) {
-                var formattedValue = formatQty(dm, value, column);
+                const formattedValue = formatQty(dm, value, column);
                 dm[column.attribute] = formattedValue;
                 return formattedValue;
             }
@@ -220,18 +216,18 @@ angular.module('sw_layout')
         },
 
         invissuelistclick_maximo71: function (datamap, schema) {
-            var param = {};
+            const param = {};
             param.id = datamap['matusetransid'];
-            var application = schema.applicationName;
+            const application = schema.applicationName;
             var detail = 'viewinvreturndetail';
-            var mode = 'input';
+            const mode = 'input';
             //Logic to determine whether the record is an ISSUE
             //and whether all of the issued items have been returned
             if (datamap['issuetype'] == 'ISSUE') {
 
                 //Sets qtyreturned to 0 if null
                 //Parses the qtyreturned if its in a strng format
-                var qtyreturned = 0;
+                let qtyreturned = 0;
                 if (typeof datamap['qtyreturned'] === "string") {
                     qtyreturned = parseInt(datamap['qtyreturned']);
                 } else if (datamap['qtyreturned'] != null) {
@@ -255,7 +251,7 @@ angular.module('sw_layout')
                         return inventoryServiceCommons.returnConfirmation(null, transformedData).then(() => {
                             sessionStorage.mockclientvalidation = true;
                             return applicationService.save({ selecteditem: transformedData, originalDatamap: originalDatamap }).then(data => {
-                                $rootScope.$broadcast('sw_refreshgrid');
+                                $rootScope.$broadcast(JavascriptEventConstants.RefreshGrid);
                             }).finally(() => {
                                 sessionStorage.mockclientvalidation = false;
                             });
@@ -273,25 +269,20 @@ angular.module('sw_layout')
         },
 
         navToBatchIssueDetail: function (schema, datamap) {
-            var siteid = datamap['siteid'];
-
+            const siteid = datamap['siteid'];
             if (nullOrEmpty(siteid)) {
                 alertService.alert("A Site Id is required.");
                 return;
             }
-
-            var storeloc = datamap['storeloc'];
-
+            const storeloc = datamap['storeloc'];
             if (nullOrEmpty(storeloc)) {
                 alertService.alert("A Storeroom is required.");
                 return;
             }
-
-            var refwo = datamap['refwo'];
-            var location = datamap['location'];
-            var assetnum = datamap['assetnum'];
-            var gldebitacct = datamap['gldebitacct'];
-
+            const refwo = datamap['refwo'];
+            const location = datamap['location'];
+            const assetnum = datamap['assetnum'];
+            const gldebitacct = datamap['gldebitacct'];
             if (nullOrEmpty(refwo) &&
                 nullOrEmpty(location) &&
                 nullOrEmpty(assetnum) &&
@@ -299,8 +290,7 @@ angular.module('sw_layout')
                 alertService.alert("Either a Workorder, Location, Asset, or GL Debit Account is required.");
                 return;
             }
-
-            var newDatamap = {};
+            const newDatamap = {};
             newDatamap['assetnum'] = datamap['assetnum'];
             newDatamap['#refwo'] = datamap['refwo'];
             newDatamap['#storeloc'] = datamap['storeloc'];
@@ -311,14 +301,13 @@ angular.module('sw_layout')
             newDatamap['#assetnum'] = datamap['assetnum'];
             newDatamap['#issueto'] = datamap['issueto'];
             newDatamap['invissue_'] = [];
-
-            var param = {};
+            const param = {};
             param.id = datamap['refwo'];
             redirectService.goToApplicationView('invissuewo', 'newdetail', null, null, param, newDatamap);
         },
 
         submitNewBatchIssue: function (schema, datamap) {
-            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
+            const clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
             submitInvIssueRec(datamap, clonedCompositionData, 0);
         },
 
@@ -327,9 +316,9 @@ angular.module('sw_layout')
         },
 
         displayNewIssueModal: function (parentschema, parentdatamap) {
-            var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
-            var user = contextService.getUserData();
-            var itemDatamap = {};
+            const compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
+            const user = contextService.getUserData();
+            const itemDatamap = {};
             itemDatamap['itemnum'] = null;
             itemDatamap['inventory_'] = null;
             itemDatamap['#gldebitacct'] = null;
@@ -352,7 +341,7 @@ angular.module('sw_layout')
         },
 
         batchissuelistclick: function (datamap, column, schema) {
-            var newDatamap = {};
+            const newDatamap = {};
             angular.copy(datamap, newDatamap);
 
             modalService.show(schema, newDatamap);
@@ -364,24 +353,20 @@ angular.module('sw_layout')
         },
 
         addItemToBatch: function (datamap) {
-            var itemtype = datamap['inventory_.item_.itemtype'];
-            var issueto = datamap['issueto'];
+            const itemtype = datamap['inventory_.item_.itemtype'];
+            const issueto = datamap['issueto'];
             if (itemtype == 'TOOL' && nullOrEmpty(issueto)) {
                 alertService.alert("Issued To is required when issuing a tool.");
                 return;
             }
-
-            var itemnum = datamap['itemnum'];
-
+            const itemnum = datamap['itemnum'];
             if (nullOrEmpty(itemnum)) {
                 alertService.alert("An item is required.");
                 return;
             }
-
-            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
-
+            const clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
             datamap['issuetype'] = "ISSUE";
-            var newissue = angular.copy(datamap);
+            const newissue = angular.copy(datamap);
             newissue['item_.description'] = newissue['inventory_.item_.description'];
             newissue.matusetransid = null;
 
@@ -403,10 +388,9 @@ angular.module('sw_layout')
         },
 
         updateItemInBatch: function (datamap) {
-            var clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
-
+            const clonedCompositionData = contextService.fetchFromContext('clonedCompositionData', true, true);
             var compositionItem = null;
-            for (var i = 0; i < clonedCompositionData.length; i++) {
+            for (let i = 0; i < clonedCompositionData.length; i++) {
                 compositionItem = clonedCompositionData[i];
                 if (compositionItem['matusetransid'] != null) {
                     continue;
@@ -418,7 +402,7 @@ angular.module('sw_layout')
             }
 
             if (compositionItem != null) {
-                var newissue = angular.copy(datamap);
+                const newissue = angular.copy(datamap);
                 compositionItem['item_.description'] = newissue['inventory_.item_.description'];
                 compositionItem['itemnum'] = newissue['itemnum'];
                 compositionItem['#gldebitacct'] = newissue['#gldebitacct'];
@@ -446,7 +430,7 @@ angular.module('sw_layout')
         },
 
         invIssueBatch_afterChangeItem: function (parameters) {
-            var itemnum = parameters['fields']['itemnum'];
+            const itemnum = parameters['fields']['itemnum'];
             parameters['fields']['binnum'] = null;
             parameters['fields']['lotnum'] = null;
             parameters['fields']['binbalances_.curbal'] = null;
@@ -459,18 +443,18 @@ angular.module('sw_layout')
             }
 
             setBatchIssueBin(parameters);
-
-            var searchData = {
+            const searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 location: parameters['fields']['storeloc'],
                 siteid: parameters['fields']['siteid'],
                 orgid: parameters['fields']['orgid'],
                 itemsetid: parameters['fields']['itemsetid']
             };
-            searchService.searchWithData("inventory", searchData).success(function (data) {
-                var resultObject = data.resultObject;
-                var fields = resultObject[0];
-                var costtype = fields['costtype'];
+            searchService.searchWithData("inventory", searchData).then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject;
+                const fields = resultObject[0];
+                const costtype = fields['costtype'];
                 parameters['fields']['inventory_.costtype'] = costtype;
                 var locationFieldName = "";
                 if (parameters['fields'].storeloc != undefined) {
@@ -493,9 +477,9 @@ angular.module('sw_layout')
         },
 
         getReserveBinQuantity: function (parameters) {
-            var binnum = parameters['fields']['#frombin'];
-            var lotnum = parameters['fields']['#fromlot'];
-            var searchData = {
+            const binnum = parameters['fields']['#frombin'];
+            const lotnum = parameters['fields']['#fromlot'];
+            const searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
@@ -506,9 +490,9 @@ angular.module('sw_layout')
         },
 
         getTransferBinQuantity: function (parameters) {
-            var binnum = parameters['fields']['invuseline_.frombin'];
-            var lotnum = parameters['fields']['invuseline_.fromlot'];
-            var searchData = {
+            const binnum = parameters['fields']['invuseline_.frombin'];
+            const lotnum = parameters['fields']['invuseline_.fromlot'];
+            const searchData = {
                 itemnum: parameters['fields']['invuseline_.itemnum'],
                 siteid: parameters['fields']['inventory_.siteid'],
                 itemsetid: parameters['fields']['inventory_.itemsetid'],
@@ -519,10 +503,10 @@ angular.module('sw_layout')
 
 
         validateReturn: function (schema, datamap) {
-            var errors = [];
-            var quantityAdj = parseInt(datamap['#quantityadj']);
-            var quantity = datamap['quantity'];
-            var qtyReturned = parseInt(datamap['qtyreturned']);
+            const errors = [];
+            const quantityAdj = parseInt(datamap['#quantityadj']);
+            const quantity = datamap['quantity'];
+            const qtyReturned = parseInt(datamap['qtyreturned']);
             if (quantity - (quantityAdj + qtyReturned) < 0) {
                 errors.push("The quantity being returned cannot be greater than the quantity that was issued.");
             }
@@ -563,7 +547,7 @@ angular.module('sw_layout')
                 datamap['invbalances_.binnum'] = "";
             }
             // Create new matusetrans record
-            var matusetransDatamap = {
+            const matusetransDatamap = {
                 matusetransid: null,
                 rowstamp: null,
                 refwo: datamap['wonum'],
@@ -595,13 +579,13 @@ angular.module('sw_layout')
                 .then(function (data) {
 
                 // Get the reserved, actual, and issue quantities
-                var reservedQty = Number(datamap["reservedqty"]);
-                var actualQty = Number(datamap["actualqty"]);
-                var issueQty = Number(datamap["#issueqty"]);
-                // Calculate the new reserved and actual values based on the quantity being issued
-                var newReservedQty = reservedQty - issueQty;
-                var newActualQty = actualQty + issueQty;
-                httpParameters = {
+                    const reservedQty = Number(datamap["reservedqty"]);
+                    const actualQty = Number(datamap["actualqty"]);
+                    const issueQty = Number(datamap["#issueqty"]);
+                    // Calculate the new reserved and actual values based on the quantity being issued
+                    const newReservedQty = reservedQty - issueQty;
+                    const newActualQty = actualQty + issueQty;
+                    httpParameters = {
                     currentSchemaKey: "detail.input.web",
                     platform: "web",
                     applicationName: 'reservedMaterials'
@@ -616,25 +600,22 @@ angular.module('sw_layout')
                     datamap["reservedqty"] = newReservedQty;
                     datamap["actualqty"] = newActualQty;
                     // Put the updated invreserve record
-                    var jsonWrapper = {
+                    const jsonWrapper = {
                         json: datamap,
                         requestData: httpParameters
-                    }
-
-                    var jsonString = angular.toJson(jsonWrapper);
-                    var urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"]);
-
-
-                    $http.put(urlToUse, jsonString).success(function () {
+                    };
+                    const jsonString = angular.toJson(jsonWrapper);
+                    const urlToUse = url("/api/data/reservedMaterials/" + datamap["requestnum"]);
+                    $http.put(urlToUse, jsonString).then(function () {
                         // Return to the list of reserved materials
                         redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
-                    }).error(function () {
+                    }).catch(function () {
                         // Failed to update the material reservation
                     });
                 } else {
                     // If the reserved quantity has reached 0, delete the record
-                    var deleteUrl = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
-                    $http.delete(deleteUrl).success(function () {
+                    const deleteUrl = url("/api/data/reservedMaterials/" + datamap["requestnum"] + "?" + $.param(httpParameters));
+                    $http.delete(deleteUrl).then(function () {
                         // Return to the list of reserved materials
                         redirectService.goToApplication("reservedMaterials", "reservedMaterialsList", null, null);
                     });
@@ -643,20 +624,19 @@ angular.module('sw_layout')
         },
 
         onloadReservation: function (scope, schema, datamap) {
-            var parameters = {
+            const parameters = {
                 fields: datamap
             };
             inventoryServiceCommons.updateInventoryCosttype(parameters, location);
             datamap['#issueqty'] = datamap['reservedqty'];
             datamap['#issuetype'] = "ISSUE";
-            var searchData = {
+            const searchData = {
                 itemnum: parameters['fields']['itemnum'],
                 siteid: parameters['fields']['siteid'],
                 itemsetid: parameters['fields']['itemsetid'],
                 location: parameters['fields']['location'],
                 binnum: parameters['fields']['#frombin']
             };
-
             getBinQuantity(searchData, parameters, '#curbal');
         },
 

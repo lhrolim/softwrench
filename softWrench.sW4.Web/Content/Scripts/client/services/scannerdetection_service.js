@@ -31,15 +31,15 @@ angular.module('sw_layout')
                 avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     // Retrieve the scan order string from the context that relates to the current schema
-                    var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
-                    var scanOrder = scanOrderString.split(",");
-                    var extraparameters = { keepfilterparameters: true };
+                    const scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
+                    const scanOrder = scanOrderString.split(",");
+                    const extraparameters = { keepfilterparameters: true };
                     // When the user scans a value, loop through the properties in the scan order
-                    for (var attribute in scanOrder) {
-                        var currentAttribute = scanOrder[attribute];
+                    for (let attribute in scanOrder) {
+                        const currentAttribute = scanOrder[attribute];
                         // If the property is not already in the scan data, add it and its value
                         if (!searchData.hasOwnProperty(currentAttribute)) {
-                            var localSearchData = {};
+                            const localSearchData = {};
                             localSearchData[currentAttribute] = data;
                             searchService.refreshGrid(localSearchData, null, extraparameters);
                             return;
@@ -63,8 +63,8 @@ angular.module('sw_layout')
 
                     //Checks to see if the item has already been added to the composition list.
                     //If the item is found, this will increment the quantity by 1.
-                    for (var key in parameters.clonedCompositionData) {
-                        var item = parameters.clonedCompositionData[key];
+                    for (let key in parameters.clonedCompositionData) {
+                        const item = parameters.clonedCompositionData[key];
                         //Records with a value for the matusetransid are being hidden from the user.
                         if (item['matusetransid'] == null) {
                             if (item['itemnum'] == data) {
@@ -76,7 +76,7 @@ angular.module('sw_layout')
                     }
                     //If the item was not found in the composition list, a lookup is made to fetch
                     //associated information (description, costtype, etc)
-                    var restParameters = {
+                    const restParameters = {
                         id: data,
                         application: "item",
                         key: {
@@ -85,13 +85,14 @@ angular.module('sw_layout')
                             platform: platform(),
                         },
                     };
-                    var urlToUse = url("/api/data/item?" + $.param(restParameters));
-                    $http.get(urlToUse).success(function (data) {
+                    const urlToUse = url("/api/data/item?" + $.param(restParameters));
+                    return $http.get(urlToUse).then(function (response) {
+                        const data = response.data;
                         if (data.resultObject === undefined) {
                             return;
                         }
                         var itemdata = data.resultObject;
-                        var matusetransData = parameters.parentdata;
+                        const matusetransData = parameters.parentdata;
                         if (itemdata['itemtype'] == 'TOOL' && matusetransData['#issueto'] == null) {
                             //var compositionschema = parentschema.cachedCompositions['invissue_'].schemas['detail'];
                             //var itemDatamap = {};
@@ -124,18 +125,19 @@ angular.module('sw_layout')
                         newRecord['issueto'] = matusetransData['#issueto'];
                         newRecord['location'] = matusetransData['#location'];
                         newRecord['refwo'] = matusetransData['#refwo'];
-                        var user = contextService.getUserData();
+                        const user = contextService.getUserData();
                         newRecord['siteid'] = user.siteid;
                         newRecord['storeloc'] = matusetransData['#storeloc'];
-                        var searchData = {
+                        const searchData = {
                             itemnum: newRecord['itemnum'],
                             location: newRecord['storeloc'],
                             siteid: newRecord['siteid']
                         };
-                        searchService.searchWithData("invcost", searchData).success(function (costdata) {
-                            var resultObject = costdata.resultObject;
-                            var resultFields = resultObject[0];
-                            var costtype = itemdata['inventory_.costtype'];
+                        return searchService.searchWithData("invcost", searchData).then(function (costdataResponse) {
+                            const costdata = costdataResponse.data;
+                            const resultObject = costdata.resultObject;
+                            const resultFields = resultObject[0];
+                            const costtype = itemdata['inventory_.costtype'];
                             if (costtype === 'STANDARD') {
                                 newRecord['unitcost'] = resultFields.stdcost;
                             } else if (costtype === 'AVERAGE') {
@@ -178,17 +180,17 @@ angular.module('sw_layout')
                     if (data == '%SUBMIT%') {
                         return applicationService.save({ isComposition: false, selecteditem: scope.datamap });
                     }
-                    var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
-                    var scanOrder = scanOrderString.split(",");
-                    for (var attribute in scanOrder) {
+                    const scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
+                    const scanOrder = scanOrderString.split(",");
+                    for (let attribute in scanOrder) {
                         // Loop through the scan order, checking the corresponding fields in the datamap
                         // to see if they have a value
-                        var currentAttribute = scanOrder[attribute];
+                        const currentAttribute = scanOrder[attribute];
                         if (datamap[currentAttribute] === '' || datamap[currentAttribute] === null) {
                             // Update the associated values
-                            var fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
+                            const fieldMetadata = fieldService.getDisplayableByKey(schema, currentAttribute);
                             // Update the associated values using the new scanned data
-                            var lookupObj = {};
+                            const lookupObj = {};
                             lookupObj.code = data;
                             lookupObj.fieldMetadata = fieldMetadata;
                             lookupObj.application = null;
@@ -197,7 +199,7 @@ angular.module('sw_layout')
                                 lookupObj.application = fieldMetadata.rendererParameters.application;
                                 lookupObj.schemaId = fieldMetadata.rendererParameters.schemaId;
                             }
-                            var searchObj = {};
+                            const searchObj = {};
                             searchObj[currentAttribute] = data;
                             associationService.updateDependentAssociationValues(scope, datamap, lookupObj, validateAssocationLookupFn, searchObj);
                             // Exit the loop once we have set a value from the scan
@@ -216,15 +218,15 @@ angular.module('sw_layout')
                 avgTimeByChar: scanningCommonsService.getTimeBetweenChars(),
                 onComplete: function (data) {
                     // Retrieve the scan order string from the context that relates to the current schema
-                    var scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
-                    var scanOrder = scanOrderString.split(",");
-                    var extraparameters = { keepfilterparameters: true };
+                    const scanOrderString = contextService.retrieveFromContext(schema.schemaId + "ScanOrder");
+                    const scanOrder = scanOrderString.split(",");
+                    const extraparameters = { keepfilterparameters: true };
                     // When the user scans a value, loop through the properties in the scan order
-                    for (var attribute in scanOrder) {
-                        var currentAttribute = scanOrder[attribute];
+                    for (let attribute in scanOrder) {
+                        const currentAttribute = scanOrder[attribute];
                         // If the property is not already in the scan data, add it and its value
                         if (!searchData.hasOwnProperty(currentAttribute)) {
-                            var localSearchData = {};
+                            const localSearchData = {};
                             localSearchData[currentAttribute] = data;
                             searchService.refreshGrid(localSearchData, null, extraparameters);
                             return;
@@ -239,15 +241,15 @@ angular.module('sw_layout')
             });
             // Add auto redirect
             // After griddata has changed
-            scope.$on('sw_griddatachanged', function (event, data, panelId) {
+            scope.$on(JavascriptEventConstants.GridDataChanged, function (event, data, panelId) {
                 // If only one record is found
                 if (data.length === 1) {
-                    var invbalanceid = data[0]['invbalancesid'];
-                    var param = {};
+                    const invbalanceid = data[0]['invbalancesid'];
+                    const param = {};
                     param.id = invbalanceid;
-                    var application = 'physicalcount';
-                    var detail = 'detail';
-                    var mode = 'input';
+                    const application = 'physicalcount';
+                    const detail = 'detail';
+                    const mode = 'input';
                     param.scanmode = true;
                     // Redirect to the detail page for that record
                     redirectService.goToApplicationView(application, detail, mode, null, param, null);
@@ -258,8 +260,8 @@ angular.module('sw_layout')
         initSouthernOperatorRounds: function (scope, schema, datamap, parameters) {
             scanningCommonsService.registerScanCallBackOnSchema(parameters, function (data) {
                 $log.get("scan#initSouthernOperatorRounds").info('receiving operator round notifications');
-                var assets = datamap.multiassetlocci_;
-                for (var asset in assets) {
+                const assets = datamap.multiassetlocci_;
+                for (let asset in assets) {
                     if (!assets.hasOwnProperty(asset)) {
                         continue;
                     }
@@ -270,12 +272,10 @@ angular.module('sw_layout')
                     }
 
                     assets[asset]['#selected'] = "true";
-
-                    var datamapToSend = {};
+                    const datamapToSend = {};
                     angular.copy(datamap, datamapToSend);
                     //                            datamapToSend['multiassetlocci_'] = [datamap];
-
-                    var command = {
+                    const command = {
                         service: "meterReadingService",
                         method: "read",
                         nextSchemaId: "readings",
@@ -285,14 +285,12 @@ angular.module('sw_layout')
                         },
                         scopeParameters: ['schema', 'datamap']
                     };
-                    var clonedSchema = {};
+                    const clonedSchema = {};
                     angular.copy(parameters.parentschema, clonedSchema);
-
-
-                    var scope = {
+                    const scope = {
                         datamap: datamapToSend,
                         schema: clonedSchema
-                    }
+                    };
                     scope.schema.applicationName = "workorder";
 
                     commandService.doCommand(scope, command);

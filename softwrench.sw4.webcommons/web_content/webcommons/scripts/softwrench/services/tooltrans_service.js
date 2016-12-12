@@ -11,7 +11,8 @@ angular.module('sw_layout')
             itemsetid: parameters['fields']['itemsetid'],
             orgid: parameters['fields']['orgid']
         };
-        searchService.searchWithData("itemorginfo", searchData).success(function (data) {
+        searchService.searchWithData("itemorginfo", searchData).then(function (response) {
+            const data = response.data;
             var resultObject = data.resultObject;
             if (resultObject != null) {
                 parameters.fields[unitCostFieldName] = resultObject[0].fields["toolrate"];

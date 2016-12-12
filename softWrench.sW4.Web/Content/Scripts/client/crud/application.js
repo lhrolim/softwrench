@@ -16,29 +16,13 @@
                         var parentElementId = scope.elementid;
                         $log.getInstance('application_dir#bodyrendered').debug('sw_body_rendered will get dispatched');
                         menuService.adjustHeight();
-                        scope.$emit('sw_bodyrenderedevent', parentElementId);
+                        scope.$emit(JavascriptEventConstants.BodyRendered, parentElementId);
                     });
                 }
             }
         };
     });
 
-    app.directive('listtablerendered', function ($timeout, $log) {
-        "ngInject";
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                $log.getInstance('application_dir#bodyrendered').trace('list table rendered');
-                if (scope.$last === true || scope.datamap.length == 0) {
-                    $timeout(function () {
-                        $log.getInstance('application_dir#bodyrendered').debug('list table rendered will get dispatched');
-                        //                    menuService.adjustHeight();
-                        scope.$emit('listTableRenderedEvent');
-                    });
-                }
-            }
-        };
-    });
 
     app.directive('filterrowrendered', function ($timeout) {
         "ngInject";
@@ -47,7 +31,7 @@
             link: function (scope, element, attr) {
                 if (scope.$last === true) {
                     $timeout(function () {
-                        scope.$emit('filterRowRenderedEvent');
+                        scope.$emit(JavascriptEventConstants.FilterRowRendered);
                     });
                 }
             }
@@ -69,11 +53,11 @@
 
 
 
-        $rootScope.$on("sw_resetFocusToCurrent", function (event, schema, field) {
+        $rootScope.$on(JavascriptEventConstants.ResetFocusToCurrent, function (event, schema, field) {
             focusService.resetFocusToCurrent(schema, field);
         });
 
-        $rootScope.$on("sw_movefocus", function (event, datamap, schema, attribute) {
+        $rootScope.$on(JavascriptEventConstants.MoveFocus, function (event, datamap, schema, attribute) {
             if (datamap[attribute] != null && datamap[attribute] != '') {
                 focusService.moveFocus(datamap, schema, attribute);
             }
@@ -84,7 +68,7 @@
         });
 
 
-        $scope.$on('sw_navigaterequest', function (event, applicationName, schemaId, mode, title, parameters) {
+        $scope.$on(JavascriptEventConstants.NavigateRequestCrawl, function (event, applicationName, schemaId, mode, title, parameters) {
             const skipDirtyMessage = parameters.customParameters ? parameters.customParameters.skipDirtyMessage : false;
             if (!crudContextHolderService.getDirty() || skipDirtyMessage) {
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
@@ -100,7 +84,7 @@
             });
         });
 
-        $scope.$on('sw_renderview', function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
+        $scope.$on(JavascriptEventConstants.RenderView, function (event, applicationName, schemaId, mode, title, parameters, dashboardpanelid) {
             // this is to prevent application.js from recv'ing dashboard rendering
             if (dashboardpanelid == null) {
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
@@ -121,7 +105,7 @@
             }
         });
 
-        $scope.$on('sw_applicationredirected', function (event, parameters) {
+        $scope.$on(JavascriptEventConstants.AppBeforeRedirection, function (event, parameters) {
             if (parameters.popupmode === "browser" || parameters.popupmode === "modal") {
                 return;
             }
@@ -202,7 +186,7 @@
 
             crudlistViewmodel.initGridFromServerResult(data, null);
 
-            scope.$broadcast("sw_gridchanged");
+            scope.$broadcast(JavascriptEventConstants.GRID_CHANGED);
             switchMode(false, scope);
         };
 
@@ -271,8 +255,9 @@
             contextService.insertIntoContext('scrollto', { 'applicationName': applicationName, 'scrollTop': document.body.scrollTop });
             log.info('Scroll From', applicationName, document.body.scrollTop);
 
-            $http.get(urlToCall)
-                .success(function (data) {
+            return $http.get(urlToCall)
+                .then(function (response) {
+                    const data = response.data;
                     // besides printMode is not undefined, we need to verify that printMode is true;
                     // otherwise disable printRequest, that will allow the pagination to update.
                     if (printMode != undefined && printMode) {
@@ -371,7 +356,7 @@
                 }
             }
             if (result.title != null) {
-                $scope.$emit('sw_titlechanged', result.title);
+                $scope.$emit(JavascriptEventConstants.TitleChanged, result.title);
                 if (GetPopUpMode() === 'browser') {
                     setWindowTitle(scope);
                 }
@@ -393,8 +378,8 @@
                 $scope.crudsubtemplate = url(result.crudSubTemplate);
             }
             $scope.requestpopup = null;
-            $rootScope.$broadcast('sw_titlechanged', $scope.schema == null ? null : $scope.schema.title);
-            $rootScope.$broadcast("sw_applicationrendered", $scope.schema == null ? null : $scope.schema.applicationName, $scope.schema);
+            $rootScope.$broadcast(JavascriptEventConstants.TitleChanged, $scope.schema == null ? null : $scope.schema.title);
+            $rootScope.$broadcast(JavascriptEventConstants.ApplicationRedirected, $scope.schema == null ? null : $scope.schema.applicationName, $scope.schema);
         };
 
 
@@ -514,7 +499,7 @@
             } else {
                 if (schema) {
                     //SM - SWWEB-619 temp fix, at times (before everything is loaded?), this is run without a schema causing an exception, resulting in a UI glich
-                    $scope.$emit('sw_titlechanged', schema.title);
+                    $scope.$emit(JavascriptEventConstants.TitleChanged, schema.title);
                 }
                 log.debug('rendering list view with previous data');
 
@@ -558,7 +543,7 @@
 
         function broadcastEx(msg) {
             const error = { errorMessage: msg}
-            $rootScope.$broadcast("sw_ajaxerror", error);
+            $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax, error);
             alertService.notifyexception(error);
         }
 
@@ -628,7 +613,7 @@
             }
             $scope.selectedSchema.value = dataObject.schemas[0];
             $scope.schemas = dataObject.schemas;
-            $scope.$emit('sw_titlechanged', title);
+            $scope.$emit(JavascriptEventConstants.TitleChanged, title);
             $scope.applicationname = applicationName;
             $scope.selectedModeRequest = mode;
             $scope.schemaSelectionLabel = dataObject.schemaSelectionLabel;

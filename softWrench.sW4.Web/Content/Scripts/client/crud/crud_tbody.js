@@ -294,7 +294,7 @@
 
                         var rowTextColor = scope.classificationColor(datamap[i].classificationid, schema.applicationName);
 
-                        html += "<tr class='{0}' style='cursor: {1};color: {2}' listtablerendered rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
+                        html += "<tr class='{0}' style='cursor: {1};color: {2}' rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
                         needsWatchers = hasMultipleSelector || hasSingleSelector;
 
                         html += "<td class='select-multiple' data-title=\"Select\" {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');
@@ -476,7 +476,7 @@
                     var t1 = new Date().getTime();
                     $log.getInstance('crudtbody#link').debug('grid compilation took {0} ms'.format(t1 - t0));
                     $timeout(function (key, value) {
-                        scope.$emit('listTableRenderedEvent');
+                        scope.$emit(JavascriptEventConstants.ListTableRendered);
                         if (!$rootScope.printRequested && !needsWatchers) {
                             scope.$$watchers = null;
                         }
@@ -489,7 +489,7 @@
                     gridSelectionService.selectionChanged(row, scope.schema, true, scope.panelid);
                 }
 
-                scope.$on('sw_griddatachanged', function (event, datamap, schema, panelid) {
+                scope.$on(JavascriptEventConstants.GridDataChanged, function (event, datamap, schema, panelid) {
                     if (panelid === scope.panelid) {
                         scope.refreshGrid(datamap, schema);
                         eventService.onschemafullyloaded(schema);

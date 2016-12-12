@@ -60,7 +60,7 @@
                         $scope.compositiondata = data.list || data.resultList;
                     }
 
-                    $scope.$on("sw_compositiondataresolved", function (event, compositiondata) {
+                    $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, function (event, compositiondata) {
                         compositionDataResolved(compositiondata);
                         if (!$scope.printDefered) {
                             return;

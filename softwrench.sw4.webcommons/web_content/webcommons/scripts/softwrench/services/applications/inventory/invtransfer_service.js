@@ -5,8 +5,7 @@
     angular.module('sw_layout').factory('invtransferService', ["$log", 'searchService', 'inventoryServiceCommons', "alertService", "redirectService", invtransferService]);
 
     function invtransferService($log, searchService, inventoryServiceCommons, alertService, redirectService) {
-
-        var service = {
+        const service = {
             afterChangeSite: afterChangeSite,
             afterChangeItem: afterChangeItem,
             afterChangeFromBin: afterChangeFromBin,
@@ -15,30 +14,29 @@
             afterChangeToStoreLoc: afterChangeToStoreLoc,
             cancel: cancel
         };
-
         return service;
 
 
 
         function afterChangeFromStoreLoc(parameters) {
-            var fields = parameters['fields'];
+            const fields = parameters['fields'];
             fields['invuseline_.fromstoreloc'] = fields['fromstoreloc'];
         };
 
         function afterChangeToStoreLoc(parameters) {
-            var fields = parameters['fields'];
+            const fields = parameters['fields'];
             fields['invuseline_.tostoreloc'] = fields['tostoreloc'];
         };
 
         function afterChangeSite(parameters) {
-            var fields = parameters['fields'];
+            const fields = parameters['fields'];
             if (fields['invuseline_.siteid'] == null || fields['invuseline_.siteid'].trim() === "") {
                 nullifyProperties(fields, ['itemnum', 'fromstoreloc', 'invuseline_.frombin', 'invuseline_.tostoreloc', 'invuseline_.tobin']);
             }
         }
 
         function afterChangeTransferQuantity(event) {
-            var fields = event.fields;
+            const fields = event.fields;
             if (fields['invuseline_.quantity'] > fields['#curbal']) {
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
                 event.scope.datamap['invuseline_.quantity'] = fields['#curbal'];
@@ -47,7 +45,7 @@
 
 
         function afterChangeFromBin(parameters) {
-            var fields = parameters['fields'];
+            const fields = parameters['fields'];
             fields['invuseline_.fromlot'] = fields['frominvbalance_.lotnum'];
             fields['invuseline_.tolot'] = fields['frominvbalance_.lotnum'];
             fields['#curbal'] = fields['frominvbalance_.curbal'];
@@ -58,8 +56,7 @@
         function afterChangeItem(parameters) {
 
             var fields = parameters['fields'];
-            var itemnum = fields['itemnum'];
-
+            const itemnum = fields['itemnum'];
             fields['invuseline_.itemnum'] = itemnum;
 
 
@@ -69,20 +66,19 @@
                 nullifyProperties(fields, ['invuseline_.itemnum', 'unitcost', 'invuseline_.issueunit', 'invuseline_.itemtype']);
                 return;
             }
-
-            var searchData = {
+            const searchData = {
                 itemnum: itemnum,
                 location: fields['fromstoreloc'],
                 siteid: fields['siteid'],
                 orgid: fields['orgid'],
                 itemsetid: fields['itemsetid']
             };
-
             searchService.searchWithData("inventory", searchData)
-                .success(function (data) {
-                    var resultObject = data.resultObject;
-                    var resultFields = resultObject[0];
-                    var costtype = resultFields['costtype'];
+                .then(function (response) {
+                    const data = response.data;
+                    const resultObject = data.resultObject;
+                    const resultFields = resultObject[0];
+                    const costtype = resultFields['costtype'];
                     fields['inventory_.costtype'] = costtype;
                     var locationFieldName = "";
                     if (fields.fromstoreloc != undefined) {
@@ -94,16 +90,17 @@
             // Check if there is a single invbalance record for the item in the
             // given location. If there is, use it as the from bin, from lot 
             // and curbal.
-            var searchOperators = {
+            const searchOperators = {
                 itemnum: searchService.getSearchOperator("="),
                 location: searchService.getSearchOperator("="),
                 siteid: searchService.getSearchOperator("=")
-            }
+            };
             searchService.searchWithData("invbalances", searchData,
-                "binLookupList", { searchOperators: searchOperators }).success(function (data) {
-                    var resultObject = data.resultObject;
+                "binLookupList", { searchOperators: searchOperators }).then(function (response) {
+                    const data = response.data;
+                    const resultObject = data.resultObject;
                     if (resultObject.length === 1) {
-                        var resultFields = resultObject[0];
+                        const resultFields = resultObject[0];
                         fields["binnum"] = resultFields.binnum;
                         fields["invuseline_.frombin"] = resultFields.binnum;
                         fields["lotnum"] = resultFields.lotnum;

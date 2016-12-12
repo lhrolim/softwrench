@@ -86,11 +86,13 @@ function UserProfileController($scope, $http, $templateCache, i18NService) {
     $scope.delete = function () {
         $('#saveBTN').prop('disabled', 'disabled');
         $http.put(url("api/security/UserProfile"), JSON.stringify($scope.profile))
-            .success(function (data) {
+            .then(function (response) {
+                const data = response.data;
                 $('#saveBTN').removeAttr('disabled');
                 toList(data);
             })
-            .error(function (data) {
+            .catch(function (response) {
+                const data = response.data;
                 $('#saveBTN').removeAttr('disabled');
                 $scope.errorMessage = data || i18NService.get18nValue('general.requestfailed', 'Request failed');
             });
@@ -99,11 +101,13 @@ function UserProfileController($scope, $http, $templateCache, i18NService) {
     $scope.save = function () {
         $('#saveBTN').prop('disabled', 'disabled');
         $http.post(url("api/security/UserProfile"), JSON.stringify($scope.profile))
-          .success(function (data) {
+          .then(function (response) {
+              const data = response.data;
               $('#saveBTN').removeAttr('disabled');
               toList(data);
           })
-          .error(function (data) {
+          .catch(function (response) {
+              const data = response.data;
               $('#saveBTN').removeAttr('disabled');
               $scope.errorMessage = data || i18NService.get18nValue('general.requestfailed', 'Request failed');
           });

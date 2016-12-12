@@ -9,7 +9,7 @@
         // Load Google map API script
         function loadScript() {
             log.debug("Loading gmaps api.");
-            $rootScope.$broadcast("sw_ajaxinit");
+            $rootScope.$broadcast(JavascriptEventConstants.AjaxInit);
             lockCommandBars();
             lockTabs();
 
@@ -23,10 +23,10 @@
         function end(error) {
             if (!error) {
                 log.debug("Gmaps api loaded.");
-                $rootScope.$broadcast("sw_ajaxend");
+                $rootScope.$broadcast(JavascriptEventConstants.AjaxFinished);
             } else {
                 log.warn("Fail to load gmaps api.");
-                $rootScope.$broadcast("sw_ajaxerror");
+                $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax);
             }
             unLockCommandBars();
             unLockTabs();

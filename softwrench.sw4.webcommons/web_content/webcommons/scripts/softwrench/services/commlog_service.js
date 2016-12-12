@@ -185,7 +185,7 @@
         };
 
         function dispatchEvent(clonedItem, title) {
-            $rootScope.$broadcast("sw.composition.edit", "commlog", clonedItem, title, true);
+            $rootScope.$broadcast(JavascriptEventConstants.CompositionEdit, "commlog", clonedItem, title, true);
             return clonedItem;
         };
 

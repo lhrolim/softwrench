@@ -7,14 +7,13 @@ angular.module('sw_layout')
         function ($http, contextService, redirectService, modalService, restService, searchService, alertService) {
 
     var doCommodityGroupAssociation = function (parameters) {
-        var searchData = {
+        const searchData = {
             itemnum: parameters['fields']['itemnum'],
             itemsetid: parameters['fields']['itemsetid']
         };
-
-        searchService.searchWithData('itemlookup', searchData).success(function (data) {
-            var resultObject = data.resultObject;
-
+        searchService.searchWithData('itemlookup', searchData).then(function (response) {
+            const data = response.data;
+            const resultObject = data.resultObject;
             if (resultObject.length > 0) {
                 parameters.fields['commoditygroup'] = resultObject[0].fields['commoditygroup'];
             }
@@ -22,7 +21,7 @@ angular.module('sw_layout')
     }
 
     var doItemBalanceAssociation = function (parameters) {
-        var searchData = {
+        const searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
             siteid: parameters['fields']['siteid'],
@@ -31,13 +30,12 @@ angular.module('sw_layout')
             lotnum: parameters['fields']['lotnum'],
             conditioncode: parameters['fields']['conditioncode']
         };
-
         parameters['fields']['curbal'] = 0.00;
         parameters['fields']['physcnt'] = 0.00;
 
-        searchService.searchWithData('invbalookup', searchData).success(function (data) {
-            var resultObject = data.resultObject;
-
+        searchService.searchWithData('invbalookup', searchData).then(function (response) {
+            const data = response.data;
+            const resultObject = data.resultObject;
             if (resultObject.length === 1) {
                 parameters.fields['binnum'] = resultObject[0].fields['binnum'];
                 parameters.fields['lotnum'] = resultObject[0].fields['lotnum'];
@@ -52,23 +50,21 @@ angular.module('sw_layout')
     }
 
     var doItemCostAssociation = function (parameters) {
-        var searchData = {
+        const searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
             conditioncode: parameters['fields']['conditioncode'],
             siteid: parameters['fields']['siteid'],
             orgid: parameters['fields']['orgid']
         };
-
         parameters['fields']['unitcost'] = 0.00;
 
-        searchService.searchWithData('invcostlookup', searchData).success(function (data) {
-            var resultObject = data.resultObject;
-
+        return searchService.searchWithData('invcostlookup', searchData).then(function (response) {
+            const data = response.data;
+            const resultObject = data.resultObject;
             if (resultObject.length === 1) {
-                var fields = resultObject[0].fields;
-                var costtype = parameters.fields['costtype'];
-
+                const fields = resultObject[0].fields;
+                const costtype = parameters.fields['costtype'];
                 if (costtype === 'STANDARD') {
                     parameters.fields['unitcost'] = fields.stdcost;
                 } else if (costtype === 'AVERAGE') {
@@ -86,17 +82,16 @@ angular.module('sw_layout')
     }
 
     var doItemLookup = function (parameters) {
-        var searchData = {
+        const searchData = {
             itemnum: parameters['fields']['itemnum'],
             location: parameters['fields']['storeloc'],
             siteid: parameters['fields']['siteid']
         };
-
-        searchService.searchWithData('invlookup', searchData).success(function (data) {
-            var resultObject = data.resultObject;
-
+        return searchService.searchWithData('invlookup', searchData).then(function (response) {
+            const data = response.data;
+            const resultObject = data.resultObject;
             if (resultObject.length > 0) {
-                var resultMap = resultObject[0].fields;
+                const resultMap = resultObject[0].fields;
                 parameters.fields['costtype'] = resultMap['costtype'];
                 parameters.fields['itemsetid'] = resultMap['itemsetid'];
                 doCommodityGroupAssociation(parameters);

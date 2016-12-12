@@ -155,8 +155,6 @@
                 return;
             }
 
-            //TODO: is this needed?
-            //$rootScope.$broadcast('sw_checksuccessmessage', leaf);
 
             if (target != undefined) {
                 this.setActiveLeaf(target);
@@ -178,7 +176,7 @@
             if (previousFilter) {
                 const previousDTO = previousFilter.searchDTO;
                 return redirectService.redirectWithData(leaf.application, leaf.schema, previousDTO.searchData, { searchDTO: previousDTO }).then(data => {
-                    $rootScope.$broadcast('sw.grid.setfilter', previousFilter);
+                    $rootScope.$broadcast(JavascriptEventConstants.GRID_SETFILTER, previousFilter);
                 });
             }
             return redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);

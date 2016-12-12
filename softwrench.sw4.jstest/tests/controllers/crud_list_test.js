@@ -110,7 +110,6 @@
         //Set mock data
         mockScope.paginationData = {};
         mockScope.searchSort = { field: "ticketid", order: "asc" };
-
         //mock the function call
         spyOn(mockScope, "selectPage").and.callFake(function () {
             return null;

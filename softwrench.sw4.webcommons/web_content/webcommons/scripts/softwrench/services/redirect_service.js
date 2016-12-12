@@ -40,26 +40,26 @@
                 }
             }
 
-            return $http.get(redirectUrl).success(
-                function (data) {
-                    if (!parameters || !parameters.popupmode) {
-                        if (controller !== "EntityMetadata" || action !== "Refresh") {
-                            historyService.addToHistory(redirectUrl);
-                        }
+            return $http.get(redirectUrl).then(function (response) {
+                const data = response.data;
+                if (!parameters || !parameters.popupmode) {
+                    if (controller !== "EntityMetadata" || action !== "Refresh") {
+                        historyService.addToHistory(redirectUrl);
                     }
+                }
 
-                    if (data.type !== "BlankApplicationResponse") {
-                        $rootScope.$broadcast("sw_redirectactionsuccess", data);
-                    }
-                }).error(
-                function (data) {
-                    const errordata = {
-                        errorMessage: "error opening action {0} of controller {1} ".format(action, controller),
-                        errorStack: data.message
-                    };
-                    $rootScope.$broadcast("sw_ajaxerror", errordata);
-                    alertService.notifyexception(errordata);
-                });
+                if (data.type !== "BlankApplicationResponse") {
+                    $rootScope.$broadcast(JavascriptEventConstants.ActionAfterRedirection, data);
+                }
+            }).catch(function (response) {
+                const data = response.data;
+                const errordata = {
+                    errorMessage: "error opening action {0} of controller {1} ".format(action, controller),
+                    errorStack: data.message
+                };
+                $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax, errordata);
+                alertService.notifyexception(errordata);
+            });
         };
 
         function getApplicationUrl(applicationName, schemaId, mode, title, parameters) {
@@ -154,7 +154,7 @@
             parameters = parameters || {};
             parameters.popupmode = "modal";
             return this.goToApplicationView(applicationName, schemaId, null, null, parameters, jsonData)
-                .then(resultObject => 
+                .then(resultObject =>
                     contextService.insertIntoContext("grid_refreshdata", { data: resultObject, panelid: "#modal" }, true)
                 );
         };
@@ -176,14 +176,14 @@
 
         function redirectFromServerResponse(serverResponse, mode) {
             mode = mode || "input";
-            return $rootScope.$broadcast("sw_redirectapplicationsuccess", serverResponse, mode, serverResponse.applicationName);
+            return $rootScope.$broadcast(JavascriptEventConstants.REDIRECT_AFTER, serverResponse, mode, serverResponse.applicationName);
         };
 
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             const log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
             parameters = parameters || {};
 
-            $rootScope.$broadcast('sw_applicationredirected', parameters);
+            $rootScope.$broadcast(JavascriptEventConstants.AppBeforeRedirection, parameters);
 
             // let´s exclude functions from possible parameters, otherwise it would be evaluated by $.param
             const savefn = parameters.savefn;
@@ -214,7 +214,7 @@
 
             if (jsonData == undefined) {
                 if (redirectUrl && !popupMode) {
-                    historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn,true);
+                    historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn, true);
                 }
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
@@ -231,13 +231,13 @@
                 if (log.isLevelEnabled("info")) {
                     log.info('invoking post on datacontroller for {0} | content: '.format(applicationName, jsonString));
                 }
-                return $http.post(redirectUrl, jsonString).then(httpResponse =>{
+                return $http.post(redirectUrl, jsonString).then(httpResponse => {
                     const data = httpResponse.data;
                     if (angular.isFunction(parameters.postProcessFn)) {
                         parameters.postProcessFn(data);
                     }
                     if (popupMode !== "modal") {
-                        $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                        $rootScope.$broadcast(JavascriptEventConstants.REDIRECT_AFTER, data, mode, applicationName);
                     } else {
                         contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
                         modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject, parameters);
@@ -252,7 +252,7 @@
                 if (redirectUrl) {
                     contextService.insertIntoContext("swGlobalRedirectURL", redirectUrl, false);
                 }
-                $rootScope.$broadcast("sw_redirectapplicationsuccess", data, mode, applicationName);
+                $rootScope.$broadcast(JavascriptEventConstants.REDIRECT_AFTER, data, mode, applicationName);
             } else {
                 contextService.insertIntoContext("grid_refreshdata", { data: data.resultObject, panelid: "#modal" }, true);
                 modalService.show(schemaCacheService.getSchemaFromResult(data), data.resultObject, parameters);
@@ -270,7 +270,8 @@
                 w.moveTo(0, 0);
                 return;
             }
-            const cbk = function (view) {
+            const cbk = function (response) {
+                const view = response.data;
                 const x = window.open('', '_blank', 'height=600px,width=800px,left=350px,top=100px,resizable=yes,scrollbars=yes', false);
                 x.document.open();
                 x.document.write(view);
@@ -285,10 +286,10 @@
                 }
             };
             if (initialData == undefined) {
-                $http.post(newWindowURL).success(cbk);
+                $http.post(newWindowURL).then(cbk);
             } else {
                 const jsonString = angular.toJson(initialData);
-                $http.post(newWindowURL, jsonString).success(cbk);
+                $http.post(newWindowURL, jsonString).then(cbk);
             }
 
         }

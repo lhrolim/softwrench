@@ -53,11 +53,13 @@ function RoleController($scope, $http, $templateCache, i18NService) {
     $scope.delete = function () {
         $('#saveBTN').prop('disabled', 'disabled');
         $http.put(url("api/security/Role"), JSON.stringify($scope.role))
-            .success(function (data) {
+            .then(function (response) {
+                const data = response.data;
                 $('#saveBTN').removeAttr('disabled');
                 toList(data.resultObject);
             })
-            .error(function (data) {
+            .catch(function (response) {
+                const data = response.data;
                 $('#saveBTN').removeAttr('disabled');
                 $scope.title = data || i18NService.get18nValue('general.requestfailed', 'Request failed');
             });
@@ -66,11 +68,13 @@ function RoleController($scope, $http, $templateCache, i18NService) {
     $scope.save = function () {
         $('#saveBTN').prop('disabled', 'disabled');
         $http.post(url("api/security/Role"), JSON.stringify($scope.role))
-          .success(function (data) {
+          .then(function (response) {
+              const data = response.data;
               $('#saveBTN').removeAttr('disabled');
               toList(data.resultObject);
           })
-          .error(function (data) {
+          .catch(function (response) {
+              const data = response.data;
               $('#saveBTN').removeAttr('disabled');
               $scope.title = data || i18NService.get18nValue('general.requestfailed', 'Request failed');
           });

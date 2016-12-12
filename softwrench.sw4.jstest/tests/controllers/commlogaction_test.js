@@ -61,7 +61,7 @@
         commlogService[actionfn]({},{});
         //this is needed to trigger the promises resolutions!
         _rootScope.$digest();
-        expect(_rootScope.$broadcast).toHaveBeenCalledWith('sw.composition.edit',"commlog", outputData, actionTitle, true);
+        expect(_rootScope.$broadcast).toHaveBeenCalledWith("sw.crud.composition.edit", "commlog", outputData, actionTitle, true);
     }
 
     it("Reply All, with default email not present, with system default", function () {

@@ -9,11 +9,10 @@ angular.module('sw_layout')
     return {
 
         getFirstFocusableFieldIdx: function (schema, datamap, acceptFilled) {
-            var realdatamap = datamap;
-
-            var displayables = fieldService.getLinearDisplayables(schema);
-            for (var i = 0; i < displayables.length; i++) {
-                var displayable = displayables[i];
+            const realdatamap = datamap;
+            const displayables = fieldService.getLinearDisplayables(schema);
+            for (let i = 0; i < displayables.length; i++) {
+                const displayable = displayables[i];
                 if (!displayable.attribute) {
                     continue;
                 }
@@ -33,10 +32,9 @@ angular.module('sw_layout')
         },
 
         setFocusToFirstField: function (schema, datamap) {
-            var log = $log.get("focusService#setFocusToFirstNonFilled");
-            var isEditing = schemaService.getId(datamap, schema);
-            var idx = this.getFirstFocusableFieldIdx(schema, datamap, isEditing);
-
+            const log = $log.get("focusService#setFocusToFirstNonFilled");
+            const isEditing = schemaService.getId(datamap, schema);
+            const idx = this.getFirstFocusableFieldIdx(schema, datamap, isEditing);
             if (idx != -1) {
                 this.setFocusOnIdx(schema, datamap, idx, { reset: true });
             }
@@ -44,14 +42,14 @@ angular.module('sw_layout')
         },
 
         resetFocusToCurrent: function (schema, attribute) {
-            var log = $log.get("focusService#resetFocusToCurrent");
+            const log = $log.get("focusService#resetFocusToCurrent");
             log.debug("resetting focus to {0}".format(attribute));
-            var idx = fieldService.getVisiableDisplayableIdxByKey(schema, attribute);
+            const idx = fieldService.getVisiableDisplayableIdxByKey(schema, attribute);
             currentFocusedIdx = idx;
         },
 
         setFocusOnIdx: function (schema, datamap, idx, parameters) {
-            var log = $log.get("focusService#setFocusOnIdx");
+            const log = $log.get("focusService#setFocusOnIdx");
             parameters = parameters || {};
             if (schema.properties && schema.properties["detail.focus.allowmovingbackward"] === "true") {
                 parameters.allowmovingbackward = true;
@@ -60,10 +58,9 @@ angular.module('sw_layout')
             if (parameters.reset) {
                 currentFocusedIdx = 0;
             }
-            var movingForward = idx >= currentFocusedIdx;
-
+            const movingForward = idx >= currentFocusedIdx;
             if (movingForward || parameters.allowmovingbackward) {
-                var nextField = fieldService.getLinearDisplayables(schema)[idx];
+                const nextField = fieldService.getLinearDisplayables(schema)[idx];
                 log.debug('call cmpfacade.focus', nextField);
                 cmpfacade.focus(nextField);
                 currentFocusedIdx = idx;
@@ -82,11 +79,9 @@ angular.module('sw_layout')
             if (schemaService.isPropertyTrue(schema,'crud.disableautofocus')) {
                 return;
             }
-
-            var log = $log.get("focusService#moveFocus");
+            const log = $log.get("focusService#moveFocus");
             log.debug("moving focus to item next to {0}".format(attribute));
-
-            var nextFieldIdx = fieldService.getNextVisibleDisplayableIdx(datamap, schema, attribute);
+            const nextFieldIdx = fieldService.getNextVisibleDisplayableIdx(datamap, schema, attribute);
             if (nextFieldIdx === -1) {
                 return;
             }

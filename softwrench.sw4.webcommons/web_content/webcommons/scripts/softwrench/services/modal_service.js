@@ -10,7 +10,7 @@
                     //adding this call to solve a mistereous bug on minified environments where the modal-backdrop element would remain
                     $('.modal-backdrop').remove();
                     if ($rootScope.showingModal) {
-                        $rootScope.$broadcast('sw.modal.hide');
+                        $rootScope.$broadcast(JavascriptEventConstants.HideModal);
                     }
                 },
 
@@ -42,7 +42,7 @@
                 /// <param name="parentschema">holds the parent schema</param>
                 show: function (schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema) {
                     if (schemaorModalData.schema) {
-                        $rootScope.$broadcast("sw.modal.show", schemaorModalData);
+                        $rootScope.$broadcast(JavascriptEventConstants.ModalShown, schemaorModalData);
                         return;
                     }
 
@@ -85,7 +85,7 @@
 
                     crudContextHolderService.registerSaveFn(savefn);
 
-                    $rootScope.$broadcast("sw.modal.show", modaldata);
+                    $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modaldata);
                 },
 
                 getSaveFn: function () {

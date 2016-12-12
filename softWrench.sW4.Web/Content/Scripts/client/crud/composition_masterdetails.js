@@ -264,7 +264,7 @@
                     }
                     init(this);
 
-                    $scope.$on("sw_compositiondataresolved", prepareData);
+                    $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, prepareData);
                 }]
         };
     });

@@ -201,7 +201,7 @@
 
 
 
-                    $scope.$on('sw_associationsupdated', function (event, associationoptions) {
+                    $scope.$on(JavascriptEventConstants.AssociationUpdated, function (event, associationoptions) {
                         $scope.associationsloaded = true;
                         if (!$scope.associationOptions) {
                             //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
@@ -219,7 +219,7 @@
 
 
                     //this will get called when the input form is done rendering
-                    $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent, parentElementId) {
+                    $scope.$on(JavascriptEventConstants.BodyRendered, function (ngRepeatFinishedEvent, parentElementId) {
                         eventService.onload($scope.schema, $scope.datamap);
                         var bodyElement = $('#' + parentElementId + "[schemaid=" + $scope.schema.schemaId + "]");
                         if (bodyElement.length <= 0) {

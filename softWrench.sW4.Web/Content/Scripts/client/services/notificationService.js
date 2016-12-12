@@ -18,6 +18,11 @@
             return vm.messages;
         }
 
+        $rootScope.$on(JavascriptEventConstants.AppBeforeRedirection, function () {
+            vm.messages.forEach(m=> m.display = false);
+        });
+
+
         return {
             /// <summary>
             /// Receive message data and crete user notification
@@ -40,7 +45,7 @@
 
                 //if any exception info is present, create the exception object
                 if (exceptionType || exceptionOutline || exceptionStack) {
-                    var exception = {};
+                    const exception = {};
                     exception.type = exceptionType;
                     exception.outline = exceptionOutline;
                     exception.stack = exceptionStack;
@@ -52,13 +57,13 @@
                     log.debug('createNotification', message);
 
                     vm.messages.push(message);
-                    $timeout(function() {
+                    $timeout(function () {
                         //timeout to display messages
                     });
 
                     //add automatic timeout for success messages
                     if (message.type === 'success' && !message.exception) {
-                        $timeout(function() {
+                        $timeout(function () {
                             //$scope.removeMessage(message);
                             message.display = false;
                         }, contextService.retrieveFromContext('successMessageTimeOut'));
@@ -71,9 +76,9 @@
             /// </summary>
             /// <param name="message" type="object">Notification message</param>
             /// <returns></returns>
-            getMoreInfo: function(message) {
+            getMoreInfo: function (message) {
                 //setup more info temporary store
-                var moreInfo = message.exception;
+                const moreInfo = message.exception;
                 moreInfo.title = message.body;
                 moreInfo.text = ('Error description:\n\n' +
                     'Type: \n{0}\n\n' +
@@ -93,7 +98,7 @@
             /// <returns></returns>
             processJsError: function (jsEvent, angularException) {
                 //TODO: Replace $injector with configurationService, after circular dependency is fixed
-                var configService = $injector.get('configurationService');
+                const configService = $injector.get('configurationService');
                 var showAlert = true;
 
                 //if there already is a JS error, don't show another notification
@@ -107,16 +112,17 @@
                 }
 
                 //check config values
-                var jsErrorAlertShowDev = configService.getConfigurationValue('/Global/JsError/ShowDev') === 'true';
-                var jsErrorAlertShowProd = configService.getConfigurationValue('/Global/JsError/ShowProd') === 'true';
-                if ($rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0) {
-                    if (!jsErrorAlertShowDev) {
-                        return;
-                    }
-                } else {
-                    if (!jsErrorAlertShowProd) {
-                        return;
-                    }
+                const jsErrorAlertShowDev = configService.getConfigurationValue('/Global/JsError/ShowDev') === 'true';
+                const jsErrorAlertShowProd = configService.getConfigurationValue('/Global/JsError/ShowProd') === 'true';
+
+                const isDevorQaEnv = $rootScope.environment && $rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0;
+
+                if (!isDevorQaEnv && !jsErrorAlertShowProd) {
+                    return;
+                }
+
+                if (isDevorQaEnv && !jsErrorAlertShowDev) {
+                    return;
                 }
 
                 var body;
@@ -126,16 +132,12 @@
 
                 //get the javascript event values
                 if (jsEvent) {
-                    var e = jsEvent.originalEvent;
-
+                    const e = jsEvent.originalEvent;
                     body = e.message;
                     exceptionType = e.type;
                     exceptionOutline = e.error.message;
                     exceptionStack = e.error.stack;
-
-                    var parts = e.message.split(': ');
-
-
+                    const parts = e.message.split(': ');
                     if (parts[0]) {
                         exceptionType = parts[0];
                     }
@@ -159,8 +161,11 @@
                 message.display = false;
             },
 
+
             messages: getMessages()
         }
+
+
 
         //#endregion
     }

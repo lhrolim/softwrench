@@ -80,7 +80,7 @@
                 // }
 
                 $scope.$emit('sw_indexPageLoaded', redirectUrl);
-                $scope.$emit('sw_titlechanged', result.title);
+                $scope.$emit(JavascriptEventConstants.TitleChanged, result.title);
                 if (!angular.isUndefined(homeModel.Message)) {
                     const messageType = homeModel.MessageType || "success";
                     alertService.notifymessage(messageType, homeModel.Message);

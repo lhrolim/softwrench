@@ -8,12 +8,12 @@
 
         $scope.forgotPassword = function () {
             var postUrl = url("/api/generic/UserSetupWebApi/ForgotPassword?userNameOrEmail={0}".format($scope.userNameOrEmail));
-            $http.post(postUrl).success(function (data) {
+            $http.post(postUrl).then(function () {
                 $scope.showforgotPasswordForm = false;
                 $scope.errorMessage = null;
                 $scope.successMessage = "An email has been sent with instructions to reset the password";
                 $scope.userNameOrEmail = null;
-            }).error(function (err) {
+            }).catch(function (err) {
                 $scope.errorMessage = err.errorMessage;
             });
         };

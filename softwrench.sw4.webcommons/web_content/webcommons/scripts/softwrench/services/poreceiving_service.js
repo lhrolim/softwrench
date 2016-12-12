@@ -8,7 +8,8 @@ angular.module('sw_layout')
         var searchData = {
             ponum: ponum
         };
-        searchService.searchWithData("po", searchData).success(function (data) {
+        searchService.searchWithData("po", searchData).then(function (response) {
+            const data = response.data;
             var resultObject = data.resultObject;
             return resultObject[0]['receipts'];
         });
@@ -48,7 +49,8 @@ angular.module('sw_layout')
                     SearchDTO: null
                 };
                 var urlToUse = url("/api/Data/materialrecords?" + $.param(restParameters));
-                $http.get(urlToUse).success(function(data) {
+                return $http.get(urlToUse).then(function (response) {
+                    const data = response.data;
                     redirectService.goToApplication("receiving", "list", null, data);
                 });
             });
@@ -60,7 +62,8 @@ angular.module('sw_layout')
             var searchData = {
                 ponum: ponum
             };
-            searchService.searchWithData("po", searchData).success(function (data) {
+            searchService.searchWithData("po", searchData).then(function (response) {
+                const data = response.data;
                 var resultObject = data.resultObject;
                 var receipts = resultObject[0]['receipts'];
                 if (receipts.equalIc('complete')) {

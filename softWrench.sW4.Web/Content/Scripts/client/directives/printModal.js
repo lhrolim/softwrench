@@ -51,14 +51,14 @@ app.directive('printModal', function ($log, contextService) {
                 return tabsService.tabsPrintDisplayables(schema);
             };
             
-            $scope.$on('sw_hideprintmodal', function (event) {
+            $scope.$on(JavascriptEventConstants.PrintHideModal, function (event) {
 
                 var modal = $(PRINTMODAL_$_KEY);
                 modal.modal('hide');
 
             });
 
-            $scope.$on('sw_showprintmodal', function (event, schema, isList, paginationData) {
+            $scope.$on(JavascriptEventConstants.PrintShowModal, function (event, schema, isList, paginationData) {
                 $log.getInstance('printmodal').info("starting printing modal");
                 $scope.isList = isList;
                 $scope.compositionstoprint = {};

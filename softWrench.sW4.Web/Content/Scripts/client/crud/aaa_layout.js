@@ -186,19 +186,19 @@
 
    
 
-        $rootScope.$on('sw_ajaxinit', function (ajaxinitevent) {
+        $rootScope.$on(JavascriptEventConstants.AjaxInit, function (ajaxinitevent) {
             var savingMain = true === $rootScope.savingMain;
             spinService.start({ savingDetail: savingMain });
 
         });
 
-        $rootScope.$on('sw_ajaxend', function (data) {
+        $rootScope.$on(JavascriptEventConstants.AjaxFinished, function (data) {
             spinService.stop();
             $rootScope.savingMain = undefined;
             fixHeaderService.callWindowResize();
         });
 
-        $rootScope.$on('sw_ajaxerror', function (data) {
+        $rootScope.$on(JavascriptEventConstants.ErrorAjax, function (data) {
             spinService.stop();
             $rootScope.savingMain = undefined;
             fixHeaderService.callWindowResize();
@@ -219,7 +219,7 @@
         });
 
 
-        $scope.$on('sw_titlechanged', function (titlechangedevent, title) {
+        $scope.$on(JavascriptEventConstants.TitleChanged, function (titlechangedevent, title) {
             var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
             if (record) {
                 title = record + ' | ' + title;
@@ -235,13 +235,13 @@
         });
 
 
-        $rootScope.$on('sw_redirectactionsuccess', function (event, result) {
+        $rootScope.$on(JavascriptEventConstants.ActionAfterRedirection, function (event, result) {
             var log = $log.getInstance('layoutcontroller#onsw_redirectactionsuccess');
             log.debug("received event");
             $scope.AjaxResult(result);
         });
 
-        $rootScope.$on('sw_redirectapplicationsuccess', function (event, result, mode, applicationName) {
+        $rootScope.$on(JavascriptEventConstants.REDIRECT_AFTER, function (event, result, mode, applicationName) {
             var log = $log.getInstance('layoutcontroller#onsw_redirectapplicationsuccess');
             //todo: are these 2 parameters really necessary?
             $scope.applicationname = applicationName;
@@ -270,7 +270,7 @@
 
             if (result.title != null) {
                 log.debug("dispatching title changed event. Title: {0}".format(result.title));
-                $scope.$emit('sw_titlechanged', result.title);
+                $scope.$emit(JavascriptEventConstants.TitleChanged, result.title);
             }
             $scope.resultData = result.resultObject;
             $scope.resultObject = result;

@@ -210,7 +210,7 @@
             //    redirectService.openAsModal(applicationname, schemaid, null, rowdm.fields);
             //    return;
             //}
-            $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, {
+            $scope.$emit(JavascriptEventConstants.RenderView, applicationname, schemaid, mode, $scope.title, {
                 id: id, popupmode: popupmode, customParameters: $scope.getCustomParameters($scope.schema, rowdm), autoloadcomposition: loadcompositiontab
             });
         }
@@ -247,7 +247,7 @@
 
 
         //#region listeners
-        $scope.$on("sw.crud.applicationchanged", function (event, schema, datamap, panelid) {
+        $scope.$on(JavascriptEventConstants.AppChanged, function (event, schema, datamap, panelid) {
             if ($scope.panelid === panelid) {
                 //need to re fetch the selection model since the context whenever the application changes
                 $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);

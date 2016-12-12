@@ -24,20 +24,19 @@ angular.module("sw_layout")
             url = removeEncoding(url);
 
             //this is for emulating the busy cursor, since this is not an ajax call
-            $rootScope.$broadcast('sw_ajaxinit');
+            $rootScope.$broadcast(JavascriptEventConstants.AjaxInit);
 
             $.fileDownload(url, {
                 successCallback: function (html, url) {
                     //this is for removing the busy cursor
-                    $rootScope.$broadcast('sw_ajaxend');
+                    $rootScope.$broadcast(JavascriptEventConstants.AjaxFinished);
                     if (successCallback) {
                         successCallback(html, url);
                     }
                 },
                 failCallback: function (html, url, formUrl) {
                     //this is for removing the busy cursor
-                    //$rootScope.$broadcast('sw_ajaxend');
-                    $rootScope.$broadcast("sw_ajaxerror", html);
+                    $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax, html);
                     if (formUrl && formUrl.indexOf("SignIn") >= 0) {
                         //sessionStorage.removeItem("swGlobalRedirectURL");
                         contextService.clearContext();

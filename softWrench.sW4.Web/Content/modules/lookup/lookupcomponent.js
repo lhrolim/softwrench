@@ -81,7 +81,7 @@
 
             associationService.updateDependentAssociationValues(scope, searchDatamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
             //to avoid circular dependency
-            scope.$emit("sw_resetFocusToCurrent", scope.schema, fieldMetadata.attribute);
+            scope.$emit(JavascriptEventConstants.ResetFocusToCurrent, scope.schema, fieldMetadata.attribute);
             //            focusService.resetFocusToCurrent(scope.schema, fieldMetadata.attribute);
         };
 

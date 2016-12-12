@@ -40,7 +40,8 @@
                 var query = selectionText ? selectionText : $scope.queryString;
 
                 $http.get(url("/api/generic/sqlclient/executequery?query=" + query + "&datasource=" + $scope.dataSource + "&limit=" + rowLimit))
-                    .success(function (data) {
+                    .then(function (response) {
+                        const data = response.data;
                         if (data.hasErrors) {
                             $scope.executionMessage = data.executionMessage;
                             $scope.hasData = false;
@@ -50,7 +51,7 @@
                             addQueryToHistory(query);
                         }
                     })
-                    .error(function (data) {
+                    .catch(function (data) {
                         $scope.executionMessage = "There was an error whilst processing your request. Please try again.";
                         $scope.hasData = false;
                         $scope.hasError = true;

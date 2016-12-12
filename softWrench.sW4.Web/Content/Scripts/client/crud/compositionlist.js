@@ -194,7 +194,7 @@
                     }
                 });
 
-                scope.$on("sw.modal.hide", function (event) {
+                scope.$on(JavascriptEventConstants.HideModal, function (event) {
                     if (scope.ismodal === "true") {
                         $log.get('compositionlistwrapper#doLoad', ["composition", "inline"]).debug('wiping <composition-list> directive due to modal disposal');
                         //inline compositions inside of the modal need to be refreshed (relinked)
@@ -512,7 +512,7 @@
             $scope.clearNewCompositionData();
         });
 
-        $scope.$on("sw_compositiondataresolved", $scope.onAfterCompositionResolved);
+        $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, $scope.onAfterCompositionResolved);
 
         $scope.getBooleanClass = function (compositionitem, attribute) {
             if (formatService.isChecked(compositionitem[attribute])) {
@@ -747,7 +747,7 @@
 
         //#endregion
 
-        $scope.$on("sw.composition.edit", function (event, applicationName, datamap, actionTitle, forceModal) {
+        $scope.$on(JavascriptEventConstants.CompositionEdit, function (event, applicationName, datamap, actionTitle, forceModal) {
             if (applicationName !== $scope.compositionlistschema.applicationName) {
                 return;
             }
@@ -964,7 +964,7 @@
                 $scope.doToggle(id, item, originalListItem);
                 if (fromServer) {
                     $timeout(function () {
-                        $rootScope.$broadcast('sw_bodyrenderedevent', $element.parents('.tab-pane').attr('id'));
+                        $rootScope.$broadcast(JavascriptEventConstants.BodyRendered, $element.parents('.tab-pane').attr('id'));
                     }, 0, false);
                 }
                 return;
@@ -1379,7 +1379,8 @@
                 compositionListData[id] = data;
             }
             const urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(buildExpandAllParams())));
-            $http.get(urlToInvoke).success(function (result) {
+            return $http.get(urlToInvoke).then(function (response) {
+                const result = response.data;
                 $.each(result.resultObject[$scope.relationship], function (key, value) {
                     //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
                     const itemId = value[$scope.compositiondetailschema.idFieldName];

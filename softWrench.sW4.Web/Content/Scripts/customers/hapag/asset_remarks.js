@@ -19,7 +19,7 @@ function AssetRemarksController($scope, $http, i18NService, fieldService) {
         var urlToUse = url("api/data/operation/asset/SaveRemarks?platform=web&id=" + id);
         parameters = addSchemaDataToJson(parameters, $scope.schema, null);
         var json = angular.toJson(parameters);
-        $http.post(urlToUse, json).success(function(result) {
+        $http.post(urlToUse, json).then(function(result) {
             var a;
         });
     }

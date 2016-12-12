@@ -12,7 +12,7 @@ app.directive('fileUpload', function (contextService, $log, attachmentService) {
         link: function (scope, element, attrs) {
             var fileInput = $('#uploadBtn', element);
 
-            scope.$on('sw.modal.hide', function (event, selfThrown) {
+            scope.$on(JavascriptEventConstants.HideModal, function (event, selfThrown) {
                 if ($('#uploadFile')) {
                     $('#uploadFile', element).val('');
                 }

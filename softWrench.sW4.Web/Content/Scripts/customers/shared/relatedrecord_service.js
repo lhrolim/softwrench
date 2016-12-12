@@ -8,7 +8,8 @@ angular.module('sw_layout')
             wonum: wonum,
             siteid: siteid
         };
-        searchService.searchWithData("workorder", searchData, "wonumlookup").success(function (data) {
+        searchService.searchWithData("workorder", searchData, "wonumlookup").then(function (response) {
+            const data = response.data;
             var resultObject = data.resultObject;
             var workorderid = resultObject[0]['workorderid'];
             redirectService.goToApplicationView(app, "editdetail", "input", null, { id: workorderid });

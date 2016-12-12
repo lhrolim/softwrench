@@ -12,7 +12,7 @@
 
     function scanningCommonsService($rootScope, crudContextHolderService) {
 
-        $rootScope.$on("sw.crud.applicationchanged", function() {
+        $rootScope.$on(JavascriptEventConstants.AppChanged, function () {
             $(document).scannerDetection(null);
         });
 

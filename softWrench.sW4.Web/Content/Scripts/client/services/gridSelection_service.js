@@ -154,7 +154,7 @@
             crudContextHolderService.clearSelectionBuffer(panelid);
             selectAllChanged(datamap, schema, panelid);
             if (selectionModel.showOnlySelected) {
-                dispatcherService.dispatchevent("sw.crud.list.toggleselected", panelid);
+                dispatcherService.dispatchevent(JavascriptEventConstants.ToggleSelected, panelid);
             }
         }
 

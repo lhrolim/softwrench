@@ -67,7 +67,7 @@ function JobPlanCompleteActionController($scope, $http, i18NService, contextServ
         var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + parameters.ticketid);
         parameters = addCurrentSchemaDataToJson(parameters, schema);
         var json = angular.toJson(parameters);
-        $http.post(urlToUse, json).success(function () {
+        $http.post(urlToUse, json).then(function () {
             window.location.reload();
         });
     };

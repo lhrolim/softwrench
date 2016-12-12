@@ -170,7 +170,7 @@
 
                 $log.getInstance("associationService#configureAssociationChangeEvents", ["association"]).debug("initing watchers for {0} ".format(association.attribute));
 
-                $scope.$on("sw.crud.associations.updateeageroptions", function (event, associationKey, options, contextData) {
+                $scope.$on(JavascriptEventConstants.Association_EagerOptionUpdated, function (event, associationKey, options, contextData) {
                     $timeout(function () {
                         if ($scope.schema) {
                             // if it is a composition list and have datamapId - the datamapId id from field should be the same from the event

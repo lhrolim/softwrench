@@ -267,7 +267,7 @@
         function applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
-            $rootScope.$broadcast("sw.crud.applicationchanged", schema, rootDataMap, panelid);
+            $rootScope.$broadcast(JavascriptEventConstants.AppChanged, schema, rootDataMap, panelid);
         }
 
         function clearCrudContext(panelid) {
@@ -457,7 +457,7 @@
             if (contextData == null) {
                 log.info("update eager global list for {0}. Size: {1}".format(associationKey, options.length));
                 context._eagerassociationOptions["#global"][associationKey] = options;
-                $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData);
+                $rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData);
                 return;
             }
 
@@ -472,14 +472,14 @@
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
 
 
-            $rootScope.$broadcast("sw.crud.associations.updateeageroptions", associationKey, options, contextData, panelid);
+            $rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData, panelid);
 
 
         }
 
         function markAssociationsResolved(panelid) {
             getContext(panelid).associationsResolved = true;
-            $rootScope.$broadcast("sw_associationsresolved", panelid);
+            $rootScope.$broadcast(JavascriptEventConstants.AssociationResolved, panelid);
         }
 
         function associationsResolved(panelid) {

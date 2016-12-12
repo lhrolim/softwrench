@@ -76,11 +76,12 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
     function doSaveOrDelete(method) {
         $('#saveBTN').prop('disabled', 'disabled');
         $http[method](url("api/security/User"), JSON.stringify($scope.user))
-            .success(function (data) {
+            .then(function (response) {
+                const data = response.data;
                 $('#saveBTN').removeAttr('disabled');
                 toList(data);
             })
-            .error(function (data) {
+            .catch(function (response) {
                 $('#saveBTN').removeAttr('disabled');
                 //                $scope.title = data || "Request failed";
             });
@@ -97,12 +98,13 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
         // Apply disable on the save button when all the fields are completed successfully
         $('#saveBTN').prop('disabled', 'disabled');
         $http.post(url("api/security/User"), JSON.stringify($scope.user))
-            .success(function (data) {
+            .then(function (response) {
+                const data = response.data;
                 $('#saveBTN').removeAttr('disabled');
                 toList(data.resultObject);
                 $('html, body').animate({ scrollTop: 0 }, 'fast');
             })
-            .error(function (data) {
+            .catch(function (data) {
                 $('#saveBTN').removeAttr('disabled');
                 //                $scope.title = data || "Request failed";
             });
@@ -119,7 +121,7 @@ function UserController($scope, $http, $templateCache, pwdenforceService, i18NSe
     function initUser() {
         var data = $scope.resultData;
         $scope.listObjects = data.users;
-        $scope.$emit('sw_titlechanged', i18NService.get18nValue('general.usersetup','User Setup'));
+        $scope.$emit(JavascriptEventConstants.TitleChanged, i18NService.get18nValue('general.usersetup', 'User Setup'));
         $scope.availableprofiles = data.profiles;
         $scope.availableprofilesselected = {};
         $scope.selectedProfiles = {};

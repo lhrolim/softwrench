@@ -13,7 +13,7 @@
                 const log = $log.getInstance('dashboardrendered');
                 log.debug("finished rendering dashboards");
 
-                $rootScope.$broadcast('sw_titlechanged', 'Dashboard');
+                $rootScope.$broadcast(JavascriptEventConstants.TitleChanged, 'Dashboard');
                 $rootScope.$broadcast(DashboardEventConstants.FinishLoading);
             }
         };

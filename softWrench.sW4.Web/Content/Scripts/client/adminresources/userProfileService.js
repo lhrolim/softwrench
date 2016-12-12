@@ -73,7 +73,7 @@
                 };
                 restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function (httpResponse) {
                     const compositionData = httpResponse.data.resultObject;
-                    $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+                    $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, compositionData);
                     mergeTransientIntoDatamap({ tab: tab });
                 });
             } else {
@@ -129,7 +129,7 @@
                 compositionData["#actionPermissions_"] = null;
             }
 
-            $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+            $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, compositionData);
         }
 
         function resetAssociations() {
@@ -244,7 +244,7 @@
             };
             restService.getPromise("UserProfile", "LoadAvailableActions", queryParameters).then(function (httpResponse) {
                 const compositionData = httpResponse.data.resultObject;
-                $rootScope.$broadcast("sw_compositiondataresolved", compositionData);
+                $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, compositionData);
                 mergeTransientIntoDatamap({ schema: schemaId });
             });
 

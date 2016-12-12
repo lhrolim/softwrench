@@ -264,7 +264,9 @@
                                 const selectionBuffer = $scope.selectionModel.selectionBuffer;
                                 datamap = [];
                                 for (let o in selectionBuffer) {
-                                    datamap.push(selectionBuffer[o]);
+                                    if (selectionBuffer.hasOwnProperty(o)) {
+                                        datamap.push(selectionBuffer[o]);
+                                    }
                                 }
                                 crudContextHolderService.setOriginalPaginationData($scope.paginationData, $scope.panelid);
                                 $scope.paginationData.totalCount = datamap.length;
@@ -274,7 +276,7 @@
                         }
 
                         // dispatching event for crud_tbody.js render the grid
-                        $scope.$broadcast("sw_griddatachanged", datamap, $scope.schema, $scope.panelid);
+                        $scope.$broadcast(JavascriptEventConstants.GridDataChanged, datamap, $scope.schema, $scope.panelid);
                     }
 
 
@@ -625,7 +627,7 @@
 
 
 
-                    $scope.$on("filterRowRenderedEvent", function (filterRowRenderedEvent) {
+                    $scope.$on(JavascriptEventConstants.FilterRowRendered, function (filterRowRenderedEvent) {
                         if ($scope.datamap && $scope.datamap.length <= 0) {
                             // only update filter visibility if there are no results to shown on grid... else the filter visibility will be updated on "listTableRenderedEvent"
                             fixHeaderService.updateFilterZeroOrOneEntries();
@@ -633,7 +635,7 @@
                         }
                     });
 
-                    $scope.$on("listTableRenderedEvent", function (listTableRenderedEvent) {
+                    $scope.$on(JavascriptEventConstants.ListTableRendered, function (listTableRenderedEvent) {
                         var log = $log.getInstance("sw4.crud_list_dir#on#listTableRenderedEvent");
                         log.debug("init table rendered listener");
                         const parameters = {
@@ -678,11 +680,11 @@
                         log.debug("finish table rendered listener");
                     });
 
-                    $scope.$on("sw_gridrefreshed", function (event, data, panelId) {
+                    $scope.$on(JavascriptEventConstants.GRID_REFRESHED, function (event, data, panelId) {
                         $scope.gridRefreshed(data, panelId,true);
                     });
 
-                    $scope.$on('sw.crud.list.toggleselected', function (event, args) {
+                    $scope.$on(JavascriptEventConstants.ToggleSelected, function (event, args) {
                         const panelid = args[0];
                         if ($scope.panelid !== panelid) {
                             return;
@@ -692,20 +694,20 @@
                     });
 
 
-                    $scope.$on('sw.crud.list.toggleselectionmode', function (event, args) {
+                    $scope.$on(JavascriptEventConstants.ToggleSelectionMode, function (event, args) {
                         const panelid = args[0];
                         if ($scope.panelid === panelid) {
                             crudContextHolderService.toggleSelectionMode($scope.panelid);
                         }
                     });
 
-                    $scope.$on("sw.crud.list.clearQuickSearch", function (event, args) {
+                    $scope.$on(JavascriptEventConstants.ClearQuickSearch, function (event, args) {
                         if ($scope.panelid === args[0]) {
                             $scope.vm.quickSearchDTO.quickSearchData = null;
                         }
                     });
 
-                    $scope.$on("sw_refreshgrid", function (event, searchData, searchOperator, extraparameters) {
+                    $scope.$on(JavascriptEventConstants.RefreshGrid, function (event, searchData, searchOperator, extraparameters) {
                         if ($scope.panelid != extraparameters.panelid) {
                             //DO NOT use !== here to avoid undefined and null comparisons to fail
                             return;
@@ -806,7 +808,7 @@
                                 // Set the scroll position to the top of the new page
                                 contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                                 $scope.gridRefreshed(data.data, $scope.panelid);
-                            });
+                            }).catch(err=> console.log(err));
                         }
                     }
 

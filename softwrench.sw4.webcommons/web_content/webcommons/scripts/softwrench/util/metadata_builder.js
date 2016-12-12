@@ -9,11 +9,12 @@
             $scope.HasError = false;
 
             $http.get(url("/api/generic/EntityMetadata/Build?tablename=" + $scope.table))
-                .success(function (data) {
+                .then(function (response) {
+                    const data = response.data;
                     $scope.hasdata = true;
                     $scope.metadata = data.metadata;
                 })
-                .error(function (data) {
+                .catch(function (data) {
                     $scope.error = data.error;
                     $scope.hasdata = true;
                 });

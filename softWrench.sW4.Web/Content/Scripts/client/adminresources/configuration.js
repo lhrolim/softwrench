@@ -2,10 +2,8 @@
     "use strict";
 
 var CONDITIONMODAL_$_KEY = window.CONDITIONMODAL_$_KEY = '[data-class="conditionModal"]';
-
-var app = angular.module('sw_layout');
-
-app.directive('configrendered', function ($timeout) {
+    const app = angular.module('sw_layout');
+    app.directive('configrendered', function ($timeout) {
     "ngInject";
 
     return {
@@ -14,7 +12,7 @@ app.directive('configrendered', function ($timeout) {
             if (scope.$last === true) {
                 $timeout(function () {
                     $('.no-touch [rel=tooltip]').tooltip({container: 'body', trigger: 'hover'});
-                    scope.$emit('sw_bodyrenderedevent');
+                    scope.$emit(JavascriptEventConstants.BodyRendered);
                 
                 });
             }
@@ -44,7 +42,7 @@ app.directive('conditionmodal', function (contextService) {
             };
 
             $scope.title = function() {
-                var creating = $scope.condition.id == null;
+                const creating = $scope.condition.id == null;
                 return creating ? "Create Condition" :"Edit Condition";
             }
 
@@ -65,11 +63,12 @@ app.directive('conditionmodal', function (contextService) {
 
             $scope.saveCondition = function () {
                 $scope.condition.fullKey = $scope.fullkey;
-                var iscreating = $scope.condition.id == null;
-                var jsonString = angular.toJson($scope.condition);
+                const iscreating = $scope.condition.id == null;
+                const jsonString = angular.toJson($scope.condition);
                 $http.put(url("/api/generic/Configuration/CreateCondition"), jsonString)
-                    .success(function (data) {
-                        var modal = $(CONDITIONMODAL_$_KEY);
+                    .then(function (response) {
+                        const data = response.data;
+                        const modal = $(CONDITIONMODAL_$_KEY);
                         modal.modal('hide');
                         $scope.$emit("sw_conditionsaved", data.resultObject);
                 });
@@ -205,7 +204,7 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
     };
 
     $scope.$on("sw_conditionsaved", function (event, data) {
-        var currentcategory = $scope.currentCategory;
+        const currentcategory = $scope.currentCategory;
         currentcategory.conditionsToShow = null;
         insertOrUpdateArray($scope.getConditions(currentcategory).values, data);
         insertOrUpdateArray($scope.allConditions, data);
@@ -234,9 +233,10 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
         }
 
         alertService.confirm(null, 'condition', condition.alias).then(function (result) {
-            var jsonString = angular.toJson(condition);
+            const jsonString = angular.toJson(condition);
             $http.put(url("/api/generic/Configuration/DeleteCondition?currentKey=" + $scope.currentCategory.fullKey), jsonString)
-                .success(function (data) {
+                .then(function (response) {
+                    const data = response.data;
                     data.conditions = data.resultObject;
                     if (data.conditions != undefined) {
                         data.conditions.unshift(noneCondition);
@@ -251,7 +251,7 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
     };
 
     $scope.createCondition = function () {
-        var modal = $(CONDITIONMODAL_$_KEY);
+        const modal = $(CONDITIONMODAL_$_KEY);
         $scope.modalcondition = $scope.getCurrentCondition();
         $scope.fullkey = $scope.currentCategory.fullKey;
         modal.draggable();
@@ -271,8 +271,7 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
             alertService.alert('Please, select a condition to edit');
             return;
         }
-
-        var modal = $(CONDITIONMODAL_$_KEY);
+        const modal = $(CONDITIONMODAL_$_KEY);
         $scope.modalcondition = condition;
         $scope.fullkey = $scope.currentCategory.fullKey;
         modal.draggable();
@@ -327,21 +326,20 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
         }
         $scope.showSave = true;
         //        $scope.currentCondition = noneCondition;
-        for (var i = 0; i < cat.definitions.length; i++) {
+        for (let i = 0; i < cat.definitions.length; i++) {
             var def = cat.definitions[i];
             $scope.currentValues[def.fullKey] = null;
             $scope.currentDefaultValues[def.fullKey] = def.stringValue;
-            var values = def.values;
+            const values = def.values;
             if (values == null) {
                 //sometimes we don´t have any value but the default one
                 return;
             }
             var exactMatchSet = false;
             $.each(values, function (key, propertyValue) {
-                var moduleMatches = isNullOrEqualMatching(propertyValue.module, $scope.currentmodule, 'id');
-                var profileMatches = isNullOrEqualMatchingNumeric(propertyValue.userProfile, $scope.currentprofile, 'id');
-                var exactMatch = moduleMatches.mode == true && profileMatches.mode == true;
-
+                const moduleMatches = isNullOrEqualMatching(propertyValue.module, $scope.currentmodule, 'id');
+                const profileMatches = isNullOrEqualMatchingNumeric(propertyValue.userProfile, $scope.currentprofile, 'id');
+                const exactMatch = moduleMatches.mode == true && profileMatches.mode == true;
                 if ((moduleMatches.mode == null || moduleMatches.mode == true) &&
                     (profileMatches.mode == null || profileMatches.mode == true) &&
                     nullOrEqualBothNulls(propertyValue.conditionId, $scope.currentcondition, 'id')) {
@@ -392,9 +390,10 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
         currentCategory.module = $scope.currentmodule;
         currentCategory.userProfile = $scope.currentprofile.id;
         currentCategory.condition = $scope.currentcondition.id == null ? null : $scope.currentcondition;
-        var jsonString = angular.toJson($scope.currentCategory);
-        $http.put(url("/api/generic/Configuration/Put"), jsonString)
-            .success(function (data) {
+        const jsonString = angular.toJson($scope.currentCategory);
+        return $http.put(url("/api/generic/Configuration/Put"), jsonString)
+            .then(function (response) {
+                const data = response.data;
                 $scope.categoryData = data.resultObject;
 //                $scope.categoryData[0].condition = currentCategory.condition;
                 $scope.currentCategory = navigateToCategory($scope.categoryData, currentCategory.fullKey);
@@ -403,7 +402,7 @@ function configController($scope, $http, $timeout, i18NService, alertService) {
         });
     };
 
-    $scope.$on('sw_bodyrenderedevent', function (ngRepeatFinishedEvent) {
+    $scope.$on(JavascriptEventConstants.BodyRendered, function (ngRepeatFinishedEvent) {
         const fileInput = $("input[type=file]");
         if (!fileInput.exists()) return;
         fileInput.filestyle({
