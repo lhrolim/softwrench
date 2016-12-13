@@ -185,7 +185,7 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
         toitcchanged: function (event) {
             //            event.fields['userid'] = event.fields['asset_.primaryuser_.person_.hlagdisplayname'];
             //TODO: fix the bug where the autocompleteserver is not being correctly bound if it´s included dinamically (via show expressions)
-            $("input[data-association-key=person_]").typeahead('val', event.fields['asset_.primaryuser_.person_.hlagdisplayname']);
+            $("input[data-association-key=person_]").typeahead('val', event.fields['asset_.aucisowner_.person_.hlagdisplayname']);
             var costCenter = event.fields['asset_.assetglaccount_.glaccount'];
             event.fields['costcenter'] = costCenter;
             setOriginalDataFromAttribute(event.scope.schema, event.fields, event.scope.associationOptions, 'costcenter');
