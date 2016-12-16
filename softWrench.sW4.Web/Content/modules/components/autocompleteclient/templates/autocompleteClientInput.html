@@ -8,7 +8,7 @@
                     ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata)"
                     data-associationkey="{{fieldMetadata.associationKey}}"
                     data-displayablepath="{{displayablepath}}">
-                <option value=""></option>
+                <option value="" style="display: none"></option>
             </select>
         </div>
         <div ng-switch-default>
@@ -19,7 +19,7 @@
                     ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata)"
                     data-associationkey="{{fieldMetadata.associationKey}}"
                     data-displayablepath="{{displayablepath}}">
-                <option value=""></option>
+                <option value="" style="display: none"></option>
             </select>
         </div>
     </div>

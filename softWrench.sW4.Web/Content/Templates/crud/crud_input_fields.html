@@ -144,7 +144,7 @@
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
                                         ng-init="initField(fieldMetadata)"
                                         data-field="{{fieldMetadata.associationKey}}">
-                                    <option value=""></option>
+                                    <option value="" style="display: none"></option>
                                 </select>
 
                                 <select ng-if="fieldMetadata.rendererParameters['multiple']"
@@ -156,7 +156,7 @@
                                         ng-enabled="isSelectEnabled(fieldMetadata)"
                                         ng-init="initField(fieldMetadata)"
                                         data-field="{{fieldMetadata.associationKey}}">
-                                    <option value=""></option>
+                                    <option value="" style="display: none"></option>
                                 </select>
 
                                 <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
@@ -220,7 +220,7 @@
                                             ng-options="option.value as i18NOptionField(option,fieldMetadata,schema) for option in GetAssociationOptions(fieldMetadata,datamap[fieldMetadata.target])"
                                             data-associationkey="{{fieldMetadata.associationKey}}"
                                             data-displayablepath="{{getApplicationPath(fieldMetadata)}}">
-                                        <option value=""></option>
+                                        <option value="" style="display: none"></option>
                                     </select>
                                 </div>
                                 <div ng-switch-default>
@@ -232,7 +232,7 @@
                                             ng-options="option.value as option.label for option in GetAssociationOptions(fieldMetadata,datamap[fieldMetadata.target])"
                                             data-associationkey="{{fieldMetadata.associationKey}}"
                                             data-displayablepath="{{getApplicationPath(fieldMetadata)}}">
-                                        <option value=""></option>
+                                        <option value="" style="display: none"></option>
                                     </select>
                                 </div>
                             </div>

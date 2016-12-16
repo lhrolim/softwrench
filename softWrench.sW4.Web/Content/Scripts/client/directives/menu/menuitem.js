@@ -181,7 +181,7 @@
                             crudContextHolderService.clearDirty();
                             crudContextHolderService.clearDetailDataResolved();
                             $scope.$digest();
-                        });
+                        }).catch(err => console.log(err));
                     }
                     else {
                         menuService.goToApplication(leaf, target);
