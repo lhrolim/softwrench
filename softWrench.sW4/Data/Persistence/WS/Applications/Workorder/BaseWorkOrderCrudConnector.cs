@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -20,34 +21,27 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         //        private const string _newlongdescriptionKey = "newlongdescriptionKey";
         //        private const string _notFoundLog = "{0} {1} not found. Impossible to generate FollowUp Workorder";
 
-        protected AttachmentHandler AttachmentHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            }
+        [Import]
+        public AttachmentHandler AttachmentHandler { get; set; }
+
+        [Import]
+        public CommLogHandler CommlogHandler {
+            get; set;
         }
 
-        protected CommLogHandler CommlogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
-            }
+        [Import]
+        public EmailService EmailService {
+            get; set;
         }
 
-        protected EmailService EmailService {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
-            }
+        [Import]
+        public LabTransHandler LabTransHandler {
+            get; set;
         }
 
-        protected LabTransHandler LabTransHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<LabTransHandler>(typeof(LabTransHandler));
-            }
-        }
-
-        protected WorkLogHandler WorkLogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
-            }
+        [Import]
+        public WorkLogHandler WorkLogHandler {
+            get; set;
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -110,6 +104,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
             base.AfterUpdate(maximoTemplateData);
+        }
+
+        public override string ApplicationName() {
+            return "workorder";
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
@@ -220,7 +218,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
                 WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1.0);
-                
+
                 var now = DateTime.Now.FromServerToRightKind();
                 WsUtil.SetValue(integrationObject, "TRANSDATE", now, true);
                 WsUtil.SetValue(integrationObject, "ACTUALDATE", now, true);

@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             return method;
         }
 
-        internal override object FindById(object id) {
+        public override object FindById(object id) {
             throw new NotImplementedException();
         }
 

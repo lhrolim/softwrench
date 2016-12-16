@@ -3,6 +3,7 @@ using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using System;
+using System.ComponentModel.Composition;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -24,17 +25,16 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ChicagoSRCrudConnector));
 
-        private IProblemManager ProblemManager {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<IProblemManager>(typeof(IProblemManager));
-            }
+        [Import]
+        public ProblemManager ProblemManager {
+            get; set;
         }
 
-        private IMaximoHibernateDAO MaximoDAO {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO));
-            }
+        [Import]
+        public IMaximoHibernateDAO MaximoDAO {
+            get; set;
         }
+
 
         public ChicagoSRCrudConnector() {
             Log.Debug("init log...");
@@ -79,7 +79,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             } else {
                 var originalTicketUid = crudOperationData.Id;
                 var originalTicketid = crudOperationData.UserId;
-                
+
 
                 //updating ISM Entry which already exists
                 var ismTicketUid = crudOperationData.GetAttribute(ISMTicketUid);
@@ -240,6 +240,10 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
 
             return new TicketOriginalData(ticketUid, ticketId, obj[1].ToString());
 
+        }
+
+        public override string ClientFilter() {
+            return "chicago";
         }
 
         internal class TicketOriginalData {

@@ -2,7 +2,9 @@
 using softWrench.sW4.Data.Persistence.Operation;
 
 namespace softwrench.sw4.pesco.classes.com.cts.pesco.action {
-    public class PescoDispatchOperationHandler : DispatchOperationHandler {
+    public class PescoDispatchOperationHandler : DispatchWorkorderConnector {
+
+
         public override CrudOperationData CreateWoCrudData(CrudOperationData srCrudData) {
             var woCrudData = base.CreateWoCrudData(srCrudData);
             var lostenergy3 = srCrudData.GetAttribute("lostenergy3");
@@ -10,6 +12,10 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.action {
             woCrudData.SetAttribute("lostenergy", lostenergy3);
             woCrudData.SetAttribute("lostenergyamount", lostenergyamount);
             return woCrudData;
+        }
+
+        public override string ClientFilter() {
+            return "pesco";
         }
     }
 }

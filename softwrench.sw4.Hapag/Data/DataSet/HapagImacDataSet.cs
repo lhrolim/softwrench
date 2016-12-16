@@ -16,7 +16,6 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
-using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -30,6 +29,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using softwrench.sw4.Hapag.Data.WS.Ism.Base;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     public class HapagImacDataSet : HapagBaseApplicationDataSet {

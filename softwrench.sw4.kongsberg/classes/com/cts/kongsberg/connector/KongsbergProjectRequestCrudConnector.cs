@@ -19,5 +19,9 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
             // Resubmitting MIF for ServiceAddress Update
             ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
         }
+
+        public override string ClientFilter() {
+            return "kongsberg";
+        }
     }
 }

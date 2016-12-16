@@ -50,12 +50,15 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\NHibernateX.1.3.1.4000\lib\net45\NHibernate.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NHibernate.Mapping.Attributes, Version=3.2.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <HintPath>..\packages\NHibernate.Mapping.Attributes.3.2.0.0\lib\NHibernate.Mapping.Attributes.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -65,6 +68,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="WcfSamples.DynamicProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\AssetRamControlWhereClauseProvider.cs" />
@@ -76,6 +83,7 @@
     <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
     <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
     <Compile Include="Data\InMemoryUserExtensions.cs" />
+    <Compile Include="Data\ISMAuditTrail.cs" />
     <Compile Include="Data\SsoWhereClauseProvider.cs" />
     <Compile Include="Data\DashboardWhereClauseProvider.cs" />
     <Compile Include="Data\DataSet\Helper\AssetConstants.cs" />
@@ -109,6 +117,30 @@
     <Compile Include="Data\Sync\HapagPersonGroupHelper.cs" />
     <Compile Include="Data\Sync\PersonGroupAssociationSyncManager.cs" />
     <Compile Include="Data\Sync\PersonGroupSyncManager.cs" />
+    <Compile Include="Data\WS\FollowUpWorkorderHandler.cs" />
+    <Compile Include="Data\WS\Handlers\HapagChangeHandler.cs" />
+    <Compile Include="Data\WS\Handlers\HapagServiceRequestCrudConnector.cs" />
+    <Compile Include="Data\WS\Handlers\HapagSRLongDescriptionHandler.cs" />
+    <Compile Include="Data\WS\Ism\Base\BaseISMDecorator.cs" />
+    <Compile Include="Data\WS\Ism\Base\BaseISMTicketDecorator.cs" />
+    <Compile Include="Data\WS\Ism\Base\ISMAttachmentHandler.cs" />
+    <Compile Include="Data\WS\Ism\Base\ISMConstants.cs" />
+    <Compile Include="Data\WS\Ism\Base\ISMCrudConnector.cs" />
+    <Compile Include="Data\WS\Ism\Base\ISMExecutionContext.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Change\ChangeApprovalActionCustomConnector.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Change\ChangeCompleteActionCustomConnector.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Change\ISMChangeCrudConnector.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Change\IsmNewChangeCrudConnectorDecorator.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Imac\IImacServicePlanHelper.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Imac\ImacCompleteActionCustomConnector.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Imac\ImacDescriptionHandler.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Imac\IsmImacCrudConnectorDecorator.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Incident\IsmIncidentCrudConnector.cs" />
+    <Compile Include="Data\WS\Ism\Entities\ISMServiceEntities.cs" />
+    <Compile Include="Data\WS\Ism\Entities\Problem\ISMProblemCrudConnector.cs" />
+    <Compile Include="Data\WS\Ism\Entities\SR\IsmSRCrudConnectorDecorator.cs" />
+    <Compile Include="Data\WS\SaveRemarkCrudConnector.cs" />
+    <Compile Include="Data\WS\UpdateStatusWorkorderHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\ImacConfigs\WoActivityGroup.cs" />
     <Compile Include="Security\HlagGroupedLocation.cs" />

@@ -6,14 +6,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     class BasePhysicalCountCrudConnector : CrudConnectorDecorator {
 
-        public BasePhysicalCountCrudConnector() {
-            
-        }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var physicalCount = maximoTemplateData.IntegrationObject;
             w.SetValue(physicalCount, "reconciled", false);
             base.BeforeCreation(maximoTemplateData);
+        }
+
+        public override string ApplicationName() {
+            return "physicalcount";
         }
     }
 }

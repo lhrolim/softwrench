@@ -22,5 +22,9 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
             SetSwChangeBy(sr);
             base.BeforeCreation(maximoTemplateData);
         }
+
+        public override string ClientFilter() {
+            return "kongsberg";
+        }
     }
 }

@@ -72,6 +72,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\pae\connector\PaeAssetCrudConnector.cs" />
     <Compile Include="classes\com\cts\pae\connector\PaePrCrudConnector.cs" />
     <Compile Include="classes\com\cts\pae\configuration\PaeWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\pae\dataset\PaeAssetDataSet.cs" />

@@ -29,8 +29,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
         public override void DoFindById(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudFindByIdConnector.DoFindById(maximoTemplateData);
         }
+
         public override void AfterFindById(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudFindByIdConnector.AfterFindById(maximoTemplateData);
+        }
+
+        
+        public override string ApplicationName() {
+            return null;
         }
     }
 }

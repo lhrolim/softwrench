@@ -6,15 +6,13 @@ using softWrench.sW4.Util;
 using System;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
-namespace softWrench.sW4.Data.Persistence.WS.Commons
-{
-    class BaseAssetCrudConnector : CrudConnectorDecorator
-    {
-        
+namespace softWrench.sW4.Data.Persistence.WS.Commons {
+    public class BaseAssetCrudConnector : CrudConnectorDecorator {
+
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
-            
+
             w.SetValueIfNull(sr, "CHANGEDATE", DateTime.Now.FromServerToRightKind(), true);
             w.SetValueIfNull(sr, "CHANGEBY", user.Login);
 
@@ -23,8 +21,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        public override string ApplicationName() {
+            return "asset";
+        }
+
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            CommonTransaction(maximoTemplateData);           
+            CommonTransaction(maximoTemplateData);
             base.BeforeCreation(maximoTemplateData);
         }
 

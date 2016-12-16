@@ -26,5 +26,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
             base.BeforeCreation(maximoTemplateData);
         }
+
+        public override string ApplicationName() {
+            return "inventory";
+        }
     }
 }

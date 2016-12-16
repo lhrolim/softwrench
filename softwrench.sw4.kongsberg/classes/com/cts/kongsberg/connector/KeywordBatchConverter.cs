@@ -4,9 +4,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
 
     public class KeywordBatchConverter : ABatchSubmissionConverter {
 
-        public override string BatchProperty {
-            get { return "#keywordlist_"; }
-        }
+        public override string BatchProperty => "#keywordlist_";
 
         public override string ApplicationName() {
             return "keyword";

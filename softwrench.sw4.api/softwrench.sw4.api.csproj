@@ -74,7 +74,9 @@
   <ItemGroup>
     <Compile Include="classes\application\ApplicationFiltereableProvider.cs" />
     <Compile Include="classes\application\ApplicationFiltereableKey.cs" />
+    <Compile Include="classes\application\IActionpplicationFiltereable.cs" />
     <Compile Include="classes\application\IApplicationFiltereable.cs" />
+    <Compile Include="classes\application\IBaseApplicationFiltereable.cs" />
     <Compile Include="classes\configuration\IConfigurationFacadeCommons.cs" />
     <Compile Include="classes\configuration\PropertyDefinitionRegistry.cs" />
     <Compile Include="classes\email\EmailAttachment.cs" />

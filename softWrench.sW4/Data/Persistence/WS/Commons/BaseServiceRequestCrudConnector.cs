@@ -4,10 +4,10 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
+using System.ComponentModel.Composition;
 using System.Linq;
 using cts.commons.portable.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
-using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Email;
@@ -16,29 +16,23 @@ using softWrench.sW4.Email;
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     public class BaseServiceRequestCrudConnector : CrudConnectorDecorator {
-        protected AttachmentHandler AttachmentHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            }
+
+        [Import]
+        public AttachmentHandler AttachmentHandler { get; set; }
+        [Import]
+        public CommLogHandler CommlogHandler { get; set; }
+
+        [Import]
+        public WorkLogHandler WorkLogHandler {
+            get; set;
         }
 
-        protected CommLogHandler CommlogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
-            }
+        [Import]
+        public EmailService EmailService {
+            get; set;
         }
 
-        protected WorkLogHandler WorkLogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
-            }
-        }
 
-        protected EmailService EmailService {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
-            }
-        }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             // Update common fields or transactions prior to maximo operation execution
@@ -93,6 +87,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.AfterUpdate(maximoTemplateData);
         }
 
+        public override string ApplicationName() {
+            return "servicerequest,sr,quickservicerequest";
+        }
+
 
         private void CommonTransaction(MaximoOperationExecutionContext maximoTemplateData) {
             // Get current username that trigger the transaction
@@ -128,7 +126,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             var user = SecurityFacade.CurrentUser();
             var saddresscode = data.GetUnMappedAttribute("saddresscode");
 
-            if (saddresscode == null) return;
+            if (saddresscode == null)
+                return;
 
             var description = data.GetUnMappedAttribute("#tkdesc");
             var formattedaddr = data.GetUnMappedAttribute("#tkformattedaddress");

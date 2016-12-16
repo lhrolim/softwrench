@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             return _methodName;
         }
 
-        internal override object FindById(object id) {
+        public override object FindById(object id) {
             var type = Proxy.ProxyType;
             var mi = type.GetMethod(MethodName());
             var pi = mi.GetParameters().First();

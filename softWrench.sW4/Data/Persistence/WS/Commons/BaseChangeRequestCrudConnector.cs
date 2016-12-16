@@ -11,17 +11,9 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     class BaseChangeRequestCrudConnector : CrudConnectorDecorator {
 
-        protected AttachmentHandler AttachmentHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            }
-        }
+        protected AttachmentHandler AttachmentHandler => SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
 
-        protected WorkLogHandler WorkLogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
-            }
-        }
+        protected WorkLogHandler WorkLogHandler => SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
@@ -35,6 +27,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             CommonTransaction(maximoTemplateData);
 
             base.BeforeUpdate(maximoTemplateData);
+        }
+
+        public override string ApplicationName() {
+            return "change";
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {

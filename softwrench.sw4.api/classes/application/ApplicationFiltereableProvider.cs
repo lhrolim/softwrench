@@ -5,7 +5,7 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 
 namespace softwrench.sw4.api.classes.application {
-    public abstract class ApplicationFiltereableProvider<T> : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent> where T : IApplicationFiltereable {
+    public abstract class ApplicationFiltereableProvider<T> : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent> where T : IBaseApplicationFiltereable {
 
         private readonly IDictionary<ApplicationFiltereableKey, T> _defaultStorage = new Dictionary<ApplicationFiltereableKey, T>();
 
@@ -19,8 +19,8 @@ namespace softwrench.sw4.api.classes.application {
 
         protected abstract T LocateDefaultItem(string applicationName, string schemaId, string clientName);
 
-        protected ApplicationFiltereableKey LookUp(string applicationName, string schemaId, string clientName, IDictionary<ApplicationFiltereableKey, T> storageToUse = null) {
-            var key = new ApplicationFiltereableKey(applicationName, clientName, schemaId);
+        protected ApplicationFiltereableKey LookUp(string applicationName, string extraKey, string clientName, IDictionary<ApplicationFiltereableKey, T> storageToUse = null) {
+            var key = new ApplicationFiltereableKey(applicationName, clientName, extraKey);
             if (storageToUse == null) {
                 storageToUse = _defaultStorage;
             }
@@ -29,13 +29,13 @@ namespace softwrench.sw4.api.classes.application {
                 return key;
             }
             //try otb as fallback
-            key = new ApplicationFiltereableKey(applicationName, "otb", schemaId);
+            key = new ApplicationFiltereableKey(applicationName, "otb", extraKey);
             if (storageToUse.ContainsKey(key)) {
                 return key;
             }
 
             //second just app + schema
-            key = new ApplicationFiltereableKey(applicationName, null, schemaId);
+            key = new ApplicationFiltereableKey(applicationName, null, extraKey);
             if (storageToUse.ContainsKey(key)) {
                 return key;
             }
@@ -63,33 +63,39 @@ namespace softwrench.sw4.api.classes.application {
         }
 
         public virtual void Init() {
-            var dataSets = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<T>(typeof(T));
+            var items = SimpleInjectorGenericFactory.Instance.GetObjectsOfType<T>(typeof(T));
 
-            foreach (var dataSet in dataSets) {
-                RegisterDataSet(dataSet);
+            foreach (var dataSet in items) {
+                RegisterItem(dataSet);
             }
         }
 
-        public virtual void RegisterDataSet(T dataSet) {
-            var applicationNames = dataSet.ApplicationName();
+        public virtual void RegisterItem(T item) {
+            var applicationNames = item.ApplicationName();
 
             if (applicationNames == null) {
                 //null stands for framework instances... we dont need to handle these
                 return;
             }
-            var schemaId = dataSet.SchemaId();
+            string extraKey = null;
+            if (item is IActionpplicationFiltereable) {
+                extraKey = ((IActionpplicationFiltereable)item).ActionId();
+            } else if (item is IApplicationFiltereable) {
+                extraKey = ((IApplicationFiltereable)item).SchemaId();
+            }
 
-            var storageToUse = LocateStorage(dataSet);
 
-            var clientFilter = dataSet.ClientFilter();
+            var storageToUse = LocateStorage(item);
+
+            var clientFilter = item.ClientFilter();
             foreach (string applicationName in applicationNames.Split(',')) {
                 if (clientFilter != null) {
                     var strings = clientFilter.Split(',');
                     foreach (var client in strings) {
-                        storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, schemaId), dataSet);
+                        storageToUse.Add(new ApplicationFiltereableKey(applicationName, client, extraKey), item);
                     }
                 } else {
-                    storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, schemaId), dataSet);
+                    storageToUse.Add(new ApplicationFiltereableKey(applicationName, null, extraKey), item);
                 }
             }
         }

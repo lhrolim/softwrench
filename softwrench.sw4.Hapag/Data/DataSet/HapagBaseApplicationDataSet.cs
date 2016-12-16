@@ -4,7 +4,6 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sw4.Hapag.Security;
 using softwrench.sw4.Shared2.Data.Association;
-using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Util;
@@ -12,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
+using softwrench.sw4.Hapag.Data.WS.Ism.Base;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     public class HapagBaseApplicationDataSet : MaximoApplicationDataSet {

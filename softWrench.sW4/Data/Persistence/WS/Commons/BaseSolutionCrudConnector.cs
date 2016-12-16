@@ -10,6 +10,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             CommonTransaction(maximoTemplateData);
         }
 
+        public override string ApplicationName() {
+            return "solution";
+        }
+
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             CommonTransaction(maximoTemplateData);
         }

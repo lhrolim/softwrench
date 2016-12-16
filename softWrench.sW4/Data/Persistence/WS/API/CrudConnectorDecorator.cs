@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using softWrench.sW4.Data.Persistence.Engine;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Data.API.Response;
@@ -11,20 +12,20 @@ using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
-    public abstract class CrudConnectorDecorator : IMaximoCrudConnector {
+    public abstract class CrudConnectorDecorator : IMaximoCrudConnector, IConnectorDecorator {
         protected BaseMaximoCrudConnector _realCrudConnector;
 
-        protected internal MaximoConnectorEngine ConnectorEngine {
-            get {
-                return
-                    SimpleInjectorGenericFactory.Instance.GetObject<MaximoConnectorEngine>(
-                        typeof(MaximoConnectorEngine));
-            }
-        } 
+
+        [Import]
+        public MaximoConnectorEngine ConnectorEngine { get; set; }
 
         public BaseMaximoCrudConnector RealCrudConnector {
-            get { return _realCrudConnector; }
-            set { _realCrudConnector = value; }
+            get {
+                return _realCrudConnector;
+            }
+            set {
+                _realCrudConnector = value;
+            }
         }
 
         public virtual DynamicObject CreateProxy(EntityMetadata metadata) {
@@ -83,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             RealCrudConnector.AfterCreation(maximoTemplateData);
         }
         #endregion
-        
+
         #region Retrieve
         public virtual void BeforeFindById(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudConnector.BeforeFindById(maximoTemplateData);
@@ -99,13 +100,13 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
         #region Update
         public virtual void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudConnector.BeforeUpdate(maximoTemplateData);
-        }        
+        }
         public virtual void DoUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudConnector.DoUpdate(maximoTemplateData);
-        }        
+        }
         public virtual void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             RealCrudConnector.AfterUpdate(maximoTemplateData);
-        }        
+        }
         #endregion
 
         #region Delete
@@ -119,5 +120,14 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             RealCrudConnector.AfterDeletion(maximoTemplateData);
         }
         #endregion
+
+        public abstract string ApplicationName();
+        public virtual string ClientFilter() {
+            return null;
+        }
+
+        public virtual string ActionId() {
+            return null;
+        }
     }
 }

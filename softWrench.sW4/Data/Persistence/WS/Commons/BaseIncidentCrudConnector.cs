@@ -4,6 +4,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
+using System.ComponentModel.Composition;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
@@ -14,28 +15,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     public class BaseIncidentCrudConnector : CrudConnectorDecorator {
 
-        protected AttachmentHandler AttachmentHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            }
+        [Import]
+        public AttachmentHandler AttachmentHandler {get; set; }
+
+        [Import]
+        public CommLogHandler CommlogHandler {
+            get; set;
         }
 
-        protected CommLogHandler CommlogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<CommLogHandler>(typeof(CommLogHandler));
-            }
+        [Import]
+        public WorkLogHandler WorkLogHandler {
+            get; set;
         }
 
-        protected WorkLogHandler WorkLogHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<WorkLogHandler>(typeof(WorkLogHandler));
-            }
-        }
-
-        protected EmailService EmailService {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<EmailService>(typeof(EmailService));
-            }
+        [Import]
+        public EmailService EmailService {
+            get; set;
         }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
@@ -66,7 +61,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
             LongDescriptionHandler.HandleLongDescription(sr, crudData);
 
-         
+
 
             // Update or create attachments
             AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
@@ -77,8 +72,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        public override string ApplicationName() {
+            return "incident";
+        }
+
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
-            var user = SecurityFacade.CurrentUser();
             var sr = maximoTemplateData.IntegrationObject;
             w.SetValue(sr, "ACTLABHRS", 0);
             w.SetValue(sr, "ACTLABCOST", 0);

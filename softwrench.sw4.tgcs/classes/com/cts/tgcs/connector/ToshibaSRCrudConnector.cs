@@ -28,6 +28,10 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.connector {
             base.BeforeUpdate(maximoTemplateData);
         }
 
+        public override string ClientFilter() {
+            return "tgcs";
+        }
+
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             base.AfterUpdate(maximoTemplateData);
 

@@ -55,5 +55,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             }
         }
 
+        public override string ApplicationName() {
+            return "servicerequest";
+        }
+
+        public override string ActionId() {
+            return "changestatus";
+        }
     }
 }

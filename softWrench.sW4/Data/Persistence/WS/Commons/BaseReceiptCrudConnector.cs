@@ -7,11 +7,9 @@ using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class BaseReceiptCrudConnector: CrudConnectorDecorator {
+    class BaseReceiptCrudConnector : CrudConnectorDecorator {
 
-        public BaseReceiptCrudConnector(){
-            
-        }
+
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
@@ -31,6 +29,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValueIfNull(receipt, "transdate", DateTime.Now.FromServerToRightKind());
             w.SetValueIfNull(receipt, "actualdate", DateTime.Now.AddMinutes(-1.00).FromServerToRightKind());
             base.BeforeCreation(maximoTemplateData);
+        }
+
+        public override string ApplicationName() {
+            return "receipt";
         }
     }
 }

@@ -6,7 +6,7 @@ using softWrench.sW4.Data.Persistence.WS.Internal;
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
     public class KongsbergIncidentCrudConnector : BaseIncidentCrudConnector {
 
-        
+
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var incident = maximoTemplateData.IntegrationObject;
 
@@ -34,6 +34,10 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
 
             //TODO: Delete the failed commlog entry or marked as failed : Input from JB needed 
             base.AfterUpdate(maximoTemplateData);
+        }
+
+        public override string ClientFilter() {
+            return "kongsberg";
         }
     }
 }

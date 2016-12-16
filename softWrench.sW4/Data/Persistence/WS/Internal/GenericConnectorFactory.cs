@@ -2,10 +2,10 @@
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
-using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Persistence.WS.Mea;
 using softWrench.sW4.Data.Persistence.WS.Mif;
 using softWrench.sW4.Data.Persistence.WS.Rest;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
@@ -45,34 +45,38 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (customConnectorTypeName == null) {
                 connectorParams.TryGetValue("customconnector", out customConnectorTypeName);
             }
-            return DoGetConnector(operation, customConnectorTypeName);
+            var entityName = metadata.Name;
+            if (entityName.Equals("sr")) {
+                entityName = "servicerequest";
+            }
+
+            var decoratorProvider = ConnectorDecoratorProvider.GetInstance();
+
+            var customConnector = decoratorProvider.LookupItem(entityName, operation, ApplicationConfiguration.ClientName);
+            return customConnector;
         }
 
-        private static IMaximoConnector DoGetConnector(string operation, string customConnectorTypeName) {
-            if (customConnectorTypeName == null) {
-                return null;
-            }
-            //TODO: use simpleinjector
-            try {
-                var connector = (IMaximoConnector)ReflectionUtil.InstanceFromName(customConnectorTypeName);
-                if (OperationConstants.IsCrud(operation) && !(connector is IMaximoCrudConnector)) {
-                    throw ExceptionUtil.InvalidOperation(WrongCrudConnectorType, customConnectorTypeName,
-                        typeof(IMaximoCrudConnector).Name);
-                }
-                return connector;
-            } catch (InvalidCastException) {
-                throw ExceptionUtil.InvalidOperation(WrongConnectorType, customConnectorTypeName,
-                    typeof(IMaximoConnector).Name);
-            } catch (Exception) {
-                throw ExceptionUtil.InvalidOperation("Custom connector {0} not found", customConnectorTypeName);
-            }
-        }
+        //        private static IMaximoConnector DoGetConnector(string entityName, string operation, string customConnectorTypeName) {
+        //          try {
+        //                
+        //                if (OperationConstants.IsCrud(operation) && !(connector is IMaximoCrudConnector)) {
+        //                    throw ExceptionUtil.InvalidOperation(WrongCrudConnectorType, customConnectorTypeName,
+        //                        typeof(IMaximoCrudConnector).Name);
+        //                }
+        //                return connector;
+        //            } catch (InvalidCastException) {
+        //                throw ExceptionUtil.InvalidOperation(WrongConnectorType, customConnectorTypeName,
+        //                    typeof(IMaximoConnector).Name);
+        //            } catch (Exception) {
+        //                throw ExceptionUtil.InvalidOperation("Custom connector not found", customConnectorTypeName);
+        //            }
+        //        }
 
         public static BaseMaximoCrudConnector GetBaseConnector(WsProvider? provider = null) {
             if (provider == null) {
                 provider = WsUtil.WsProvider();
             }
-            
+
             if (WsProvider.MEA.Equals(provider)) {
                 return new MeaCrudConnector();
             }
@@ -80,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 return new MifCrudConnector();
             }
             if (WsProvider.ISM.Equals(provider)) {
-                return new IsmCrudConnector();
+                //                return new IsmCrudConnector();
             }
             if (WsProvider.REST.Equals(provider)) {
                 return new RestCrudConnector();

@@ -36,21 +36,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         private readonly ApplicationMetadata _applicationMetadata;
         private readonly EntityMetadata _metadata;
 
-        public IOperationData OperationData {
-            get {
-                return _operationData;
-            }
-        }
-        public ApplicationMetadata ApplicationMetadata {
-            get {
-                return _applicationMetadata;
-            }
-        }
-        public EntityMetadata Metadata {
-            get {
-                return _metadata;
-            }
-        }
+        public IOperationData OperationData => _operationData;
+        public ApplicationMetadata ApplicationMetadata => _applicationMetadata;
+        public EntityMetadata Metadata => _metadata;
 
         public object IntegrationObject {
             get; set;
@@ -108,7 +96,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         protected abstract string MethodName();
 
-        internal abstract object FindById(Object id);
+        public abstract object FindById(Object id);
 
         /// <summary>
         /// Executes the invocation on the Proxy to MAXIMO's Web Service

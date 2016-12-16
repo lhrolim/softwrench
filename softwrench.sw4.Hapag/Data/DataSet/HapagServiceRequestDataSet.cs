@@ -11,7 +11,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Entities;
-using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -24,6 +23,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using softwrench.sw4.Hapag.Data.WS.Ism.Base;
 using softWrench.sW4.Metadata.Applications.DataSet.Faq;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {

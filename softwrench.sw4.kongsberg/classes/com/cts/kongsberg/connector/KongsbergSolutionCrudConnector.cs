@@ -32,6 +32,10 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector {
             base.BeforeCreation(maximoTemplateData);
         }
 
+        public override string ClientFilter() {
+            return "kongsberg";
+        }
+
         private static void ManageKeywords(MaximoOperationExecutionContext maximoTemplateData) {
             var solution = maximoTemplateData.IntegrationObject;
             var operationData = maximoTemplateData.OperationData;

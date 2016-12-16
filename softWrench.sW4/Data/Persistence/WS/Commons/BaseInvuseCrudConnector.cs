@@ -9,9 +9,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
 
     class BaseInvuseCrudConnector : CrudConnectorDecorator {
 
-        public BaseInvuseCrudConnector() {
-            
-        }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var entity = (CrudOperationData)maximoTemplateData.OperationData;
@@ -26,6 +23,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             w.SetValue(invuse, "STATUS", "COMPLETE");
             InvuselineHandler.HandleInvuseline(entity, invuse);
             base.BeforeCreation(maximoTemplateData);
+        }
+
+        public override string ApplicationName() {
+            return "invuse";
         }
     }
 }

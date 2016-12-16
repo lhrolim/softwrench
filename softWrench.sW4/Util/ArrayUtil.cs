@@ -2,7 +2,7 @@
 using System.Linq;
 
 namespace softWrench.sW4.Util {
-    class ArrayUtil {
+    public class ArrayUtil {
 
         public static T[] Push<T>(T[] arr, T element) {
             if (arr == null) {

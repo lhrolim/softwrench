@@ -5,6 +5,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
@@ -12,11 +13,9 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
     public class BasePurchaseRequestCrudConnector : CrudConnectorDecorator {
 
-        protected AttachmentHandler AttachmentHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            }
-        }
+
+        [Import]
+        public AttachmentHandler AttachmentHandler { get; set; }
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var user = SecurityFacade.CurrentUser();
@@ -38,6 +37,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }*/
             HandlePRLINES(maximoTemplateData, crudData, sr);
             base.BeforeUpdate(maximoTemplateData);
+        }
+
+        public override string ApplicationName() {
+            return "pr";
         }
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {

@@ -7,7 +7,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
-    class MeterReadingOperationHandler : BaseMaximoCustomConnector {
+    public class MeterReadingOperationHandler : BaseMaximoCustomConnector {
         private readonly EntityMetadata _meterReadingEntity;
         private EntityMetadata _woEntity;
 
@@ -52,8 +52,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder {
         }
 
 
+        public override string ApplicationName() {
+            return "workorder";
+        }
 
-
+        public override string ActionId() {
+            return "entermeter";
+        }
     }
 }
 

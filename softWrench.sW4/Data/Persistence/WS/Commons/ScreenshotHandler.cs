@@ -7,7 +7,7 @@ using System.Text;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Commons {
-    class ScreenshotHandler {
+    public class ScreenshotHandler {
 
         protected AttachmentHandler _attachmentHandler;
 

@@ -56,6 +56,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             }
         }
 
+        public override string ApplicationName() {
+            return "person";
+        }
+
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var person = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);

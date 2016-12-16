@@ -56,7 +56,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
             return _MethodName;
         }
 
-        internal override object FindById(Object id) {
+        public override object FindById(Object id) {
             InMemoryUser curUser = SecurityFacade.CurrentUser();
             Type type = _queryProxy.ProxyType;
             MethodInfo mi = type.GetMethod(_MethodName);

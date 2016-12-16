@@ -3,20 +3,20 @@
 namespace softwrench.sw4.api.classes.application {
     public class ApplicationFiltereableKey {
         readonly string _application;
-        readonly string _schemaId;
+        readonly string _extraKey;
         readonly string _client;
 
-        public ApplicationFiltereableKey(string application, string client, string schemaId) {
+        public ApplicationFiltereableKey(string application, string client, string extraKey) {
             _application = application.ToLower();
             _client = client;
-            _schemaId = schemaId;
+            _extraKey = extraKey;
         }
 
         private bool Equals(ApplicationFiltereableKey other) {
             var applicationEquals = string.Equals(_application, other._application, StringComparison.CurrentCultureIgnoreCase);
             var clientEquals = _client == null || string.Equals(_client, other._client, StringComparison.CurrentCultureIgnoreCase);
-            var schemaEquals = _schemaId == null || string.Equals(_schemaId, other._schemaId, StringComparison.CurrentCultureIgnoreCase);
-            return applicationEquals && clientEquals && schemaEquals;
+            var extraKeyEquals = _extraKey == null || string.Equals(_extraKey, other._extraKey, StringComparison.CurrentCultureIgnoreCase);
+            return applicationEquals && clientEquals && extraKeyEquals;
         }
 
         public override bool Equals(object obj) {
@@ -28,12 +28,12 @@ namespace softwrench.sw4.api.classes.application {
 
         public override int GetHashCode() {
             unchecked {
-                return ((_application != null ? _application.ToLower().GetHashCode() : 0) * 397) ^ (_client != null ? _client.ToLower().GetHashCode() : 0) ^ (_schemaId != null ? _schemaId.ToLower().GetHashCode() : 0);
+                return ((_application?.ToLower().GetHashCode() ?? 0) * 397) ^ (_client?.ToLower().GetHashCode() ?? 0) ^ (_extraKey?.ToLower().GetHashCode() ?? 0);
             }
         }
 
         public override string ToString() {
-            return string.Format("Application: {0}, Client: {1}", _application, _client);
+            return $"Application: {_application}, Client: {_client}";
         }
     }
 }

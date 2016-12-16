@@ -12,5 +12,9 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.connector {
             w.SetValue(pr, "SWCHANGEBY", user.Login);
             base.BeforeUpdate(maximoTemplateData);
         }
+
+        public override string ClientFilter() {
+            return "pae";
+        }
     }
 }

@@ -15,7 +15,7 @@ using System.Net;
 using softWrench.sW4.Data.Persistence.WS.API;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
-    internal class DynamicProxyUtil : ISWEventListener<ClearCacheEvent> {
+    public class DynamicProxyUtil : ISWEventListener<ClearCacheEvent> {
 
         private const string MissingKeyMsg = "Please provide integration_interface key for entity {0}";
 
