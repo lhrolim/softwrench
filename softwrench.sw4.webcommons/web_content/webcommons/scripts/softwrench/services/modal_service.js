@@ -68,8 +68,7 @@
                         appResponseData = datamap;
                         datamap = datamap.resultObject;
                     }
-
-                    var modaldata = {
+                    const modaldata = {
                         schema: schemaorModalData,
                         datamap: datamap,
                         appResponseData: appResponseData,
@@ -82,7 +81,6 @@
                         onloadfn: properties.onloadfn,
                         closeAfterSave: properties.closeAfterSave
                     };
-
                     crudContextHolderService.registerSaveFn(savefn);
 
                     $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modaldata);

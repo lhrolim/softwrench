@@ -49,12 +49,17 @@ const TitleChanged = "sw.crud.navigation.titlechanged";
 
 const RenderView = "sw.crud.navigation.renderview";
 
+//TODO: reconsider this one
+const RenderViewWithData = "sw.crud.navigation.renderwithdata";
+
 const REDIRECT_BEFORE = "sw.crud.navigation.beforeredirection";
 
 //Happens after the server side has returned data and the app is ready to redirect
 const REDIRECT_AFTER = "sw.crud.navigation.redirected";
 
 const REDIRECT_AFTERACTION = "sw.crud.navigation.actionredirected";
+
+
 
 
 
@@ -229,6 +234,10 @@ class JavascriptEventConstants {
 
     static get RenderView() {
         return RenderView;
+    }
+
+    static get RenderViewWithData() {
+        return RenderViewWithData;
     }
 
 

@@ -4,7 +4,7 @@
 
 
 
-    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", "checkpointService", applicationService]);
+    angular.module('webcommons_services').factory('applicationService', ["$q", '$http', '$rootScope','$injector', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", applicationService]);
 
     function fillApplicationParameters(parameters, applicationName, schemaId, mode) {
         /// <returns type=""></returns>
@@ -21,7 +21,7 @@
         return parameters;
     };
 
-    function applicationService($q, $http, $rootScope, contextService, crudContextHolderService, userPreferencesService, alertService, checkpointService) {
+    function applicationService($q, $http, $rootScope,$injector, contextService, crudContextHolderService, userPreferencesService, alertService) {
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
@@ -100,8 +100,13 @@
                 dispatchedByModal = crudContextHolderService.isShowingModal();
             }
 
-            //TODO: refactor it entirely to use promises instead
-            $rootScope.$broadcast(JavascriptEventConstants.CrudSubmitData, {
+            const panelId = dispatchedByModal ? "#modal" : null;
+
+            const schema = crudContextHolderService.currentSchema(panelId);
+            const datamap = crudContextHolderService.rootDataMap(panelId);
+
+            //LUIZ -- TODO: review circular dependency
+            return $injector.get('submitService').submit(schema, datamap, {
                 successCbk: successCallBack,
                 failureCbk: failureCallback,
                 isComposition,
@@ -114,7 +119,21 @@
                 originalDatamap
             });
 
-            return deferred.promise;
+            //            //TODO: refactor it entirely to use promises instead
+            //            $rootScope.$broadcast(JavascriptEventConstants.CrudSubmitData, {
+            //                successCbk: successCallBack,
+            //                failureCbk: failureCallback,
+            //                isComposition,
+            //                compositionData,
+            //                dispatcherComposition,
+            //                nextSchemaObj,
+            //                dispatchedByModal,
+            //                refresh,
+            //                selecteditem,
+            //                originalDatamap
+            //            });
+            //
+            //            return deferred.promise;
         }
 
         /// <summary>
@@ -217,14 +236,14 @@
         };
 
         const service = {
-            cancelDetail: cancelDetail,
-            getApplicationUrl: getApplicationUrl,
-            getPostPromise: getPostPromise,
-            invokeOperation: invokeOperation,
-            getApplicationDataPromise: getApplicationDataPromise,
-            getApplicationWithInitialDataPromise: getApplicationWithInitialDataPromise,
-            submitData: submitData,
-            save: save
+            cancelDetail,
+            getApplicationUrl,
+            getPostPromise,
+            invokeOperation,
+            getApplicationDataPromise,
+            getApplicationWithInitialDataPromise,
+            submitData,
+            save
         };
         return service;
 

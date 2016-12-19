@@ -123,10 +123,9 @@ angular.module('sw_layout')
                     });
                 });
 
-                return;
             }
 
-            this.doExecuteService(scope, clientFunction, command);
+            return this.doExecuteService(scope, clientFunction, command).catch(err=> log.debug(err));
         },
 
         isServiceMethod: function (fullName) {

@@ -1,8 +1,6 @@
 (function (angular) {
     "use strict";
-
-    var app = angular.module('sw_layout');
-
+    const app = angular.module('sw_layout');
     app.directive('bodyrendered', function ($timeout, $log, menuService) {
         "ngInject";
         return {
@@ -13,7 +11,7 @@
                 }
                 if (scope.$last === true) {
                     $timeout(function () {
-                        var parentElementId = scope.elementid;
+                        const parentElementId = scope.elementid;
                         $log.getInstance('application_dir#bodyrendered').debug('sw_body_rendered will get dispatched');
                         menuService.adjustHeight();
                         scope.$emit(JavascriptEventConstants.BodyRendered, parentElementId);
@@ -46,7 +44,7 @@
         "ngInject";
 
         $scope.$name = 'applicationController';
-        var currentFocusedIdx = 0;
+        const currentFocusedIdx = 0;
 
 
         //#region listeners
@@ -118,8 +116,8 @@
 
         });
 
-        $scope.$on('sw_applicationrenderviewwithdata', function (event, data) {
-            var nextSchema = data.schema;
+        $scope.$on(JavascriptEventConstants.RenderViewWithData, function (event, data) {
+            const nextSchema = data.schema;
             $scope.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
         });
 
@@ -149,19 +147,19 @@
                 }
 
                 var id = $scope.datamap[$scope.schema.idFieldName];
-                var list = crud_context.list_elements;
+                const list = crud_context.list_elements;
                 if (!list || !id) {
                     return;
                 }
 
                 var idAsString = String(id);
-                var findById = function (item) {
+                const findById = function (item) {
                     return item.id === id || item.id === idAsString;
                 };
                 if (list.find(findById)) {
-                    var current = list.findIndex(findById);
-                    var previous = current - 1;
-                    var next = current + 1;
+                    const current = list.findIndex(findById);
+                    const previous = current - 1;
+                    const next = current + 1;
                     crud_context.detail_previous = list[previous];
                     crud_context.detail_next = list[next];
                 } else {
@@ -221,7 +219,7 @@
             }
             $scope.requestpopup = parameters.popupmode ? parameters.popupmode : 'none';
             //change made to prevent popup for incident detail report
-            var log = $log.getInstance("applicationController#renderView");
+            const log = $log.getInstance("applicationController#renderView");
             if ($scope.requestpopup == 'browser' || $scope.requestpopup == 'report') {
                 log.debug("calling goToApplicationView for application {0}".format(applicationName));
                 $scope.$parent.goToApplicationView(applicationName, schemaId, mode, title, parameters);
@@ -243,7 +241,7 @@
 
             $scope.applicationname = applicationName;
             $scope.requestmode = mode;
-            var urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
+            const urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
             if (printMode == undefined) {
                 //avoid the print url to be saved on the sessionStorage, breaking page refresh
                 contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
@@ -274,7 +272,7 @@
 
 
         $scope.renderSelectedSchema = function () {
-            var selectedSchema = $scope.selectedSchema.value;
+            const selectedSchema = $scope.selectedSchema.value;
             if (selectedSchema == null || selectedSchema.schemaId == null) {
                 return;
             }
@@ -284,11 +282,11 @@
         };
 
         function setWindowTitle(scope) {
-            var strategy = scope.schema.properties["popup.window.titlestrategy"];
-            var id = scope.datamap[scope.schema.idFieldName];
-            var titleattribute = scope.schema.properties["popup.window.titleattribute"];
+            const strategy = scope.schema.properties["popup.window.titlestrategy"];
+            const id = scope.datamap[scope.schema.idFieldName];
+            const titleattribute = scope.schema.properties["popup.window.titleattribute"];
             if (titleattribute != null) {
-                var overridenTitle = scope.datamap[titleattribute];
+                const overridenTitle = scope.datamap[titleattribute];
                 window.document.title = String.format(overridenTitle, id);
                 return;
             }
@@ -335,7 +333,7 @@
             //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
             //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
             scope.originalDatamap = angular.copy(scope.datamap);
-            crudContextHolderService.updateOriginalDatamap(scope.originalDatamap);
+            crudContextHolderService.originalDatamap(null,scope.originalDatamap);
 
             scope.extraparameters = instantiateIfUndefined(result.extraParameters);
             if (result.mode === undefined || "none".equalsIc(result.mode)) {
@@ -364,12 +362,12 @@
             var log = $log.getInstance("applicationcontroller#renderData");
 
 
-            if (result.type === 'ApplicationDetailResult') {
+            if (result.type === ResponseConstants.ApplicationDetailResult) {
                 log.debug("Application Detail Result handled");
                 detailService.fetchRelationshipData(scope, result);
                 toDetail(scope);
                 crudContextHolderService.detailLoaded();
-            } else if (result.type === 'ApplicationListResult') {
+            } else if (result.type === ResponseConstants.ApplicationListResult) {
                 log.debug("Application List Result handled");
                 $scope.toList(result, scope);
                 crudContextHolderService.gridLoaded(result);
@@ -413,7 +411,7 @@
 
         $scope.toSchema = function (data, schema) {
             if (schema == null) {
-                var currentSchema = crudContextHolderService.currentSchema();
+                const currentSchema = crudContextHolderService.currentSchema();
                 if (!currentSchema.stereotype.equalsIc("list")) {
                     return $scope.toListSchema(data, schema);
                 }
@@ -426,8 +424,8 @@
         }
 
         $scope.toDetailSchema = function (data, schema) {
-            var log = $log.getInstance('application#toDetailSchema');
-            var params = {};
+            const log = $log.getInstance('application#toDetailSchema');
+            const params = {};
             params["resultObject"] = data[0];
             params["schema"] = schema;
             params["type"] = "ApplicationDetailResult";
@@ -553,14 +551,12 @@
                 //pog to identify that this result if of the right type.
                 return;
             }
-            var dataObject = $scope.resultObject;
-            var title = $scope.title;
-
-            var mode = dataObject.mode;
-            var applicationName = dataObject.applicationName;
-            var schema = dataObject.schema;
-            var schemaId = schema == null ? null : schema.schemaId;
-
+            const dataObject = $scope.resultObject;
+            const title = $scope.title;
+            const mode = dataObject.mode;
+            const applicationName = dataObject.applicationName;
+            const schema = dataObject.schema;
+            const schemaId = schema == null ? null : schema.schemaId;
             $scope.searchData = {};
             $scope.searchOperator = {};
             $scope.searchSort = {};
@@ -599,10 +595,9 @@
 
         $scope.multipleSchemaHandling = function (dataObject) {
             $scope.crudsubtemplate = null;
-            var title = dataObject.title;
-            var applicationName = dataObject.applicationName;
-            var mode = dataObject.mode;
-
+            const title = dataObject.title;
+            const applicationName = dataObject.applicationName;
+            const mode = dataObject.mode;
             $scope.isDetail = false;
             $scope.isList = false;
             $scope.multipleSchema = true;

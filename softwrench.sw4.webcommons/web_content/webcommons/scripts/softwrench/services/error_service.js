@@ -6,10 +6,13 @@
             return function (exception, cause) {
 
                 //TODO: Replace $injector with notificationViewModel, after circular dependency is fixed
-                var notificationViewModel = $injector.get("notificationViewModel");
+                const notificationViewModel = $injector.get("notificationViewModel");
+                if (exception && exception.startsWith && exception.startsWith("Possibly unhandled rejection")) {
+                    return;
+                }
                 notificationViewModel.processJsError(null, exception, cause);
-
                 $delegate(exception, cause);
+                
             };
         });
     });

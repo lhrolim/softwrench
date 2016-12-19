@@ -16,6 +16,7 @@
             originalDatamap: null,
             isList: null,
             isDetail: null,
+            crudForm:null,
 
             currentApplicationName: null,
             //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
@@ -150,8 +151,17 @@
             return getContext(panelid).currentApplicationName;
         }
 
+        function crudForm(panelid, crudForm) {
+            const context = getContext(panelid);
+            if (!!crudForm) {
+                context.crudForm = crudForm;
+            }
+            return context.crudForm || {};
+
+        }
+
         function currentSchema(panelid, schema) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             if (schema) {
                 context.currentSchema = schema;
             }
@@ -159,7 +169,7 @@
         }
 
         function rootDataMap(panelid, datamap) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             if (datamap) {
                 context.rootDataMap = datamap;
             }
@@ -167,7 +177,7 @@
         }
 
         function originalDatamap(panelid, datamap) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             if (datamap) {
                 context.originalDatamap = datamap;
             }
@@ -225,7 +235,7 @@
         }
 
         function setTabRecordCount(tabId, panelId, count) {
-            var context = getContext(panelId);
+            const context = getContext(panelId);
             if (context.tabRecordCount) {
                 context.tabRecordCount[tabId] = count;
             }
@@ -249,21 +259,18 @@
 
         //#region hooks
         function updateCrudContext(schema, rootDataMap, panelid) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             schema.properties = schema.properties || {};
             context.currentSchema = schema;
             context.rootDataMap = rootDataMap;
+            context.originalDatamap = rootDataMap;
             context.currentApplicationName = schema.applicationName;
             context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
             context.gridSelectionModel.selectionBufferIdCollumn = context.gridSelectionModel.selectionBufferIdCollumn || schema.idFieldName;
             schemaCacheService.addSchemaToCache(schema);
         }
 
-        function updateOriginalDatamap(datamap, panelid) {
-            var context = getContext(panelid);
-            context.originalDatamap = datamap;
-        }
-
+    
         function applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
@@ -279,9 +286,10 @@
             return _crudContext[panelid];
         }
 
-        function afterSave(panelid) {
+        function afterSave(panelid,datamap) {
             this.clearDirty(panelid);
             getContext(panelid).needsServerRefresh = true;
+            this.originalDatamap(panelid, datamap);
         }
 
         function detailLoaded(panelid) {
@@ -293,13 +301,13 @@
         function gridLoaded(applicationListResult, panelid) {
             this.disposeDetail(panelid, true);
             this.setActiveTab(null, panelid);
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
         }
 
         function disposeDetail(panelid, clearTab) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
@@ -313,9 +321,9 @@
         }
 
         function compositionsLoaded(result, panelid) {
-            var context = getContext(panelid);
-            for (var relationship in result) {
-                var tab = result[relationship];
+            const context = getContext(panelid);
+            for (let relationship in result) {
+                const tab = result[relationship];
                 context.tabRecordCount = context.tabRecordCount || {};
                 context.tabRecordCount[relationship] = tab.paginationData.totalCount;
             }
@@ -337,10 +345,10 @@
          * @returns {} 
          */
         function updateLazyAssociationOption(associationKey, options, notIndexed, panelid) {
-            var log = $log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
+            const log = $log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
             if (!!notIndexed && options != null) {
-                var objIdxKey = options.value.toLowerCase();
-                var idxedObject = {};
+                const objIdxKey = options.value.toLowerCase();
+                const idxedObject = {};
                 idxedObject[objIdxKey] = options;
                 options = idxedObject;
             }
@@ -348,8 +356,7 @@
             if (options) {
                 length = options.length ? options.length : 1;
             }
-
-            var lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
+            const lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
                 log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
                 _crudContext._lazyAssociationOptions[associationKey] = options;
@@ -358,13 +365,13 @@
                 _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
             //to avoid circular dependency, cannot inject it
-            var fieldService = $injector.get("fieldService");
-            var displayables = fieldService.getDisplayablesByAssociationKey(_crudContext.currentSchema, associationKey);
+            const fieldService = $injector.get("fieldService");
+            const displayables = fieldService.getDisplayablesByAssociationKey(_crudContext.currentSchema, associationKey);
             if (displayables && displayables.length === 1 && options) {
                 //when we have a reverse relationship, let´s add it to the parentdatamap, to make "life" easier for the outer components, such as the angulartypeahead, 
                 //and/or expressions
-                var displayable = displayables[0];
-                var key = Object.keys(options)[0];
+                const displayable = displayables[0];
+                const key = Object.keys(options)[0];
                 if (displayable.reverse && key) {
                     //Object.keys(options)[0] --> this would be the key of the association
                     _crudContext.rootDataMap[displayable.target] = key.toLowerCase();
@@ -375,17 +382,17 @@
         }
 
         function fetchLazyAssociationOption(associationKey, key, panelid) {
-            var associationOptions = _crudContext._lazyAssociationOptions[associationKey];
+            const associationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (associationOptions == null) {
                 return null;
             }
-            var keyToUse = angular.isString(key) ? key.toLowerCase() : key;
+            const keyToUse = angular.isString(key) ? key.toLowerCase() : key;
             return associationOptions[keyToUse];
         }
 
         function setDefaultValue(context,path, dmValue) {
             //temporarily setting a value 
-            var resultOptions = [];
+            const resultOptions = [];
             //temporarily setting a value 
             resultOptions.push({ value: dmValue, label: "Loading..." });
             setDeep(context._eagerassociationOptions, path, resultOptions);
@@ -401,7 +408,7 @@
          * @returns an Array object with the eager options
          */
         function fetchEagerAssociationOptions(associationKey, contextData, panelid, dmValue) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             //if (context.showingModal) {
             //    contextData = { schemaId: "#modal" };
             //}
@@ -428,7 +435,7 @@
         }
 
         function fetchEagerAssociationOption(associationKey, itemValue) {
-            var options = fetchEagerAssociationOptions(associationKey);
+            const options = fetchEagerAssociationOptions(associationKey);
             // normalize value to string
             var value = angular.isUndefined(itemValue) || itemValue === null ? itemValue : String(itemValue);
             return !options
@@ -444,26 +451,20 @@
                 //case for dependant associations
                 return;
             }
-
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             if (context.showingModal) {
                 contextData = contextData || {};
                 contextData.schemaId = "#modal";
             }
-            var log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
-
-
-
+            const log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
             if (contextData == null) {
                 log.info("update eager global list for {0}. Size: {1}".format(associationKey, options.length));
                 context._eagerassociationOptions["#global"][associationKey] = options;
                 $rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData);
                 return;
             }
-
-            var schemaId = contextData.schemaId;
-            var entryId = contextData.entryId || "#global";
-
+            const schemaId = contextData.schemaId;
+            const entryId = contextData.entryId || "#global";
             context._eagerassociationOptions[schemaId] = context._eagerassociationOptions[schemaId] || {};
             context._eagerassociationOptions[schemaId][entryId] = context._eagerassociationOptions[schemaId][entryId] || {};
 
@@ -537,19 +538,19 @@
         }
 
         function toggleShowOnlySelected(panelid) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             context.gridSelectionModel.showOnlySelected = !context.gridSelectionModel.showOnlySelected;
             return context.gridSelectionModel.showOnlySelected;
         }
 
 
         function getSelectionModel(panelid) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             return context.gridSelectionModel;
         }
 
         function toggleSelectionMode(panelid) {
-            var context = getContext(panelid);
+            const context = getContext(panelid);
             context.gridSelectionModel.selectionMode = !context.gridSelectionModel.selectionMode;
             return context.gridSelectionModel.selectionMode;
         }
@@ -566,22 +567,22 @@
         //#region gridServices
 
         function setFixedWhereClause(panelId, fixedWhereClause) {
-            var context = getContext(panelId);
+            const context = getContext(panelId);
             context.gridModel.fixedWhereClause = fixedWhereClause;
         }
 
         function getFixedWhereClause(panelId) {
-            var context = getContext(panelId);
+            const context = getContext(panelId);
             return context.gridModel.fixedWhereClause;
         }
 
         function setSelectedFilter(filter, panelId) {
-            var context = getContext(panelId);
+            const context = getContext(panelId);
             context.gridModel.selectedFilter = filter;
         }
 
         function getSelectedFilter(panelId) {
-            var context = getContext(panelId);
+            const context = getContext(panelId);
             return context.gridModel.selectedFilter;
         }
 
@@ -628,32 +629,33 @@
             return getContext(panelid).compositionLoadEventQueue;
         }
 
+
+
         //#endregion
 
         //#region Service Instance
-
-        var generalServices = {
-            getAffectedProfiles: getAffectedProfiles,
-            getActiveTab: getActiveTab,
-            setActiveTab: setActiveTab,
-            getTabRecordCount: getTabRecordCount,
-            setTabRecordCount: setTabRecordCount,
-            shouldShowRecordCount: shouldShowRecordCount,
-            getCurrentSelectedProfile: getCurrentSelectedProfile,
-            setCurrentSelectedProfile: setCurrentSelectedProfile,
-            currentSchema: currentSchema,
-            currentApplicationName: currentApplicationName,
-            updateCrudContext: updateCrudContext,
-            updateOriginalDatamap: updateOriginalDatamap,
-            applicationChanged: applicationChanged,
-            clearCrudContext: clearCrudContext,
-            needsServerRefresh: needsServerRefresh,
-            rootDataMap: rootDataMap,
-            originalDatamap: originalDatamap,
-            setDetailDataResolved: setDetailDataResolved,
-            getDetailDataResolved: getDetailDataResolved,
-            clearDetailDataResolved: clearDetailDataResolved,
-            getContext: getContext
+        const generalServices = {
+            getAffectedProfiles,
+            getActiveTab,
+            setActiveTab,
+            getTabRecordCount,
+            setTabRecordCount,
+            shouldShowRecordCount,
+            getCurrentSelectedProfile,
+            setCurrentSelectedProfile,
+            currentSchema,
+            currentApplicationName,
+            updateCrudContext,
+            applicationChanged,
+            clearCrudContext,
+            needsServerRefresh,
+            rootDataMap,
+            originalDatamap,
+            setDetailDataResolved,
+            getDetailDataResolved,
+            clearDetailDataResolved,
+            getContext,
+            crudForm
         };
         const associationServices = {
             updateLazyAssociationOption,
@@ -671,22 +673,20 @@
             gridLoaded,
             compositionsLoaded
         };
-        var modalService = {
+        const modalService = {
             disposeModal: disposeModal,
             getSaveFn: getSaveFn,
             isShowingModal: isShowingModal,
             modalLoaded: modalLoaded,
             registerSaveFn: registerSaveFn
-        }
-
-        var gridServices = {
+        };
+        const gridServices = {
             setFixedWhereClause: setFixedWhereClause,
             getFixedWhereClause: getFixedWhereClause,
             setSelectedFilter: setSelectedFilter,
             getSelectedFilter: getSelectedFilter
-        }
-
-        var selectionService = {
+        };
+        const selectionService = {
             addSelectionToBuffer: addSelectionToBuffer,
             clearSelectionBuffer: clearSelectionBuffer,
             getOriginalPaginationData: getOriginalPaginationData,
@@ -695,28 +695,24 @@
             setOriginalPaginationData: setOriginalPaginationData,
             toggleSelectionMode: toggleSelectionMode,
             toggleShowOnlySelected: toggleShowOnlySelected,
-        }
-
-        var commandsServices = {
+        };
+        const commandsServices = {
             getCommandsModel: getCommandsModels,
             getToggleCommand: getToggleCommand,
             addToggleCommand: addToggleCommand
-        }
-
-        var detailServices = {
+        };
+        const detailServices = {
             setDirty: setDirty,
             getDirty: getDirty,
             clearDirty: clearDirty,
             compositionQueue
-        }
-
-        var navigationServices = {
+        };
+        const navigationServices = {
             isList: isList,
             isDetail: isDetail,
             setList: setList,
             setDetail: setDetail,
-        }
-
+        };
         return angular.extend({}, generalServices, hookServices, associationServices, modalService, selectionService, gridServices, commandsServices, detailServices, navigationServices);
 
 

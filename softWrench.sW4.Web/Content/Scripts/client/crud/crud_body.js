@@ -1,68 +1,6 @@
 ﻿(function (angular) {
     "use strict";
     const app = angular.module('sw_layout');
-    app.directive('tabsrendered', function ($timeout, $log, $rootScope, eventService, schemaService, redirectService, spinService, commandService) {
-        "ngInject";
-
-        /// <summary>
-        /// This directive allows for a hookup method when all the tabs of the crud_body have finished rendered successfully.
-        /// 
-        /// Since the tabs are lazy loaded, we will replace default bootstrap behaviour of tab-toggle to use a custom engine that will dispatch an event, listened by all possible 
-        /// tab implementations (compositionlist.js, crud_output.js and crud_input.js)
-        /// 
-        /// </summary>
-        /// <param name="$timeout"></param>
-        /// <param name="$log"></param>
-        /// <param name="$rootScope"></param>
-        /// <returns type=""></returns>
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                // Do not execute until the last iteration of ng-repeat has been reached,
-                // or if $last is undefined (this happens when the tabsrendered directive 
-                // is placed on something other than ng-repeat).
-                if (scope.$last === false) {
-                    return;
-                }
-                var log = $log.getInstance('tabsrendered');
-                log.debug("finished rendering tabs of detail screen");
-                if (scope.$last === undefined) {
-                    //0 tabs scenario
-                    return $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, null, scope.panelid);
-                }
-
-                // covers a redirect for same application and schema but to another entry
-                $rootScope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
-                    scope.schema = renderedSchema;
-                    $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, null, scope.panelid);
-                });
-
-                $timeout(function () {
-                    var firstTabId = null;
-                    $('.compositiondetailtab li>a').each(function () {
-                        var $this = $(this);
-                        if (firstTabId == null) {
-                            firstTabId = $(this).data('tabid');
-                        }
-                        $this.click(function (e) {
-                            e.preventDefault();
-                            $this.tab('show');
-                            const tabId = $(this).data('tabid');
-                            log.trace('lazy loading tab {0}'.format(tabId));
-                            spinService.stop({ compositionSpin: true });
-                            $rootScope.$broadcast('sw_lazyloadtab', tabId);
-
-                        });
-
-                    });
-                    $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, firstTabId, scope.panelid);
-
-                }, 0, false);
-
-            }
-        };
-    });
-
 
     app.directive('crudBody', function (contextService, genericTicketService) {
         "ngInject";
@@ -200,7 +138,7 @@
                 }
 
                 $scope.setForm = function (form) {
-                    $scope.crudform = form;
+                    crudContextHolderService.crudForm($scope.panelid, form);
                 };
 
                 $scope.getPosition = function (schema, propertyName, defaultPosition) {
@@ -230,8 +168,7 @@
                     const promiseArray = [];
                     for (let i = 0; i < displayables.length; i++) {
                         const displayable = displayables[i];
-
-                        let fields = crudContextHolderService.rootDataMap();
+                        const fields = crudContextHolderService.rootDataMap();
                         const providerLoadedParameters = {
                             fields: fields,
                             options: options
@@ -250,14 +187,14 @@
                 }
             );
 
-                $scope.$on(JavascriptEventConstants.CrudSubmitData, function (event, parameters) {
-                    if ($scope.ismodal !== "true" && !!parameters.dispatchedByModal) {
-                        return;
-                    } else if ($scope.ismodal === "true" && !parameters.dispatchedByModal) {
-                        return;
-                    }
-                    $scope.save(parameters);
-                });
+//                $scope.$on(JavascriptEventConstants.CrudSubmitData, function (event, parameters) {
+//                    if ($scope.ismodal !== "true" && !!parameters.dispatchedByModal) {
+//                        return;
+//                    } else if ($scope.ismodal === "true" && !parameters.dispatchedByModal) {
+//                        return;
+//                    }
+//                    $scope.save(parameters);
+//                });
 
 
 
@@ -356,20 +293,6 @@
 
 
 
-                function defaultSuccessFunction(data) {
-                    $scope.$parent.multipleSchema = false;
-                    $scope.$parent.schemas = null;
-                    if (data != null) {
-                        if (data.type === 'ActionRedirectResponse') {
-                            //we´ll not do a crud action on this case, so totally different workflow needed
-                            redirectService.redirectToAction(null, data.controller, data.action, data.parameters);
-                        } else if (data.type !== 'BlankApplicationResponse' && data.type !== 'GenericApplicationResponse') {
-                            const nextSchema = data.schema;
-                            $scope.$parent.renderViewWithData(nextSchema.applicationName, nextSchema.schemaId, nextSchema.mode, nextSchema.title, data);
-                        }
-                    }
-
-                }
 
                 $scope.showNavigationButtons = function (schema) {
                     const property = schema.properties['detail.navigationbuttons.disabled'];
@@ -478,211 +401,13 @@
                 }
 
                 // flag to block multiple save calls while one is still executing
-                $scope.save = function (parameters) {
-                    const log = $log.getInstance('crudbody#save');
-                    parameters = parameters || {};
-
-                    var schemaToSave = $scope.schema;
-                    if (parameters.schema) {
-                        schemaToSave = parameters.schema;
-                    }
-                    const modalSavefn = $scope.ismodal === "true" ? modalService.getSaveFn() : null; //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
-                    if (modalSavefn) {
-                        const errorForm = $scope.crudform ? $scope.crudform.$error : {};
-                        const validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, $scope.datamap, errorForm);
-                        if (validationErrors.length > 0) {
-                            //interrupting here, can´t be done inside service
-                            return $q.reject();
-                        }
-                        const result = modalSavefn($scope.datamap, schemaToSave);
-                        if (result && result.then) {
-                            result.then(() => modalService.hide());
-                        }
-                        return $q.reject();
-                    }
-
-                    var selecteditem = parameters.selecteditem;
-                    //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
-                    //Otherwise, fetching from the $scope.datamap
-                    const fromDatamap = selecteditem == null;
-                    const fields = fromDatamap ? $scope.datamap : selecteditem;
-                    var originalDatamap = $scope.originalDatamap;
-                    if (parameters.originalDatamap) {
-                        originalDatamap = parameters.originalDatamap;
-                    }
-
-
-
-                    //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
-                    //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
-                    var transformedFields = angular.copy(fields);
-                    const eventParameters = {
-                        originaldatamap: originalDatamap,
-                    };
-
-                    const prevalidation = eventService.beforesubmit_prevalidation(schemaToSave, transformedFields, eventParameters);
-                    return $q.when(prevalidation).then(eventResult => {
-                        if (eventResult === false) {
-                            log.debug('Validation failed, returning');
-                            return;
-                        }
-                        $scope.validateSubmission(selecteditem, parameters, transformedFields, schemaToSave);
-                    });
-
-
+                $scope.save = function (parameters ={}) {
+                    const schemaToSave = parameters.schema || $scope.schema;
+                    parameters.originaldatamap = parameters.originaldatamap || $scope.originalDatamap;
+                    return submitService.submit(schemaToSave, $scope.datamap, parameters);
                 };
 
-                $scope.validateSubmission = function (selecteditem, parameters, transformedFields, schemaToSave) {
-                    const log = $log.getInstance('crudbody#validateSubmission'); //hook for updating doing custom logic before sending the data to the server
-                    $rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
 
-                    if (sessionStorage.mockclientvalidation == undefined) {
-                        const validationErrors = validationService.validate(schemaToSave, schemaToSave.displayables, transformedFields, $scope.crudform.$error);
-                        if (validationErrors.length > 0) {
-                            //interrupting here, can´t be done inside service
-                            return $q.reject();
-                        }
-                    }
-
-                    var originalDatamap = $scope.originalDatamap;
-                    if (parameters.originalDatamap) {
-                        originalDatamap = parameters.originalDatamap;
-                    }
-                    const eventParameters = {
-                        originaldatamap: originalDatamap,
-                    };
-
-                    const postvalidation = eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
-
-                    $q.when(postvalidation).then((eventResult) => {
-                        if (eventResult === false) {
-                            //this means that the custom postvalidator should call the continue method
-                            log.debug('waiting on custom postvalidator to invoke the continue function');
-                            return $q.when();
-                        }
-
-                        return $scope.submitToServer(selecteditem, parameters, transformedFields, schemaToSave).then(httpResult => {
-                            return $scope.onServerResult(httpResult, parameters);
-                        });
-                    });
-
-                };
-
-                $scope.setIdAfterCreation = function (data) {
-                    const fields = $scope.datamap;
-                    if (data && data.id && fields &&
-                        /* making sure not to update when it's not creation */
-                     (!fields.hasOwnProperty($scope.schema.idFieldName) ||
-                         !fields[$scope.schema.idFieldName])) {
-                        //updating the id, useful when it´s a creation and we need to update value return from the server side
-                        fields[$scope.schema.idFieldName] = data.id;
-                        fields[$scope.schema.userIdFieldName] = data.userId;
-                    }
-                }
-
-
-                $scope.onServerResult = function (httpResult, parameters) {
-                    crudContextHolderService.afterSave();
-                    const data = httpResult.data;
-
-                    if (data.fullRefresh) {
-                        window.location.reload();
-                        return $q.when();
-                    }
-
-                    const responseDataMap = data.resultObject;
-                    if (!data.type.equalsAny("BlankApplicationResponse")) {
-
-                        // handle the case where the datamap had lazy compositions already fetched
-                        // and the response does not have them (for performance reasons)
-                        if (!data.type.equalsAny("ApplicationListResult")) {
-                            compositionService.updateCompositionDataAfterSave($scope.schema, $scope.datamap, responseDataMap);
-                        }
-
-                        // not necessary to update the complete datamap after a composition save
-                        if (!parameters.dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
-                            angular.extend($scope.datamap, responseDataMap);
-                        }
-                    }
-
-                    $scope.setIdAfterCreation(data);
-
-                    if (parameters.successCbk == null) {
-                        defaultSuccessFunction(data);
-                    } else {
-                        parameters.successCbk(data);
-                    }
-
-                    crudContextHolderService.updateOriginalDatamap($scope.datamap);
-                    $rootScope.$emit(JavascriptEventConstants.CrudSaved, data);
-                    $rootScope.$broadcast(JavascriptEventConstants.CrudSaved, data);
-                    return data;
-                }
-
-                $scope.submitToServer = function (selecteditem, parameters, transformedFields, schemaToSave) {
-                    $rootScope.$broadcast("sw_beforesubmitpostvalidate_internal", transformedFields);
-                    parameters = parameters || {};
-                    var originalDatamap = $scope.originalDatamap;
-                    if (parameters.originalDatamap) {
-                        originalDatamap = parameters.originalDatamap;
-                    }
-
-                    //some fields might require special handling
-                    submitService.removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
-                    transformedFields = submitService.removeExtraFields(transformedFields, true, schemaToSave);
-                    submitService.translateFields(schemaToSave.displayables, transformedFields);
-                    associationService.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
-                    submitService.handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
-
-                    const nextSchemaObj = parameters.nextSchemaObj;
-                    const isComposition = parameters.isComposition;
-                    const applicationName = schemaToSave.applicationName;
-                    const idFieldName = schemaToSave.idFieldName;
-                    const id = transformedFields[idFieldName];
-                    const submissionParameters = submitService.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, parameters.compositionData);
-                    const jsonWrapper = {
-                        json: transformedFields,
-                        requestData: submissionParameters
-                    };
-                    const jsonString = angular.toJson(jsonWrapper);
-                    $rootScope.savingMain = !isComposition;
-
-                    if (isIe9()) {
-                        const formToSubmitId = submitService.getFormToSubmitIfHasAttachement(schemaToSave.displayables, transformedFields);
-                        if (formToSubmitId != null) {
-                            const form = $(formToSubmitId);
-                            submitService.submitForm(form, submissionParameters, jsonString, applicationName);
-                            return $q.when();
-                        }
-                    }
-
-                    if ("true" === sessionStorage.logJSON) {
-                        $log.info(jsonString);
-                    }
-
-                    const failureCallback = parameters["failureCbk"];
-                    const successCallback = parameters["successCbk"];
-
-                    $log.getInstance("crud_body#submit").debug(jsonString);
-                    const urlToUse = url("/api/data/" + applicationName + "/");
-                    const command = id == null ? $http.post : $http.put;
-                    return command(urlToUse, jsonString)
-                        .then(result => {
-                            const data = result.data;
-                            if (successCallback) {
-                                successCallback(data);
-                            }
-                            return result;
-                        }).catch(result => {
-                            const exceptionData = result.data;
-                            const resultObject = exceptionData.resultObject;
-                            $scope.setIdAfterCreation(resultObject);
-                            if (failureCallback) {
-                                failureCallback(resultObject);
-                            }
-                            return $q.reject(result);
-                        });
-                };
 
                 // adds a padding right to not be behind side panels handles
                 $scope.sidePanelStyle = function () {

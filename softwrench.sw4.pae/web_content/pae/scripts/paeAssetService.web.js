@@ -90,7 +90,7 @@
                                 });
                         }
                     };
-                    submitService.submitConfirmation(null, datamap, searchParameters);
+                    submitService.submitConfirmation();
                 }
             });
         };

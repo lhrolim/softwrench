@@ -188,6 +188,7 @@ module.exports = function (grunt) {
                     "<%= app.content %>/Scripts/client/adminresources/*.js",
                     "<%= app.content %>/Scripts/client/directives/*.js",
                     "<%= app.content %>/Scripts/client/directives/menu/*.js",
+                    "<%= app.content %>/Scripts/client/directives/internal/*.js",
                     "<%= app.content %>/Templates/commands/**/*.js",
                     "<%= app.content %>/modules/**/*.js",
 

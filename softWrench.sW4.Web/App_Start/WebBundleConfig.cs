@@ -134,6 +134,7 @@ namespace softWrench.sW4.Web {
                 .IncludeDirectory("~/Content/Scripts/client/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/adminresources/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/directives/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/directives/internal", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/directives/menu/", "*.js")
                 .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
                 .IncludeDirectory("~/Content/modules", "*.js", true);

@@ -2,7 +2,7 @@
     "use strict";
 
 
-    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, restService, submitService, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, eventService) {
+    function associationService(dispatcherService, $http, $q, $timeout, $log, $rootScope, restService, submitServiceCommons, fieldService, contextService, searchService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, eventService) {
 
 
         /**
@@ -131,14 +131,16 @@
             const panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
             const datamap = crudContextHolderService.rootDataMap(panelId);
             const schema = crudContextHolderService.currentSchema(panelId);
-            const fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
+            const fieldsTosubmit = submitServiceCommons.removeExtraFields(datamap, true, schema);
             const key = schemaService.buildApplicationMetadataSchemaKey(schema);
+
             const parameters = {
-                key: key,
-                associationKey: associationKey,
-                associationValue: associationValue,
+                key,
+                associationKey,
+                associationValue
             };
-            return restService.postPromise("Association", "LookupSingleAssociation", parameters, fieldsTosubmit,{avoidspin:true}).then(function (httpResponse) {
+
+            return restService.postPromise("Association", "LookupSingleAssociation", parameters, fieldsTosubmit, { avoidspin: true }).then(function (httpResponse) {
                 if (httpResponse.data === "null" || httpResponse.data == null) {
                     //                    var fakeItem = {
                     //                        value: associationValue,
@@ -302,7 +304,7 @@
 
             var fields = triggerparams.fields;
             if (!fields) {
-                fields = scope.datamap;              
+                fields = scope.datamap;
             }
 
             // clear the extra fields if new value is null
@@ -496,7 +498,7 @@
                 return $timeout(function () {
                     //this needs to be marked for the next digest loop so that the crud_input_fields has the possibility to distinguish between the initial and configured phases, 
                     //and so the listeners
-                    crudContextHolderService.markAssociationsResolved(contextData !=null ? contextData.panelId : null);
+                    crudContextHolderService.markAssociationsResolved(contextData != null ? contextData.panelId : null);
                     contextService.insertIntoContext("associationsresolved", true, true);
                 }, 100, false);
             }
@@ -519,9 +521,8 @@
                 key: key,
                 showmore: options.showmore || false
             };
-            var fields = datamap;
-
-            const fieldsTosubmit = submitService.removeExtraFields(fields, true, schema);
+            const fields = datamap;
+            const fieldsTosubmit = submitServiceCommons.removeExtraFields(fields, true, schema);
             const urlToUse = url("/api/generic/Association/GetSchemaOptions?" + $.param(parameters));
             const jsonString = angular.toJson(fieldsTosubmit);
             log.info('going to server for loading schema {0} associations '.format(schema.schemaId));
@@ -530,11 +531,11 @@
             }
 
             return $http.post(urlToUse, jsonString, config)
-                .then(function (serverResponse) {
+                .then(serverResponse => {
                     const result = updateFromServerSchemaLoadResult(serverResponse.data.resultObject, options.contextData, true);
                     updateExtraFields(associations, datamap, schema, options.contextData);
                     return result;
-                });
+                }).catch(err => log.error(err));
 
         }
 
@@ -588,7 +589,7 @@
                 triggerFieldName: triggerFieldName,
                 id: fields[schema.idFieldName]
             };
-            const fieldsTosubmit = submitService.removeExtraFields(fields, true, scope.schema);
+            const fieldsTosubmit = submitServiceCommons.removeExtraFields(fields, true, scope.schema);
             const urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             const jsonString = angular.toJson(fieldsTosubmit);
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));
@@ -622,7 +623,7 @@
                             //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                             scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
                         }, 0, false);
-                    } 
+                    }
                 }
             });
         };
@@ -776,11 +777,11 @@
         };
 
         function clearDependantFieldValues(scope, triggerFieldName) {
-            var fieldsDependant = scope.displayables.filter(function(o) {
+            const fieldsDependant = scope.displayables.filter(function (o) {
                 return $.inArray(triggerFieldName, o.dependantFields) !== -1 && o.schema.isLazyLoaded;
             });
-            $.each(fieldsDependant, function(key, value) {
-                var attribute = value.attribute;
+            $.each(fieldsDependant, function (key, value) {
+                const attribute = value.attribute;
                 scope.datamap[attribute] = null;
             });
         }
@@ -816,13 +817,13 @@
             updateFromServerSchemaLoadResult,
             updateUnderlyingAssociationObject,
             updateOptionFieldExtraFields
-        };
+            };
         return service;
     }
 
     angular
     .module('sw_layout')
-    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'restService', 'submitService', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', "eventService",
+    .factory('associationService', ['dispatcherService', '$http', '$q', '$timeout', '$log', '$rootScope', 'restService', 'submitServiceCommons', 'fieldService', 'contextService', 'searchService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', "eventService",
         associationService]);
 
 })(angular);

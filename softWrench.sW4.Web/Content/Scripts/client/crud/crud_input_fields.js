@@ -171,9 +171,9 @@
                     //dictionary containing which details are or not expanded
                     $scope.expandeddetails = {};
 
-                    $scope.setForm = function (form) {
-                        $scope.crudform = form;
-                    };
+//                    $scope.setForm = function (form) {
+//                        $scope.crudform = form;
+//                    };
 
                     $scope.$on('sw_block_association', function (event, association) {
                         $scope.blockedassociations[association] = true;

@@ -4,14 +4,14 @@
     var app = angular.module('sw_layout');
 
     app.factory('compositionService',
-        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitService", "schemaService", "searchService", "$q", "fieldService",
+        ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitServiceCommons", "schemaService", "searchService", "$q", "fieldService",
             "compositionCommons", "crudContextHolderService", "tabsService", "userPreferencesService",
             function($log,
                 $http,
                 $rootScope,
                 $timeout,
                 contextService,
-                submitService,
+                submitServiceCommons,
                 schemaService,
                 searchService,
                 $q,
@@ -105,7 +105,7 @@
         function buildFetchRequestDTO(schema, datamap, compositions, paginatedSearch) {
             var applicationName = schema.applicationName;
             // sanitizing data to submit
-            var fieldsTosubmit = submitService.removeExtraFields(datamap, true, schema);
+            var fieldsTosubmit = submitServiceCommons.removeExtraFields(datamap, true, schema);
             var compositionNames = getLazyCompositions(schema, datamap);
             angular.forEach(compositionNames, function (composition) {
                 if (!fieldsTosubmit[composition] || !fieldsTosubmit.hasOwnProperty(composition)) {

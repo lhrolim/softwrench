@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .factory('crudextraService', ["$http", "$rootScope", "printService", "alertService", "submitService", "redirectService", function ($http, $rootScope, printService, alertService, submitService, redirectService) {
+        .factory('crudextraService', ["$http", "$rootScope", "printService", "alertService", "submitServiceCommons", "redirectService", function ($http, $rootScope, printService, alertService, submitServiceCommons, redirectService) {
             return {
                 deletefn: function (schema, datamap, extraParameters, skipAlert) {
                     const fields = datamap;
@@ -11,7 +11,7 @@
                     const id = fields[idFieldName];
 
                     const request = () => {
-                        var parameters = submitService.createSubmissionParameters(fields, schema, null, id);
+                        var parameters = submitServiceCommons.createSubmissionParameters(fields, schema, null, id);
                         parameters.siteId = fields["siteid"];
                         if (extraParameters) {
                             parameters = $.extend({}, parameters, extraParameters);

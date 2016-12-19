@@ -3,19 +3,18 @@
 
     angular.module('sw_layout').factory('crud_inputcommons', factory);
 
-    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', 'dispatcherService', '$parse', "$rootScope", "$q"];
+    factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', 'dispatcherService', '$parse'];
 
-    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, dispatcherService, $parse, $rootScope, $q) {
+    function factory($log, associationService, contextService, cmpfacade, fieldService, $timeout, expressionService, dispatcherService, $parse) {
 
-        var api = {
-            configureAssociationChangeEvents: configureAssociationChangeEvents,
-            initField: initField
+        const api = {
+            configureAssociationChangeEvents,
+            initField
         };
-
         return api;
 
 
-        function initField($scope, fieldMetadata, datamappropname, idx) {
+        function initField($scope, fieldMetadata, datamappropname = "datamap", idx) {
             /// <summary>
             /// 
             /// </summary>
@@ -24,10 +23,9 @@
             /// <param name="datamappropname"></param>
             /// <param name="idx">if defined, it will refer to the line on a composition this field is inside</param>
             /// <returns type=""></returns>
-            datamappropname = datamappropname || "datamap";
 
             if (fieldMetadata.evalExpression != null) {
-                var variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
+                const variables = expressionService.getVariablesForWatch(fieldMetadata.evalExpression);
                 $scope.$watchCollection(variables, function (newVal, oldVal) {
                     if (newVal != oldVal) {
                         $scope[datamappropname][fieldMetadata.attribute] = expressionService.evaluate(fieldMetadata.evalExpression, $scope[datamappropname], $scope);
@@ -36,14 +34,14 @@
             }
             var maxExpression = fieldMetadata.rendererParameters['max'];
             if (maxExpression != null) {
-                var variablesToWatch = expressionService.getVariablesForWatch(maxExpression, datamappropname + ".");
+                const variablesToWatch = expressionService.getVariablesForWatch(maxExpression, datamappropname + ".");
                 if (variablesToWatch == null) {
                     return null;
                 }
                 $scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
                     if (newVal != oldVal) {
-                        var maxValue = parseInt(expressionService.evaluate(maxExpression, $parse(datamappropname)($scope)));
-                        var selector = (idx != undefined) ? '[data-field="{0}{1}"]'.format(fieldMetadata.attribute, idx) : '[data-field="{0}"]'.format(fieldMetadata.attribute);
+                        const maxValue = parseInt(expressionService.evaluate(maxExpression, $parse(datamappropname)($scope)));
+                        const selector = (idx != undefined) ? '[data-field="{0}{1}"]'.format(fieldMetadata.attribute, idx) : '[data-field="{0}"]'.format(fieldMetadata.attribute);
                         $(selector).spinner({
                             max: maxValue
                         });
@@ -51,14 +49,14 @@
                 });
             }
 
+            const isRequired= fieldService.isFieldRequired(fieldMetadata, $scope[datamappropname]);
+
+
             return null;
         };
 
         function configureAssociationChangeEvents($scope, datamappropertiesName, displayables, datamapId) {
-
-
-            var associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
-
+            const associations = fieldService.getDisplayablesOfTypes(displayables, ['OptionField', 'ApplicationAssociationDefinition']);
             var createdWatches = [];
 
             $.each(associations, function (key, association) {
@@ -87,7 +85,7 @@
 
                     if (newValue != null && angular.isString(newValue)) {
                         //this is a hacky thing when we want to change a value of a field without triggering the watch
-                        var ignoreWatchIdx = newValue.indexOf("$ignorewatch");
+                        const ignoreWatchIdx = newValue.indexOf("$ignorewatch");
                         if (ignoreWatchIdx >= 0) {
                             shouldDoWatch = false;
                             $parse(datamappropertiesName)($scope)[association.attribute] = newValue.substring(0, ignoreWatchIdx);
@@ -104,9 +102,7 @@
                         }
                     }
                     var fields = $parse(datamappropertiesName)($scope);
-
-
-                    var eventToDispatch = {
+                    const eventToDispatch = {
                         oldValue: oldValue,
                         newValue: newValue,
                         fields: fields,
@@ -125,10 +121,10 @@
                             if (association.type === "OptionField") {
                                 associationService.updateOptionFieldExtraFields(association, $scope);
                             }
-                            var resolved = contextService.fetchFromContext("associationsresolved", false, true);
-                            var phase = resolved ? 'configured' : 'initial';
-                            var dispatchedbytheuser = resolved ? true : false;
-                            var hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser, fields: fields });
+                            const resolved = contextService.fetchFromContext("associationsresolved", false, true);
+                            const phase = resolved ? 'configured' : 'initial';
+                            const dispatchedbytheuser = resolved ? true : false;
+                            const hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser, fields: fields });
                             hook.then(function (hookResult) {
                                 associationService.updateAssociations(association, $scope);
                                 try {
@@ -156,7 +152,7 @@
 
                         }
                     };
-                    var result = associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
+                    const result = associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
                     if (!result) {
                         return;
                     }
@@ -177,9 +173,8 @@
                             if (datamapId && $scope.datamap && $scope.datamap[$scope.schema.idFieldName] !== datamapId) {
                                 return;
                             }
-
-                            var displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
-                            for (var i = 0; i < displayables.length; i++) {
+                            const displayables = fieldService.getDisplayablesByAssociationKey($scope.schema, associationKey);
+                            for (let i = 0; i < displayables.length; i++) {
                                 cmpfacade.updateEagerOptions($scope, displayables[i], options, contextData, datamapId);
                             }
                         }

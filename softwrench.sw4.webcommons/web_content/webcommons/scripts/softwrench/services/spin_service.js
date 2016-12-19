@@ -43,12 +43,17 @@
 
     angular.module('sw_layout').factory('spinService', ['$rootScope', spinService]);
 
+    const defaultSpingParams= {
+        savingDetail:false,
+        compositionSpin:false
+    }
+
     function spinService($rootScope) {
 
-        var ajaxspin;
-        var compositionspin;
+        let ajaxspin;
+        let compositionspin;
 
-        var service = {
+        const service = {
             start: start,
             stop: stop,
             startSpinner: startSpinner
@@ -72,37 +77,31 @@
          * @returns Spinner the spinner that was intantiated 
          */
         function startSpinner(target, options) {
-            var merged = mergeOptions(options);
+            const merged = mergeOptions(options);
             return new Spinner(merged).spin(target);
         }
 
-        function start(parameters) {
+      
+
+        function start({savingDetail,compositionSpin}=defaultSpingParams) {
             if ($rootScope.showingspin) {
                 //if already showing no action needed
                 return;
             }
-            parameters = parameters || {};
-            var savingDetail = parameters.savingDetail || false;
-            var isComposition = parameters.compositionSpin || false;
-
-            var spinDivId = savingDetail ? 'detailspinner' : 'mainspinner';
-            var optsToUse = savingDetail ? smallOpts : defaultOptions;
-            var spinner = document.getElementById(spinDivId);
+            const spinDivId = savingDetail ? 'detailspinner' : 'mainspinner';
+            const optsToUse = savingDetail ? smallOpts : defaultOptions;
+            const spinner = document.getElementById(spinDivId);
             $rootScope.showingspin = true;
-            if (isComposition) {
+            if (compositionSpin) {
                 compositionspin = new Spinner(optsToUse).spin(spinner);
             } else {
                 ajaxspin = new Spinner(optsToUse).spin(spinner);
             }
-        };
+        }
 
-        function stop(parameters) {
+        function stop({compositionSpin}=defaultSpingParams) {
 
-            parameters = parameters || {};
-            var isComposition = parameters.compositionSpin || false;
-
-            var spinToUse = isComposition ? compositionspin : ajaxspin;
-
+            const spinToUse = compositionSpin ? compositionspin : ajaxspin;
             if (spinToUse) {
                 $rootScope.showingspin = false;
                 spinToUse.stop();

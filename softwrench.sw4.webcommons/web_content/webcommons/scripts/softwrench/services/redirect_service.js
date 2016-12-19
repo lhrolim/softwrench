@@ -48,7 +48,7 @@
                     }
                 }
 
-                if (data.type !== "BlankApplicationResponse") {
+                if (data.type !== ResponseConstants.BlankApplicationResponse) {
                     $rootScope.$broadcast(JavascriptEventConstants.ActionAfterRedirection, data);
                 }
             }).catch(function (response) {

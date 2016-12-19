@@ -191,8 +191,11 @@
             }
             const contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
             const options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid,datamapValue);
+            const datamap = $scope.datamap;
             if (!options) {
                 return blankArray;
+            }else if (options.length === 1 && fieldService.isFieldRequired(optionField, $scope.datamap)) {
+                $scope.datamap[optionField.target] = options[0].value;
             }
             return applyFilter(optionField.filter, options, {compositionItem});
         }

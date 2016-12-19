@@ -795,6 +795,7 @@
     <Content Include="Content\Scripts\client\crud\crud_expandable_section.js" />
     <Content Include="Content\Scripts\client\crud\inlinecompositionlistoutput.js" />
     <Content Include="Content\Scripts\client\directives\codeEditor.js" />
+    <Content Include="Content\Scripts\client\directives\internal\tabsrendered.js" />
     <Content Include="Content\Scripts\client\elementResizeEvent.js" />
     <Content Include="Content\Scripts\client\routePageController.js" />
     <Content Include="Content\Scripts\client\scriptsController.js" />
@@ -1189,6 +1190,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />
+    <Folder Include="Content\Scripts\constants\" />
     <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Content\vendor\css\fonts\" />
     <Folder Include="Content\vendor\scripts\" />

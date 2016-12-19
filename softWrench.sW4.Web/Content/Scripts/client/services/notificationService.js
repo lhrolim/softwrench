@@ -115,7 +115,7 @@
                 const jsErrorAlertShowDev = configService.getConfigurationValue('/Global/JsError/ShowDev') === 'true';
                 const jsErrorAlertShowProd = configService.getConfigurationValue('/Global/JsError/ShowProd') === 'true';
 
-                const isDevorQaEnv = $rootScope.environment && $rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0;
+                const isDevorQaEnv = $rootScope.environment && ($rootScope.environment.indexOf('dev') >= 0 || $rootScope.environment.indexOf('qa') >= 0);
 
                 if (!isDevorQaEnv && !jsErrorAlertShowProd) {
                     return;
@@ -135,8 +135,13 @@
                     const e = jsEvent.originalEvent;
                     body = e.message;
                     exceptionType = e.type;
-                    exceptionOutline = e.error.message;
-                    exceptionStack = e.error.stack;
+                    const error = e.error;
+                    if (!error) {
+                        return;
+                    }
+                    exceptionOutline = error.message;
+                    exceptionStack = error.stack;
+
                     const parts = e.message.split(': ');
                     if (parts[0]) {
                         exceptionType = parts[0];
@@ -144,7 +149,7 @@
                 }
 
                 //get the angular values
-                if (angularException) {
+                if (angularException ) {
                     body = angularException;
                 }
 

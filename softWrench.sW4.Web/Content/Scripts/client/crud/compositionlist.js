@@ -287,10 +287,6 @@
             return schemaService.isPropertyTrue($scope.compositionlistschema, "compositions.disable.filter");
         }
 
-        $scope.setForm = function (form) {
-            $scope.crudform = form;
-        };
-
 
         $scope.showTableHover = function () {
             return (($scope.compositionlistschema != undefined && $scope.compositionlistschema.properties['list.click.event'] != undefined) || $scope.compositiondetailschema != undefined) && $scope.compositiondata.length > 0;
@@ -769,8 +765,7 @@
                 }
 
                 modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, function saveCallBack(datamap) {
-
-                    $scope.save(datamap);
+                    return $scope.save(datamap);
                 }, null, $scope.parentdata, $scope.parentschema);
 
             } else {
@@ -1161,9 +1156,11 @@
             //enforcing the dirtyness of the item
             selecteditem["#isDirty"] = true;
 
+            const log = $log.getInstance("compositionlist#save",["save","submit"]);
+
             if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
                 //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
-                $log.getInstance("compositionlist#save").debug("calling save on server without composition selected");
+                log.debug("calling save on server without composition selected");
                 //this flag must be true for the spin to work properly... TODO: improve this
                 $scope.$parent.$parent.save(null, { isComposition: true });
                 return;
@@ -1185,7 +1182,6 @@
                 //ensure new item is captured as well
                 safePush($scope.parentdata, $scope.relationship, selecteditem);
             }
-            const log = $log.getInstance('compositionlist#save');
             if (!$scope.collectionproperties.autoCommit) {
                 log.warn('autocommit=false is yet to be implemented for compositions');
                 return;
@@ -1200,16 +1196,19 @@
                 action = selecteditem["_iscreation"] ? "crud_create" : "crud_update";
             }
 
-            applicationService.save({
+            log.debug("calling applicationService save with composition data");
+            return applicationService.save({
                 dispatcherComposition: $scope.relationship,
                 nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
                 refresh: alwaysrefresh,
                 dispatchedByModal: false,
                 compositionData: new CompositionOperation(action, $scope.relationship, selecteditem, schemaService.getId(selecteditem, $scope.compositionlistschema))
             }).then(function (data) {
+                log.debug("applying composition save cbk");
                 $scope.onAfterSave(data, alwaysrefresh);
             }).catch(function (data) {
                 $scope.onSaveError(data, selecteditem);
+                return $q.reject(data);
             });
         };
 
