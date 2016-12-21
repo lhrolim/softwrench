@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('srservice', ["$http", "alertService", "fieldService", function ($http, alertService, fieldService) {
+    .service('srservice', ["$http", "alertService", "fieldService", function ($http, alertService, fieldService) {
 
     return {
         //This service is to add the new field ACTION in Service Request details for resolved tickets

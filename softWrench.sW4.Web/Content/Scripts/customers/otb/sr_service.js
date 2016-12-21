@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('srService', ["alertService", "redirectService", function (alertService, redirectService) {
+    .service('srService', ["alertService", "redirectService", function (alertService, redirectService) {
 
     return {
         beforeChangeLocation: function (event) {

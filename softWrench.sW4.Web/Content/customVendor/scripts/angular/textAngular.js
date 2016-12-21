@@ -763,14 +763,14 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				}
 			};
 		}
-	]).factory('taBrowserTag', [function(){
+	]).service('taBrowserTag', [function(){
 		return function(tag){
 			/* istanbul ignore next: ie specific test */
 			if(!tag) return (ie <= 8)? 'P' : 'p';
 			else if(tag === '') return (ie === undefined)? 'div' : (ie <= 8)? 'P' : 'p';
 			else return (ie <= 8)? tag.toUpperCase() : tag;
 		};
-	}]).factory('taExecCommand', ['taSelection', 'taBrowserTag', '$document', function(taSelection, taBrowserTag, $document){
+	}]).service('taExecCommand', ['taSelection', 'taBrowserTag', '$document', function(taSelection, taBrowserTag, $document){
 		var BLOCKELEMENTS = /^(address|article|aside|audio|blockquote|canvas|dd|div|dl|fieldset|figcaption|figure|footer|form|h1|h2|h3|h4|h5|h6|header|hgroup|hr|noscript|ol|output|p|pre|section|table|tfoot|ul|video)$/ig;
 		var LISTELEMENTS = /^(ul|li|ol)$/ig;
 		var listToDefault = function(listElement, defaultWrap){
@@ -1324,7 +1324,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 				}
 			}
 		};
-	}]).factory('taApplyCustomRenderers', ['taCustomRenderers', function(taCustomRenderers){
+	}]).service('taApplyCustomRenderers', ['taCustomRenderers', function(taCustomRenderers){
 		return function(val){
 			var element = angular.element('<div></div>');
 			element[0].innerHTML = val;
@@ -1419,7 +1419,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
 	})
     // cts:rbotti
 	// copied from textAngular.js-1.4.6: stop automatically closing non-html tags + enhanced parsing
-    .factory('taFixChrome', function () {
+    .service('taFixChrome', function () {
 		// get whaterever rubbish is inserted in chrome
 	    // should be passed an html string, returns an html string
 		var taFixChrome = function(html){
@@ -1457,7 +1457,7 @@ See README.md or https://github.com/fraywing/textAngular/wiki for requirements a
     // - copied from textAngular.js-1.4.6: stop automatically closing non-html tags + enhanced parsing
 	// - added $log reference so it stops swallowing errors
     // - added `escapeAll(unsafe:String):String` function
-    .factory('taSanitize', ['$sanitize', '$log', function taSanitizeFactory($sanitize, $log) {
+    .service('taSanitize', ['$sanitize', '$log', function taSanitizeFactory($sanitize, $log) {
 	    
         /**
          * Escapes any possible 'harmfull' characters from a text.

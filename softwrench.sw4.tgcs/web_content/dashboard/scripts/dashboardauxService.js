@@ -189,7 +189,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("dashboardAuxService",
+    angular.module("sw_layout").service("dashboardAuxService",
         ["$rootScope", "$log", "contextService", "restService", "graphicPanelServiceProvider", "crudContextHolderService", dashboardAuxService]);
     //#endregion
 

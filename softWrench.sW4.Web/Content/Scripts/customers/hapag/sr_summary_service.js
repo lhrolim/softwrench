@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('srsummaryService', ["redirectService", function (redirectService) {
+    .service('srsummaryService', ["redirectService", function (redirectService) {
 
     return {
 

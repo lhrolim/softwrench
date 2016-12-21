@@ -25,7 +25,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("deltadental.srService", [srService]);
+    angular.module("sw_layout").service("deltadental.srService", [srService]);
     //#endregion
 
 })(angular);

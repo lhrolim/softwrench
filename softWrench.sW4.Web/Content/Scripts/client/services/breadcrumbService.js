@@ -356,7 +356,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("breadcrumbService", ["$rootScope", "$location", "$log", "i18NService", "crudContextHolderService", "historyService", "contextService", breadcrumbService]);
+    angular.module("sw_layout").service("breadcrumbService", ["$rootScope", "$location", "$log", "i18NService", "crudContextHolderService", "historyService", "contextService", breadcrumbService]);
 
     //#endregion
 

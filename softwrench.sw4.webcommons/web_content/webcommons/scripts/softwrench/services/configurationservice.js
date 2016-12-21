@@ -78,7 +78,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("configurationService", ["$rootScope", "$timeout", "contextService", "restService", "crudContextHolderService", "compositionService", configurationService]);
+    angular.module("webcommons_services").service("configurationService", ["$rootScope", "$timeout", "contextService", "restService", "crudContextHolderService", "compositionService", configurationService]);
 
     //#endregion
 

@@ -744,23 +744,25 @@
                     }
 
                     function initController() {
-                        const log = $log.getInstance("crudlist#init", ["grid"]);
+                        const log = $log.getInstance("crudlist#init", ["grid","init","route","navigation"]);
+                        log.debug("crudlist controller init...")
                         $injector.invoke(BaseController, this, {
-                            $scope: $scope,
-                            i18NService: i18NService,
-                            fieldService: fieldService,
-                            commandService: commandService,
-                            formatService: formatService
+                            $scope,
+                            i18NService,
+                            fieldService,
+                            commandService,
+                            formatService
                         });
 
                         $injector.invoke(BaseList, this, {
-                            $scope: $scope,
-                            formatService: formatService,
-                            expressionService: expressionService,
-                            searchService: searchService,
-                            commandService: commandService,
-                            gridSelectionService: gridSelectionService
+                            $scope,
+                            formatService,
+                            expressionService,
+                            searchService,
+                            commandService,
+                            gridSelectionService
                         });
+
                         const dataRefreshed = contextService.fetchFromContext("grid_refreshdata", true, true, true);
                         if ($scope.ismodal === "true") {
                             $scope.panelid = modalService.panelid;
@@ -804,6 +806,7 @@
                                 printMode: false,
                                 metadataid: $scope.metadataid
                             });
+
                             searchPromise.then(function (data) {
                                 // Set the scroll position to the top of the new page
                                 contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });

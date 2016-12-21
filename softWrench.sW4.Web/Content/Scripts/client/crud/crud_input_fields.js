@@ -281,7 +281,7 @@
 
                     $scope.isSelectEnabled = function (fieldMetadata) {
                         var key = fieldMetadata.associationKey;
-                        $scope.disabledassociations = instantiateIfUndefined($scope.disabledassociations);
+                        $scope.disabledassociations = $scope.disabledassociations || {};
                         if (key == undefined) {
                             return true;
                         }

@@ -1,14 +1,13 @@
 ﻿!(function (modules, angular) {
     "use strict";
 
-    modules.webcommons.factory("contextService", ["$log", "$rootScope", function ($log, $rootScope) {
+    modules.webcommons.service("contextService", ["$log", "$rootScope", function ($log, $rootScope) {
 
         return {
             //using sessionstorage instead of rootscope, as the later would be lost upon F5.
             //see SWWEB-239
             insertIntoContext: function (key, value, userootscope) {
-                var urlContext = url("");
-
+                const urlContext = url("");
                 if (userootscope) {
                     $rootScope[urlContext + ':ctx_' + key] = value;
                 } else {
@@ -30,7 +29,7 @@
 
             fetchFromContext: function (key, isJson, userootscope, removeentry) {
                 //shortcut method
-                var value = this.retrieveFromContext(key, userootscope, removeentry);
+                const value = this.retrieveFromContext(key, userootscope, removeentry);
                 if (value == "undefined") {
                     return undefined;
                 }
@@ -46,16 +45,15 @@
             },
 
             retrieveFromContext: function (key, userootscope, removeentry) {
-                var urlContext = url("");
-
+                const urlContext = url("");
                 if (userootscope) {
-                    var object = $rootScope[urlContext + ':ctx_' + key];
+                    const object = $rootScope[urlContext + ':ctx_' + key];
                     if (removeentry) {
                         delete $rootScope[urlContext + ':ctx_' + key];
                     }
                     return object;
                 }
-                var sessionContextValue = sessionStorage[urlContext + ':ctx_' + key];
+                const sessionContextValue = sessionStorage[urlContext + ':ctx_' + key];
                 if (removeentry) {
                     sessionStorage.removeItem([urlContext + ':ctx_' + key]);
                 }
@@ -66,7 +64,7 @@
             },
 
             deleteFromContext: function (key) {
-                var urlContext = url("");
+                const urlContext = url("");
                 delete sessionStorage[urlContext + ":ctx_" + key];
                 delete $rootScope[urlContext + ":ctx_" + key];
             },
@@ -121,11 +119,11 @@
                     //caching
                     return $rootScope.user;
                 }
-                var userData = this.retrieveFromContext('user');
+                const userData = this.retrieveFromContext('user');
                 if (userData == null) {
                     return null;
                 }
-                var user = JSON.parse(userData);
+                const user = JSON.parse(userData);
                 $rootScope.user = user;
                 return user;
             },
@@ -154,7 +152,7 @@
                 if (roleArray == null) {
                     return true;
                 }
-                var user = this.getUserData();
+                const user = this.getUserData();
                 var userroles = user.roles;
                 var result = false;
                 $.each(roleArray, function (key, value) {
@@ -198,6 +196,11 @@
                 this.insertIntoContext('invIssueListBeringScanOrder', config.invIssueListBeringScanOrder);
                 this.insertIntoContext('newKeyISsueDetailScanOrder', config.newKeyIssueDetailScanOrder);
 
+                this.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
+                this.insertIntoContext("UIShowClassicAdminMenu", config.uiShowClassicAdminMenu, true);
+                this.insertIntoContext("UIShowToolbarLabels", config.uiShowToolbarLabels, true);
+                this.insertIntoContext("isLocal", config.isLocal);
+
                 let dateTimeFormat = config.displayableFormats.dateTimeFormat;
 
                 if (dateTimeFormat.indexOf("hh") !== -1 && dateTimeFormat.indexOf("a") === -1) {
@@ -208,9 +211,9 @@
             },
 
             getResourceUrl: function (path) {
-                var baseURL = url(path);
+                const baseURL = url(path);
                 if (!this.isLocal()) {
-                    var initTime = this.getFromContext("systeminittime");
+                    const initTime = this.getFromContext("systeminittime");
                     if (baseURL.indexOf("?") == -1) {
                         return baseURL + "?" + initTime;
                     }
@@ -225,10 +228,10 @@
             },
 
             clearContext: function () {
-                var urlContext = url("");
+                const urlContext = url("");
                 var i = sessionStorage.length;
                 while (i--) {
-                    var key = sessionStorage.key(i);
+                    const key = sessionStorage.key(i);
                     if (key.startsWith(urlContext + ':ctx_')) {
                         sessionStorage.removeItem(key);
                     }

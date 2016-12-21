@@ -3,7 +3,7 @@
 
     angular
       .module('sw_layout')
-      .factory('toshibasrService', ['$q', 'searchService', chicagosrService]);
+      .service('toshibasrService', ['$q', 'searchService', chicagosrService]);
 
     function chicagosrService($q, searchService) {
         var service = {

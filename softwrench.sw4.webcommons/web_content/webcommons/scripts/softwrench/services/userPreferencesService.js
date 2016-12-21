@@ -133,7 +133,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("userPreferencesService", ["localStorageService", "contextService", "crudContextHolderService", userPreferencesService]);
+    angular.module("webcommons_services").service("userPreferencesService", ["localStorageService", "contextService", "crudContextHolderService", userPreferencesService]);
 
     //#endregion
 

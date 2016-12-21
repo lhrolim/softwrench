@@ -134,7 +134,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("sseService", ["$log", "$timeout", sseService]);
+    angular.module("webcommons_services").service("sseService", ["$log", "$timeout", sseService]);
 
     //#endregion
 

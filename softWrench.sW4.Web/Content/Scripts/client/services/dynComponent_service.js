@@ -125,7 +125,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("dynComponentService", ["$rootScope", "$q", "restService", "alertService", "schemaService", "modalService", "validationService", "crudContextHolderService", "crudextraService", "redirectService", "applicationService", dynComponentService]);
+    angular.module("sw_layout").service("dynComponentService", ["$rootScope", "$q", "restService", "alertService", "schemaService", "modalService", "validationService", "crudContextHolderService", "crudextraService", "redirectService", "applicationService", dynComponentService]);
 
     //#endregion
 

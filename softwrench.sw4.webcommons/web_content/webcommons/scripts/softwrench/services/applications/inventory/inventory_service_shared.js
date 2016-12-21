@@ -68,7 +68,7 @@
     }
 
     //#region Service registration
-    angular.module("webcommons_services").factory("inventorySharedService", [inventorySharedService]);
+    angular.module("webcommons_services").service("inventorySharedService", [inventorySharedService]);
     //#endregion
 
 })(angular);

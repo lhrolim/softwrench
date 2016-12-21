@@ -846,6 +846,6 @@
     }
 
 
-    angular.module('sw_crudadmin').factory('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'validationService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', 'fixHeaderService', userProfileService]);
+    angular.module('sw_crudadmin').service('userProfileService', ['$q', "$rootScope", "$log", 'restService', 'validationService', 'contextService', 'crudContextHolderService', 'redirectService', 'alertService', 'modalService', 'fixHeaderService', userProfileService]);
 
 })(angular);

@@ -1,7 +1,7 @@
 ﻿(function (modules) {
     "use strict";
 
-modules.webcommons.factory('expressionService', ["$rootScope", "$log", "contextService", "dispatcherService", function ($rootScope, $log, contextService, dispatcherService) {
+modules.webcommons.service('expressionService', ["$rootScope", "$log", "contextService", "dispatcherService", function ($rootScope, $log, contextService, dispatcherService) {
 
     var preCompiledReplaceRegex = /(?:^|\W)@(\#*)([\w+\.]+)(?!\w)/g;
 

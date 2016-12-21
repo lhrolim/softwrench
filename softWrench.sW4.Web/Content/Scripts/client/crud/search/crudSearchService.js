@@ -30,7 +30,7 @@
 
 	//#region Service registration
 
-	angular.module("sw_layout").factory("crudSearchService", ["$rootScope", "$log", crudSearchService]);
+	angular.module("sw_layout").service("crudSearchService", ["$rootScope", "$log", crudSearchService]);
 
 	//#endregion
 

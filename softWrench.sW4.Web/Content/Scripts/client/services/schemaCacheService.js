@@ -130,7 +130,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("schemaCacheService", ["$log", "contextService", "localStorageService", schemaCacheService]);
+    angular.module("sw_layout").service("schemaCacheService", ["$log", "contextService", "localStorageService", schemaCacheService]);
     //#endregion
 
 })();

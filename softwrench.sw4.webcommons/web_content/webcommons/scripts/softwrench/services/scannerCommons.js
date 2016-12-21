@@ -6,7 +6,7 @@
 
     //#region Service registration
 
-    angular.module("sw_scan").factory("scanningCommonsService", ["$rootScope", "crudContextHolderService", scanningCommonsService]);
+    angular.module("sw_scan").service("scanningCommonsService", ["$rootScope", "crudContextHolderService", scanningCommonsService]);
 
     //#endregion
 

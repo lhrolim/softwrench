@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('wobatchService', ["redirectService", "$rootScope", "restService", "alertService", "validationService", "$timeout", "searchService", function (redirectService, $rootScope, restService, alertService, validationService, $timeout, searchService) {
+    .service('wobatchService', ["redirectService", "$rootScope", "restService", "alertService", "validationService", "$timeout", "searchService", function (redirectService, $rootScope, restService, alertService, validationService, $timeout, searchService) {
 
     function doSubmit(hasAtLeastOne, datamap) {
         var batchId = datamap[0]["#batchId"];

@@ -183,12 +183,14 @@ module.exports = function (grunt) {
                     "<%= app.content %>/Shared/**/*.js",
                     // sw
                     "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
-                    "<%= app.content %>/Scripts/client/services/*.js",
+                    "<%= app.content %>/Scripts/client/services/**/*.js",
                     "<%= app.content %>/Scripts/client/*.js",
+                    "<%= app.content %>/Scripts/client/constants/*.js",
+                    "<%= app.content %>/Scripts/client/controllers/*.js",
                     "<%= app.content %>/Scripts/client/adminresources/*.js",
-                    "<%= app.content %>/Scripts/client/directives/*.js",
-                    "<%= app.content %>/Scripts/client/directives/menu/*.js",
-                    "<%= app.content %>/Scripts/client/directives/internal/*.js",
+                    "<%= app.content %>/Scripts/client/components/*.js",
+                    "<%= app.content %>/Scripts/client/util/*.js",
+                    "<%= app.content %>/Scripts/client/directives/**/*.js",
                     "<%= app.content %>/Templates/commands/**/*.js",
                     "<%= app.content %>/modules/**/*.js",
 

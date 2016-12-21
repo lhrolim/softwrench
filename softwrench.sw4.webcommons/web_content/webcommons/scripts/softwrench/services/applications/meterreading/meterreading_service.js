@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    angular.module('maximo_applications').factory('meterReadingService', ['$rootScope', 'applicationService', 'alertService', 'commandService', meterReadingService]);
+    angular.module('maximo_applications').service('meterReadingService', ['$rootScope', 'applicationService', 'alertService', 'commandService', meterReadingService]);
 
     function meterReadingService($rootScope, applicationService, alertService, commandService) {
 

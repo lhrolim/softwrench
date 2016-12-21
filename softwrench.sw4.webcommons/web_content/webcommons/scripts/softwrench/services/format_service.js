@@ -249,7 +249,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("formatService", ['$filter', 'i18NService', 'dispatcherService', 'contextService', formatService]);
+    angular.module("webcommons_services").service("formatService", ['$filter', 'i18NService', 'dispatcherService', 'contextService', formatService]);
 
     //#endregion
 

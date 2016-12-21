@@ -457,7 +457,7 @@
 
     //#region Service registration
 
-    modules.webcommons.factory("historyService", ["$rootScope", "$location", "$log", "$timeout", "$q", "crudContextHolderService", "i18NService", "contextService", "alertService", "localStorageService", "restService", historyService]);
+    modules.webcommons.service("historyService", ["$rootScope", "$location", "$log", "$timeout", "$q", "crudContextHolderService", "i18NService", "contextService", "alertService", "localStorageService", "restService", historyService]);
 
     //#endregion
 

@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('reportservice', ["$http", "alertService", "fieldService", "searchService", "redirectService", "printService", "contextService", "validationService", function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService) {
+    .service('reportservice', ["$http", "alertService", "fieldService", "searchService", "redirectService", "printService", "contextService", "validationService", function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService) {
 
     var getDefaultFilterValue = function (displayable) {
         var defaultValue = null;

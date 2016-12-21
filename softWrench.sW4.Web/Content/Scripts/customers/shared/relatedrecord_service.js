@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('relatedrecordService', ["$rootScope", "redirectService", "searchService", "crudContextHolderService", function ($rootScope, redirectService, searchService, crudContextHolderService) {
+    .service('relatedrecordService', ["$rootScope", "redirectService", "searchService", "crudContextHolderService", function ($rootScope, redirectService, searchService, crudContextHolderService) {
     var getWorkOrderId = function (app, wonum, siteid) {
         var searchData = {
             wonum: wonum,

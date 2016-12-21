@@ -20,7 +20,7 @@
                     link: function (scope, element, attrs) {
                         scope.vm = {};
 
-                        var linkLog = $log.getInstance("filterMultipleOption", ["link"]);
+                        var linkLog = $log.getInstance("filterMultipleOption", ["init","link"]);
 
                         //let´s avoid some null pointers
                         scope.filter.options = scope.filter.options || [];

@@ -69,7 +69,7 @@
 
 	//#region Service registration
 
-	angular.module("sw_layout").factory("crudCrawlService", ["$rootScope", "crudContextHolderService", "contextService", crudCrawlService]);
+	angular.module("sw_layout").service("crudCrawlService", ["$rootScope", "crudContextHolderService", "contextService", crudCrawlService]);
 
 	//#endregion
 

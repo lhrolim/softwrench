@@ -41,7 +41,6 @@
         expect(mockScope.datamap).toEqual(serverResult.resultObject);
         expect(mockScope.previousdata).toEqual({});
         expect(mockScope.isList).toBeTruthy();
-        expect(mockScope.$broadcast).toHaveBeenCalledWith(JavascriptEventConstants.GRID_CHANGED);
         expect(_crudlistViewmodel.initGridFromServerResult).toHaveBeenCalledWith(serverResult, null);
     });
 
@@ -59,7 +58,6 @@
         expect(mockScope.datamap).toEqual(data);
         expect(mockScope.schema).toEqual(schema);
         expect(mockScope.isList).toBeTruthy();
-        expect(mockScope.$broadcast).toHaveBeenCalledWith(JavascriptEventConstants.GRID_CHANGED);
 
         var eventData = {
             //here we have to reproduce that the request is coming from the server, so use resultObject as the name.

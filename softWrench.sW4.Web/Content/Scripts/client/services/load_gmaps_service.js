@@ -48,7 +48,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("loadGoogleMapApi", ["$window", "$q", "$rootScope", "$log", loadGoogleMapApi]);
+    angular.module("sw_layout").service("loadGoogleMapApi", ["$window", "$q", "$rootScope", "$log", loadGoogleMapApi]);
 
     //#endregion
 

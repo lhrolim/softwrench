@@ -20,5 +20,5 @@
         return service;
     }
 
-    angular.module('webcommons_services').factory('globalSearchService', ['$rootScope', 'redirectService', 'contextService', 'checkpointService', globalSearchService]);
+    angular.module('webcommons_services').service('globalSearchService', ['$rootScope', 'redirectService', 'contextService', 'checkpointService', globalSearchService]);
 })(angular);

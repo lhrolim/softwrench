@@ -720,7 +720,7 @@
     }
 
 
-    angular.module("sw_layout").factory("crudContextHolderService", ["$rootScope", "$log", "$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").service("crudContextHolderService", ["$rootScope", "$log", "$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
 
 
 

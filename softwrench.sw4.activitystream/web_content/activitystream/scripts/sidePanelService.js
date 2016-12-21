@@ -240,7 +240,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("sidePanelService", ["fixHeaderService", "userPreferencesService", sidePanelService]);
+    angular.module("sw_layout").service("sidePanelService", ["fixHeaderService", "userPreferencesService", sidePanelService]);
 
     //#endregion
 

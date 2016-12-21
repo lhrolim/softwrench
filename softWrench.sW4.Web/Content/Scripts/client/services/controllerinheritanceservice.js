@@ -169,7 +169,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("controllerInheritanceService", ["$injector", controllerInheritanceService]);
+    angular.module("sw_layout").service("controllerInheritanceService", ["$injector", controllerInheritanceService]);
     //#endregion
 
 })(angular);

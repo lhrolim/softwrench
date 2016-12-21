@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('adminMenuService', ["menuService", "redirectService", "contextService", "logoutService", "crudContextHolderService",
+    .service('adminMenuService', ["menuService", "redirectService", "contextService", "logoutService", "crudContextHolderService",
         function (menuService, redirectService, contextService, logoutService, crudContextHolderService) {
 
     return {

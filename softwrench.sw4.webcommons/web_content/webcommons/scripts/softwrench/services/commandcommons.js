@@ -63,7 +63,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").factory("commandCommonsService", ["$log", "expressionService", commandCommonsService]);
+    angular.module("webcommons_services").service("commandCommonsService", ["$log", "expressionService", commandCommonsService]);
 
     //#endregion
 

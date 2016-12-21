@@ -2,10 +2,15 @@
     "use strict";
 
     function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService) {
-    const APP_VERION = 'sw_system_version_key';
-    $scope.$name = 'HomeController';
+        const APP_VERION = 'sw_system_version_key';
+        $scope.$name = 'HomeController';
+
+        const log = $log.get("HomeController#init", ["init", "navigation", "route"]);
+        
 
         function initController() {
+        
+            log.debug("init home controller");
             //workaround for knowing where the user is already loggedin
             sessionStorage["ctx_loggedin"] = true;
             if (homeModel.RouteInfo) { // store route info on local storage
@@ -35,27 +40,20 @@
             if (sessionRedirectUrl != null && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0)) && !homeModel.FromRoute) {
                 redirectUrl = sessionRedirectUrl;
             }
+            const locationUrl = historyService.getLocationUrl();
+            if (locationUrl) {
+                redirectUrl = locationUrl;
+            } else {
+                historyService.addToHistory(redirectUrl, false, true);
+            }
 
-        var locationUrl = historyService.getLocationUrl();
-        if (locationUrl) {
-            redirectUrl = locationUrl;
-        } else {
-            historyService.addToHistory(redirectUrl,false, true);
+            //Check if the user is sysadmin and the application version has changed since last login for this user
+            if (contextService.HasRole(["sysadmin"]) && appVersionChanged(homeModel.ApplicationVersion)) {
+                redirectUrl = restService.getActionUrl("DeployValidation", "Index", null);
+            }
+
+            return redirect(redirectUrl);
         }
-
-        //Check if the user is sysadmin and the application version has changed since last login for this user
-        if (contextService.HasRole(["sysadmin"]) && appVersionChanged(homeModel.ApplicationVersion)) {
-            redirectUrl = restService.getActionUrl("DeployValidation", "Index", null);
-        }
-
-
-        //        if (sessionStorage.currentmodule != undefined && sessionStorage.currentmodule != "null") {
-        //            //sessionstorage is needed in order to avoid F5 losing currentmodule
-        //            $rootScope.currentmodule = sessionStorage.currentmodule;
-        //        }
-
-        redirect(redirectUrl);
-    }
 
         function redirect(redirectUrl, avoidTemplateCache) {
             const parameters = {
@@ -66,7 +64,8 @@
                 parameters.cache = $templateCache;
             }
 
-            $http(parameters).then(function (response) {
+            log.info(`getting crud data at ${redirectUrl}`);
+            return $http(parameters).then(function (response) {
                 // updates the configs on page load
                 configurationService.updateConfigurations();
 
@@ -92,22 +91,22 @@
         // listen to a location change to redirect on browser back and forward navigation
         $rootScope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
             if (newUrl === oldUrl || oldUrl && oldUrl.endsWith(location.pathname)) {
-                return;
+                return false;
             }
 
             // workaround - if the location change was originated by adding a url on history (causes a hash change on url) ignores this redirect
             if (historyService.wasLocationUpdatedByService()) {
                 historyService.resetLocationUpdatedByService();
-                return;
+                return false;
             }
 
             const redirectUrl = historyService.getLocationUrl();
             if (!redirectUrl) {
-                return;
+                return false;
             }
             const log = $log.getInstance("HomeController#locationChangeSuccess");
             log.debug("Redirecting to ({0}) as a browser navigation".format(redirectUrl));
-            redirect(redirectUrl, true);
+            return redirect(redirectUrl, true);
         });
 
         $scope.onTemplateLoad = function (event) {
@@ -120,19 +119,18 @@
             });
         };
 
-    function appVersionChanged(currentVersion) {
-        var localVersion = localStorageService.get(APP_VERION);
-
-        if (!currentVersion || (localVersion && currentVersion.equalsIc(localVersion))) {
-            return false;
-        } else {
-            localStorageService.put(APP_VERION, currentVersion);
-            return true;
+        function appVersionChanged(currentVersion) {
+            const localVersion = localStorageService.get(APP_VERION);
+            if (!currentVersion || (localVersion && currentVersion.equalsIc(localVersion))) {
+                return false;
+            } else {
+                localStorageService.put(APP_VERION, currentVersion);
+                return true;
+            }
         }
-    }
 
-    initController();
-}
+        initController();
+    }
 
     app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", HomeController]);
     window.HomeController = HomeController;

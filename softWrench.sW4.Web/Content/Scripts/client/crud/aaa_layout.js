@@ -13,6 +13,7 @@
         "sw_typeahead",
         "sw_scan",
         "sw_crudadmin",
+        "sw_components",
         "webcommons_services",
         "maximo_applications",
         "selectize",
@@ -39,25 +40,6 @@
     });
 
     //#region extra directives
-    app.directive("dynamicName", function ($compile) {
-        "ngInject";
-        /// <summary>
-        /// workaround for having dynamic named forms to work with angular 1.2
-        /// took from http://jsfiddle.net/YAZmz/2/
-        /// </summary>
-        /// <param name="$compile"></param>
-        /// <returns type=""></returns>
-        return {
-            restrict: "A",
-            terminal: true,
-            priority: 1000,
-            link: function (scope, element, attrs) {
-                element.attr('name', scope.$eval(attrs.dynamicName));
-                element.removeAttr("dynamic-name");
-                $compile(element)(scope);
-            }
-        };
-    });
 
 
     app.filter('linebreak', function () {
@@ -70,90 +52,6 @@
         };
     });
 
-    app.directive('swcontenteditable', function () {
-        return {
-            restrict: 'A',
-            require: '?ngModel',
-            link: function (scope, element, attr, ngModel) {
-                var read;
-                if (!ngModel) {
-                    return;
-                }
-                ngModel.$render = function () {
-                    return element.html(ngModel.$viewValue);
-                };
-                element.bind('blur', function () {
-                    if (ngModel.$viewValue !== $.trim(element.html())) {
-                        return scope.$apply(read);
-                    }
-                });
-                return read = function () {
-                    return ngModel.$setViewValue($.trim(element.html()));
-                };
-            }
-        };
-    });
-
-    app.directive('onFinishRender', function ($timeout) {
-        "ngInject";
-
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                if (scope.$last === true) {
-                    $timeout(function () {
-                        scope.$emit('ngRepeatFinished');
-                    });
-                }
-            }
-        };
-    });
-
-    app.directive('ngEnter', function () {
-        return function (scope, element, attrs) {
-            element.bind("keypress", function (event) {
-                if (event.which === 13) {
-                    scope.$apply(function () {
-                        scope.$eval(attrs.ngEnter);
-                    });
-
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-
-    app.directive("ngEnabled", function () {
-
-        return {
-            restrict: 'A',
-            link: function (scope, element, attrs) {
-                scope.$watch(attrs.ngEnabled, function (val) {
-                    if (val)
-                        element.removeAttr("disabled");
-                    else
-                        element.attr("disabled", "disabled");
-                });
-            }
-        };
-    });
-
-    app.directive('numberToString', function () {
-        return {
-            require: 'ngModel',
-            link: function (scope, element, attrs, ngModel) {
-                // Some non-string values coming from the rootdatamap are breaking the string binding, so we need to format them to string
-                // https://controltechnologysolutions.atlassian.net/browse/SWWEB-2042 : first issue
-                ngModel.$formatters.push(function (value) {
-                    if (value == null) {
-                        return null;
-                    }
-                    return '' + value;
-                });
-            }
-        };
-    });
-
     //#endregion
 
 
@@ -161,8 +59,6 @@
     function LayoutController($scope, $http, $log, $templateCache, $q, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService, crudContextHolderService) {
 
         $scope.$name = 'LayoutController';
-        var log = $log.getInstance('sw4.LayoutController');
-
         schemaCacheService.wipeSchemaCacheIfNeeded();
 
 
@@ -186,33 +82,32 @@
 
    
 
-        $rootScope.$on(JavascriptEventConstants.AjaxInit, function (ajaxinitevent) {
-            var savingMain = true === $rootScope.savingMain;
+        $rootScope.$on(JavascriptEventConstants.AjaxInit, function () {
+            const savingMain = true === $rootScope.savingMain;
             spinService.start({ savingDetail: savingMain });
 
         });
 
-        $rootScope.$on(JavascriptEventConstants.AjaxFinished, function (data) {
+        $rootScope.$on(JavascriptEventConstants.AjaxFinished, function () {
             spinService.stop();
             $rootScope.savingMain = undefined;
             fixHeaderService.callWindowResize();
         });
 
-        $rootScope.$on(JavascriptEventConstants.ErrorAjax, function (data) {
+        $rootScope.$on(JavascriptEventConstants.ErrorAjax, function () {
             spinService.stop();
             $rootScope.savingMain = undefined;
             fixHeaderService.callWindowResize();
         });
 
-        $scope.$on('ngLoadFinished', function (ngLoadFinishedEvent) {
+        $scope.$on('ngLoadFinished', function () {
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
             menuService.adjustHeight();
         });
 
         $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
-
-            var sidebarWidth = $('.col-side-bar').width();
+            const sidebarWidth = $('.col-side-bar').width();
             if (sidebarWidth != null) {
                 $('.col-main-content').css('margin-left', sidebarWidth);
             }
@@ -220,7 +115,7 @@
 
 
         $scope.$on(JavascriptEventConstants.TitleChanged, function (titlechangedevent, title) {
-            var record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
+            const record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(), crudContextHolderService.rootDataMap());
             if (record) {
                 title = record + ' | ' + title;
             }
@@ -236,16 +131,15 @@
 
 
         $rootScope.$on(JavascriptEventConstants.ActionAfterRedirection, function (event, result) {
-            var log = $log.getInstance('layoutcontroller#onsw_redirectactionsuccess');
+            const log = $log.getInstance('layoutcontroller#onsw_redirectactionsuccess', ["navigation", "route"]);
             log.debug("received event");
             $scope.AjaxResult(result);
         });
 
         $rootScope.$on(JavascriptEventConstants.REDIRECT_AFTER, function (event, result, mode, applicationName) {
-            var log = $log.getInstance('layoutcontroller#onsw_redirectapplicationsuccess');
+            const log = $log.getInstance('layoutcontroller#onsw_redirectapplicationsuccess',["navigation","route"]);
             //todo: are these 2 parameters really necessary?
             $scope.applicationname = applicationName;
-            $scope.requestmode = mode;
             if ($rootScope.popupmode != undefined) {
                 $scope.popupmode = $rootScope.popupmode;
                 $(hddn_popupmode)[0].value = $rootScope.popupmode;
@@ -261,8 +155,8 @@
 
 
         $scope.AjaxResult = function (result) {
-            var log = $log.getInstance('layoutcontroller#AjaxResult', ["redirect"]);
-            var newUrl = url(result.redirectURL);
+            const log = $log.getInstance('layoutcontroller#AjaxResult', ["redirect","navigation","route"]);
+            const newUrl = url(result.redirectURL);
             if ($scope.includeURL !== newUrl) {
                 log.debug("redirection detected new:{0} old:{1}".format(newUrl, $scope.includeURL));
                 $scope.includeURL = newUrl;
@@ -289,20 +183,24 @@
         }
 
         function initController() {
-            var configsJSON = $(hddn_configs)[0].value;
-            var userJSON = $(hiddn_user)[0].value;
+
+            const log = $log.get("LayoutController#init", ["init", "navigation", "route"]);
+            log.debug("init Layout controller");
+
+            const configsJSON = $(hddn_configs)[0].value;
+            const userJSON = $(hiddn_user)[0].value;
             if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON) || contextService.get("sw:changepasword")) {
                 contextService.deleteFromContext("sw:changepasword");
                 //this means user tried to hit back button after logout
                 logoutService.logout();
                 return;
             }
-            var config = JSON.parse(configsJSON);
-            var user = JSON.parse(userJSON);
+            const config = JSON.parse(configsJSON);
+            const user = JSON.parse(userJSON);
             contextService.loadUserContext(user);
             contextService.loadConfigs(config);
 
-            contextService.insertIntoContext("isLocal", config.isLocal);
+            
             $rootScope.defaultEmail = config.defaultEmail;
             $rootScope.clientName = config.clientName;
             $rootScope.environment = config.environment;
@@ -310,20 +208,12 @@
             $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
             $rootScope.browserType = BrowserDetect.browser.toLowerCase();
 
-            contextService.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
-            contextService.insertIntoContext("UIShowClassicAdminMenu", config.uiShowClassicAdminMenu, true);
-            contextService.insertIntoContext("UIShowToolbarLabels", config.uiShowToolbarLabels, true);
+
 
             $scope.mainlogo = config.logo;
             $scope.myprofileenabled = config.myProfileEnabled;
 
-            $scope.$on('sw_goToApplicationView', function (event, data) {
-                if (data != null) {
-                    $scope.goToApplicationView(data.applicationName, data.schemaId, data.mode, data.title, data.parameters);
-                }
-            });
-
-            var popupMode = GetPopUpMode();
+            const popupMode = GetPopUpMode();
             $scope.popupmode = popupMode;
             if (popupMode !== "none") {
                 return;

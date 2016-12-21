@@ -1,7 +1,7 @@
 ﻿(function(modules) {
     "use strict";
 
-    modules.webcommons.factory('priorityService', ['searchService', 'genericTicketService', '$q', function (searchService, genericTicketService, $q) {
+    modules.webcommons.service('priorityService', ['searchService', 'genericTicketService', '$q', function (searchService, genericTicketService, $q) {
         var fallbackFunction = function (priority) {
             var color;
 

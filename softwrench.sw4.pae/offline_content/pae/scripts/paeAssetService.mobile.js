@@ -152,7 +152,7 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications")
-        .factory("paeAssetService", [
+        .service("paeAssetService", [
             "scanningCommonsService", "$log", "crudContextService", "offlineAuditService", "$ionicPopup", "maximoDataService", "swdbDAO", "offlineSaveService", "securityService", "$q", paeAssetService
         ]);
 

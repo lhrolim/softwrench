@@ -130,12 +130,14 @@ namespace softWrench.sW4.Web {
 //                .IncludeDirectory("~/Content/Shared/webcommons/scripts/softwrench/util", "*.js")
 //                .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
-                .IncludeDirectory("~/Content/Scripts/client/services/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/services/", "*.js",true)
+                .IncludeDirectory("~/Content/Scripts/client/controllers/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/constants/", "*.js")
                 .IncludeDirectory("~/Content/Scripts/client/adminresources/", "*.js")
-                .IncludeDirectory("~/Content/Scripts/client/directives/", "*.js")
-                .IncludeDirectory("~/Content/Scripts/client/directives/internal", "*.js")
-                .IncludeDirectory("~/Content/Scripts/client/directives/menu/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/components/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/util/", "*.js")
+                .IncludeDirectory("~/Content/Scripts/client/directives/", "*.js",true)
                 .IncludeDirectory("~/Content/Templates/commands", "*.js", true)
                 .IncludeDirectory("~/Content/modules", "*.js", true);
             appBundle.Orderer = new PassthroughBundleOrderer();

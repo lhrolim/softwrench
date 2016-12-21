@@ -153,6 +153,6 @@
         return service;
     }
 
-    angular.module("webcommons_services").factory("richTextService", [richTextService]);
+    angular.module("webcommons_services").service("richTextService", [richTextService]);
 
 })(angular);

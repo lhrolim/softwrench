@@ -32,7 +32,7 @@
     }
 
     //#region Service registration
-    angular.module("sw_layout").factory("graphicPanelServiceProvider", ["$injector", graphicPanelServiceProvider]);
+    angular.module("sw_layout").service("graphicPanelServiceProvider", ["$injector", graphicPanelServiceProvider]);
     //#endregion
 
 })(angular);

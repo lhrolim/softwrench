@@ -6,7 +6,7 @@
  * @license MIT
  */
 angular.module('sw_layout')
-.factory('recursionHelper', ['$compile', function ($compile) {
+.service('recursionHelper', ['$compile', function ($compile) {
     return {
         /**
 		 * Manually compiles the element, fixing the recursion loop.

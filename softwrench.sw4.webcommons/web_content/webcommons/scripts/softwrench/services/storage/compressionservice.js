@@ -31,7 +31,7 @@
     }
 
     //#region Service registration
-    angular.module("webcommons_services").factory("compressionService", [compressionService]);
+    angular.module("webcommons_services").service("compressionService", [compressionService]);
     //#endregion
 
 })(angular);

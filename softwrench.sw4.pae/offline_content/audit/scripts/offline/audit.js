@@ -252,7 +252,7 @@
         };
 
         //#region Service registration
-        audit.factory("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", "securityService", "routeService", offlineAuditService]);
+        audit.service("offlineAuditService", ["$q", "offlineEntities", "swdbDAO", "securityService", "routeService", offlineAuditService]);
         //#endregion
     })(audit);
     //#endregion

@@ -257,7 +257,7 @@
     //#region Service registration
     angular
         .module("sw_layout")
-        .factory("tableauGraphicPanelService",
+        .service("tableauGraphicPanelService",
             ["$q", "restService", "crudContextHolderService", "localStorageService", "contextService", tableauGraphicPanelService]);
     //#endregion
 

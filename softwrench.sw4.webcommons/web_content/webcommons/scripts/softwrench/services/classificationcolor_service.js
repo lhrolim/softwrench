@@ -1,7 +1,7 @@
 ﻿(function(modules) {
     "use strict";
 
-    modules.webcommons.factory("classificationColorService", ["$rootScope", "contextService", function ($rootScope, contextService) {
+    modules.webcommons.service("classificationColorService", ["$rootScope", "contextService", function ($rootScope, contextService) {
 
         var fallbackFunction = function (classification) {
 

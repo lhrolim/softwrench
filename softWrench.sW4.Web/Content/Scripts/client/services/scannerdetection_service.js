@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('scannerdetectionService', [
+    .service('scannerdetectionService', [
     "$log", "$http", "$rootScope", "$timeout", "restService", "searchService", "redirectService",
     "contextService", "alertService", "associationService", "modalService",
     "fieldService", "submitService", "validationService", "commandService", "scanningCommonsService", "applicationService",

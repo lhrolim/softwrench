@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('inventoryService', [
+    .service('inventoryService', [
         "$http", "$timeout", "contextService", "redirectService", "modalService", "searchService", "restService", "alertService", "inventoryServiceCommons", "$rootScope", "applicationService", 
         function ($http, $timeout, contextService, redirectService, modalService, searchService, restService, alertService, inventoryServiceCommons, $rootScope, applicationService) {
 

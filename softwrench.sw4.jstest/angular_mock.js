@@ -762,7 +762,7 @@ angular.mock.animate = angular.module('ngAnimateMock', ['ng'])
 
   .config(['$provide', function($provide) {
 
-    $provide.factory('$$forceReflow', function() {
+    $provide.service('$$forceReflow', function() {
       function reflowFn() {
         reflowFn.totalReflows++;
       }
@@ -770,7 +770,7 @@ angular.mock.animate = angular.module('ngAnimateMock', ['ng'])
       return reflowFn;
     });
 
-    $provide.factory('$$animateAsyncRun', function() {
+    $provide.service('$$animateAsyncRun', function() {
       var queue = [];
       var queueFn = function() {
         return function(fn) {

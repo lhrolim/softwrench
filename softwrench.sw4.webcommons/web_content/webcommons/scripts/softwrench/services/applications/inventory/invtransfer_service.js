@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    angular.module('sw_layout').factory('invtransferService', ["$log", 'searchService', 'inventoryServiceCommons', "alertService", "redirectService", invtransferService]);
+    angular.module('sw_layout').service('invtransferService', ["$log", 'searchService', 'inventoryServiceCommons', "alertService", "redirectService", invtransferService]);
 
     function invtransferService($log, searchService, inventoryServiceCommons, alertService, redirectService) {
         const service = {

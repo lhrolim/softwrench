@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('deltadental_.personService', function () {
+    .service('deltadental_.personService', function () {
     return {
         afterChangeAltDisplayname: function (datamap) {
             if (datamap['altdisplayname'] === null) {

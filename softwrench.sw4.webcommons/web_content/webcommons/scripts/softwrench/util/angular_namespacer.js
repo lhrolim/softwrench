@@ -11,7 +11,7 @@
         var instance = angularModule(moduleName, requires, configFn);
 
         instance.clientfactory = function (serviceName, fn) {
-            return app.factory(moduleName + "." + serviceName, fn);
+            return app.service(moduleName + "." + serviceName, fn);
         };
 
         return instance;

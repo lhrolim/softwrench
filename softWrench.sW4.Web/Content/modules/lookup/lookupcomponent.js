@@ -150,6 +150,6 @@
 
     service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService', 'schemaService', 'searchService'];
 
-    angular.module("sw_lookup").factory('cmplookup', service);
+    angular.module("sw_lookup").service('cmplookup', service);
 
 })(angular);

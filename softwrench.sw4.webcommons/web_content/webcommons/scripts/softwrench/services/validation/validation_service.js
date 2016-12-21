@@ -1,7 +1,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').factory('validationService', ['$log','$q', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', 'crudContextHolderService', "passwordValidationService", validationService]);
+    angular.module('webcommons_services').service('validationService', ['$log','$q', 'i18NService', 'fieldService', '$rootScope', 'dispatcherService', 'expressionService', 'eventService', 'compositionCommons', 'schemaService', 'alertService', 'crudContextHolderService', "passwordValidationService", validationService]);
 
     function validationService($log,$q, i18NService, fieldService, $rootScope, dispatcherService, expressionService, eventService, compositionCommons, schemaService, alertService, crudContextHolderService, passwordValidationService) {
 
@@ -99,11 +99,10 @@
             const arr = this.validate(schema, schema.displayables, datamap,crudFormErrors);
             const deferred =$q.defer();
             if (arr.length > 0) {
-                deferred.reject(arr);
-            } else {
-                deferred.resolve();
-            }
-            return deferred.promise;
+                return $q.reject(arr);
+            } 
+            return $q.when();
+            
         }
 
         function validate(schema, displayables, datamap, angularformerrors={}, innerValidation=false) {

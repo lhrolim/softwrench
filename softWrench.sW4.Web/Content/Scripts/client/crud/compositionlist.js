@@ -867,7 +867,7 @@
                 $event.stopImmediatePropagation();
             }
             this.handleSingleSelectionClick(item, rowIndex);
-            const log = $log.get("compositionlist#toggleDetails");
+            const log = $log.get("compositionlist#toggleDetails",["composition","detail"]);
             if (column != null && column.attribute == null) {
                 //for sections inside compositionlist, ex: reply/replyall of commlogs
                 return;
@@ -1156,7 +1156,7 @@
             //enforcing the dirtyness of the item
             selecteditem["#isDirty"] = true;
 
-            const log = $log.getInstance("compositionlist#save",["save","submit"]);
+            const log = $log.getInstance("compositionlist#save",["composition","save","submit"]);
 
             if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
                 //this is for the call to submit without having any item on composition selected, due to having the submit as the default button

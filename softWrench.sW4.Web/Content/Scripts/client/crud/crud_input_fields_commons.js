@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('crud_inputcommons', factory);
+    angular.module('sw_layout').service('crud_inputcommons', factory);
 
     factory.$inject = ['$log', 'associationService', 'contextService', 'cmpfacade', 'fieldService', "$timeout", 'expressionService', 'dispatcherService', '$parse'];
 

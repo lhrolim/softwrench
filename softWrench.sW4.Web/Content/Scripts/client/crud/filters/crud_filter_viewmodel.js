@@ -160,5 +160,5 @@
         return service;
     }
 
-    angular.module('sw_layout').factory('filterModelService', ['searchService', 'userService', filterModelService]);
+    angular.module('sw_layout').service('filterModelService', ['searchService', 'userService', filterModelService]);
 })();

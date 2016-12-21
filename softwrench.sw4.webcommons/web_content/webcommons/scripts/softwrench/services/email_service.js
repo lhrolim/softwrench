@@ -44,5 +44,5 @@
         return service;
     }
 
-    angular.module('webcommons_services').factory('emailService', ['$http', '$rootScope', 'crudContextHolderService', emailService]);
+    angular.module('webcommons_services').service('emailService', ['$http', '$rootScope', 'crudContextHolderService', emailService]);
 })(angular);

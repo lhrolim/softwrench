@@ -84,7 +84,7 @@
 
     //#region Service registration
 
-    angular.module("sw_mobile_services").factory("fsUserProfileService", ["routeService", "securityService", "associationConstants", "$q", fsUserProfileService]);
+    angular.module("sw_mobile_services").service("fsUserProfileService", ["routeService", "securityService", "associationConstants", "$q", fsUserProfileService]);
 
     //#endregion
 

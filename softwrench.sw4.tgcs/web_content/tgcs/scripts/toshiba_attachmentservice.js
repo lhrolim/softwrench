@@ -32,7 +32,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("tgcs.attachmentService", ["alertService", "i18NService", toshibaAttachmentService]);
+    angular.module("sw_layout").service("tgcs.attachmentService", ["alertService", "i18NService", toshibaAttachmentService]);
 
     //#endregion
 

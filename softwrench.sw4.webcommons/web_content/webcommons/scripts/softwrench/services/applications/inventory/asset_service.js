@@ -2,7 +2,7 @@
 (function () {
     'use strict';
 
-    angular.module('sw_layout').factory('assetService', ["$log", "redirectService", assetService]);
+    angular.module('sw_layout').service('assetService', ["$log", "redirectService", assetService]);
 
     function assetService($log, redirectService) {
 

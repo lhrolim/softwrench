@@ -1,7 +1,7 @@
 ﻿(function(modules) {
     "use strict";
 
-modules.webcommons.factory('statuscolorService', ["$rootScope", "contextService", function ($rootScope, contextService) {
+modules.webcommons.service('statuscolorService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
     var fallbackFunction = function (status, applicationname) {
 

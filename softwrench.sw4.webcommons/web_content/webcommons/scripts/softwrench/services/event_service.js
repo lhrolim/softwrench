@@ -1,7 +1,7 @@
 ﻿(function (modules) {
     "use strict";
 
-    modules.webcommons.factory('eventService', ["$log", "$q", "dispatcherService", "crudContextHolderService", "expressionService", function ($log, $q, dispatcherService, crudContextHolderService, expressionService) {
+    modules.webcommons.service('eventService', ["$log", "$q", "dispatcherService", "crudContextHolderService", "expressionService", function ($log, $q, dispatcherService, crudContextHolderService, expressionService) {
         const loadEvent = function (schemaOrDisplayable, eventName) {
             if (!schemaOrDisplayable || schemaOrDisplayable.events === undefined) {
                 return null;

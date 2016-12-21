@@ -24,7 +24,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("problemService", ["contextService", problemService]);
+    angular.module("sw_layout").service("problemService", ["contextService", problemService]);
 
     //#endregion
 

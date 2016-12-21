@@ -3,7 +3,7 @@
 
     //#region Service registration
 
-    angular.module("maximo_applications").factory("paeAssetService", [
+    angular.module("maximo_applications").service("paeAssetService", [
         "scanningCommonsService", "validationService", "$http", "submitService",
         "contextService", "searchService", "redirectService", "alertService",
         "crudContextHolderService", "formatService", "schemaService",

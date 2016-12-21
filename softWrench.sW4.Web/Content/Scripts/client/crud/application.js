@@ -1,40 +1,7 @@
 (function (angular) {
     "use strict";
     const app = angular.module('sw_layout');
-    app.directive('bodyrendered', function ($timeout, $log, menuService) {
-        "ngInject";
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                if (scope.schema.mode !== 'output' && scope.isSelectEnabled) {
-                    element.data('selectenabled', scope.isSelectEnabled(scope.fieldMetadata));
-                }
-                if (scope.$last === true) {
-                    $timeout(function () {
-                        const parentElementId = scope.elementid;
-                        $log.getInstance('application_dir#bodyrendered').debug('sw_body_rendered will get dispatched');
-                        menuService.adjustHeight();
-                        scope.$emit(JavascriptEventConstants.BodyRendered, parentElementId);
-                    });
-                }
-            }
-        };
-    });
 
-
-    app.directive('filterrowrendered', function ($timeout) {
-        "ngInject";
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                if (scope.$last === true) {
-                    $timeout(function () {
-                        scope.$emit(JavascriptEventConstants.FilterRowRendered);
-                    });
-                }
-            }
-        };
-    });
 
     app.controller("ApplicationController", applicationController);
     function applicationController($scope, $http, $log, $timeout,
@@ -123,75 +90,29 @@
 
         //#endregion
 
-        function switchMode(mode, scope) {
-            scope = scope || $scope;
-            scope.isDetail = mode;
-            scope.isList = !mode;
-            var crud_context;
-            if (scope.isDetail) {
-                crud_context = contextService.fetchFromContext("crud_context", true);
-                if (!crud_context) {
-                    //this might happen if we´re handling a direct link
-                    return;
-                }
-
-                if (crud_context.panelid != null || crud_context.applicationName !== scope.schema.applicationName) {
-                    // the list was from a modal or dashboard panel
-                    // or is from another aplication
-                    // should not be considered when goint to detail
-                    crud_context.detail_previous = null;
-                    crud_context.detail_next = null;
-                    crud_context.list_elements = null;
-                    crud_context.panelid = null;
-                    contextService.insertIntoContext("crud_context", crud_context);
-                }
-
-                var id = $scope.datamap[$scope.schema.idFieldName];
-                const list = crud_context.list_elements;
-                if (!list || !id) {
-                    return;
-                }
-
-                var idAsString = String(id);
-                const findById = function (item) {
-                    return item.id === id || item.id === idAsString;
-                };
-                if (list.find(findById)) {
-                    const current = list.findIndex(findById);
-                    const previous = current - 1;
-                    const next = current + 1;
-                    crud_context.detail_previous = list[previous];
-                    crud_context.detail_next = list[next];
-                } else {
-                    // not on list, so new created
-                    crud_context.detail_previous = null;
-                    crud_context.detail_next = list.length > 0 ? list[0] : null;
-                    list.unshift({ id: id });
-                }
-                contextService.insertIntoContext("crud_context", crud_context);
+        $scope.switchMode=(mode) =>{
+            $scope.isDetail = mode;
+            $scope.isList = !mode;
+            if ($scope.isDetail) {
+                detailService.updateCrudContext($scope.datamap, $scope.schema);
             }
 
         }
 
-        $scope.toList = function (data, scope) {
-            if (scope == null) {
-                scope = $scope;
-            }
+        $scope.toList = function (data) {
             $('#saveBTN').removeAttr('disabled');
-            //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
 
-            contextService.insertIntoContext("grid_refreshdata", { data: data, panelid: null }, true);
+            //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
+            contextService.insertIntoContext("grid_refreshdata", { data, panelid: null }, true);
 
             crudlistViewmodel.initGridFromServerResult(data, null);
 
-            scope.$broadcast(JavascriptEventConstants.GRID_CHANGED);
-            switchMode(false, scope);
+            this.switchMode(false);
         };
 
 
-        function toDetail(scope) {
-
-            switchMode(true, scope);
+        $scope.toDetail= function() {
+            this.switchMode(true);
         };
 
 
@@ -205,42 +126,47 @@
 
         $scope.renderViewWithData = function (applicationName, schemaId, mode, title, dataObject) {
             $scope.applicationname = applicationName;
-            $scope.requestmode = mode;
             dataObject.mode = mode;
             $scope.renderData(dataObject);
         };
 
+        const defaultRenderViewParams = {
+            popupmode:"none",
+            printMode:null,
+            customParameters: {},
+            //a string indicating which composition to load
+            autoloadcomposition:null
+        }
+
         //this code will get called when the user is already on a crud page and tries to switch view only.
-        $scope.renderView = function (applicationName, schemaId, mode, title, parameters) {
+        $scope.renderView = function (applicationName, schemaId, mode, title, parameters =defaultRenderViewParams) {
             //Make a list of ticket ids in array to find the adjacent ones
 
-            if (parameters === undefined || parameters == null) {
-                parameters = {};
-            }
-            $scope.requestpopup = parameters.popupmode ? parameters.popupmode : 'none';
+            
+            $scope.requestpopup = parameters.popupmode || "none";
+
             //change made to prevent popup for incident detail report
-            const log = $log.getInstance("applicationController#renderView");
-            if ($scope.requestpopup == 'browser' || $scope.requestpopup == 'report') {
+            const log = $log.getInstance("applicationController#renderView",["navigation","route"]);
+            if ($scope.requestpopup.equalsAny('browser', 'report')) {
                 log.debug("calling goToApplicationView for application {0}".format(applicationName));
-                $scope.$parent.goToApplicationView(applicationName, schemaId, mode, title, parameters);
-                return;
+                return $scope.$parent.goToApplicationView(applicationName, schemaId, mode, title, parameters);
             }
 
             //remove it, so its not used on server side
             var printMode = parameters.printMode;
             parameters.printMode = null;
 
-            parameters.key = {};
-            parameters.key.schemaId = schemaId;
-            parameters.key.mode = mode;
-            parameters.key.platform = platform();
-            parameters.customParameters = parameters.customParameters || {};
+            parameters.key = {
+                schemaId,
+                mode,
+                platform: platform()
+            };
+            
             if (title) {
                 parameters.title = title;
             }
 
             $scope.applicationname = applicationName;
-            $scope.requestmode = mode;
             const urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
             if (printMode == undefined) {
                 //avoid the print url to be saved on the sessionStorage, breaking page refresh
@@ -254,7 +180,7 @@
             log.info('Scroll From', applicationName, document.body.scrollTop);
 
             return $http.get(urlToCall)
-                .then(function (response) {
+                .then(response =>{
                     const data = response.data;
                     // besides printMode is not undefined, we need to verify that printMode is true;
                     // otherwise disable printRequest, that will allow the pagination to update.
@@ -301,41 +227,41 @@
 
 
         $scope.renderData = function renderData(result) {
+
             contextService.insertIntoContext("associationsresolved", false, true);
             $scope.isList = $scope.isDetail = false;
             $scope.crudsubtemplate = null;
             $scope.multipleSchema = false;
             $scope.schemas = null;
-            var isModal = $scope.requestpopup && ($scope.requestpopup == 'modal' || $scope.requestpopup == 'multiplemodal');
+
+            var isModal = $scope.requestpopup && ($scope.requestpopup.equalsAny("modal","multiplemodal"));
             if (isModal) {
+                //TODO: review
                 $('#crudmodal').modal('show');
                 $("#crudmodal").draggable();
                 $scope.modal = {};
                 $scope.showingModal = true;
             } else {
-                /*if ($scope.schemas != null) {
-                    $scope.previousschema = $scope.schemas;
-                } else {*/
                 $scope.previousschema = $scope.schema;
-                //}
-                var crudContext = contextService.fetchFromContext("crud_context", true);
-                var contextPreviousData = crudContext == null ? {} : crudContext.previousData;
-                var datamap = $scope.datamap ? $scope.datamap : {};
-                $scope.previousdata = contextPreviousData == {} ? datamap : contextPreviousData;
+                var crudContext = contextService.fetchFromContext("crud_context", true) || {};
+                var contextPreviousData = crudContext.previousData || {};
+                var datamap = $scope.datamap || {};
+                $scope.previousdata = contextPreviousData === {} ? datamap : contextPreviousData;
             }
+
             var scope = isModal ? $scope.modal : $scope;
 
             scope.schema = schemaCacheService.getSchemaFromResult(result);
 
             // resultObject can be null only when SW is pointing to a Maximo DB different from Maximo WS DB
-            scope.datamap = instantiateIfUndefined(result.resultObject);
+            scope.datamap = result.resultObject || {};
 
             //Save the originalDatamap after the body finishes rendering. This will be used in the submit service to update
             //associations that were "removed" with a " ". This is because a null value, when sent to the MIF, is ignored
             scope.originalDatamap = angular.copy(scope.datamap);
             crudContextHolderService.originalDatamap(null,scope.originalDatamap);
 
-            scope.extraparameters = instantiateIfUndefined(result.extraParameters);
+            scope.extraparameters = result.extraParameters || {};
             if (result.mode === undefined || "none".equalsIc(result.mode)) {
                 //FIX SWWEB 1640 and SWWEB 1797
                 result.mode = "input";
@@ -359,17 +285,17 @@
                     setWindowTitle(scope);
                 }
             }
-            var log = $log.getInstance("applicationcontroller#renderData");
+            var log = $log.getInstance("applicationcontroller#renderData",["route","navigation"]);
 
 
             if (result.type === ResponseConstants.ApplicationDetailResult) {
                 log.debug("Application Detail Result handled");
                 detailService.fetchRelationshipData(scope, result);
-                toDetail(scope);
+                this.toDetail(scope);
                 crudContextHolderService.detailLoaded();
             } else if (result.type === ResponseConstants.ApplicationListResult) {
                 log.debug("Application List Result handled");
-                $scope.toList(result, scope);
+                this.toList(result, scope);
                 crudContextHolderService.gridLoaded(result);
             } else if (result.crudSubTemplate != null) {
                 log.debug("Crud Sub Template handled");
@@ -428,7 +354,7 @@
             const params = {};
             params["resultObject"] = data[0];
             params["schema"] = schema;
-            params["type"] = "ApplicationDetailResult";
+            params["type"] = ResponseConstants.ApplicationDetailResult;
             // If the application has custom parameters get them from the datamap
 
             $scope.renderViewWithData(schema.applicationName, schema.schemaId, schema.mode, schema.title, params);
@@ -438,22 +364,19 @@
 
             crudContextHolderService.disposeDetail();
 
-            var log = $log.getInstance('application#toListSchema');
+            var log = $log.getInstance('application#toListSchema',["list"]);
             $scope.multipleSchema = false;
             $scope.schemas = null;
             //                $('#crudmodal').modal('hide');
             $scope.showingModal = false;
-            if (GetPopUpMode() == 'browser') {
+            if (GetPopUpMode() === 'browser') {
                 open(location, '_self').close();
             }
             var parameters = {};
-
-            var pageSize;
-            if (schema) {
-                pageSize = userPreferencesService.getSchemaPreference("pageSize", schema.applicationName, schema.schemaId);
-            } else {
-                pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.applicationname, "list");
-            }
+            const schemaId = schema ? schema.schemaId : "list";
+            const applicationName = schema ? schema.applicationName : $scope.applicationName;
+            var pageSize = userPreferencesService.getSchemaPreference("pageSize", applicationName, schemaId);
+            
             if (pageSize) {
                 parameters["SearchDTO"] = parameters["SearchDTO"] || {};
                 parameters["SearchDTO"].pageSize = pageSize;
@@ -513,7 +436,7 @@
             //}
         };
 
-        $scope.renderListView = function (parameters) {
+        $scope.renderListView = function (parameters ={}) {
             /// <summary>
             /// 
             /// </summary>
@@ -521,11 +444,11 @@
             ///  application --> overrides the default application which would be the same as current. Useful for cancel clicks that should span different applications (on F5)
             /// </param>
             var applicationToGo = $scope.applicationname;
-            if (parameters && parameters.application) {
+            if (parameters.application) {
                 applicationToGo = parameters.application;
             }
             var schemaToGo = 'list';
-            if (parameters && parameters.schema) {
+            if (parameters.schema) {
                 schemaToGo = parameters.schema;
             }
 
@@ -547,6 +470,10 @@
 
 
         function doInit() {
+            
+            const log = $log.get("ApplicationController#init", ["init", "navigation", "route"]);
+            log.debug("init Application controller");
+
             if ($scope.resultObject.redirectURL.indexOf("Application.html") == -1) {
                 //pog to identify that this result if of the right type.
                 return;
@@ -563,7 +490,7 @@
 
             if (dataObject.schemas == null) {
                 if (dataObject.resultObject == null) {
-                    if (dataObject.type === "NotFoundResponse") {
+                    if (dataObject.type === ResponseConstants.NotFoundResponse) {
                         broadcastEx("Page not found.");
                         return;
                     }

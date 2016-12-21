@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('pwdenforceService', ["$rootScope", "$timeout", "i18NService", "alertService", function ($rootScope, $timeout, i18NService, alertService) {
+    .service('pwdenforceService', ["$rootScope", "$timeout", "i18NService", "alertService", function ($rootScope, $timeout, i18NService, alertService) {
 
     return {
         checker: function(password, retype) {

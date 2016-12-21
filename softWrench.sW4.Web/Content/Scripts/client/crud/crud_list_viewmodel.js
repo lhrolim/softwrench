@@ -2,12 +2,11 @@
 (function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('crudlistViewmodel', ['$rootScope', crudListViewModel]);
+    class crudListViewModel {
 
-
-
-    function crudListViewModel($rootScope) {
-
+        constructor($rootScope) {
+            this.$rootScope = $rootScope;
+        }
 
         //TODO: refactor it to use classes instead...
         /**
@@ -16,25 +15,26 @@
          * @param {} panelId the panelid, usually null, but could be #modal or a dashboard id
          * @returns {} 
          */
-        function initGridFromServerResult(applicationListResultObj, panelId) {
-            return $rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
+        initGridFromServerResult(applicationListResultObj, panelId) {
+            return this.$rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
         }
 
-        function initGridFromDatamapAndSchema(datamap, schema, panelId) {
+        initGridFromDatamapAndSchema(datamap, schema, panelId) {
 
             const applicationListResultObj = {
-                datamap: datamap,
-                schema: schema
+                datamap,
+                schema
             }
 
-            return $rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
+            return this.$rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
         }
 
-        const service = {
-            initGridFromDatamapAndSchema,
-            initGridFromServerResult
-        };
-
-        return service;
     }
+
+    crudListViewModel.$inject = ['$rootScope'];
+
+    angular.module('sw_layout').service('crudlistViewmodel', crudListViewModel);
+    
+
+
 })(angular);

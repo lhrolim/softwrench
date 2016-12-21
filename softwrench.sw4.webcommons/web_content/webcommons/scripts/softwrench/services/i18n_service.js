@@ -1,7 +1,7 @@
 ﻿(function (modules) {
     "use strict";
         
-    modules.webcommons.factory('i18NService', ["$rootScope", "contextService", function ($rootScope, contextService) {
+    modules.webcommons.service('i18NService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
     var verifyKeyInAllCatalogsButEn = function (key) {
         var catalogs = $rootScope['sw_i18ncatalogs'];

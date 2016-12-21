@@ -4,7 +4,7 @@
     // crudContextHolderService, redirectService, restService, alertService
 
 angular.module('sw_layout')
-    .factory('genericTicketService', ["$q", "alertService", "crudContextHolderService", "searchService", "userService", "applicationService", "redirectService", "restService", "$log",
+    .service('genericTicketService', ["$q", "alertService", "crudContextHolderService", "searchService", "userService", "applicationService", "redirectService", "restService", "$log",
         function ($q, alertService, crudContextHolderService, searchService, userService, applicationService, redirectService, restService, $log) {
 
     var updateTicketStatus = function (datamap) {

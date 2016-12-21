@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('mockService', ["contextService", function (contextService) {
+    .service('mockService', ["contextService", function (contextService) {
 
     return {
         //avoids opening dashboard upon container click

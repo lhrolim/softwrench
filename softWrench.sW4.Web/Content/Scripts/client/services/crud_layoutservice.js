@@ -256,6 +256,6 @@
 
     angular
       .module('sw_layout')
-      .factory('layoutservice', ['$log', "fieldService", layoutservice]);
+      .service('layoutservice', ['$log', "fieldService", layoutservice]);
 
 })(angular);

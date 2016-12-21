@@ -4,7 +4,7 @@
 
     angular
       .module('sw_layout')
-      .factory('logoutService', ['$window', 'contextService', 'schemaCacheService', logoutService]);
+      .service('logoutService', ['$window', 'contextService', 'schemaCacheService', logoutService]);
 
     function logoutService($window, contextService, schemaCacheService) {
 

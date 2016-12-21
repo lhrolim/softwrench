@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').factory('inventoryServiceCommons', ['searchService', 'alertService', '$q', inventoryServiceCommons]);
+    angular.module('sw_layout').service('inventoryServiceCommons', ['searchService', 'alertService', '$q', inventoryServiceCommons]);
 
     //TODO: remove fields entirely
 

@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-angular.module("sw_layout").factory('kongsberg.srService', ['srService', 'crudContextHolderService', function (srService, crudContextHolderService) {
+angular.module("sw_layout").service('kongsberg.srService', ['srService', 'crudContextHolderService', function (srService, crudContextHolderService) {
 
     return {
 

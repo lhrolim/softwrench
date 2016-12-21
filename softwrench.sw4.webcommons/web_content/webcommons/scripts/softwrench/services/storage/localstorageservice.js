@@ -109,7 +109,7 @@
     }
 
     //#region Service registration
-    angular.module("webcommons_services").factory("localStorageService", ["compressionService", localStorageService]);
+    angular.module("webcommons_services").service("localStorageService", ["compressionService", localStorageService]);
     //#endregion
 
 })(angular);

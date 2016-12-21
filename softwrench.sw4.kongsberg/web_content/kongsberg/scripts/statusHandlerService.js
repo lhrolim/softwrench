@@ -17,5 +17,5 @@
         return service;
     }
 
-    angular.module("sw_layout").factory("statusHandlerService", ["crudContextHolderService", statusHandlerService]);
+    angular.module("sw_layout").service("statusHandlerService", ["crudContextHolderService", statusHandlerService]);
 })(angular);

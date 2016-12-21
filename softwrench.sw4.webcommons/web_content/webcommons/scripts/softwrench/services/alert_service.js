@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('webcommons_services')
-        .factory('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", alertService]);
+        .service('alertService', ["$rootScope", "$timeout", "i18NService", "notificationViewModel", "$log", "$q", alertService]);
 
     function alertService($rootScope, $timeout, i18NService, notificationViewModel, $log, $q) {
         /**

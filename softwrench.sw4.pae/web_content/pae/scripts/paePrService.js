@@ -70,7 +70,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("paePrService", ["$rootScope", "crudContextHolderService", "crudCrawlService", "applicationService", "schemaService", "modalService", "validationService", paePrService]);
+    angular.module("sw_layout").service("paePrService", ["$rootScope", "crudContextHolderService", "crudCrawlService", "applicationService", "schemaService", "modalService", "validationService", paePrService]);
 
     //#endregion
 

@@ -208,7 +208,7 @@
     //#region Service registration
 
     angular.module("maximo_offlineapplications")
-        .factory("fsWorkorderOfflineService", ["crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService", fsWorkorderOfflineService]);
+        .service("fsWorkorderOfflineService", ["crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService", fsWorkorderOfflineService]);
 
     //#endregion
 

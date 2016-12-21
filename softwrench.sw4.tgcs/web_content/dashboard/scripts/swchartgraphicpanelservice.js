@@ -289,7 +289,7 @@
     //#region Service registration
     angular
         .module("sw_layout")
-        .factory("swchartGraphicPanelService",
+        .service("swchartGraphicPanelService",
             ["$rootScope","$log", "$compile", "restService", "crudContextHolderService", swchartGraphicPanelService]);
     //#endregion
 

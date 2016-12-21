@@ -24,6 +24,6 @@
         return api;
     };
 
-    angular.module("webcommons_services").factory("datamapSanitizeService", service);
+    angular.module("webcommons_services").service("datamapSanitizeService", service);
 
 })(angular);

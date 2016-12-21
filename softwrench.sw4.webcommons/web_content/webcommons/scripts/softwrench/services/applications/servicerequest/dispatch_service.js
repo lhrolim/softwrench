@@ -36,5 +36,5 @@
         return service;
     }
 
-    angular.module('maximo_applications').factory('dispatchService', ['$rootScope', 'applicationService', 'alertService','contextService', dispatchService]);
+    angular.module('maximo_applications').service('dispatchService', ['$rootScope', 'applicationService', 'alertService','contextService', dispatchService]);
 })(angular);

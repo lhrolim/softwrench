@@ -2,7 +2,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('maximo_applications').factory('personService', ['$rootScope', "$log", 'alertService', 'redirectService', 'applicationService',
+    angular.module('maximo_applications').service('personService', ['$rootScope', "$log", 'alertService', 'redirectService', 'applicationService',
         'contextService', 'crudContextHolderService', 'historyService', 'restService', '$q', personService]);
 
     function personService($rootScope, $log, alertService, redirectService, applicationService, contextService, crudContextHolderService, historyService, restService, $q) {

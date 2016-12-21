@@ -207,7 +207,7 @@
     }
 
     //#region Service registration
-    angular.module("webcommons_services").factory("passwordValidationService", ["$log", "$http", "$injector", passwordValidationService]);
+    angular.module("webcommons_services").service("passwordValidationService", ["$log", "$http", "$injector", passwordValidationService]);
     //#endregion
 
 })(angular, jQuery);

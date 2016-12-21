@@ -26,7 +26,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("locationFilterService", locationFilterService);
+    angular.module("sw_layout").service("locationFilterService", locationFilterService);
 
     //#endregion
 

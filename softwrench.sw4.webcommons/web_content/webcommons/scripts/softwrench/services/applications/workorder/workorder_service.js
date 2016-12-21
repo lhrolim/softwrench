@@ -86,6 +86,6 @@
 
 
 
-    angular.module('sw_layout').factory('workorderService', ["$log", "redirectService", 'crudContextHolderService', 'applicationService', 'restService', 'compositionService', 'alertService', '$http', '$rootScope', 'submitService', workorderService]);
+    angular.module('sw_layout').service('workorderService', ["$log", "redirectService", 'crudContextHolderService', 'applicationService', 'restService', 'compositionService', 'alertService', '$http', '$rootScope', 'submitService', workorderService]);
 }
 )(angular);

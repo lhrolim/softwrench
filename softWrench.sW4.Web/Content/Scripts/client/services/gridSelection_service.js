@@ -176,7 +176,7 @@
 
     //#region Service registration
 
-    angular.module("sw_layout").factory("gridSelectionService", ["crudContextHolderService", "dispatcherService", gridSelectionService]);
+    angular.module("sw_layout").service("gridSelectionService", ["crudContextHolderService", "dispatcherService", gridSelectionService]);
 
     //#endregion
 

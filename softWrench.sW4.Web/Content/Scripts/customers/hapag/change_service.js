@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .factory('changeservice', ["$http", "redirectService", function ($http, redirectService) {
+    .service('changeservice', ["$http", "redirectService", function ($http, redirectService) {
 
     return {
 
