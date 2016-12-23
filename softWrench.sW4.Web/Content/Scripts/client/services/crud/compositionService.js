@@ -1,8 +1,6 @@
 ﻿(function (angular, $) {
     "use strict";
-
-    var app = angular.module('sw_layout');
-
+    const app = angular.module('sw_layout');
     app.service('compositionService',
         ["$log", "$http", "$rootScope", "$timeout", "contextService", "submitServiceCommons", "schemaService", "searchService", "$q", "fieldService",
             "compositionCommons", "crudContextHolderService", "tabsService", "userPreferencesService",
@@ -37,7 +35,7 @@
         //#region private methods
 
         function buildPaginatedSearchDTO(pageNumber, pageSize) {
-            var dto = searchService.buildSearchDTO();
+            const dto = searchService.buildSearchDTO();
             dto.pageNumber = pageNumber || 1;
             dto.pageSize = pageSize === "all" ? 0 : pageSize || config.defaultPageSize;
             dto.totalCount = 0;
@@ -49,7 +47,7 @@
 
         function fetchCompositions(requestDTO, datamap, showLoading) {
             var log = $log.getInstance('compositionservice#fetchCompositions', ['composition']);
-            var urlToUse = url("/api/generic/Composition/GetCompositionData");
+            const urlToUse = url("/api/generic/Composition/GetCompositionData");
             return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                 .then(response => {
                     var data = response.data;
@@ -103,23 +101,21 @@
         };
 
         function buildFetchRequestDTO(schema, datamap, compositions, paginatedSearch) {
-            var applicationName = schema.applicationName;
+            const applicationName = schema.applicationName;
             // sanitizing data to submit
             var fieldsTosubmit = submitServiceCommons.removeExtraFields(datamap, true, schema);
-            var compositionNames = getLazyCompositions(schema, datamap);
+            const compositionNames = getLazyCompositions(schema, datamap);
             angular.forEach(compositionNames, function (composition) {
                 if (!fieldsTosubmit[composition] || !fieldsTosubmit.hasOwnProperty(composition)) {
                     return;
                 }
                 delete fieldsTosubmit[composition];
             });
-
-            var pageSize = userPreferencesService.getSchemaPreference("compositionPageSize", schema.applicationName, schema.schemaId);
+            const pageSize = userPreferencesService.getSchemaPreference("compositionPageSize", schema.applicationName, schema.schemaId);
             if (pageSize && paginatedSearch && paginatedSearch.pageSize !== 0) {
                 paginatedSearch.pageSize = pageSize;
             }
-
-            var parameters = {
+            const parameters = {
                 key: {
                     schemaId: schema.schemaId,
                     mode: schema.mode,
@@ -170,9 +166,8 @@
         };
 
         function locatePrintSchema(baseSchema, compositionKey) {
-            var schemas = tabsService.nonInlineCompositionsDict(baseSchema);
-            var thisSchema = schemas[compositionKey];
-
+            const schemas = tabsService.nonInlineCompositionsDict(baseSchema);
+            const thisSchema = schemas[compositionKey];
             if (thisSchema.schema.schemas.print != null) {
                 return thisSchema.schema.schemas.print;
             } else if (thisSchema.schema.schemas.list != null) {
@@ -183,8 +178,8 @@
         };
 
         function getTitle(baseSchema, compositionKey) {
-            var schemas = tabsService.nonInlineCompositionsDict(baseSchema);
-            var thisSchema = schemas[compositionKey];
+            const schemas = tabsService.nonInlineCompositionsDict(baseSchema);
+            const thisSchema = schemas[compositionKey];
             return thisSchema.label;
         };
 
@@ -219,14 +214,14 @@
         *
         */
         function populateWithCompositionData(schema, datamap) {
-            var applicationName = schema.applicationName;
-            var log = $log.getInstance('compositionservice#populateWithCompositionData');
+            const applicationName = schema.applicationName;
+            const log = $log.getInstance('compositionservice#populateWithCompositionData');
             log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
             compositionContext = {};
             // fetching all compositions in a single http request:
             // browser limits simultaneous client requests (usually 6).
             // doing in a single request so it doesn't impact static files fetching and page loading              
-            var dto = buildFetchRequestDTO(schema, datamap);
+            const dto = buildFetchRequestDTO(schema, datamap);
             return doPopulateWithCompositionData(dto, datamap);
         };
 
@@ -244,13 +239,13 @@
          *              rejected with HTTP error 
          */
         function getCompositionList(composition, schema, datamap, pageNumber, pageSize) {
-            var pageRequest = buildPaginatedSearchDTO(pageNumber, pageSize);
-            var dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
+            const pageRequest = buildPaginatedSearchDTO(pageNumber, pageSize);
+            const dto = buildFetchRequestDTO(schema, datamap, [composition], pageRequest);
             return fetchCompositions(dto, datamap, true);
         }
 
         function searchCompositionList(composition, schema, datamap, searchDTO) {
-            var dto = buildFetchRequestDTO(schema, datamap, [composition], searchDTO);
+            const dto = buildFetchRequestDTO(schema, datamap, [composition], searchDTO);
             return fetchCompositions(dto, datamap, true);
         }
 
@@ -304,9 +299,9 @@
         }
 
         function pollCompositionEvent(relationship) {
-            var compositionLoadEventQueue = crudContextHolderService.compositionQueue();
+            const compositionLoadEventQueue = crudContextHolderService.compositionQueue();
             if (compositionLoadEventQueue.hasOwnProperty(relationship)) {
-                var compositionData = compositionLoadEventQueue[relationship];
+                const compositionData = compositionLoadEventQueue[relationship];
                 delete compositionLoadEventQueue[relationship];
                 return compositionData;
             }
@@ -315,7 +310,8 @@
 
         function updateCompositionDataAfterSave(schema, datamap, responseDataMap) {
             const compositions = this.getLazyCompositions(schema, datamap) || [];
-            compositions.forEach(function (composition) {
+            compositions.forEach(composition=> {
+
                 const currentValue = datamap[composition];
                 const updateFields = responseDataMap;
 

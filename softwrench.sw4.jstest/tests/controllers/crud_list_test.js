@@ -72,7 +72,8 @@
             detail_next: { id: "0" },
             detail_previous: { id: "-1" },
             paginationData: {},
-            previousData: [{ id: "100" }, { id: "200" }]
+            previousData: [{ id: "100" }, { id: "200" }],
+            applicationName: 'sr'
         });
     });
 
@@ -102,7 +103,8 @@
             detail_next: { id: "0" },
             detail_previous: { id: "-1" },
             paginationData: {},
-            previousData: [{ id: "100" }, { id: "200" }]
+            previousData: [{ id: "100" }, { id: "200" }],
+            applicationName: 'sr'
         });
     });
 

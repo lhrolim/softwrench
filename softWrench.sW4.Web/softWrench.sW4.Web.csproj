@@ -793,6 +793,7 @@
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\datetime.js" />
     <Content Include="Content\Scripts\client\components\samelinepickers.js" />
+    <Content Include="Content\Scripts\client\constants\MetadataConstants.js" />
     <Content Include="Content\Scripts\client\controllers\metadata_builder.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
     <Content Include="Content\Scripts\client\crud\crud_crawl_service.js" />
@@ -1191,8 +1192,6 @@
     <Content Include="Content\Images\update_24.png" />
     <Content Include="Content\Scripts\client\crud\aaa_layout.js" />
     <Content Include="Content\Scripts\client\adminresources\dashboard.js" />
-    <Content Include="Content\Scripts\client\adminresources\user.js" />
-    <Content Include="Content\Scripts\client\adminresources\userprofile.js" />
     <Content Include="Content\Scripts\client\adminresources\role.js" />
     <Content Include="Content\customVendor\scripts\bootstrap\bootstrap-modal.js" />
     <Content Include="Content\Scripts\client\controllers\settings.js" />

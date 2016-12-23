@@ -15,7 +15,7 @@
                 $scope.panelid = $scope.$parent.panelid;
                 $scope.crudPanelid = "search";
 
-                var log = $log.getInstance("sw4.crudSearch");
+                var log = $log.getInstance("sw4.crudSearch",["layout"]);
                 var lastApplication = "";
                 var lastSchemaId = "";
 
@@ -56,11 +56,10 @@
                         log.debug("getSearchSchema  - cache hit on applicationName ({0}) and  schemaId ({1})".format(applicationName, schemaId));
                         return $q.when(schemaCacheService.getCachedSchema(applicationName, schemaId));
                     }
-
-                    var redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, "input");
+                    const redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, "input");
                     return $http.get(redirectUrl).then(function (httpResponse) {
                         log.debug("getSearchSchema - server response on applicationName ({0}) and  schemaId ({1})".format(applicationName, schemaId));
-                        var schema = httpResponse.data.schema;
+                        const schema = httpResponse.data.schema;
                         schemaCacheService.addSchemaToCache(schema);
                         schemacache[applicationName + "." + schemaId] = true;
                         return schema;
@@ -76,8 +75,7 @@
                         }
 
                         sidePanelService.setTitle($scope.panelid, schema.title);
-
-                        var handleWidth = schema.properties ? schema.properties["search.panelwidth"] : null;
+                        const handleWidth = schema.properties ? schema.properties["search.panelwidth"] : null;
                         sidePanelService.setHandleWidth($scope.panelid, handleWidth);
 
                         sidePanelService.show($scope.panelid);
@@ -88,11 +86,11 @@
                         $scope.title = schema.title;
 
                         crudContextHolderService.applicationChanged(schema, $scope.datamap, $scope.crudPanelid);
-                        var ctx = sidePanelService.getContext($scope.panelid);
+                        const ctx = sidePanelService.getContext($scope.panelid);
                         ctx.toggleCallback = setFocus;
 
                         // controls the initial state of side panel
-                        var startExpanded = schema.properties && schema.properties["search.startexpanded"] === "true";
+                        const startExpanded = schema.properties && schema.properties["search.startexpanded"] === "true";
                         if (startExpanded) {
                             if (!sidePanelService.isOpened($scope.panelid)) {
                                 sidePanelService.toggle($scope.panelid);
@@ -117,8 +115,7 @@
                         crudContextHolderService.clearCrudContext($scope.crudPanelid);
                         return;
                     }
-
-                    var searchSchemaid = renderedSchema.properties ? renderedSchema.properties["search.schemaid"] : null;
+                    const searchSchemaid = renderedSchema.properties ? renderedSchema.properties["search.schemaid"] : null;
                     if (!searchSchemaid) {
                         log.debug("no searchSchemaid on applicationName ({0}) and renderedSchema ({1})".format(applicationName, renderedSchema));
                         sidePanelService.hide($scope.panelid);
@@ -147,13 +144,13 @@
                         if (!searchData.hasOwnProperty(att) || searchData[att] === null || searchData[att] === "") {
                             continue;
                         }
-                        var displayable = $scope.schema.displayables.find(function (d) {
+                        const displayable = $scope.schema.displayables.find(function (d) {
                             return d.attribute === att;
                         });
                         if (!displayable || !displayable.searchOperation) {
                             continue;
                         }
-                        var operation = searchService.getSearchOperationById(displayable.searchOperation);
+                        const operation = searchService.getSearchOperationById(displayable.searchOperation);
                         if (operation) {
                             searchOperator[att] = operation;
                         }
@@ -163,17 +160,16 @@
 
                 $scope.$on("sw.crud.search", function (event, args) {
                     log.debug("search panel search");
-                    var validation = validationService.validate($scope.schema, $scope.schema.displayables, $scope.datamap);
+                    const validation = validationService.validate($scope.schema, $scope.schema.displayables, $scope.datamap);
                     if (validation.length > 0) {
                         return;
                     }
-                    var searchdata = args[1];
-                    var applicationName = $scope.schema.applicationName;
-                    var extraParameters = {};
-                    var searchOperator = args[2];
+                    const searchdata = args[1];
+                    const applicationName = $scope.schema.applicationName;
+                    const extraParameters = {};
+                    const searchOperator = args[2];
                     extraParameters.searchOperator = buildSearchOperators(searchdata, searchOperator);
-
-                    var targetSchemaId = $scope.schema.properties["search.target.schemaid"] || "list";
+                    const targetSchemaId = $scope.schema.properties["search.target.schemaid"] || "list";
                     redirectService.redirectWithData(applicationName, targetSchemaId, searchdata, extraParameters);
                 });
 
@@ -186,7 +182,7 @@
                         if (obj.length === 0) {
                             return;
                         }
-                        for (var i = obj.length - 1; i >= 0 ; i--) {
+                        for (let i = obj.length - 1; i >= 0 ; i--) {
                             if (typeof obj[i] === "object") {
                                 clear(obj[i]);
                             } else {
@@ -196,7 +192,7 @@
                         return;
                     }
 
-                    for (var key in obj) {
+                    for (let key in obj) {
                         if (!obj.hasOwnProperty(key)) {
                             continue;
                         }
@@ -210,7 +206,7 @@
 
                 // copies a object into another - used after a form clear to copy the default datamap (datamap with only default values)
                 function copy(srcObj, destObj) {
-                    for (var key in srcObj) {
+                    for (let key in srcObj) {
                         if (!srcObj.hasOwnProperty(key)) {
                             continue;
                         }

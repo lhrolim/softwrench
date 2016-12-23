@@ -67,11 +67,8 @@ namespace softWrench.sW4.Data.API.Response {
             }
         }
 
-        public string ApplicationName {
-            get {
-                return Schema.ApplicationName;
-            }
-        }
+        public string ApplicationName => Schema.ApplicationName;
+
         public string Id {
             get; private set;
         }
@@ -80,10 +77,9 @@ namespace softWrench.sW4.Data.API.Response {
             get; set;
         }
 
-        public string Type {
-            get {
-                return GetType().Name;
-            }
+
+        public bool ShouldSerializeSchema() {
+            return (CachedSchemaId == null);
         }
 
         #region PagingDelegateMethods

@@ -85,15 +85,6 @@
         }
 
         function save({compositionData,dispatcherComposition,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap} = defaultSaveParams) {
-            var deferred = $q.defer();
-
-            const successCallBack = function (data) {
-                deferred.resolve(data);
-            };
-            const failureCallback = function (data) {
-                deferred.reject(data);
-            };
-        
             const isComposition = crudContextHolderService.getActiveTab() !== null;
 
             if (dispatchedByModal == undefined) {
@@ -107,8 +98,6 @@
 
             //LUIZ -- TODO: review circular dependency
             return $injector.get('submitService').submit(schema, datamap, {
-                successCbk: successCallBack,
-                failureCbk: failureCallback,
                 isComposition,
                 compositionData,
                 dispatcherComposition,
@@ -119,21 +108,7 @@
                 originalDatamap
             });
 
-            //            //TODO: refactor it entirely to use promises instead
-            //            $rootScope.$broadcast(JavascriptEventConstants.CrudSubmitData, {
-            //                successCbk: successCallBack,
-            //                failureCbk: failureCallback,
-            //                isComposition,
-            //                compositionData,
-            //                dispatcherComposition,
-            //                nextSchemaObj,
-            //                dispatchedByModal,
-            //                refresh,
-            //                selecteditem,
-            //                originalDatamap
-            //            });
-            //
-            //            return deferred.promise;
+     
         }
 
         /// <summary>

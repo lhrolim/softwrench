@@ -2,7 +2,7 @@
     'use strict';
 
 
-    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService, historyService, $location) {
+    function redirectService($http, $rootScope, $log, $q, contextService, fixHeaderService, restService, applicationService, alertService, modalService, schemaCacheService, $timeout, searchService, historyService, $location, crudContextHolderService) {
 
 
         function getActionUrl(controller, action, parameters) {
@@ -179,6 +179,35 @@
             return $rootScope.$broadcast(JavascriptEventConstants.REDIRECT_AFTER, serverResponse, mode, serverResponse.applicationName);
         };
 
+        //TODO: investigate deeper diference with redirectFromServerResponse
+        function redirectViewWithData(serverResponse) {
+            let nextSchema = serverResponse.schema;
+            if (!nextSchema && serverResponse.cachedSchemaId) {
+                nextSchema = schemaCacheService.getSchemaFromResult(serverResponse);
+                if (!nextSchema) {
+                    throw new Error(`cached schema ${serverResponse.cachedSchemaId} for app ${serverResponse.applicationName} not found`);
+                }
+
+                //to avoid loading the schema twice from the schemacacheService
+                serverResponse.schema = nextSchema;
+                serverResponse.cachedSchemaId = null;
+            }
+
+            if (nextSchema) {
+                const currentSchema = crudContextHolderService.currentSchema();
+
+                //some types of response, such as a GenericResponseResult do not contain a specific crud schema
+                if (!currentSchema || nextSchema.applicationName === currentSchema.applicationName) {
+                    crudContextHolderService.updateCrudContext(nextSchema, serverResponse.resultObject);
+                } else {
+                    crudContextHolderService.applicationChanged(nextSchema, serverResponse.resultObject);
+                }
+            }
+            
+
+            return $rootScope.$broadcast(JavascriptEventConstants.RenderViewWithData, serverResponse);
+        };
+
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
             const log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
             parameters = parameters || {};
@@ -300,6 +329,7 @@
             goToAction,
             goToApplication,
             redirectFromServerResponse,
+            redirectViewWithData,
             goToApplicationView,
             openAsModal,
             redirectNewWindow,
@@ -313,7 +343,7 @@
 
     angular
     .module('sw_layout')
-    .service('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', "$location", redirectService]);
+    .service('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', "$location", "crudContextHolderService", redirectService]);
 
 })(angular);
 

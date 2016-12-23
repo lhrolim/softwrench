@@ -3,6 +3,7 @@ const GenericApplicationResponse = "GenericApplicationResponse";
 const ApplicationListResult = "ApplicationListResult";
 const ApplicationDetailResult = "ApplicationDetailResult";
 const NotFoundResponse = "NotFoundResponse";
+const ActionRedirectResponse = "ActionRedirectResponse";
 
 
 class ResponseConstants {
@@ -24,5 +25,9 @@ class ResponseConstants {
 
     static get NotFoundResponse() {
         return ApplicationDetailResult;
+    }
+
+    static get ActionRedirectResponse() {
+        return ActionRedirectResponse;
     }
 }

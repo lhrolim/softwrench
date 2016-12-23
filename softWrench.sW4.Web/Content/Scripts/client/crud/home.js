@@ -1,7 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $location, $log, contextService, menuService, i18NService, alertService, statuscolorService, redirectService, classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService) {
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout,  $log, contextService,  i18NService, alertService, statuscolorService,
+        classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService,schemaCacheService) {
         const APP_VERION = 'sw_system_version_key';
         $scope.$name = 'HomeController';
 
@@ -28,6 +29,9 @@
             }
 
             const menuModel = JSON.parse(homeModel.MenuJSON);
+
+            //force initialization of schema cache for this given app
+            schemaCacheService.getCachedSchema(homeModel.ApplicationName, homeModel.SchemaId);
 
             i18NService.load(homeModel.I18NJsons, userLanguage);
             statuscolorService.load(homeModel.StatusColorJson);
@@ -132,7 +136,7 @@
         initController();
     }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$location", "$log", "contextService", "menuService", "i18NService", "alertService", "statuscolorService", "redirectService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", HomeController]);
     window.HomeController = HomeController;
 
 })(angular);

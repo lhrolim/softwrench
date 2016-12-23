@@ -8,12 +8,6 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
     public class ApplicationDetailResult : GenericResponseResult<DataMap>, IApplicationResponse {
-        private readonly string _id;
-
-
-
-        private readonly AssociationMainSchemaLoadResult _associationOptions;
-
         public bool FullRefresh { get; set; } = false;
 
 
@@ -21,15 +15,13 @@ namespace softWrench.sW4.Data.API.Response {
             ApplicationSchemaDefinition main, [CanBeNull]IDictionary<string, ApplicationCompositionSchema> compositions, string id)
             : base(dataMap, null) {
             
-            _associationOptions = associationOptions;
+            AssociationOptions = associationOptions;
             Schema = main;
             Schema.CompositionSchemas = compositions;
-            _id = id;
+            Id = id;
         }
 
-        public AssociationMainSchemaLoadResult AssociationOptions {
-            get { return _associationOptions; }
-        }
+        public AssociationMainSchemaLoadResult AssociationOptions { get; }
 
 
         public string CachedSchemaId { get; set; }
@@ -41,21 +33,15 @@ namespace softWrench.sW4.Data.API.Response {
 
 
 
-        public string Id {
-            get { return _id; }
-        }
+        public string Id { get; }
 
         public IErrorDto WarningDto { get; set; }
 
-        public IDictionary<string, ApplicationCompositionSchema> Compositions {
-            get { return Schema.CompositionSchemas; }
-        }
+        public IDictionary<string, ApplicationCompositionSchema> Compositions => Schema.CompositionSchemas;
 
-        public string Type {
-            get { return GetType().Name; }
-        }
+        
 
-        public string ApplicationName { get { return Schema.ApplicationName; } }
+        public string ApplicationName => Schema.ApplicationName;
 
         public ApplicationSchemaDefinition Schema { get; set; }
 
@@ -69,6 +55,10 @@ namespace softWrench.sW4.Data.API.Response {
                 return _allassociationsFetched;
             }
             set { _allassociationsFetched = value; }
+        }
+
+        public bool ShouldSerializeSchema() {
+            return (CachedSchemaId == null);
         }
     }
 }

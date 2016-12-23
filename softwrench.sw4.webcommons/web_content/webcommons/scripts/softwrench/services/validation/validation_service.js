@@ -75,18 +75,6 @@
             return this.validate(schema, schema.displayables, datamap);
         }
 
-        function validateCurrentPromise(panelId) {
-
-            const arr = this.validateCurrent(panelId);
-            const deferred =$q.defer();
-            if (arr.length > 0) {
-                return deferred.reject(arr);
-            } else {
-                deferred.resolve();
-            }
-            return deferred.promise;
-        }
-
         function validatePromise(schema,datamap,crudFormErrors) {
             if (schema == null || datamap == null) {
                 return $q.when();
@@ -205,7 +193,6 @@
         const service = {
             getInvalidLabels,
             validate,
-            validateCurrentPromise,
             validateCurrent,
             validatePromise,
             validateInlineComposition,

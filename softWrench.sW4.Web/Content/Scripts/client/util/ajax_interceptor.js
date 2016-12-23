@@ -6,7 +6,7 @@
                 var activeRequests = 0;
                 var activeRequestsArr = [];
                 var started = function (config) {
-                    var spinAvoided = config.avoidspin || false;
+                    const spinAvoided = config.avoidspin || false;
                     if (!spinAvoided) {
                         lockCommandBars();
                         lockTabs();
@@ -19,8 +19,7 @@
                     config.headers['mocksecurity'] = sessionStorage['mocksecurity'];
                     config.headers['requesttime'] = new Date().getTime();
                     config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
-                    var log = $log.getInstance('sw4.ajaxint#started');
-
+                    const log = $log.getInstance('sw4.ajaxint#started');
                     if (config.url.indexOf("/Content/") < 0) {
                         //let´s ignore angularjs templates loading, that would pass through here as well
                         if (!log.isLevelEnabled('trace')) {
@@ -41,11 +40,11 @@
                     //Hiding the tooltip. Workaround for Issue HAP -281 (need proper fix)
                     $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
                     $('.no-touch [rel=tooltip]').tooltip('hide');
-                    var spinAvoided = response.config.avoidspin;
+                    const spinAvoided = response.config.avoidspin;
                     if (!spinAvoided) {
                         activeRequests--;
                     }
-                    var log = $log.getInstance('sw4.ajaxint#endedok');
+                    const log = $log.getInstance('sw4.ajaxint#endedok');
                     log.trace("status :{0}, url: {1} ".format(response.status, response.config.url));
                     if (activeRequests <= 0) {
                         activeRequests = 0;
@@ -61,7 +60,7 @@
                         //this has to be renewed per operation
                         contextService.insertIntoContext("avoidspin", null, true);
                     }
-                    var idx = activeRequestsArr.indexOf(response.config.url);
+                    const idx = activeRequestsArr.indexOf(response.config.url);
                     if (idx >= 0) {
                         activeRequestsArr.splice(idx, 1);
                     }
@@ -69,7 +68,7 @@
 
                 function successMessageHandler(data) {
                     if (!!data && !!data.successMessage) {
-                        var willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
+                        const willRefresh = contextService.fetchFromContext("refreshscreen", false, true);
                         if (!willRefresh) {
                             //use $timeout to make sure the notification timing works correctly
                             $timeout(function () {
@@ -101,7 +100,7 @@
                     unLockTabs();
                     //            if (activeRequests <= 0) {
                     $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax, rejection.data);
-                    if (rejection.data.notifyException !== false) {
+                    if (rejection.data && rejection.data.notifyException !== false) {
                         alertService.notifyexception(rejection.data);
                     }
 
@@ -134,8 +133,8 @@
                     return data;
                 }
                 if (sessionStorage.mockerror || sessionStorage.mockmaximo) {
-                    var jsonOb = angular.fromJson(data);
-                    var objtoSet = jsonOb.json ? jsonOb.json : jsonOb;
+                    const jsonOb = angular.fromJson(data);
+                    const objtoSet = jsonOb.json ? jsonOb.json : jsonOb;
                     objtoSet['%%mockerror'] = sessionStorage.mockerror === "true";
                     objtoSet['%%mockmaximo'] = sessionStorage.mockmaximo === "true";
                     return angular.toJson(jsonOb);

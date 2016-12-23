@@ -4,11 +4,11 @@
 
     class crudListViewModel {
 
-        constructor($rootScope) {
+        constructor($rootScope, crudContextHolderService) {
             this.$rootScope = $rootScope;
+            this.crudContextHolderService = crudContextHolderService;
         }
 
-        //TODO: refactor it to use classes instead...
         /**
          * 
          * @param {} applicationListResultObj represents a ApplicaitonListResult from server side
@@ -16,6 +16,8 @@
          * @returns {} 
          */
         initGridFromServerResult(applicationListResultObj, panelId) {
+            
+            this.crudContextHolderService.gridLoaded(applicationListResultObj, panelId);
             return this.$rootScope.$broadcast(JavascriptEventConstants.GRID_REFRESHED, applicationListResultObj, panelId);
         }
 
@@ -31,7 +33,7 @@
 
     }
 
-    crudListViewModel.$inject = ['$rootScope'];
+    crudListViewModel.$inject = ['$rootScope', 'crudContextHolderService'];
 
     angular.module('sw_layout').service('crudlistViewmodel', crudListViewModel);
     

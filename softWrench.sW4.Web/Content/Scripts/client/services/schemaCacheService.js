@@ -1,4 +1,4 @@
-﻿(function () {
+﻿(function (angular) {
     "use strict";
 
     function schemaCacheService($log, contextService, localStorageService) {
@@ -31,7 +31,7 @@
         }
 
         function schemaStorageKey(applicationName, schemaId) {
-            var username = contextService.getUserData().login;
+            const username = contextService.getUserData().login;
             return keyRoot + username + ":" + applicationName + "." + schemaId;
         }
         //#endregion
@@ -41,16 +41,16 @@
             if (sessionStorage.ignoreSchemaCache === "true") {
                 return ";";
             }
-            var result = ";" + Object.keys(schemaCache).join(";") + ";";
+            const result = ";" + Object.keys(schemaCache).join(";") + ";";
             $log.get("schemaCacheService#getSchemaCacheKeys").debug("schema keys in cache {0}".format(result));
             return result;
         }
 
         function getSchemaFromResult(result) {
             if (result.cachedSchemaId) {
-                var log = $log.get("schemaCacheService#getSchemaFromResult", ["performance"]);
+                const log = $log.get("schemaCacheService#getSchemaFromResult", ["performance"]);
                 log.info("schema {0}.{1} retrieved from cache".format(result.applicationName, result.cachedSchemaId));
-                var cachedSchema = getCachedSchema(result.applicationName, result.cachedSchemaId);
+                const cachedSchema = getCachedSchema(result.applicationName, result.cachedSchemaId);
                 log.info("finish retrieving from cache".format(result.applicationName, result.cachedSchemaId));
                 return cachedSchema;
             }
@@ -58,10 +58,10 @@
         }
 
         function getCachedSchema(applicationName, schemaId) {
-            var cacheKey = applicationName + "." + schemaId;
+            const cacheKey = applicationName + "." + schemaId;
             var schema = schemaCache[cacheKey];
             if (!schema) {
-                var storageKey = schemaStorageKey(applicationName, schemaId);
+                const storageKey = schemaStorageKey(applicationName, schemaId);
                 schema = localStorageService.get(storageKey);
                 schemaCache[cacheKey] = schema;
             }
@@ -70,21 +70,18 @@
 
         function addSchemaToCache(schema) {
             if (!schema || !!schema.ignoreCache) return;
-
-            var log = $log.get("schemaCacheService#addSchemaToCache", ["performance"]);
-
-            var schemaKey = schema.applicationName + "." + schema.schemaId;
+            const log = $log.get("schemaCacheService#addSchemaToCache", ["performance"]);
+            const schemaKey = schema.applicationName + "." + schema.schemaId;
             if (!!schemaCache[schemaKey]) return; // already in the cache
 
             log.info("adding schema {0} retrieved to cache".format(schemaKey));
-            var systeminitMillis = contextService.getFromContext("systeminittime");
+            const systeminitMillis = contextService.getFromContext("systeminittime");
             // let´s force a wipe before we update the systeminitMillis time
             this.wipeSchemaCacheIfNeeded();
             // in-memory first-level cache
             schemaCache[schemaKey] = schema;
             schemaCache.systeminitMillis = systeminitMillis;
-
-            var storageKey = schemaStorageKey(schema.applicationName, schema.schemaId);
+            const storageKey = schemaStorageKey(schema.applicationName, schema.schemaId);
             try {
                 // localStorage as second-level cache
                 localStorage.setItem(systemInitTimeKey, systeminitMillis); // plain localStorage for performance and simpler data-structure
@@ -96,7 +93,7 @@
         }
 
         function wipeSchemaCacheIfNeeded(forceClean) {
-            var systeminitMillis = contextService.getFromContext("systeminittime");
+            const systeminitMillis = contextService.getFromContext("systeminittime");
             if (forceClean || (schemaCache && schemaCache.systeminitMillis !== systeminitMillis)) {
                 $log.get("schemaCacheService#wipeSchemaCacheIfNeeded").info("wiping out schema cache");
 
@@ -118,12 +115,12 @@
 
         //#region Service Instance
         restore();
-        var service = {
-            getSchemaCacheKeys: getSchemaCacheKeys,
-            addSchemaToCache: addSchemaToCache,
-            getCachedSchema: getCachedSchema,
-            getSchemaFromResult: getSchemaFromResult,
-            wipeSchemaCacheIfNeeded: wipeSchemaCacheIfNeeded
+        const service = {
+            getSchemaCacheKeys,
+            addSchemaToCache,
+            getCachedSchema,
+            getSchemaFromResult,
+            wipeSchemaCacheIfNeeded
         };
         return service;
         //#endregion
@@ -133,4 +130,4 @@
     angular.module("sw_layout").service("schemaCacheService", ["$log", "contextService", "localStorageService", schemaCacheService]);
     //#endregion
 
-})();
+})(angular);

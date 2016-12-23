@@ -146,7 +146,7 @@
                 $scope.savefn({ selecteditem: selecteditem });
             };
 
-            $scope.$on(JavascriptEventConstants.CrudSaved, function (event, modaldata) {
+            $scope.$on(JavascriptEventConstants.CrudSaved, () => {
                 if ($scope.closeAfterSave) {
                     $scope.closeModal();
                 }

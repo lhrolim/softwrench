@@ -12,24 +12,20 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Data;
 
-namespace softWrench.sW4.Web.Formatting
-{
-    internal class DataMapXmlFormatter : MediaTypeFormatter
-    {
+namespace softWrench.sW4.Web.Formatting {
+    internal class DataMapXmlFormatter : MediaTypeFormatter {
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() };
         private static readonly XmlWriterSettings XmlSettings = new XmlWriterSettings { Indent = true };
 
-        public DataMapXmlFormatter()
-        {
+        public DataMapXmlFormatter() {
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("application/xml"));
         }
 
-        private static void WriteToStream(object value, XmlWriter writer)
-        {
+        private static void WriteToStream(object value, XmlWriter writer) {
             var json = JsonConvert.SerializeObject(value, JsonSettings);
 
             var xml = JsonConvert
-                .DeserializeXNode(string.Format("{{\"root\":{0}}}", json))
+                .DeserializeXNode($"{{\"root\":{json}}}")
                 .ToString();
 
             writer.WriteStartElement("dataMap");
@@ -41,32 +37,26 @@ namespace softWrench.sW4.Web.Formatting
             writer.WriteEndElement();
         }
 
-        private static void WriteToStream(object value, Stream writeStream)
-        {
+        private static void WriteToStream(object value, Stream writeStream) {
             var enumerable = value as IEnumerable<DataMap>;
             var isEnumerable = null != enumerable;
 
-            if (false == isEnumerable)
-            {
-                enumerable = Enumerable.Repeat((DataMap) value, 1);
+            if (false == isEnumerable) {
+                enumerable = Enumerable.Repeat((DataMap)value, 1);
             }
 
-            using (var writer = XmlWriter.Create(writeStream, XmlSettings))
-            {
+            using (var writer = XmlWriter.Create(writeStream, XmlSettings)) {
                 writer.WriteStartDocument();
 
-                if (isEnumerable)
-                {
+                if (isEnumerable) {
                     writer.WriteStartElement("dataMaps");
                 }
 
-                foreach (var item in enumerable)
-                {
+                foreach (var item in enumerable) {
                     WriteToStream(item, writer);
                 }
 
-                if (isEnumerable)
-                {
+                if (isEnumerable) {
                     writer.WriteEndElement();
                 }
 
@@ -76,15 +66,12 @@ namespace softWrench.sW4.Web.Formatting
             writeStream.Flush();
         }
 
-        public override bool CanReadType(Type type)
-        {
+        public override bool CanReadType(Type type) {
             return false;
         }
 
-        public override bool CanWriteType(Type type)
-        {
-            if (type == typeof(DataMap))
-            {
+        public override bool CanWriteType(Type type) {
+            if (type == typeof(DataMap)) {
                 return true;
             }
 
@@ -92,8 +79,7 @@ namespace softWrench.sW4.Web.Formatting
             return enumerableType.IsAssignableFrom(type);
         }
 
-        public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext)
-        {            
+        public override Task WriteToStreamAsync(Type type, object value, Stream writeStream, HttpContent content, TransportContext transportContext) {
             var task = Task
                 .Factory
                 .StartNew(() => WriteToStream(value, writeStream));

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using cts.commons.portable.Util;
+using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -143,10 +144,12 @@ namespace softWrench.sW4.Web.Controllers {
             var model = _homeService.BaseHomeModel(Request, user);
             model.FromRoute = true;
             model.Title = schema.Title;
+            model.ApplicationName = schema.ApplicationName;
+            model.SchemaId = schema.SchemaId;
             return model;
         }
 
-        private ActionResult RouteView(InMemoryUser user, IApplicationIdentifier appMetadata, ApplicationSchemaDefinition schema, string id) {
+        private ActionResult RouteView(InMemoryUser user, IApplicationIdentifier appMetadata, [NotNull]ApplicationSchemaDefinition schema, string id) {
             var model = BaseHomeModel(user, schema);
             model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, id);
             return View(Index, model);

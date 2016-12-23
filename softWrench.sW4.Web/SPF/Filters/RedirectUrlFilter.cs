@@ -79,7 +79,8 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 applicationResponse.CachedSchemaId = applicationResponse.Schema.SchemaId;
                 var applicationName = applicationResponse.ApplicationName;
                 applicationResponse.Schema = new ApplicationSchemaDefinition {
-                    //to play safe since it might be a delegation method to the schema
+                    //to play safe since it might be server-side delegation methods to the schema
+                    //TODO: think of a way to avoid serialization
                     ApplicationName = applicationName,
                     SchemaId = applicationResponse.Schema.SchemaId,
                     Mode = applicationResponse.Schema.Mode

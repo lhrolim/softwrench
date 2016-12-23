@@ -9,7 +9,7 @@
             return fieldService.getId(datamap, schema) != undefined;
         };
 
-        function handleAssociations(scope, result) {
+        function handleAssociations(datamap, schema, result) {
             const shouldFetchAssociations = !result.allAssociationsFetched;
 
             //some associations might already been retrieved
@@ -18,9 +18,9 @@
             if (shouldFetchAssociations) {
                 return $timeout(function () {
                     //why this timeout?
-                    $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(scope.schema.applicationName));
-                    associationService.loadSchemaAssociations(scope.datamap, scope.schema, { avoidspin: true }).then(function (result) {
-                        eventService.onassociationsloaded(scope.schema);
+                    $log.get("#detailService#fetchRelationshipData").info('fetching eager associations of {0}'.format(schema.applicationName));
+                    associationService.loadSchemaAssociations(datamap, schema, { avoidspin: true }).then((result) => {
+                        eventService.onassociationsloaded(schema);
                         return result;
                     });
 
@@ -33,9 +33,7 @@
             }
         }
 
-        function handleCompositions(scope, result) {
-            const datamap = scope.datamap;
-            const schema = scope.schema;
+        function handleCompositions(datamap, schema, result) {
             const isEdit = isEditDetail(schema, datamap);
             if (!isEdit) {
                 return $q.when();
@@ -45,34 +43,36 @@
             var shouldFetchCompositions = !schemaService.isPropertyTrue(result.schema, "detail.prefetchcompositions");
 
             if (!shouldFetchCompositions) {
-                scope.compositions = result.compositions;
+                return $q.when(result.compositions);
             }
 
             return $timeout(function () {
                 if (shouldFetchCompositions) {
-                    $log.get("#detailService#fetchRelationshipData").info('fetching compositions of {0}'.format(scope.schema.applicationName));
-                    return compositionService.populateWithCompositionData(scope.schema, scope.datamap);
+                    $log.get("#detailService#fetchRelationshipData").info('fetching compositions of {0}'.format(schema.applicationName));
+                    return compositionService.populateWithCompositionData(schema, datamap);
                 }
                 return $q.when();
             });
 
         }
 
-        function fetchRelationshipData(scope, result) {
+        function fetchRelationshipData(datamap, schema, result) {
             crudContextHolderService.clearDetailDataResolved();
-            const associationPromise = handleAssociations(scope, result);
-            const compositionPromise = handleCompositions(scope, result);
+            const associationPromise = handleAssociations(datamap, schema, result);
+            const compositionPromise = handleCompositions(datamap, schema, result);
             return $q.all([associationPromise, compositionPromise])
                 .then(function () {
                     //ready to listen for dirty watchers
-                    $log.get("detailService#fetchRelationshipData").info("associations and compositions fetched");
+                    $log.get("detailService#fetchRelationshipData", ["detail"]).info("associations and compositions fetched");
                 })
                 .finally(function () {
                     crudContextHolderService.setDetailDataResolved();
                 });
         };
 
-        function updateCrudContext(datamap,schema,panelId) {
+        //TODO: move this to the crudContextHolderService
+        //holding structures to navigate to next and previous elements on the detail page
+        function updateLegacyCrudContext(datamap, schema, panelId) {
             datamap = datamap || crudContextHolderService.rootDataMap(panelId);
             schema = schema || crudContextHolderService.currentSchema(panelId);
 
@@ -117,14 +117,18 @@
             }
             contextService.insertIntoContext("crud_context", crudContext);
 
+
         }
 
-        const api = {
-            fetchRelationshipData,
-            isEditDetail,
-            updateCrudContext
+        function detailLoaded(datamap, schema, result) {
+            updateLegacyCrudContext(datamap, schema);
+            crudContextHolderService.detailLoaded();
+            return fetchRelationshipData(datamap, schema, result);
+        }
+
+        return {
+            detailLoaded
         };
-        return api;
     };
 
     angular.module("sw_layout")

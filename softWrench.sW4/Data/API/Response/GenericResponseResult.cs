@@ -27,6 +27,8 @@ namespace softWrench.sW4.Data.API.Response {
         public string SuccessMessage { get; set; }
         public DateTime TimeStamp { get; set; }
 
+        public string Type => GetType().Name;
+
         public IList<AttributeHolder> ToList() {
             throw new NotImplementedException();
         }

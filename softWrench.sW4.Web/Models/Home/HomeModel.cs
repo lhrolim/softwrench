@@ -28,6 +28,10 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public string ClientName { get; set; }
 
+        public string ApplicationName { get; set; }
+
+        public string SchemaId { get; set; }
+
         public long InitTimeMillis { get; set; }
 
         public string MenuJSON { get; set; }

@@ -18,6 +18,7 @@ class LogHelper {
             filter: new LogHelp("filter related logs"),
             grid: new LogHelp("crud grid related information"),
             init: new LogHelp("logs information about the initialization of the directives/controllers"),
+            layout: new LogHelp("logs information related to the layout of the screen"),
             modal: new LogHelp("modal related logs"),
             route: new LogHelp("information about navigation of pages"),
             save: new LogHelp("log for saving entries"),

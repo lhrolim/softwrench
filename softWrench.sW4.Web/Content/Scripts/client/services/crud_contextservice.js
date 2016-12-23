@@ -259,6 +259,7 @@
 
         //#region hooks
         function updateCrudContext(schema, rootDataMap, panelid) {
+            const log = $log.get("crudContextService#updateCrudContext", ["route"]);
             const context = getContext(panelid);
             schema.properties = schema.properties || {};
             context.currentSchema = schema;
@@ -268,6 +269,7 @@
             context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
             context.gridSelectionModel.selectionBufferIdCollumn = context.gridSelectionModel.selectionBufferIdCollumn || schema.idFieldName;
             schemaCacheService.addSchemaToCache(schema);
+            log.debug("crudcontext updated");
         }
 
     
@@ -290,6 +292,7 @@
             this.clearDirty(panelid);
             getContext(panelid).needsServerRefresh = true;
             this.originalDatamap(panelid, datamap);
+            $rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
         }
 
         function detailLoaded(panelid) {
@@ -304,6 +307,8 @@
             const context = getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
+            //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
+            contextService.insertIntoContext("grid_refreshdata", { data: applicationListResult, panelid }, true);
         }
 
         function disposeDetail(panelid, clearTab) {
@@ -590,16 +595,16 @@
 
         //#region commandsServices
 
-        function getCommandsModels(panelid) {
+        function getCommandsModel(panelid) {
             return getContext(panelid).commandsModel;
         }
 
         function getToggleCommand(commandId, panelid) {
-            return getCommandsModels(panelid).toggleCommands[commandId];
+            return getCommandsModel(panelid).toggleCommands[commandId];
         }
 
         function addToggleCommand(command, panelid) {
-            return getCommandsModels(panelid).toggleCommands[command.id] = command;
+            return getCommandsModel(panelid).toggleCommands[command.id] = command;
         }
 
         //#endregion
@@ -674,44 +679,44 @@
             compositionsLoaded
         };
         const modalService = {
-            disposeModal: disposeModal,
-            getSaveFn: getSaveFn,
-            isShowingModal: isShowingModal,
-            modalLoaded: modalLoaded,
-            registerSaveFn: registerSaveFn
+            disposeModal,
+            getSaveFn,
+            isShowingModal,
+            modalLoaded,
+            registerSaveFn
         };
         const gridServices = {
-            setFixedWhereClause: setFixedWhereClause,
-            getFixedWhereClause: getFixedWhereClause,
-            setSelectedFilter: setSelectedFilter,
-            getSelectedFilter: getSelectedFilter
+            setFixedWhereClause,
+            getFixedWhereClause,
+            setSelectedFilter,
+            getSelectedFilter
         };
         const selectionService = {
-            addSelectionToBuffer: addSelectionToBuffer,
-            clearSelectionBuffer: clearSelectionBuffer,
-            getOriginalPaginationData: getOriginalPaginationData,
-            getSelectionModel: getSelectionModel,
-            removeSelectionFromBuffer: removeSelectionFromBuffer,
-            setOriginalPaginationData: setOriginalPaginationData,
-            toggleSelectionMode: toggleSelectionMode,
-            toggleShowOnlySelected: toggleShowOnlySelected,
+            addSelectionToBuffer,
+            clearSelectionBuffer,
+            getOriginalPaginationData,
+            getSelectionModel,
+            removeSelectionFromBuffer,
+            setOriginalPaginationData,
+            toggleSelectionMode,
+            toggleShowOnlySelected
         };
         const commandsServices = {
-            getCommandsModel: getCommandsModels,
-            getToggleCommand: getToggleCommand,
-            addToggleCommand: addToggleCommand
+            getCommandsModel,
+            getToggleCommand,
+            addToggleCommand
         };
         const detailServices = {
-            setDirty: setDirty,
-            getDirty: getDirty,
-            clearDirty: clearDirty,
+            setDirty,
+            getDirty,
+            clearDirty,
             compositionQueue
         };
         const navigationServices = {
-            isList: isList,
-            isDetail: isDetail,
-            setList: setList,
-            setDetail: setDetail,
+            isList,
+            isDetail,
+            setList,
+            setDetail,
         };
         return angular.extend({}, generalServices, hookServices, associationServices, modalService, selectionService, gridServices, commandsServices, detailServices, navigationServices);
 

@@ -753,28 +753,7 @@
             return true;
         };
 
-        function insertAssocationLabelsIfNeeded(schema, datamap) {
-            if (schema.properties['addassociationlabels'] !== "true") {
-                return;
-            }
-            const associations = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
-            var fn = this;
-            $.each(associations, function (key, value) {
-                const targetName = value.target;
-                const labelName = "#" + targetName + "_label";
-                const realValue = fn.getFullObject(value, datamap);
-                if (realValue != null && Array.isArray(realValue)) {
-                    datamap[labelName] = "";
-                    // store result into a string with newline delimiter
-                    for (let i = 0; i < realValue.length; i++) {
-                        datamap[labelName] += "\\n" + realValue[i].label;
-                    }
-                }
-                else if (realValue != null) {
-                    datamap[labelName] = realValue.label;
-                }
-            });
-        };
+      
 
         function clearDependantFieldValues(scope, triggerFieldName) {
             const fieldsDependant = scope.displayables.filter(function (o) {
@@ -804,7 +783,6 @@
             getLookupOptions,
             getEagerAssociations,
             getEagerLookupOptions,
-            insertAssocationLabelsIfNeeded,
             lookupAssociation,
             lookupSingleAssociationByValue,
             parseLabelText,

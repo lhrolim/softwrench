@@ -6,6 +6,41 @@
 
     angular.module('sw_layout').service('submitServiceCommons', ["$injector", "schemaService", "fieldService", "checkpointService", function submitServiceCommons($injector, schemaService,fieldService, checkpointService) {
 
+        function applyTransformationsForSubmission(schemaToSave, originalDatamap, fields) {
+            //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
+            //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
+            let transformedFields = angular.copy(fields);
+            removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
+            transformedFields = this.removeExtraFields(transformedFields, true, schemaToSave);
+            translateFields(schemaToSave.displayables, transformedFields);
+            handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
+            this.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
+            return transformedFields;
+        }
+
+        function insertAssocationLabelsIfNeeded(schema, datamap) {
+            if (schema.properties['addassociationlabels'] !== "true") {
+                return;
+            }
+            const associations = fieldService.getDisplayablesOfTypes(schema.displayables, ['OptionField', 'ApplicationAssociationDefinition']);
+            var fn = this;
+            $.each(associations, function (key, value) {
+                const targetName = value.target;
+                const labelName = "#" + targetName + "_label";
+                const realValue = fn.getFullObject(value, datamap);
+                if (realValue != null && Array.isArray(realValue)) {
+                    datamap[labelName] = "";
+                    // store result into a string with newline delimiter
+                    for (let i = 0; i < realValue.length; i++) {
+                        datamap[labelName] += "\\n" + realValue[i].label;
+                    }
+                }
+                else if (realValue != null) {
+                    datamap[labelName] = realValue.label;
+                }
+            });
+        };
+
 
         function addSchemaDataToParameters(parameters, schema, nextSchema) {
             parameters["currentSchemaKey"] = schema.schemaId + "." + schema.mode + "." + platform();
@@ -35,14 +70,13 @@
         ///return if a field which is not on screen (but is not a hidden instance), and whose value is null from the datamap, avoiding sending useless (and wrong) data
         function removeNullInvisibleFields(displayables, datamap) {
             var fn = this;
-            $.each(displayables, function (key, value) {
+            displayables.forEach(value => {
                 if (fieldService.isNullInvisible(value, datamap)) {
                     delete datamap[value.attribute];
                 }
                 if (value.displayables != undefined) {
-                    fn.removeNullInvisibleFields(value.displayables, datamap);
+                    removeNullInvisibleFields(value.displayables, datamap);
                 }
-
             });
         }
 
@@ -142,13 +176,25 @@
         }
 
 
+        //Updates fields that were "removed" from an existing record. If the value was originally not null, but is now null,
+        //then we update the datamap to " ". This is because the MIF will ignore nulls, causing no change to that field on the ticket.
+        function handleDatamapForMIF(schema, originalDatamap, datamap) {
+            const displayableFields = fieldService.getDisplayablesOfTypes(schema.displayables, [MetadataConstants.OptionField, MetadataConstants.AssociationField]);
+            for (var i = 0, len = displayableFields.length; i < len; i++) {
+                const key = displayableFields[i].target == null ? displayableFields[i].attribute : displayableFields[i].target;
+                if (originalDatamap && (datamap[key] == null || datamap[key] == undefined) && datamap[key] !== originalDatamap[key]) {
+                    datamap[key] = " ";
+                }
+            }
+        }
+
         const service = {
             addSchemaDataToParameters,
+            applyTransformationsForSubmission,
             createSubmissionParameters,
             getFormToSubmitIfHasAttachement,
-            removeExtraFields,
-            removeNullInvisibleFields,
-            translateFields
+            insertAssocationLabelsIfNeeded,
+            removeExtraFields
         };
         return service;
 

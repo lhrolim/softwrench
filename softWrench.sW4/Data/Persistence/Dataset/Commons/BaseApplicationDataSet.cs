@@ -778,12 +778,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         public IEnumerable<IAssociationOption> GetSWPriorityType(OptionFieldProviderParameters parameters) {
             //create default priority list
-            var list = new List<AssociationOption>();
+            var list = new List<AssociationOption>
+            {
+                new AssociationOption("1", "1 - High"),
+                new AssociationOption("2", "2 - Medium"),
+                new AssociationOption("3", "3 - Low")
+            };
 
             //list.Add(new AssociationOption("0", "0 - None"));
-            list.Add(new AssociationOption("1", "1 - High"));
-            list.Add(new AssociationOption("2", "2 - Medium"));
-            list.Add(new AssociationOption("3", "3 - Low"));
 
             return list;
         }

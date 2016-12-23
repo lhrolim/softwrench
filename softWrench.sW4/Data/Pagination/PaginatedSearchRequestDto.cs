@@ -2,25 +2,15 @@
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
-using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace softWrench.sW4.Data.Pagination {
 
     public class PaginatedSearchRequestDto : SearchRequestDto {
-
-        private readonly int _pageCount;
-        private bool _shouldPaginate = true;
-
-        private readonly IList<PageToShow> _pagesToShow = new List<PageToShow>();
-
-        private Boolean _needsCountUpdate = true;
-
 //        private IList<String> _compositionsToFetch;
 
-        public static List<int> DefaultPaginationOptions {
-            get { return new List<int> { 10, 30, 100 }; }
-        }
+        public static List<int> DefaultPaginationOptions => new List<int> { 10, 30, 100 };
 
 
         public int TotalCount { get; set; }
@@ -41,26 +31,16 @@ namespace softWrench.sW4.Data.Pagination {
         ///  as .net would be lost with json conversion.
         /// if the association is not defined, this should be false 
         /// </summary>
-        public bool ShouldPaginate {
-            get { return _shouldPaginate; }
-            set { _shouldPaginate = value; }
-        }
+        public bool ShouldPaginate { get; set; } = true;
 
-        public int PageCount {
-            get { return _pageCount; }
-        }
+        public int PageCount { get; }
 
-        public bool HasNext {
-            get { return PageNumber != PageCount; }
-        }
+        public bool HasNext => PageNumber != PageCount;
 
-        public bool HasPrevious {
-            get { return PageNumber != 1; }
-        }
+        public bool HasPrevious => PageNumber != 1;
 
-        public IList<PageToShow> PagesToShow {
-            get { return _pagesToShow; }
-        }
+        [JsonIgnore]
+        public IList<PageToShow> PagesToShow { get; } = new List<PageToShow>();
 
         /// <summary>
         /// by default, no compositions is fetched from the server on a list search
@@ -68,7 +48,7 @@ namespace softWrench.sW4.Data.Pagination {
         /// be returned
         /// ex. detailed list search (for detailed print in grid)
         /// </summary>
-        public IList<String> CompositionsToFetch { get; set; }
+        public IList<string> CompositionsToFetch { get; set; }
 
         public PaginatedSearchRequestDto()
             : this(30, DefaultPaginationOptions) {
@@ -86,12 +66,12 @@ namespace softWrench.sW4.Data.Pagination {
         public PaginatedSearchRequestDto(int totalCount, int pageNumber, int pageSize, string searchValue, List<int> paginationOptions) {
             TotalCount = totalCount;
             PageSize = pageSize;
-            _pageCount = CalculatePageCount(totalCount);
+            PageCount = CalculatePageCount(totalCount);
             PageNumber = pageNumber;
             SearchValues = searchValue;
-            var limitTuple = PaginationUtils.GetPaginationBounds(pageNumber, _pageCount);
+            var limitTuple = PaginationUtils.GetPaginationBounds(pageNumber, PageCount);
             for (int i = limitTuple.Item1; i <= limitTuple.Item2; i++) {
-                _pagesToShow.Add(new PageToShow(i == pageNumber, i));
+                PagesToShow.Add(new PageToShow(i == pageNumber, i));
             }
             CompositionsToFetch = new List<string>();
             if (paginationOptions.Count == 1 && paginationOptions.First() == 0) {
@@ -112,10 +92,7 @@ namespace softWrench.sW4.Data.Pagination {
             return (totalCount / PageSize) + 1;
         }
 
-        public bool NeedsCountUpdate {
-            get { return _needsCountUpdate; }
-            set { _needsCountUpdate = value; }
-        }
+        public bool NeedsCountUpdate { get; set; } = true;
 
         public static PaginatedSearchRequestDto DefaultInstance(ApplicationSchemaDefinition schema) {
             var defaultSize = 30;
@@ -123,7 +100,7 @@ namespace softWrench.sW4.Data.Pagination {
             if (schema != null) {
                 var defaultSizeSt = schema.GetProperty(ApplicationSchemaPropertiesCatalog.DefaultPaginationSize);
                 if (defaultSizeSt != null) {
-                    defaultSize = Int32.Parse(defaultSizeSt);
+                    defaultSize = int.Parse(defaultSizeSt);
                 }
                 var paginationOptionsSt = schema.GetProperty(ApplicationSchemaPropertiesCatalog.PaginationOptions);
                 if (paginationOptionsSt != null) {

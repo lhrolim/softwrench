@@ -4,29 +4,27 @@
 
 
 
-    function batchWorkorderService($rootScope, $q, $log, crudContextHolderService, modalService, associationService, validationService, restService, alertService, contextService, redirectService) {
+    function batchWorkorderService($rootScope, $q, $log, crudContextHolderService, modalService, associationService, validationService, restService, alertService, contextService, redirectService,submitServiceCommons) {
 
 
         // save method of inline wo edit modal
-        function woInlineEditSave(saveDataMap, schema) {           
-            var validationErrors = validationService.validate(schema, schema.displayables, saveDataMap, {});
+        function woInlineEditSave(saveDataMap, schema) {
+            const validationErrors = validationService.validate(schema, schema.displayables, saveDataMap, {});
             if (validationErrors.length > 0) {
                 return;
             }
-
-            var params = {
+            const params = {
                 batchType: saveDataMap.userIdFieldName === "location" ? "location" : "asset",
                 specificValue: saveDataMap[saveDataMap.userIdFieldName],
                 classificationId: saveDataMap["classificationid"],
                 worktype: saveDataMap["worktype"]
-            }
-
+            };
             var resultObject;
 
             restService.postPromise("FirstSolarWorkorderBatch", "ValidateExistingWorkorders", params).then(function (httpResponse) {
                 resultObject = httpResponse.data.resultObject;
-                associationService.insertAssocationLabelsIfNeeded(schema, saveDataMap);
-                var gridDatamap = crudContextHolderService.rootDataMap();
+                submitServiceCommons.insertAssocationLabelsIfNeeded(schema, saveDataMap);
+                const gridDatamap = crudContextHolderService.rootDataMap();
                 gridDatamap.forEach(function (row) {
                     if (row[schema.idFieldName] === saveDataMap[schema.idFieldName]) {
                         row.summary = saveDataMap.summary;
@@ -47,10 +45,9 @@
         function woBatchSharedSave(schema, modalData, modalSchema) {
 
 
-            associationService.insertAssocationLabelsIfNeeded(modalSchema, modalData);
+            submitServiceCommons.insertAssocationLabelsIfNeeded(modalSchema, modalData);
             var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
-
-            var batchData = {
+            const batchData = {
                 summary: modalData["summary"],
                 details: modalData["details"],
                 siteid: modalData["siteid"],
@@ -59,16 +56,13 @@
                     label: modalData["#classificationid_label"]
                 },
                 worktype: modalData["worktype"]
-            }
-
-
+            };
             batchData["items"] = Object.keys(selectionBuffer).map(function (key) {
-                var value = selectionBuffer[key];
-                var associationOption = {
+                const value = selectionBuffer[key];
+                const associationOption = {
                     value: value[schema.userIdFieldName],
                     label: value["description"]
                 };
-
                 associationOption.extraFields = {
                     "siteid": value["siteid"],
                     "orgid": value["orgid"]
@@ -80,16 +74,14 @@
                 }
                 return associationOption;
             });
-
-            var params = {
+            const params = {
                 batchType: schema.applicationName === "asset" ? "asset" : "location"
-            }
-
+            };
             return restService.postPromise("FirstSolarWorkorderBatch", "InitBatch", params, batchData);
         }
 
         function proceedToBatchSelection(httpResponse, confirmMessage) {
-            var applicationResponse = httpResponse.data;
+            const applicationResponse = httpResponse.data;
             //            if (applicationResponse.extraParameters && true === applicationResponse.extraParameters["allworkorders"]) {
             //                return alertService.confirm2(confirmMessage)
             //                    .then(function () {
@@ -107,68 +99,58 @@
         }
 
         function spreadSheetLineClick(rowDm, column, schema) {
-            var wonums = rowDm["#wonums"];
+            const wonums = rowDm["#wonums"];
             if (column.attribute === "#warning" && wonums) {
                 loadRelatedWorkorders(rowDm, wonums);
                 return false;
             }
-
-            var nextSchemaId = schema.properties["list.click.schema"];
+            const nextSchemaId = schema.properties["list.click.schema"];
             redirectService.openAsModal("workorder", nextSchemaId, null, rowDm);
             return false;
         }
 
         function loadRelatedWorkorders(rowDm, wonums) {
-            var commaSeparattedQuotedIds = wonums.split(',').map(function (item) {
+            const commaSeparattedQuotedIds = wonums.split(',').map(function (item) {
                 return "'" + item + "'";
             }).join(",");
-
             var fixedWhereClause = "wonum in ({0})".format(commaSeparattedQuotedIds);
-
-            var params = {
+            const params = {
                 searchDTO: {
                     filterFixedWhereClause: fixedWhereClause,
                     pageSize:10
                 },
                 title: "Work Orders of " + rowDm["specificLabel"]
-            }
-
+            };
             redirectService.openAsModal("workorder", "readonlyfixedlist", params).then(function () {
                 crudContextHolderService.setFixedWhereClause("#modal", fixedWhereClause);
             });
         }
 
         function submitBatch(batchType) {
-
-            var log = $log.get("batchWorkorderService#submitBatch", ["workorder"]);
-
+            const log = $log.get("batchWorkorderService#submitBatch", ["workorder"]);
             log.debug("init batch submission process for {0}".format(batchType));
 
             var keyName = batchType === "asset" ? "assetnum" : "location";
 
             var itemsToSubmit = crudContextHolderService.getSelectionModel().selectionBuffer;
-            var itemsToSubmitKeys = Object.keys(itemsToSubmit);
-
+            const itemsToSubmitKeys = Object.keys(itemsToSubmit);
             var sharedData = contextService.get("batchshareddata", false, true);
             var specificData = {};
-
-            var submissionData = {
+            const submissionData = {
                 sharedData: sharedData,
                 specificData: specificData
             };
-
             if (itemsToSubmitKeys.length === 0) {
                 alertService.alert("Please, select at least one entry to confirm the batch");
                 return $q.reject();
             }
 
             itemsToSubmitKeys.forEach(function (bufferKey) {
-                var datamap = itemsToSubmit[bufferKey];
+                const datamap = itemsToSubmit[bufferKey];
                 var fields = datamap;
-                var customizedValues = Object.keys(fields).filter(function (prop) {
+                const customizedValues = Object.keys(fields).filter(function (prop) {
                     return prop !== keyName && fields[prop] !== sharedData[prop];
                 });
-
                 var key = fields[keyName];
 
                 if (customizedValues.length !== 0) {
@@ -181,30 +163,26 @@
                 }
 
             });
-            var params = { batchType: batchType };
-
-
+            const params = { batchType: batchType };
             return restService.postPromise("FirstSolarWorkorderBatch", "SubmitBatch", params, JSON.stringify(submissionData))
                 .then(function (httpResponse) {
-                    var appResponse = httpResponse.data;
+                    const appResponse = httpResponse.data;
                     return redirectService.redirectFromServerResponse(appResponse, "workorder");
                 });
 
         }
 
-
-        var service = {
+        const service = {
             woInlineEditSave: woInlineEditSave,
             woBatchSharedSave: woBatchSharedSave,
             proceedToBatchSelection: proceedToBatchSelection,
             spreadSheetLineClick: spreadSheetLineClick,
             submitBatch: submitBatch
         };
-
         return service;
     }
 
     angular
       .module('firstsolar')
-      .clientfactory('batchWorkorderService', ['$rootScope', "$q", "$log", 'crudContextHolderService', 'modalService', 'associationService', 'validationService', 'restService', 'alertService', 'contextService', 'redirectService', batchWorkorderService]);
+      .clientfactory('batchWorkorderService', ['$rootScope', "$q", "$log", 'crudContextHolderService', 'modalService', 'associationService', 'validationService', 'restService', 'alertService', 'contextService', 'redirectService', 'submitServiceCommons', batchWorkorderService]);
 })(angular);
