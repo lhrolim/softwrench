@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .service('modalService', ["$rootScope", "crudContextHolderService", function ($rootScope, crudContextHolderService) {
+        .service('modalService', ["$rootScope","$q", "crudContextHolderService", function ($rootScope,$q, crudContextHolderService) {
 
             return {
 
@@ -86,11 +86,31 @@
                     $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modaldata);
                 },
 
+
+                showPromise: function (schemaorModalData, datamap, properties, parentdata, parentschema) {
+                    var deferred = $q.defer();
+
+                    const savefn = (datamap) => {
+                        deferred.resolve(datamap);
+                    }
+
+                    const cancelfn = (datamap) => {
+                        deferred.reject(datamap);
+                    }
+
+                    this.show(schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema);
+                    //registering modal promise as well
+
+                    return deferred.promise;
+                },
+
                 getSaveFn: function () {
                     if (crudContextHolderService.isShowingModal()) {
                         return crudContextHolderService.getSaveFn();
                     }
                 },
+
+         
 
 
                 panelid: "#modal"

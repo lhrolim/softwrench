@@ -99,7 +99,6 @@
 
     });
 
-
     it('Test Submission valid data create entry', function (done) {
 
         const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();

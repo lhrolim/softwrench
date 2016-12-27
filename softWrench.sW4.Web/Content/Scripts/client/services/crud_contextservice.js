@@ -517,11 +517,11 @@
             getContext("#modal").customSaveFn = saveFn;
         };
 
+        
+
         function getSaveFn() {
             return getContext("#modal").customSaveFn;
         };
-
-
 
 
         //#endregion

@@ -2,40 +2,54 @@
     "use strict";
 
     // service.$inject = [];
+    class compositionCommons {
+        
+        constructor(datamapSanitizeService) {
+            this.datamapSanitizeService = datamapSanitizeService;
+        }
 
-    var service = function (datamapSanitizeService) {
+
+        buildInlineDefinition(definition) {
+            //this means that we recevived only the list schema, for inline compositions
+            definition.schemas = {
+                list: definition.compositionschemadefinition
+            };
+            definition.inline = true;
+            definition.collectionProperties = {
+                allowInsertion: "false",
+                allowUpdate: "false",
+                autoCommit:false
+            }
+            return definition;
+        }
 
         /**
-         * merges the parent datamap with a specific composition row data, making sure that, 
-         * in case of conflicts, the composition data is sent and not the parent one (ex: both have assets)
-         * @param {} datamap 
-         * @param {} parentdata 
-         * @returns {} 
-         */
-        var buildMergedDatamap = function (datamap, parentdata) {
-            var toClone = parentdata;
-            
-            var clonedDataMap = angular.copy(toClone);
-            clonedDataMap = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(clonedDataMap);
+       * merges the parent datamap with a specific composition row data, making sure that, 
+       * in case of conflicts, the composition data is sent and not the parent one (ex: both have assets)
+       * @param {} datamap 
+       * @param {} parentdata 
+       * @returns {} 
+       */
+        buildMergedDatamap (datamap, parentdata) {
+            const toClone = parentdata;
+            let clonedDataMap = angular.copy(toClone);
+            clonedDataMap = this.datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(clonedDataMap);
 
             if (datamap) {
-                var item = datamap;
-                for (var prop in item) {
+                const item = datamap;
+                for (let prop in item) {
                     if (item.hasOwnProperty(prop)) {
                         clonedDataMap[prop] = item[prop];
                     }
                 }
             }
             return clonedDataMap;
-        };
+        }
+    }
 
-        var api = {
-            buildMergedDatamap: buildMergedDatamap
-        };
+    compositionCommons.$inject = ["datamapSanitizeService"];
 
-        return api;
-    };
+    angular.module("webcommons_services").service("compositionCommons", ['datamapSanitizeService', compositionCommons]);
 
-    angular.module("webcommons_services").service("compositionCommons", ['datamapSanitizeService', service]);
 
 })(angular);

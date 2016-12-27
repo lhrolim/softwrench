@@ -60,7 +60,7 @@
             $scope.$on(JavascriptEventConstants.HideModal, function (event, selfThrown) {
                 crudContextHolderService.clearCrudContext(modalService.panelid);
                 if (selfThrown !== true) {
-                    $scope.closeModal();
+                    $scope.cancel();
                 }
             });
 

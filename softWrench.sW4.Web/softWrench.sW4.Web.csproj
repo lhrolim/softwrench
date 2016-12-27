@@ -797,6 +797,7 @@
     <Content Include="Content\Scripts\client\controllers\metadata_builder.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
     <Content Include="Content\Scripts\client\crud\crud_crawl_service.js" />
+    <Content Include="Content\Scripts\client\crud\composition_list_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_list_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_dropdown.js" />
     <Content Include="Content\Scripts\client\crud\filters\crud_filter_multioptions.js" />
@@ -806,6 +807,7 @@
     <Content Include="Content\Scripts\client\crud\inlinecompositionlistoutput.js" />
     <Content Include="Content\Scripts\client\directives\detail\codeEditor.js" />
     <Content Include="Content\Scripts\client\directives\detail\swlabel.js" />
+    <Content Include="Content\Scripts\client\directives\internal\compositionlistWrapper.js" />
     <Content Include="Content\Scripts\client\directives\internal\onFinishRender.js" />
     <Content Include="Content\Scripts\client\directives\internal\ngEnter.js" />
     <Content Include="Content\Scripts\client\directives\internal\numbertostring.js" />

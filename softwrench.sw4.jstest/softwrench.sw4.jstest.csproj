@@ -73,6 +73,7 @@
     <Content Include="tests\controllers\commlogaction_test.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
     <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
+    <Content Include="tests\directives\composition_list_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
     <Content Include="tests\pojos\ResponsePojo.js" />
     <Content Include="tests\pojos\FieldMetadataPojo.js" />

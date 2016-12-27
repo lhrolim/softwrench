@@ -96,32 +96,31 @@ class SubmitResult {
             }
         }
 
+        submitModal(schemaToSave,fields,modalSavefn) {
+
+            const log = this.$log.get("submitService#submitModal",["submit","save"]);
+            log.debug("submitting modal fn");
+            const errorForm = this.crudContextHolderService.crudForm("#modal").$error;
+            return this.validationService.validatePromise(schemaToSave, fields, errorForm).then(() => {
+                log.debug("modal form validated. applying modal informed save fn");
+                return $q.when(modalSavefn(fields, schemaToSave));
+            });
+        }
 
         submit(schemaToSave,datamap, parameters={}) {
 
-          const log = this.$log.get("submitService#submit",["submit","save"]);
-
+            const log = this.$log.get("submitService#submit",["submit","save"]);
 
             const modalSavefn = this.modalService.getSaveFn(); //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
-
-            var selecteditem = parameters.selecteditem;
+            const selecteditem = parameters.selecteditem;
             //selectedItem would be passed in the case of a composition with autocommit=true, in the case the target would accept only the child instance... not yet supported. 
             //Otherwise, fetching from the $scope.datamap
             const fromDatamap = selecteditem == null;
             const fields = fromDatamap ? datamap : selecteditem;
 
-         
-
             if (modalSavefn && parameters.dispatchedByModal) {
-                log.debug("submitting modal fn");
-                const errorForm = this.crudContextHolderService.crudForm("#modal").$error;
-                return this.validationService.validatePromise(schemaToSave, fields, errorForm).then(() => {
-                    log.debug("modal form validated. applying modal informed save fn");
-                    return this.$q.when(modalSavefn(fields, schemaToSave)).then(() => {
-                        log.debug("modal form promise chaining");
-                        this.modalService.hide();
-                    });
-                });
+                //if there's a custom save fn registered by the modal, lets invoke it
+                return this.submitModal(schemaToSave,fields,modalSavefn);
             }
 
             log.debug("non-modal submission. validating");
@@ -131,7 +130,7 @@ class SubmitResult {
                     log.debug("validation rejected, returning");
                     return this.$q.reject(SubmitResult.ClientValidationFailed);
                 }
-                return this.doSubmitToServer(selecteditem, fields, schemaToSave, parameters).then(httpResult => {
+                return this.doSubmitToServer(fields, schemaToSave, parameters).then(httpResult => {
                     return this.onServerResult(httpResult, parameters);
                 }).catch(err => {
                     const exceptionData = err.data;
@@ -205,7 +204,7 @@ class SubmitResult {
         }
 
       
-        doSubmitToServer(selecteditem, transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,isComposition,compositionData}) {
+        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,isComposition,compositionData}) {
                 
             const log = this.$log.get("submitService#doSubmitToServer",["submit","save"]);
             log.debug("doSubmit to server start... applying datamap transformations");

@@ -21,8 +21,8 @@ var BrowserDetect =
     },
 
     searchString: function (data) {
-        for (var i = 0 ; i < data.length ; i++) {
-            var dataString = data[i].string;
+        for (let i = 0 ; i < data.length ; i++) {
+            const dataString = data[i].string;
             this.versionSearchString = data[i].subString;
 
             if (dataString.indexOf(data[i].subString) != -1) {
@@ -32,7 +32,7 @@ var BrowserDetect =
     },
 
     searchVersion: function (dataString) {
-        var index = dataString.indexOf(this.versionSearchString);
+        const index = dataString.indexOf(this.versionSearchString);
         if (index == -1) return;
         return parseFloat(dataString.substring(index + this.versionSearchString.length + 1));
     },
@@ -60,8 +60,8 @@ var DeviceDetect =
     },
 
     searchString: function (data) {
-        for (var i = 0 ; i < data.length ; i++) {
-            var dataString = data[i].string;
+        for (let i = 0 ; i < data.length ; i++) {
+            const dataString = data[i].string;
             this.versionSearchString = data[i].subString;
 
             if (dataString.indexOf(data[i].subString) != -1) {
@@ -118,7 +118,7 @@ function safeCSSselector(name) {
     //if column has an attribute property, else return an empty string
     if (name) {
         //make sure name is all lower case
-        var newName = name.toLowerCase();
+        let newName = name.toLowerCase();
 
         //replace invaild characters with underscores
 
@@ -135,7 +135,7 @@ function safeCSSselector(name) {
 
 
 function instantiateIfUndefined(obj, nullcheck) {
-    var shouldNullCheck = nullcheck === undefined || nullcheck == true;
+    const shouldNullCheck = nullcheck === undefined || nullcheck == true;
     if (obj === undefined || (shouldNullCheck && obj === null)) {
         obj = {};
     }
@@ -160,10 +160,9 @@ function RemoveSpecialChars(id) {
 }
 
 function JsonProperty(obj, property, valueToSet, forceCreation) {
-
-    var prop = property.split('.');
+    const prop = property.split('.');
     var value = obj;
-    for (var i = 0; i < prop.length; i++) {
+    for (let i = 0; i < prop.length; i++) {
         if (value.hasOwnProperty(prop[i])) {
             value = value[prop[i]];
         } else {
@@ -184,9 +183,10 @@ function JsonProperty(obj, property, valueToSet, forceCreation) {
 }
 
 Date.prototype.mmddyyyy = Date.prototype.f = function () {
-    var yyyy = this.getFullYear().toString();
-    var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
-    var dd = this.getDate().toString();
+    const yyyy = this.getFullYear().toString();
+    const mm = (this.getMonth() + 1).toString();
+    // getMonth() is zero-based
+    const dd = this.getDate().toString();
     return (mm[1] ? mm : "0" + mm[0]) + "/" + (dd[1] ? dd : "0" + dd[0]) + "/" + yyyy; // padding
 };
 
@@ -202,12 +202,12 @@ String.prototype.format = String.prototype.f = function () {
 };
 
 String.prototype.nullOrEmpty = String.prototype.f = function () {
-    var s = this;
+    const s = this;
     return s.trim().length == 0;
 };
 
 String.prototype.isEqual = String.prototype.f = function (other, ignoreCase) {
-    var s = this;
+    const s = this;
     if (!ignoreCase) {
         return s === other;
     }
@@ -250,6 +250,8 @@ var hasSingleElement = function (arr) {
 };
 
 var safePush = function (baseObject, propertyName, item) {
+    if (!item || !baseObject || !propertyName) return;
+
     if (!baseObject[propertyName]) {
         baseObject[propertyName] = [];
     }
@@ -261,16 +263,16 @@ var nullifyProperties = function (baseObject, propertyArray) {
         return;
     }
 
-    for (var i = 0; i < propertyArray.length; i++) {
-        var propName = propertyArray[i];
+    for (let i = 0; i < propertyArray.length; i++) {
+        const propName = propertyArray[i];
         baseObject[propName] = null;
     }
 }
 
 String.format = function () {
     var s = arguments[0];
-    for (var i = 0; i < arguments.length - 1; i++) {
-        var reg = new RegExp("\\{" + i + "\\}", "gm");
+    for (let i = 0; i < arguments.length - 1; i++) {
+        const reg = new RegExp("\\{" + i + "\\}", "gm");
         s = s.replace(reg, arguments[i + 1]);
     }
     return s;
@@ -299,7 +301,7 @@ function nullOrUndef(obj) {
 function insertOrUpdateArray(arr, item, property) {
     property = property || "id";
     var idx = -1;
-    for (var i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         if (arr[i][property] == item[property]) {
             idx = i;
             break;
@@ -313,11 +315,11 @@ function insertOrUpdateArray(arr, item, property) {
 }
 
 function lockCommandBars() {
-    var bars = $('[data-classplaceholder=commandbar]');
+    const bars = $('[data-classplaceholder=commandbar]');
     bars.each(function (index, element) {
-        var buttons = $(element).find('button');
-        for (var i = 0; i < buttons.length; i++) {
-            var button = $(buttons[i]);
+        const buttons = $(element).find('button');
+        for (let i = 0; i < buttons.length; i++) {
+            const button = $(buttons[i]);
             if (button.prop('disabled') !== true) {
                 //lets disable only those who aren´t already disabled
                 button.attr('disabled', 'disabled');
@@ -329,11 +331,11 @@ function lockCommandBars() {
 }
 
 function unLockCommandBars() {
-    var bars = $('[data-classplaceholder=commandbar]');
+    const bars = $('[data-classplaceholder=commandbar]');
     bars.each(function (index, element) {
-        var buttons = $(element).find('button');
-        for (var i = 0; i < buttons.length; i++) {
-            var button = $(buttons[i]);
+        const buttons = $(element).find('button');
+        for (let i = 0; i < buttons.length; i++) {
+            const button = $(buttons[i]);
             if (button.attr('forceddisable') === 'disabled') {
                 button.removeAttr('disabled');
             }
@@ -342,9 +344,9 @@ function unLockCommandBars() {
 }
 
 function lockTabs() {
-    var tabs = $('[data-toggle=tab]');
+    const tabs = $('[data-toggle=tab]');
     tabs.each(function (index, element) {
-        var jquery = $(element);
+        const jquery = $(element);
         jquery.removeAttr('data-toggle');
         jquery.attr('data-toggle', 'tab_inactive');
         //        jquery.css('cursor', 'no-drop');
@@ -352,9 +354,9 @@ function lockTabs() {
 }
 
 function unLockTabs() {
-    var tabs = $('[data-toggle=tab_inactive]');
+    const tabs = $('[data-toggle=tab_inactive]');
     tabs.each(function (index, element) {
-        var jquery = $(element);
+        const jquery = $(element);
         jquery.removeAttr('data-toggle');
         jquery.attr('data-toggle', 'tab');
         //        jquery.css('cursor', null);
@@ -362,9 +364,9 @@ function unLockTabs() {
 }
 
 function capitaliseFirstLetter(string) {
-    var fullstring = string.split(/[ ]+/);
+    const fullstring = string.split(/[ ]+/);
     var returnstring = '';
-    for (var i = 0; i < fullstring.length; i++) {
+    for (let i = 0; i < fullstring.length; i++) {
         returnstring += fullstring[i].charAt(0).toUpperCase() + fullstring[i].slice(1);
         returnstring += (i + 1) == fullstring.length ? '' : ' ';
     }
@@ -376,8 +378,8 @@ function isIE11() {
     if (navigator.appName !== "Netscape") {
         return false;
     }
-    var ua = navigator.userAgent;
-    var re = new RegExp("Trident/.*rv:([0-9]{1,}[\.0-9]{0,})");
+    const ua = navigator.userAgent;
+    const re = new RegExp("Trident/.*rv:([0-9]{1,}[\.0-9]{0,})");
     return re.exec(ua) != null;
 }
 
@@ -386,7 +388,7 @@ function isIE() {
 }
 
 function isIe9() {
-    var mockie9 = sessionStorage["mockie9"];
+    const mockie9 = sessionStorage["mockie9"];
     return (mockie9 === true || "true" === mockie9)
         ? true
         : isIE() && (BrowserDetect.version == '9' || BrowserDetect.version == '8' || BrowserDetect.version == '7');
@@ -411,8 +413,8 @@ $.extend({
 
 function loadScript(baseurl, callback) {
     // Adding the script tag to the head as suggested before
-    var head = document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
+    const head = document.getElementsByTagName('head')[0];
+    const script = document.createElement('script');
     script.type = 'text/javascript';
     script.src = url(baseurl);
 
@@ -445,9 +447,7 @@ function url(path) {
     if (path && path[0] != "/") {
         path = "/" + path;
     }
-
-
-    var value = $(routes_basecontext)[0].value;
+    const value = $(routes_basecontext)[0].value;
     if (value == "/") {
         return path;
     }
@@ -468,8 +468,8 @@ function GetPopUpMode() {
 }
 
 function BuildDataObject() {
-    var parameters = {};
-    var data = $(crud_InitialData)[0].value;
+    const parameters = {};
+    const data = $(crud_InitialData)[0].value;
     if (data === undefined || data == null || data == '') {
         return parameters;
     }
@@ -494,10 +494,10 @@ function listSchema() {
 }
 
 function executeFunctionByName(functionName, context /*, args */) {
-    var args = Array.prototype.slice.call(arguments).splice(2);
-    var namespaces = functionName.split(".");
-    var func = namespaces.pop();
-    for (var i = 0; i < namespaces.length; i++) {
+    const args = Array.prototype.slice.call(arguments).splice(2);
+    const namespaces = functionName.split(".");
+    const func = namespaces.pop();
+    for (let i = 0; i < namespaces.length; i++) {
         context = context[namespaces[i]];
     }
     return context[func].apply(this, args);
@@ -523,7 +523,7 @@ function addSchemaDataToJson(json, schema, nextSchemaObj) {
     }
 
     else if (schema.properties != null && schema.properties['nextschema.schemaid'] != null) {
-        var nextschemaId = schema.properties['nextschema.schemaid'];
+        const nextschemaId = schema.properties['nextschema.schemaid'];
         json["%%nextschema"] = {};
         json["%%nextschema"].schemaId = nextschemaId;
         if (schema.properties['nextschema.schemamode'] != null) {
@@ -548,8 +548,7 @@ function getCurrentDate() {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-
+    const yyyy = today.getFullYear();
     if (dd < 10) {
         dd = '0' + dd
     }
@@ -570,20 +569,19 @@ function replaceAll(str, find, replace) {
 }
 
 function imgToBase64(img) {
-    var canvas = document.createElement("canvas");
+    const canvas = document.createElement("canvas");
     canvas.width = img.width;
     canvas.height = img.height;
 
     // Copy the image contents to the canvas
-    var ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0);
 
     // Get the data-URL formatted image
     // Firefox supports PNG and JPEG. You could check img.src to
     // guess the original format, but be aware the using "image/jpg"
     // will re-encode the image.
-    var dataURL = canvas.toDataURL("image/png");
-
+    const dataURL = canvas.toDataURL("image/png");
     return dataURL;
 }
 
@@ -610,7 +608,7 @@ function isEmpty(obj) {
     // Otherwise, does it have any properties of its own?
     // Note that this doesn't handle
     // toString and valueOf enumeration bugs in IE < 9
-    for (var key in obj) {
+    for (let key in obj) {
         if (hasOwnProperty.call(obj, key)) return false;
     }
 
@@ -633,7 +631,7 @@ function removeDuplicatesOnArray(array, keyProp) {
     var indexes = [];
     var withoutDuplicates = [];
     array.forEach(function (option) {
-        var index = option[keyProp];
+        const index = option[keyProp];
         if (indexes.indexOf(index) >= 0) {
             return;
         }
@@ -720,10 +718,8 @@ var Base64 = {
         string = string.replace(/\r\n/g, "\n");
         var utftext = "";
 
-        for (var n = 0; n < string.length; n++) {
-
-            var c = string.charCodeAt(n);
-
+        for (let n = 0; n < string.length; n++) {
+            const c = string.charCodeAt(n);
             if (c < 128) {
                 utftext += String.fromCharCode(c);
             }
@@ -794,11 +790,11 @@ if (typeof (window.debounce !== "function") && (!window._ || typeof (window._.de
         var timeout;
         return function() {
             var context = this, args = arguments;
-            var later = function() {
+            const later = function() {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
             };
-            var callNow = immediate && !timeout;
+            const callNow = immediate && !timeout;
             clearTimeout(timeout);
             timeout = setTimeout(later, wait);
             if (callNow) func.apply(context, args);
@@ -838,9 +834,9 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
             if (!timeout) context = args = null;
         };
         return function() {
-            var now = Date.now();
+            const now = Date.now();
             if (!previous && options.leading === false) previous = now;
-            var remaining = wait - (now - previous);
+            const remaining = wait - (now - previous);
             context = this;
             args = arguments;
             if (remaining <= 0 || remaining > wait) {
@@ -863,11 +859,11 @@ if (typeof (window.throttle !== "function") && (!window._ || typeof (window._.th
 
 // returns the value of the given parameter name from the current url
 window.getUrlParameter = function getUrlParameter(sParam) {
-    var sPageUrl = decodeURIComponent(window.location.search.substring(1));
-    var sUrlVariables = sPageUrl.split("&");
+    const sPageUrl = decodeURIComponent(window.location.search.substring(1));
+    const sUrlVariables = sPageUrl.split("&");
     var sParameterName;
 
-    for (var i = 0; i < sUrlVariables.length; i++) {
+    for (let i = 0; i < sUrlVariables.length; i++) {
         sParameterName = sUrlVariables[i].split("=");
 
         if (sParameterName[0] === sParam) {

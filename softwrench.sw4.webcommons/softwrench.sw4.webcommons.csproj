@@ -117,6 +117,8 @@
     <Content Include="web_content\webcommons\scripts\softwrench\components\richtext.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\directive\passwordvalidation.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\constants\MetadataEventConstants.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\CompositionSchemas.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\ApplicationCompositionSchemaDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\GridFilterDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\searchDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\quickSearchDTO.js" />

@@ -20,7 +20,7 @@
             controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService", "$q", "compositionService",
                 function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService, $q, compositionService) {
 
-                    var log = $log.getInstance('sw4.composition.master/detail');
+                    var log = $log.getInstance('sw4.composition.master/detail',["composition","init"]);
 
                     var masterMap = {};
 

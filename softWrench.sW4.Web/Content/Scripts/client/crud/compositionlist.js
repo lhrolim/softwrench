@@ -1,233 +1,11 @@
 ﻿(function (angular, app) {
     "use strict";
 
-    app.directive('expandedItemOutput', function ($compile) {
-        "ngInject";
-
-        return {
-            restrict: "E",
-            replace: true,
-            scope: {
-                displayables: '=',
-                schema: '=',
-                datamap: '=',
-                cancelfn: '&'
-            },
-            template: "<div></div>",
-            link: function (scope, element, attrs) {
-                if (angular.isArray(scope.displayables)) {
-                    element.append(
-                        "<crud-output schema='schema'" +
-                        "datamap='datamap'" +
-                        "displayables='displayables'" +
-                        "cancelfn='cancelfn()'></crud-output>"
-                    );
-                    $compile(element.contents())(scope);
-                }
-            }
-        }
-    });
-
-    app.directive('expandedItemInput', function ($compile) {
-        "ngInject";
-
-        return {
-            restrict: "E",
-            replace: true,
-            scope: {
-                displayables: '=',
-                schema: '=',
-                datamap: '=',
-                savefn: '&',
-                cancelfn: '&'
-            },
-            template: "<div></div>",
-            link: function (scope, element, attrs) {
-                if (angular.isArray(scope.displayables)) {
-                    element.append(
-                        "<crud-input schema='schema'" +
-                        "datamap='datamap'" +
-                        "displayables='displayables'" +
-                        "savefn='savefn()'" +
-                        "cancelfn='cancelfn()'></crud-input>"
-                    );
-                    $compile(element.contents())(scope);
-                }
-            }
-        }
-    });
-
-    app.directive('newItemInput', function ($compile, fieldService) {
-        "ngInject";
-
-        return {
-            restrict: "E",
-            replace: true,
-            scope: {
-                displayables: '=',
-                elementid: '=',
-                schema: '=',
-                datamap: '=',
-                cancelfn: '&',
-                savefn: '&',
-                parentdata: '=',
-                parentschema: '=',
-                previousdata: '=',
-                previousschema: '='
-
-            },
-            template: "<div></div>",
-            link: function (scope, element, attrs) {
-                if (angular.isArray(scope.displayables)) {
-                    fieldService.fillDefaultValues(scope.displayables, scope.datamap, scope);
-                    element.append(
-                        "<crud-input schema='schema' " +
-                        "datamap='datamap' " +
-                        "displayables='displayables' " +
-                        "elementid='crudInputNewItemComposition' " +
-                        "association-schemas='associationSchemas' " +
-                        "blockedassociations='blockedassociations' " +
-                        "parentdata='parentdata' " +
-                        "parentschema='parentschema' " +
-                        "previousdata='previousdata' " +
-                        "previouschema='previousschema' " +
-                        "savefn='savefn()' " +
-                        "cancelfn='cancelfn()' " +
-                        "composition='true'></crud-input>"
-                    );
-                    $compile(element.contents())(scope);
-                }
-            }
-        }
-    });
-
-    app.directive('compositionListWrapper', function ($compile, i18NService, $log, compositionService, spinService) {
-        "ngInject";
-
-        return {
-            restrict: 'E',
-            replace: true,
-            template: "<div></div>",
-            scope: {
-                metadata: '=',
-                parentschema: '=',
-                parentdata: '=',
-                cancelfn: '&',
-                previousschema: '=',
-                previousdata: '=',
-                mode: '@',
-                inline: '@',
-                ismodal: '@',
-                tabid: '@'
-            },
-            link: function (scope, element, attrs) {
-
-                scope.$name = 'compositionlistwrapper';
-
-                var doLoad = function () {
-                    $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
-                    const metadata = scope.metadata;
-                    scope.tabLabel = i18NService.get18nValue(metadata.schema.schemas.list.applicationName + '._title', metadata.label);
-
-                    scope.compositiondata = scope.parentdata[scope.metadata.relationship];
-                    
-                    if (!scope.compositiondata) {
-                        const arr = [];
-                        scope.parentdata[scope.metadata.relationship] = arr;
-
-                        //a blank array if nothing exists, scenario for selfcompositions
-                        scope.compositiondata = arr;
-
-                    }
-
-                    scope.compositionschemadefinition = metadata.schema;
-                    scope.compositionlistschema = scope.compositionschemadefinition.schemas.list;
-                    scope.compositiondetailschema = scope.compositionschemadefinition.schemas.detail;
-                    scope.relationship = metadata.relationship;
-
-                    //display the list composition by default
-                    if (scope.compositionschemadefinition.schemas.list.properties.masterdetail === "true") {
-                        element.append(
-                            "<composition-master-details data-cancelfn='cancel(data,schema)' " +
-                            "data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' " +
-                            "data-parentdata='parentdata' parentschema='parentschema' " +
-                            "mode='{{mode}}' " +
-                            "data-relationship='{{relationship}}' data-title='{{tabLabel}}' />");
-                    } else {
-                        element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
-                            "compositionschemadefinition='compositionschemadefinition' " +
-                            "relationship='{{relationship}}' " +
-                            "compositiondata='compositiondata' " +
-                            "metadatadeclaration='metadata' " +
-                            "parentschema='parentschema' " +
-                            "mode='{{mode}}' " +
-                            "parentdata='parentdata' " +
-                            "cancelfn='cancel(data,schema)' " +
-                            "previousschema='previousschema' " +
-                            "previousdata='previousdata' />");
-                    }
-
-                    $compile(element.contents())(scope);
-
-                    //controls tab lazy loading
-                    scope.loaded = true;
-                }
-                const custom = scope.metadata.schema.renderer.rendererType == 'custom';
-                const isInline = scope.metadata.inline;
-                if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
-                    //inline compositions should load automatically
-                    doLoad();
-                 
-                }
-
-                scope.cancel = function (data, schema) {
-                    scope.cancelfn({ data: data, schema: schema });
-                }
-
-
-                scope.$on(JavascriptEventConstants.ModalShown, function (event, modalData) {
-                    if (scope.ismodal === "true") {
-                        //inline compositions inside of the modal need to be refreshed (relinked)
-                        const datamap = modalData.datamap;
-                        scope.parentdata = datamap;
-                        doLoad();
-                    }
-                });
-
-                scope.$on(JavascriptEventConstants.HideModal, function (event) {
-                    if (scope.ismodal === "true") {
-                        $log.get('compositionlistwrapper#doLoad', ["composition", "inline"]).debug('wiping <composition-list> directive due to modal disposal');
-                        //inline compositions inside of the modal need to be refreshed (relinked)
-                        element.empty();
-                    }
-                });
-
-                scope.$on("sw_lazyloadtab", function (event, tabid) {
-                    if (scope.tabid == tabid) {
-                        if (!compositionService.isCompositionLodaded(scope.tabid)) {
-                            spinService.start({ compositionSpin: true });
-                        }
-                        if (!scope.loaded) {
-                            doLoad();
-                        }
-
-                    }
-
-                });
-
-            }
-        }
-    });
-
-    function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $attrs, $element, $rootScope, i18NService, tabsService, alertService,
+    function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService, alertService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, associationService,
         expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
-        schemaService, contextService, fixHeaderService, applicationService, searchService) {
+        schemaService, contextService, fixHeaderService, applicationService, searchService, compositionCommons, compositionListViewModel) {
 
-        $scope.lookupObj = {};
-
-        $scope.lookupAssociationsCode = [];
-        $scope.lookupAssociationsDescriptions = [];
 
         $scope.searchData = {};
         $scope.searchOperator = {};
@@ -238,12 +16,7 @@
 
         $scope.filterForColumn = function (column) {
             const schema = $scope.compositionlistschema;
-            if (!schema || !schema.schemaFilters || !schema.schemaFilters.filters) {
-                return null;
-            }
-            return schema.schemaFilters.filters.find(function (filter) {
-                return filter.attribute === column.attribute;
-            });
+            return compositionListViewModel.filterForColumn(schema, column);
         }
 
         $scope.filterApplied = function () {
@@ -347,25 +120,21 @@
         }
 
         function init(previousCompositionData, isPaginationRefresh) {
+            //$scope.compositionschemadefinition matches ApplicationCompositionSchema
             if (!$scope.compositionschemadefinition.schemas) {
-                //this means that we recevived only the list schema, for inline compositions
-                $scope.compositionschemadefinition.schemas = {};
-                $scope.compositionschemadefinition.schemas.list = $scope.compositionschemadefinition;
-                $scope.compositionschemadefinition.inline = true;
-                $scope.compositionschemadefinition.collectionProperties = {
-                    allowInsertion: "false",
-                    allowUpdate: "false",
-                }
+                angular.extend($scope.compositionschemadefinition, compositionCommons.buildInlineDefinition($scope.compositionschemadefinition));
             }
 
             //Extra variables
             $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
             $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
+
             $scope.fetchfromserver = $scope.compositionschemadefinition.fetchFromServer;
             $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
             $scope.inline = $scope.compositionschemadefinition.inline;
 
             $scope.detailData = $scope.clonedData = {};
+            $scope.parentdata = $scope.parentdata || crudContextHolderService.rootDataMap();
 
             $scope.noupdateallowed = !$scope.isBatch() && !expressionService.evaluate($scope.collectionproperties.allowUpdate, $scope.parentdata);
             $scope.nodeleteallowed = !expressionService.evaluate($scope.collectionproperties.allowRemoval, $scope.parentdata);
@@ -422,17 +191,17 @@
 
                 $scope.unWatcherArray = [];
 
+                let watches = [];
+
                 $scope.compositionData().forEach(function (value, index, array) {
                     //for eventually already existing items
                     const id = schemaService.getId(value, $scope.compositionlistschema);
-                    const watches = crud_inputcommons.configureAssociationChangeEvents($scope,
-                        "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, id);
+                    watches = watches.concat(crud_inputcommons.configureAssociationChangeEvents($scope,
+                        "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, id));
                     watches.push(watchForDirty(index));
-
-                    $scope.unWatcherArray = watches;
-
-
                 });
+
+                $scope.unWatcherArray = watches;
 
                 if (fieldService.isPropertyTrue($scope.metadatadeclaration.schema, "composition.inline.startwithentry")) {
                     //inline composition should apear with an initial item
@@ -460,15 +229,12 @@
         $scope.showPagination = function () {
             return !$scope.isNoRecords() && // has items to show
                 !!$scope.paginationData &&
-                $scope.paginationData.paginationOptions.some(function (option) {
+                $scope.paginationData.paginationOptions.some((option) => {
                     // totalCount is bigger than at least one option
                     return option !== 0 && $scope.paginationData.totalCount > option;
                 });
         }
 
-
-
-        
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
 
@@ -505,7 +271,7 @@
         };
 
         $scope.$on(JavascriptEventConstants.CrudSaved, () => {
-            $scope.clearNewCompositionData();
+            $scope.clearNewCompositionDataForBatches();
         });
 
         $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, $scope.onAfterCompositionResolved);
@@ -564,36 +330,6 @@
             return result;
         };
 
-        /**
-         * 
-         * @returns list of commands particular to this composition
-         */
-        $scope.compositionProvider = function () {
-            const localCommands = {};
-            const toAdd = [];
-            localCommands.toAdd = toAdd;
-            const log = $log.getInstance('composition_service#compositionProvider',["composition"]);
-            localCommands.toKeep = compositionService.getListCommandsToKeep($scope.compositionschemadefinition);
-
-            if (!expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) || $scope.inline) {
-                log.debug('local commands without add. {0} '.format(JSON.stringify(localCommands)));
-                return localCommands;
-            }
-            const addCommand = {};
-            addCommand.label = $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
-            addCommand.method = $scope.newDetailFn;
-            addCommand.defaultPosition = 'left';
-            var iconCompoistionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];
-            if (!iconCompoistionAddbutton) {
-                //use the same as the tab by default
-                iconCompoistionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.tab'];
-            }
-            addCommand.icon = iconCompoistionAddbutton;
-            toAdd.push(addCommand);
-            log.debug('local commands: {0} '.format(JSON.stringify(localCommands)));
-            return localCommands;
-        };
-
         this.shouldShowAdd = function () {
             return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) && $scope.collectionproperties.autoCommit;
         }
@@ -609,7 +345,6 @@
         $scope.shouldShowAdd = function () {
             return expressionService.evaluate($scope.collectionproperties.allowInsertion, $scope.parentdata) && $scope.collectionproperties.autoCommit;
         }
-
 
         this.getAddIcon = function () {
             var iconCompositionAddbutton = $scope.compositionschemadefinition.schemas.list.properties['icon.composition.addbutton'];
@@ -634,11 +369,7 @@
             const datamap = {
                 _iscreation: true
             };
-            $scope.edit(datamap);
-        };
-
-        $scope.draggableValue = function () {
-            return $scope.relationship.contains("attachment") ? "true" : "false";
+            return $scope.edit(datamap);
         };
 
         this.save = function () {
@@ -654,6 +385,14 @@
             $scope.cancelfn({ data: $scope.previousdata, schema: $scope.previousschema });
             $scope.$emit('sw_cancelclicked');
         };
+
+        $scope.draggableValue = function () {
+            return $scope.relationship.contains("attachment") ? "true" : "false";
+        };
+
+
+
+
 
         //#region attachments
 
@@ -752,22 +491,20 @@
 
 
         //#region edition
-
         $scope.edit = function (datamap, actionTitle, forceModal) {
             if (!!forceModal || shouldEditInModal()) {
                 // Check that main tab has all required fields filled before opening modal
                 const parentDatamap = crudContextHolderService.rootDataMap();
                 const parentSchema = crudContextHolderService.currentSchema();
-                if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap).length > 0) {
-                    //crudContextHolderService.setActiveTab(null);
+
+                return validationService.validatePromise(parentSchema, parentDatamap).catch(() => {
                     redirectService.redirectToTab('main');
-                    return;
-                }
-
-                modalService.show($scope.compositiondetailschema, datamap, { title: actionTitle }, function saveCallBack(datamap) {
-                    return $scope.save(datamap);
-                }, null, $scope.parentdata, $scope.parentschema);
-
+                    return $q.reject();
+                }).then(() => {
+                    return modalService.showPromise($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.parentdata, $scope.parentschema);
+                }).then(modaldatamap => {
+                    return $scope.save(modaldatamap, null);
+                });
             } else {
                 //TODO: switch to edit
                 $scope.newDetail = true;
@@ -779,6 +516,7 @@
             }
             $scope.collapseAll();
         };
+
 
         $scope.doToggle = function (id, item, originalListItem, forcedState) {
 
@@ -807,7 +545,7 @@
             }
         };
 
-        
+
 
         $scope.hasDetailSchema = function () {
             return !!$scope.compositiondetailschema;
@@ -867,7 +605,7 @@
                 $event.stopImmediatePropagation();
             }
             this.handleSingleSelectionClick(item, rowIndex);
-            const log = $log.get("compositionlist#toggleDetails",["composition","detail"]);
+            const log = $log.get("compositionlist#toggleDetails", ["composition", "detail"]);
             if (column != null && column.attribute == null) {
                 //for sections inside compositionlist, ex: reply/replyall of commlogs
                 return;
@@ -912,21 +650,19 @@
 
             if ($scope.isBatch()) {
                 //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
-                $scope.doToggle(compositionId, clonedItem, item);
-                return;
+                return $scope.doToggle(compositionId, clonedItem, item);
             }
             const needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
             if (!needServerFetching) {
                 //opening it using already existing cached instance
-                $scope.innerToggleDetails(false, compositionId, $scope.detailData[compositionId].data, item);
-                return;
+                return $scope.innerToggleDetails(false, compositionId, $scope.detailData[compositionId].data, item);
             }
 
             if (!compositionId) {
                 // we can´t hit the server if there´s no id.
                 //this should not be happening
                 log.warn("trying to fetch details on a compostion with no id selected");
-                return;
+                return $q.reject();
             }
 
             const customParamNameString = $scope.compositionlistschema.properties["list.click.customparams"];
@@ -945,7 +681,7 @@
                 });
             }
 
-            compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(function (result) {
+            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(function (result) {
                 const datamap = result.resultObject;
                 if ($scope.isUpdate) {
                     datamap["#edited"] = 1;
@@ -962,31 +698,35 @@
                         $rootScope.$broadcast(JavascriptEventConstants.BodyRendered, $element.parents('.tab-pane').attr('id'));
                     }, 0, false);
                 }
-                return;
+                return $q.when();
             }
 
             // Check that main tab has all required fields filled before opening modal
             const parentDatamap = crudContextHolderService.rootDataMap();
             const parentSchema = crudContextHolderService.currentSchema();
-            if (validationService.validate(parentSchema, parentSchema.displayables, parentDatamap).length > 0) {
-                //crudContextHolderService.setActiveTab(null);
+
+
+            return validationService.validatePromise(parentSchema, parentDatamap).catch(() => {
                 redirectService.redirectToTab('main');
-                return;
-            }
-            modalService.show($scope.compositiondetailschema, angular.copy(item), {}, $scope.save, null, $scope.parentdata, $scope.parentschema);
+            }).then(() => {
+                return modalService.showPromise($scope.compositiondetailschema, angular.copy(item), {}, $scope.parentdata, $scope.parentschema);
+            }).then(modaldatamap => {
+                return $scope.save(modaldatamap, null);
+            });
         }
 
         //#endregion
 
         $scope.delete = function (item, column, $event, rowIndex) {
-            alertService.confirm("Are you sure you want to delete this entry").then(function () {
+            return alertService.confirm("Are you sure you want to delete this entry").then(() => {
                 const compositionId = item[$scope.compositionlistschema.idFieldName];
-                compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema).then(function (result) {
+                return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
+                .then((result) => {
                     //TODO: generate composition deletion method
                     var compositionItem = result.resultObject;
-                    eventService.onremoval_validation(compositionItem, $scope.compositionlistschema).then(() => {
+                    return eventService.onremoval_validation(compositionItem, $scope.compositionlistschema).then(() => {
                         compositionItem["#deleted"] = 1;
-                        $scope.save(compositionItem, null, "crud_delete");
+                        return $scope.save(compositionItem, "crud_delete");
                     });
                 });
             });
@@ -1027,7 +767,7 @@
                 }
             }
 
-          
+
 
             // if inside a scroll pane - to update pane size
             fixHeaderService.callWindowResize();
@@ -1110,7 +850,7 @@
             const datamap = {
                 _iscreation: true
             };
-            $scope.edit(datamap);
+            return $scope.edit(datamap);
         };
 
 
@@ -1147,100 +887,84 @@
 
         //#region saving
 
-        $scope.save = function (selecteditem, schema, action) {
+        $scope.save = function (selecteditem, action) {
             if (!selecteditem) {
                 //if the function is called inside a modal, then we would receive the item as a parameter, otherwise it would be on the scope of the page itself
                 selecteditem = $scope.selecteditem;
             }
 
-            //enforcing the dirtyness of the item
-            selecteditem["#isDirty"] = true;
-
-            const log = $log.getInstance("compositionlist#save",["composition","save","submit"]);
-
-            if (selecteditem == undefined && !$scope.collectionproperties.allowUpdate) {
-                //this is for the call to submit without having any item on composition selected, due to having the submit as the default button
-                log.debug("calling save on server without composition selected");
-                //this flag must be true for the spin to work properly... TODO: improve this
-                $scope.$parent.$parent.save(null, { isComposition: true });
-                return;
-            }
-
-            // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
-            const detailSchema = $scope.compositionschemadefinition.schemas.detail;
-            var validationErrors;
-            if (selecteditem != undefined && selecteditem["#deleted"] !== 1) {
-                const crudFormCtrl = getModalCrudFormController();
-                validationErrors = validationService.validate(detailSchema, detailSchema.displayables, selecteditem, crudFormCtrl.$error);
-                if (validationErrors.length > 0) {
-                    //interrupting here, can´t be done inside service
-                    return;
-                }
-            }
-
-            if (selecteditem != undefined) {
-                //ensure new item is captured as well
-                safePush($scope.parentdata, $scope.relationship, selecteditem);
-            }
-            if (!$scope.collectionproperties.autoCommit) {
-                log.warn('autocommit=false is yet to be implemented for compositions');
-                return;
-            }
-
-            var alwaysrefresh = schemaService.isPropertyTrue($scope.compositiondetailschema, 'compositions.alwaysrefresh');
-            if (alwaysrefresh) {
-                //this will disable success message, since we know we´ll need to refresh the screen
-                contextService.insertIntoContext("refreshscreen", true, true);
-            }
             if (!action) {
                 action = selecteditem["_iscreation"] ? "crud_create" : "crud_update";
             }
 
+            //enforcing the dirtyness of the item
+            selecteditem["#isDirty"] = true;
+            const relationship = $scope.relationship;
+
+            const log = $log.getInstance("compositionlist#save", ["composition", "save", "submit"]);
+
+            // Validation should happen before adding items to the composition list to allow invalid data to pass into the system.
+            const detailSchema = $scope.compositionschemadefinition.schemas.detail;
+
+            //ensure new item is captured as well
+            safePush($scope.parentdata, relationship, selecteditem);
+
+            if ($scope.collectionproperties.autoCommit != undefined && !$scope.collectionproperties.autoCommit) {
+                log.warn('autocommit=false is yet to be implemented for compositions');
+                return $q.reject();
+            }
+
+            var alwaysrefresh = schemaService.isPropertyTrue(detailSchema, 'compositions.alwaysrefresh');
+            if (alwaysrefresh) {
+                //this will disable success message, since we know we´ll need to refresh the screen
+                contextService.insertIntoContext("refreshscreen", true, true);
+            }
+
             log.debug("calling applicationService save with composition data");
+            //calling submit on root application, informing extra composition data
             return applicationService.save({
-                dispatcherComposition: $scope.relationship,
                 nextSchemaObj: { schemaId: crudContextHolderService.currentSchema().schemaId },
                 refresh: alwaysrefresh,
                 dispatchedByModal: false,
-                compositionData: new CompositionOperation(action, $scope.relationship, selecteditem, schemaService.getId(selecteditem, $scope.compositionlistschema))
+                compositionData: new CompositionOperation(action, relationship, selecteditem, schemaService.getId(selecteditem, $scope.compositionlistschema))
             }).then(function (data) {
                 log.debug("applying composition save cbk");
                 $scope.onAfterSave(data, alwaysrefresh);
-            }).catch(function (data) {
-                $scope.onSaveError(data, selecteditem);
-                return $q.reject(data);
+            }).catch(data => {
+                return $scope.onSaveError(data, selecteditem);
             });
         };
 
-        function afterSaveListener(name, extra) {
-            return function (data) {
-                $scope[name](data, extra);
-            }
-        };
-
         $scope.onSaveError = function (data, selecteditem) {
-            $scope.clearNewCompositionData();
+            $scope.clearNewCompositionDataForBatches();
+
+            //TODO: investigate whether this first call is really necessary...
+            //$scope.compositiondata and $scope.parentdata[$scope.relationship] should be pointing to the exact same array, and angular should have been dealing with them
+            //keeping here just to play safe, while there are few tests for the batches scenario
             const idx = $scope.compositiondata.indexOf(selecteditem);
             if (idx !== -1) {
                 $scope.compositiondata.splice(idx, 1);
             }
+
+            const parentidx = $scope.parentdata[$scope.relationship].indexOf(selecteditem);
+            if (parentidx !== -1) {
+                $scope.parentdata[$scope.relationship].splice(idx, 1);
+            }
             $scope.isReadonly = !$scope.collectionproperties.allowUpdate;
+            return $q.reject(data);
         };
 
         $scope.onAfterSave = function (data, alwaysrefresh) {
             if (alwaysrefresh) {
                 window.location.href = window.location.href;
             }
-            // dispose of the edit/creation form
-            if ($rootScope.showingModal) {
-                 modalService.hide();
-            }
+            //legacy composition mode, no modals
             $scope.newDetail = false;
             $scope.selecteditem = null;
             $scope.collapseAll();
 
             if (!$scope.paginationData) {
-                $scope.clearNewCompositionData();
+                $scope.clearNewCompositionDataForBatches();
                 return $q.when(null);
             }
             const keepfilters = schemaService.isPropertyTrue($scope.parentschema, "compositions.keepfilters");
@@ -1253,7 +977,7 @@
 
             // select first page
             return $scope.selectPage(destinationPage).then(() => {
-                $scope.clearNewCompositionData();
+                $scope.clearNewCompositionDataForBatches();
                 crudContextHolderService.setTabRecordCount($scope.relationship, null, $scope.paginationData.totalCount);
             });
         };
@@ -1261,35 +985,36 @@
         //#endregion
 
 
-        $scope.clearNewCompositionData = function () {
+        $scope.clearNewCompositionDataForBatches = function () {
+
+            if (!$scope.isBatch()) {
+                return;
+            }
 
             if ($scope.unWatcherArray) {
-                $scope.unWatcherArray.forEach(function(unwatcher) {
+                $scope.unWatcherArray.forEach(unwatcher=> {
                     unwatcher();
                 });
             }
 
             $scope.unWatcherArray = [];
 
+            let watches = [];
 
-
-            $scope.compositionData().forEach(function (item) {
+            //removing dirty flag
+            $scope.compositionData().forEach((item, index) => {
                 delete item["#isDirty"];
             });
 
-
-            //readding the necessary watches
-            $scope.compositionData().forEach(function (value, index, array) {
-                //for eventually already existing items
-                const itemId = schemaService.getId(value, $scope.compositionlistschema);
-                const watches = crud_inputcommons.configureAssociationChangeEvents($scope,
-                    "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, itemId);
+            //readding watchers
+            //TODO: investigate joining loops
+            $scope.compositionData().forEach((item, index) => {
+                const itemId = schemaService.getId(item, $scope.compositionlistschema);
+                watches = watches.concat(crud_inputcommons.configureAssociationChangeEvents($scope,
+                    "compositiondata[{0}]".format(index), $scope.compositionlistschema.displayables, itemId));
                 watches.push(watchForDirty(index));
-
-                $scope.unWatcherArray = watches;
             });
-
-            
+            $scope.unWatcherArray = watches;
         };
 
 
@@ -1464,10 +1189,6 @@
             return !openInLine && $scope.isUpdate;
         }
 
-        function getModalCrudFormController() {
-            const crudModalForm = document.querySelector("#crudmodal").querySelector("#crudbodyform");
-            return !crudModalForm ? null : angular.element(crudModalForm).scope()["crudbodyform"];
-        }
 
         //#endregion
 
@@ -1495,12 +1216,14 @@
 
     };
 
-    CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$attrs", "$element", "$rootScope", "i18NService", "tabsService", "alertService",
+    CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$element", "$rootScope", "i18NService", "tabsService", "alertService",
             "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", "associationService",
             "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
-            "schemaService", "contextService", "fixHeaderService", "applicationService", "searchService"];
+            "schemaService", "contextService", "fixHeaderService", "applicationService", "searchService", "compositionCommons", "compositionListViewModel"];
 
     window.CompositionListController = CompositionListController;
+
+    app.controller("ExtractedCompositionListController", CompositionListController);
 
     app.directive("compositionList", ["contextService", function (contextService) {
 
@@ -1524,7 +1247,7 @@
                 ismodal: '@'
             },
 
-            controller: CompositionListController
+            controller: "ExtractedCompositionListController"
         };
     }]);
 })(angular, app);

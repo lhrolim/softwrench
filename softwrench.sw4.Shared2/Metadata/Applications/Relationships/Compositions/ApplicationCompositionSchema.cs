@@ -22,6 +22,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public ApplicationCompositionSchema() {
+            Events = new Dictionary<string, ApplicationEvent>();
         }
 
         public CompositionSchemas Schemas {
@@ -29,16 +30,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public IDictionary<string, ApplicationEvent> Events {
-            get {
-                return _events;
-            }
-            set {
-                _events = value;
-            }
+            get; set;
         }
 
 
-        private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
         private ISet<ApplicationEvent> _eventsSet;
         [JsonConverter(typeof(StringEnumConverter))]
         [DefaultValue(FetchType.Lazy)]
@@ -48,6 +43,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer,
             string printSchema, string dependantfields, FetchType fetchType, ISet<ApplicationEvent> events = null) {
+            Events = new Dictionary<string, ApplicationEvent>();
             _inline = inline;
             Renderer = renderer;
             _detailSchema = detailSchema;
@@ -56,7 +52,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             _eventsSet = events;
             FetchType = fetchType;
             if (events != null) {
-                _events = events.ToDictionary(f => f.Type, f => f);
+                Events = events.ToDictionary(f => f.Type, f => f);
             }
             if (dependantfields != null) {
                 var fields = dependantfields.Split(',');
@@ -118,7 +114,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
-        public string RequiredRelationshipExpression { get; set; }
+        public string RequiredRelationshipExpression {
+            get; set;
+        }
 
         public override string ToString() {
             return string.Format("DetailSchema: {0}, INLINE: {1}", _detailSchema, _inline);

@@ -64,27 +64,22 @@
         }
 
 
-        /**
-         * 
-         * @param {} parameters 
-         * 
-         * compositionData --> an object holding the composition related data:
-         * {
-         * 
-         *       dispatcherComposition --> the name of the composition (relationship) that initiated this save
-         *       operation --> indicates the operation performed on the composition, such as crud_delete, crud_update, crud_create
-         *       id --> the id of the composition item
-         * }
-         * 
-         * 
-         * @returns {Promise} 
-         */
+
 
         const defaultSaveParams = {
             refresh:false
         }
 
-        function save({compositionData,dispatcherComposition,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap} = defaultSaveParams) {
+        /**
+         * 
+         * @param {} parameters 
+         * 
+         * compositionData {CompositionOperation}
+         * 
+         * 
+         * @returns {Promise} 
+         */
+        function save({compositionData,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap} = defaultSaveParams) {
             const isComposition = crudContextHolderService.getActiveTab() !== null;
 
             if (dispatchedByModal == undefined) {
@@ -100,7 +95,6 @@
             return $injector.get('submitService').submit(schema, datamap, {
                 isComposition,
                 compositionData,
-                dispatcherComposition,
                 nextSchemaObj,
                 dispatchedByModal,
                 refresh,

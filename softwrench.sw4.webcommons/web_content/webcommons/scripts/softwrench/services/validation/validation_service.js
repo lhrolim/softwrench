@@ -94,7 +94,13 @@
         }
 
         function validate(schema, displayables, datamap, angularformerrors={}, innerValidation=false) {
-            const log = $log.get("validationService#validate");
+            const log = $log.get("validationService#validate",["validation"]);
+
+            if (!innerValidation) {
+                $log.get("validationService#validate",["save"]).info(`init validation for schema ${schema.schemaId} of application ${schema.applicationName}`);
+            }
+            
+
             let validationArray = [];
             const allDisplayables = schemaService.flattenDisplayables(displayables, null, datamap);
 
