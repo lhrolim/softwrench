@@ -57,6 +57,7 @@ angular.module('sw_layout')
         //change id of the filter sdao that it becomes reacheable via jquery
         saveFormSt = saveFormSt.replace('batchalias', 'batchalias2');
         bootbox.dialog({
+            onEscape: true,
             message: saveFormSt,
             title: "Save Batch",
             buttons: {
@@ -270,6 +271,7 @@ angular.module('sw_layout')
             }
 
             bootbox.dialog({
+                onEscape: true,
                 message: message,
                 title: column['label'],
                 buttons: buttons,

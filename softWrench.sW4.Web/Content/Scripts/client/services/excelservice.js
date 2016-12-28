@@ -23,6 +23,7 @@ angular.module('sw_layout')
             const exportModeCategoriesText = i18NService.get18nValue('_exportotoexcel.categories', 'Categories');
             
             bootbox.dialog({
+                onEscape: true,
                 message: "<form id='infos' action=''>" +
                     "<label class='control-label'>" + selectText + ":</label><br>" +
                     "<label class='control-label' for='gridonlyid'>" +

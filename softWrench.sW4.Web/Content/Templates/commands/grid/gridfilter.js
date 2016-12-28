@@ -53,6 +53,7 @@
                         },
                         message: saveFormSt,
                         title: "Save Filter",
+                        onEscape:true,
                         buttons: {
                             cancel: {
                                 label: $scope.i18N(".cancel", "Cancel"),
