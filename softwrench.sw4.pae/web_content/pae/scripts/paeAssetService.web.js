@@ -111,8 +111,7 @@
         //#region Service Instance
         const service = {
             initAssetDetailListener,
-            initAssetGridListener,
-            transportationAssetChanged
+            initAssetGridListener
         };
         return service;
         //#endregion
