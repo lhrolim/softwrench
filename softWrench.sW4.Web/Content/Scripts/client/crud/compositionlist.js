@@ -1160,14 +1160,14 @@
                 return $q.when();
             }
             const fields = $scope.parentdata;
-            crudContextHolderService.clearDetailDataResolved();
+            crudContextHolderService.clearCompositionsLoaded();
             const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
             searchDTO.pageNumber = pageNumber;
             searchDTO.pageSize = pageSize;
             return compositionService
                 .searchCompositionList($scope.relationship, $scope.parentschema, fields, searchDTO)
                 .then(result => $scope.refreshList(result[$scope.relationship]))
-                .finally(() => crudContextHolderService.setDetailDataResolved());
+                .finally((result) => crudContextHolderService.compositionsLoaded(result));
         };
 
         $scope.refreshList = function (compositionData) {

@@ -57,22 +57,41 @@
 
     it('composition record counts added', function () {
         // Get the record counts for the compositions
-        var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
-        var commlogLength = crudContextService.getTabRecordCount(commlogTab);
-        var worklogLength = crudContextService.getTabRecordCount(worklogTab);
+        const attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
+        const commlogLength = crudContextService.getTabRecordCount(commlogTab);
+        const worklogLength = crudContextService.getTabRecordCount(worklogTab);
         // Make sure they match the values from the mockCompositionResult
         expect(attachmentLength).toBe(5);
         expect(commlogLength).toBe(11);
         expect(worklogLength).toBe(10);
     });
 
+    it('details resolved check all flags', function () {
+        // simulating a change of a detail, disposing flags
+        crudContextService.disposeDetail();
+
+        expect(crudContextService.getDetailDataResolved()).toBeFalsy();
+        crudContextService.setDetailDataResolved();
+        expect(crudContextService.getDetailDataResolved()).toBeFalsy();
+        crudContextService.markAssociationsResolved();
+        expect(crudContextService.getDetailDataResolved()).toBeFalsy();
+        crudContextService.compositionsLoaded();
+        expect(crudContextService.getDetailDataResolved()).toBeTruthy();
+        crudContextService.clearCompositionsLoaded();
+        expect(crudContextService.getDetailDataResolved()).toBeFalsy();
+        crudContextService.compositionsLoaded();
+        expect(crudContextService.getDetailDataResolved()).toBeTruthy();
+        crudContextService.clearDetailDataResolved();
+        expect(crudContextService.getDetailDataResolved()).toBeFalsy();
+    });
+
     it('should remove record counts on disposeDetail', function () {
         // Dispose the values from the _crudContext
         crudContextService.disposeDetail();
         // Get the recond counts for the compositions
-        var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
-        var commlogLength = crudContextService.getTabRecordCount(commlogTab);
-        var worklogLength = crudContextService.getTabRecordCount(worklogTab);
+        const attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
+        const commlogLength = crudContextService.getTabRecordCount(commlogTab);
+        const worklogLength = crudContextService.getTabRecordCount(worklogTab);
         // Make sure they have been removed
         expect(attachmentLength).toBe(0);
         expect(commlogLength).toBe(0);
@@ -83,9 +102,9 @@
         // Call the gridLoaded function
         crudContextService.gridLoaded({});
         // Get the record counts for the compositions
-        var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
-        var commlogLength = crudContextService.getTabRecordCount(commlogTab);
-        var worklogLength = crudContextService.getTabRecordCount(worklogTab);
+        const attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
+        const commlogLength = crudContextService.getTabRecordCount(commlogTab);
+        const worklogLength = crudContextService.getTabRecordCount(worklogTab);
         // Make sure they have been removed
         expect(attachmentLength).toBe(0);
         expect(commlogLength).toBe(0);
@@ -96,9 +115,9 @@
         // Call the detailLoaded function
         crudContextService.detailLoaded();
         // Get the record counts for the compositions
-        var attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
-        var commlogLength = crudContextService.getTabRecordCount(commlogTab);
-        var worklogLength = crudContextService.getTabRecordCount(worklogTab);
+        const attachmentLength = crudContextService.getTabRecordCount(attachmentTab);
+        const commlogLength = crudContextService.getTabRecordCount(commlogTab);
+        const worklogLength = crudContextService.getTabRecordCount(worklogTab);
         // Make sure they have been removed
         expect(attachmentLength).toBe(0);
         expect(commlogLength).toBe(0);
@@ -106,8 +125,8 @@
     });
 
     it("clears selected buffer on app change", function () {
-        var row1 = { a: "1" };
-        var row2 = { a: "2" };
+        const row1 = { a: "1" };
+        const row2 = { a: "2" };
 
         // add rows
         crudContextService.addSelectionToBuffer("1", row1);
@@ -138,9 +157,9 @@
     });
 
     it("independent selected buffer from different panels", function () {
-        var row1 = { a: "1" };
-        var row2 = { a: "2" };
-        var row3 = { a: "3" };
+        const row1 = { a: "1" };
+        const row2 = { a: "2" };
+        const row3 = { a: "3" };
 
         // add rows
         crudContextService.addSelectionToBuffer("1", row1);
@@ -178,7 +197,7 @@
         crudContextService.updateLazyAssociationOption("reverse_", { value: "xxx", label: "yyy" }, true);
         dm = crudContextService.rootDataMap();
         expect(dm["reversetarget"]).toBe("xxx");
-        var result = crudContextService.fetchLazyAssociationOption("reverse_", "xxx");
+        const result = crudContextService.fetchLazyAssociationOption("reverse_", "xxx");
         expect(result).toEqual({ value: "xxx", label: "yyy" });
     });
 });

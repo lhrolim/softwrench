@@ -242,17 +242,19 @@
         }
 
         function setDetailDataResolved(panelid) {
+            $log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("marking details as resolved");
             getContext(panelid).detailDataResolved = true;
-            //            getContext(panelid).associationsResolved = true;
         }
 
-        function clearDetailDataResolved(panelid) {
+
+        function clearDetailDataResolved(panelid, relationshipData) {
+            $log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("cleaning detailresolved flag");
             getContext(panelid).detailDataResolved = false;
-            //            getContext(panelid).associationsResolved = false;
         }
 
         function getDetailDataResolved(panelid) {
-            return getContext(panelid).detailDataResolved;
+            const context = getContext(panelid);
+            return context.detailDataResolved && context.associationsResolved && context.compositionLoadComplete;
         }
 
         //#endregion
@@ -326,6 +328,7 @@
         }
 
         function compositionsLoaded(result, panelid) {
+            $log.get("crudContextService#compositionsLoaded", ["dirty", "detail", "composition"]).debug("marking compositions as resolved");
             const context = getContext(panelid);
             for (let relationship in result) {
                 const tab = result[relationship];
@@ -333,6 +336,11 @@
                 context.tabRecordCount[relationship] = tab.paginationData.totalCount;
             }
             context.compositionLoadComplete = true;
+        }
+
+        function clearCompositionsLoaded(panelid) {
+            const context = getContext(panelid);
+            context.compositionLoadComplete = false;
         }
 
 
@@ -484,6 +492,7 @@
         }
 
         function markAssociationsResolved(panelid) {
+            $log.get("crudContextService#markAssociationsResolved", ["dirty", "detail", "association"]).debug("marking associations as resolved");
             getContext(panelid).associationsResolved = true;
             $rootScope.$broadcast(JavascriptEventConstants.AssociationResolved, panelid);
         }
@@ -676,7 +685,8 @@
             detailLoaded,
             disposeDetail,
             gridLoaded,
-            compositionsLoaded
+            compositionsLoaded,
+            clearCompositionsLoaded
         };
         const modalService = {
             disposeModal,

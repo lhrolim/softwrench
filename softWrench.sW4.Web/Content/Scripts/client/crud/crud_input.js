@@ -150,7 +150,7 @@ app.directive('crudInput', ["contextService", "associationService", function (co
 
             //#region $dirty checking
             function handleDirtyChecking() {
-                var log = $log.get("crud_input#dirtychecking", ["datamap", "dirtycheck"]);
+                var log = $log.get("crud_input#dirtychecking", ["datamap", "dirtycheck", "detail"]);
                 var dirtyWatcherDeregister;
 
                 function dirtyWatcher(newDatamap, oldDatamap) {
@@ -159,6 +159,10 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                     if (log.isLevelEnabled("trace")) {
                         Object.keys(newDatamap)
                             .forEach(k => {
+                                if (!oldDatamap.hasOwnProperty(k)) {
+                                    log.trace("key", k, "not found on olddatamap marking as dirty");
+                                }
+
                                 if (angular.equals(newDatamap[k], oldDatamap[k])) return;
                                 if (!angular.isArray(newDatamap[k]) && !angular.isArray(oldDatamap[k])) {
                                     log.trace("changed", k, "from", oldDatamap[k], "to", newDatamap[k]);

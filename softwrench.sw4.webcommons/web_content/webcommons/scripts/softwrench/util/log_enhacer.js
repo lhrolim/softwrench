@@ -60,6 +60,10 @@ class LogHelper {
         this.level(items,"debug");
     }
 
+    trace(items) {
+        this.level(items, "trace");
+    }
+
     display() {
         let i = sessionStorage.length;
         const logs = {};
