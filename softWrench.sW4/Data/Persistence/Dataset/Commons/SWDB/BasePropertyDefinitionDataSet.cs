@@ -155,7 +155,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             if (minvalue != null) {
                 return minvalue <= outVar;
             }
-            return outVar <= maxvalue;
+            if (maxvalue != null) {
+                return outVar <= maxvalue;
+            }
+            return true;
         }
 
         /// <summary>
