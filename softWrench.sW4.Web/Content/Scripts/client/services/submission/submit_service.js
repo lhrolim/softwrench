@@ -103,7 +103,7 @@ class SubmitResult {
             const errorForm = this.crudContextHolderService.crudForm("#modal").$error;
             return this.validationService.validatePromise(schemaToSave, fields, errorForm).then(() => {
                 log.debug("modal form validated. applying modal informed save fn");
-                return $q.when(modalSavefn(fields, schemaToSave));
+                return this.$q.when(modalSavefn(fields, schemaToSave));
             });
         }
 
