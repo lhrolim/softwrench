@@ -153,5 +153,26 @@
 
     });
 
+    it('test modal submission', function (done) {
+
+
+        const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+        const datamap = { attr1: "x" };
+
+        crudContextHolderService.rootDataMap(null, datamap);
+        crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
+
+        crudContextHolderService.registerSaveFn(() => { return $q.when(); });
+        crudContextHolderService.modalLoaded(schemaWithOneRequiredField,datamap);
+
+        spyOn(validationService, "validatePromise").and.returnValue($q.when());
+
+        submitService.submit(schemaWithOneRequiredField, datamap, { dispatchedByModal :true}).then(() => {
+        }).catch(reason => {
+            expect(false).toBeTruthy();
+        }).finally(done);
+        $rootScope.$digest();
+    });
+
 
 });

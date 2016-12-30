@@ -23,6 +23,21 @@ class SchemaPojo {
         return schema;
     }
 
+    static InLineMultiAssetSchema() {
+        const field1 = FieldMetadataPojo.Hidden("multiid");
+        const field2 = FieldMetadataPojo.Hidden("siteid");
+        const assetField=  FieldMetadataPojo.ForAssociation("asset_", "assetnum");
+        const locField=  FieldMetadataPojo.ForAssociation("location_", "location");
+        const isPrimary = FieldMetadataPojo.Hidden("isprimary");
+        const isDirty = FieldMetadataPojo.Hidden("#isDirty");
+        isDirty.defaultLaborExpression = true;
+
+        const displayables = [field1,field2, isPrimary,assetField,locField,isDirty];
+        const schema = SchemaPojo.WithIdAndDisplayables("newlist",displayables,"multiassetlocci");
+        schema.stereotype = "compositionlist";
+        return schema;
+    }
+
 
     static WithId(id, applicationName = "sr") {
         return {

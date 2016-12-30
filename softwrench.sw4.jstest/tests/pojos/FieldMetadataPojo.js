@@ -5,7 +5,10 @@ class FieldMetadataPojo {
 
         return {
             associationKey,
+            attribute: target,
             target: target || associationKey,
+            type: "ApplicationAssociationDefinition",
+            rendererType: "lookup"
         };
     }
 

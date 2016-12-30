@@ -8,13 +8,14 @@
     var crudContextHolderService;
     var redirectService;
     var applicationService;
+    var crud_inputcommons;
 
     //init app --> first action usually
     beforeEach(() => {
 
 
         angular.mock.module('sw_layout');
-        angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_, _crudContextHolderService_, _redirectService_, _applicationService_) {
+        angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_, _crudContextHolderService_, _redirectService_, _applicationService_, _crud_inputcommons_) {
             $rootScope = _$rootScope_;
             mockScope = $rootScope.$new();
             const element = angular.element('<div></div>');
@@ -24,6 +25,7 @@
             redirectService = _redirectService_;
             modalService = _modalService_;
             applicationService = _applicationService_;
+            crud_inputcommons = _crud_inputcommons_;
 
             mockScope.relationship = "worklog_";
             mockScope.compositiondata = [];
@@ -167,7 +169,7 @@
             });
             //assuring that the composition was removed from the datamap in case of failure
             expect(mockScope.parentdata["worklog_"].length).toBe(1);
-            
+
         }).catch((err) => {
             expect(true).toBeFalsy();
         }).finally(done);
@@ -177,6 +179,55 @@
     });
 
 
+
+
+    it("Inline Composition Blank add new item if property says so. " +
+        "Check Watchers", done=> {
+
+            const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+            const rootDatamap = { "attr1": "x" };
+
+            mockScope.relationship = "multiassetlocci_";
+            mockScope.compositiondata = [];
+            const renderer = {
+                parameters: {
+                    mode: "batch",
+                    "composition.inline.startwithentry": "true"
+                },
+                rendererType: "TABLE"
+            };
+
+            const compschemas = new CompositionSchemas(null, SchemaPojo.InLineMultiAssetSchema());
+
+            const compositionDefinition = new ApplicationCompositionSchemaDTO(compschemas, true, renderer);
+
+            mockScope.compositionschemadefinition = compositionDefinition;
+
+            //setting parent data
+            crudContextHolderService.rootDataMap(null, rootDatamap);
+            crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
+
+            mockScope.parentdata = rootDatamap;
+
+            spyOn(crud_inputcommons, "configureAssociationChangeEvents").and.returnValue([]);
+
+            mockScope.init();
+
+            expect(crud_inputcommons.configureAssociationChangeEvents).toHaveBeenCalled();
+
+
+            expect(mockScope.compositionData().length).toBe(1);
+            const generatedId = mockScope.compositionData()[0].id;
+            expect(generatedId).not.toBeNull();
+            expect(mockScope.compositionData()[0]["#datamaptype"]).toBe('compositionitem');
+            expect(generatedId > 0).toBeFalsy();
+
+
+            $rootScope.$digest();
+            done();
+
+
+        });
 
 
 });

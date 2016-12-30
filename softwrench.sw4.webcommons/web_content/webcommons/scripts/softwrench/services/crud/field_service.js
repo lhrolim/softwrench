@@ -42,6 +42,10 @@
         }
 
 
+        var parseBooleanValue = function (attrValue) {
+            return attrValue == undefined || attrValue === "" ? true : attrValue.toLowerCase() === "true";
+        }
+
 
         var api = {
             isFieldHidden: function (datamap, application, fieldMetadata) {
@@ -141,7 +145,7 @@
                                 //                            datamap[target] = $filter('date')(new Date(), dateFormat)
                             } else {
                                 let parsedUserValue = userService.readProperty(value.defaultValue);
-                                if (displayable.rendererType == "numericinput" && parsedUserValue) {
+                                if (displayable.rendererType === "numericinput" && parsedUserValue) {
                                     parsedUserValue = parseInt(parsedUserValue);
                                 }
                                 if (displayable.rendererType === "checkbox" && parsedUserValue) {

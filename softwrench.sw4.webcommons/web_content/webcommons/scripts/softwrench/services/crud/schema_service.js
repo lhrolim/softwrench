@@ -307,7 +307,7 @@
             getTitle: getTitle,
             hasAnyFieldOnMainTab: hasAnyFieldOnMainTab,
             hasEditableProperty: hasEditableProperty,
-            isPropertyTrue: isPropertyTrue,
+            isPropertyTrue,
             locateDisplayableByQualifier: locateDisplayableByQualifier,
             locateJquerySectionElementByApp: locateJquerySectionElementByApp,
             nonTabFields: nonTabFields,

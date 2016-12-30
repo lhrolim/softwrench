@@ -336,7 +336,6 @@
             const newItem = {
                 //used to make a differentiation between a compositionitem datamap and a regular datamap
                 '#datamaptype': "compositionitem",
-                '#datamapidx': idx
             };
 
             //this id will be placed on the entity so that angular can use it to track. 
