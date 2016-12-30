@@ -31,6 +31,9 @@
             mockScope.compositiondata = [];
             mockScope.compositionschemadefinition = new ApplicationCompositionSchemaDTO(new CompositionSchemas(SchemaPojo.CompositionListSchema(), SchemaPojo.CompositionDetailSchema()));
 
+            const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+            const rootDatamap = { "attr1": "x" };
+
             $controller('ExtractedCompositionListController', {
                 $scope: mockScope,
                 $element: element
@@ -52,7 +55,6 @@
     it("Blank, Non inline, Composition List Add new Item--> parent invalid do not open the modal and redirect to main", done=> {
 
         const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
-        const deferred = $q.defer();
         const datamap = {};
 
         spyOn(validationService, "validatePromise").and.callThrough();
@@ -90,7 +92,7 @@
         const rootDatamap = { "attr1": "x" };
 
         const compositionDatamap = {
-            _iscreation: true
+            _iscreation: true,
         }
 
         spyOn(validationService, "validatePromise").and.callThrough();
@@ -178,36 +180,47 @@
 
     });
 
+    it("Batch-Inline Composition Blank", done=> {
+
+        const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+        const rootDatamap = { "attr1": "x" };
+
+        mockScope.relationship = "multiassetlocci_";
+        mockScope.compositiondata = [];
+
+        mockScope.compositionschemadefinition = CompositionDefinitionPojo.MultiAssetLocciBase();
+
+        //setting parent data
+        crudContextHolderService.rootDataMap(null, rootDatamap);
+        crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
+
+        mockScope.parentdata = rootDatamap;
+
+        spyOn(crud_inputcommons, "configureAssociationChangeEvents");
+
+        mockScope.init();
+
+        expect(crud_inputcommons.configureAssociationChangeEvents).not.toHaveBeenCalled();
 
 
+        expect(mockScope.compositionData().length).toBe(0);
 
-    it("Inline Composition Blank add new item if property says so. " +
+        $rootScope.$digest();
+        done();
+
+
+    });
+
+
+    it("Batch-Inline Composition Blank add new item if property says so. " +
         "Check Watchers", done=> {
 
-            const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
-            const rootDatamap = { "attr1": "x" };
+            
 
             mockScope.relationship = "multiassetlocci_";
             mockScope.compositiondata = [];
-            const renderer = {
-                parameters: {
-                    mode: "batch",
-                    "composition.inline.startwithentry": "true"
-                },
-                rendererType: "TABLE"
-            };
 
-            const compschemas = new CompositionSchemas(null, SchemaPojo.InLineMultiAssetSchema());
-
-            const compositionDefinition = new ApplicationCompositionSchemaDTO(compschemas, true, renderer);
-
-            mockScope.compositionschemadefinition = compositionDefinition;
-
-            //setting parent data
-            crudContextHolderService.rootDataMap(null, rootDatamap);
-            crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
-
-            mockScope.parentdata = rootDatamap;
+            mockScope.compositionschemadefinition = CompositionDefinitionPojo.MultiAssetLocciBase("true");
 
             spyOn(crud_inputcommons, "configureAssociationChangeEvents").and.returnValue([]);
 
@@ -217,17 +230,62 @@
 
 
             expect(mockScope.compositionData().length).toBe(1);
-            const generatedId = mockScope.compositionData()[0].id;
+            const generatedItem = mockScope.compositionData()[0];
+
+            const generatedId = generatedItem.id;
             expect(generatedId).not.toBeNull();
-            expect(mockScope.compositionData()[0]["#datamaptype"]).toBe('compositionitem');
+            expect(generatedItem[CompositionConstants.IsDirty]).toBeUndefined();
+            expect(generatedItem["#datamaptype"]).toBe('compositionitem');
+            
+
             expect(generatedId > 0).toBeFalsy();
 
 
             $rootScope.$digest();
             done();
-
-
         });
+
+
+
+    it("Batch-Inline Composition with entries. Add and Remove item", done=> {
+
+        mockScope.relationship = "multiassetlocci_";
+        mockScope.compositiondata = [{ "multiid": 10, siteid: "BEDFORD", "assetnum": "100", "location": "LOC_1", isprimary : true}, { "multiid": 11, siteid: "BEDFORD", "assetnum": "101", "location": "LOC_1", isprimary: false }];
+        mockScope.compositionschemadefinition = CompositionDefinitionPojo.MultiAssetLocciBase();
+
+        spyOn(crud_inputcommons, "configureAssociationChangeEvents").and.callThrough();
+
+        mockScope.init();
+
+        
+
+        expect(crud_inputcommons.configureAssociationChangeEvents).toHaveBeenCalled();
+
+        expect(mockScope.compositionData().length).toBe(2);
+
+        mockScope.addBatchItem();
+
+        expect(mockScope.compositionData().length).toBe(3);
+
+        expect(mockScope.compositionData()[2]["#isDirty"]).toBeUndefined();
+
+        mockScope.$digest();
+
+        mockScope.compositionData()[2]["assetnum"] = "1000";
+        mockScope.$digest();
+        expect(mockScope.compositionData()[2]["#isDirty"]).toBeTruthy();
+
+        mockScope.removeBatchItem(2);
+
+        expect(mockScope.compositionData().length).toBe(2);
+        
+
+        $rootScope.$digest();
+        done();
+
+
+    });
+   
 
 
 });

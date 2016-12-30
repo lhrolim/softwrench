@@ -162,12 +162,14 @@
         crudContextHolderService.rootDataMap(null, datamap);
         crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
 
-        crudContextHolderService.registerSaveFn(() => { return $q.when(); });
+        crudContextHolderService.registerSaveFn(() => { return $q.when({modalfunctionresult:true}); });
         crudContextHolderService.modalLoaded(schemaWithOneRequiredField,datamap);
 
         spyOn(validationService, "validatePromise").and.returnValue($q.when());
 
-        submitService.submit(schemaWithOneRequiredField, datamap, { dispatchedByModal :true}).then(() => {
+        submitService.submit(schemaWithOneRequiredField, datamap, { dispatchedByModal: true }).then((result) => {
+            //making sure the modal function is getting invoked and it´s result is being returned
+            expect(result.modalfunctionresult).toBeTruthy();
         }).catch(reason => {
             expect(false).toBeTruthy();
         }).finally(done);

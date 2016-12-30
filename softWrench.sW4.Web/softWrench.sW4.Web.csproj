@@ -793,6 +793,7 @@
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\datetime.js" />
     <Content Include="Content\Scripts\client\components\samelinepickers.js" />
+    <Content Include="Content\Scripts\client\constants\CompositionConstants.js" />
     <Content Include="Content\Scripts\client\constants\MetadataConstants.js" />
     <Content Include="Content\Scripts\client\controllers\metadata_builder.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />

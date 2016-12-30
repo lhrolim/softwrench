@@ -113,7 +113,7 @@
             return $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
                 //make sure any change on the composition marks it as dirty
                 if (oldValue !== newValue && $scope.compositiondata[index]) {
-                    $scope.compositiondata[index]["#isDirty"] = true;
+                    $scope.compositiondata[index][CompositionConstants.IsDirty] = true;
                 }
             }, true);
         }
@@ -736,7 +736,7 @@
                         //TODO: generate composition deletion method
                         var compositionItem = result.resultObject;
                         return eventService.onremoval_validation(compositionItem, $scope.compositionlistschema).then(() => {
-                            compositionItem["#deleted"] = 1;
+                            compositionItem[CompositionConstants.Deleted] = 1;
                             return $scope.save(compositionItem, "crud_delete");
                         });
                     });
@@ -882,7 +882,7 @@
                 }
 
                 //enforcing the dirtyness of the item
-                selecteditem["#isDirty"] = true;
+                selecteditem[CompositionConstants.IsDirty] = true;
                 const relationship = $scope.relationship;
 
                 const log = $log.getInstance("compositionlist#save", ["composition", "save", "submit"]);
@@ -983,7 +983,7 @@
                 }
                 //removing dirty flag
                 $scope.compositionData().forEach((item, index) => {
-                    delete item["#isDirty"];
+                    delete item[CompositionConstants.IsDirty];
                 });
 
                 initBatches(false);
