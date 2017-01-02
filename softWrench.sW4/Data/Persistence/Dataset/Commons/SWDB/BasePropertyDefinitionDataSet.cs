@@ -68,7 +68,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
             var lookupContext = _contextLookuper.LookupContext();
             var resultList = new List<Dictionary<string, object>>();
-            listResult.ResultObject.ForEach(async ah => await AddToResultList(resultList, ah, lookupContext));
+            listResult.ResultObject.ForEach(ah => AddToResultList(resultList, ah, lookupContext));
 
             var searchResult = new EntityRepository.SearchEntityResult {
                 ResultList = resultList,
@@ -78,13 +78,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return new CompositionFetchResult(compositions, null);
         }
 
-        private async Task AddToResultList(ICollection<Dictionary<string, object>> resultList, AttributeHolder ah, ContextHolder lookupContext) {
+        private void AddToResultList(ICollection<Dictionary<string, object>> resultList, AttributeHolder ah, ContextHolder lookupContext) {
             var dict = (Dictionary<string, object>)ah;
             object key;
             if (!dict.TryGetValue("FullKey", out key)) {
                 key = dict["fullkey"];
             }
-            dict["currentvalue"] = await _configService.Lookup<string>((string)key, lookupContext);
+
+            dict["currentvalue"] = AsyncHelper.RunSync(() => _configService.Lookup<string>((string)key, lookupContext));
             resultList.Add(dict);
         }
 
