@@ -6,11 +6,14 @@
 
 
 
-        constructor(crud_inputcommons,fieldService, schemaService, tabsService) {
+        constructor(crud_inputcommons, fieldService, schemaService, tabsService, eventService,formatService, crudContextHolderService) {
             this.crud_inputcommons = crud_inputcommons;
             this.fieldService = fieldService;
             this.schemaService = schemaService;
             this.tabsService = tabsService;
+            this.eventService = eventService;
+            this.formatService = formatService;
+            this.crudContextHolderService = crudContextHolderService;
         }
 
 
@@ -46,12 +49,83 @@
             return params;
         }
 
+
+        isSingleSelection (compositionlistSchema) {
+            return "single" === this.schemaService.getProperty(compositionlistSchema, "list.selectionstyle");
+        }
+
+        isBatch(compositionschemadefinition) {
+            return "batch" === compositionschemadefinition.rendererParameters["mode"];
+        }
+
+        /**
+          * Toggles the current selected item value, and sets all the others to false
+          * @param {} item 
+          * @param {} rowIndex 
+          * @returns {} 
+          */
+        handleSingleSelectionClick (compositionlistSchema,items, originalcompositiondata,item, rowIndex) {
+            if (!this.isSingleSelection(compositionlistSchema)) {
+                return;
+            }
+            const previousValue = item[CompositionConstants.Selected];
+
+            for (let i = 0; i < items.length; i++) {
+                items[i][CompositionConstants.Selected] = "false";
+                originalcompositiondata[i][CompositionConstants.Selected] = "false";
+            }
+            if (previousValue == undefined || "false" == previousValue) {
+                item[CompositionConstants.Selected] = "true";
+                //updating the original item, to make it possible to send custom action selection to server-side
+                originalcompositiondata[rowIndex][CompositionConstants.Selected] = "true";
+            }
+
+        }
+
+        /**
+         *  Method that gets called whenever a composition entry gets their detail data shown, for read-only purposes. This is not triggered upon a modal edition
+         *
+         */
+        doToggle ({clonedData, detailData,relationship,parentdata,compositionlistschema}, item, originalListItem, forcedState, informedId) {
+
+            const parentschema = this.crudContextHolderService.currentSchema();
+
+            const id = informedId ? informedId : item[compositionlistschema.idFieldName];
+
+            if (clonedData[id] == undefined) {
+                clonedData[id] = {
+                    data : this.formatService.doContentStringConversion(jQuery.extend(true, {}, item))
+                };
+            }
+
+            if (detailData[id] == undefined) {
+                detailData[id] = {
+                    expanded : false,
+                    data: this.formatService.doContentStringConversion(item),
+                };
+                detailData[id].data[CompositionConstants.IsCreation] = id == null || id < 0;
+            }
+            const newState = forcedState != undefined ? forcedState : !detailData[id].expanded;
+            detailData[id].expanded = newState;
+
+            if (newState) {
+                const parameters = {
+                    compositionItemId: id,
+                    compositionItemData: originalListItem,
+                    parentData: parentdata,
+                    parentSchema: parentschema
+                };
+                const compositionSchema = parentschema.cachedCompositions[relationship];
+                this.eventService.onviewdetail(compositionSchema, parameters);
+            }
+        }
+
       
 
 
     }
 
-    compositionListViewModel.$inject = ['crud_inputcommons','fieldService', 'schemaService', 'tabsService'];
+    compositionListViewModel.$inject = ['crud_inputcommons', 'fieldService', 'schemaService', 'tabsService', 'eventService', 'formatService', 'crudContextHolderService'];
 
     angular.module('sw_layout').service('compositionListViewModel', compositionListViewModel);
 

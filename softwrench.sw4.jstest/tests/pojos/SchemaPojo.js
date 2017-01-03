@@ -59,7 +59,8 @@ class SchemaPojo {
             properties: {},
             commandSchema: {},
             idFieldName: "id",
-            mode: "input"
+            mode: "input",
+            cachedCompositions: {}
         };
     }
 
@@ -69,6 +70,7 @@ class SchemaPojo {
             schemaId: id,
             displayables: [],
             events: {},
+            cachedCompositions: {},
             mode:"input"
         };
         result.events[eventName] = {

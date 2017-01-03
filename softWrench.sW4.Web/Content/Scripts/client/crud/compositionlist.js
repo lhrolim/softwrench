@@ -503,60 +503,8 @@
 
             //#region edition
             $scope.edit = function (datamap, actionTitle, forceModal) {
-                if (!!forceModal || shouldEditInModal()) {
-                    // Check that main tab has all required fields filled before opening modal
-                    const parentDatamap = crudContextHolderService.rootDataMap();
-                    const parentSchema = crudContextHolderService.currentSchema();
-
-                    return validationService.validatePromise(parentSchema, parentDatamap).catch(() => {
-                        redirectService.redirectToTab('main');
-                        return $q.reject();
-                    }).then(() => {
-                        return modalService.showPromise($scope.compositiondetailschema, datamap, { title: actionTitle }, $scope.parentdata, $scope.parentschema);
-                    }).then(modaldatamap => {
-                        return $scope.save(modaldatamap, null);
-                    });
-                } else {
-                    //TODO: switch to edit
-                    $scope.newDetail = true;
-                    $scope.selecteditem = datamap;
-                    $timeout(function () {
-                        $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
-                        $(".no-touch [rel=tooltip]").tooltip("hide");
-                    });
-                }
-                $scope.collapseAll();
+                return $scope.toggleDetailsAfterDataFetched(false, datamap, null, actionTitle, forceModal);
             };
-
-
-            $scope.doToggle = function (id, item, originalListItem, forcedState) {
-
-                if ($scope.clonedData[id] == undefined) {
-                    $scope.clonedData[id] = {};
-                    $scope.clonedData[id].data = formatService.doContentStringConversion(jQuery.extend(true, {}, item));
-                }
-
-                if ($scope.detailData[id] == undefined) {
-                    $scope.detailData[id] = {};
-                    $scope.detailData[id].expanded = false;
-                    $scope.detailData[id].data = formatService.doContentStringConversion(item);
-                    $scope.detailData[id].data["_iscreation"] = id == null || id < 0;
-                }
-                const newState = forcedState != undefined ? forcedState : !$scope.detailData[id].expanded;
-                $scope.detailData[id].expanded = newState;
-
-                if (newState) {
-                    const parameters = {};
-                    parameters.compositionItemId = id;
-                    parameters.compositionItemData = originalListItem;
-                    parameters.parentData = $scope.parentdata;
-                    parameters.parentSchema = $scope.parentschema;
-                    const compositionSchema = $scope.parentschema.cachedCompositions[$scope.relationship];
-                    eventService.onviewdetail(compositionSchema, parameters);
-                }
-            };
-
-
 
             $scope.hasDetailSchema = function () {
                 return !!$scope.compositiondetailschema;
@@ -567,24 +515,6 @@
                 return compositionId != null;
             }
 
-            $scope.handleSingleSelectionClick = function (item, rowIndex) {
-                if (!this.isSingleSelection()) {
-                    return;
-                }
-                const items = this.compositionData();
-                const previousValue = item["#selected"];
-                for (let i = 0; i < items.length; i++) {
-                    items[i]["#selected"] = "false";
-                    $scope.compositiondata[i]["#selected"] = "false";
-                }
-                if (previousValue == undefined || "false" == previousValue) {
-                    item["#selected"] = "true";
-                    //updating the original item, to make it possible to send custom action selection to server-side
-                    $scope.compositiondata[rowIndex]["#selected"] = "true";
-                }
-
-            }
-
 
             /// <summary>
             ///  Method called when an entry of the composition is clicked
@@ -593,66 +523,67 @@
             /// <param name="column">the specific column clicked,might be used by different implementations</param>
             $scope.toggleDetails = function (item, column, columnMode, $event, rowIndex) {
                 $scope.isUpdate = columnMode === "edit";
-                if ($scope.isUpdate) {
-                    eventService.onedit_validation(item, $scope.compositionlistschema).then(() => {
-                        $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
-                    });
-                } else {
-                    $scope.executeToggleDetails(item, column, columnMode, $event, rowIndex);
-                }
-
-
+                const initialPromise = columnMode === "edit" ? eventService.onedit_validation(item, $scope.compositionlistschema) : $q.when();
+                return initialPromise.then(() => {
+                    $scope.doToggleDetails(item, column, columnMode, $event, rowIndex);
+                });
             };
-            $scope.executeToggleDetails = function (item, column, columnMode, $event, rowIndex) {
+
+            $scope.executeCompositionCustomClickService = (fullServiceName,column,compositionlistschema,item,clonedItem) => {
+                // TODO: watch for siteid changes to recalculate the whole composition list
+
+                if (clonedItem.hasOwnProperty("siteid") && !clonedItem["siteid"]) {
+                    clonedItem.siteid = $scope.parentdata["siteid"];
+                }
+                const shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, compositionlistschema);
+                if (shouldToggle && $scope.hasDetailSchema()) {
+                    compositionListViewModel.doToggle($scope, clonedItem, item);
+                }
+                return $q.when();
+            }
+
+
+            $scope.doToggleDetails = function (item, column, columnMode, $event, rowIndex) {
                 // if there is a custom list click action, do it
-                const customAction = $scope.compositionlistschema.properties["list.click.event"];
+                const compositionlistschema = $scope.compositionlistschema;
+
+                const customAction = compositionlistschema.properties["list.click.event"];
                 if (customAction) {
-                    dispatcherService.invokeServiceByString(customAction, [item]);
-                    return;
+                    return dispatcherService.invokeServiceByString(customAction, [item]);
                 }
 
                 if (columnMode === "arrow" || columnMode === "singleselection") {
                     //to avoid second call
                     $event.stopImmediatePropagation();
                 }
-                this.handleSingleSelectionClick(item, rowIndex);
+                compositionListViewModel.handleSingleSelectionClick(compositionlistschema,this.compositionData(),$scope.compositionData, item, rowIndex);
                 const log = $log.get("compositionlist#toggleDetails", ["composition", "detail"]);
+                log.debug("dotoggleDetails init");
+
                 if (column != null && column.attribute == null) {
                     //for sections inside compositionlist, ex: reply/replyall of commlogs
-                    return;
+                    return $q.reject();
                 }
 
                 if (($scope.isBatch() && columnMode !== "arrow")) {
                     //For batch mode, as the items will be edited on the lines, 
                     //we cannot allow the details to be expanded unless the button is clicked on the left side of the table.
-                    return;
+                    return $q.reject();
                 }
-
-                var compositionId = item[$scope.compositionlistschema.idFieldName];
+                const compositionId = item[compositionlistschema.idFieldName];
                 const updating = parseBooleanValue($scope.collectionproperties.allowUpdate);
-                const fullServiceName = $scope.compositionlistschema.properties['list.click.service'];
+                const fullServiceName = compositionlistschema.properties['list.click.service'];
                 const clonedItem = angular.copy(item);
-                if (fullServiceName != null) {
-                    const compositionschema = $scope.compositionschemadefinition['schemas']['detail']; // TODO: watch for siteid changes to recalculate the whole composition list
 
-                    if (clonedItem.hasOwnProperty("siteid") && !clonedItem["siteid"]) {
-                        clonedItem.siteid = $scope.parentdata["siteid"];
-                    }
-                    const shouldToggle = commandService.executeClickCustomCommand(fullServiceName, clonedItem, column, $scope.compositionlistschema);
-                    if (shouldToggle && $scope.hasDetailSchema()) {
-                        doToggle(compositionId, clonedItem, item);
-                    }
-                    return;
+                if (fullServiceName != null) {
+                    return executeCompositionCustomClickService(fullServiceName, column, compositionlistschema,  item, clonedItem);
                 };
 
                 if (!$scope.hasDetailSchema()) {
-                    return;
+                    return $q.reject("no detail schema found");
                 }
 
                 $scope.isReadOnly = !updating;
-
-                // Need to disable all other rich text box for viewable real estate
-                //                $scope.collapseAll();
 
                 //update header/footer layout
                 $timeout(function () {
@@ -661,12 +592,12 @@
 
                 if ($scope.isBatch()) {
                     //batches should always pick details locally, therefore make sure to adjust extraprojectionfields on list schema
-                    return $scope.doToggle(compositionId, clonedItem, item);
+                    return compositionListViewModel.doToggle($scope, clonedItem, item);
                 }
                 const needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
                 if (!needServerFetching) {
                     //opening it using already existing cached instance
-                    return $scope.innerToggleDetails(false, compositionId, $scope.detailData[compositionId].data, item);
+                    return $scope.toggleDetailsAfterDataFetched(false,  $scope.detailData[compositionId].data, item);
                 }
 
                 if (!compositionId) {
@@ -676,34 +607,21 @@
                     return $q.reject();
                 }
 
-                const customParamNameString = $scope.compositionlistschema.properties["list.click.customparams"];
-                var customParams = null;
-                if (!!customParamNameString) {
-                    const names = customParamNameString.split(",");
-                    customParams = {};
-                    let index = 0;
-                    angular.forEach(names, name => {
-                        const value = item[name];
-                        if (!value) return;
-                        customParams[index++] = {
-                            key: name,
-                            value: value
-                        };
-                    });
-                }
+                const customParams =  $scope.getCustomParameters(compositionlistschema, item);
 
-                return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(function (result) {
+                return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(result => {
                     const datamap = result.resultObject;
                     if ($scope.isUpdate) {
-                        datamap["#edited"] = 1;
+                        datamap[CompositionConstants.Edited] = 1;
                     }
-                    $scope.innerToggleDetails(true, compositionId, datamap, item);
+                    return $scope.toggleDetailsAfterDataFetched(true,  datamap, item);
                 });
             };
 
-            $scope.innerToggleDetails = function (fromServer, id, item, originalListItem) {
-                if (!shouldEditInModal()) {
-                    $scope.doToggle(id, item, originalListItem);
+            $scope.toggleDetailsAfterDataFetched = function (fromServer, item, originalListItem, title, forceModal) {
+                if (!shouldEditInModal() && !forceModal) {
+                    $scope.collapseAll(item[$scope.compositionlistschema.idFieldName]);
+                    compositionListViewModel.doToggle($scope, item, originalListItem);
                     if (fromServer) {
                         $timeout(function () {
                             $rootScope.$broadcast(JavascriptEventConstants.BodyRendered, $element.parents('.tab-pane').attr('id'));
@@ -719,8 +637,9 @@
 
                 return validationService.validatePromise(parentSchema, parentDatamap).catch(() => {
                     redirectService.redirectToTab('main');
+                    return $q.reject();
                 }).then(() => {
-                    return modalService.showPromise($scope.compositiondetailschema, angular.copy(item), {}, $scope.parentdata, $scope.parentschema);
+                    return modalService.showPromise($scope.compositiondetailschema, angular.copy(item), { title }, $scope.parentdata, $scope.parentschema);
                 }).then(modaldatamap => {
                     return $scope.save(modaldatamap, null);
                 });
@@ -861,11 +780,7 @@
             };
 
             $scope.isBatch = function () {
-                return "batch" === $scope.compositionschemadefinition.rendererParameters["mode"];
-            }
-
-            $scope.isSingleSelection = function () {
-                return "single" === schemaService.getProperty($scope.compositionlistschema, "list.selectionstyle");
+                return compositionListViewModel.isBatch($scope.compositionschemadefinition);
             }
 
 
@@ -878,7 +793,7 @@
                 }
 
                 if (!action) {
-                    action = selecteditem["_iscreation"] ? "crud_create" : "crud_update";
+                    action = selecteditem[CompositionConstants.IsCreation] ? "crud_create" : "crud_update";
                 }
 
                 //enforcing the dirtyness of the item
@@ -1011,9 +926,13 @@
             }
 
 
-            $scope.collapseAll = function () {
-                $.each($scope.detailData, function (key, value) {
+            $scope.collapseAll = function (except) {
+                Object.keys($scope.detailData).forEach(key => {
+                    if (except && String(key) === String(except)) {
+                        return;
+                    }
                     $scope.detailData[key].expanded = false;
+
                 });
             }
 
@@ -1062,7 +981,7 @@
                     $.each(result.resultObject[$scope.relationship], function (key, value) {
                         //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
                         const itemId = value[$scope.compositiondetailschema.idFieldName];
-                        $scope.doToggle(itemId, value, compositionListData[itemId], true);
+                        compositionListViewModel.doToggle($scope, value, compositionListData[itemId], true,itemId);
                     });
                     $scope.wasExpandedBefore = true;
                 });
