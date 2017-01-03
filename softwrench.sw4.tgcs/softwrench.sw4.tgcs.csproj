@@ -32,19 +32,23 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.6151.15243, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.2.6156.25815, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.2.6212.7618, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6212.7618\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
@@ -108,8 +112,8 @@
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.0.0.1\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.1.6207.1737, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.1.6207.1737\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
@@ -169,8 +173,8 @@
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="WebGrease, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebGrease.1.1.0\lib\WebGrease.dll</HintPath>
+    <Reference Include="WebGrease, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -196,18 +200,9 @@
     <Content Include="metadata\tgcs\metadata.xml" />
     <Content Include="metadata\tgcs\properties.xml" />
     <Content Include="web_content\dashboard\scripts\dashboardauxService.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardcontroller.js" />
-    <Content Include="web_content\dashboard\scripts\dashboarddirective.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardgraphicpanel.js" />
-    <Content Include="web_content\dashboard\scripts\dashboardgridpanel.js" />
     <Content Include="web_content\dashboard\scripts\graphicpanelserviceprovider.js" />
     <Content Include="web_content\dashboard\scripts\swchartgraphicpanelservice.js" />
     <Content Include="web_content\dashboard\scripts\tableaugraphicpanelservice.js" />
-    <Content Include="web_content\dashboard\templates\createnewpanelbutton.html" />
-    <Content Include="web_content\dashboard\templates\Dashboard.html" />
-    <Content Include="web_content\dashboard\templates\dashboarddirective.html" />
-    <Content Include="web_content\dashboard\templates\dashboardgraphicpanel.html" />
-    <Content Include="web_content\dashboard\templates\dashboardgridpanel.html" />
     <Content Include="web_content\problem\templates\problemsection.html" />
     <Content Include="web_content\tgcs\scripts\toshibasr_service.js" />
     <Content Include="web_content\tgcs\scripts\toshiba_attachmentservice.js" />

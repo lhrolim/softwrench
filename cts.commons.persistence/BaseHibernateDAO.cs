@@ -14,12 +14,12 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using cts.commons.persistence.Event;
+using cts.commons.persistence.Transaction;
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using JetBrains.Annotations;
-using NHibernate.Util;
 using FlushMode = NHibernate.FlushMode;
 
 namespace cts.commons.persistence {
@@ -185,14 +185,12 @@ namespace cts.commons.persistence {
         }
 
         public async Task<List<Dictionary<string, string>>> FindByNativeQueryAsync(string queryst, params object[] parameters) {
-            IList<dynamic> queryResult;
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session, true);
-                    query.SetResultTransformer(NhTransformers.ExpandoObject);
-                    queryResult = await query.ListAsync<dynamic>();
-                }
-            }
+            var queryResult = await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session, true);
+                query.SetResultTransformer(NhTransformers.ExpandoObject);
+                return await query.ListAsync<dynamic>();
+            });
+
             if (queryResult == null || !queryResult.Any()) {
                 return new List<Dictionary<string, string>>();
             }
@@ -209,16 +207,14 @@ namespace cts.commons.persistence {
         public async Task<IList<dynamic>> FindByNativeQueryAsync(string queryst, ExpandoObject parameters, IPaginationData paginationData = null,
             string queryAlias = null) {
             var before = Stopwatch.StartNew();
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session, true, paginationData);
-                    query.SetResultTransformer(NhTransformers.ExpandoObject);
-                    var result = await query.ListAsync<dynamic>();
-                    GetLog()
-                        .Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
-                    return result;
-                }
-            }
+
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session, true, paginationData);
+                query.SetResultTransformer(NhTransformers.ExpandoObject);
+                var result = await query.ListAsync<dynamic>();
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
+                return result;
+            });
         }
 
         public T FindSingleByNativeQuery<T>(string queryst, params object[] parameters) where T : class {
@@ -226,12 +222,10 @@ namespace cts.commons.persistence {
         }
 
         public async Task<T> FindSingleByNativeQueryAsync<T>(string queryst, params object[] parameters) where T : class {
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session, true);
-                    return await query.UniqueResultAsync<T>();
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session, true);
+                return await query.UniqueResultAsync<T>();
+            });
         }
 
 
@@ -246,51 +240,94 @@ namespace cts.commons.persistence {
             return AsyncHelper.RunSync(() => ExecuteSqlAsync(sql, parameters));
         }
 
-        public async Task<int> ExecuteSqlAsync(string sql, params object[] parameters) {
+        public Task<int> ExecuteSqlAsync(string sql, params object[] parameters) {
+            return RunTransactionalAsync(async (p) => {
+                var query = p.Session.CreateSQLQuery(sql);
+                if (parameters != null) {
+                    for (var i = 0; i < parameters.Length; i++) {
+                        query.SetParameter(i, parameters[i]);
+                    }
+                }
+                var result = await query.ExecuteUpdateAsync();
+                await CommitTransactionAsync(p);
+
+                return result;
+            });
+        }
+
+        protected async Task<T> RunTransactionalAsync<T>(Func<TransactionPair, Task<T>> runabble) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            if (txContext.TransactionManaged) {
+                var session = GetSession();
+                var transaction = await BeginTransactionAsync(session);
+                return await runabble(new TransactionPair(session, transaction));
+            }
+
             using (var session = GetSession()) {
                 using (var transaction = await session.BeginTransactionAsync()) {
-                    var query = session.CreateSQLQuery(sql);
-                    if (parameters != null) {
-                        for (int i = 0; i < parameters.Length; i++) {
-                            query.SetParameter(i, parameters[i]);
-                        }
-                    }
-                    var result = await query.ExecuteUpdateAsync();
-                    await transaction.CommitAsync();
-
-                    return result;
+                    return await runabble(new TransactionPair(session, transaction));
                 }
             }
         }
 
+        protected async Task RunTransactionalAsync(Func<TransactionPair, Task> runabble) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            if (txContext.TransactionManaged) {
+                var session = GetSession();
+                var transaction = await BeginTransactionAsync(session);
+                await runabble(new TransactionPair(session, transaction));
+            }
 
+            using (var session = GetSession()) {
+                using (var transaction = await session.BeginTransactionAsync()) {
+                    await runabble(new TransactionPair(session, transaction));
+                }
+            }
+        }
 
-        //public int FindSingleByQuery(String queryst, params object[] parameters)  {
-        //    using (var session = GetSessionManager().OpenSession()) {
-        //        using (session.BeginTransaction()) {
-        //            var query = BuildQuery(queryst, parameters, session);
-        //            return (int)query.UniqueResult();
-        //        }
-        //    }
-        //}
+        protected T RunTransactional<T>(Func<TransactionPair, T> runabble) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            if (txContext.TransactionManaged) {
+                var session = GetSession();
+                var transaction = BeginTransaction(session);
+                return runabble(new TransactionPair(session, transaction));
+            }
+
+            using (var session = GetSession()) {
+                using (var transaction = session.BeginTransaction()) {
+                    return runabble(new TransactionPair(session, transaction));
+                }
+            }
+        }
+
+        protected void RunTransactional(Action<TransactionPair> runabble) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            if (txContext.TransactionManaged) {
+                var session = GetSession();
+                var transaction = BeginTransaction(session);
+                runabble(new TransactionPair(session, transaction));
+            }
+
+            using (var session = GetSession()) {
+                using (var transaction = session.BeginTransaction()) {
+                    runabble(new TransactionPair(session, transaction));
+                }
+            }
+        }
+
         public int CountByNativeQuery(string queryst, ExpandoObject parameters, string queryAlias = null) {
             return AsyncHelper.RunSync(() => CountByNativeQueryAsync(queryst, parameters, queryAlias));
         }
 
         public async Task<int> CountByNativeQueryAsync(string queryst, ExpandoObject parameters, string queryAlias = null) {
             var before = Stopwatch.StartNew();
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session, true, null, queryAlias);
-                    var result = Convert.ToInt32(await query.UniqueResultAsync());
-                    GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
-                    return result;
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session, true, null, queryAlias);
+                var result = Convert.ToInt32(await query.UniqueResultAsync());
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
+                return result;
+            });
         }
-
-
-
 
         public static class NhTransformers {
             public static readonly IResultTransformer ExpandoObject;
@@ -343,7 +380,29 @@ namespace cts.commons.persistence {
 
 
         public ISession GetSession() {
-            return _sessionManager.OpenSession();
+            return TransactionalInterceptor.GetContext(this).Session ?? _sessionManager.OpenSession();
+        }
+
+        public async Task<ITransaction> BeginTransactionAsync(ISession session) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            if (txContext.Transaction != null) {
+                return txContext.Transaction;
+            }
+            return await session.BeginTransactionAsync();
+        }
+
+        public ITransaction BeginTransaction(ISession session) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            return txContext.Transaction ?? session.BeginTransaction();
+        }
+
+        public async Task CommitTransactionAsync(TransactionPair pair) {
+            var txContext = TransactionalInterceptor.GetContext(this);
+            if (txContext.TransactionManaged) {
+                return;
+            }
+            await pair.Transaction.CommitAsync();
+            pair.Session.Close();
         }
 
 

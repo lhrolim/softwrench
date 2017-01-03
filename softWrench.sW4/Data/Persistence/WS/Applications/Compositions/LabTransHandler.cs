@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using Newtonsoft.Json.Linq;
@@ -26,8 +28,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
 
-
-        public void HandleLabors(CrudOperationData entity, object wo) {
+        [Transactional(DBType.Maximo)]
+        public virtual void HandleLabors(CrudOperationData entity, object wo) {
             
 
             // Filter work order materials for any new entries where matusetransid is null
@@ -142,7 +144,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             }
         }
 
-        public void DeleteLabtrans(string labtransid) {
+        [Transactional(DBType.Maximo)]
+        public virtual void DeleteLabtrans(string labtransid) {
             _maxDAO.ExecuteSql("delete from labtrans where labtransid = ? ", labtransid);
         }
 

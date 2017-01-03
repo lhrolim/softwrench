@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using NHibernate.Linq;
@@ -36,6 +38,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return await base.Execute(application, json, operationData);
         }
 
+        [Transactional(DBType.Swdb)]
         public override TargetResult DoExecute(OperationWrapper operationWrapper) {
             var id = string.IsNullOrEmpty(operationWrapper.Id) ? (int?)null : int.Parse(operationWrapper.Id);
             var entry = (ScriptEntry)null;

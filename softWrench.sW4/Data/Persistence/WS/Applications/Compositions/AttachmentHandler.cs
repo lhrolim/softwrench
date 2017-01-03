@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using log4net;
@@ -74,7 +76,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         //            return System.Convert.FromBase64String(base64String);
         //        };
 
-        public void HandleAttachmentAndScreenshot(MaximoOperationExecutionContext maximoTemplateData) {
+        [Transactional(DBType.Maximo)]
+        public virtual void HandleAttachmentAndScreenshot(MaximoOperationExecutionContext maximoTemplateData) {
             // Used to get user's current local time for screenshot
             var user = SecurityFacade.CurrentUser();
             // Entity structure contain all the attachment data

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
+using cts.commons.persistence.Transaction;
 using cts.commons.Util;
 using FluentMigrator.Infrastructure.Extensions;
 using log4net;
@@ -27,6 +28,8 @@ namespace softWrench.sW4.Web.SimpleInjector {
             container.Options.AllowOverridingRegistrations = true;
             container.Options.PropertySelectionBehavior = new ImportPropertySelectionBehavior();
 
+            container.InterceptWith<TransactionalInterceptor>(TransactionalHelper.IsTransactionable);
+
             DynamicScannerHelper.LoadDynamicTypes(singleDynComponent);
 
             RegisterComponents(container);
@@ -36,8 +39,6 @@ namespace softWrench.sW4.Web.SimpleInjector {
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
 
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-
-            
 
             // This is an extension method from the integration package as well.
             container.RegisterMvcAttributeFilterProvider();
@@ -90,7 +91,7 @@ namespace softWrench.sW4.Web.SimpleInjector {
 
                     var overridingAnnotation = finalType.GetCustomAttribute(typeof(OverridingComponentAttribute));
                     if (overridingAnnotation != null && finalType.BaseType != null) {
-                        SimpleInjectoScannerUtil.RegisterOverridingBaseClass(container,ApplicationConfiguration.ClientName, (OverridingComponentAttribute)overridingAnnotation, finalType, reg, name);
+                        SimpleInjectoScannerUtil.RegisterOverridingBaseClass(container, ApplicationConfiguration.ClientName, (OverridingComponentAttribute)overridingAnnotation, finalType, reg, name);
                     }
 
                     RegisterFromInterfaces(typeToRegister, tempDict, reg);
@@ -110,8 +111,6 @@ namespace softWrench.sW4.Web.SimpleInjector {
                 }
             }
         }
-
-   
 
         private static void RegisterClassItSelf(Container container, Type registration, Registration reg, string name) {
             if (!registration.IsPublic && !registration.IsNestedPublic) {
@@ -135,7 +134,5 @@ namespace softWrench.sW4.Web.SimpleInjector {
                 tempDict[type].Add(reg);
             }
         }
-
-     
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
@@ -66,7 +67,8 @@ namespace softWrench.sW4.Configuration.Services {
             return HandleConditions<T>(values, lookupContext, definition, ignoreCache);
         }
 
-        public async Task SetValue(string configKey, object value) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task SetValue(string configKey, object value) {
             var definition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
                 throw new InvalidOperationException($"Property {configKey} not found");
@@ -157,8 +159,8 @@ namespace softWrench.sW4.Configuration.Services {
             return GetConvertedValue<T>(definition.StringValue);
         }
 
-
-        public async Task<SortedSet<PropertyDefinition>> UpdateDefinitions(CategoryDTO category) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<SortedSet<PropertyDefinition>> UpdateDefinitions(CategoryDTO category) {
             var definitions = category.Definitions;
             var updatedDefinitions = new SortedSet<PropertyDefinition>();
             var condition = category.Condition == null ? null : category.Condition.RealCondition;
@@ -202,7 +204,8 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         // global property, ignores module, profile and conditions
-        public async Task UpdateGlobalDefinition(string fullKey, string value) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task UpdateGlobalDefinition(string fullKey, string value) {
             var definition = await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, fullKey);
             if (definition.PropertyDataType.Equals(PropertyDataType.BOOLEAN) && value != null) {
                 value = value.ToLower(); // newtonsoft json workaround it converts bool true to string "True" same for false

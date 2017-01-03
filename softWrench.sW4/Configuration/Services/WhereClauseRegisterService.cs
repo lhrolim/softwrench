@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using log4net;
 using softwrench.sw4.user.classes.entities;
@@ -73,8 +74,8 @@ namespace softWrench.sW4.Configuration.Services {
 
         }
 
-
-        public async Task<WCRegisterOperation> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<WCRegisterOperation> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
 
             if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
                 //we don´t need to register this property here.

@@ -1,4 +1,6 @@
 ﻿using System;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
@@ -8,7 +10,7 @@ using softWrench.sW4.Security.Init.Com;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Configuration {
-    class ComConfigurationRegistry : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
+    public class ComConfigurationRegistry : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
         private readonly IWhereClauseFacade _wcFacade;
         private readonly IConfigurationFacade _facade;
 
@@ -17,7 +19,8 @@ namespace softWrench.sW4.Data.Configuration {
             _facade = facade;
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (ApplicationConfiguration.ClientName != "manchester") {
                 return;
             }

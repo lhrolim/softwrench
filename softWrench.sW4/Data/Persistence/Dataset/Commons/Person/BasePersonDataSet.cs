@@ -4,6 +4,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
@@ -110,6 +111,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return result;
         }
 
+        [Transactional(DBType.Swdb)]
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             if (request.UserId != null && request.UserIdSitetuple == null) {
                 request.UserIdSitetuple = new Tuple<string, string>(request.UserId, null);
@@ -201,6 +203,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         /// <param name="isBatch"></param>
         /// <param name="userIdSite"></param>
         /// <returns></returns>
+        [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
             var isactive = json.StringValue("isactive").EqualsAny("1", "true");
             var isLocked = json.StringValue("locked").EqualsAny("1", "true");

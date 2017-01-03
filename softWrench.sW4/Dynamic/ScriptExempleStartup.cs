@@ -1,5 +1,6 @@
 ﻿using System;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 
@@ -53,7 +54,8 @@ return typeof(DynScriptExample);";
             _service = service;
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             var entry = _dao.FindSingleByQuery<ScriptEntry>(ScriptEntry.ScriptByName, Name);
             entry = entry ?? new ScriptEntry();
             ResetExampleEntry(entry);

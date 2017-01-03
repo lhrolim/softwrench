@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
@@ -14,6 +16,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
     public class BaseLabtransDataSet : MaximoApplicationDataSet {
 
+        [Transactional(DBType.Maximo)]
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
 
             TargetResult result;

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using Quartz.Util;
@@ -36,7 +38,8 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        public async Task Sync() {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task Sync() {
             var rowstamp = ConfigFacade.Lookup<long>(ConfigurationConstants.UserRowstampKey);
             var dto = BuildDTO();
             var maximoUsers = await FetchNew(rowstamp, EntityName, dto);

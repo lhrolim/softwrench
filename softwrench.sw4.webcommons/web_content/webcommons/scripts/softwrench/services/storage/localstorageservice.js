@@ -22,7 +22,7 @@
         }
 
         function validateParam(name, value) {
-            if (!value) throw new Error(`${name} cannot be null nor undefined`);
+            if (value !== 0 && !value) throw new Error(`${name} cannot be null nor undefined`);
         };
 
         function doGet(key) {

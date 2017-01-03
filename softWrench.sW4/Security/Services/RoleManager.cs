@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using cts.commons.persistence.Transaction;
 using softwrench.sw4.user.classes.entities;
 
 namespace softWrench.sW4.Security.Services {
@@ -47,23 +48,15 @@ namespace softWrench.sW4.Security.Services {
             return role;
         }
 
-        public static void DeleteRole(Role role)
-        {
+        public static void DeleteRole(Role role) {
             var dao = SWDBHibernateDAO.GetInstance();
-            using (ISession session = SWDBHibernateDAO.GetInstance().GetSession()) {
-                using (ITransaction transaction = session.BeginTransaction()) {
-                    dao.ExecuteSql("delete from sw_userprofile_role where role_id = ? ", role.Id);
-                    dao.ExecuteSql("delete from sw_user_customrole where role_id = ? ",role.Id);
-                    dao.Delete(role);
-                    Role oldRole = _activeRoles.FirstOrDefault(r => r.Id == role.Id);
-                    if (oldRole != null) {
-                        _activeRoles.Remove(oldRole);
-                    }
-                }
+            dao.ExecuteSql("delete from sw_userprofile_role where role_id = ? ", role.Id);
+            dao.ExecuteSql("delete from sw_user_customrole where role_id = ? ", role.Id);
+            dao.Delete(role);
+            var oldRole = _activeRoles.FirstOrDefault(r => r.Id == role.Id);
+            if (oldRole != null) {
+                _activeRoles.Remove(oldRole);
             }
-
-
         }
-
     }
 }

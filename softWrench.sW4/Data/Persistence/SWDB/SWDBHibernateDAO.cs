@@ -31,17 +31,15 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
 
 
         public IList<T> FindByNativeQuery<T>(string queryst, PaginationData paginationData = null, params object[] parameters) where T : class {
-            using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
-                    var query = BuildQuery(queryst, parameters, session, true);
-                    if (paginationData != null) {
-                        var pageSize = paginationData.PageSize;
-                        query.SetMaxResults(pageSize);
-                        query.SetFirstResult((paginationData.PageNumber - 1) * pageSize + 1);
-                    }
-                    return query.List<T>();
+            return RunTransactional((p) => {
+                var query = BuildQuery(queryst, parameters, p.Session, true);
+                if (paginationData != null) {
+                    var pageSize = paginationData.PageSize;
+                    query.SetMaxResults(pageSize);
+                    query.SetFirstResult((paginationData.PageNumber - 1) * pageSize + 1);
                 }
-            }
+                return query.List<T>();
+            });
         }
 
 

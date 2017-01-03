@@ -3,6 +3,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using log4net;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
@@ -16,7 +18,7 @@ using softwrench.sw4.api.classes.configuration;
 
 namespace softWrench.sW4.Configuration.Services {
 
-    class ConfigurationFacade : IConfigurationFacade, ISWEventListener<ApplicationStartedEvent>, IOrdered {
+    public class ConfigurationFacade : IConfigurationFacade, ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConfigurationFacade));
 
@@ -74,8 +76,8 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
 
-
-        public async Task RegisterAsync(string configKey, PropertyDefinition definition) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task RegisterAsync(string configKey, PropertyDefinition definition) {
             if (!_appStarted) {
                 _toRegister.Add(configKey, definition);
             } else {
@@ -83,7 +85,8 @@ namespace softWrench.sW4.Configuration.Services {
             }
         }
 
-        public async Task SetValue(string configkey, object value) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task SetValue(string configkey, object value) {
             if (!_appStarted) {
                 //TODO: Handle complex integration tests scenarios here, where the value is modified before application is up ==> config is not up yet
             }
@@ -104,7 +107,8 @@ namespace softWrench.sW4.Configuration.Services {
             return definition;
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             var definitions = _toRegister.Select(entry => SetKeys(entry.Key, entry.Value)).ToList();
             foreach (var toOverride in _toOverride) {
                 var originalDeclaration = definitions.FirstOrDefault(d => d.FullKey.Equals(toOverride.Key));

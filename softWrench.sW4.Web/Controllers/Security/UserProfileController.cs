@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using cts.commons.web.Attributes;
@@ -183,7 +185,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [HttpPost]
-        public BlankApplicationResponse ApplyMultiple(int profileId, [FromBody]List<string> usernames) {
+        [Transactional(DBType.Swdb)]
+        public virtual BlankApplicationResponse ApplyMultiple(int profileId, [FromBody]List<string> usernames) {
             var newProfile = _userProfileManager.FindById(profileId);
             var usersEnum = usernames as IList<string> ?? usernames.ToList();
 
@@ -209,7 +212,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         }
 
         [HttpPost]
-        public BlankApplicationResponse RemoveMultiple(int profileId, [FromBody]List<string> usernames) {
+        [Transactional(DBType.Swdb)]
+        public virtual BlankApplicationResponse RemoveMultiple(int profileId, [FromBody]List<string> usernames) {
             var usersEnum = usernames as IList<string> ?? usernames.ToList();
             if (usernames == null || !usernames.Any()) {
                 return new BlankApplicationResponse() {

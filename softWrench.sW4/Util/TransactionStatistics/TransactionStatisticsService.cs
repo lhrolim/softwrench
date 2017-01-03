@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 
 namespace softWrench.sW4.Util.TransactionStatistics {
     public class TransactionStatisticsService : ISingletonComponent {        
@@ -38,7 +40,8 @@ namespace softWrench.sW4.Util.TransactionStatistics {
         /// Adds a new <see cref="AuditSession"/>
         /// </summary>
         /// <param name="user">The user information <see cref="InMemoryUser"/></param>
-        public void AddSessionAudit(InMemoryUser user) {
+        [Transactional(DBType.Swdb)]
+        public virtual void AddSessionAudit(InMemoryUser user) {
             try {
                 if (user.DBUser.UserName.Equals("jobuser")) {
                     return;
@@ -61,7 +64,8 @@ namespace softWrench.sW4.Util.TransactionStatistics {
         /// Updates the session audit with the endtime in UTC
         /// </summary>
         /// <param name="sessionId">The session ID</param>
-        public void CloseSessionAudit(int sessionId) {
+        [Transactional(DBType.Swdb)]
+        public virtual void CloseSessionAudit(int sessionId) {
             try {
                 if (sessionId == 0) {
                     return;
@@ -87,7 +91,8 @@ namespace softWrench.sW4.Util.TransactionStatistics {
         /// <param name="operation">The operation performed. </param>
         /// <param name="start">The transaction start time</param>
         /// <param name="end">The transaction end time</param>
-        public void AuditTransaction(string name, string operation, DateTime start, DateTime end) {
+        [Transactional(DBType.Swdb)]
+        public virtual void AuditTransaction(string name, string operation, DateTime start, DateTime end) {
             try {
                 // Save the transaction audit
                 Task.Run(() => {

@@ -1,4 +1,6 @@
-﻿using cts.commons.simpleinjector.Events;
+﻿using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
+using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Util;
 
@@ -18,7 +20,8 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.configuration {
             _whereClauseFacade = whereClauseFacade;
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (ApplicationConfiguration.ClientName != "pae") return;
 
             var transportationCondition = new WhereClauseRegisterCondition() {

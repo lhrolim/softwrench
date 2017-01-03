@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Entities.SyncManagers;
@@ -73,10 +74,7 @@ namespace softWrench.sW4.Security.Services {
             _userProfileManager = userProfileManager;
         }
 
-
-
-
-
+        [Transactional(DBType.Swdb)]
         public virtual async Task<User> SaveUser(User user, bool updateMaximo = false) {
             bool isCreation = false;
             if (user.Id == null) {
@@ -110,7 +108,8 @@ namespace softWrench.sW4.Security.Services {
             return savedUser;
         }
 
-        public async Task ActivateAndDefinePassword(User user, string password) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task ActivateAndDefinePassword(User user, string password) {
             user.Password = AuthUtils.GetSha1HashData(password);
             await _userPasswordService.HandlePasswordHistory(user, user.Password);
 
@@ -153,6 +152,7 @@ namespace softWrench.sW4.Security.Services {
                 .FindByQuery<User>(querystring);
         }
 
+        [Transactional(DBType.Swdb)]
         public virtual async Task<User> CreateMissingDBUser(string userName, bool save = true) {
             var personid = userName.ToUpper();
             if (IsHapagProd) {
@@ -195,7 +195,8 @@ namespace softWrench.sW4.Security.Services {
             return user;
         }
 
-        public async Task<User> SyncLdapUser(User existingUser, bool isLdapSetup) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<User> SyncLdapUser(User existingUser, bool isLdapSetup) {
             if (existingUser.MaximoPersonId == null || existingUser.Systemuser) {
                 return existingUser;
             }
@@ -257,7 +258,8 @@ namespace softWrench.sW4.Security.Services {
             return null;
         }
 
-        public async Task Activate(int userId) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task Activate(int userId) {
             var dbUser = await _dao.FindByPKAsync<User>(userId);
 
             if (dbUser == null) {
@@ -270,7 +272,8 @@ namespace softWrench.sW4.Security.Services {
             await _dao.SaveAsync(dbUser);
         }
 
-        public async Task InActivate(int userId) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task InActivate(int userId) {
             var dbUser = await _dao.FindByPKAsync<User>(userId);
 
             if (dbUser == null) {
@@ -336,7 +339,8 @@ namespace softWrench.sW4.Security.Services {
             }
         }
 
-        public async Task ForcePasswordReset(string username) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task ForcePasswordReset(string username) {
             var user = await _dao.FindSingleByQueryAsync<User>(User.UserByUserName, username);
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(username));
@@ -352,7 +356,8 @@ namespace softWrench.sW4.Security.Services {
             return !await _ldapManager.IsLdapSetup() && (user.ChangePassword || passwordExpired);
         }
 
-        public async Task Unlock(string username) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task Unlock(string username) {
             var user = await _dao.FindSingleByQueryAsync<User>(User.UserByUserName, username);
             if (user == null) {
                 throw new InvalidOperationException("user {0} not found".Fmt(username));

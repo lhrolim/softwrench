@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -13,7 +15,8 @@ namespace softWrench.sW4.Configuration.Services {
             _dao = dao;
         }
 
-        public IList<Condition> RemoveCondition(WhereClauseRegisterCondition condition, string currentCategoryKey) {
+        [Transactional(DBType.Swdb)]
+        public virtual IList<Condition> RemoveCondition(WhereClauseRegisterCondition condition, string currentCategoryKey) {
             var values = _dao.FindByQuery<PropertyValue>(PropertyValue.ByCondition, condition);
             var canDeleteCondition = !condition.Global || values.Count <= 1;
             foreach (var propertyValue in values) {

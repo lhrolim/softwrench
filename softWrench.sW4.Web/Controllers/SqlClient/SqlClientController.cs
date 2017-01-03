@@ -11,6 +11,7 @@ using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Web.Http;
+using cts.commons.persistence.Transaction;
 
 namespace softWrench.sW4.Web.Controllers.SqlClient {
     /// <summary>
@@ -42,7 +43,8 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
         /// <returns>The <see cref="SqlQueryResultModel"/> result</returns>
         [HttpGet]
         [DynamicAdminRole]
-        public SqlQueryResultModel ExecuteQuery (string query, string datasource, int limit) { // SqlQueryViewModel viewModel) {
+        [Transactional(DBType.Swdb, DBType.Maximo)]
+        public virtual SqlQueryResultModel ExecuteQuery (string query, string datasource, int limit) { // SqlQueryViewModel viewModel) {
             var model = new SqlQueryResultModel();
             var timer = new Stopwatch();
             timer.Start();
@@ -54,20 +56,17 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
                 } else {
                     var dbType = (DBType)Enum.Parse(typeof(DBType), datasource, true);
 
-                    var sqlClient = dbType == DBType.Swdb ?
-                        new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>(typeof(ISWDBHibernateDAO))) :
-                        new SimpleSqlClient(SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>(typeof(IMaximoHibernateDAO)));
-
+                    var sqlClient = SimpleInjectorGenericFactory.Instance.GetObject<ISqlClient>();
                     if (sqlClient.IsDefinitionOrManipulation(query)) {
                         if ((dbType == DBType.Maximo && CheckEnvironment()) || dbType == DBType.Swdb) {
-                            var result = sqlClient.ExecuteUpdate(query);                           
+                            var result = sqlClient.ExecuteUpdate(query, dbType);                           
                             model.ExecutionMessage = string.Format("{0} records(s) affected", result);
                         } else {
                             model.HasErrors = true;
                             model.ExecutionMessage = "Cannot execute this query. Access denied.";
                         }
                     } else {
-                        var resultset = sqlClient.ExecuteQuery(query, limit);
+                        var resultset = sqlClient.ExecuteQuery(query, dbType, limit);
                         model.ResultSet = resultset;
                         model.ExecutionMessage = resultset != null ? string.Format("{0} records(s) returned", model.ResultSet.Count()) : "No records found.";
                         model.HasErrors = false;

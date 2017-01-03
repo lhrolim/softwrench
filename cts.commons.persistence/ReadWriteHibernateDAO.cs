@@ -19,13 +19,11 @@ namespace cts.commons.persistence {
         }
 
         public async Task<T> SaveAsync<T>(T ob) where T : class {
-            using (var session = GetSession()) {
-                using (var transaction = await session.BeginTransactionAsync()) {
-                    ob = await DoSave(ob, session);
-                    await transaction.CommitAsync();
-                    return ob;
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                ob = await DoSave(ob, p.Session);
+                await CommitTransactionAsync(p);
+                return ob;
+            });
         }
 
 
@@ -38,16 +36,16 @@ namespace cts.commons.persistence {
                 return items.ToList<T>();
             }
             var result = new List<T>(items.Count<T>());
-            using (var session = GetSessionManager().OpenSession()) {
-                using (var transaction = await session.BeginTransactionAsync()) {
-                    // adding the saved items to a new collection 
-                    // because they can't replace the original's in an iteration 
-                    foreach (var item in items) {
-                        result.Add(await DoSave(item, session));
-                    }
-                    await transaction.CommitAsync();
+
+            result = await RunTransactionalAsync(async (p) => {
+                // adding the saved items to a new collection 
+                // because they can't replace the original's in an iteration 
+                foreach (var item in items) {
+                    result.Add(await DoSave(item, p.Session));
                 }
-            }
+                await CommitTransactionAsync(p);
+                return result;
+            });
             return result;
         }
 
@@ -75,20 +73,18 @@ namespace cts.commons.persistence {
 
 
         public void DeleteCollection(IEnumerable<object> collection) {
-
+            AsyncHelper.RunSync(() => DeleteCollectionAsync(collection));
         }
 
         public async Task DeleteCollectionAsync(IEnumerable<object> collection) {
-            using (var session = GetSession()) {
-                using (var transaction = await session.BeginTransactionAsync()) {
-                    if (collection != null) {
-                        foreach (var element in collection) {
-                            await session.DeleteAsync(element);
-                        }
-                        await transaction.CommitAsync();
+            await RunTransactionalAsync(async (p) => {
+                if (collection != null) {
+                    foreach (var element in collection) {
+                        await p.Session.DeleteAsync(element);
                     }
+                    await CommitTransactionAsync(p);
                 }
-            }
+            });
         }
 
         public void Delete(object ob) {
@@ -96,12 +92,10 @@ namespace cts.commons.persistence {
         }
 
         public async Task DeleteAsync(object ob) {
-            using (var session = GetSession()) {
-                using (var transaction = await session.BeginTransactionAsync()) {
-                    await session.DeleteAsync(ob);
-                    await transaction.CommitAsync();
-                }
-            }
+            await RunTransactionalAsync(async (p) => {
+                await p.Session.DeleteAsync(ob);
+                await CommitTransactionAsync(p);
+            });
         }
 
         public T FindByPK<T>(Type type, object id, params string[] toEager) {
@@ -110,25 +104,21 @@ namespace cts.commons.persistence {
 
         public async Task<T> FindByPKAsync<T>(object id, params string[] toEager) {
             var type = typeof(T);
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var ob = session.LoadAsync(type, id);
-                    for (int i = 0; i < toEager.Length; i++) {
-                        object property = BaseReflectionUtil.GetProperty(ob, toEager[i]);
-                        NHibernateUtil.Initialize(property);
-                    }
-                    return (T)await ob;
+            return await RunTransactionalAsync(async (p) => {
+                var ob = p.Session.LoadAsync(type, id);
+                for (int i = 0; i < toEager.Length; i++) {
+                    object property = BaseReflectionUtil.GetProperty(ob, toEager[i]);
+                    NHibernateUtil.Initialize(property);
                 }
-            }
+                return (T)await ob;
+            });
         }
 
         public T EagerFindByPK<T>(Type type, object id) {
-            using (var session = GetSession()) {
-                using (session.BeginTransaction()) {
-                    var ob = session.Get(type, id);
-                    return (T)ob;
-                }
-            }
+            return RunTransactional((p) => {
+                var ob = p.Session.Get(type, id);
+                return (T)ob;
+            });
         }
 
 
@@ -137,12 +127,10 @@ namespace cts.commons.persistence {
         }
 
         public async Task<T> FindSingleByQueryAsync<T>(string queryst, params object[] parameters) {
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session);
-                    return (T)await query.UniqueResultAsync();
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session);
+                return (T)await query.UniqueResultAsync();
+            });
         }
 
 
@@ -151,32 +139,26 @@ namespace cts.commons.persistence {
         }
 
         public async Task<IList<T>> FindByQueryAsync<T>(string queryst, params object[] parameters) where T : class {
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session);
-                    return await query.ListAsync<T>();
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session);
+                return await query.ListAsync<T>();
+            });
         }
 
         public async Task<IList<T>> FindByQueryWithLimitAsync<T>(string queryst, int limit, params object[] parameters) where T : class {
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery(queryst, parameters, session);
-                    query.SetMaxResults(limit);
-                    return await query.ListAsync<T>();
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery(queryst, parameters, p.Session);
+                query.SetMaxResults(limit);
+                return await query.ListAsync<T>();
+            });
         }
 
         public async Task<IList<T>> FindAllAsync<T>() where T : class {
             var type = typeof(T);
-            using (var session = GetSession()) {
-                using (await session.BeginTransactionAsync()) {
-                    var query = BuildQuery("from " + type.Name, (object[])null, session);
-                    return await query.ListAsync<T>();
-                }
-            }
+            return await RunTransactionalAsync(async (p) => {
+                var query = BuildQuery("from " + type.Name, (object[])null, p.Session);
+                return await query.ListAsync<T>();
+            });
         }
 
 

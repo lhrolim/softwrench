@@ -12,6 +12,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
@@ -114,7 +116,8 @@ namespace softWrench.sW4.Configuration.Services {
             AsyncHelper.RunSync(() => RegisterAsync(applicationName, query, condition, validate));
         }
 
-        public async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false) {
             var result = Validate(applicationName,query, validate, condition);
             if (!result) {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
@@ -189,9 +192,9 @@ namespace softWrench.sW4.Configuration.Services {
             return true;
         }
 
-    
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             foreach (var entry in _toRegister) {
                 var localEntry = entry;
                 AsyncHelper.RunSync(() => _whereClauseRegisterService.DoRegister(localEntry.Item1, localEntry.Item2, localEntry.Item3));
