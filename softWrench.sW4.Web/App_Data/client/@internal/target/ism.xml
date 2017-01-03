@@ -24,7 +24,7 @@
 
     <attributes>
       <const targetpath="Transaction/TransactionRouting" value="MX::HLCINC"/>
-      <const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-SM-DE-TAT-TPS-PROJECTMANAG"/>
+      <const targetpath="Problem/ProviderAssignedGroup/Group/GroupID" value="I-EUS-DE-CSC-SDK-HLCFRONTDESKI"/>
       <const targetpath="Problem/ProviderAssignedGroup/Group/Address/OrganizationID" value="ITD-ESS6"/>
       <const targetpath="Problem/ProviderAssignedGroup/Group/Address/LocationID" value="ESS6"/>
       <const targetpath="Problem/System" value="21390000" />

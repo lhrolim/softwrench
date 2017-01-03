@@ -49,7 +49,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.SR {
 
         // https://controltechnologysolutions.atlassian.net/browse/HAP-839
         protected override string GetOverridenOwnerGroup(bool isCreation, CrudOperationData jsonObject) {
-            return "I-SM-DE-TAT-TPS-PROJECTMANAG";
+            return "I-EUS-DE-CSC-SDK-HLCFRONTDESKI";
         }
     }
 }
