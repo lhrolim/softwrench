@@ -922,7 +922,7 @@
                     }
                 }
 
-                return $scope.noupdateallowed && $scope.compositionData().length > 1;
+                return $scope.compositionData().length > 1;
             }
 
 
@@ -959,32 +959,14 @@
             };
 
      
-            this.expandAll = function () {
-                if ($scope.wasExpandedBefore) {
-                    $.each($scope.detailData, function (key, value) {
-                        $scope.detailData[key].expanded = true;
-                    });
-                    return;
-                }
-
-                var compositionListData = [];
-                for (let i = 0; i < $scope.compositiondata.length; i++) {
-                    const data = $scope.compositiondata[i];
-                    const id = data[$scope.compositiondetailschema.idFieldName];
-                    compositionListData[id] = data;
-                }
-                const parameters = compositionListViewModel.buildExpandAllParams($scope.relationship, $scope.parentSchema, $scope.compositionlistschema, $scope.compositiondetailschema);
-
-                const urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(parameters)));
-                return $http.get(urlToInvoke).then(function (response) {
-                    const result = response.data;
-                    $.each(result.resultObject[$scope.relationship], function (key, value) {
-                        //TODO: This function is not utilizing the needServerFetching optimization as found in the toggleDetails function
-                        const itemId = value[$scope.compositiondetailschema.idFieldName];
-                        compositionListViewModel.doToggle($scope, value, compositionListData[itemId], true,itemId);
-                    });
+            $scope.expandAll = function() {
+                return compositionListViewModel.expandAll($scope).then(() => {
                     $scope.wasExpandedBefore = true;
                 });
+            }
+
+            this.expandAll = function () {
+                return $scope.expandAll();
             };
 
 
@@ -997,7 +979,7 @@
             };
 
             $scope.isEnabledToExpand = function () {
-                return $scope.isReadonly && $scope.compositiondetailschema != null &&
+                return !this.isBatch() && $scope.isReadonly && $scope.compositiondetailschema != null &&
                 ($scope.compositionlistschema.properties.expansible == undefined ||
                     $scope.compositionlistschema.properties.expansible == 'true');
             };

@@ -12,12 +12,15 @@
     var compositionService;
     var compositionListViewModel;
 
+    var $httpBackend;
+
     //init app --> first action usually
     beforeEach(() => {
 
 
         angular.mock.module('sw_layout');
-        angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_, _crudContextHolderService_, _redirectService_, _applicationService_, _crud_inputcommons_, _compositionService_, _compositionListViewModel_) {
+        angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_,
+            _crudContextHolderService_, _redirectService_, _applicationService_, _crud_inputcommons_, _compositionService_, _compositionListViewModel_, _$httpBackend_) {
             $rootScope = _$rootScope_;
             mockScope = $rootScope.$new();
             const element = angular.element('<div></div>');
@@ -30,6 +33,7 @@
             crud_inputcommons = _crud_inputcommons_;
             compositionService = _compositionService_;
             compositionListViewModel = _compositionListViewModel_;
+            $httpBackend = _$httpBackend_;
 
             mockScope.relationship = "worklog_";
             mockScope.compositiondata = [];
@@ -144,9 +148,9 @@
  */
     it("Blank, Non inline, Composition List Add new Item--> parent valid --> composition valid --> assure first save", done=> {
 
-        const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+
         const serverSideDefer = $q.defer();
-        const rootDatamap = { "attr1": "x" };
+
 
         const compositionDatamap = {
             _iscreation: true
@@ -160,7 +164,9 @@
         serverSideDefer.resolve();
 
         //setting parent data
+        const rootDatamap = { "attr1": "x" };
         crudContextHolderService.rootDataMap(null, rootDatamap);
+        const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
         crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
         mockScope.parentdata = rootDatamap;
 
@@ -339,12 +345,49 @@
         }).catch(err => {
             console.log(err);
             expect(false).toBeTruthy();
-            }).finally(done);
+        }).finally(done);
 
         $rootScope.$digest();
 
 
     });
+
+    it("test expand all", done => {
+
+        //setting parent data
+        const rootDatamap = { "attr1": "x", "id": 10 };
+        crudContextHolderService.rootDataMap(null, rootDatamap);
+        const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+        crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
+        mockScope.parentdata = rootDatamap;
+
+        mockScope.relationship = "worklog_";
+
+        
+        mockScope.compositionschemadefinition = new ApplicationCompositionSchemaDTO(new CompositionSchemas(WorklogPojo.DetailSchema(), WorklogPojo.ListSchema()));
+        mockScope.compositiondata = [WorklogPojo.ListItem("1", "test1", "100", "sr"), WorklogPojo.ListItem("2", "test2", "100", "sr")];
+
+        const detailCompsResult = { resultObject: { worklog_: [WorklogPojo.DetailItem("1", "test1", "ld 1", "100", "sr"), WorklogPojo.DetailItem("2", "test2", "ld 2", "100", "sr")] } }
+
+        spyOn(compositionListViewModel, "doToggle").and.callThrough();
+
+        mockScope.init();
+
+        $httpBackend.expectGET("/api/generic/Composition/ExpandCompositions?options.printMode=true&options.compositionsToExpand=worklog_%3Dlazy&application=sr&detailRequest.key.schemaId=detail&detailRequest.key.mode=input&detailRequest.key.platform=web&detailRequest.id=10").respond(detailCompsResult);
+
+        mockScope.expandAll().then(() => {
+            expect(compositionListViewModel.doToggle).toHaveBeenCalled();
+            //called twice
+            expect(compositionListViewModel.doToggle).callCount.toBe(2);
+            expect(mockScope.wasExpandedBefore).toBeTruthy();
+        }).catch(err => { console.log(err); })
+            .finally(done);
+
+
+        $httpBackend.flush();
+
+        $rootScope.$digest();
+    })
 
 
 
