@@ -13,6 +13,7 @@ class ResponsePojo {
         };
     }
 
+
     static CrudDetailResponse() {
         return ResponsePojo.CrudCreateCachedBaseResponse();
     }

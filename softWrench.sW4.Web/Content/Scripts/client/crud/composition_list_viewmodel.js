@@ -6,7 +6,7 @@
 
 
 
-        constructor(crud_inputcommons, fieldService, schemaService, tabsService, eventService,formatService, crudContextHolderService) {
+        constructor($q,$http,crud_inputcommons, fieldService, schemaService, tabsService, eventService,formatService, crudContextHolderService) {
             this.crud_inputcommons = crud_inputcommons;
             this.fieldService = fieldService;
             this.schemaService = schemaService;
@@ -14,6 +14,8 @@
             this.eventService = eventService;
             this.formatService = formatService;
             this.crudContextHolderService = crudContextHolderService;
+            this.$q = $q;
+            this.$http = $http;
         }
 
 
@@ -27,26 +29,60 @@
             });
         }
 
-        buildExpandAllParams(relationship,parentSchema, parentdata, compositionlistschema, compositiondetailschema) {
-            const params = {
-                key: {},
-                options: {},
-                application: parentSchema.applicationName
+        buildExpandAllParams(relationship, parentdata, compositionlistschema, compositiondetailschema) {
+
+            const parentSchema = this.crudContextHolderService.currentSchema();
+
+            const key = {
+                schemaId : parentSchema.schemaId,
+                mode: parentSchema.mode,
+                platform: platform()
             };
-            const key = {};
-            params.detailRequest.key = key;
-            params.detailRequest.id = this.fieldService.getId(parentdata, parentSchema);
-            key.schemaId = parentSchema.schemaId;
-            key.mode = parentSchema.mode;
-            key.platform = platform();
-            const compositionsToExpand = {};
-            compositionsToExpand[relationship] = { schema: compositionlistschema, value: true };
+
+            const params = {
+                options: {printMode:true},
+                application: parentSchema.applicationName,
+                detailRequest: {
+                    key,
+                    id:this.fieldService.getId(parentdata, parentSchema)
+                }
+            };
+            
+            const compositionsToExpand = {
+                [relationship]:{ schema: compositionlistschema, value: true }
+            };
             //                var compositionsToExpand = { 'worklog_': true };
 
-            params.options.compositionsToExpand = tabsService.buildCompositionsToExpand(compositionsToExpand, parentSchema,
+            params.options.compositionsToExpand = this.tabsService.buildCompositionsToExpand(compositionsToExpand, parentSchema,
                 parentdata, compositiondetailschema.schemaId);
-            params.options.printMode = true;
             return params;
+        }
+
+        expandAll({clonedData,wasExpandedBefore,detailData,compositiondata,compositiondetailschema,relationship,parentdata,compositionlistschema}) {
+            if (wasExpandedBefore) {
+            Object.keys(detailData).forEach(key => {
+                detailData[key].expanded = true;
+            });
+            return this.$q.reject();
+        }
+
+        var compositionListData = [];
+        for (let i = 0; i < compositiondata.length; i++) {
+            const data = compositiondata[i];
+            const id = data[compositiondetailschema.idFieldName];
+            compositionListData[id] = data;
+        }
+            const parameters = this.buildExpandAllParams(relationship,parentdata, compositionlistschema, compositiondetailschema);
+
+            const urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(parameters)));
+            return this.$http.get(urlToInvoke).then(response=> {
+                const result = response.data;
+                result.resultObject[relationship].forEach(value => {
+                    const itemId = value[compositiondetailschema.idFieldName];
+                    this.doToggle({clonedData, detailData,relationship,parentdata,compositionlistschema}, value, compositionListData[itemId], true, itemId);
+                });
+                
+            });
         }
 
 
@@ -125,7 +161,7 @@
 
     }
 
-    compositionListViewModel.$inject = ['crud_inputcommons', 'fieldService', 'schemaService', 'tabsService', 'eventService', 'formatService', 'crudContextHolderService'];
+    compositionListViewModel.$inject = ["$q","$http",'crud_inputcommons', 'fieldService', 'schemaService', 'tabsService', 'eventService', 'formatService', 'crudContextHolderService'];
 
     angular.module('sw_layout').service('compositionListViewModel', compositionListViewModel);
 

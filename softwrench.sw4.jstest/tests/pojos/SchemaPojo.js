@@ -51,14 +51,14 @@ class SchemaPojo {
         };
     }
 
-    static WithIdAndDisplayables(id, displayables,applicationName = "sr") {
+        static WithIdAndDisplayables(id, displayables,applicationName = "sr", idFieldName= "id") {
         return {
             applicationName:applicationName,
             schemaId: id,
             displayables: displayables,
             properties: {},
             commandSchema: {},
-            idFieldName: "id",
+            idFieldName: idFieldName,
             mode: "input",
             cachedCompositions: {}
         };
