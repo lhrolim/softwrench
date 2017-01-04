@@ -402,7 +402,9 @@ namespace cts.commons.persistence {
                 return;
             }
             await pair.Transaction.CommitAsync();
-            pair.Session.Close();
+            if (pair.Session != null && pair.Session.IsOpen) {
+                pair.Session.Close();
+            }
         }
 
 
