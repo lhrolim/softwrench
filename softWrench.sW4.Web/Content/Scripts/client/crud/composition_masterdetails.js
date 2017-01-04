@@ -17,8 +17,8 @@
                 title: '@'
             },
 
-            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService", "$q", "compositionService",
-                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService, $q, compositionService) {
+            controller: ["$scope", "$element", "$attrs", "formatService", "schemaService", "iconService", "eventService", "i18NService", "controllerInheritanceService", "fieldService", "$timeout", "richTextService", "$q", "compositionService", "compositionListViewModel",
+                function ($scope, $element, $attrs, formatService, schemaService, iconService, eventService, i18NService, controllerInheritanceService, fieldService, $timeout, richTextService, $q, compositionService, compositionListViewModel) {
 
                     var log = $log.getInstance('sw4.composition.master/detail',["composition","init"]);
 
@@ -34,7 +34,7 @@
                     function onDetailDataResolved(selectedEntry, resolvedDetailData) {
                         //close the current record
                         if ($scope.getDetailDatamap) {
-                            var currentMaster = $scope.getMaster($scope.getDetailDatamap);
+                            const currentMaster = $scope.getMaster($scope.getDetailDatamap);
                             currentMaster.open = false;
                             //update the first message if another message is viewed
                             if (!$scope.getDetailDatamap.read) {
@@ -62,8 +62,9 @@
 
                         // hit server
                         return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
-                            .then(function(result) {
-                                $scope.doToggle(compositionId, result.resultObject, entry);
+                            .then(result=> {
+                                compositionListViewModel.doToggle($scope, result.resultObject, entry, null, compositionId);
+                                $(document.body).animate({ scrollTop: 0 });
                                 return onDetailDataResolved(entry, $scope.detailData[compositionId].data);
                             });
                     };
@@ -77,7 +78,7 @@
                     };
 
                     $scope.formattedValue = function (value, column, datamap) {
-                        var formattedValue = formatService.format(value, column, datamap);
+                        const formattedValue = formatService.format(value, column, datamap);
                         if (formattedValue === "-666" || formattedValue === -666) {
                             //this magic number should never be displayed! 
                             //hack to make the grid sortable on unions, where we return this -666 instead of null, but then remove this from screen!
@@ -89,26 +90,22 @@
                     };
 
                     $scope.getScrollSpaceMaster = function () {
-                        var scrollTop = getScrollTop();
+                        const scrollTop = getScrollTop();
                         if (scrollTop == null) {
                             return null;
                         }
-
-                        var masterMargins = $('.master-details .master').outerHeight(true) - $('.master').height();
-                        var pagination = $('.master-details  .master .swpagination').outerHeight(true);
-                        var commandbuttons = $('.master-details .toolbar-secondary:visible').outerHeight(true);
-
+                        const masterMargins = $('.master-details .master').outerHeight(true) - $('.master').height();
+                        const pagination = $('.master-details  .master .swpagination').outerHeight(true);
+                        const commandbuttons = $('.master-details .toolbar-secondary:visible').outerHeight(true);
                         return $(window).height() - scrollTop - masterMargins - pagination - commandbuttons;
                     };
 
                     $scope.getScrollSpaceDetails = function () {
-                        var scrollTop = getScrollTop();
+                        const scrollTop = getScrollTop();
                         if (scrollTop == null) {
                             return null;
                         }
-
-                        var commandbuttons = $('.master-details .toolbar-secondary:visible').outerHeight(true);
-
+                        const commandbuttons = $('.master-details .toolbar-secondary:visible').outerHeight(true);
                         return $(window).height() - scrollTop - commandbuttons;
                     };
 
@@ -121,7 +118,7 @@
                     };
 
                     $scope.getMaster = function(entry) {
-                        var id = schemaService.getId(entry, $scope.compositionlistschema);
+                        const id = schemaService.getId(entry, $scope.compositionlistschema);
                         return masterMap[id];
                     }
 
@@ -136,15 +133,14 @@
 
                             //loop thru the schema fields
                             schema.displayables.forEach(function (field) {
-                                var qualifier = fieldService.getQualifier(field, entry);
-
+                                const qualifier = fieldService.getQualifier(field, entry);
                                 if (!!qualifier) {
                                     master[qualifier] = formatEntryString(entry, field, qualifier);
                                 }
 
                                 //process the icon fields
                                 if (field.rendererType === "icon") {
-                                    var icon = iconService.loadIcon(entry[field.attribute], field);
+                                    const icon = iconService.loadIcon(entry[field.attribute], field);
                                     if (!!icon) {
                                         master.icons.push(icon + " " + field.attribute);
                                     }
@@ -152,7 +148,7 @@
                             });
 
                             //add the master info
-                            var id = schemaService.getId(entry, $scope.compositionlistschema);
+                            const id = schemaService.getId(entry, $scope.compositionlistschema);
                             masterMap[id] = master;
                         });
                     };
@@ -169,7 +165,7 @@
                         });
 
                         // update the read flag on the server
-                        var parameters = {};
+                        const parameters = {};
                         parameters.compositionItemId = entry.commloguid;
                         parameters.compositionItemData = entry;
                         parameters.parentData = $scope.parentdata;
@@ -212,7 +208,7 @@
                     }
 
                     function getScrollTop() {
-                        var composition = $('.composition.master-details:visible');
+                        const composition = $('.composition.master-details:visible');
                         if (composition.position() != undefined) {
                             return composition.position().top;
                         } else {
@@ -226,14 +222,14 @@
                         $scope.mapMaster($scope.compositiondata, $scope.getListSchema());
 
                         // display the first record
-                        var entry = $scope.compositiondata[0];
+                        const entry = $scope.compositiondata[0];
                         if (entry) {
                             $scope.displayDetails(entry);
                         }
                     }
 
                     function prepareDataProxy(original, params, context) {
-                        var result = original.apply(context, params);
+                        const result = original.apply(context, params);
                         if (result && angular.isFunction(result.then)) {
                             return result.then(prepareData);
                         }
@@ -254,11 +250,11 @@
                             .scope($scope, "selectPage", prepareDataProxy)
                             .scope($scope, "onSaveError", prepareDataProxy)
                             .scope($scope, "onAfterCompositionResolved", prepareDataProxy)
-                            .scope($scope, "doToggle", function (original, params, context) {
-                                original.apply(context, params);
-                                // scroll to the detail:
-                                $(document.body).animate({ scrollTop: 0 });
-                            });
+//                            .scope($scope, "doToggle", function (original, params, context) {
+//                                original.apply(context, params);
+//                                // scroll to the detail:
+//                                $(document.body).animate({ scrollTop: 0 });
+//                            });
 
                         log.debug($scope, $scope.compositiondata);
                     }
