@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using NHibernate.Linq;
 using NHibernate.Util;
+using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Dynamic {
@@ -49,6 +51,7 @@ namespace softWrench.sW4.Dynamic {
             return DAO.FindAll<ScriptEntry>(typeof(ScriptEntry));
         }
 
+        [Transactional(DBType.Swdb)]
         public virtual void SaveScript(ScriptDTO dto) {
             var entry = new ScriptEntry {
                 Id = dto.Id,
@@ -93,6 +96,7 @@ namespace softWrench.sW4.Dynamic {
             Reloader.ReloadContainer(singleDynComponent);
         }
 
+        [Transactional(DBType.Swdb)]
         public virtual void ContainerReloaded(ScriptEntry singleDynComponent) {
             var v = GetSystemVersion();
             if (singleDynComponent == null) {

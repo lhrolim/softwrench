@@ -7,6 +7,8 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Security;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
@@ -165,12 +167,13 @@ namespace softWrench.sW4.Security.Services {
             return inMemoryUser;
         }
 
-
-        public void SaveUpdateRole(Role role) {
+        [Transactional(DBType.Swdb)]
+        public virtual void SaveUpdateRole(Role role) {
             RoleManager.SaveUpdateRole(role);
         }
 
-        public void DeleteRole(Role role) {
+        [Transactional(DBType.Swdb)]
+        public virtual void DeleteRole(Role role) {
             RoleManager.DeleteRole(role);
         }
 
@@ -285,7 +288,8 @@ namespace softWrench.sW4.Security.Services {
             return _userProfileManager.FetchAllProfiles(eager);
         }
 
-        public User SaveUser(User user, ISet<UserProfile> profiles, ISet<UserCustomRole> customRoles, ISet<UserCustomConstraint> customConstraints) {
+        [Transactional(DBType.Swdb)]
+        public virtual User SaveUser(User user, ISet<UserProfile> profiles, ISet<UserCustomRole> customRoles, ISet<UserCustomConstraint> customConstraints) {
             user.Profiles = profiles;
             user.CustomRoles = customRoles;
             user.CustomConstraints = customConstraints;
@@ -293,7 +297,8 @@ namespace softWrench.sW4.Security.Services {
             return SWDBHibernateDAO.GetInstance().Save(user);
         }
 
-        public async Task<User> SaveUser(User user) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<User> SaveUser(User user) {
             var loginUser = CurrentUser();
 
             user.UserName = user.UserName.ToLower();
@@ -308,7 +313,8 @@ namespace softWrench.sW4.Security.Services {
             return saveUser;
         }
 
-        public void DeleteUser(User user) {
+        [Transactional(DBType.Swdb)]
+        public virtual void DeleteUser(User user) {
             SWDBHibernateDAO.GetInstance().Delete(user);
         }
 

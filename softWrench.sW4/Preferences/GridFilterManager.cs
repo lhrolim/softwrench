@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata.Security;
 using cts.commons.simpleinjector;
@@ -15,7 +17,8 @@ namespace softWrench.sW4.Preferences {
             _dao = dao;
         }
 
-        public GridFilterAssociation CreateNewFilter(InMemoryUser user, string application, string fields, string operators, string values,string template, string alias, string advancedSearch, string schema = "list") {
+        [Transactional(DBType.Swdb)]
+        public virtual GridFilterAssociation CreateNewFilter(InMemoryUser user, string application, string fields, string operators, string values,string template, string alias, string advancedSearch, string schema = "list") {
             var filter = new GridFilter {
                 Alias = alias,
                 Application = application,
@@ -47,7 +50,8 @@ namespace softWrench.sW4.Preferences {
             return new HashSet<GridFilterAssociation>(_dao.FindByQuery<GridFilterAssociation>(GridFilterAssociation.ByUserId, userId));
         }
 
-        public GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, string template, string advancedSearch, int? id) {
+        [Transactional(DBType.Swdb)]
+        public virtual GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, string template, string advancedSearch, int? id) {
             var filter = _dao.FindByPK<GridFilter>(typeof(GridFilter), id);
             if (filter == null) {
                 throw GridFilterException.FilterNotFound(id);
@@ -68,7 +72,8 @@ namespace softWrench.sW4.Preferences {
             return updateFilter;
         }
 
-        public GridFilterAssociation DeleteFilter(InMemoryUser currentUser, int? id, int? creatorId) {
+        [Transactional(DBType.Swdb)]
+        public virtual GridFilterAssociation DeleteFilter(InMemoryUser currentUser, int? id, int? creatorId) {
 
             var association = _dao.FindSingleByQuery<GridFilterAssociation>(GridFilterAssociation.ByUserIdAndFilter, currentUser.DBId, id);
             _dao.Delete(association);

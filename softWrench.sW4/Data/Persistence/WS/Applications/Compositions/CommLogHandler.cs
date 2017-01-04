@@ -27,6 +27,7 @@ using Newtonsoft.Json;
 using System.Net;
 using System.IO;
 using System.Text;
+using cts.commons.persistence.Transaction;
 using NHibernate.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
@@ -66,7 +67,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             Log.Debug("init");
         }
 
-        public void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(Commlog);
             var crudOperationDatas = commlogs as CrudOperationData[] ?? commlogs.ToArray();

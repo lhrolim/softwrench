@@ -37,21 +37,31 @@
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons">
-      <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
-    </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.2.1.6\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.2.6156.25815, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cts.commons.persistence, Version=1.2.6207.850, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6207.850\lib\net46\cts.commons.persistence.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.2.6156.25003\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="cts.commons.web, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.web.1.2.6156.25003\lib\net46\cts.commons.web.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="DotLiquid">
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
     </Reference>
-    <Reference Include="FluentMigrator, Version=1.6.1.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentMigrator.1.6.1\lib\40\FluentMigrator.dll</HintPath>
+    <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">

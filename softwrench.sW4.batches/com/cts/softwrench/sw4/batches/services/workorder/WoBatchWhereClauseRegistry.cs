@@ -1,4 +1,6 @@
-﻿using softWrench.sW4.Configuration.Services.Api;
+﻿using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
@@ -14,6 +16,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
             _wcFacade = wcFacade;
         }
 
+        [Transactional(DBType.Swdb)]
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (MetadataProvider.Application("workorder", false) == null) return;
             _wcFacade.Register("_wobatch", "userid = @userid", new WhereClauseRegisterCondition() { AppContext = new ApplicationLookupContext() { Schema = "list" } });

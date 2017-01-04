@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.web.Attributes;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -30,7 +32,8 @@ namespace softWrench.sW4.Web.Controllers {
 
 
         [HttpPost]
-        public async Task<IEnumerable<Mapping.Mapping>> Save(int mappingDefinitionId, string mappingDefinitionKey, [FromBody]IEnumerable<Mapping.Mapping> mappings) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<IEnumerable<Mapping.Mapping>> Save(int mappingDefinitionId, string mappingDefinitionKey, [FromBody]IEnumerable<Mapping.Mapping> mappings) {
             var items = new List<Mapping.Mapping>(mappings.Where(m => m.IsValid()));
 
             foreach (var mapping in items) {

@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Net;
 using System.Web.Http;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.web.Attributes;
 using Quartz.Util;
 using softWrench.sW4.Data.API.Response;
@@ -20,7 +22,8 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IGenericResponseResult ApproveLabtrans([FromBody]List<string> labtransIds) {
+        [Transactional(DBType.Maximo)]
+        public virtual IGenericResponseResult ApproveLabtrans([FromBody]List<string> labtransIds) {
             if (labtransIds == null || !labtransIds.Any()) {
                 return null;
             }
@@ -33,7 +36,8 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         [HttpPost]
-        public IGenericResponseResult DeleteLabtrans([FromBody]List<string> labtransIds) {
+        [Transactional(DBType.Maximo)]
+        public virtual IGenericResponseResult DeleteLabtrans([FromBody]List<string> labtransIds) {
             if (labtransIds == null || !labtransIds.Any()) {
                 return null;
             }

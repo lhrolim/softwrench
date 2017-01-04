@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
@@ -89,6 +90,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             resultList.Add(dict);
         }
 
+        [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
             var id = compositionData.Id;

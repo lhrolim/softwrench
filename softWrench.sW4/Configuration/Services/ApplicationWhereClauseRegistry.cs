@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Configuration.Services.Api;
@@ -17,6 +19,7 @@ namespace softWrench.sW4.Configuration.Services {
             _facade = facade;
         }
 
+        [Transactional(DBType.Swdb)]
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             var before = new Stopwatch();
             var applications = MetadataProvider.Applications(true);

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
@@ -48,7 +50,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade = whereClauseFacade;
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (!ApplicationConfiguration.IsClient("firstsolar")) {
                 //to avoid issues on dev environments
                 return;

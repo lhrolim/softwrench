@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
@@ -117,7 +119,8 @@ namespace softwrench.sw4.dashboard.classes.startup {
             return _dao.Save(dashboard);
         }
 
-        public void RegisterWhereClause(string application, string query, string alias, string metadataId) {
+        [Transactional(DBType.Swdb)]
+        public virtual void RegisterWhereClause(string application, string query, string alias, string metadataId) {
             _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition() {
                 Alias = alias,
                 AppContext = new ApplicationLookupContext() {

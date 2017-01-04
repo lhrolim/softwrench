@@ -26,9 +26,12 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var sqlClientMock = new Mock<ISqlClient>();
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
+            var sqlClientHelper = new SimpleSqlClient(swdbMock.Object, maximodbMock.Object);
 
             sqlClientMock.Setup(a => a.IsDefinitionOrManipulation(It.IsAny<string>()))
                .Returns(() => false);
+            sqlClientMock.Setup(a => a.ExecuteQuery(It.IsAny<string>(), It.IsAny<DBType>(), It.IsAny<int>()))
+               .Returns(() => sqlClientHelper.ExecuteQuery("dummy", DBType.Swdb));
 
             swdbMock.Setup(x => x.FindByNativeQuery(It.IsAny<string>(), It.IsAny<ExpandoObject>(), It.IsAny<IPaginationData>(), It.IsAny<string>()))
                 .Returns(() => new List<dynamic>() { "record 1", "record 2" });
@@ -36,6 +39,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var scanner = new TestSimpleInjectorScanner();
             scanner.ResgisterSingletonMock<ISWDBHibernateDAO>(swdbMock);
             scanner.ResgisterSingletonMock<IMaximoHibernateDAO>(maximodbMock);
+            scanner.ResgisterSingletonMock<ISqlClient>(sqlClientMock);
             scanner.InitDIController();
 
             var injector = new SimpleInjectorGenericFactory(scanner.Container);
@@ -53,13 +57,19 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var sqlClientMock = new Mock<ISqlClient>();
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
+            var sqlClientHelper = new SimpleSqlClient(swdbMock.Object, maximodbMock.Object);
 
+            sqlClientMock.Setup(a => a.IsDefinitionOrManipulation(It.IsAny<string>()))
+               .Returns(() => true);
             swdbMock.Setup(x => x.ExecuteSql(It.IsAny<string>(), null))
                 .Returns(() => 2);
+            sqlClientMock.Setup(a => a.ExecuteUpdate(It.IsAny<string>(), It.IsAny<DBType>()))
+               .Returns(() => sqlClientHelper.ExecuteUpdate("dummy", DBType.Swdb));
 
             var scanner = new TestSimpleInjectorScanner();
             scanner.ResgisterSingletonMock<ISWDBHibernateDAO>(swdbMock);
             scanner.ResgisterSingletonMock<IMaximoHibernateDAO>(maximodbMock);
+            scanner.ResgisterSingletonMock<ISqlClient>(sqlClientMock);
             scanner.InitDIController();
 
             var injector = new SimpleInjectorGenericFactory(scanner.Container);
@@ -98,9 +108,12 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var sqlClientMock = new Mock<ISqlClient>();
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
+            var sqlClientHelper = new SimpleSqlClient(swdbMock.Object, maximodbMock.Object);
 
             sqlClientMock.Setup(a => a.IsDefinitionOrManipulation(It.IsAny<string>()))
                .Returns(() => false);
+            sqlClientMock.Setup(a => a.ExecuteQuery(It.IsAny<string>(), It.IsAny<DBType>(), It.IsAny<int>()))
+               .Returns(() => sqlClientHelper.ExecuteQuery("dummy", DBType.Swdb));
 
             swdbMock.Setup(x => x.FindByNativeQuery(It.IsAny<string>(), It.IsAny<ExpandoObject>(), It.IsAny<IPaginationData>(), It.IsAny<string>()))
                 .Throws(new Exception("Invalid Query", new Exception("Object 'Hello1 doesnt exist'")));
@@ -108,6 +121,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var scanner = new TestSimpleInjectorScanner();
             scanner.ResgisterSingletonMock<ISWDBHibernateDAO>(swdbMock);
             scanner.ResgisterSingletonMock<IMaximoHibernateDAO>(maximodbMock);
+            scanner.ResgisterSingletonMock<ISqlClient>(sqlClientMock);
             scanner.InitDIController();
 
             var injector = new SimpleInjectorGenericFactory(scanner.Container);

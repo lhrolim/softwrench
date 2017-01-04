@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector.Core.Order;
 using Iesi.Collections.Generic;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -10,8 +12,7 @@ using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Init {
-    class DbUserInitializer : ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
-        private static readonly SecurityFacade SecurityFacade = SecurityFacade.GetInstance();
+    public class DbUserInitializer : ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
         private static SWDBHibernateDAO _dao;
 
         public int Order {
@@ -20,7 +21,8 @@ namespace softWrench.sW4.Security.Init {
             }
         }
 
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        [Transactional(DBType.Swdb)]
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             CreateUser();
         }
 
@@ -102,7 +104,7 @@ namespace softWrench.sW4.Security.Init {
                     new UserCustomRole {Exclusion = false, Role = role},
                     new UserCustomRole {Exclusion = false, Role = role2}
                 };
-                SecurityFacade.SaveUser(user, null, userCustomRoles, null);
+                SecurityFacade.GetInstance().SaveUser(user, null, userCustomRoles, null);
             }
         }
 

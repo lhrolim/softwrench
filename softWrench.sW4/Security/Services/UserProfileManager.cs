@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
@@ -109,8 +110,8 @@ namespace softWrench.sW4.Security.Services {
             return new HashSet<UserProfile>(allPRofiles.Where(f => f.ApplyByDefault));
         }
 
-
-        public UserProfile SaveUserProfile(UserProfile profile) {
+        [Transactional(DBType.Swdb)]
+        public virtual UserProfile SaveUserProfile(UserProfile profile) {
 
 
             var isUpdate = profile.Id != null;
@@ -177,7 +178,8 @@ namespace softWrench.sW4.Security.Services {
 
 
         //TODO: remove customUserRoles and customUSerCOnstraints which were exclusions from this profile ==> They don´t make sense anymore (tough,they are useless anyway)
-        public void DeleteProfile(int? profileId) {
+        [Transactional(DBType.Swdb)]
+        public virtual void DeleteProfile(int? profileId) {
             using (var session = SWDBHibernateDAO.GetInstance().GetSession()) {
                 using (session.BeginTransaction()) {
                     var profile = FindById(profileId);

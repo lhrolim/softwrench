@@ -37,16 +37,20 @@
       <HintPath>..\packages\WebGrease.1.1.0\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.6151.15243, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.2.6156.25815, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.2.6212.7618, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6212.7618\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
@@ -111,8 +115,8 @@
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sW4.batches, Version=1.1.6162.35374, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.batches.1.1.6162.35374\lib\net46\softwrench.sW4.batches.dll</HintPath>
+    <Reference Include="softwrench.sW4.batches, Version=1.1.6207.1155, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.batches.1.1.6207.1155\lib\net46\softwrench.sW4.batches.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
