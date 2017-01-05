@@ -3,9 +3,9 @@
 
 
 
-    angular.module("sw_layout").directive("autocompleteClientInput", ["cmplookup", "contextService", 'expressionService', 'cmpfacade',
+    angular.module("sw_layout").directive("autocompleteClientInput", ["lookupService", "contextService", 'expressionService', 'cmpfacade',
         'dispatcherService', 'modalService', 'compositionCommons', 'i18NService',
-        function (cmplookup, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService) {
+        function (lookupService, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService) {
             var directive = {
                 restrict: "E",
                 templateUrl: contextService.getResourceUrl('/Content/modules/components/autocompleteclient/templates/autocompleteClientInput.html'),

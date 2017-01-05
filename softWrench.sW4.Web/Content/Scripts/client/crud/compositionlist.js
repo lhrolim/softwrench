@@ -3,7 +3,7 @@
 
     function CompositionListController($scope, $q, $log, $timeout, $filter, $injector, $http, $element, $rootScope, i18NService, tabsService, alertService,
         formatService, fieldService, commandService, compositionService, validationService, dispatcherService, cmpAutocompleteClient, userPreferencesService, associationService,
-        expressionService, modalService, redirectService, eventService, iconService, cmplookup, cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
+        expressionService, modalService, redirectService, eventService, iconService,  cmpfacade, crud_inputcommons, spinService, crudContextHolderService, gridSelectionService,
         schemaService, contextService, fixHeaderService, applicationService, searchService, compositionCommons, compositionListViewModel) {
 
 
@@ -1064,7 +1064,7 @@
 
         CompositionListController.$inject = ["$scope", "$q", "$log", "$timeout", "$filter", "$injector", "$http", "$element", "$rootScope", "i18NService", "tabsService", "alertService",
                 "formatService", "fieldService", "commandService", "compositionService", "validationService", "dispatcherService", "cmpAutocompleteClient", "userPreferencesService", "associationService",
-                "expressionService", "modalService", "redirectService", "eventService", "iconService", "cmplookup", "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
+                "expressionService", "modalService", "redirectService", "eventService", "iconService",  "cmpfacade", "crud_inputcommons", "spinService", "crudContextHolderService", "gridSelectionService",
                 "schemaService", "contextService", "fixHeaderService", "applicationService", "searchService", "compositionCommons", "compositionListViewModel"];
 
         window.CompositionListController = CompositionListController;

@@ -55,7 +55,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             var result = (TargetResult)Maximoengine.Create(incidentCrudData);
             var id = result.Id ?? result.UserId;
 
-            result.SuccessMessage = "Incident {0} sucessfully created.".FormatInvariant(id);
+            result.SuccessMessage = "Incident {0} successfully created.".FormatInvariant(id);
 
             return result;
         }

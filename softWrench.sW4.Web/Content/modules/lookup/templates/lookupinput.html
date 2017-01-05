@@ -10,28 +10,29 @@
         
         <angulartypeahead schema="schema" datamap="datamap"
                           parentdata="parentdata"
-                          panelid="{{panelid}}"
+                          panelid="{{::panelid}}"
                           field-metadata="fieldMetadata"
                           attribute="fieldMetadata.attribute"
                           provider="fieldMetadata.associationKey"
-                          placeholder="getPlaceholderText(fieldMetadata)"
+                          placeholder="::getPlaceholderText(fieldMetadata)"
                           displayablepath="displayablepath"
                           search-text="vm.searchText"
-                          hide-description="{{fieldMetadata.hideDescription}}"
+                          hide-description="{{::fieldMetadata.hideDescription}}"
                           magnet-clicked="showLookupModal(text)"
-                          allow-custom-value="{{fieldMetadata.rendererParameters['allowcustomvalue']}}"
-                          mode="{{mode}}"
+                          allow-custom-value="{{::fieldMetadata.rendererParameters['allowcustomvalue']}}"
+                          mode="{{::mode}}"
                           />
 
     </div>
     <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
 
-    <div ng-if="loadModalWrappers">
+    <div ng-if="loadModalWrappers[fieldMetadata.attribute]!=null">
         <lookup-modal-wrapper lookup-obj="lookupObj"
-                              lookup-associations-code="lookupAssociationsCode"
-                              lookup-associations-description="lookupAssociationsDescription"
                               schema="schema"
-                              datamap="datamap">
+                              datamap="datamap"
+                              fieldMetadata="fieldMetadata"
+                              loadedmodals="loadModalWrappers"
+                              >
         </lookup-modal-wrapper>
     </div>
 

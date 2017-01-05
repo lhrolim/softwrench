@@ -1,6 +1,6 @@
 ﻿<div class="modal fade lookupModal modalLock"
      data-attribute="{{lookupObj.fieldMetadata.target}}" tabindex="-1" role="dialog" data-backdrop="static"
-     data-keyboard="false" aria-labelledby="myModalLabel" aria-hidden="true">
+     aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -10,8 +10,8 @@
                 </div>
                 <div class="context clearfix">
                     <div class="input-group lazy-search">
-                        <input type="search" class="hidden-phone form-control" ng-model="lookupsearchdata" ng-model-options='{ debounce: 700 }'
-                               placeholder="Find {{placeholder}}" data-association-key="{{provider}}" ng-enter="lookupModalSearch(pageNumber)" ng-change="lookupModalSearch(pageNumber)" />
+                        <input type="search" class="hidden-phone form-control" ng-model="lookupsearchdata" ng-model-options='{ debounce: 350 }' data-type="lookupsearchinput"
+                               placeholder="Find {{placeholder}}" data-association-key="{{provider}}" ng-enter="lookupModalSearch(pageNumber)" ng-change="lookupModalSearch(pageNumber)"  />
                         <span class="input-group-addon last" ng-click="lookupModalSearch(pageNumber)">
                             <i class="fa fa-search"></i>
                         </span>
@@ -78,7 +78,7 @@
                     </thead>
                     <tbody>
                         <tr ng-repeat="option in lookupObj.options" ng-click="lookupModalSelect(option)">
-                            <td ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
+                            <td ng-repeat="column in ::lookupObj.schema.displayables" ng-hide="column.isHidden">
                                 <ng-switch on="column.rendererType">
                                     <span ng-switch-when="checkbox">
                                         <div class='cell-wrapper'>

@@ -36,21 +36,21 @@ angular.module('sw_layout')
             const isEditing = schemaService.getId(datamap, schema);
             const idx = this.getFirstFocusableFieldIdx(schema, datamap, isEditing);
             if (idx != -1) {
-                this.setFocusOnIdx(schema, datamap, idx, { reset: true });
+                this.setFocusOnIdx(schema,  idx, { reset: true });
             }
             log.debug("reseting focus to first field");
         },
 
         resetFocusToCurrent: function (schema, attribute) {
-            const log = $log.get("focusService#resetFocusToCurrent");
+            const log = $log.get("focusService#resetFocusToCurrent",["detail", "focus"]);
             log.debug("resetting focus to {0}".format(attribute));
             const idx = fieldService.getVisiableDisplayableIdxByKey(schema, attribute);
             currentFocusedIdx = idx;
+            this.setFocusOnIdx(schema, idx);
         },
 
-        setFocusOnIdx: function (schema, datamap, idx, parameters) {
-            const log = $log.get("focusService#setFocusOnIdx");
-            parameters = parameters || {};
+        setFocusOnIdx: function (schema,  idx, parameters ={}) {
+            const log = $log.get("focusService#setFocusOnIdx", ["detail", "focus"]);
             if (schema.properties && schema.properties["detail.focus.allowmovingbackward"] === "true") {
                 parameters.allowmovingbackward = true;
             }
@@ -86,7 +86,7 @@ angular.module('sw_layout')
                 return;
             }
 
-            this.setFocusOnIdx(schema, datamap, nextFieldIdx, params);
+            this.setFocusOnIdx(schema,  nextFieldIdx, params);
         }
     };
 

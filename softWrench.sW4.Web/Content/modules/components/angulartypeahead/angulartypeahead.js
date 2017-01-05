@@ -237,7 +237,7 @@
             replace: true,
             template: '<div class="input-group lazy-search">' +
                 '<input type="search" class="hidden-phone form-control typeahead" ng-enabled="isModifiableEnabled(fieldMetadata)" placeholder="Find {{placeholder}}" ' +
-                'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}"/>' +
+                'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}" data-field="{{provider}}"/>' +
                 '<span class="input-group-addon last" ng-click="!isModifiableEnabled(fieldMetadata) || executeMagnetSearch()">' +
                 '<i class="fa fa-search"></i>' +
                 '</span>' +

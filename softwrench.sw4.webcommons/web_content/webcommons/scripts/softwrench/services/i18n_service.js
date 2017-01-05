@@ -4,7 +4,7 @@
     modules.webcommons.service('i18NService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
     var verifyKeyInAllCatalogsButEn = function (key) {
-        var catalogs = $rootScope['sw_i18ncatalogs'];
+        const catalogs = $rootScope['sw_i18ncatalogs'];
         var all = true;
         $.each(catalogs, function (language, catalog) {
             if (language == 'en') {
@@ -27,7 +27,7 @@
         if (!nullOrUndef(contextService.retrieveFromContext('currentmodule')) && !isMenu) {
             return defaultValue;
         }
-        var catalog = $rootScope['sw_currentcatalog'];
+        const catalog = $rootScope['sw_currentcatalog'];
         var catalogValue = null;
         if (catalog != null) {
             catalogValue = JsonProperty(catalog, key);
@@ -78,26 +78,30 @@
     return {
 
         getI18nLabel: function (fieldMetadata, schema) {
-            if (fieldMetadata.type == "ApplicationCompositionDefinition" || fieldMetadata.type == "ApplicationSection") {
-                var headerLabel = this.getI18nSectionHeaderLabel(fieldMetadata, fieldMetadata.header, schema);
-                if (headerLabel != null && headerLabel != "") {
+            if (fieldMetadata.type === "ApplicationCompositionDefinition" || fieldMetadata.type === "ApplicationSection") {
+                const headerLabel = this.getI18nSectionHeaderLabel(fieldMetadata, fieldMetadata.header, schema);
+                if (headerLabel != null && headerLabel !== "") {
                     return headerLabel;
                 }
             }
-            var applicationName = schema.applicationName;
 
-            var attr = fillattr(fieldMetadata);
+            if (fieldMetadata.isHidden) {
+                return "";
+            }
+
+            const applicationName = schema.applicationName;
+            const attr = fillattr(fieldMetadata);
             var key = applicationName + "." + attr;
-            if (fieldMetadata.type == "OptionField") {
+            if (fieldMetadata.type === "OptionField") {
                 key += "._label";
             }
-            var value = doGetValue(key, fieldMetadata.label);
+            const value = doGetValue(key, fieldMetadata.label);
             return valueConsideringSchemas(value, schema);
         },
 
         getI18nLabelTooltip: function (fieldMetadata, schema) {
-            var applicationName = schema.applicationName;
-            var attr = fillattr(fieldMetadata);
+            const applicationName = schema.applicationName;
+            const attr = fillattr(fieldMetadata);
             var key = applicationName + "." + attr + "._tooltip";
             if (!hasKey(key, $rootScope['sw_currentcatalog'])) {
                 //fallbacks to default label strategy
@@ -114,7 +118,7 @@
             var value = doGetValue(key, defaultValue);
 
             //if the tooltip and label are the same, don't show tooltips
-            if (value == fieldMetadata.label) {
+            if (value === fieldMetadata.label) {
                 value = '';
             }
 
@@ -126,26 +130,28 @@
                 //case there´s a providerattribute, 118N makes no sense
                 return option.label;
             }
-            var applicationName = schema.applicationName;
-            var attr = fieldMetadata.attribute;
-            var val = option.value == '' ? option.label : option.value;
-            var key = applicationName + "." + attr + "." + val;
-            var value = doGetValue(key, option.label);
+            const applicationName = schema.applicationName;
+            const attr = fieldMetadata.attribute;
+            const val = option.value == '' ? option.label : option.value;
+            const key = applicationName + "." + attr + "." + val;
+            const value = doGetValue(key, option.label);
             return valueConsideringSchemas(value, schema);
         },
 
         getI18nCommandLabel: function (command, schema) {
-            var applicationName = schema.applicationName;
-            var key = applicationName + "._commands." + command.id;
-            var value = doGetValue(key, command.label);
+            const applicationName = schema.applicationName;
+            const key = applicationName + "._commands." + command.id;
+            const value = doGetValue(key, command.label);
             return valueConsideringSchemas(value, schema);
         },
 
         getI18nInputLabel: function (fieldMetadata, schema) {
             var label = this.getI18nLabel(fieldMetadata, schema);
-            var lastChar = label.charAt(label.length - 1);
-
-            if (lastChar == ":" || lastChar == "?" || lastChar == "#" || fieldMetadata.type == 'ApplicationSection') {
+            if (label === "") {
+                return "";
+            }
+            const lastChar = label.charAt(label.length - 1);
+            if (lastChar === ":" || lastChar === "?" || lastChar === "#" || fieldMetadata.type === 'ApplicationSection') {
                 return label;
             }
 
@@ -169,20 +175,18 @@
             if (nullOrUndef(menuitem.id)) {
                 return menuitem.icon;
             }
-            var defaultValue = menuitem.icon;
-            var key = "_menu." + menuitem.id + "_icon" ;
+            const defaultValue = menuitem.icon;
+            const key = "_menu." + menuitem.id + "_icon";
             return doGetValue(key, defaultValue, true);
         },
 
         getI18nPlaceholder: function (fieldMetadata) {
-            var label = fieldMetadata.label;
-            var lastChar = label.charAt(label.length - 1);
-
+            const label = fieldMetadata.label;
+            const lastChar = label.charAt(label.length - 1);
             if (lastChar != ":") {
                 return label;
             }
-
-            var placeholder = label.substr(0, label.length - 1);
+            const placeholder = label.substr(0, label.length - 1);
             return placeholder
         },
 
@@ -190,10 +194,8 @@
             if (datamap == null || schema == null) {
                 return "";
             }
-
-            var userIdFieldName = schema.userIdFieldName;
-            var userId = datamap[userIdFieldName];
-
+            const userIdFieldName = schema.userIdFieldName;
+            const userId = datamap[userIdFieldName];
             if (schema.idDisplayable && userId != null) {
                 return '{0} {1}'.format(schema.idDisplayable, userId);
 
@@ -208,18 +210,18 @@
         },
 
         getI18nTitle: function (schema) {
-            var applicationName = schema.applicationName;
-            var key = applicationName + "._title." + schema.schemaId;
+            const applicationName = schema.applicationName;
+            const key = applicationName + "._title." + schema.schemaId;
             return doGetValue(key, schema.title);
         },
 
         get18nValue: function (key, defaultValue, paramArray) {
-            var isHeaderMenu = (key!=null && key.indexOf("_headermenu") > -1) ? true : false;
-            var unformatted = doGetValue(key, defaultValue, isHeaderMenu);
+            const isHeaderMenu = (key!=null && key.indexOf("_headermenu") > -1) ? true : false;
+            const unformatted = doGetValue(key, defaultValue, isHeaderMenu);
             if (paramArray == undefined) {
                 return unformatted;
             }
-            var formatFn = unformatted.format;
+            const formatFn = unformatted.format;
             return formatFn.apply(unformatted, paramArray);
         },
 
@@ -227,17 +229,17 @@
             if (header == undefined) {
                 return "";
             }
-            var applicationName = schema.applicationName;
+            const applicationName = schema.applicationName;
             section = !nullOrUndef(section.id) ? section.id : section.relationship;
-            var key = applicationName + "." + section + "._header";
-            var value = doGetValue(key, header.label);
+            const key = applicationName + "." + section + "._header";
+            const value = doGetValue(key, header.label);
             return valueConsideringSchemas(value, schema);
         },
 
         getTabLabel: function (tab, schema) {
-            var applicationName = tab.applicationName;
-            var key = applicationName + "." + tab.id + "._title";
-            var value = doGetValue(key, tab.label);
+            const applicationName = tab.applicationName;
+            const key = applicationName + "." + tab.id + "._title";
+            const value = doGetValue(key, tab.label);
             return valueConsideringSchemas(value, schema);
         },
 
@@ -252,7 +254,7 @@
         },
        
         load: function (jsonString, language) {
-            var languages = JSON.parse(jsonString);
+            const languages = JSON.parse(jsonString);
             var catalogs = {};
             $.each(languages, function (key, value) {
                 catalogs[key] = value;
@@ -267,7 +269,7 @@
 
         changeCurrentLanguage: function (language) {
             $rootScope['sw_userlanguage'] = language;
-            var normalizedLanguage = language != null ? language.toLowerCase() : '';
+            const normalizedLanguage = language != null ? language.toLowerCase() : '';
             $rootScope['sw_currentcatalog'] = $rootScope['sw_i18ncatalogs'][normalizedLanguage];
             //broadcast language changed event to update filter label translations.
             $rootScope.$broadcast("sw_languageChanged", normalizedLanguage);

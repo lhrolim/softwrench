@@ -23,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             //customization for deltadental here
             var label = ApplicationConfiguration.ClientName.EqualsIc("deltadental") ? "dispatched" : "created";
 
-            result.SuccessMessage = "Work Order {0} sucessfully {1}.".FormatInvariant(id, label);
+            result.SuccessMessage = "Work Order {0} successfully {1}.".FormatInvariant(id, label);
 
             return result;
         }

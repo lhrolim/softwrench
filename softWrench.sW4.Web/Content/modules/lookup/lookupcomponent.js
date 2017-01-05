@@ -5,7 +5,7 @@
 
         function showModal(target, element) {
             $timeout(function() {
-                var modals = $('[data-attribute="{0}"]'.format(target), element);
+                const modals = $('[data-attribute="{0}"]'.format(target), element);
                 modals.draggable();
                 modals.modal('show');
             }, 0, false);
@@ -32,7 +32,7 @@
          * @returns {} 
          */
         function refreshFromAttribute(fieldMetadata, datamap, datamapId, newValue) {
-            var log = $log.getInstance("cmplookup#refreshFromAttribute", ["association", "lookup"]);
+            var log = $log.getInstance("lookupService#refreshFromAttribute", ["association", "lookup"]);
 
             var associationKey = fieldMetadata.associationKey;
 
@@ -49,8 +49,8 @@
                 key = replaceAll(key, "\\.", "_");
 
                 log.debug("setting lookup {0} to {1}".format(key, label));
-                var el = $("input[data-displayablepath=" + key + "]");
-                if (el.length === 0) {
+                    const el = $("input[data-displayablepath=" + key + "]");
+                    if (el.length === 0) {
                     log.warn("lookup {0} not found".format(key));
                 }
                 el.typeahead("val", label);
@@ -69,10 +69,11 @@
                 scope.lookupObj.application = fieldMetadata.schema.rendererParameters["application"];
                 scope.lookupObj.schemaId = fieldMetadata.schema.rendererParameters["schemaId"];
             }
+            const searchObj = {
+                addPreSelectedFilters : true
+            };
 
-            var searchObj = {};
-            searchObj.addPreSelectedFilters = true;
-            var lookupAttribute = fieldMetadata.schema ? fieldMetadata.schema.rendererParameters["attribute"] : null;
+            const lookupAttribute = fieldMetadata.schema ? fieldMetadata.schema.rendererParameters["attribute"] : null;
             if (lookupAttribute != null) {
                 searchObj[lookupAttribute] = searchValue;
             } else if (fieldMetadata.target != null) {
@@ -81,22 +82,21 @@
 
             associationService.updateDependentAssociationValues(scope, searchDatamap, scope.lookupObj, this.handleMultipleLookupOptionsFn, searchObj);
             //to avoid circular dependency
-            scope.$emit(JavascriptEventConstants.ResetFocusToCurrent, scope.schema, fieldMetadata.attribute);
+//            scope.$emit(JavascriptEventConstants.ResetFocusToCurrent, scope.schema, fieldMetadata.attribute);
             //            focusService.resetFocusToCurrent(scope.schema, fieldMetadata.attribute);
         };
 
         function handleMultipleLookupOptionsFn(result, lookupObj, scope, datamap) {
-            var log = $log.get("cmplookup#handleMultipleLookupOptionsFn");
-
-            var associationResult = result;
+            const log = $log.get("lookupService#handleMultipleLookupOptionsFn");
+            const associationResult = result;
             lookupObj.schema = associationResult.associationSchemaDefinition;
             lookupObj.options = associationResult.associationData;
 
             if (hasSingleElement(associationResult.associationData)) {
-                var firstOption = lookupObj.options[0];
-                var firstElementEqualsCode = firstOption.value != null && lookupObj.code != null && ((window.isString(firstOption.value) && window.isString(lookupObj.code) && firstOption.value.toUpperCase() == lookupObj.code.toUpperCase()) || (firstOption.value == lookupObj.code));
-                var attribute = lookupObj.fieldMetadata.attribute;
-                var datamapIsChanging = datamap[attribute] != firstOption.value;
+                const firstOption = lookupObj.options[0];
+                const firstElementEqualsCode = firstOption.value != null && lookupObj.code != null && ((window.isString(firstOption.value) && window.isString(lookupObj.code) && firstOption.value.toUpperCase() == lookupObj.code.toUpperCase()) || (firstOption.value == lookupObj.code));
+                const attribute = lookupObj.fieldMetadata.attribute;
+                const datamapIsChanging = datamap[attribute] != firstOption.value;
                 if (firstElementEqualsCode && datamapIsChanging) {
                     log.debug("exact match {0} found for modal/ avoid opening it".format(lookupObj.code));
                     associationService.updateUnderlyingAssociationObject(lookupObj.fieldMetadata, firstOption, scope);
@@ -134,22 +134,22 @@
             showModal(element);
         };
 
-        var api = {
-            unblock: unblock,
-            block: block,
-            refreshFromAttribute: refreshFromAttribute,
-            init: init,
-            updateLookupObject: updateLookupObject,
-            handleMultipleLookupOptionsFn: handleMultipleLookupOptionsFn,
-            displayLookupModal: displayLookupModal
-        };
 
+        const api = {
+            unblock,
+            block,
+            refreshFromAttribute,
+            init,
+            updateLookupObject,
+            handleMultipleLookupOptionsFn,
+            displayLookupModal
+        };
         return api;
 
     }
 
     service.$inject = ['$rootScope', '$timeout', '$log', 'associationService', 'crudContextHolderService', 'schemaService', 'searchService'];
 
-    angular.module("sw_lookup").service('cmplookup', service);
+    angular.module("sw_lookup").service('lookupService', service);
 
 })(angular);

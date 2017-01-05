@@ -157,12 +157,12 @@
             controller: ["$scope", "$http", "$element", "$injector", "$timeout", "$log",
                 "printService", "compositionService", "commandService", "fieldService", "i18NService",
                 "associationService", "expressionService", "styleService",
-                "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService", "cmplookup",
+                "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService", 
                 "layoutservice", "attachmentService", "richTextService",
                 function ($scope, $http, $element, $injector, $timeout, $log,
                 printService, compositionService, commandService, fieldService, i18NService,
                 associationService, expressionService, styleService,
-                cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService, cmplookup,
+                cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
                 layoutservice, attachmentService, richTextService) {
 
                     $scope.$name = 'crud_input_fields';
