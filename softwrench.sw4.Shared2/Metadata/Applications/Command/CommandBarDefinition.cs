@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using log4net;
 using Newtonsoft.Json;
+using softwrench.sw4.Shared2.Metadata.Exception;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Command;
 
@@ -49,6 +51,9 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
             get; set;
         }
 
+        public ApplicationCommand PrimaryCommand {
+            get { return Commands.OfType<ApplicationCommand>().FirstOrDefault(f => f.Primary.HasValue && f.Primary.Value); }
+        }
 
         public CommandBarDefinition(string id, string position, Boolean excludeUndeclared, IEnumerable<ICommandDisplayable> commands) {
             Id = id;
@@ -62,6 +67,12 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
                 //the id of the command will be a hash followed by the position value, so that we can refer to it later by id
                 Id = "#" + Position;
             }
+            var count = commands.OfType<ApplicationCommand>().Count(a => a.Primary.HasValue && a.Primary.Value);
+            if (count > 1) {
+                //TODO: throw exception, but need to check eventual showexpressions
+                LogManager.GetLogger(typeof(CommandBarDefinition)).Warn("only one primary command should be declared");
+            }
+
         }
 
         public bool IsDynamic() {

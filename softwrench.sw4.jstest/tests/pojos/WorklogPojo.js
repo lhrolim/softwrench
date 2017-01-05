@@ -31,7 +31,7 @@ class WorklogPojo {
         }
     }
 
-        static DetailItem(id, description,ld, parentid, parentclass = "sr") {
+        static DetailItem(id, description,ld, parentid= "100", parentclass = "sr") {
             return {
                 "worklogid": id,
                 description,

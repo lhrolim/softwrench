@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function commandCommonsService($log, expressionService) {
+    function commandCommonsService($log,$q, expressionService, contextService) {
         
         //#region Public methods
 
@@ -38,6 +38,23 @@
             return commands;
         }
 
+        function getBarCommands(schema, position) {
+            if (schema == null) {
+                return $q.reject();
+            }
+            schema.jscache = schema.jscache || {};
+            schema.jscache.commandbars = schema.jscache.commandbars || {};
+            if (schema.jscache.commandbars[position] !== undefined) {
+                //null should be considered as a cache hit also
+                return schema.jscache.commandbars[position];
+            }
+            const bars = contextService.fetchFromContext("commandbars", true);
+            const commands = this.getCommands(schema, position, bars);
+            schema.jscache.commandbars[position] = commands;
+
+            return commands;
+        }
+
         //tabId parameter can be used in showexpression, do not remove it
         function isCommandHidden(datamap, schema, command, tabId) {
             if (command.remove) {
@@ -55,6 +72,7 @@
         //#region Service Instance
         const service = {
             getCommands,
+            getBarCommands,
             isCommandHidden
         };
         return service;
@@ -63,7 +81,7 @@
 
     //#region Service registration
 
-    angular.module("webcommons_services").service("commandCommonsService", ["$log", "expressionService", commandCommonsService]);
+    angular.module("webcommons_services").service("commandCommonsService", ["$log", "$q", "expressionService", "contextService", commandCommonsService]);
 
     //#endregion
 

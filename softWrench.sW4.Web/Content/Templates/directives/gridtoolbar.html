@@ -1,7 +1,7 @@
 <div class="toolbar-secondary group" data-classplaceholder="commandbar">
     <div class="wrap">
-        <div class="buttons" ng-repeat="command in getGridToolbar()">
-            <button type="button"
+        <div class="buttons" ng-repeat="command in ::getGridToolbar()">
+            <button type="{{buttonType(command)}}"
                     ng-class="buttonClasses(getCommand(command))"
                     ng-init="initIfToggleCommand(command)"
                     ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href=""

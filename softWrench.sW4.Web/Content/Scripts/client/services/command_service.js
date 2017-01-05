@@ -8,15 +8,15 @@ angular.module('sw_layout')
 
     return {
         commandLabel: function (schema, id, defaultValue) {
-            var commandSchema = schema.commandSchema;
+            const commandSchema = schema.commandSchema;
             if (schema.properties != null && id == "cancel" && schema.properties['detail.cancel.lbl'] != null) {
-                var value = schema.properties['detail.cancel.lbl'];
+                const value = schema.properties['detail.cancel.lbl'];
                 return i18NService.get18nValue('general.' + value.toLowerCase(), value);
             }
             if (!commandSchema.hasDeclaration) {
                 return defaultValue;
             }
-            var idx = $.inArray(id, commandSchema.toInclude);
+            const idx = $.inArray(id, commandSchema.toInclude);
             if (idx == -1) {
                 return defaultValue;
             }
@@ -36,22 +36,21 @@ angular.module('sw_layout')
         },
 
         isCommandEnabled: function (datamap, schema, command, tabId) {
-            var expression = command.showExpression;
+            const expression = command.showExpression;
             if (expression == undefined || expression === "") {
                 return false;
             }
-            var expressionToEval = expressionService.getExpression(expression, datamap);
+            const expressionToEval = expressionService.getExpression(expression, datamap);
             return !eval(expressionToEval);
         },
 
         doExecuteService: function (scope, clientFunction, command,overridenDatamap) {
-            var service = $injector.getInstance(command.service);
+            const service = $injector.getInstance(command.service);
             if (service == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return $q.when();
             }
-
-            var method = service[clientFunction];
+            const method = service[clientFunction];
             if (method == null) {
                 $log.get("commandService#doExecuteService").warn('method {0} not found on service {1}'.format(clientFunction, command.service));
                 return $q.when();
@@ -100,16 +99,16 @@ angular.module('sw_layout')
      
 
                 log.debug("executing modal default implementation for command {0}".format(command.id));
-                var ob = schemaService.parseAppAndSchema(command.nextSchemaId);
-                var application = ob.application;
+                const ob = schemaService.parseAppAndSchema(command.nextSchemaId);
+                let application = ob.application;
                 if (!application) {
                     application = scope.schema.applicationName;
                 }
-                var id = schemaService.getId(scope.datamap, scope.schema);
+                const id = schemaService.getId(scope.datamap, scope.schema);
                 var that = this;
 
                 applicationService.getApplicationWithInitialDataPromise(application, ob.schemaId, { id: id }, scope.datamap).then(function (result) {
-                    var title = result.data.schema.title;
+                    const title = result.data.schema.title;
                     if (result.data.extraParameters['exception']) {
                         alertService.alert(result.data.extraParameters['exception']);
                         return;
@@ -132,21 +131,17 @@ angular.module('sw_layout')
             if (!fullName) {
                 return false;
             }
-
-            var idx = fullName.indexOf(".");
-
-            var serviceName = fullName.substring(0, idx);
+            const idx = fullName.indexOf(".");
+            const serviceName = fullName.substring(0, idx);
             if (!serviceName) {
                 return false;
             }
-
-            var service = $injector.getInstance(serviceName);
+            const service = $injector.getInstance(serviceName);
             if (!service) {
                 return false;
             }
-
-            var methodName = fullName.substring(idx + 1);
-            var method = service[methodName];
+            const methodName = fullName.substring(idx + 1);
+            const method = service[methodName];
             if (!method) {
                 return false;
             }
@@ -156,19 +151,16 @@ angular.module('sw_layout')
 
         //TODO: make it generic
         executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid, newValue) {
-            var idx = fullServiceName.indexOf(".");
-            var serviceName = fullServiceName.substring(0, idx);
-            var methodName = fullServiceName.substring(idx + 1);
-
-            var service = $injector.getInstance(serviceName);
+            const idx = fullServiceName.indexOf(".");
+            const serviceName = fullServiceName.substring(0, idx);
+            const methodName = fullServiceName.substring(idx + 1);
+            const service = $injector.getInstance(serviceName);
             if (service == undefined) {
-                var errost = "missing clicking service".format(serviceName);
+                const errost = "missing clicking service".format(serviceName);
                 throw new Error(errost);
             }
-
-            var method = service[methodName];
-
-            var args = [];
+            const method = service[methodName];
+            const args = [];
             args.push(rowdm);
             args.push(column);
             args.push(schema);
@@ -179,27 +171,14 @@ angular.module('sw_layout')
         },
 
         getBarCommands: function (schema, position) {
-            if (schema == null) {
-                return;
-            }
-            schema.jscache = schema.jscache || {};
-            schema.jscache.commandbars = schema.jscache.commandbars || {};
-            if (schema.jscache.commandbars[position] !== undefined) {
-                //null should be considered as a cache hit also
-                return schema.jscache.commandbars[position];
-            }
-            const bars = contextService.fetchFromContext("commandbars", true);
-            const commands = commandCommonsService.getCommands(schema, position, bars);
-            schema.jscache.commandbars[position] = commands;
-
-            return commands;
+            return commandCommonsService.getBarCommands(schema, position);
         },
 
         evalToggleExpression: function (datamap, expression) {
             if (expression == undefined || expression === "") {
                 return false;
             }
-            var expressionToEval = expressionService.getExpression(expression, datamap);
+            const expressionToEval = expressionService.getExpression(expression, datamap);
             return eval(expressionToEval);
         }
 

@@ -1,8 +1,8 @@
 ﻿(function (app, angular) {
     "use strict";
 
-    var sharedController = ["$scope", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService", "genericTicketService",
-        function ($scope, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService, genericTicketService) {
+    var sharedController = ["$scope","$q", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService", "genericTicketService",
+        function ($scope,$q, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService, genericTicketService) {
 
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         const methodname = expr.substr(7);
@@ -136,7 +136,7 @@
 
         //don't execute disabled commands
         if (!$scope.clickEnabled(command)) {
-           return;
+           return $q.reject();
         }
 
         return command.service === "$scope"
@@ -192,15 +192,23 @@
         return eval(expressionToEval);
     }
 
+    $scope.buttonType = (command) => {
+        return command.primary ? "submit" :"button";
+    }
+
     $scope.buttonClasses = function (command) {
         var classes = "btn ";
 
+        if (command.primary) {
+            classes += " btn-primary ";
+        }
+
         if (command.pressed) {
-            classes += "active ";
+            classes += " active ";
         }
 
         if (!$scope.clickEnabled(command)) {
-            classes += "disabled ";
+            classes += " disabled ";
         }
 
         return classes + command.cssClasses;

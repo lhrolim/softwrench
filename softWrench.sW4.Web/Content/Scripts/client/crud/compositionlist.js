@@ -618,6 +618,7 @@
                 });
             };
 
+
             $scope.toggleDetailsAfterDataFetched = function (fromServer, item, originalListItem, title, forceModal) {
                 if (!shouldEditInModal() && !forceModal) {
                     $scope.collapseAll(item[$scope.compositionlistschema.idFieldName]);

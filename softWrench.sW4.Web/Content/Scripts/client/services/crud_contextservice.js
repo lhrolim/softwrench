@@ -526,10 +526,16 @@
             getContext("#modal").customSaveFn = saveFn;
         };
 
-        
-
         function getSaveFn() {
             return getContext("#modal").customSaveFn;
+        };
+
+        function registerPrimaryCommand(command) {
+            getContext("#modal").primaryCommand = command;
+        };
+
+        function getPrimaryCommand() {
+            return getContext("#modal").primaryCommand;
         };
 
 
@@ -691,9 +697,11 @@
         const modalService = {
             disposeModal,
             getSaveFn,
+            getPrimaryCommand,
             isShowingModal,
             modalLoaded,
-            registerSaveFn
+            registerSaveFn,
+            registerPrimaryCommand
         };
         const gridServices = {
             setFixedWhereClause,

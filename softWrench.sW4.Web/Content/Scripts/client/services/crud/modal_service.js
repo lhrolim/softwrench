@@ -2,16 +2,20 @@
     "use strict";
 
     angular.module('sw_layout')
-        .service('modalService', ["$rootScope","$q", "crudContextHolderService", function ($rootScope,$q, crudContextHolderService) {
+        .service('modalService', ["$rootScope", "$q", "crudContextHolderService", function ($rootScope, $q, crudContextHolderService) {
 
             return {
 
                 hide: function (modalId) {
                     //adding this call to solve a mistereous bug on minified environments where the modal-backdrop element would remain
                     $('.modal-backdrop').remove();
-                    if ($rootScope.showingModal) {
+                    if (crudContextHolderService.isShowingModal()) {
                         $rootScope.$broadcast(JavascriptEventConstants.HideModal);
                     }
+                },
+
+                showWithModalData: function(modalData) {
+                    $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modalData);
                 },
 
                 /// <summary>
@@ -42,6 +46,8 @@
                 /// <param name="parentschema">holds the parent schema</param>
                 show: function (schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema) {
                     if (schemaorModalData.schema) {
+                        //this happens if the directive was compiled after the event was thrown, i.e, the first time the modal is being included on the screen
+                        //later calls won´t come here
                         $rootScope.$broadcast(JavascriptEventConstants.ModalShown, schemaorModalData);
                         return;
                     }
@@ -70,10 +76,10 @@
                     }
                     const modaldata = {
                         schema: schemaorModalData,
-                        datamap: datamap,
-                        appResponseData: appResponseData,
-                        savefn: savefn,
-                        cancelfn: cancelfn,
+                        datamap,
+                        appResponseData,
+                        savefn,
+                        cancelfn,
                         previousdata: parentdata,
                         previousschema: parentschema,
                         title: properties.title,
@@ -81,8 +87,8 @@
                         onloadfn: properties.onloadfn,
                         closeAfterSave: properties.closeAfterSave
                     };
-                    crudContextHolderService.registerSaveFn(savefn);
 
+                    
                     $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modaldata);
                 },
 
