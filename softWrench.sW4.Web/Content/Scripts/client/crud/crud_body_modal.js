@@ -78,7 +78,9 @@
                     if (e.which === 13) {
                         const command = crudContextHolderService.getPrimaryCommand();
                         if (!!command) {
-                            commandService.doCommand($scope, command);
+                            $timeout(() => {
+                                commandService.doCommand($scope, command);
+                            }, 0, false);
                         }
                         
                     }
