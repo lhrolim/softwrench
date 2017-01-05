@@ -32,6 +32,7 @@
         $scope.closeModal = function () {
             $scope.modalshown = false;
             $('#crudmodal').modal("hide");
+            $('#crudmodal').unbind("keypress");
             $rootScope.$broadcast(JavascriptEventConstants.HideModal, true);
 
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
