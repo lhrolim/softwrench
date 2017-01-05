@@ -53,7 +53,7 @@
         <attribute name="pluspcustomer" type="varchar"/>
       </attributes>
     </entity>
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+    <entity name="asset" idAttribute="assetuid" useridAttribute="assetnum">
       <attributes>
         <attribute name="pluspcustomer" type="varchar"/>
       </attributes>

@@ -990,7 +990,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="asset" idAttribute="assetid">
+    <entity name="asset" idAttribute="assetuid">
       <attributes>
         <attribute name="ancestor" type="varchar" required="false" />
         <attribute name="assetid" type="integer" required="true" />

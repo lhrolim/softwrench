@@ -90,7 +90,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="asset" idAttribute="assetid" whereclause="asset.pluspcustomer != 'HLC-00' ">
+    <entity name="asset" idAttribute="assetuid" whereclause="asset.pluspcustomer != 'HLC-00' ">
       <attributes>
         <attribute name="computername" type="varchar" required="false" query="CASE WHEN LOCATE('//',!@Description) > 0 THEN LTRIM(RTRIM(SUBSTR(!@Description,1,LOCATE('//',!@Description)-1))) ELSE LTRIM(RTRIM(!@Description)) END"/>
         <attribute name="hlagdescription" type="varchar" required="false" query="CASE WHEN LOCATE('//',!@Description) > 0 THEN LTRIM(RTRIM(SUBSTR(!@Description, LOCATE('//', !@Description)+3))) ELSE LTRIM(RTRIM(!@Description)) END" />

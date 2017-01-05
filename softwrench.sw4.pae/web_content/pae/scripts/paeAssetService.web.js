@@ -42,9 +42,9 @@
                     return;
                 }
 
-                const assetId = resultObject[0]["assetid"];
+                const assetuId = resultObject[0]["assetuid"];
                 const param = {
-                    id: assetId,
+                    id: assetuId,
                     scanmode: true
                 };
 
@@ -78,7 +78,7 @@
                                 platform: "web",
                                 scanmode: true
                             };
-                            const urlToUse = url(`/api/data/asset/${datamap["assetid"]}?${$.param(httpParameters)}`);
+                            const urlToUse = url(`/api/data/asset/${datamap["assetuid"]}?${$.param(httpParameters)}`);
 
                             $http.put(urlToUse, jsonString)
                                 .then(() => {

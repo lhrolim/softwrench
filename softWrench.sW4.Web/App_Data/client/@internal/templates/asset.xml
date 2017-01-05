@@ -11,7 +11,7 @@
   </templates>
   <entities>
 
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+    <entity name="asset" idAttribute="assetuid" useridAttribute="assetnum">
       <relationships>
         <relationship to="site">
           <relationshipAttribute from="siteid" to="siteid" primary="true" />
@@ -254,6 +254,7 @@
           </commandbars>
           
           <field attribute="assetid" label="Asset#" readonly="true" hidden="true"/>
+          <field attribute="assetuid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
           <field attribute="unchargedcost" hidden="true"/>
           <field attribute="totunchargedcost" hidden="true"/>
@@ -405,6 +406,7 @@
             <property key="list.click.event" value="assetService.goToDetail"/>
           </properties>
           <field attribute="assetid" hidden="true"/>
+          <field attribute="assetuid" hidden="true"/>
           <field attribute="assetnum" label="Asset"/>
           <field attribute="description" label="Description"/>
           <field attribute="location" label="Location"/>

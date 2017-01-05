@@ -212,7 +212,7 @@
         <connectorParameter key="dbtable" value="SITE" />
       </connectorParameters>
     </entity>
-    <entity name="asset" idAttribute="assetid">
+    <entity name="asset" idAttribute="assetuid">
       <attributes>
         <attribute name="assetid"  type="bigint" required="true" />
         <attribute name="assetnum" type="varchar" required="true" auto-generated="true" />

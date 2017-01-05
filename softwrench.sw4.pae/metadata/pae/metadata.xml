@@ -32,7 +32,7 @@
   </templates>
 
   <entities>
-    <entity name="paeasset" parententity="asset" idAttribute="assetid" useridAttribute="assetnum">
+    <entity name="paeasset" parententity="asset" idAttribute="assetuid" useridAttribute="assetnum">
       <attributes>
         <attribute name="assetid" type="bigint" required="true"/>
         <attribute name="assetnum" type="varchar" required="true" />

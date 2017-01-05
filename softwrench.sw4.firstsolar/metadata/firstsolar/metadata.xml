@@ -54,7 +54,7 @@
     </entity>
 
 
-    <entity name="asset" idAttribute="assetid">
+    <entity name="asset" idAttribute="assetuid">
       <attributes>
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
       </attributes>

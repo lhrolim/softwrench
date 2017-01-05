@@ -639,7 +639,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="asset" idAttribute="assetid" useridAttribute="assetnum">
+    <entity name="asset" idAttribute="assetuid" useridAttribute="assetnum">
       <attributes>
         <attribute name="assetnum" type="varchar" required="true" />
         <attribute name="parent" type="varchar" required="false" />
