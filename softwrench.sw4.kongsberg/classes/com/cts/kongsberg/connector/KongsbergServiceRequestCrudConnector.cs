@@ -7,6 +7,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
     public class KongsbergServiceRequestCrudConnector: BaseServiceRequestCrudConnector {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
+            TicketspecHandler.HandleTicketspec(maximoTemplateData);
             var sr = maximoTemplateData.IntegrationObject;
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
 
@@ -16,6 +17,16 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.connector
 
             base.BeforeUpdate(maximoTemplateData);
         }
+
+        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            base.AfterCreation(maximoTemplateData);
+            maximoTemplateData.OperationData.UserId = maximoTemplateData.ResultObject.UserId;
+            maximoTemplateData.OperationData.OperationType = softWrench.sW4.Data.Persistence.WS.Internal.OperationType.AddChange;
+
+            // Resubmitting MIF for ServiceAddress Update
+            ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
+        }
+
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;

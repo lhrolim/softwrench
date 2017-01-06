@@ -4,7 +4,7 @@
     function statusHandlerService(crudContextHolderService) {
         function filterSelectableOptions(item) {
             let dm = crudContextHolderService.rootDataMap();
-            if (dm && !dm.originalstatus.equalIc('INPROG') && item.value.equalIc('RESOLVED')) {
+            if (dm && !dm.originalstatus.equalsAny('INPROG', 'RESOLVED') && item.value.equalIc('RESOLVED')) {
                 return false;
             }
 

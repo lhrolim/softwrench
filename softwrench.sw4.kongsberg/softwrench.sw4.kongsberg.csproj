@@ -103,7 +103,6 @@
     <Compile Include="classes\com\cts\kongsberg\configuration\KogtGlobalPreferenceRegistry.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KeywordBatchConverter.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergIncidentCrudConnector.cs" />
-    <Compile Include="classes\com\cts\kongsberg\connector\KongsbergProjectRequestCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergSolutionCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergServiceRequestCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergIncidentDataSet.cs" />
