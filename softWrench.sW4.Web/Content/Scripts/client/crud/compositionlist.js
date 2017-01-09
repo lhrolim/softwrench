@@ -18,6 +18,10 @@
             return compositionListViewModel.filterForColumn($scope.compositionlistschema, column);
         }
 
+        $scope.nonHiddenDisplayables = function() {
+            return $scope.compositionlistschema.displayables.filter(f => !f.isHidden);
+        }
+
         $scope.filterApplied = function () {
             $scope.paginationData.pageNumber = 1;
             const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);

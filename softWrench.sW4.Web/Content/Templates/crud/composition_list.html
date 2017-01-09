@@ -31,7 +31,7 @@
                     <!--Singleselect-->
                 </th>
                 <th class="{{safeCSSselector(column.attribute)}}"
-                    ng-repeat="column in compositionlistschema.nonHiddenFields"
+                    ng-repeat="column in ::nonHiddenDisplayables()"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)"
                     ng-init="columnFilter = filterForColumn(column)">
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
@@ -89,7 +89,7 @@
                     <input type="radio" ng-model="compositionitem['#selected']" value="true" name="radio" ng-click="toggleDetails(compositionitem,column,'singleselection',$event,rowindex)">
                 </td>
                 <td class="{{safeCSSselector(column.attribute)}}"
-                    ng-repeat="column in compositionlistschema.nonHiddenFields"
+                    ng-repeat="column in nonHiddenDisplayables()"
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
                     ng-click="toggleDetails(compositionitem,column,'row',$event,rowindex)"
                     data-title="{{column.label}}">
