@@ -40,7 +40,6 @@ namespace softWrench.sW4.Util.TransactionStatistics {
         /// Adds a new <see cref="AuditSession"/>
         /// </summary>
         /// <param name="user">The user information <see cref="InMemoryUser"/></param>
-        [Transactional(DBType.Swdb)]
         public virtual void AddSessionAudit(InMemoryUser user) {
             try {
                 if (user.DBUser.UserName.Equals("jobuser")) {
@@ -64,7 +63,6 @@ namespace softWrench.sW4.Util.TransactionStatistics {
         /// Updates the session audit with the endtime in UTC
         /// </summary>
         /// <param name="sessionId">The session ID</param>
-        [Transactional(DBType.Swdb)]
         public virtual void CloseSessionAudit(int sessionId) {
             try {
                 if (sessionId == 0) {
@@ -91,7 +89,6 @@ namespace softWrench.sW4.Util.TransactionStatistics {
         /// <param name="operation">The operation performed. </param>
         /// <param name="start">The transaction start time</param>
         /// <param name="end">The transaction end time</param>
-        [Transactional(DBType.Swdb)]
         public virtual void AuditTransaction(string name, string operation, DateTime start, DateTime end) {
             try {
                 // Save the transaction audit
