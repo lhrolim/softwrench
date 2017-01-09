@@ -124,9 +124,9 @@
                             const resolved = contextService.fetchFromContext("associationsresolved", false, true);
                             const phase = resolved ? 'configured' : 'initial';
                             const dispatchedbytheuser = resolved ? true : false;
-                            const hook = associationService.postAssociationHook(association, $scope, { phase: phase, dispatchedbytheuser: dispatchedbytheuser, fields: fields });
+                            const hook = associationService.postAssociationHook(association, $scope, { phase, dispatchedbytheuser, fields});
                             hook.then(function (hookResult) {
-                                associationService.updateAssociations(association, $scope);
+                                associationService.updateAssociations(association, $scope, {phase});
                                 try {
                                     $scope.$digest();
                                 } catch (ex) {

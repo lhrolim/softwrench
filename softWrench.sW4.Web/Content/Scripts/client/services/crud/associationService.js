@@ -299,9 +299,7 @@
 
 
         ///dispatchedbyuser: the method could be called after a user action (changing a field), or internally after a value has been set programatically 
-        function postAssociationHook(associationMetadata, scope, triggerparams) {
-            triggerparams = triggerparams || {};
-
+        function postAssociationHook(associationMetadata, scope, triggerparams ={}) {
             var fields = triggerparams.fields;
             if (!fields) {
                 fields = scope.datamap;
@@ -318,9 +316,8 @@
                 parentdata: scope.parentdata || /* when trigerring event from modal */ crudContextHolderService.rootDataMap(),
                 triggerparams
             };
-            $log.getInstance("sw4.associationservice#postAssociationHook").debug(`Post hook from association ${associationMetadata.target}|${associationMetadata.associationKey}`);
-            const promise = $q.when(eventService.afterchange(associationMetadata, parameters));
-            return promise;
+            $log.get("sw4.associationservice#postAssociationHook", ["association", "detail"]).debug(`Post hook from association ${associationMetadata.target}|${associationMetadata.associationKey}`);
+            return $q.when(eventService.afterchange(associationMetadata, parameters));
         };
 
 
@@ -544,8 +541,7 @@
         // of this very first association.
         // This would only affect the eager associations, not the lookups, because they would be fetched at the time the user opens it.
         // Ex: An asset could be filtered by the location, so if a user changes the location field, the asset should be refetched.
-        function updateAssociations(association, scope, options) {
-            options = options || {};
+        function updateAssociations(association, scope, options = {}) {
 
             var log = $log.getInstance('sw4.associationservice#updateAssociations', ['association']);
 
@@ -558,9 +554,9 @@
                 //no other asociation depends upon this first association, return here.
                 //false is to indicate that no value has been updated
                 log.debug('No associated dependants for {0}'.format(triggerFieldName));
-                if (association.rendererType !== 'multiselectautocompleteclient') {
+                if (association.rendererType !== 'multiselectautocompleteclient' && options.phase !== "initial") {
                     //if multiple selection, there´s no sense to move focus
-                    $timeout(function () {
+                    $timeout(() =>{
                         //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                         //had to put a bigger timeout so that the watches doesn´t get evaluated.
                         //TODO: investigate it
