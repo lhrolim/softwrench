@@ -527,10 +527,9 @@
             <field attribute="itdfirstcallresolution" label="First Call Resolution?">
               <renderer type="checkbox"/>
             </field>
-            <association target="classificationid" labelfield="classification_.description" label="Classification" requiredexpression="true">
-              <renderer type="lookup"/>
-              <dataprovider prefilterfunction="FilterClassification"/>
-            </association>
+              <optionfield attribute="classstructureid" label="Classification" providerattribute="_SRClassStructureTypeDescription">
+                    <renderer type="lookup" />
+              </optionfield>
           </section>
           
           <section orientation="horizontal">
