@@ -237,7 +237,7 @@ namespace softWrench.sW4.Configuration.Services {
         // global property, ignores module, profile and conditions
         public T GetGlobalPropertyValue<T>(PropertyDefinition definition) {
             var value = InnerGetGlobalPropertyValue(definition);
-            var stringValue = value == null ? null : (value.StringValue ?? value.SystemStringValue);
+            var stringValue = value == null ? definition.DefaultValue : (value.StringValue ?? value.SystemStringValue);
             return GetConvertedValue<T>(stringValue);
         }
 
