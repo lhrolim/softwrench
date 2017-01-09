@@ -9,7 +9,7 @@ module.exports = function (grunt) {
     //Resolving presets on the run, so that we do not need to install node-modules on web-project
     var babelCore = require('babel-core');
     var optManager = new babelCore.OptionManager();
-    var resolvedPresets = optManager.resolvePresets(['es2015']);
+    var resolvedPresets = optManager.resolvePresets(['latest']);
     var node_modulesPath = __dirname + "\\node_modules";
 
     global.last = function (arr) {

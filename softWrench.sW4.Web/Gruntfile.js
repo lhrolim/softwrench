@@ -215,7 +215,7 @@ module.exports = function (grunt) {
                 options: {
                     babelPreprocessor: {
                         options: {
-                            presets: ["es2015"],
+                            presets: ["latest"],
                             sourceMap: false
                         }
                     },
