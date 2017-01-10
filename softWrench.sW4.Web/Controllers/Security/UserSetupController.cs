@@ -42,6 +42,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly UserManager _userManager;
         private readonly SecurityFacade _facade;
 
+    
+
         public UserSetupController(UserManager userManager, SecurityFacade facade) {
             _userManager = userManager;
             _facade = facade;
@@ -232,6 +234,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IMaximoHibernateDAO _maxdao;
 
+        private const string application = "person";
+        private const string schemaId = "newPersonDetail";
+
         public UserSetupWebApiController(UserManager userManager, UserSetupEmailService userSetupEmailService,
             ISWDBHibernateDAO swdao, IMaximoHibernateDAO maxdao) {
             _userManager = userManager;
@@ -284,7 +289,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [System.Web.Http.AllowAnonymous]
         [System.Web.Http.HttpPost]
-        public IGenericResponseResult NewUserRegistration([FromBody]JObject json) {
+        public async Task<IGenericResponseResult> NewUserRegistration([FromBody]JObject json) {
             var approvers = _swdao.FindByQuery<SwUser>(SwUser.UserByProfile, "approver");
             if (!approvers.Any()) {
                 throw new InvalidOperationException(
@@ -297,10 +302,6 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 throw new InvalidOperationException(
                     "Registration can't be processed: There are no approvers with a primary email registered in the system. Please contact your system administrator or support team.");
             }
-
-            const string application = "person";
-            const string schemaId = "newPersonDetail";
-
             // pre-signin action --> use anonymous user
             var user = InMemoryUser.NewAnonymousInstance();
 
@@ -315,9 +316,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
             var schemaKey = SchemaUtil.GetSchemaKeyFromString(schemaId, ClientPlatform.Web);
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(schemaKey, user, ClientPlatform.Web);
-            DataSetProvider.GetInstance()
-                .LookupDataSet(application, schemaId)
-                .Execute(applicationMetadata, json, operationRequest);
+            var personDataSet = DataSetProvider.GetInstance().LookupDataSet(application, schemaId);
+            await personDataSet.Execute(applicationMetadata, json, operationRequest);
 
             // request user activation to the approvers
             var firstname = json.GetValue("firstname").Value<string>();

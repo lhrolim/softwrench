@@ -566,8 +566,8 @@
 
                 return false;
             }
-            var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer;
-            var postAssociationHook = this.postAssociationHook;
+            var updateAssociationOptionsRetrievedFromServer = this.updateAssociationOptionsRetrievedFromServer.bind(this);
+            var postAssociationHook = this.postAssociationHook.bind(this);
             const applicationName = schema.applicationName;
             var fields = scope.datamap;
 
