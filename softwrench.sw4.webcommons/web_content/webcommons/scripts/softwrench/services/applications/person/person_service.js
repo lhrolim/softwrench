@@ -4,7 +4,7 @@
 
     angular.module('maximo_applications').service('personService', ['$rootScope', "$log", 'alertService', 'redirectService', 'applicationService',
         'contextService', 'crudContextHolderService', 'historyService', 'restService', '$q', personService]);
-
+    
     function personService($rootScope, $log, alertService, redirectService, applicationService, contextService, crudContextHolderService, historyService, restService, $q) {
 
 
@@ -155,9 +155,10 @@
 
 
             alertService.confirm(`are you sure you want to activate user ${username}`).then(r => {
-                restService.postPromise("UserSetupWebApi", "Activate", { userid }).then(r => {
+                restService.postPromise("UserSetupWebApi", "Activate", { userid }).then(response => {
                     alertService.success("User Activated");
                     dm["isactive"] = true;
+                    dm["activationlink"] = response.data;
                 });
             });
         }

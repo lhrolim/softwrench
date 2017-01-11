@@ -58,9 +58,10 @@ namespace softWrench.sW4.Security.Services {
 
         private readonly UserProfileManager _userProfileManager;
 
+        private readonly UserLinkManager _userLinkManager;
 
 
-        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService, LdapManager ldapManager, UserSyncManager userSyncManager, IEventDispatcher dispatcher, ISWDBHibernateDAO swdbDAO, IConfigurationFacade facade, UserPasswordService userPasswordService, MenuSecurityManager menuSecurityManager, UserProfileManager userProfileManager) {
+        public UserManager(UserLinkManager userLinkManager, MaximoHibernateDAO maxDAO, UserSetupEmailService userSetupEmailService, LdapManager ldapManager, UserSyncManager userSyncManager, IEventDispatcher dispatcher, ISWDBHibernateDAO swdbDAO, IConfigurationFacade facade, UserPasswordService userPasswordService, MenuSecurityManager menuSecurityManager, UserProfileManager userProfileManager, UserLinkManager userLinkManager1) {
             UserLinkManager = userLinkManager;
             MaxDAO = maxDAO;
             UserSetupEmailService = userSetupEmailService;
@@ -72,6 +73,7 @@ namespace softWrench.sW4.Security.Services {
             _userPasswordService = userPasswordService;
             _menuSecurityManager = menuSecurityManager;
             _userProfileManager = userProfileManager;
+            _userLinkManager = userLinkManager1;
         }
 
         [Transactional(DBType.Swdb)]
@@ -90,7 +92,7 @@ namespace softWrench.sW4.Security.Services {
                     user.MaximoPersonId = user.UserName;
                 }
 
-                user.Profiles =_userProfileManager.GetDefaultGroups();
+                user.Profiles = _userProfileManager.GetDefaultGroups();
 
                 isCreation = true;
 
@@ -258,8 +260,7 @@ namespace softWrench.sW4.Security.Services {
             return null;
         }
 
-        [Transactional(DBType.Swdb)]
-        public virtual async Task Activate(int userId) {
+        public virtual async Task<UserActivationLink> Activate(int userId) {
             var dbUser = await _dao.FindByPKAsync<User>(userId);
 
             if (dbUser == null) {
@@ -270,6 +271,8 @@ namespace softWrench.sW4.Security.Services {
             dbUser.Locked = false;
             ValidateForActivation(dbUser);
             await _dao.SaveAsync(dbUser);
+            await SendActivationEmailFromUser(dbUser);
+            return await _userLinkManager.GetLinkByUser(dbUser);
         }
 
         [Transactional(DBType.Swdb)]

@@ -1,17 +1,19 @@
 <div ng-controller="UserStatisticsController"
      ng-if="!isLdap()"
-     class="alert faq clearfix col-sm-offset-2" ng-class="{'alert-info' : !hasAlreadyLoggedIn()}">
+     class="alert faq clearfix col-sm-offset-2" ng-class="{'alert-info' : !hasAlreadyLoggedIn()}"
+     ng-show="isActive()">
+    
     <article>
         <div class="col-md-12" ng-show="!hasAlreadyLoggedIn()">
             <label>That user has not yet logged into the system</label>
-            <div ng-if="activationlink!=null">
-                <label>An activation email has already been sent on {{getFormattedDate(activationlink.sentDate)}}</label>
+            <div ng-if="datamap['activationlink']!=null">
+                <label>An activation email has already been sent on {{getFormattedDate(datamap['activationlink'].sentDate)}}</label>
             </div>
             <div class="cta-button">
                 <button class="btn btn-primary" ng-click="sendActivationEmail()">
                     <i class="fa fa-paper-plane"></i>&ensp;
-                    <span ng-if="activationlink!=null">Resend</span>
-                    <span ng-if="activationlink==null">Send</span>
+                    <span ng-if="datamap['activationlink']!=null">Resend</span>
+                    <span ng-if="datamap['activationlink']==null">Send</span>
                     Activation Email
                 </button>
             </div>

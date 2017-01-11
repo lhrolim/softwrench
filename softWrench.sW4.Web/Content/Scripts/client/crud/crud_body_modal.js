@@ -75,7 +75,7 @@
             $timeout(function () {
                 $(window).trigger("resize");
                 $('#crudmodal').keypress(e=> {
-                    if (e.which === 13) {
+                    if (e.which === 13 && !$(e.target).is("input")) {
                         const command = crudContextHolderService.getPrimaryCommand();
                         if (!!command) {
                             $timeout(() => {

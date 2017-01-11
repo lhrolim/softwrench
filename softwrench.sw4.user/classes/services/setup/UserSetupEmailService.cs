@@ -96,7 +96,6 @@ namespace softwrench.sw4.user.classes.services.setup {
             var emailData = new EmailData(NoReplySendFrom, email, "[softWrench] Welcome to softWrench", msg);
             //TODO: Async??
             _emailService.SendEmail(emailData);
-
         }
 
         public void ForgotPasswordEmail(User user, string email) {

@@ -17,6 +17,10 @@
             return $scope.datamap["statistics"] != null;
         }
 
+        $scope.isActive = function () {
+            return $scope.datamap["isactive"];
+        }
+
         $scope.isLdap = function () {
             return "true" === $scope.datamap["ldapEnabled"];
         }

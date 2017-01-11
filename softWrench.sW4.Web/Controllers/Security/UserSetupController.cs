@@ -12,6 +12,7 @@ using cts.commons.persistence;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Util;
+using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.services.setup;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -231,6 +232,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private readonly UserManager _userManager;
         private readonly UserSetupEmailService _userSetupEmailService;
+        private UserLinkManager _userLinkManager;
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IMaximoHibernateDAO _maxdao;
 
@@ -277,8 +279,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [System.Web.Http.HttpPost]
         [System.Web.Http.Authorize]
-        public async Task Activate([FromUri]int userId) {
-            await _userManager.Activate(userId);
+        public async Task<UserActivationLink> Activate([FromUri]int userId) {
+            return await _userManager.Activate(userId);
         }
 
         [System.Web.Http.HttpPost]

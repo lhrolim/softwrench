@@ -1,33 +1,33 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('webcommons_services').service('userService', ['contextService', userService]);
+    class userService {
+        constructor (contextService) {
+            this.contextService = contextService;
+        }
 
-    function userService(contextService) {
-
-
-        function locatePrimaryEmail(compositionEmails) {
+        locatePrimaryEmail(compositionEmails) {
 
             if (!compositionEmails) {
                 return null;
             }
-            for (var i = 0; i < compositionEmails.length; i++) {
-                var email = compositionEmails[i];
+            for (let i = 0; i < compositionEmails.length; i++) {
+                const email = compositionEmails[i];
                 if (email.isprimary) {
                     return email.emailaddress;
                 }
             }
             return null;
-        };
+        }
 
-        function readProperty(propertyExpression) {
+        readProperty(propertyExpression) {
             if (propertyExpression == null) {
                 return null;
             }
             if (!propertyExpression.startsWith("@")) {
                 return propertyExpression;
             }
-            const user = contextService.getUserData();
+            const user = this.contextService.getUserData();
             if (propertyExpression.startsWith("@user.")) {
                 const propName = propertyExpression.substring(6);
                 if (user.hasOwnProperty(propName)) {
@@ -44,22 +44,22 @@
             //TODO: finish this;
             return propertyExpression;
 
-        };
+        }
 
-        function getPersonId() {
-            const user = contextService.getUserData();
+        getPersonId() {
+            const user = this.contextService.getUserData();
             const personId = user.maximoPersonId;
-            if (!personId && contextService.isLocal() && "swadmin".equalsIc(user.login)) {
+            if (!personId && this.contextService.isLocal() && "swadmin".equalsIc(user.login)) {
                 return "SWADMIN";
             }
             return personId;
         }
 
-        function hasRole(roleArray) {
+        hasRole(roleArray) {
             if (roleArray == null) {
                 return true;
             }
-            const user = contextService.getUserData();
+            const user = this.contextService.getUserData();
             var userroles = user.roles;
             var result = false;
             $.each(roleArray, function (key, value) {
@@ -73,11 +73,11 @@
             return result;
         }
 
-        function inGroup(groupName) {
+        inGroup(groupName) {
             if (groupName == null) {
                 return true;
             }
-            const user = contextService.getUserData();
+            const user = this.contextService.getUserData();
             
             const personGroups = user.personGroups;
             if (!personGroups || personGroups.length === 0) {
@@ -91,19 +91,12 @@
                     return true;
                 }
             }
-
-
             return false;
-        };
-
-        const service = {
-            getPersonId,
-            hasRole,
-            locatePrimaryEmail,
-            inGroup,
-            readProperty
-        };
-        return service;
+        }
 
     }
+
+    userService.$inject = ["contextService"];
+
+    angular.module('webcommons_services').service('userService', userService);
 })(angular);
