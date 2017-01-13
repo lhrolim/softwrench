@@ -16,6 +16,7 @@
                 return lineCost;
             };
 
+            //afterchange
             var updateLineCost = function (event) {
                 if (event.parentdata) {
                     var parentdatamap = event.parentdata.fields || event.parentdata;
@@ -71,6 +72,7 @@
             }
 
             return {
+                //afterchange
                 afterlaborchange: function (event) {
                     if (event.fields['laborcode'] == ' ') {
                         event.fields['craft'] = null;
@@ -80,6 +82,7 @@
                     // TODO: Need to reset the display fields on craft after laborcode has been changed.
                     return;
                 },
+                //afterchange
                 aftercraftchange: function (event) {
                     if (event.fields['laborcraftrate_.rate'] != null) {
                         event.fields['payrate'] = event.fields['laborcraftrate_.rate'];
@@ -91,6 +94,8 @@
                         event.fields['linecost'] = 0.0;
                     }
                 },
+
+                //afterchange
                 afterDateTimeChange: function(event) {
                     // If all of the datetime fields are filed
                     if ((event.fields['startdate'] && !event.fields['startdate'].nullOrEmpty()) &&
@@ -122,7 +127,8 @@
                     return redirectService.goToApplication("labtrans", schema, {}, {});
                 },
                 updateLineCost: updateLineCost,
-                approveSingleLabtrans: function() {
+
+                approveSingleLabtrans: function () {
                     var datamap = crudContextHolderService.rootDataMap();
                     var labtransIds = [];
                     labtransIds.push(datamap.labtransid);

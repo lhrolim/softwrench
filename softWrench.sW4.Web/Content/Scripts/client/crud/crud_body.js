@@ -13,7 +13,6 @@
                 isList: '=',
                 isDetail: '=',
                 blockedassociations: '=',
-                associationSchemas: '=',
                 schema: '=',
                 datamap: '=',
                 originalDatamap: '=',

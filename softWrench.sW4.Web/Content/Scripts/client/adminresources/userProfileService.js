@@ -38,6 +38,7 @@
             }
         }
 
+        //afterchange
         function tabvaluechanged(parameters) {
             const dm = parameters.fields;
             var tab = parameters.fields["#selectedtab"];
@@ -86,6 +87,7 @@
             fixHeaderService.callWindowResize();
         }
 
+        //afterchange
         function afterModeChanged(parameters) {
             const dm = parameters.fields; //cleaning up data
             simpleLog.debug("resting tab");
@@ -139,6 +141,7 @@
             });
         }
 
+        //afterchange
         function basicRoleChanged(parameters) {
             const fields = parameters.fields;
             if (parameters.target.attribute === "#appallowview") {
@@ -157,6 +160,7 @@
 
         }
 
+        //afterchange
         function cmpRoleChanged(parameters) {
             const fields = parameters.fields;
             if (parameters.target.attribute === "#compallowview") {
@@ -172,7 +176,7 @@
 
         }
 
-
+        //afterchange
         function onApplicationChange(parameters) {
             var dm = parameters.fields;
             var nextApplication = dm["#application"];
@@ -225,6 +229,7 @@
             });
         }
 
+        //afterchange
         function afterSchemaChanged(parameters) {
             const dm = parameters.fields; //cleaning up data
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
@@ -810,21 +815,21 @@
         }
 
         const hooks = {
-            afterSchemaListLoaded: afterSchemaListLoaded,
-            afterModeChanged: afterModeChanged,
-            afterSchemaChanged: afterSchemaChanged,
-            afterTabsLoaded: afterTabsLoaded,
-            availableFieldsRefreshed: availableFieldsRefreshed,
-            availableActionsRefreshed: availableActionsRefreshed,
+            afterSchemaListLoaded,
+            afterModeChanged,
+            afterSchemaChanged,
+            afterTabsLoaded,
+            availableFieldsRefreshed,
+            availableActionsRefreshed,
             //activeUsersRefreshed: activeUsersRefreshed,
-            beforeApplicationChange: beforeApplicationChange,
-            cmpRoleChanged: cmpRoleChanged,
-            basicRoleChanged: basicRoleChanged,
-            beforeTabChange: beforeTabChange,
-            beforeSchemaChange: beforeSchemaChange,
-            onSchemaLoad: onSchemaLoad,
-            onApplicationChange: onApplicationChange,
-            tabvaluechanged: tabvaluechanged
+            beforeApplicationChange,
+            cmpRoleChanged,
+            basicRoleChanged,
+            beforeTabChange,
+            beforeSchemaChange,
+            onSchemaLoad,
+            onApplicationChange,
+            tabvaluechanged
         };
         const api = {
             'delete': deleteProfile,

@@ -378,7 +378,7 @@
         mockScope.expandAll().then(() => {
             expect(compositionListViewModel.doToggle).toHaveBeenCalled();
             //called twice
-            expect(compositionListViewModel.doToggle).callCount.toBe(2);
+            expect(compositionListViewModel.doToggle.calls.count()).toBe(2);
             expect(mockScope.wasExpandedBefore).toBeTruthy();
         }).catch(err => { console.log(err); })
             .finally(done);

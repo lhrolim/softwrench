@@ -80,8 +80,7 @@
          * @returns {Promise} 
          */
         function save({compositionData,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap} = defaultSaveParams) {
-            const isComposition = crudContextHolderService.getActiveTab() !== null;
-
+            
             if (dispatchedByModal == undefined) {
                 dispatchedByModal = crudContextHolderService.isShowingModal();
             }
@@ -93,7 +92,6 @@
 
             //LUIZ -- TODO: review circular dependency
             return $injector.get('submitService').submit(schema, datamap, {
-                isComposition,
                 compositionData,
                 nextSchemaObj,
                 dispatchedByModal,

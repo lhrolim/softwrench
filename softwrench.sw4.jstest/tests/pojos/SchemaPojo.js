@@ -51,7 +51,7 @@ class SchemaPojo {
         };
     }
 
-        static WithIdAndDisplayables(id, displayables,applicationName = "sr", idFieldName= "id") {
+    static WithIdAndDisplayables(id, displayables,applicationName = "sr", idFieldName= "id") {
         return {
             applicationName:applicationName,
             schemaId: id,
@@ -82,4 +82,4 @@ class SchemaPojo {
     }
 
 
-}
+    }

@@ -79,7 +79,7 @@
             const operatorToUse = useOrOperator ? "||" : "&&";
             var resultString = "";
             for (let data in searchData) {
-                if (data === "lastSearchedValues") {
+                if (!searchData.hasOwnProperty(data) || data === "lastSearchedValues") {
                     //exclude this field which is used only to control the  needsCountUpdate flag
                     continue;
                 }
@@ -258,32 +258,32 @@
             /// <param name="quicksearchDTO">a dto containing the quick search information </param>
             /// <param name="multiSort">an object containing the multi sort information </param>
             /// <returns type=""></returns>        
-            buildSearchDTO: function (searchData, searchSort, searchOperator, filterFixedWhereClause, paginationData, searchTemplate, quicksearchDTO, multiSort) {
-                const searchDto = {};
-                searchData = searchData || {};
-                searchSort = searchSort || {};
-                searchOperator = searchOperator || {};
-                searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
+            buildSearchDTO: function (searchData ={}, searchSort ={}, searchOperator ={}, filterFixedWhereClause, paginationData, searchTemplate, quickSearchDTO, multiSearchSort) {
                 specialCharactersHandler(searchData, searchOperator);
-                searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
-                searchDto.searchSort = buildSearchSortString(searchSort);
-                searchDto.SearchAscending = searchSort.order == "asc";
-                searchDto.filterFixedWhereClause = filterFixedWhereClause;
-                searchDto.needsCountUpdate = true;
-                searchDto.quickSearchDTO = quicksearchDTO;
-                searchDto.multiSearchSort = multiSort;
+                const searchDto = {
+                    searchParams : buildSearchParamsString(searchData, searchOperator),
+                    searchValues : this.buildSearchValuesString(searchData, searchOperator),
+                    searchSort : buildSearchSortString(searchSort),
+                    SearchAscending : searchSort.order === "asc",
+                    filterFixedWhereClause,
+                    quickSearchDTO,
+                    multiSearchSort,
+                    searchTemplate
+                };
                 //existing template pass too many variable, which some of them did not get translated and caused an SQL error
-                //searchDto.searchTemplate = searchTemplate;
+                //searchDto.searchTemplate = searchTemplate;        
+                
+                //TODO: inspect if needed
                 searchDto.searchTemplate = searchTemplate;
                 searchData.lastSearchedValues = searchDto.searchValues;
-
+                
                 if (paginationData) {
                     searchDto.pageNumber = paginationData.pageNumber;
                     searchDto.pageSize = paginationData.pageSize;
                     searchDto.totalCount = paginationData.totalCount;
                     searchDto.numberOfPages = paginationData.numberOfPages;
                 }
-                return searchDto;
+                return new SearchDTO(searchDto);
 
             },
 

@@ -27,6 +27,7 @@ angular.module('sw_layout')
             }
         },
 
+        //afterchange
         afterITCAssetChange: function (event) {
             // Clean User-Personal Asset
             if (event['assetnum'] != null) {
@@ -36,6 +37,7 @@ angular.module('sw_layout')
 
         },
 
+        //afterchange
         afterUserAssetChange: function (event) {
             // Clean ITC-Responsible Asset
             if (event['itcassetnum'] != null) {

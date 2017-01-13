@@ -21,6 +21,8 @@ angular.module('sw_layout')
     };
     
     return {
+
+        //afterchange
         aftertoolchange: function (event) {
             event.fields['itemsetid'] = event.fields["tool_.itemsetid"];
 

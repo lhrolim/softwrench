@@ -38,7 +38,6 @@
                 $rootScope.$broadcast(DashboardEventConstants.AppFieldsLoaded);
 
                 //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
-                //event.scope.datamap['appFields'] = "#allfields";
             });
         }
 

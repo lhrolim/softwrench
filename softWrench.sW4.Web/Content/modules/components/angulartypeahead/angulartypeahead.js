@@ -6,7 +6,7 @@
 
 
     function angularTypeahead(restService, $timeout, $log, $rootScope,
-        contextService, associationService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
+        contextService, associationService,lookupService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
@@ -67,7 +67,7 @@
                 }
             } else {
                 bloodHoundOptions.local = function () {
-                    const eagerLookupOptions = associationService.getEagerLookupOptions(new LookupDTO(fieldMetadata, null));
+                    const eagerLookupOptions = lookupService.getEagerLookupOptions(new LookupDTO(fieldMetadata, null));
                     return eagerLookupOptions == null ? [] : eagerLookupOptions.resultObject.associationData;
                 }
             }
@@ -112,7 +112,7 @@
             const engineSourceFn = engine.ttAdapter();
             const sourceFn = fieldMetadata.type === "OptionField" ?
                 function (query, cb) {
-                    const results = associationService.getEagerLookupOptions(new LookupDTO(fieldMetadata, new QuickSearchDTO(query)));
+                    const results = lookupService.getEagerLookupOptions(new LookupDTO(fieldMetadata), new QuickSearchDTO(query));
                     if (results == null) {
                         return cb([]);
                     }
@@ -292,7 +292,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', '$rootScope', 'contextService', 'associationService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', '$rootScope', 'contextService', 'associationService', 'lookupService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
 
 })(angular, Bloodhound);
 

@@ -4,11 +4,11 @@
 angular.module("sw_layout").service('kongsberg.srService', ['srService', 'crudContextHolderService', function (srService, crudContextHolderService) {
 
     return {
-
+        //afterchange
         afterchangeowner: function (event) {
             srService.afterchangeowner(event);
         },
-
+        //afterchange
         afterchangeownergroup: function (event) {
 
             if (event.fields['ownergroup'] == null) {

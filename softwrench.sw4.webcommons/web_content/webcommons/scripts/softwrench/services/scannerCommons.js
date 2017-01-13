@@ -6,11 +6,11 @@
 
     //#region Service registration
 
-    angular.module("sw_scan").service("scanningCommonsService", ["$rootScope", "crudContextHolderService", scanningCommonsService]);
+    angular.module("sw_scan").service("scanningCommonsService", ["$rootScope", "crudContextHolderService", "$q", scanningCommonsService]);
 
     //#endregion
 
-    function scanningCommonsService($rootScope, crudContextHolderService) {
+    function scanningCommonsService($rootScope, crudContextHolderService, $q) {
 
         $rootScope.$on(JavascriptEventConstants.AppChanged, function () {
             $(document).scannerDetection(null);
@@ -26,6 +26,7 @@
         var scanCallbackMap = {
 
         };
+
         //#endregion
 
         //#region Public methods
@@ -49,7 +50,12 @@
             const registerSchemaId = matchingparameters.schemaId;
             const registerTabId = matchingparameters.tabid || "";
 
-            scanCallbackMap[`${registerApplication}.${registerSchemaId}.${registerTabId}`] = callback;
+            const deferred = $q.defer();
+            const promise = deferred.promise;
+
+
+            scanCallbackMap[`${registerApplication}.${registerSchemaId}.${registerTabId}`] = callback || deferred;
+
 
             $(document).scannerDetection({
                 avgTimeByChar: timeBetweenCharacters,
@@ -70,13 +76,16 @@
                         const callbackFn = scanCallbackMap[`${applicationName}.${schema.schemaId}.${tabId}`];
                         if (angular.isFunction(callbackFn)) {
                             callbackFn(data);
-                        } else {
+                        } else if (angular.isFunction(callbackFn.resolve)) {
+                            deferred.resolve(data);
+                        }else {
                             //no call back defined, let´s take the chance to unregister the scanner detector
                             //whenever it reaches the proper screen it can then register it self again
                             $(document).scannerDetection(null);
                         }
                         return;
                     }
+                    //TODO: is this scenario here really important?
 
                     //if we have multiple schemas on screen, invoke both functions unless they are the same
                     const callbackFn1 = scanCallbackMap[`${applicationName}.${schema[0].schemaId}.${tabId}`];
@@ -101,6 +110,10 @@
 
                 }
             });
+
+            return promise;
+
+
         };
 
         function getTimeBetweenChars() {

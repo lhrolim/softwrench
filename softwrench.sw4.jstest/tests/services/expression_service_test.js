@@ -38,7 +38,6 @@
 
     //    it('should match services by fn:', function () {
     //        var datamap = {};
-    //        debugger;
     //        var expression = expressionService.getExpression("fn:service.method($.datamap,$.schema)'", null, false);
     //        expect(expression).toEqual("dispatcherService.invokeService('service','method',[scope.datamap,scope.schema])");
     //    });

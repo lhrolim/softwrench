@@ -23,12 +23,12 @@
         }
 
         function viewUrl(panel, auth) {
-            var workbook = sanitizeName(panel.configurationDictionary["workbook"]);
-            var view = sanitizeName(panel.configurationDictionary["view"]);
-            var ticket = auth.ticket;
-            var site = auth.siteName;
-            var serverUrl = auth.serverUrl.endsWith("/") ? auth.serverUrl.substring(0, auth.serverUrl.length - 1) : auth.serverUrl;
-            var url = "{0}{1}{2}/views/{3}/{4}".format(serverUrl, (!!ticket ? "/trusted/" + ticket : ""), (!!site ? "/site/" + site : ""), workbook, view);
+            const workbook = sanitizeName(panel.configurationDictionary["workbook"]);
+            const view = sanitizeName(panel.configurationDictionary["view"]);
+            const ticket = auth.ticket;
+            const site = auth.siteName;
+            const serverUrl = auth.serverUrl.endsWith("/") ? auth.serverUrl.substring(0, auth.serverUrl.length - 1) : auth.serverUrl;
+            const url = "{0}{1}{2}/views/{3}/{4}".format(serverUrl, (!!ticket ? "/trusted/" + ticket : ""), (!!site ? "/site/" + site : ""), workbook, view);
             return url;
         }
 
@@ -44,11 +44,11 @@
         }
 
         function toObjectList(xml, tagName) {
-            var parsed = $.parseXML(xml);
-            var elements = parsed.getElementsByTagName(tagName);
+            const parsed = $.parseXML(xml);
+            const elements = parsed.getElementsByTagName(tagName);
             // slice: hack to turn an HTMLCollection into an Array
             return Array.prototype.slice.call(elements).map(function (element) {
-                var attrs = element.attributes;
+                const attrs = element.attributes;
                 var object = {};
                 angular.forEach(attrs, function (attr) {
                     object[attr.name] = attr.value;
@@ -60,9 +60,9 @@
         function trustedTicketCacheKey(panel) {
             // cache key composed of user, workbook and view requested:
             // tableau expects a different trusted ticket for each different view
-            var workbook = sanitizeName(panel.configurationDictionary["workbook"]);
-            var view = sanitizeName(panel.configurationDictionary["view"]);
-            var user = contextService.getUserData().login;
+            const workbook = sanitizeName(panel.configurationDictionary["workbook"]);
+            const view = sanitizeName(panel.configurationDictionary["view"]);
+            const user = contextService.getUserData().login;
             return "sw:graphic:tableau:auth:ticket:" + user + ":" + workbook + ":" + view;
         }
         
@@ -82,21 +82,21 @@
             var shouldCache = angular.isNumber(cachettl) && cachettl > 0;
             // hit cache first
             if (shouldCache) {
-                var cachedAuth = localStorageService.get(cacheKey);
+                const cachedAuth = localStorageService.get(cacheKey);
                 if (!!cachedAuth) return $q.when(cachedAuth);
             }
             // hit in-progress request promise (avoid multiple identical requests)
             var undergoingPromiseCacheKey = cacheKey + ":promise";
-            var undergoingPromise = config.auth.cacheRegion[undergoingPromiseCacheKey];
+            const undergoingPromise = config.auth.cacheRegion[undergoingPromiseCacheKey];
             if (!!undergoingPromise) return undergoingPromise;            
             
             // execute request
-            var params = { provider: config.defaultProvider };
-            var payload = { authtype: type };
-            var ajaxconfig = { avoidspin: true };
-            var authPromise = restService.postPromise("Dashboard", "Authenticate", params, payload, ajaxconfig)
+            const params = { provider: config.defaultProvider };
+            const payload = { authtype: type };
+            const ajaxconfig = { avoidspin: true };
+            const authPromise = restService.postPromise("Dashboard", "Authenticate", params, payload, ajaxconfig)
                 .then(function (response) {
-                    var auth = response.data["resultObject"];
+                    const auth = response.data["resultObject"];
                     // update cache
                     if(shouldCache) localStorageService.put(cacheKey, auth, { ttl: cachettl });
                     return auth;
@@ -117,7 +117,7 @@
         }
 
         function authToRestApi() {
-            var cacheKey = "sw:graphic:tableau:auth:rest:" + contextService.getUserData().login;
+            const cacheKey = "sw:graphic:tableau:auth:rest:" + contextService.getUserData().login;
             return authenticate("REST", cacheKey, config.auth.restTTL);
         }
 
@@ -136,14 +136,14 @@
          * @returns Promise resolved with the tableau Viz instantiated
          */
         function renderGraphic(element, panel, auth, options) {
-            var url = viewUrl(panel, auth);
-            var renderOptions = buildRenderOptions(element, options);
+            const url = viewUrl(panel, auth);
+            const renderOptions = buildRenderOptions(element, options);
             var deferred = $q.defer();
             renderOptions.onFirstInteractive = function (event) {
                 deferred.resolve(event.getViz());
             };
             try {
-                var viz = new tableau.Viz(element, url, renderOptions);
+                const viz = new tableau.Viz(element, url, renderOptions);
             } catch (e) {
                 deferred.reject(e);
             }
@@ -178,13 +178,13 @@
 
             authToRestApi()
                 .then(function (auth) {
-                    var params = { provider: event.fields.provider, resource: "workbook" };
-                    var payload = angular.copy(auth);
-                    var requestconfig = { avoidspin: true };
+                    const params = { provider: event.fields.provider, resource: "workbook" };
+                    const payload = angular.copy(auth);
+                    const requestconfig = { avoidspin: true };
                     return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
                 .then(function (response) {
-                    var workbooks = toObjectList(response.data, "workbook").map(function (workbook) {
+                    const workbooks = toObjectList(response.data, "workbook").map(function (workbook) {
                         workbook.value = { id: workbook.id, name: workbook.name }
                         workbook.label = workbook.name;
                         return workbook;
@@ -199,19 +199,20 @@
          * 
          * @param {} event 
          */
+        //afterchange
         function onWorkbookSelected(event) {
             if (!event.fields.workbook) return;
 
             authToRestApi()
                 .then(function (auth) {
-                    var params = { provider: event.fields.provider, resource: "view" };
-                    var payload = angular.copy(auth);
+                    const params = { provider: event.fields.provider, resource: "view" };
+                    const payload = angular.copy(auth);
                     payload.workbook = event.fields.workbook.id;
-                    var requestconfig = { avoidspin: true };
+                    const requestconfig = { avoidspin: true };
                     return restService.postPromise("Dashboard", "LoadGraphicResource", params, payload, requestconfig);
                 })
                 .then(function (response) {
-                    var views = toObjectList(response.data, "view").map(function (view) {
+                    const views = toObjectList(response.data, "view").map(function (view) {
                         view.value = { name: view.name }
                         view.label = view.name;
                         return view;
@@ -241,7 +242,7 @@
         //#endregion
 
         //#region Service Instance
-        var service = {
+        const service = {
             renderGraphic: renderGraphic,
             loadGraphic: loadGraphic,
             resizeGraphic: resizeGraphic,

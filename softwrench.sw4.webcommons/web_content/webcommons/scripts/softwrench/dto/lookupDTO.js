@@ -1,45 +1,38 @@
-﻿class LookupDTO {
+﻿const required = (paramname) => {
+    throw new Error(`${paramname} is required`);
+}
 
-    constructor(fieldMetadata, quickSearchDTO) {
+class LookupDTO {
+
+    constructor(fieldMetadata = required("fieldMetadata")) {
         this.fieldMetadata = fieldMetadata;
-        this.quickSearchDTO = quickSearchDTO;
-
-        if (!fieldMetadata) {
-            throw new Error("fieldMetadata is required");
-        }
+        this._modalPaginationData = null;
+        this._options = null;
+        this._schema = null;
     }
 
     set options(options) {
-        this.options = options;
+        this._options = options;
     }
 
     get options() {
-        return this.options;
+        return this._options;
     }
 
-
-    set code (value) {
-        this.code = value;
+    get schema() {
+        return this._schema;
     }
 
-    get code() {
-        return this.code;
+    set schema(schema) {
+        this._schema = schema;
     }
 
-    set schemaId(value) {
-        this.schemaId = value;
+    get modalPaginationData() {
+        return this._modalPaginationData;
     }
 
-    get schemaId() {
-        return this.schemaId;
-    }
-
-    set application(value) {
-        this.application = value;
-    }
-
-    get application() {
-        return this.application;
+    set modalPaginationData(modalPaginationData) {
+        this._modalPaginationData = modalPaginationData;
     }
 
 }

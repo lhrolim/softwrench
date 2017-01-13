@@ -44,6 +44,7 @@ angular.module('sw_layout')
             redirectService.goToApplicationView("_wobatch", "list", null, null, {}, null);
         },
 
+        //afterchange
         clearSelectedRelatedEntityId: function (event) {
             event.fields["#transient_relatedreckey"] = null;
             event.fields["relatedreckey"] = null;
@@ -53,6 +54,7 @@ angular.module('sw_layout')
             $rootScope.$broadcast("sw_cleartypeaheadtext", null);
         },
 
+        //afterchange
         onAfterRelatedEntitySelected: function(event) {
             var datamap = event.fields;
             var selectedEntityName = datamap["relatedrecclass"];

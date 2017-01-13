@@ -119,6 +119,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\constants\MetadataEventConstants.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\CompositionSchemas.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\ApplicationCompositionSchemaDTO.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\dto\AssociationOptionDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\GridFilterDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\searchDTO.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\dto\quickSearchDTO.js" />

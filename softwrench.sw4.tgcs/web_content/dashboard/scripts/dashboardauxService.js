@@ -14,24 +14,24 @@
         //#endregion
 
         //#region Public methods
+        //afterchange
         function lookupFields(event) {
             var application = event.fields.application;
             if (!application) return;
 
             restService.getPromise("Dashboard", "LoadFields", { applicationName: application }).then(function (response) {
-                var data = response.data;
+                const data = response.data;
                 crudContextHolderService.updateEagerAssociationOptions("appfields", data.resultObject);
-                event.scope.datamap["appfields"] = "";
+                event.fields["appfields"] = "";
                 $.each(data.resultObject, function (key, value) {
-                    event.scope.datamap["appfields"] += value.value + ",";
+                    event.fields["appfields"] += value.value + ",";
                 });
-                var selectedFields = event.scope.datamap["appfields"];
+                const selectedFields = event.fields["appfields"];
                 if (selectedFields) {
-                    event.scope.datamap["appfields"] = selectedFields.substring(0, selectedFields.length - 1);
+                    event.fields["appfields"] = selectedFields.substring(0, selectedFields.length - 1);
                 }
 
                 //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
-                //event.scope.datamap['appfields'] = "#allfields";
             });
         }
 
@@ -106,6 +106,7 @@
             });
         }
 
+        //afterchange
         function loadPanels(event) {
             var paneltype = event.fields.paneltype;
             if (!paneltype) return;
@@ -140,6 +141,7 @@
             return dashboard;
         }
 
+        //afterchange
         function setGraphicProvider(event) {
             // delegate call to provider api
             const provider = event.fields.provider;
@@ -171,18 +173,18 @@
 
         //#region Service Instance
         var service = {
-            lookupFields: lookupFields,
-            createAndAssociateGridPanel: createAndAssociateGridPanel,
-            saveDashboard: saveDashboard,
-            filterSelectableModeOptions: filterSelectableModeOptions,
-            filterSelectableDashboards: filterSelectableDashboards,
-            selectPanel: selectPanel,
-            loadPanels: loadPanels,
-            setGraphicProvider: setGraphicProvider,
-            createAndAssociateGraphicPanel: createAndAssociateGraphicPanel,
-            addPanelToDashboard: addPanelToDashboard,
-            deactivateDashboard: deactivateDashboard,
-            loadDashboards: loadDashboards
+            lookupFields,
+            createAndAssociateGridPanel,
+            saveDashboard,
+            filterSelectableModeOptions,
+            filterSelectableDashboards,
+            selectPanel,
+            loadPanels,
+            setGraphicProvider,
+            createAndAssociateGraphicPanel,
+            addPanelToDashboard,
+            deactivateDashboard,
+            loadDashboards
         };
         return service;
         //#endregion

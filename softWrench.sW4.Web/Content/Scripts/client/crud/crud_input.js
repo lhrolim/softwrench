@@ -14,7 +14,6 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
             displayables: '=',
             datamap: '=',
             extraparameters: '=',
-            associationSchemas: '=',
             blockedassociations: '=',
             cancelfn: '&',
             savefn: '&',
@@ -35,7 +34,7 @@ app.directive('crudInputWrapper', function (contextService, $compile) {
                 element.append(
                   "<crud-input elementid='crudInputMain' schema='schema' extraparameters='extraparameters'" +
                   "datamap='datamap'  blockedassociations='blockedassociations'" +
-                  "association-schemas='associationSchemas'cancelfn='cancel(data,schema)' displayables='displayables'" +
+                  "cancelfn='cancel(data,schema)' displayables='displayables'" +
                   "savefn='save(selecteditem, parameters)' previousschema='previousschema' previousdata='previousdata' " +
                   "parentschema='parentschema' parentdata='parentdata'  ismodal='{{ismodal}}' panelid='panelid'/>"
                );
@@ -76,7 +75,6 @@ app.directive('crudInput', ["contextService", "associationService", function (co
             displayables: '=',
             datamap: '=',
             extraparameters: '=',
-            associationSchemas: '=',
             blockedassociations: '=',
             cancelfn: '&',
             savefn: '&',

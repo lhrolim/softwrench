@@ -672,10 +672,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var association = application.Schema.Associations().FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, lookupRequest.AssociationFieldName)));
             var associationApplicationMetadata = ApplicationAssociationResolver.GetAssociationApplicationMetadata(association);
 
-            if (associationApplicationMetadata != null
-                && associationApplicationMetadata.Schema != null
-                && associationApplicationMetadata.Schema.SchemaFilters != null
-                && lookupRequest.SearchDTO.AddPreSelectedFilters) {
+            if (associationApplicationMetadata?.Schema?.SchemaFilters != null && lookupRequest.SearchDTO.AddPreSelectedFilters) {
                 SchemaFilterBuilder.AddPreSelectedFilters(associationApplicationMetadata.Schema.SchemaFilters, lookupRequest.SearchDTO);
             }
 

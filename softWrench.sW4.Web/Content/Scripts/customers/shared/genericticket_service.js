@@ -36,6 +36,7 @@ angular.module('sw_layout')
             return $q.when();
         },
 
+        //afterchange
         adjustOrgId: function (event) {
             event.orgid = event.fields.extrafields["site_.orgid"];
         },
@@ -74,10 +75,6 @@ angular.module('sw_layout')
             
             alertService.confirm("The location you have entered does not contain the current asset. Would you like to remove the current asset from the ticket?").then(function () {
                 event['assetnum'] = null;
-                //TODO: this should be done using watchers, so that we could remove scope from event, decoupling things
-                event.scope.lookupAssociationsCode['assetnum'] = null;
-                event.scope.lookupAssociationsDescription["assetnum"] = null;
-
                 event.continue();
             }, function () {
                 event.interrupt();
@@ -97,6 +94,7 @@ angular.module('sw_layout')
             });
         },
 
+        //afterchange
         afterChangeAsset: function (event) {
             if (event.assetnum == null) {
                 return;
@@ -108,6 +106,7 @@ angular.module('sw_layout')
             }
         },
 
+        //afterchange
         afterchangeowner: function (event) {
             if (event['owner'] == null) {
                 return;
@@ -125,6 +124,7 @@ angular.module('sw_layout')
 
         },
 
+        //afterchange
         afterchangeownergroup: function (event) {
 
             if (event['ownergroup'] == null) {
@@ -156,6 +156,7 @@ angular.module('sw_layout')
             }
         },
 
+        //afterchange
         afterChangeWOServiceAddress: function (event) { 
             event["woserviceaddress_.formattedaddress"] = event["woaddress_.formattedaddress"];
             event["#formattedaddr"] = event["woserviceaddress_.formattedaddress"];
@@ -185,6 +186,7 @@ angular.module('sw_layout')
             }
         },
 
+        //afterchange
         afterChangeReportedBy: function (event) {
             var datamap = event;
             const searchData = {

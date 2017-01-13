@@ -56,6 +56,7 @@
             return redirectService.goToApplication("Person", "list");
         };
 
+        //afterchange
         function afterChangeUsername(datamap) {
             if (!nullOrEmpty(datamap["#personid"])) {
                 datamap["personid"] = datamap["#personid"];
@@ -107,6 +108,7 @@
             });
         }
 
+        //afterchange
         function onSiteSelected(event) {
             const datamap = event.fields;
             if (!datamap["locationorg"]) {
@@ -114,6 +116,7 @@
             }
         }
 
+        //afterchange
         function onOrganizationSelected(event) {
             const datamap = event.fields;
             if (datamap["locationorg"] !== datamap["site_.orgid"]) {

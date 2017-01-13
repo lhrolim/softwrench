@@ -35,25 +35,26 @@
             });
         };
 
-        function formatCommTemplate(parameters) {
-            const parentSchema = parameters.scope.parentschema || /* when commlog being edited in modal */ crudContextHolderService.currentSchema();
+        //afterchange
+        function formatCommTemplate(event) {
+            const parentSchema = crudContextHolderService.currentSchema();
             const parentIdFieldName = parentSchema.idFieldName;
-            const parentData = parameters.parentdata;
-            const templateId = parameters.fields['#templateid'];
+            const parentData = event.parentdata;
+            const templateId = event.fields['#templateid'];
             if (templateId == null) {
                 return;
             }
             const httpParameters = {
-                templateId: templateId,
+                templateId,
                 json: parentData,
                 schemaId: parentSchema.schemaId,
                 applicationName: parentSchema.applicationName,
                 applicationItemId: parentData[parentIdFieldName]
             };
             restService.invokePost("CommTemplate", "MergeTemplateDefinition", null, angular.toJson(httpParameters), function (data) {
-                parameters.fields['subject'] = data.resultObject.subject;
-                parameters.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
-                parameters.fields['sendto'] = [parameters.parentdata['reportedemail']];
+                event.fields['subject'] = data.resultObject.subject;
+                event.fields['message'] = richTextService.getDecodedValue(data.resultObject.message);
+                event.fields['sendto'] = [event.parentdata['reportedemail']];
             }, null);
         };
 

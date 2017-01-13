@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_lookup')
-        .directive('lookupModalWrapper', function ($compile, $timeout) {
+        .directive('lookupModalWrapper', function ($compile) {
             "ngInject";
 
             return {
@@ -12,10 +12,10 @@
                     lookupObj: '=',
                     schema: '=',
                     datamap: '=',
-                    loadedmodals: '=',
+                    loadedmodals: '='
                 },
                 template: "<div></div>",
-                link: function (scope, element, attrs) {
+                link: function (scope, element) {
                     if (!scope.datamap) {
                         scope.datamap = {};
                     }
@@ -27,15 +27,13 @@
                     "</lookup-modal>"
                     );
 
-                    $timeout(()=> {
-                        //lazy load the real directive gaining in performance
-                        $compile(element.contents())(scope);
-                    }, 0, false);
-                },
+                    //lazy load the real directive gaining in performance
+                    $compile(element.contents())(scope);
+                }
 
             };
         })
-    .directive('lookupModal', function (contextService) {
+    .directive('lookupModal', function (contextService, lookupService) {
         "ngInject";
 
         return {
@@ -46,15 +44,17 @@
                 lookupObj: '=',
                 schema: '=',
                 datamap: '=',
-                loadedmodals: '=',
+                loadedmodals: '='
             },
 
-            link: function (scope, element, attrs) {
+            link: function (scope, element) {
                 scope.name = "lookupmodal";
+                element.draggable();
+                element.modal('show');
             },
 
 
-            controller: function ($injector, $scope, $http, $element, searchService, i18NService, associationService,
+            controller: function ($q,$injector, $scope, $http, $element, searchService, i18NService, associationService,
                                   formatService, expressionService,  contextService, crudContextHolderService) {
 
                 $scope.searchData = {};
@@ -63,18 +63,16 @@
                 $scope.searchObj = {};
 
                 $scope.lookupModalSearch = function (pageNumber) {
-
-                    $scope.lookupObj.quickSearchDTO = {
-                        quickSearchData: $scope.lookupsearchdata
+                    if (!$scope.loadedmodals[$scope.lookupObj.fieldMetadata.attribute]) {
+                        //handling the case where an esc key is hit, closing the modal, but the ng-change is still active.
+                        return null;
                     }
 
-                    $scope.searchObj = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, null, $scope.searchTemplate);
+
+                    $scope.searchObj = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, {pageNumber}, $scope.searchTemplate, {quickSearchData: $scope.lookupsearchdata});
                     $scope.searchObj.addPreSelectedFilters = false;
 
-                    return associationService.getLookupOptions($scope.schema, $scope.datamap, $scope.lookupObj, pageNumber, $scope.searchObj).then(function (data) {
-                        const result = data.resultObject;
-                        $scope.populateModal(result);
-                    });
+                    return lookupService.getLookupOptions($scope.lookupObj, $scope.searchObj, $scope.datamap);
                 };
 
                 $scope.shouldShowPagination = function () {
@@ -88,18 +86,18 @@
                     });;
                 }
 
-                $scope.populateModal = function (associationResult) {
-                    $scope.lookupObj.options = associationResult.associationData;
-                    $scope.lookupObj.schema = associationResult.associationSchemaDefinition;
-                    const modalPaginationData = $scope.lookupObj.modalPaginationData;
-                    modalPaginationData.pageCount = associationResult.pageCount;
-                    modalPaginationData.pageNumber = associationResult.pageNumber;
-                    modalPaginationData.pageSize = associationResult.pageSize;
-                    modalPaginationData.totalCount = associationResult.totalCount;
-                    modalPaginationData.selectedPage = associationResult.pageNumber;
-                    //TODO: this should come from the server side
-                    modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
-                };
+//                $scope.populateModal = function (associationResult) {
+//                    $scope.lookupObj.options = associationResult.associationData;
+//                    $scope.lookupObj.schema = associationResult.associationSchemaDefinition;
+//                    const modalPaginationData = $scope.lookupObj.modalPaginationData;
+//                    modalPaginationData.pageCount = associationResult.pageCount;
+//                    modalPaginationData.pageNumber = associationResult.pageNumber;
+//                    modalPaginationData.pageSize = associationResult.pageSize;
+//                    modalPaginationData.totalCount = associationResult.totalCount;
+//                    modalPaginationData.selectedPage = associationResult.pageNumber;
+//                    //TODO: this should come from the server side
+//                    modalPaginationData.paginationOptions = associationResult.paginationOptions || [10, 30, 100];
+//                };
 
                 $scope.filterForColumn = function (column) {
                     return $scope.lookupObj.schema.schemaFilters.filters.find(function (filter) {
@@ -165,15 +163,21 @@
                 $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                     return i18NService.getLookUpDescriptionLabel(fieldMetadata);
                 };
+                
+                /**
+                 * Called when the user hits an option of the lookup modal, selecting the value de facto and closing it.
+                 * @param {} option 
+                 * @returns {} 
+                 */
                 $scope.lookupModalSelect = function (option) {
                     const fieldMetadata = $scope.lookupObj.fieldMetadata;
                     $scope.selectedOption = option;
                     $scope.datamap[fieldMetadata.target] = option.value;
-                    associationService.updateUnderlyingAssociationObject(fieldMetadata, option, $scope);
+                    associationService.updateUnderlyingAssociationObject(fieldMetadata, new AssociationOptionDTO(option), $scope);
                     $element.modal('hide');
                 };
 
-                $element.on('hide.bs.modal', function (e) {
+                $element.on('hide.bs.modal', ()=> {
                     $scope.lookupObj.quickSearchDTO = null;
                     $('body').removeClass('modal-open');
                     $('.modal-backdrop').remove();
@@ -199,7 +203,7 @@
                     modals.modal('hide');
                 };
 
-                $element.on('shown.bs.modal', function (e) {
+                $element.on('shown.bs.modal', ()=> {
                     if ($scope.lookupObj.item) {
                         $scope.datamap = $scope.lookupObj.item;
                     }

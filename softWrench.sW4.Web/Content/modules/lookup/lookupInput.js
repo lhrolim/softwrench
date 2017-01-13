@@ -1,8 +1,6 @@
 (function (angular) {
     "use strict";
 
-
-
     angular.module("sw_lookup").directive("lookupInput", ["$q", "lookupService", "contextService", 'expressionService', 'cmpfacade',
         'dispatcherService', 'modalService', 'compositionCommons', 'i18NService',
         function ($q, lookupService, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService) {
@@ -15,19 +13,15 @@
                     parentdata: '=',
                     schema: '=',
                     fieldMetadata: '=',
-                    disabledassociations: '=',
-                    blockedassociations: '=',
                     panelid: "@",
                     displayablepath: '@',
                     mode: '@'
                 },
 
-                link: function (scope, element) {
+                link: function (scope) {
 
-                    scope.lookupObj = {
-                        searchData: {},
-                        searchOperator: {}
-                    };
+                    scope.lookupObj = new LookupDTO(scope.fieldMetadata);
+
                     scope.vm = {
                         isSearching: false
                     };
@@ -74,9 +68,11 @@
 
                     scope.showLookupModal = function () {
                         //this will include (link) the directive defined on lookupModal.js on the screen
+                        //check the ng-if on the lookupinput.html for more information
                         scope.loadModalWrappers = {
                          [scope.fieldMetadata.attribute]: true
                         };
+
                         const fieldMetadata = scope.fieldMetadata;
 
                         if (fieldMetadata.rendererType === "modal") {
@@ -85,16 +81,17 @@
 
                         var searchDatamap = scope.datamap;
 
+                        scope.lookupObj = scope.lookupObj || new LookupDTO(fieldMetadata);
+
                         if (scope.parentdata) {
-                            scope.lookupObj.parentdata = scope.parentdata;
                             scope.lookupObj.item = scope.datamap;
                             searchDatamap = compositionCommons.buildMergedDatamap(scope.datamap, scope.parentdata);
-
                         }
 
-                        const code = scope.datamap[fieldMetadata.attribute];
-                        scope.lookupObj.element = element;
-                        return lookupService.updateLookupObject(scope, fieldMetadata, code, searchDatamap);
+                        return lookupService.initLookupModal(scope.lookupObj, scope.datamap, searchDatamap)
+                            .then(lookupObj => {
+                                scope.lookupObj = lookupObj;
+                            });
                     }
 
 

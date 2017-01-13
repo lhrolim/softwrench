@@ -529,7 +529,7 @@
               <command id="cancelinvissue" label="Cancel" icon="fa-times" service="inventoryService" method="navToIssueReturnList" parameters="schema,datamap" position=">print" cssclasses="large-button"/>              
             </commandgroup>
           </commandbars>
-          <event type="onload" service="scannerdetectionService" method="initInvIssueDetailListener"/>
+          <event type="onload" service="invIssueScannerService" method="initInvIssueDetailListener"/>
           <properties>
             <property key="detail.titleexpression" value="'Issue: {0} Entered By: {1}'.format(@matusetransid, @enterby)"/>
             <property key="config.fullKey" value="/Global/Details/InvIssue/ScanBar"/>

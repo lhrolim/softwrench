@@ -2,24 +2,7 @@
     "use strict";
 
 
-    app.directive('configAssociationListInputDatamap', function () {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attr) {
-                if (scope.$first) {
-                    scope.datamap[scope.fieldMetadata.attribute] = [];
-                }
-                var item = {};
-                var displayables = scope.associationSchemas[scope.fieldMetadata.associationKey].displayables;
-                angular.forEach(displayables, function (displayable) {
-                    var attribute = displayable.attribute;
-                    item[attribute] = scope.option.extrafields[attribute];
-                });
-                scope.datamap[scope.fieldMetadata.attribute].push(item);
-            }
-        };
-    })
-    .directive("configUpdateSectionDatamap", function () {
+    app.directive("configUpdateSectionDatamap", function () {
         return {
             restrict: "A",
             link: function (scope, element, attr) {
@@ -51,7 +34,6 @@
                 datamap: '=',
                 isDirty: '=',
                 displayables: '=',
-                associationSchemas: '=',
                 blockedassociations: '=',
                 extraparameters: '=',
                 elementid: '@',
@@ -72,7 +54,6 @@
                     "is-dirty='isDirty'" +
                     "ismodal = '{{ismodal}}'" +
                     "displayables='displayables'" +
-                    "association-schemas='associationSchemas'" +
                     "blockedassociations='blockedassociations'" +
                     "section-parameters='rendererParameters'" +
                     "elementid='{{elementid}}'" +
@@ -103,7 +84,6 @@
                 extraparameters: '=',
                 isDirty: '=',
                 displayables: '=',
-                associationSchemas: '=',
                 blockedassociations: '=',
                 elementid: '@',
                 orientation: '@',
@@ -192,7 +172,7 @@
                         if (fieldMetadata.providerAttribute == null) {
                             return fieldMetadata.options;
                         }
-                        var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
+                        const contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
                         return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
                     }
                     $scope.isPositionLeft = function (fieldMetadata) {
@@ -203,10 +183,10 @@
 
                     $scope.$on(JavascriptEventConstants.AssociationUpdated, function (event, associationoptions) {
                         $scope.associationsloaded = true;
-                        if (!$scope.associationOptions) {
-                            //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
-                            $scope.associationOptions = associationoptions;
-                        }
+//                        if (!$scope.associationOptions) {
+//                            //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
+//                            $scope.associationOptions = associationoptions;
+//                        }
                     });
 
                     //$scope.$on("sw.modal.hide", function () {
@@ -221,7 +201,7 @@
                     //this will get called when the input form is done rendering
                     $scope.$on(JavascriptEventConstants.BodyRendered, function (ngRepeatFinishedEvent, parentElementId) {
                         eventService.onload($scope.schema, $scope.datamap);
-                        var bodyElement = $('#' + parentElementId + "[schemaid=" + $scope.schema.schemaId + "]");
+                        const bodyElement = $('#' + parentElementId + "[schemaid=" + $scope.schema.schemaId + "]");
                         if (bodyElement.length <= 0) {
                             return;
                         }
@@ -257,7 +237,7 @@
                             $scope.configureFieldChangeEvents();
                             //                    $scope.configureDirtyWatcher();
                         }
-                        var datepickers = $('.datetimereadonly').data("DateTimePicker");
+                        const datepickers = $('.datetimereadonly').data("DateTimePicker");
                         if (datepickers) {
                             datepickers.disable();
                         }
@@ -275,17 +255,17 @@
                         return fieldService.getDisplayablesOfRendererTypes(schema.displayables, ['lookup']).length > 0;
                     }
                     $scope.isModifiableEnabled = function (fieldMetadata) {
-                        var result = expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
+                        const result = expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap);
                         return result;
                     };
 
                     $scope.isSelectEnabled = function (fieldMetadata) {
-                        var key = fieldMetadata.associationKey;
+                        const key = fieldMetadata.associationKey;
                         $scope.disabledassociations = $scope.disabledassociations || {};
                         if (key == undefined) {
                             return true;
                         }
-                        var result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap, $scope);
+                        const result = ($scope.blockedassociations == null || !$scope.blockedassociations[key]) && expressionService.evaluate(fieldMetadata.enableExpression, $scope.datamap, $scope);
                         if (result != $scope.disabledassociations[key]) {
                             cmpfacade.blockOrUnblockAssociations($scope, !result, !$scope.disabledassociations[key], fieldMetadata);
                             $scope.disabledassociations[key] = result;
@@ -303,7 +283,7 @@
 
                     /* CHECKBOX functions */
                     $scope.isCheckboxSelected = function (option, datamapKey) {
-                        var model = $scope.datamap[datamapKey];
+                        const model = $scope.datamap[datamapKey];
                         if (model == undefined) {
                             return false;
                         }
@@ -320,7 +300,7 @@
                                 $('.multiselect').multiselect('select', 'ADL');
                             });
                         }
-                        var idx = model.indexOf(option.value);
+                        const idx = model.indexOf(option.value);
                         if (idx > -1) {
                             model.splice(idx, 1);
                         } else {
@@ -329,7 +309,7 @@
                         $scope.datamap[datamapKey] = model;
                     };
                     $scope.initCheckbox = function (fieldMetadata) {
-                        var content = $scope.datamap[fieldMetadata.attribute];
+                        const content = $scope.datamap[fieldMetadata.attribute];
                         $scope.datamap[fieldMetadata.attribute] = formatService.isChecked(content);
                     }
 
@@ -348,9 +328,9 @@
 
                     $scope.configureNumericInput = function () {
                         if (!$scope.datamap) return;
-                        var displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ["numericinput"]);
+                        const displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ["numericinput"]);
                         angular.forEach(displayables, function (fieldMetadata) {
-                            var currentValue = $scope.datamap[fieldMetadata.attribute];
+                            const currentValue = $scope.datamap[fieldMetadata.attribute];
                             if (currentValue == null) {
                                 /* without default value */
                                 $scope.datamap[fieldMetadata.attribute] = 1;
@@ -361,15 +341,14 @@
                     };
 
                     $scope.configureFieldChangeEvents = function () {
-                        var fields = fieldService.getDisplayablesOfTypes($scope.displayables, ['ApplicationFieldDefinition']);
+                        const fields = fieldService.getDisplayablesOfTypes($scope.displayables, ['ApplicationFieldDefinition']);
                         $.each(fields, function (key, field) {
                             var shouldDoWatch = true;
                             $scope.$watch('datamap["' + field.attribute + '"]', function (newValue, oldValue) {
                                 if (oldValue === newValue || !shouldDoWatch) {
                                     return;
                                 }
-
-                                var eventToDispatch = {
+                                const eventToDispatch = {
                                     oldValue: oldValue,
                                     newValue: newValue,
                                     fields: $scope.datamap,
@@ -392,7 +371,6 @@
                                         shouldDoWatch = true;
                                     }
                                 };
-
                                 fieldService.onFieldChange(field, eventToDispatch);
                                 cmpfacade.digestAndrefresh(field, $scope);
                             });
@@ -400,7 +378,7 @@
                     };
 
                     $scope.configureOptionFields = function () {
-                        var log = $log.get("crud_input_fields#configureOptions");
+                        const log = $log.get("crud_input_fields#configureOptions");
                         //TODO: check field parameter as well, with top priority before schema
                         if ($scope.schema.properties["optionfield.donotusefirstoptionasdefault"] === "true") {
                             return;
@@ -409,18 +387,16 @@
                             //no need to further check it
                             return;
                         }
-                        var optionsFields = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField']);
-                        for (var i = 0; i < optionsFields.length; i++) {
-                            var optionfield = optionsFields[i];
-
+                        const optionsFields = fieldService.getDisplayablesOfTypes($scope.displayables, ['OptionField']);
+                        for (let i = 0; i < optionsFields.length; i++) {
+                            const optionfield = optionsFields[i];
                             if (fieldService.isPropertyTrue(optionfield, "optionfield.donotusefirstoptionasdefault")) {
                                 log.debug("ignoring first value of field {0}".format(optionfield.associationKey));
                                 continue;
                             }
-                            var shouldUseFirstOption = optionfield.providerAttribute == null || fieldService.isPropertyTrue(optionfield, "optionfield.forcefirstoption");
-
+                            const shouldUseFirstOption = optionfield.providerAttribute == null || fieldService.isPropertyTrue(optionfield, "optionfield.forcefirstoption");
                             if ($scope.datamap[optionfield.target] == null && shouldUseFirstOption && optionfield.rendererType !== 'checkbox') {
-                                var values = $scope.GetOptionFieldOptions(optionfield);
+                                const values = $scope.GetOptionFieldOptions(optionfield);
                                 if (values != null && values.length > 0) {
                                     $scope.datamap[optionfield.target] = values[0].value;
                                 }
@@ -432,7 +408,7 @@
                     };
 
                     $scope.formatLabel = function (text, fieldMetadata) {
-                        var maxLength = fieldMetadata.rendererParameters["labelmaxlength"];
+                        const maxLength = fieldMetadata.rendererParameters["labelmaxlength"];
                         if (!maxLength || text.length <= maxLength) {
                             return text;
                         }
@@ -441,17 +417,17 @@
 
                     $scope.opendetails = function (fieldMetadata) {
                         if ($scope.enabletoopendetails(fieldMetadata)) {
-                            var parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };
+                            const parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };
                             redirectService.goToApplicationView($scope.paramstopendetails.application, 'detail', 'output', null, parameters);
                         }
                     };
                     $scope.fillparamstoopendetails = function (fieldMetadata) {
                         $scope.paramstopendetails = null;
                         if (!nullOrUndef(fieldMetadata.rendererParameters)) {
-                            var idtopendetails = fieldMetadata.rendererParameters['idtopendetails'];
+                            const idtopendetails = fieldMetadata.rendererParameters['idtopendetails'];
                             if (!nullOrUndef(fieldMetadata.applicationTo)) {
-                                var application = fieldMetadata.applicationTo.replace('_', '');
-                                var id = $scope.datamap[idtopendetails];
+                                const application = fieldMetadata.applicationTo.replace('_', '');
+                                const id = $scope.datamap[idtopendetails];
                                 if (!nullOrUndef(id) && !nullOrUndef(application)) {
                                     $scope.paramstopendetails = { idtopendetails: id, application: application };
                                 }
@@ -466,7 +442,7 @@
                     $scope.getLengthParam = function (fieldMetadata) {
                         var lengthclass = null;
                         if (!nullOrUndef(fieldMetadata.rendererParameters)) {
-                            var length = fieldMetadata.rendererParameters['length'];
+                            const length = fieldMetadata.rendererParameters['length'];
                             if (!nullOrUndef(length)) {
                                 switch (length) {
                                     case 'full':
@@ -491,16 +467,16 @@
                         return isIE();
                     };
                     $scope.getLabelStyle = function (fieldMetadata) {
-                        var rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
-                        var weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');
-                        var result = {
+                        const rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
+                        const weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');
+                        const result = {
                             'color': rendererColor,
                             'font-weight': weight
-                        }
+                        };
                         return result;
                     }
                     $scope.showLabelTooltip = function (fieldMetadata) {
-                        var helpIcon = $scope.getHelpIconPos(fieldMetadata);
+                        const helpIcon = $scope.getHelpIconPos(fieldMetadata);
                         if (fieldMetadata.label !== fieldMetadata.toolTip && (helpIcon == undefined || helpIcon === '')) {
                             return 'tooltip';
                         } else {
@@ -520,7 +496,7 @@
                             //if there are no details, there´s nothing at all to expand
                             return false;
                         }
-                        var key = fieldMetadata.associationKey;
+                        const key = fieldMetadata.associationKey;
                         if (!$scope.datamap[key]) {
                             //if the item is not yet selected it should not be shown
                             return false;
@@ -532,7 +508,7 @@
                         if (!fieldService.isAssociation(fieldMetadata) || !fieldMetadata.detailSection) {
                             return;
                         }
-                        var key = fieldMetadata.associationKey;
+                        const key = fieldMetadata.associationKey;
                         $scope.expandeddetails[key] = !$scope.expandeddetails[key];
                     }
 
@@ -540,7 +516,7 @@
                         if (!this.isExpansionAvailable(fieldMetadata)) {
                             return false;
                         }
-                        var key = fieldMetadata.associationKey;
+                        const key = fieldMetadata.associationKey;
                         if (!$scope.expandeddetails[key]) {
                             $scope.expandeddetails[key] = false;
                         }
@@ -556,30 +532,27 @@
 
                     };
 
-                    $scope.associationOptionsToStringArray = function (fieldMetadata) {
-                        if (!$scope.associationsloaded) {
-                            return [];
-                        }
-
-                        $scope.schema.jscache = $scope.schema.jscache || {};
-
-                        var cacheKey = fieldMetadata.associationKey + "stringarraycache";
-                        if ($scope.schema.jscache[cacheKey]) {
-                            return $scope.schema.jscache[cacheKey];
-                        }
-
-                        var options = $scope.associationOptions[fieldMetadata.associationKey];
-
-                        var strArr = new Array();
-                        for (var option in options) {
-                            if (!options.hasOwnProperty(option)) {
-                                continue;
-                            }
-                            strArr.push(options[option].value);
-                        }
-                        $scope.schema.jscache[cacheKey] = strArr;
-                        return strArr;
-                    }
+//                    $scope.associationOptionsToStringArray = function (fieldMetadata) {
+//                        if (!$scope.associationsloaded) {
+//                            return [];
+//                        }
+//
+//                        $scope.schema.jscache = $scope.schema.jscache || {};
+//                        const cacheKey = fieldMetadata.associationKey + "stringarraycache";
+//                        if ($scope.schema.jscache[cacheKey]) {
+//                            return $scope.schema.jscache[cacheKey];
+//                        }
+//                        const options = $scope.associationOptions[fieldMetadata.associationKey];
+//                        const strArr = new Array();
+//                        for (let option in options) {
+//                            if (!options.hasOwnProperty(option)) {
+//                                continue;
+//                            }
+//                            strArr.push(options[option].value);
+//                        }
+//                        $scope.schema.jscache[cacheKey] = strArr;
+//                        return strArr;
+//                    }
 
                     $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                         return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type === 'ApplicationSection' && fieldMetadata.resourcepath == null;
@@ -607,7 +580,7 @@
 
                     function init() {
                         if (!$scope.isVerticalOrientation()) {
-                            var countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
+                            const countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);
                             if (countVisibleDisplayables > 0) {
                                 $scope.horizontalWidth = {
                                     width: (100 / countVisibleDisplayables) + "%"
@@ -638,7 +611,7 @@
                     };
 
                     $scope.showHelpIcon = function (fieldMetadata, position) {
-                        var helpIconPosition = $scope.getHelpIconPos(fieldMetadata);                        
+                        const helpIconPosition = $scope.getHelpIconPos(fieldMetadata);
                         return (helpIconPosition != null && helpIconPosition != '' && helpIconPosition === position);
                     };
 
@@ -647,7 +620,7 @@
                     };
 
                     $scope.initRichtextField = function (fieldMetadata) {
-                        var content = $scope.datamap[fieldMetadata.attribute];
+                        const content = $scope.datamap[fieldMetadata.attribute];
                         $scope.datamap[fieldMetadata.attribute] = richTextService.getDecodedValue(content);
                     }
 

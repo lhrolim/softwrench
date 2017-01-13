@@ -120,6 +120,7 @@ angular.module('sw_layout')
             event.fields['quantity'] = 1;
         },
 
+        //afterchange
         afteritemchange: function (event) {
             if (event.fields['linetype'].equalIc("sparepart")) {
                 event.fields['#description'] = event.fields['sparepart_.description'];
@@ -130,6 +131,7 @@ angular.module('sw_layout')
             doItemLookup(event);
         },
 
+        //afterchange
         afterchange: function (event) {
             doItemAssociation(event);
         }

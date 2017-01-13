@@ -227,6 +227,7 @@
             // implementing interface
         }
 
+        //afterchange
         function onApplicationSelected(event) {
             const entityAndApp = event.fields["#entity_application"];
             if (!entityAndApp) return;

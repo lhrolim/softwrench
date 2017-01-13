@@ -208,7 +208,6 @@
                         "datamap='datamap' " +
                         "displayables='displayables' " +
                         "elementid='crudInputNewItemComposition' " +
-                        "association-schemas='associationSchemas' " +
                         "blockedassociations='blockedassociations' " +
                         "parentdata='parentdata' " +
                         "parentschema='parentschema' " +

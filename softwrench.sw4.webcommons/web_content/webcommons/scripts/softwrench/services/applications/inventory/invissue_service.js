@@ -6,18 +6,30 @@
 
     function invissueService($rootScope, $log, searchService, inventoryServiceCommons, redirectService, alertService, inventorySharedService, applicationService) {
         const service = {
-            afterChangeBin: afterChangeBin,
-            afterchangeItem: afterchangeItem,
-            afterChangeRotAsset: afterChangeRotAsset,
-            afterChangeAsset: afterChangeAsset,
-            afterChangeWorkorder: afterChangeWorkorder,
-            afterChangeLocation: afterChangeLocation,
-            afterChangeCurbal: afterChangeCurbal,
-            afterChangeLotnum: afterChangeLotnum,
-            afterChangeLaborCode: afterChangeLaborCode,
-            invissuelistclick: invissuelistclick,
-            validateInvIssue: validateInvIssue,
-            afterChangeStoreloc: afterChangeStoreloc
+            //afterchange
+            afterChangeBin,
+            //afterchange
+            afterchangeItem,
+            //afterchange
+            afterChangeRotAsset,
+            //afterchange
+            afterChangeAsset,
+            //afterchange
+            afterChangeWorkorder,
+            //afterchange
+            afterChangeLocation,
+            //afterchange
+            afterChangeCurbal,
+            //afterchange
+            afterChangeLotnum,
+            //afterchange
+            afterChangeLaborCode,
+            //afterchange
+            invissuelistclick,
+            
+            validateInvIssue,
+            //afterchange
+            afterChangeStorelocc
         };
         return service;
 

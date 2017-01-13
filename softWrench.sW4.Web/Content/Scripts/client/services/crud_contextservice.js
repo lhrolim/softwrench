@@ -394,6 +394,16 @@
 
         }
 
+        function blockOrUnblockAssociations(associationKey, blocking) {
+            const panelId = this.isShowingModal() ? "#modal" : null;
+            getContext(panelId)["_blockedAssociations"][associationKey] = blocking;
+        }
+
+        function isAssociationBlocked(associationKey) {
+            const panelId = this.isShowingModal() ? "#modal" : null;
+            return getContext(panelId)["_blockedAssociations"][associationKey];
+        }
+
         function fetchLazyAssociationOption(associationKey, key, panelid) {
             const associationOptions = _crudContext._lazyAssociationOptions[associationKey];
             if (associationOptions == null) {
@@ -495,6 +505,7 @@
             $log.get("crudContextService#markAssociationsResolved", ["dirty", "detail", "association"]).debug("marking associations as resolved");
             getContext(panelid).associationsResolved = true;
             $rootScope.$broadcast(JavascriptEventConstants.AssociationResolved, panelid);
+            contextService.insertIntoContext("associationsresolved", true, true);
         }
 
         function associationsResolved(panelid) {
@@ -684,7 +695,9 @@
             fetchEagerAssociationOptions,
             fetchEagerAssociationOption,
             associationsResolved,
-            markAssociationsResolved
+            markAssociationsResolved,
+            blockOrUnblockAssociations,
+            isAssociationBlocked
         };
         const hookServices = {
             afterSave,

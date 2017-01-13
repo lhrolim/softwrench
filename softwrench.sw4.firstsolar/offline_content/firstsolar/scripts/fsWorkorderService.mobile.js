@@ -7,7 +7,7 @@
         //#endregion
 
         //#region Public methods
-
+        //afterchange
         function afterFailureChanged() {
             const dm = crudContextService.currentDetailItemDataMap();
             if (dm["problemcode"] != null) {
@@ -20,6 +20,7 @@
                 dm["fr2code"] = "null$ignorewatch";
             }
         }
+        //afterchange
         function afterProblemChanged() {
             const dm = crudContextService.currentDetailItemDataMap();
             if (dm["fr1code"] != null) {
@@ -29,16 +30,18 @@
                 dm["fr2code"] = "null$ignorewatch";
             }
         }
+        //afterchange
         function afterCauseChanged() {
             const dm = crudContextService.currentDetailItemDataMap();
             if (dm["fr2code"] != null) {
                 dm["fr2code"] = "null$ignorewatch";
             }
         }
+        //afterchange
         function afterRemedyChanged() {
 
         }
-
+        //afterchange
         function updateLocation(event) {
             const datamap = event.datamap;
 
@@ -52,7 +55,7 @@
             datamap["location"] = `${location}$ignorewatch`;
             datamap["failurecode"] = failurecode;
         }
-
+        //afterchange
         function clearAsset(event) {
             const datamap = event.datamap;
             datamap["assetnum"] = "null$ignorewatch";

@@ -15,9 +15,9 @@
         var blockFilterId = "#fsblock";
 
         var updateOptions = function (controllerMethod, parameters, associationKey) {
-            var promise = restService.getPromise("FirstSolarAdvancedSearch", controllerMethod, parameters);
+            const promise = restService.getPromise("FirstSolarAdvancedSearch", controllerMethod, parameters);
             promise.then(function (response) {
-                var options = response.data.map(function (dbData) {
+                const options = response.data.map(function (dbData) {
                     return {
                         "type": "MultiValueAssociationOption",
                         "value": dbData["location"],
@@ -33,7 +33,7 @@
 
         // filters pcs location by pcs
         var filterByPcs = function (optionValue) {
-            var pcs = $(pcsFilterId).val();
+            const pcs = $(pcsFilterId).val();
             if (!pcs) {
                 return true;
             }
@@ -41,14 +41,13 @@
             if (!optionValue) {
                 return false;
             }
-
-            var tokens = optionValue.split("-");
+            const tokens = optionValue.split("-");
             return tokens[tokens.length - 1].contains(pcs);
         }
 
         // filters pcs location by block
         var filterByBlock = function (optionValue) {
-            var block = $(blockFilterId).val();
+            const block = $(blockFilterId).val();
             if (!block) {
                 return true;
             }
@@ -56,8 +55,7 @@
             if (!optionValue) {
                 return false;
             }
-
-            var dashNumber = (optionValue.match(/-/g) || []).length;
+            const dashNumber = (optionValue.match(/-/g) || []).length;
             if (dashNumber === 4 || dashNumber === 3) {
                 return optionValue.split("-")[2].contains(block);
             }
@@ -67,11 +65,11 @@
 
         // searchs for the siteid from location option value
         var findSiteId = function (associationKey, location) {
-            var options = crudContextHolderService.fetchEagerAssociationOptions(associationKey, null, searchPanelId);
+            const options = crudContextHolderService.fetchEagerAssociationOptions(associationKey, null, searchPanelId);
             if (!options) {
                 return null;
             }
-            var locationOption = options.find(function (option) {
+            const locationOption = options.find(function (option) {
                 return option["value"] === location;
             });
             return locationOption && locationOption.extrafields ? locationOption.extrafields["siteid"] : null;
@@ -82,10 +80,11 @@
 
         // called when a facility is selected
         // updates the locations of interest and switchgear location options
+        //afterchange
         function facilitySelected(event) {
-            var facility = event.fields ? event.fields[facilityId] : null;
-            var facilities = facility ? facility.split(",") : [];
-            var parameters = { facilities: facilities }
+            const facility = event.fields ? event.fields[facilityId] : null;
+            const facilities = facility ? facility.split(",") : [];
+            const parameters = { facilities: facilities };
             log.debug("Updating locations of interest for facilities: {0}".format(facilities));
             updateOptions("GetLocationsOfInterest", parameters, "_FsLocationsOfInterest");
             log.debug("Updating switchgears for facilities: {0}".format(facilities));
@@ -105,9 +104,9 @@
 
             dropdownOptions["filterFunction"] = function (optionValue, optionText, filterInput) {
                 log.debug("filterAvailablePcsLocations - Filtering: {0}".format(optionValue));
-                var pcsOk = filterByPcs(optionValue);
-                var blockOk = filterByBlock(optionValue);
-                var isOk = pcsOk && blockOk;
+                const pcsOk = filterByPcs(optionValue);
+                const blockOk = filterByBlock(optionValue);
+                const isOk = pcsOk && blockOk;
                 log.debug("filterAvailablePcsLocations - {0} filter result is {1}".format(optionValue, isOk));
                 return isOk;
             }
@@ -123,17 +122,17 @@
 
             // calcs the margin top to open the dropdown upward
             dropdownOptions["onDropdownShow"] = function () {
-                var multiselectContainer = selectElement.closest(".multiselect-div").find("ul.multiselect-container");
-                var containerHeight = multiselectContainer.height();
+                const multiselectContainer = selectElement.closest(".multiselect-div").find("ul.multiselect-container");
+                const containerHeight = multiselectContainer.height();
                 multiselectContainer.css({ 'margin-top': "-" + (containerHeight + 34) + "px" });
             }
         }
 
         function woNoResultsPreAction() {
-            var searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
-            var facility = searchDatamap[facilityId];
-            var includeSubLocations = searchDatamap["fsincludesubloc"];
-            var map = buildLocationAndSiteIdMap();
+            const searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
+            const facility = searchDatamap[facilityId];
+            const includeSubLocations = searchDatamap["fsincludesubloc"];
+            const map = buildLocationAndSiteIdMap();
             if (map.length === 0 && facility) {
                 //if none selected, let´s stick with the facility itself
                 //TODO: fetch correctsiteid
@@ -143,19 +142,13 @@
                 //this would only happen if no search at all has been performed, and, hence, there´s no way to fill the initial wo data.
                 return $q.when();
             }
-
-
-            var parameters = {
+            const parameters = {
                 includeSubLocations: includeSubLocations,
                 locations: map,
-            }
-
-
+            };
             return restService.getPromise("FirstSolarAdvancedSearch", "FindAssetsBySelectedLocations", parameters).then(function (response) {
                 var appData = response.data;
-                var schema = schemaCacheService.getSchemaFromResult(appData);
-
-
+                const schema = schemaCacheService.getSchemaFromResult(appData);
                 if (appData.resultObject.length === 0) {
                     alertService.alert("No asset could be found at the selected locations. Cannot create a workorder");
                     return $q.reject();
@@ -171,19 +164,16 @@
                     savefn: function () {
 
                         var selectedAsset = {};
-
-                        var buffer = crudContextHolderService.getSelectionModel("#modal").selectionBuffer;
-                        var keys = Object.keys(buffer);
+                        const buffer = crudContextHolderService.getSelectionModel("#modal").selectionBuffer;
+                        const keys = Object.keys(buffer);
                         if (keys.length === 1) {
                             selectedAsset = buffer[keys[0]].fields;
                         }
-
-                        var workorderInitialDataMap = {
+                        const workorderInitialDataMap = {
                             siteid: selectedAsset.siteid,
                             assetnum: selectedAsset.assetnum,
                             location: selectedAsset.location
-                        }
-
+                        };
                         deferred.resolve(workorderInitialDataMap);
                         modalService.hide();
                     }
@@ -196,18 +186,17 @@
         }
 
         function buildLocationAndSiteIdMap() {
-            var location = null;
-            var associationKey = null;
-            var searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
+            const location = null;
+            const associationKey = null;
+            const searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
 
 
             // tries to get a single location from selected  locations of interest,
             // switchgear locations or pcs locations, if more than one location is
             // found just returns null
-            var locsOfInterest = searchDatamap[locOfInterestId] || [];
-            var switchgearLocations = searchDatamap[switchgearLocationsId] || [];
-            var pcsLocations = searchDatamap[pcsLocationsId] || [];
-
+            const locsOfInterest = searchDatamap[locOfInterestId] || [];
+            const switchgearLocations = searchDatamap[switchgearLocationsId] || [];
+            const pcsLocations = searchDatamap[pcsLocationsId] || [];
             var toSearch = {
                 "_FsLocationsOfInterest": locsOfInterest,
                 "_FsSwitchgearLocations": switchgearLocations,
@@ -218,8 +207,8 @@
 
             //concatenating everything into a single array
             Object.keys(toSearch).forEach(function (associationKey) {
-                var items = toSearch[associationKey].map(function (location) {
-                    var siteId = findSiteId(associationKey, location);
+                const items = toSearch[associationKey].map(function (location) {
+                    const siteId = findSiteId(associationKey, location);
                     return { location: location, siteid: siteId };
                 });
                 results = results.concat(items);
@@ -232,7 +221,7 @@
         function newWorkOrder() {
             return woNoResultsPreAction().then(function (datamap) {
                 modalService.hide();
-                var msg = "Are you sure you want to leave the page?";
+                const msg = "Are you sure you want to leave the page?";
                 if (crudContextHolderService.getDirty()) {
                     alertService.confirmCancel(msg).then(function () {
                         redirectService.goToApplication("workorder", "newdetail", null, datamap);
@@ -248,12 +237,12 @@
         //#endregion
 
         //#region Service Instance
-        var service = {
-            facilitySelected: facilitySelected,
-            customizeComboDropdown: customizeComboDropdown,
-            buildLocationAndSiteIdMap: buildLocationAndSiteIdMap,
-            woNoResultsPreAction: woNoResultsPreAction,
-            newWorkOrder: newWorkOrder
+        const service = {
+            facilitySelected,
+            customizeComboDropdown,
+            buildLocationAndSiteIdMap,
+            woNoResultsPreAction,
+            newWorkOrder
         };
         return service;
         //#endregion

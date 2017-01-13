@@ -6,6 +6,7 @@ angular.module('sw_layout')
 
     return {
 
+        //afterchange
         setsolutiondata: function (event) {
             var fields = event.fields;
             if (event.triggerparams.phase == 'initial') {

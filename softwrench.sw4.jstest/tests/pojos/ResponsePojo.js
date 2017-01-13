@@ -18,6 +18,41 @@ class ResponsePojo {
         return ResponsePojo.CrudCreateCachedBaseResponse();
     }
 
+
+    static ListSchemaLoadResult() {
+        return {
+            eagerOptions: {},
+            preFetchLazyOptions:{}
+        }
+    }
+
+    static LookpOptionsResult(returnArray = null) {
+
+        const ob1 = { value: "test1", label: "test1 label" };
+        const ob2 = { value: "test2", label: "test2 label" };
+        const ob11 = { value: "test11", label: "test11 label" };
+        let baseArray = [ob1, ob2, ob11];
+        if (!!returnArray) {
+            baseArray = returnArray;
+        }
+
+        return {
+            resultObject: {
+                associationData:baseArray
+            }
+        }
+    }
+
+
+    static DetailSchemaLoadResult() {
+        return {
+            eagerOptions: {
+                classification: [{ value: "100", label: "label 100" }, { value: "101", label: "label 101" }]
+            },
+            preFetchLazyOptions: {}
+        }
+    }
+
     //TODO: finish filling for a true dashboard response
     static DashboardResponse() {
         return {

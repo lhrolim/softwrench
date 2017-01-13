@@ -6,13 +6,19 @@
 
     function invtransferService($log, searchService, inventoryServiceCommons, alertService, redirectService) {
         const service = {
-            afterChangeSite: afterChangeSite,
-            afterChangeItem: afterChangeItem,
-            afterChangeFromBin: afterChangeFromBin,
-            afterChangeFromStoreLoc: afterChangeFromStoreLoc,
-            afterChangeTransferQuantity: afterChangeTransferQuantity,
-            afterChangeToStoreLoc: afterChangeToStoreLoc,
-            cancel: cancel
+            //afterchange
+            afterChangeSite,
+            //afterchange
+            afterChangeItem,
+            //afterchange
+            afterChangeFromBin,
+            //afterchange
+            afterChangeFromStoreLoc,
+            //afterchange
+            afterChangeTransferQuantity,
+            //afterchange
+            afterChangeToStoreLoc,
+            cancel
         };
         return service;
 
@@ -39,7 +45,7 @@
             const fields = event.fields;
             if (fields['invuseline_.quantity'] > fields['#curbal']) {
                 alertService.alert("The quantity being transferred cannot be greater than the current balance of the From Bin.");
-                event.scope.datamap['invuseline_.quantity'] = fields['#curbal'];
+                event.fields['invuseline_.quantity'] = fields['#curbal'];
             }
         }
 

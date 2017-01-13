@@ -21,7 +21,6 @@
                         "is-dirty='isDirty'" +
                         "displayables='displayables'" +
                         "association-options='associationOptions'" +
-                        "association-schemas='associationSchemas'" +
                         "blockedassociations='blockedassociations'" +
                         "renderer-parameters='rendererParameters'" +
                         "elementid='{{elementid}}'" +
@@ -55,7 +54,6 @@
                 isDirty: "=",
                 displayables: "=",
                 associationOptions: "=",
-                associationSchemas: "=",
                 blockedassociations: "=",
                 extraparameters: "=",
                 elementid: "@",

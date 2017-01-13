@@ -2,62 +2,42 @@
 
 
     //declare used services
-    var associationService, crudContextHolderService;
+    var associationService, crudContextHolderService, $rootScope, $timeout;
 
     //instantiate used modules
     beforeEach(module('sw_layout'));
 
     //inject services
-    beforeEach(inject(function (_associationService_, _crudContextHolderService_) {
+    beforeEach(inject(function (_associationService_, _crudContextHolderService_, _$rootScope_, _$timeout_) {
         associationService = _associationService_;
         crudContextHolderService = _crudContextHolderService_;
+        $rootScope = _$rootScope_;
+        $timeout = _$timeout_;
     }));
 
 
-    it('getEagerLookupOptions test', function () {
-        const quickSearchDTO = new QuickSearchDTO("test1");
-        quickSearchDTO.schemaId = "test";
-        const lookupDTO = new LookupDTO(FieldMetadataPojo.ForAssociation("test"), quickSearchDTO);
-
-        spyOn(crudContextHolderService, "isShowingModal").and.returnValue(true);
-
-        const ob1 = { value: "test1", label: "test1 label" };
-        const ob2 = { value: "test2", label: "test2 label" };
-        const ob11 = { value: "test11", label: "test11 label" };
-
-        spyOn(crudContextHolderService, "fetchEagerAssociationOptions").and.returnValue([ob1, ob2, ob11]);
-            
-        const results = associationService.getEagerLookupOptions(lookupDTO).resultObject;
-
-        expect(results.totalCount).toBe(2);
-        var associationData = results.associationData;
-        expect(associationData[0]).toBe(ob1);
-        expect(associationData[1]).toBe(ob11);
+    it("updateFromServerSchemaLoadResult for list", done => {
+        spyOn(crudContextHolderService, "markAssociationsResolved");
+        associationService.updateFromServerSchemaLoadResult(ResponsePojo.ListSchemaLoadResult(), null, true).then(r => {
+            expect(crudContextHolderService.markAssociationsResolved).toHaveBeenCalledWith(null);
+        }).finally(done);
+        $rootScope.$digest();
+        $timeout.flush();
 
     });
 
 
-    it('getEagerLookupOptions no filter test', function () {
-        const lookupDTO = new LookupDTO(FieldMetadataPojo.ForAssociation("test"), null);
-
-        spyOn(crudContextHolderService, "isShowingModal").and.returnValue(true);
-
-        const ob1 = { value: "test1", label: "test1 label" };
-        const ob2 = { value: "test2", label: "test2 label" };
-        const ob11 = { value: "test11", label: "test11 label" };
-
-        spyOn(crudContextHolderService, "fetchEagerAssociationOptions").and.returnValue([ob1, ob2, ob11]);
-
-        const results = associationService.getEagerLookupOptions(lookupDTO).resultObject;
-
-        expect(results.totalCount).toBe(3);
-        var associationData = results.associationData;
-        expect(associationData[0]).toBe(ob1);
-        expect(associationData[1]).toBe(ob2);
-        expect(associationData[2]).toBe(ob11);
+    it("updateFromServerSchemaLoadResult for detail", done => {
+        spyOn(crudContextHolderService, "markAssociationsResolved");
+        spyOn(crudContextHolderService, "updateEagerAssociationOptions").and.callThrough();
+        associationService.updateFromServerSchemaLoadResult(ResponsePojo.DetailSchemaLoadResult(), null, true).then(r => {
+            expect(crudContextHolderService.updateEagerAssociationOptions).toHaveBeenCalledWith("classification", [{ value: "100", label: "label 100" }, { value: "101", label: "label 101" }],null);
+            expect(crudContextHolderService.markAssociationsResolved).toHaveBeenCalledWith(null);
+        }).finally(done);
+        $rootScope.$digest();
+        $timeout.flush();
 
     });
-
 
 
 });

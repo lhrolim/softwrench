@@ -18,10 +18,6 @@ angular.module('sw_layout')
 
             alertService.confirm("The location you have entered does not contain the current asset. Would you like to remove the current asset from the ticket?").then(function () {
                 event.fields['assetnum'] = null;
-                //TODO: this should be done using watchers, so that we could remove scope from event, decoupling things
-                event.scope.lookupAssociationsCode['assetnum'] = null;
-                event.scope.lookupAssociationsDescription["assetnum"] = null;
-
                 event.continue();
             }, function () {
                 event.interrupt();
@@ -40,14 +36,14 @@ angular.module('sw_layout')
                 event.interrupt();
             });
         },
-
+        //afterchange
         afterChangeAsset: function (event) {
             if (event.fields['location'] == null && event.fields.assetnum!=null) {
                 var location = event.fields['asset_.location'];
                 event.fields['location'] = location;
             }
         },
-
+        //afterchange
         afterchangeowner: function (event) {
             if (event.fields['owner'] == null) {
                 return;
@@ -66,7 +62,7 @@ angular.module('sw_layout')
                 return;
             }
         },
-
+        //afterchange
         afterchangeownergroup: function (event) {
             
             if (event.fields['ownergroup'] == null) {

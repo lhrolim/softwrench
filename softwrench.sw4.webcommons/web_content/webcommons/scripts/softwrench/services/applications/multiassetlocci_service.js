@@ -4,7 +4,7 @@
 
     function multiassetlocciService() {
 
-
+        //afterchange
         function afterChangeAsset(parameters) {
 
             if (parameters.fields['assetnum'] != null) {
@@ -12,6 +12,7 @@
             }
         };
 
+        //afterchange
         function afterChangeLocation(parameters) {
 
             if (parameters.fields['location'] != parameters.fields['asset_.location']) {
@@ -20,9 +21,9 @@
         };
 
 
-        var service = {
-            afterChangeAsset: afterChangeAsset,
-            afterChangeLocation: afterChangeLocation,
+        const service = {
+            afterChangeAsset,
+            afterChangeLocation
         };
 
         return service;

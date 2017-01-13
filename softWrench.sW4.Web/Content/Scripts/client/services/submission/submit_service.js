@@ -204,7 +204,7 @@ class SubmitResult {
         }
 
       
-        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,isComposition,compositionData}) {
+        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,compositionData}) {
                 
             const log = this.$log.get("submitService#doSubmitToServer",["submit","save"]);
             log.debug("doSubmit to server start... applying datamap transformations");

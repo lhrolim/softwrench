@@ -76,16 +76,19 @@
     <Content Include="tests\directives\crud_body_modal_test.js" />
     <Content Include="tests\directives\composition_list_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
+    <Content Include="tests\pojos\DatamapPojo.js" />
     <Content Include="tests\pojos\WorklogPojo.js" />
     <Content Include="tests\pojos\ResponsePojo.js" />
     <Content Include="tests\pojos\FieldMetadataPojo.js" />
     <Content Include="tests\pojos\CompositionDefinitionPojo.js" />
     <Content Include="tests\pojos\SchemaPojo.js" />
     <Content Include="tests\services\adminresources\userprofileservice_test.js" />
+    <Content Include="tests\services\lookupservice_test.js" />
     <Content Include="tests\services\associationservice_test.js" />
     <Content Include="tests\services\compositionService_test.js" />
     <Content Include="tests\services\format_service_test.js" />
     <Content Include="tests\services\passwordvalidationservice_test.js" />
+    <Content Include="tests\services\scanner\invissueScannerService_test.js" />
     <Content Include="tests\services\submit_service_test.js" />
     <Content Include="tests\services\search_service_test.js" />
     <Content Include="tests\services\crud_contextservice_test.js" />
@@ -95,6 +98,7 @@
     <Content Include="tests\services\expression_service_test.js" />
     <Content Include="tests\services\richtext_test.js" />
     <Content Include="tests\services\schemaservice_test.js" />
+    <Content Include="tests\util\test_util.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="package.json" />

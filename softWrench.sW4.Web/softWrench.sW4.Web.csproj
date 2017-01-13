@@ -779,7 +779,7 @@
     <Content Include="Content\modules\components\angulartypeahead\templates\angulartypeahead.html" />
     <Content Include="Content\modules\components\autocompleteclient\autocompleteClientInput.js" />
     <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
-    <Content Include="Content\modules\lookup\lookupcomponent.js" />
+    <Content Include="Content\modules\lookup\lookupservice.js" />
     <Content Include="Content\modules\components\autocompleteclient\templates\autocompleteClientInput.html" />
     <Content Include="Content\modules\lookup\templates\lookupinput.html" />
     <Content Include="Content\modules\lookup\lookupInput.js" />
@@ -797,6 +797,7 @@
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\datetime.js" />
     <Content Include="Content\Scripts\client\components\samelinepickers.js" />
+    <Content Include="Content\Scripts\client\constants\DatamapConstants.js" />
     <Content Include="Content\Scripts\client\constants\CompositionConstants.js" />
     <Content Include="Content\Scripts\client\constants\MetadataConstants.js" />
     <Content Include="Content\Scripts\client\controllers\metadata_builder.js" />
@@ -885,6 +886,7 @@
     <Content Include="Content\customVendor\scripts\jquery\jquery-mousewheel.js" />
     <Content Include="Content\Scripts\client\services\adminmenu_service.js" />
     <Content Include="Content\Scripts\client\services\redirect_service.js" />
+    <Content Include="Content\Scripts\client\services\scanner\invIssueScannerService.js" />
     <Content Include="Content\Scripts\client\services\schemaCacheService.js" />
     <Content Include="Content\Scripts\client\services\crud_contextservice.js" />
     <Content Include="Content\Scripts\client\services\crud_layoutservice.js" />
@@ -1120,7 +1122,6 @@
     <Content Include="Content\templates\commands\scan\scanfilter.js" />
     <Content Include="Content\templates\commands\scan\scanfilter.html" />
     <Content Include="Content\templates\crud\advanced_filter_toogle.html" />
-    <Content Include="Content\templates\crud\association_list_input.html" />
     <Content Include="Content\templates\crud\crud_body_modal.html" />
     <Content Include="Content\templates\crud\crud_list.html" />
     <Content Include="Content\templates\directives\angulartreeview.html" />

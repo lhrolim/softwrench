@@ -120,6 +120,9 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        /// <summary>
+        /// Whether or not to add preselected filters, such as ones defined on the metadata for a grid, to a search
+        /// </summary>
         public bool AddPreSelectedFilters {
             get; set;
         }

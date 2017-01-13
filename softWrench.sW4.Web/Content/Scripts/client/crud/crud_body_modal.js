@@ -192,7 +192,6 @@
                            "savefn='save(selecteditem)'" +
                            "is-dirty='false' " +
                            "original-datamap='OriginalDatamp' " +
-                           "association-schemas='associationSchemas' " +
                            "blockedassociations='blockedassociations' " +
                            "paginationdata='paginationData' " +
                            "search-data='searchData' " +
@@ -215,7 +214,6 @@
             templateUrl: contextService.getResourceUrl('/Content/Templates/crud/crud_body_modal.html'),
             scope: {
                 blockedassociations: '=',
-                associationSchemas: '=',
                 schema: '=',
                 datamap: '=',
                 isDirty: '=',

@@ -4,7 +4,9 @@
 angular.module('sw_layout')
     .service('srService', ["alertService", "redirectService", function (alertService, redirectService) {
 
-    return {
+        return {
+
+            //beforechange
         beforeChangeLocation: function (event) {
             if (event.fields['assetnum']== null) {
                 //if no asset is selected we can proceed.
@@ -19,16 +21,13 @@ angular.module('sw_layout')
 
             alertService.confirm("The location you have entered does not contain the current asset. Would you like to remove the current asset from the ticket?").then(function () {
                 event.fields['assetnum'] = null;
-                //TODO: this should be done using watchers, so that we could remove scope from event, decoupling things
-                event.scope.lookupAssociationsCode['assetnum'] = null;
-                event.scope.lookupAssociationsDescription["assetnum"] = null;
-
                 event.continue();
             }, function () {
                 event.interrupt();
             });
         },
 
+        //beforechange
         beforeChangeStatus: function (event) {
             if (event.fields['owner'] == null || event.fields['status']!= "NEW") {
                 return true;
@@ -42,6 +41,7 @@ angular.module('sw_layout')
             });
         },
 
+        //afterchange
         afterChangeAsset: function (event) {
             const fields = event.fields;
             if (fields['location'] == null && fields.assetnum != null) {
@@ -50,7 +50,7 @@ angular.module('sw_layout')
             }
         },
 
-
+        //afterchange
         afterchangeowner: function (event) {
             if (event.fields['owner']== null) {
                 return;
@@ -66,6 +66,7 @@ angular.module('sw_layout')
             
         },
 
+        //afterchange
         afterchangeownergroup: function (event) {
             
             if (event.fields['ownergroup']== null) {
@@ -83,6 +84,7 @@ angular.module('sw_layout')
             
         },
 
+        //beforechange
         beforechangeownergroup: function (event) {
             if (event.fields['owner']!= null) {
                 alertService.alert("You may select an Owner or an Owner Group; not both");
