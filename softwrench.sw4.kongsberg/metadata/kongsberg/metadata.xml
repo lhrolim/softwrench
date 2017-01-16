@@ -998,7 +998,7 @@
               <association label="Area:" target="area" labelfield="area_.description" requiredexpression="true" orderbyfield="value asc">
                 <renderer type="lookup" />
               </association>
-              <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description">
+              <association label ="Internal Priority:" target="internalpriority" labelfield="internalpriority_.description" default="3">
                 <renderer type="lookup" />
               </association>
               <association label ="Reported Version:" target="reportedversion" labelfield="reportedversion_.description" requiredexpression="@feature_request == 1">
