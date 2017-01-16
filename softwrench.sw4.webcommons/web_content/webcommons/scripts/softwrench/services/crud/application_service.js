@@ -3,7 +3,6 @@
     'use strict';
 
 
-
     angular.module('webcommons_services').service('applicationService', ["$q", '$http', '$rootScope','$injector', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", applicationService]);
 
     function fillApplicationParameters(parameters, applicationName, schemaId, mode) {

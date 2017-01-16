@@ -3,6 +3,7 @@
 
     modules.webcommons.service('fieldService', ["$injector", "$log", "$filter", "expressionService", "eventService", "userService", "formatService", function ($injector, $log, $filter, expressionService, eventService, userService, formatService) {
 
+
         var isFieldHidden = function (datamap, schema, fieldMetadata) {
             fieldMetadata.jscache = fieldMetadata.jscache || {};
             if (fieldMetadata.jscache.isHidden != undefined) {

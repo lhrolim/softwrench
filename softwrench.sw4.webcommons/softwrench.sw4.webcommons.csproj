@@ -138,6 +138,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\priority_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\sseservice.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\storage\compressionservice.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\storage\schemaCacheService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\userPreferencesService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\validation\passwordvalidationservice.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\validation\validation_service.js" />

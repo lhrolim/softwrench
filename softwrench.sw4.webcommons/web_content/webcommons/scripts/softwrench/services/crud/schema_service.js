@@ -16,9 +16,9 @@
                 return;
             }
             schema.jscache.qualifiercache = {};
-            var displayables = schema.displayables;
-            for (var i = 0; i < displayables.length; i++) {
-                var displayable = displayables[i];
+            const displayables = schema.displayables;
+            for (let i = 0; i < displayables.length; i++) {
+                const displayable = displayables[i];
                 if (displayable.qualifier) {
                     schema.jscache.qualifiercache[displayable.qualifier] = displayable;
                 }
@@ -42,15 +42,14 @@
             if (schemaKey == null) {
                 return null;
             }
-
-            var keys = schemaKey.split('.');
+            const keys = schemaKey.split('.');
             if (keys.length == 1) {
                 //in this case we are passing only the schemaId  
                 return { app: null, schemaId: schemaKey, mode: null };
             }
             var mode = null;
-            var application = keys[0];
-            var schemaId = keys[1];
+            const application = keys[0];
+            const schemaId = keys[1];
             if (keys.length == 3) {
                 mode = keys[2];
             }
@@ -92,8 +91,8 @@
             if (schema.jscache.hasAnyFieldOnMainTab) {
                 return schema.jscache.hasAnyFieldOnMainTab;
             }
-            var fields = fieldService.nonTabFields(schema.displayables, false);
-            var result = fields.length > 0;
+            const fields = fieldService.nonTabFields(schema.displayables, false);
+            const result = fields.length > 0;
             schema.jscache.hasAnyFieldOnMainTab = result;
             return result;
         };
@@ -138,12 +137,11 @@
             if (!datamap) {
                 return "New " + schema.title;
             }
-            var fields = datamap;
-
+            const fields = datamap;
             if (schema.properties['detail.titleexpression'] != null) {
                 return expressionService.evaluate(schema.properties['detail.titleexpression'], fields);
             }
-            var titleId = schema.idDisplayable;
+            const titleId = schema.idDisplayable;
             if (titleId == null) {
                 return schema.title;
             }
@@ -191,11 +189,9 @@
             if (schema.jscache.editable) {
                 return schema.jscache.editable;
             }
-
-            var editable = allDisplayables(schema).some(function (displayable) {
+            const editable = allDisplayables(schema).some(function (displayable) {
                 return fieldService.isPropertyTrue(displayable, "editable");
             });
-
             schema.jscache.editable = editable;
             return editable;
         }

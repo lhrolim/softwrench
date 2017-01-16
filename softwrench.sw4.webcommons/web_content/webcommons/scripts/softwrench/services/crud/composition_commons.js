@@ -1,6 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
+
     // service.$inject = [];
     class compositionCommons {
         

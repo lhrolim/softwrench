@@ -1,6 +1,7 @@
 ﻿(function (modules) {
     "use strict";
 
+
     modules.webcommons.service('dispatcherService', ["$injector", "$log", "$q", "$rootScope", function ($injector, $log, $q, $rootScope) {
     var loadService = function(service, method) {
         const log = $log.getInstance('dispatcherService#loadService');

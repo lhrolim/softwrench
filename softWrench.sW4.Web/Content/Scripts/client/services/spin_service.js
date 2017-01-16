@@ -1,7 +1,7 @@
 ﻿(function (angular, Spinner) {
     'use strict';
 
-    var defaultOptions = {
+    const defaultOptions = {
         lines: 13, // The number of lines to draw
         length: 20, // The length of each line
         width: 10, // The line thickness
@@ -21,7 +21,7 @@
         opacity: 1 / 4
     };
 
-    var smallOpts = {
+    const smallOpts = {
         lines: 13, // The number of lines to draw
         length: 10, // The length of each line
         width: 5, // The line thickness
@@ -41,27 +41,22 @@
         opacity: 1 / 4
     };
 
-    angular.module('sw_layout').service('spinService', ['$rootScope', spinService]);
+    
 
     const defaultSpingParams= {
         savingDetail:false,
         compositionSpin:false
     }
 
-    function spinService($rootScope) {
+    class spinService{
 
-        let ajaxspin;
-        let compositionspin;
+        constructor($rootScope) {
+            this.$rootScope = $rootScope;
+            this.ajaxspin = null;
+            this.compositionSpin = null;
+        }
 
-        const service = {
-            start: start,
-            stop: stop,
-            startSpinner: startSpinner
-        };
-
-        return service;
-
-        function mergeOptions(options) {
+        mergeOptions(options) {
             var merged = angular.copy(!!options.small ? smallOpts : defaultOptions);
             angular.forEach(merged, function(val, key) {
                 if (!!options[key]) merged[key] = options[key];
@@ -76,37 +71,40 @@
          * @param boolean small 
          * @returns Spinner the spinner that was intantiated 
          */
-        function startSpinner(target, options) {
-            const merged = mergeOptions(options);
+        startSpinner(target, options) {
+            const merged = this.mergeOptions(options);
             return new Spinner(merged).spin(target);
         }
 
-      
-
-        function start({savingDetail,compositionSpin}=defaultSpingParams) {
-            if ($rootScope.showingspin) {
+        start({savingDetail,compositionSpin}=defaultSpingParams) {
+            if (this.$rootScope.showingspin) {
                 //if already showing no action needed
                 return;
             }
             const spinDivId = savingDetail ? 'detailspinner' : 'mainspinner';
             const optsToUse = savingDetail ? smallOpts : defaultOptions;
             const spinner = document.getElementById(spinDivId);
-            $rootScope.showingspin = true;
+            this.$rootScope.showingspin = true;
             if (compositionSpin) {
-                compositionspin = new Spinner(optsToUse).spin(spinner);
+                this.compositionspin = new Spinner(optsToUse).spin(spinner);
             } else {
-                ajaxspin = new Spinner(optsToUse).spin(spinner);
+                this.ajaxspin = new Spinner(optsToUse).spin(spinner);
             }
         }
 
-        function stop({compositionSpin}=defaultSpingParams) {
+        stop({compositionSpin}=defaultSpingParams) {
 
-            const spinToUse = compositionSpin ? compositionspin : ajaxspin;
+            const spinToUse = compositionSpin ? this.compositionspin : this.ajaxspin;
             if (spinToUse) {
-                $rootScope.showingspin = false;
+                this.$rootScope.showingspin = false;
                 spinToUse.stop();
             }
         }
 
     }
+
+    spinService.$inject = ['$rootScope'];
+
+    angular.module('sw_layout').service('spinService', spinService);
+
 })(angular, Spinner);

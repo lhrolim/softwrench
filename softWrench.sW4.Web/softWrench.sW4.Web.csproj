@@ -887,7 +887,6 @@
     <Content Include="Content\Scripts\client\services\adminmenu_service.js" />
     <Content Include="Content\Scripts\client\services\redirect_service.js" />
     <Content Include="Content\Scripts\client\services\scanner\invIssueScannerService.js" />
-    <Content Include="Content\Scripts\client\services\schemaCacheService.js" />
     <Content Include="Content\Scripts\client\services\crud_contextservice.js" />
     <Content Include="Content\Scripts\client\services\crud_layoutservice.js" />
     <Content Include="Content\Scripts\client\services\scannerdetection_service.js" />
