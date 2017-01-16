@@ -2,7 +2,11 @@
     "use strict";
 
     //TODO: crudContextHolderService should be somehow on a dependant module...
-    angular.module('sw_scan', []);
+    try {
+        angular.module('sw_scan', []);
+    } catch (e) {
+        //already defined
+    }
 
     //#region Service registration
 

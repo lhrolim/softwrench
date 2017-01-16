@@ -87,8 +87,12 @@
 
     InvIssueScannerService.$inject = ['$q', 'scanningCommonsService', 'applicationService', 'contextService', 'alertService', 'lookupService', 'associationService', 'fieldService'];
 
-    angular.module('sw_scan').service('invIssueScannerService', InvIssueScannerService);
-
+    try {
+        angular.module('sw_scan').service('invIssueScannerService', InvIssueScannerService);
+    } catch (e) {
+        angular.module('sw_scan', []);
+        angular.module('sw_scan').service('invIssueScannerService', InvIssueScannerService);
+    }
 
 
 })(angular);
