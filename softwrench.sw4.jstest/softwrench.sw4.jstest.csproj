@@ -89,6 +89,7 @@
     <Content Include="tests\services\format_service_test.js" />
     <Content Include="tests\services\passwordvalidationservice_test.js" />
     <Content Include="tests\services\scanner\invissueScannerService_test.js" />
+    <Content Include="tests\services\storage\schemacacheService_test.js" />
     <Content Include="tests\services\submit_service_test.js" />
     <Content Include="tests\services\search_service_test.js" />
     <Content Include="tests\services\crud_contextservice_test.js" />

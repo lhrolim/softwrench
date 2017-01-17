@@ -63,7 +63,9 @@
             if (!schema) {
                 const storageKey = schemaStorageKey(applicationName, schemaId);
                 schema = localStorageService.get(storageKey);
-                schemaCache[cacheKey] = schema;
+                if (!!schema) {
+                    schemaCache[cacheKey] = schema;
+                }
             }
             return schema;
         }
