@@ -43,8 +43,8 @@
     // expandable section: click to expand
     // in the first expansion it will dynamically compile the template then show it's content
     // after that it's content becomes expandable
-    app.directive("crudExpandableSection", [function () { 
-        var directive = {
+    app.directive("crudExpandableSection", [function () {
+        const directive = {
             replace: false,
             transclude: false,
             // just data to pass to the 'actual' section
@@ -68,86 +68,84 @@
 
             controller: ["$scope", "$element", "$compile", "$timeout", "spinService", "associationService","crudContextHolderService",
                 function ($scope, $element, $compile, $timeout, spinService, associationService, crudContextHolderService) {
-                $scope.config = {
-                    compiled: false,
-                    expanded: false
-                };
+                    $scope.config = {
+                        compiled: false,
+                        expanded: false
+                    };
 
-                var toggleExpansion = function () {
-                    $scope.config.expanded = !$scope.config.expanded;
+                    var toggleExpansion = function () {
+                        $scope.config.expanded = !$scope.config.expanded;
+                        const siteHeaderElement = $('.site-header');
+                        const toolbarElement = $('.toolbar-primary:visible');
+                        var fixedOffset = 0;
 
-                    var siteHeaderElement = $('.site-header');
-                    var toolbarElement = $('.toolbar-primary:visible');
-                    var fixedOffset = 0;
-
-                    //adjust the scroll to postion if the header is fixed
-                    if (siteHeaderElement.css('position') === 'fixed') {
-                        fixedOffset = siteHeaderElement.height() + toolbarElement.height();
-                    }
+                        //adjust the scroll to postion if the header is fixed
+                        if (siteHeaderElement.css('position') === 'fixed') {
+                            fixedOffset = siteHeaderElement.height() + toolbarElement.height();
+                        }
                     
-                    // scroll to expanded section
-                    if ($scope.config.expanded) {
+                        // scroll to expanded section
+                        if ($scope.config.expanded) {
+                            $timeout(function () {
+                                //keep the expand button visible below the header and toolbar
+                                $(document.body).animate({ scrollTop: $element.offset().top - fixedOffset }, 500);
+                            }, 500, false);
+                        }
+                    };
+
+                    var showTemplateLoading = function() {
+                        const spinneroptions = {
+                            small: true,
+                            top: String(Math.round(window.innerHeight / 2)) + "px",
+                            left: String(Math.round(window.innerWidth / 2)) + "px"
+                        };
+                        const spinner = spinService.startSpinner(document.body, spinneroptions);
+                        return spinner;
+                    };
+
+                    var compileTemplate = function () {
+                        const stereotype = $scope.schema.stereotype;
+                        // validate supported stereotype
+                        if (!stereotype.contains("detail") && !stereotype.contains("Detail")) {
+                            throw new Error(error.unsupportedStereotype.format(stereotype));
+                        }
+
+                        /*
+                            the following code looks ugly but it's the only way to make the spinner stop 
+                            only after the template is compiled and appended to the DOM  
+                         */
+
+                        // start spinner
+                        var spinner = showTemplateLoading();
+                        // schedule compilation and DOM manipulation
                         $timeout(function () {
-                            //keep the expand button visible below the header and toolbar
-                            $(document.body).animate({ scrollTop: $element.offset().top - fixedOffset }, 500);
-                        }, 500, false);
-                    }
-                };
+                            const templateElement = $compile(templates.section.detail)($scope);
+                            $scope.config.compiled = true;
+                            $element.append(templateElement);
+                            // schedule spinner stop after the compilation and DOM manipulation
+                            $timeout(function () { spinner.stop() }, 0, false);
 
-                var showTemplateLoading = function() {
-                    var spinneroptions = {
-                        small: true,
-                        top: String(Math.round(window.innerHeight / 2)) + "px",
-                        left: String(Math.round(window.innerWidth / 2)) + "px"
-                    }
-                    var spinner = spinService.startSpinner(document.body, spinneroptions);
-                    return spinner;
-                };
+                        }, 0, false);
+                    };
 
-                var compileTemplate = function () {
-                    var stereotype = $scope.schema.stereotype;
-                    // validate supported stereotype
-                    if (!stereotype.contains("detail") && !stereotype.contains("Detail")) {
-                        throw new Error(error.unsupportedStereotype.format(stereotype));
-                    }
-
-                    /*
-                        the following code looks ugly but it's the only way to make the spinner stop 
-                        only after the template is compiled and appended to the DOM  
-                     */
-
-                    // start spinner
-                    var spinner = showTemplateLoading();
-                    // schedule compilation and DOM manipulation
-                    $timeout(function () {
-                        var templateElement = $compile(templates.section.detail)($scope);
-                        $scope.config.compiled = true;
-                        $element.append(templateElement);
-                        // schedule spinner stop after the compilation and DOM manipulation
-                        $timeout(function () { spinner.stop() }, 0, false);
-
-                    }, 0, false);
-                };
-
-                $scope.expandSection = function () {
-                    // make sure compilation happens only once per $scope/directive instance
-                    if (!$scope.config.compiled) {
-                        compileTemplate();
-                        // new data coming up: mark data as not resolved
-                        crudContextHolderService.clearDetailDataResolved();
-                        associationService
-                            .loadSchemaAssociations(crudContextHolderService.rootDataMap(), crudContextHolderService.currentSchema(), { avoidspin: true, showmore: true })
-                            .finally(function () {
-                                // data fetched or errored: mark as resolved
-                                crudContextHolderService.setDetailDataResolved();
-                            });
-                    }
-                    toggleExpansion();
-                };
-            }]
+                    $scope.expandSection = function () {
+                        // make sure compilation happens only once per $scope/directive instance
+                        if (!$scope.config.compiled) {
+                            compileTemplate();
+                            // new data coming up: mark data as not resolved
+                            crudContextHolderService.clearDetailDataResolved();
+                            associationService
+                                .loadSchemaAssociations(crudContextHolderService.rootDataMap(), crudContextHolderService.currentSchema(), { avoidspin: true, showmore: true })
+                                .finally(function () {
+                                    // data fetched or errored: mark as resolved
+                                    crudContextHolderService.setDetailDataResolved();
+                                });
+                        }
+                        toggleExpansion();
+                    };
+                }]
 
         };
-
         return directive;
     }]);
 

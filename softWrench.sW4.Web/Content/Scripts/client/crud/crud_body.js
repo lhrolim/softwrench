@@ -49,14 +49,17 @@
             submitService, redirectService,
             associationService, crudContextHolderService, alertService,
             validationService, schemaService, $timeout, $interval, eventService, $log, expressionService, focusService, modalService,
-            compositionService, attachmentService, sidePanelService) {
+            compositionService, attachmentService, sidePanelService, spinService) {
+
+                //holding the spinners used for the tabs on the screen, at SWWEB-2905
+                const tabSpinners = [];
 
                 this.shouldshowprint = function () {
-                    return $scope.schema.stereotypeAttr != 'detailnew';
+                    return $scope.schema.stereotypeAttr !== 'detailnew';
                 }
 
                 this.getCancelLabel = function () {
-                    if ($scope.schema.stereotypeAttr == 'detailnew') {
+                    if ($scope.schema.stereotypeAttr === 'detailnew') {
                         return 'Cancel';
                     }
 
@@ -64,7 +67,7 @@
                 };
 
                 this.getCancelIcon = function () {
-                    if ($scope.schema.stereotypeAttr == 'detailnew') {
+                    if ($scope.schema.stereotypeAttr === 'detailnew') {
                         return 'fa-times';
                     }
 
@@ -94,12 +97,24 @@
                         }
                         $scope.allTabsLoaded();
                     }
+                
                 });
 
                 $scope.$on(JavascriptEventConstants.TabsLoaded, function (event, firstTabId, panelId) {
                     if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema, crudContextHolderService.currentSchema()))) {
                         return;
                     }
+
+                    tabSpinners.forEach(s => {
+                        //just in case, enforcing spinners have been stopped.
+                        s.stop();
+                    });
+                    
+                    tabSpinners.splice(0,tabSpinners.length);
+                    $(".tabRecordspin").each((idx,e) => {
+                        tabSpinners.push(spinService.startSpinner(e, { extraSmall: true }));
+                    });
+
                     $scope.allTabsLoaded(event, firstTabId);
                 });
 
@@ -126,6 +141,14 @@
                         focusService.setFocusToFirstField($scope.schema, datamap);
                     }, 1000, false);
                     eventService.onschemafullyloaded($scope.schema);
+                
+                }
+
+                $scope.showTabBusyCursor = function(element) {
+                    const spinneroptions = {
+                        small: true
+                    };
+                    spinService.startSpinner(element,spinneroptions);
                 }
 
                 $scope.getTabRecordCount = function (tab) {
@@ -203,6 +226,11 @@
                     if (tab != null && data[tab] != null) {
                         redirectService.redirectToTab(tab);
                     }
+
+                    tabSpinners.forEach(s => {
+                        s.stop();
+                    });
+
                 });
 
                 $scope.$on(JavascriptEventConstants.BodyRendered, function (ngRepeatFinishedEvent, parentElementId) {
