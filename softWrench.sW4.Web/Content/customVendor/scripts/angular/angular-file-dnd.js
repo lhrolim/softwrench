@@ -31,7 +31,7 @@
                     return false;
                 };
 
-                validMimeTypes = !attrs.fileDropzone
+                validMimeTypes = (!attrs.fileDropzone || attrs.fileDropzone.trim() === "")
                                     ? null
                                     : attrs.fileDropzone.split(",").map(function (e) {
                                         return e.trim();

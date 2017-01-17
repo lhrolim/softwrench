@@ -116,6 +116,11 @@
         function isValid(value, types) {
             if (!value) return false;
             // var fileName = value.match(/[^\/\\]+$/);
+            if (!types || ((types instanceof Array) && types.length === 0)) {
+                //SWWEB-2906
+                types = null;
+            }
+
             const validFileTypes = types || contextService.fetchFromContext("allowedfiles", true) || staticvalidFileTypes;
             const extensionIdx = value.lastIndexOf(".");
             const extension = value.substring(extensionIdx + 1).toLowerCase();
