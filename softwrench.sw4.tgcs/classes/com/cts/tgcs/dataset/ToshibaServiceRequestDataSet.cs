@@ -65,7 +65,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
         }
         
 
-        protected override void HandleAttachments(CompositionFetchResult data) {
+        protected override async Task HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             
             foreach (var attachment in attachments) {
@@ -77,7 +77,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
                 } else if (attachment.ContainsKey("docinfo_.urlname")) {
                     // download url from 'local'
                     var docInfoURL = (string) attachment["docinfo_.urlname"];
-                    attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                    attachment["download_url"] = await AttachmentHandler.GetFileUrl(docInfoURL);
                 }
                 AttachmentHandler.BuildParsedURLName(attachment);
             }

@@ -249,17 +249,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (!data.ResultObject.ContainsKey("attachment_")) {
                 return data;
             }
-            HandleAttachments(data);
+            await HandleAttachments(data);
             return data;
         }
 
-        protected virtual void HandleAttachments(CompositionFetchResult data) {
+        protected virtual async  Task HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
                 if (!attachment.ContainsKey("docinfo_.urlname"))
                     continue;
                 var docInfoURL = (string)attachment["docinfo_.urlname"];
-                attachment["download_url"] = AttachmentHandler.GetFileUrl(docInfoURL);
+                attachment["download_url"] = await AttachmentHandler.GetFileUrl(docInfoURL);
                 AttachmentHandler.BuildParsedURLName(attachment);
             }
         }
