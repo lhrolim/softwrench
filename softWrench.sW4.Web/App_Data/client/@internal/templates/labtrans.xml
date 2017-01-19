@@ -404,7 +404,7 @@
             <association target="location" label="Location" labelfield="location_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @assetnum == null &amp;&amp; @gldebitacct == null)">
               <renderer type="lookup"/>
             </association>
-            <association target="assetnum" label="Asset" labelfield="asset_.description" dependantfields="siteid,orgid" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
+            <association target="assetnum" label="Asset" labelfield="asset_.description" dependantfields="siteid,orgid,location" requiredexpression="@transtype == 'WORK' &amp;&amp; (@refwo == null &amp;&amp; @location == null &amp;&amp; @gldebitacct == null)">
               <renderer type="lookup"/>
             </association>
             <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname">

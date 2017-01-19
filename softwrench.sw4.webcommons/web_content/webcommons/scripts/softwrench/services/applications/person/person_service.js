@@ -57,7 +57,8 @@
         };
 
         //afterchange
-        function afterChangeUsername(datamap) {
+        function afterChangeUsername(event) {
+            const datamap = event.fields;
             if (!nullOrEmpty(datamap["#personid"])) {
                 datamap["personid"] = datamap["#personid"];
             }

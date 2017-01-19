@@ -66,6 +66,17 @@
                         });
                     };
 
+
+                    scope.$on(JavascriptEventConstants.AssociationResolved, function (event, panelid) {
+                        if (panelid != scope.panelid && !(panelid == null && scope.panelid === "")) {
+                            //keep != to avoid errors
+                          return;
+                        }
+                        scope.lookupObj = new LookupDTO(scope.fieldMetadata);
+                    
+                    });
+
+
                     scope.showLookupModal = function () {
                         //this will include (link) the directive defined on lookupModal.js on the screen
                         //check the ng-if on the lookupinput.html for more information

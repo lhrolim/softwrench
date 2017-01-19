@@ -14,6 +14,8 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
+using log4net;
+using log4net.Core;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Search.QuickSearch;
@@ -29,18 +31,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string ValueKeyConst = "value";
 
-        private static EntityRepository EntityRepository {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
-            }
-        }
+        private ILog Log = LogManager.GetLogger(typeof (ApplicationAssociationResolver));
+
+        private static EntityRepository EntityRepository => SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
 
 
-        private static QuickSearchHelper QuickSearchHelper {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
-            }
-        }
+        private static QuickSearchHelper QuickSearchHelper => SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
 
         public static ApplicationMetadata GetAssociationApplicationMetadata(ApplicationAssociationDefinition association) {
 
@@ -50,7 +46,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             association.Schema.RendererParameters.TryGetValueAsString("application", out optionApplication);
             association.Schema.RendererParameters.TryGetValueAsString("schemaId", out optionSchemaId);
 
-            if (!String.IsNullOrWhiteSpace(optionApplication) && !String.IsNullOrWhiteSpace(optionSchemaId)) {
+            if (!string.IsNullOrWhiteSpace(optionApplication) && !string.IsNullOrWhiteSpace(optionSchemaId)) {
                 return MetadataProvider
                     .Application(optionApplication)
                     .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web, null);
@@ -67,6 +63,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         public async Task<IEnumerable<IAssociationOption>> ResolveOptions([NotNull]ApplicationSchemaDefinition schema,
             [NotNull]AttributeHolder originalEntity, [NotNull] ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
+                Log.WarnFormat("field {0} has dependant fields which are not fully satisfied, ignoring query");
                 return null;
             }
             //TODO: remove this workaround, but need to refactor a bunch of prefilters
@@ -257,17 +254,17 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             for (var i = 0; i < association.LabelFields.Count; i++) {
                 fmt[i] = attributeHolder.GetAttribute(association.LabelFields[i], true);
             }
-            return String.Format(association.LabelPattern, fmt);
+            return string.Format(association.LabelPattern, fmt);
         }
 
         private IEnumerable<IAssociationOption> ApplyFilters(ApplicationMetadata app, AttributeHolder originalEntity, string filterFunctionName, ISet<IAssociationOption> options, ApplicationAssociationDefinition association) {
             var dataSet = FindDataSet(app.Name, app.Schema.SchemaId, filterFunctionName);
             var mi = dataSet.GetType().GetMethod(filterFunctionName);
             if (mi == null) {
-                throw new InvalidOperationException(String.Format(MethodNotFound, filterFunctionName, dataSet.GetType().Name));
+                throw new InvalidOperationException(string.Format(MethodNotFound, filterFunctionName, dataSet.GetType().Name));
             }
             if (mi.GetParameters().Count() != 1) {
-                throw new InvalidOperationException(String.Format(WrongPostFilterMethod, filterFunctionName, dataSet.GetType().Name));
+                throw new InvalidOperationException(string.Format(WrongPostFilterMethod, filterFunctionName, dataSet.GetType().Name));
             }
             var postFilterParam = new AssociationPostFilterFunctionParameters() {
                 Options = options,

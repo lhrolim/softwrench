@@ -52,7 +52,11 @@
 
         }
 
+        
 
+        clearAutoCompleteCache(associationKey = RequiredParam ) {
+            return this.$rootScope.$broadcast(JavascriptEventConstants.ClearAutoCompleteCache, associationKey);
+        }
 
         getEagerLookupOptions(lookupObj, quickSearchDTO) {
             const isShowingModal = this.crudContextHolderService.isShowingModal();
@@ -134,6 +138,8 @@
             }
 
             const searchDTO = new SearchDTO({ addPreSelectedFilters: true });
+            lookupDTO.searchData = {};
+            lookupDTO.searchOperator = {};
 
             return this.getLookupOptions(lookupDTO, searchDTO, mainDatamap, searchDatamap);
 

@@ -134,13 +134,13 @@
           <customization position="+locationhiddenfield">
             <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
               <renderer type="lookup" params="application=location;schemaId=locationLookupList;"/>
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             </association>
 
             <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
             <section orientation="horizontal">
             <field attribute="lostenergy3" label="Lost Energy">

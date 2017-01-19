@@ -6,5 +6,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces
     {
         ISet<string> DependantFields { get;}
         string AssociationKey { get; }
+
+        
     }
 }

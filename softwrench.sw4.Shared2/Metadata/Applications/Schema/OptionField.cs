@@ -29,11 +29,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly bool _sort;
         private readonly ISet<ApplicationEvent> _eventsSet;
         private readonly string _dependantFieldsString;
-        public string EvalExpression { get; set; }
+        public string EvalExpression {
+            get; set;
+        }
 
         public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression, string helpIcon,
-            string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression, 
+            string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression,
             string evalExpression, string extraParameter, string defaultExpression, string searchOperation, string extraProjectionFields = null)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, helpIcon, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
             _renderer = renderer;
@@ -57,57 +59,44 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         }
 
-        public override bool IsHidden { get; set; }
-
-        public IDictionary<string, object> RendererParameters {
-            get { return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary(); }
+        public override bool IsHidden {
+            get; set;
         }
 
-        public FieldFilter Filter {
-            get { return _filter; }
+        public IDictionary<string, object> RendererParameters => _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary();
+
+        public FieldFilter Filter => _filter;
+
+        public IDictionary<string, object> FilterParameters => _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary();
+
+        public override string RendererType => _renderer.RendererType.ToLower();
+
+
+        public string AssociationKey => _providerAttribute ?? Attribute;
+
+        public string Target => Attribute;
+
+        public string ProviderAttribute => _providerAttribute;
+
+        public string ExtraParameter => _extraParameter;
+
+        public IEnumerable<IAssociationOption> Options => _options;
+
+        public ISet<string> DependantFields => _dependantFields;
+
+        public bool Sort => _sort;
+
+        public string ApplicationPath => AssociationKey;
+
+        public ISet<string> ExtraProjectionFields {
+            get; set;
         }
-
-        public IDictionary<string, object> FilterParameters {
-            get { return _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary(); }
-        }
-
-        public override string RendererType { get { return _renderer.RendererType.ToLower(); } }
-
-
-        public string AssociationKey { get { return _providerAttribute ?? Attribute; } }
-        public string Target { get { return Attribute; } }
-
-        public string ProviderAttribute {
-            get { return _providerAttribute; }
-        }
-
-         public string ExtraParameter {
-             get { return _extraParameter; }
-         }
-
-        public IEnumerable<IAssociationOption> Options {
-            get { return _options; }
-        }
-
-        public ISet<string> DependantFields {
-            get { return _dependantFields; }
-        }
-
-        public bool Sort {
-            get { return _sort; }
-        }
-
-        public string ApplicationPath {
-            get { return AssociationKey; }
-        }
-
-        public ISet<string> ExtraProjectionFields { get; set; }
 
         public object Clone() {
             var optionField = new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression,
                 IsReadOnly, IsHidden, _renderer, _filter,
                 _options,
-                DefaultValue, _sort, ShowExpression,HelpIcon, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
+                DefaultValue, _sort, ShowExpression, HelpIcon, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
                 _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter, DefaultExpression,
                 SearchOperation) {
                 ExtraProjectionFields = ExtraProjectionFields

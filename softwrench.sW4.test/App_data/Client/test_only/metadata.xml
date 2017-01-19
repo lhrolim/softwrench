@@ -736,7 +736,7 @@
           <customization position="owner">
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeowner"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
             </association>
           </customization>
         </schema>

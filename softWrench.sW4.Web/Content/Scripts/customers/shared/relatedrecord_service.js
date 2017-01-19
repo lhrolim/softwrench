@@ -3,20 +3,20 @@
 
 angular.module('sw_layout')
     .service('relatedrecordService', ["$rootScope", "redirectService", "searchService", "crudContextHolderService", function ($rootScope, redirectService, searchService, crudContextHolderService) {
-    var getWorkOrderId = function (app, wonum, siteid) {
-        var searchData = {
-            wonum: wonum,
-            siteid: siteid
+        const getWorkOrderId = function (app, wonum, siteid) {
+            const searchData = {
+                wonum: wonum,
+                siteid: siteid
+            };
+            searchService.searchWithData("workorder", searchData, "wonumlookup").then(function (response) {
+                const data = response.data;
+                const resultObject = data.resultObject;
+                const workorderid = resultObject[0]['workorderid'];
+                redirectService.goToApplicationView(app, "editdetail", "input", null, { id: workorderid });
+            });
         };
-        searchService.searchWithData("workorder", searchData, "wonumlookup").then(function (response) {
-            const data = response.data;
-            var resultObject = data.resultObject;
-            var workorderid = resultObject[0]['workorderid'];
-            redirectService.goToApplicationView(app, "editdetail", "input", null, { id: workorderid });
-        });
-    };
 
-    function appName(app) {
+        function appName(app) {
         if (app.equalsIc("sr")) {
             return "servicerequest";
         } else if (app.equalsIc("incident")) {
@@ -28,13 +28,12 @@ angular.module('sw_layout')
     return {
 
         open: function (datamap, columnmetadata) {
-            var app = datamap["relatedrecclass"];
-            var key = datamap["relatedreckey"];
-            var siteid = datamap["siteid"];
-
-            var swApp = appName(app);
-            var schemaId = app.equalsAny("SR", "WORKORDER", "INCIDENT") ? "editdetail" : "detail";
-            var params = { userid: key, siteid: siteid };
+            const app = datamap["relatedrecclass"];
+            const key = datamap["relatedreckey"];
+            const siteid = datamap["siteid"];
+            const swApp = appName(app);
+            const schemaId = app.equalsAny("SR", "WORKORDER", "INCIDENT") ? "editdetail" : "detail";
+            const params = { userid: key, siteid: siteid };
             params.saveHistoryReturn = true;
 
             return redirectService.goToApplicationView(swApp, schemaId, "input", null, params);
@@ -46,10 +45,11 @@ angular.module('sw_layout')
 
         //afterchange
         clearSelectedRelatedEntityId: function (event) {
-            event.fields["#transient_relatedreckey"] = null;
-            event.fields["relatedreckey"] = null;
-            event.fields["relatedservicerequest_"] = null;
-            event.fields["relatedworkorder_"] = null;
+            const fields = event.fields;
+            fields["#transient_relatedreckey"] = null;
+            fields["relatedreckey"] = null;
+            fields["relatedservicerequest_"] = null;
+            fields["relatedworkorder_"] = null;
 
             $rootScope.$broadcast("sw_cleartypeaheadtext", null);
         },
@@ -58,17 +58,16 @@ angular.module('sw_layout')
         onAfterRelatedEntitySelected: function(event) {
             var datamap = event.fields;
             var selectedEntityName = datamap["relatedrecclass"];
-            var selectedEntity = (function() {
+            const selectedEntity = (function() {
                 switch (selectedEntityName) {
-                    case "SR":
-                        return datamap["relatedservicerequest_"];
-                    case "WORKORDER":
-                        return datamap["relatedworkorder_"];
-                    default:
-                        return { siteid: null, orgid: null }
+                case "SR":
+                    return datamap["relatedservicerequest_"];
+                case "WORKORDER":
+                    return datamap["relatedworkorder_"];
+                default:
+                    return { siteid: null, orgid: null }
                 }
             })();
-
             datamap["relatedrecsiteid"] = selectedEntity["siteid"];
             datamap["relatedrecorgid"] = selectedEntity["orgid"];
         }

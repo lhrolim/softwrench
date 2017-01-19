@@ -350,7 +350,7 @@
             </association>
             <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" orderbyfield="persongroup asc" requiredexpression="true">
               <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
             </association>
           </section>
 
@@ -471,12 +471,12 @@
               <section orientation="horizontal">
                 <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
                   <renderer type="lookup"/>
-                  <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+                  <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
                 </association>
                 <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
                   <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                   <dataprovider prefilterfunction="FilterAssets"/>
-                  <event type="afterchange" service="srService" method="afterChangeAsset"/>
+                  <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
                 </association>
                 <field label="Ism Ticket Id" attribute="ismticketid"/>
                 <field label="Ism Ticket UId" attribute="ismticketuid"/>
@@ -523,7 +523,7 @@
             <association label="Status" target="status" labelfield="synstatus_.description" requiredexpression="true">
               <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <renderer type="lookup" />
-              <event type="beforechange" service="srService" method="beforeChangeStatus"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeStatus"/>
             </association>
           </section>
        

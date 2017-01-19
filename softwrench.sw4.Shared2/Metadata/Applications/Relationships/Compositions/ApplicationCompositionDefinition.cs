@@ -34,13 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         /// The list and detail schemas shall point to the same application in that case.
         /// 
         /// </summary>
-        public Boolean IsSelfRelationship {
-            get {
-                return Relationship.StartsWith("#");
-            }
-        }
-
-        private Boolean _isCollection = false;
+        public Boolean IsSelfRelationship => Relationship.StartsWith("#");
 
         public ApplicationCompositionDefinition() {
 
@@ -48,7 +42,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public ApplicationCompositionDefinition(string @from, string relationship, string label, ApplicationCompositionSchema schema, string showExpression, string toolTip, bool hidden, bool printEnabled, ApplicationHeader header)
             : base(from, label, showExpression, toolTip, null) {
-            if (relationship == null) throw new ArgumentNullException("relationship");
+            if (relationship == null)
+                throw new ArgumentNullException("relationship");
             _relationship = relationship;
             _schema = schema;
             isHidden = hidden;
@@ -58,7 +53,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
                 //if hidden then the detail schema can be marked as empty
                 _schema.DetailSchema = "";
             }
-            _isCollection = schema is ApplicationCompositionCollectionSchema;
+            Collection = schema is ApplicationCompositionCollectionSchema;
         }
 
 
@@ -71,17 +66,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
-        public override string RendererType {
-            get {
-                return _schema.Renderer.RendererType;
-            }
-        }
+        public override string RendererType => _schema.Renderer.RendererType;
 
-        public override string Role {
-            get {
-                return From + "." + Relationship;
-            }
-        }
+        public override string Role => From + "." + Relationship;
 
         public override string Attribute {
             get {
@@ -101,39 +88,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
-        public Boolean Inline {
-            get {
-                return _schema.INLINE;
-            }
-        }
+        public Boolean Inline => _schema.INLINE;
 
         public override string ToString() {
             return string.Format("From: {0}, To: {1} , Collection: {2}", From, EntityAssociation, Collection);
         }
 
-        public string TabId {
-            get {
-                return Relationship;
-            }
-        }
+        public string TabId => Relationship;
 
-        public ISet<string> DependantFields {
-            get {
-                return _schema.DependantFields;
-            }
-        }
+        public ISet<string> DependantFields => _schema.DependantFields;
 
-        public override bool Collection {
-            get {
-                return _isCollection;
-            }
-        }
+        public override bool Collection { get; }
 
-        public string AssociationKey {
-            get {
-                return Relationship;
-            }
-        }
+        public string AssociationKey => Relationship;
 
 
         public object Clone() {
@@ -143,6 +110,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         }
 
-       
+
     }
 }

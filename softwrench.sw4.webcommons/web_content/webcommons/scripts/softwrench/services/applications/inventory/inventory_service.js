@@ -428,34 +428,35 @@
 
                     //afterchange
                     invIssueBatch_afterChangeItem: function (parameters) {
-                        const itemnum = parameters['fields']['itemnum'];
-                        parameters['fields']['binnum'] = null;
-                        parameters['fields']['lotnum'] = null;
-                        parameters['fields']['binbalances_.curbal'] = null;
+                        const fields = parameters['fields'];
+                        const itemnum = fields['itemnum'];
+                        fields['binnum'] = null;
+                        fields['lotnum'] = null;
+                        fields['binbalances_.curbal'] = null;
                         if (nullOrEmpty(itemnum)) {
-                            parameters['fields']['itemnum'] = null;
-                            parameters['fields']['unitcost'] = null;
-                            parameters['fields']['inventory_.issueunit'] = null;
-                            parameters['fields']['inventory_.itemtype'] = null;
+                            fields['itemnum'] = null;
+                            fields['unitcost'] = null;
+                            fields['inventory_.issueunit'] = null;
+                            fields['inventory_.itemtype'] = null;
                             return;
                         }
 
                         setBatchIssueBin(parameters);
                         const searchData = {
-                            itemnum: parameters['fields']['itemnum'],
-                            location: parameters['fields']['storeloc'],
-                            siteid: parameters['fields']['siteid'],
-                            orgid: parameters['fields']['orgid'],
-                            itemsetid: parameters['fields']['itemsetid']
+                            itemnum: fields['itemnum'],
+                            location: fields['storeloc'],
+                            siteid: fields['siteid'],
+                            orgid: fields['orgid'],
+                            itemsetid: fields['itemsetid']
                         };
                         searchService.searchWithData("inventory", searchData).then(function (response) {
                             const data = response.data;
                             const resultObject = data.resultObject;
                             const fields = resultObject[0];
                             const costtype = fields['costtype'];
-                            parameters['fields']['inventory_.costtype'] = costtype;
+                            fields['inventory_.costtype'] = costtype;
                             var locationFieldName = "";
-                            if (parameters['fields'].storeloc != undefined) {
+                            if (fields.storeloc != undefined) {
                                 locationFieldName = "storeloc";
                             }
                             //parameters['fields']['inventory_.issueunit'] = fields['issueunit'];

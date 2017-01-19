@@ -105,6 +105,8 @@ var DeviceDetect =
 DeviceDetect.init();
 
 
+const RequiredParam = () => { throw new Error("Required Parameter"); }
+
 function isMobile() {
     return DeviceDetect.catagory == 'Mobile';
 };

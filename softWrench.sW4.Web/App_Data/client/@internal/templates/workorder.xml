@@ -459,11 +459,13 @@
 
               <section orientation="horizontal">
                 <renderer type="default" params="childinputsize=large" />
-                <association label="Location" target="location" labelfield="location_.description"  dependantfields="siteid" enableexpression="!@siteid != null" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
+                <association label="Location" target="location" labelfield="location_.description"  
+                             dependantfields="siteid" enableexpression="!@siteid != null" 
+                             extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
                   <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
                   <renderer type="lookup" />
                 </association>
-                <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" >
                   <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                   <dataprovider prefilterfunction="FilterAssets"/>
                   <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>

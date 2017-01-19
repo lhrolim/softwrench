@@ -94,7 +94,7 @@
             dm["schema"] = null;
         }
 
-
+        //beforechange
         function beforeSchemaChange(parameters) {
             if (!!parameters.oldValue) {
                 simpleLog.debug("beforeSchemaChange: storing updated transient data for {0}".format(parameters.oldValue));
@@ -104,6 +104,7 @@
             }
         }
 
+        //beforechange
         function beforeTabChange(parameters) {
             if (!!parameters.oldValue) {
                 simpleLog.debug("beforeTabChange: storing updated transient data for {0}".format(parameters.oldValue));
@@ -113,6 +114,7 @@
             }
         }
 
+        //beforechange
         function beforeApplicationChange(parameters) {
             //before we change the application, let´s store its fresh data into the transientprofiledata object
             if (!!parameters.oldValue && !!parameters.newValue) {

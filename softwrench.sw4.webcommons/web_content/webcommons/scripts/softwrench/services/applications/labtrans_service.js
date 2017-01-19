@@ -4,7 +4,7 @@
     angular.module('sw_layout').service('labtransService', ["$q", "alertService", "redirectService", "crudContextHolderService", "restService", "searchService", "applicationService", "contextService",
         function ($q, alertService, redirectService, crudContextHolderService, restService, searchService, applicationService, contextService) {
             var calcLineCost = function (regularHours, regularRate, premiumHours, premiumRate) {
-                var regularPay = regularHours * regularRate;
+                const regularPay = regularHours * regularRate;
                 var premiumPay = 0;
                 if (premiumHours && premiumRate) {
                     premiumPay = premiumHours * (premiumRate * regularRate);
@@ -19,7 +19,7 @@
             //afterchange
             var updateLineCost = function (event) {
                 if (event.parentdata) {
-                    var parentdatamap = event.parentdata.fields || event.parentdata;
+                    const parentdatamap = event.parentdata.fields || event.parentdata;
                     // Update from one of the labor lines
                     var regularHours = parentdatamap['regularhrs'];
                     var regularRate = event.fields['payrate'];
@@ -29,12 +29,12 @@
                     event.fields['linecost'] = calcLineCost(regularHours, regularRate, premiumHours, premiumRate);
                 } else if (event.fields['#laborlist_'] && (event.fields['_iscreation'] || event.fields['mode'] == 'batch')) {
                     // Update from the body of the batch labor detail
-                    var labors = event.fields['#laborlist_'];
-                    for (var laborIndex in labors) {
+                    const labors = event.fields['#laborlist_'];
+                    for (let laborIndex in labors) {
                         if (!labors.hasOwnProperty(laborIndex)) {
                             continue;
                         }
-                        var currentLabor = labors[laborIndex];
+                        const currentLabor = labors[laborIndex];
                         var regularHours = event.fields['regularhrs'];
                         var regularRate = currentLabor['payrate'];
                         var premiumHours = event.fields['premiumpayhours'];
@@ -102,49 +102,47 @@
                     (event.fields['starttime'] && !event.fields['starttime'].nullOrEmpty()) &&
                     (event.fields['finishdate'] && !event.fields['finishdate'].nullOrEmpty()) &&
                     (event.fields['finishtime'] && !event.fields['finishtime'].nullOrEmpty())) {
-
-                        var startDate = new Date(event.fields['startdate']);
-                        var startTime = Date.parse(event.fields['starttime']);
+                        const startDate = new Date(event.fields['startdate']);
+                        const startTime = Date.parse(event.fields['starttime']);
                         startDate.setHours(startTime.getHours());
                         startDate.setMinutes(startTime.getMinutes());
-
-                        var finishDate = new Date(event.fields['finishdate']);
-                        var finishTime = Date.parse(event.fields['finishtime']);
+                        const finishDate = new Date(event.fields['finishdate']);
+                        const finishTime = Date.parse(event.fields['finishtime']);
                         finishDate.setHours(finishTime.getHours());
                         finishDate.setMinutes(finishTime.getMinutes());
 
                         // time diff
-                        var difference = finishDate - startDate;
+                        const difference = finishDate - startDate;
                         // convert ms to hours
-                        var hours = difference / 3600000;
+                        let hours = difference / 3600000;
                         hours = hours.toPrecision(6);
                         // set the labor hours
                         event.fields['regularhrs'] = parseFloat(hours);
                     }
                 },
                 openNewDetailModal: function (modalschemaId) {
-                    var schema = modalschemaId ? modalschemaId : "newdetail";
+                    const schema = modalschemaId ? modalschemaId : "newdetail";
                     return redirectService.goToApplication("labtrans", schema, {}, {});
                 },
                 updateLineCost: updateLineCost,
 
                 approveSingleLabtrans: function () {
-                    var datamap = crudContextHolderService.rootDataMap();
-                    var labtransIds = [];
+                    const datamap = crudContextHolderService.rootDataMap();
+                    const labtransIds = [];
                     labtransIds.push(datamap.labtransid);
                     approveLabtrans(labtransIds);
                 },
                 approveMultipleLabtrans: function() {
-                    var selectedLabtrans = crudContextHolderService.getSelectionModel(null).selectionBuffer;
-                    var labtransIds = Object.keys(selectedLabtrans);
+                    const selectedLabtrans = crudContextHolderService.getSelectionModel(null).selectionBuffer;
+                    const labtransIds = Object.keys(selectedLabtrans);
                     if (labtransIds.length < 1) {
                         return alertService.alert("There are no Labor Transaction selected");
                     }
                     approveLabtrans(labtransIds);
                 },
                 deleteSingleLabtrans: function() {
-                    var datamap = crudContextHolderService.rootDataMap();
-                    var labtransIds = [];
+                    const datamap = crudContextHolderService.rootDataMap();
+                    const labtransIds = [];
                     if (datamap.genapprservreceipt == 1) {
                         return alertService.alert("Approved Labor Transactions cannot be deleted.");
                     }
@@ -153,7 +151,7 @@
                 },
                 deleteMultipleLabtrans: function () {
                     var selectedLabtrans = crudContextHolderService.getSelectionModel(null).selectionBuffer;
-                    var keys = Object.keys(selectedLabtrans);
+                    const keys = Object.keys(selectedLabtrans);
                     // If not records are selected do nothing
                     if (keys.length == 0) {
                         return alertService.alert("There are no Labor Transaction selected");
@@ -182,7 +180,7 @@
                     return $q.when();
                 },
                 editLabtrans: function() {
-                    var datamap = crudContextHolderService.rootDataMap();
+                    const datamap = crudContextHolderService.rootDataMap();
                     if (datamap.genapprservreceipt == 1) {
                         alertService.alert("Cannot edit already approved labor transactions");
                         return false;
@@ -190,11 +188,11 @@
                     return true;
                 },
                 listClick: function(datamap, field, schema) {
-                    var history = datamap["workorder_.historyflag"];
-                    var approved = datamap["genapprservreceipt"];
-                    var parameters = {
+                    const history = datamap["workorder_.historyflag"];
+                    const approved = datamap["genapprservreceipt"];
+                    const parameters = {
                         "id": datamap["labtransid"]
-                    }
+                    };
                     if (history || approved) {
                         redirectService.goToApplicationView("labtrans", "editdetail", "output", null, parameters);
                     } else {
@@ -204,9 +202,9 @@
                 },
                 defaultLaborExpression: function (datamap, schema, displayable) {
                     var username = '';
-                    var rootdatamap = crudContextHolderService.rootDataMap();
+                    const rootdatamap = crudContextHolderService.rootDataMap();
                     if (rootdatamap['#laborlist_'].length < 2) {
-                        var user = contextService.getUserData();
+                        const user = contextService.getUserData();
                         username = user.login.toUpperCase();
                     }
                     return username;

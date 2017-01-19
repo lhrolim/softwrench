@@ -1,14 +1,15 @@
 ﻿
 class FieldMetadataPojo {
 
-    static ForAssociation(associationKey,target) {
+    static ForAssociation(associationKey,target, extraFields = []) {
 
         return {
             associationKey,
             attribute: target,
             target: target || associationKey,
             type: "ApplicationAssociationDefinition",
-            rendererType: "lookup"
+            rendererType: "lookup",
+            extraProjectionFields : extraFields
         };
     }
 

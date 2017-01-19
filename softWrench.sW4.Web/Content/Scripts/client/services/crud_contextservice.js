@@ -301,6 +301,8 @@
             this.clearDirty(panelid);
             this.disposeDetail(panelid, false);
             getContext(panelid).needsServerRefresh = false;
+            $log.get("crudContextHolderService#detailLoaded", ["navigation", "detail"]).debug("detail loaded");
+            $rootScope.$broadcast(JavascriptEventConstants.DetailLoaded);
         }
 
         function gridLoaded(applicationListResult, panelid) {

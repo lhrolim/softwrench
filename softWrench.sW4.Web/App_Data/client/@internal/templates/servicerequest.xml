@@ -134,14 +134,14 @@
         <componentdisplayable id="owner">
           <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeowner"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
           </association>
         </componentdisplayable>
 
         <componentdisplayable id="ownergroup">
           <association label="Owner Group" target="ownergroup" labelfield="ownergroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
             <renderer type="lookup"/>
-            <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+            <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
           </association>
         </componentdisplayable>
 
@@ -337,12 +337,12 @@
                   <!--<section id ="siteidsection"/>-->
                   <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
                     <renderer type="lookup"/>
-                    <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+                    <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
                   </association>
-                  <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+                  <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" >
                     <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                     <dataprovider prefilterfunction="FilterAssets"/>
-                    <event type="afterchange" service="srService" method="afterChangeAsset"/>
+                    <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
                   </association>
                   <!--<section id="statussection"/>-->
 

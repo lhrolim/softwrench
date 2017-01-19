@@ -6,13 +6,17 @@
 
 
     function angularTypeahead(restService, $timeout, $log, $rootScope,
-        contextService, associationService,lookupService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
+        contextService, associationService, lookupService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
         /// <returns type=""></returns>
 
-        function beforeSendPostJsonDatamap(jqXhr, settings, datamap, isComposition) {
+        function beforeSendPostJsonDatamap(jqXhr, settings) {
+            const datamap = this.datamap;
+            const isComposition = this.mode === "composition";
+
+
             if (datamap) {
                 let datamapToSend = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap);
                 if (isComposition) {
@@ -27,26 +31,29 @@
             return true;
         }
 
-        var configureSearchEngine = function (attrs, schema, provider, attribute, rateLimit, datamap, mode, fieldMetadata) {
+      
+
+        var configureSearchEngine = function (scope, attrs, schema, provider, attribute, rateLimit, datamap, mode, fieldMetadata) {
             const isDataEagerFetched = fieldMetadata.type === "OptionField";
-            const applicationName = schema.applicationName;
             const parameters = {
                 key: schemaService.buildApplicationMetadataSchemaKey(schema),
-                labelSearchString: "%QUERY",
+                labelSearchString: "%QUERY"
             };
             parameters.associationKey = provider;
             //            parameters.filterAttribute = attribute;
 
             var urlToUse = restService.getActionUrl("Association", "GetFilteredOptions", parameters);
             urlToUse = replaceAll(urlToUse, '%25', "%");
-            var isComposition = "composition" === mode;
+
             const bloodHoundOptions = {
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
-                limit: 30,
-
+                limit: 30
             };
 
+            const beforeSendPostJsonDatamapFn = beforeSendPostJsonDatamap.bind(scope);
+
+      
             if (!isDataEagerFetched) {
                 bloodHoundOptions.remote = {
                     url: urlToUse,
@@ -60,9 +67,7 @@
                         return parsedResponse;
                     },
                     ajax: {
-                        beforeSend: function (jqXhr, settings) {
-                            beforeSendPostJsonDatamap(jqXhr, settings, datamap, isComposition);
-                        }
+                        beforeSend: beforeSendPostJsonDatamapFn
                     }
                 }
             } else {
@@ -125,7 +130,7 @@
                 displayKey: function (item) {
                     return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true" });
                 },
-                source: sourceFn,
+                source: sourceFn
             });
 
 
@@ -144,7 +149,7 @@
                     element.typeahead("moveToBegin");
                     element.typeahead("highlight");
                 }, 0, false);
-                
+
             });
 
             element.on("keyup", function (e) {
@@ -189,7 +194,8 @@
             $timeout(function () {
                 //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
                 //it has enough to time to render itself on screen
-                const engine = configureSearchEngine(attrs, schema, provider, attribute, rateLimit, scope.datamap, scope.mode, scope.fieldMetadata);
+                const engine = configureSearchEngine(scope, attrs, schema, provider, attribute, rateLimit, scope.datamap, scope.mode, scope.fieldMetadata);
+                scope.engine = engine;
                 log.debug("configuring (after timeout) angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
                 configureJqueryHooks(scope, element, engine, scope.fieldMetadata);
 
@@ -211,14 +217,32 @@
             scope.$on('sw_cleartypeaheadtext', function (event) {
                 if (scope && scope.jelement) {
                     scope.jelement.typeahead('val', '');
-                }                
+                }
             });
+
+
+            scope.$on(JavascriptEventConstants.ClearAutoCompleteCache, (event, associationKey) => {
+                if (scope.provider !== associationKey) {
+                    //not the right handler... ignoring
+                    return;
+                }
+                $log.get("angulartypeahead#clearcache", ["detail"]).debug(`clearing autocomplete cache for ${associationKey}`);
+                scope.engine.clearRemoteCache();
+                scope.engine.clearPrefetchCache();
+            });
+
 
             scope.$on(JavascriptEventConstants.AssociationResolved, function (event, panelid) {
                 if (panelid != scope.panelid && !(panelid == null && scope.panelid === "")) {
                     //keep != to avoid errors
                     log.debug("ignoring event sw_associationsresolved for panelid {0} since we are on {1}".format(panelid, scope.panelid));
                     return;
+                }
+                $log.get("angulartypeahead#associations resolved", ["detail"]).debug(`clearing autocomplete cache for ${scope.provider}`);
+                if (scope.engine) {
+                    //upon detail navigation
+                    scope.engine.clearRemoteCache();
+                    scope.engine.clearPrefetchCache();
                 }
 
                 setInitialText(element, scope);

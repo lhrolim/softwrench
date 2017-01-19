@@ -597,12 +597,12 @@
             <section orientation="horizontal">
               <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid">
                 <renderer type="lookup"/>
-                <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+                <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               </association>
               <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
                 <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                 <dataprovider prefilterfunction="FilterAssets"/>
-                <event type="afterchange" service="srService" method="afterChangeAsset"/>
+                <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
               </association>
               <field attribute="reportedbyp_.langcode" label="Language" readonly="true"/>
             </section>

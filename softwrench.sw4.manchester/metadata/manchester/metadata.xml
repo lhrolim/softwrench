@@ -277,13 +277,13 @@
             <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
           </section>
 
           <section>
             <association label="Location:" target="location" labelfield="location_.description" requiredexpression="@saddresscode == null" extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <renderer type="lookup" params="inputsize=large"/>
             </association>
           </section>
@@ -302,13 +302,13 @@
 
             <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="personid asc">
               <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeowner"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
             </association>
 
             <!-- Added the Owner Group field-->
             <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
               <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
             </association>
           </section>
 

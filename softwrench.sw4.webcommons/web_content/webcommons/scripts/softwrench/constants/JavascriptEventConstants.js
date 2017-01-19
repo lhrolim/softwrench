@@ -21,6 +21,8 @@ const AjaxFinished = "sw.ajax.finished";
 
 const AjaxInit = "sw.ajax.init";
 
+
+
 //#region print
 
 const ReadyToPrint = "sw.application.print.ready";
@@ -48,6 +50,11 @@ const AppRedirected = "sw.crud.navigation.applicationredirected";
 const TitleChanged = "sw.crud.navigation.titlechanged";
 
 const RenderView = "sw.crud.navigation.renderview";
+
+/**
+ * Event that happens when a detail page has finish loading. Note that neither the compositions nor the associations have yet been loaded at this stage.
+ */
+const DetailLoaded = "sw.crud.navigation.detailloaded";
 
 //TODO: reconsider this one
 const RenderViewWithData = "sw.crud.navigation.renderwithdata";
@@ -118,6 +125,11 @@ const AssociationUpdated = "sw.crud.association.updated";
 
 //indicates that the a eager association has been updated
 const Association_EagerOptionUpdated = "sw.crud.associations.updateeageroptions";
+
+//manual event to clear the cache results for an autocomplete cache(angulartypeahead). This should happen whenever the query for the autocomplete needs to be reevaluated 
+//(ex: a location changes, invalidating the asset results)
+const ClearAutoCompleteCache = "sw.crud.association.clearautocompletecache";
+
 
 //#endregion
 
@@ -232,6 +244,10 @@ class JavascriptEventConstants {
         return TitleChanged;
     }
 
+    static get DetailLoaded() {
+        return DetailLoaded;
+    }
+
     static get RenderView() {
         return RenderView;
     }
@@ -260,6 +276,10 @@ class JavascriptEventConstants {
     }
     static get Association_EagerOptionUpdated() {
         return Association_EagerOptionUpdated;
+    }
+
+    static get ClearAutoCompleteCache() {
+        return ClearAutoCompleteCache;
     }
 
     //#endregion

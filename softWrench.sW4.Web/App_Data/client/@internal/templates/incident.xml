@@ -206,13 +206,13 @@
               
               <association label="Location" target="location" labelfield="location_.description" >
                 <renderer type="lookup" />
-                <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+                <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               </association>
               
-              <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location">
+              <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" >
                 <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
                 <dataprovider prefilterfunction="FilterAssets"/>
-                <event type="afterchange" service="srService" method="afterChangeAsset"/>
+                <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
               </association>
               <optionfield attribute="classstructureid" label="Classification" providerattribute="_IncidentClassStructureType" default="@classstructureid">
                 <renderer type="lookup" />
@@ -234,7 +234,7 @@
             </association>
             <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>
-              <event type="afterchange" service="srService" method="afterchangeowner"/>
+              <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
             </association>
             <association label="Owner Group" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null">
               <renderer type="lookup"/>

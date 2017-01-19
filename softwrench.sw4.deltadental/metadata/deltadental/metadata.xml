@@ -406,13 +406,13 @@
             <field attribute="createby" hidden="true"/>
 
             <association label="Location:" target="location" labelfield="location_.description">
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
               <renderer type="lookup"/>
             </association>
             <association label="Asset:" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" showexpression="1!=1">
               <renderer type="lookup" params="application=asset;schemaId=assetLookupList;"/>
               <dataprovider prefilterfunction="FilterAssets"/>
-              <event type="afterchange" service="srService" method="afterChangeAsset"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
             </association>
             
             <optionfield attribute="classstructureid" label="Request Code:" dependantfields="siteid" providerattribute="_SRClassStructureType">
@@ -435,11 +435,11 @@
               <section orientation="vertical">
                 <association label="Owner:"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null" orderbyfield="person.personid asc">
                   <renderer type="lookup"/>
-                  <event type="afterchange" service="srService" method="afterchangeowner"/>
+                  <event type="afterchange" service="genericTicketService" method="afterchangeowner"/>
                 </association>
                 <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" enableexpression="@owner==null" orderbyfield="persongroup asc">
                   <renderer type="lookup"/>
-                  <event type="afterchange" service="srService" method="afterchangeownergroup"/>
+                  <event type="afterchange" service="genericTicketService" method="afterchangeownergroup"/>
                 </association>
                 <field label="Reported Date" attribute="reportdate" readonly="true" default="@currentdatetime">
                   <renderer type="datetime" />

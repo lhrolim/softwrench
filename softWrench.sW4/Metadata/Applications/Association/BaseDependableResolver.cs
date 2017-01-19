@@ -12,6 +12,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         protected const string DataSetNotFound = "Application {0} requires a filterFunction {1}, but no DataSet could be located";
 
         protected bool FullSatisfied(IDependableField dependableField, AttributeHolder originalEntity) {
+            //TODO: rethink of this implementation
             var dependantFields = dependableField.DependantFields;
             if (dependantFields.Count == 0) {
                 return true;

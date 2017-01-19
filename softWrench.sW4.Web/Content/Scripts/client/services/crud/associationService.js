@@ -146,6 +146,8 @@
             const schema = this.crudContextHolderService.currentSchema(panelId);
             const fieldsTosubmit = this.submitServiceCommons.removeExtraFields(datamap, true, schema);
             const key = this.schemaService.buildApplicationMetadataSchemaKey(schema);
+            const lazyAssociationsBeingResolvedLocal = this.lazyAssociationsBeingResolved;
+            const updateLazyFn = this.crudContextHolderService.updateLazyAssociationOption.bind(this);
 
             const parameters = {
                 key,
@@ -157,11 +159,11 @@
                 if (httpResponse.data === "null" || httpResponse.data == null) {
                     return null;
                 }
-                const idx = this.lazyAssociationsBeingResolved.indexOf(associationKey);
+                const idx = lazyAssociationsBeingResolvedLocal.indexOf(associationKey);
                 if (idx !== -1) {
-                    this.lazyAssociationsBeingResolved.splice(idx, 1);
+                    lazyAssociationsBeingResolvedLocal.splice(idx, 1);
                 }
-                this.crudContextHolderService.updateLazyAssociationOption(associationKey, httpResponse.data, true);
+                updateLazyFn(associationKey, httpResponse.data, true);
                 return httpResponse.data;
             });
         }
@@ -213,6 +215,7 @@
                 return this.$q.when(itemValue);
             }
 
+            const parseLabelTextFn = this.parseLabelText.bind(this);
 
             if (item == null) {
                 if (!this.crudContextHolderService.associationsResolved()) {
@@ -231,11 +234,11 @@
                     if (association == null && allowTransientValue) {
                         return this.$q.when(itemValue);
                     }
-                    return parseLabelText(association, options);
+                    return parseLabelTextFn(association, options);
                 });
             }
 
-            return this.$q.when(this.parseLabelText(item, options));
+            return this.$q.when(parseLabelTextFn(item, options));
 
         }
 
@@ -264,7 +267,7 @@
 
             this.$log.get("associationService#updateUnderlyingAssociationObject", ["association"]).debug("call updateUnderlyingAssociationObject");
 
-            if (!!associationFieldMetadata.providerAttribute) return;
+            if (!!associationFieldMetadata.providerAttribute) return datamap;
 
             //if association options have no fields, we need to define it as an empty array. 
             
@@ -279,12 +282,13 @@
             
             if (underlyingValue == null) {
                 //the value remains null, but this is because the list of options is lazy loaded, nothing to do
-                return;
+                return datamap;
             }
 
             if (!!associationFieldMetadata.extraProjectionFields && associationFieldMetadata.extraProjectionFields.length > 0) {
                 this.doUpdateExtraFields(associationFieldMetadata, underlyingValue, datamap);
             }
+            return datamap;
         }
 
         updateOptionFieldExtraFields(optionFieldMetadata, scope) {
@@ -549,7 +553,7 @@
                         //this timeout is required because there´s already a digest going on, so this emit would throw an exception
                         //had to put a bigger timeout so that the watches doesn´t get evaluated.
                         //TODO: investigate it
-                        scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
+//                        scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
                     }, 300, false);
                 }
 
@@ -582,7 +586,7 @@
             if (options.avoidspin) {
                 config.avoidspin = true;
             }
-            return this.$http.post(urlToUse, jsonString, config).then(function (response) {
+            return this.$http.post(urlToUse, jsonString, config).then(response=> {
                 const data = response.data;
                 const options = data.resultObject;
                 log.info('associations returned {0}'.format($.keys(options)));
@@ -604,7 +608,7 @@
                     if (triggerFieldName !== "#eagerassociations") {
                         this.$timeout(function () {
                             //this timeout is required because there´s already a digest going on, so this emit would throw an exception
-                            scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
+//                            scope.$emit(JavascriptEventConstants.MoveFocus, scope.datamap, scope.schema, triggerFieldName);
                         }, 0, false);
                     }
                 }
@@ -613,13 +617,14 @@
 
         onAssociationChange(fieldMetadata, updateUnderlying, event) {
 
-            if (fieldMetadata.events == undefined) {
+            if (fieldMetadata.events == undefined || !event.dispatchedbytheuser) {
+                //no sense to dispatch a before change event which was not dispatched by the user
                 event.continue();
                 return true;
             }
 
             const result = this.eventService.beforechange(fieldMetadata, event); //sometimes the event might be syncrhonous, returning either true of false
-            if (result != undefined && result == false) {
+            if (result != undefined && result === false) {
                 event.interrupt();
                 return false;
             }

@@ -7,7 +7,7 @@
     function applicationController($scope, $http, $log, $timeout,
         fixHeaderService, $rootScope, associationService, validationService, historyService,
         contextService, searchService, alertService, schemaService, userPreferencesService,
-        checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService, crudlistViewmodel) {
+        checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService, crudlistViewmodel, $q) {
         "ngInject";
 
         $scope.$name = 'applicationController';

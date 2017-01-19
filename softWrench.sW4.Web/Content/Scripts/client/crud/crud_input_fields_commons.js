@@ -102,13 +102,18 @@
                         }
                     }
                     var fields = $parse(datamappropertiesName)($scope);
+                    const resolved = contextService.fetchFromContext("associationsresolved", false, true);
+                    const phase = resolved ? 'configured' : 'initial';
+                    const dispatchedbytheuser = resolved ? true : false;
                     const eventToDispatch = {
-                        oldValue: oldValue,
-                        newValue: newValue,
-                        fields: fields,
+                        oldValue,
+                        newValue,
+                        fields,
                         parentdata: $scope.parentdata,
-                        displayables: displayables,
+                        displayables,
                         scope: $scope,
+                        phase,
+                        dispatchedbytheuser,
                         'continue': function () {
                             if ($scope.compositionlistschema) {
                                 //workaround for compositions
@@ -121,9 +126,7 @@
                             if (association.type === "OptionField") {
                                 associationService.updateOptionFieldExtraFields(association, $scope);
                             }
-                            const resolved = contextService.fetchFromContext("associationsresolved", false, true);
-                            const phase = resolved ? 'configured' : 'initial';
-                            const dispatchedbytheuser = resolved ? true : false;
+                     
                             const hook = associationService.postAssociationHook(association, { phase, dispatchedbytheuser, fields});
                             hook.then(function (hookResult) {
                                 associationService.updateAssociations(association, $scope, {phase});
@@ -152,7 +155,9 @@
 
                         }
                     };
-                    const result = associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
+
+                    //TODO change to use promises
+                    const result = !eventToDispatch.dispatchedbytheuser || associationService.onAssociationChange(association, isMultiValued, eventToDispatch);
                     if (!result) {
                         return;
                     }

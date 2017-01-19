@@ -111,7 +111,7 @@
             </association>
             <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" >
               <renderer type="lookup"/>
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             </association>
             <field label="Attachment" attribute="newattachment" >
               <renderer type="upload"/>
@@ -168,7 +168,7 @@
             </association>
             <association label="Location" target="location" labelfield="location_.description" dependantfields="siteid" >
               <renderer type="lookup"/>
-              <event type="beforechange" service="srService" method="beforeChangeLocation"/>
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
             </association>
           </section>
           <section id="compositions">

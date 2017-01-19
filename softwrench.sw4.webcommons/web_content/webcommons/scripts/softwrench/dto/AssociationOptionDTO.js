@@ -1,10 +1,10 @@
 ﻿class AssociationOptionDTO {
 
-    constructor({value, label, type, extraFields}) {
+    constructor({value, label, type, extrafields}) {
         this.value = value;
         this.label = label;
         this.type = type;
-        this.extraFields = extraFields;
+        this.extrafields = extrafields;
     }
 
    
