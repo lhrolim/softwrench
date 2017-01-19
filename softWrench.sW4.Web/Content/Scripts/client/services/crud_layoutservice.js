@@ -137,6 +137,11 @@
                 cssclass += ' haschildren';
             }
 
+            //add class if section is a tab section
+            if (fieldMetadata.displayables != null && fieldMetadata.rendererParameters["tabsection"] === "true") {
+                cssclass += " tabsection";
+            }
+
             //add classes if childinputsize is set
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.childinputsize != null) {
                 cssclass += ' childinputsize ' + fieldMetadata.rendererParameters.childinputsize;

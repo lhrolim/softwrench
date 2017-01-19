@@ -20,6 +20,10 @@ fieldset.form-group {
     &.haschildren {
         padding-right: 0;
         padding-left: 0;
+
+        &.tabsection {
+            padding-left: 15px;
+        }
     }
 }
 

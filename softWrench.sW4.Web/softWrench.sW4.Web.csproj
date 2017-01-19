@@ -628,6 +628,7 @@
     </Content>
     <Content Include="App_Data\Client\%40internal\templates\serviceaddress.xml" />
     <Content Include="App_Data\Client\%40internal\templates\solution.xml" />
+    <Content Include="App_Data\Client\%40internal\templates\safety.xml" />
     <Content Include="App_Data\Client\%40internal\templates\sparepart.xml" />
     <Content Include="App_Data\Client\%40internal\templates\swdb\mappingtool.xml">
       <SubType>Designer</SubType>

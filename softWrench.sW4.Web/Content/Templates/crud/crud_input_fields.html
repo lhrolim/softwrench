@@ -1,6 +1,6 @@
 <form name="crudInputForm">
     <section id="{{elementid}}" schemaid="{{schema.schemaId}}">
-        <div class="field-wrap">
+        <div class="field-wrap" ng-if="!isTabSection()">
             <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
                       class="form-group"
                       ng-class="getFieldClass(fieldMetadata)"
@@ -528,7 +528,9 @@
                                                                    elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                                                    orientation="{{fieldMetadata.orientation}}"
                                                                    islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
-                                                                   ismodal="{{ismodal}}">
+                                                                   ismodal="{{ismodal}}"
+                                                                   tabsection="{{isTabSection(fieldMetadata)}}"
+                                                                   cancelfn="cancelfn(data,schema)">
                                             </section-element-input>
 
                                         </div>
@@ -603,11 +605,66 @@
                                                    renderer-parameters="fieldMetadata.rendererParameters"
                                                    elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                                    orientation="{{fieldMetadata.orientation}}"
-                                                   islabelless="{{isSectionWithoutLabel(fieldMetadata)}}">
+                                                   islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                                   tabsection="{{isTabSection(fieldMetadata)}}"
+                                                   cancelfn="cancelfn(data,schema)">
                             </section-element-input>
                         </div>
                 </div>
             </fieldset>
+        </div>
+
+        <div ng-if="isTabSection()">
+            <div class="detail-header clearfix">
+                <ul class="nav nav-tabs compositiondetailtab hapag-composition">
+                    <li ng-class="{'active': $first}" ng-repeat="tab in tabsDisplayables(displayables)" ng-switch on="tab.type" tabsrendered>
+                        <a ng-switch-when="ApplicationCompositionDefinition" ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowComposition(tab)">
+                            <i class="{{getTabIcon(tab)}}"></i>&ensp;{{i18N(tab.tabId + '._title',tab.label)}}&ensp;
+                            <span ng-show="showTabRecordCount(tab)" class="tabRecordCount spin badge">{{getTabRecordCount(tab)}}</span>
+                            <span ng-show="!showTabRecordCount(tab)" class="tabRecordspin" style="display: inline-block"></span>
+                        </a>
+                        <a ng-switch-when="ApplicationTabDefinition" ng-href="#{{tab.tabId}}" data-tabid="{{tab.tabId}}" ng-show="shouldShowTab(tab)">
+                            <i class="fa {{tab.icon}} "></i>&ensp;{{i18NTabLabel(tab)}}&ensp;
+                            <span ng-show="showTabRecordCount(tab)" class="tabRecordCount spin badge">{{getTabRecordCount(tab)}}</span>
+                            <span ng-show="!showTabRecordCount(tab)" class="tabRecordspin" style="display: inline-block"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content tabsection-content">
+                <div class="tab-pane" ng-class="{'active': $first}" ng-repeat="tab in tabsDisplayables(displayables)" id="{{tab.tabId}}" ng-switch on="tab.type">
+                    <div ng-switch-when="ApplicationCompositionDefinition" ng-switch on="tab.collection">
+                        <div ng-switch-when="true" class="hiddenonprint">
+                            <composition-list-wrapper parentschema="schema"
+                                                      parentdata="datamap"
+                                                      cancelfn="cancelfn(data,schema)"
+                                                      previousschema="previousschema" previousdata="previousdata"
+                                                      metadata="tab"
+                                                      mode="{{schema.mode}}"
+                                                      tabid="{{tab.tabId}}"
+                                                      ismodal="{{ismodal}}"
+                                                      startlazyloading="{{$first}}" />
+                        </div>
+                        <div ng-switch-when="false">
+                        </div>
+                    </div>
+                    <div class="tab-pane" ng-switch-when="ApplicationTabDefinition">
+                        <crud-input-wrapper ismodal="{{ismodal}}"
+                                            extraparameters="extraparameters"
+                                            elementid="tab_{{tab.tabid}}"
+                                            displayables="tab.displayables"
+                                            schema="schema" datamap="datamap"
+                                            association-schemas="associationSchemas"
+                                            blockedassociations="blockedassociations"
+                                            cancelfn="cancel(data,schema)"
+                                            savefn="save(selecteditem, parameters)"
+                                            previousschema="previousschema"
+                                            previousdata="previousdata"
+                                            is-main-tab="{{$first}}"
+                                            tabid="{{tab.tabId}}" />
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </form>

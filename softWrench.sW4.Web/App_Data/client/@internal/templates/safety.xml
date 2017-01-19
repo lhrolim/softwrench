@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity name="safetylexicon" idAttribute="safetylexiconid">
+      <attributes>
+        <attribute name="safetylexiconid" type="bigint" required="true" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="hazardid" type="varchar" required="false" />
+        <attribute name="tagoutid" type="varchar" required="false" />
+        <attribute name="applyseq" type="smallint" required="false" />
+        <attribute name="removeseq" type="smallint" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="sl01" type="varchar" required="false" />
+        <attribute name="sl02" type="varchar" required="false" />
+        <attribute name="sl03" type="datetime" required="false" />
+        <attribute name="sl04" type="decimal" required="false" />
+        <attribute name="sl05" type="int" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="hazard">
+          <relationshipAttribute from="hazardid" to="hazardid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+        <relationship to="hazardprec" collection="true">
+          <relationshipAttribute from="hazardid" to="hazardid" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="hazard" idAttribute="hazarduid">
+      <attributes>
+        <attribute name="hazarduid" type="bigint" required="true" />
+        <attribute name="hazardid" type="varchar" required="true" />
+        <attribute name="description" type="varchar"/>
+        <attribute name="orgid" type="varchar" required="true"/>
+        <attribute name="hazmatenabled" type="boolean" required="true"/>
+        <attribute name="hazardtype" type="varchar"/>
+        <attribute name="msdsnum" type="varchar"/>
+        <attribute name="healthrating" type="varchar"/>
+        <attribute name="flammabilityrating" type="varchar"/>
+        <attribute name="reactivityrating" type="varchar"/>
+        <attribute name="contactrating" type="varchar"/>
+      </attributes>
+    </entity>
+
+    <entity name="hazardprec" idAttribute="hazardprecid">
+      <attributes>
+        <attribute name="hazardprecid" type="bigint" required="true" />
+        <attribute name="hazardid" type="varchar" required="true" />
+        <attribute name="precautionid" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true"/>
+        <attribute name="siteid" type="varchar" required="true"/>
+      </attributes>
+      <relationships>
+        <relationship to="precaution" collection="true">
+          <relationshipAttribute from="precautionid" to="precautionid" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="precaution" idAttribute="precautionuid" useridAttribute="precautionid">
+      <attributes>
+        <attribute name="precautionuid" type="bigint" required="true" />
+        <attribute name="precautionid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" />
+        <attribute name="orgid" type="varchar" required="true"/>
+        <attribute name="siteid" type="varchar" required="true"/>
+      </attributes>
+    </entity>
+
+    <entity name="sprelatedasset" idAttribute="sprelatedassetid">
+      <attributes>
+        <attribute name="sprelatedassetid" type="bigint" required="true" />
+        <attribute name="assetnum" type="varchar" />
+        <attribute name="relatedasset" type="varchar" />
+        <attribute name="relatedlocation" type="varchar" />
+        <attribute name="orgid" type="varchar" required="true"/>
+        <attribute name="siteid" type="varchar" required="true"/>
+        <attribute name="description" type="varchar" query="(case when !@relatedasset is not null then (select a.description from asset a where a.assetnum = !@relatedasset and a.siteid = !@siteid) else (select l.description from locations l where l.location = !@relatedlocation and l.siteid = !@siteid) end)"/>
+      </attributes>
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="safetylexicon" title="Safety Lexicon" entity="safetylexicon">
+      <schemas>
+        <schema id="hazardlist" stereotype="compositionlist">
+          <field attribute="hazardid" label="Hazard"/>
+          <field attribute="hazard_.description" label="Description"/>
+          <field attribute="hazard_.hazmatenabled" label="Can Have Hazardous Materials?">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="hazard_.hazardtype" label="Type"/>
+        </schema>
+
+        <schema id="hazarddetail" stereotype="compositiondetail">
+          <field attribute="hazardid" hidden="true"/>
+          <composition relationship="hazardprec" inline="true" label="Precautions" detailschema="" printschema="" >
+            <collectionproperties listschema="precautionlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+          </composition>
+        </schema>
+
+        <schema id="hazardrousmaterialslist" stereotype="compositionlist">
+          <field attribute="hazardid" label="Hazard"/>
+          <field attribute="hazard_.description" label="Description"/>
+          <field attribute="hazard_.msdsnum" label="MSDS"/>
+          <field attribute="hazard_.healthrating" label="Heath"/>
+          <field attribute="hazard_.flammabilityrating" label="Flammability"/>
+          <field attribute="hazard_.reactivityrating" label="Reactivity"/>
+          <field attribute="hazard_.contactrating" label="Contact"/>
+          <properties>
+            <property key="list.click.customparams" value="hazard_.description"/>
+            <property key="icon.composition.tab" value="fa fa-bomb"/>
+          </properties>
+        </schema>
+
+        <schema id="hazardrousmaterialsdetail" stereotype="compositiondetail">
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Details"/>
+            <renderer type="default" params="childinputsize=medium" />
+            <field attribute="hazardid" label="Hazard"/>
+            <field attribute="hazard_.description" label="Description"/>
+            <field attribute="hazard_.msdsnum" label="MSDS" />
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="NFPA Rating"/>
+            <renderer type="default" params="childinputsize=small" />
+            <field attribute="hazard_.healthrating" label="Heath"/>
+            <field attribute="hazard_.flammabilityrating" label="Flammability"/>
+            <field attribute="hazard_.reactivityrating" label="Reactivity"/>
+            <field attribute="hazard_.contactrating" label="Contact"/>
+          </section>
+        </schema>
+
+        <schema id="tagoutslist" stereotype="compositionlist">
+          <field attribute="hazardid" label="Hazard"/>
+          <field attribute="hazard_.description" label="Description"/>
+          <field attribute="hazard_.hazardtype" label="Type"/>
+          <properties>
+            <property key="expansible" value="false"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="hazard" title="Hazard" entity="hazard">
+      <schemas>
+      </schemas>
+    </application>
+
+    <application name="hazardprec" title="Hazard Precautions" entity="hazardprec">
+      <schemas>
+        <schema id="precautionlist" stereotype="compositionlist">
+          <field attribute="precautionid" label="Precaution"/>
+          <field attribute="precaution_.description" label="Description"/>
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="sprelatedasset" title="Safety Related Asset" entity="sprelatedasset">
+      <schemas>
+        <schema id="sprelatedassetlist" stereotype="compositionlist">
+          <field attribute="relatedasset" label="Asset"/>
+          <field attribute="relatedlocation" label="Location"/>
+          <!--<field attribute="relatedasset_.description" label="Description" showexpression="@relatedasset != null"/>
+          <field attribute="relatedlocation_.description" label="Description" showexpression="@relatedlocation != null"/>-->
+          <field attribute="description" label="Description"/>
+          <properties>
+            <property key="icon.composition.tab" value="fa fa-share-alt"/>
+            <property key="expansible" value="false"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

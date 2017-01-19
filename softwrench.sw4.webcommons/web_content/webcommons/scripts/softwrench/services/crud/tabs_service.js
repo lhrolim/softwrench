@@ -14,6 +14,10 @@
         return result;
     };
 
+    const isTabSection = function(section) {
+        return section.rendererParameters && section.rendererParameters["tabsection"] === "true";
+    }
+
     return {
 
         getCompositionSchema: function (baseSchema, compositionKey, schemaId) {
@@ -54,28 +58,45 @@
             return resultList;
         },
 
+        filterTabs: function (displayables, includeSubTabs = false) {
+            var resultList = [];
+            angular.forEach(displayables, function (displayable) {
+                if (fieldService.isTabOrComposition(displayable) && !displayable.isHidden) {
+                    resultList.push(displayable);
+                    if (includeSubTabs) {
+                        // only add subtabs if includeSubTabs equals true
+                        resultList = resultList.concat(this.tabsDisplayables(displayable, includeSubTabs));
+                    }
+                } else if (fieldService.isSection(displayable) && (!isTabSection(displayable) || includeSubTabs)) {
+                    // only add subtabs if includeSubTabs equals true
+                    resultList = resultList.concat(this.tabsDisplayables(displayable, includeSubTabs));
+                }
+            }, this);
+            return resultList;
+        },
+
         /**
          * 
          * @param {} container a DisplayableContainer, either a schema or a section or any other implementation
          * @returns {} 
          */
-        tabsDisplayables: function (container) {
-            if (container.tabsDisplayables != undefined) {
+        tabsDisplayables: function (container, includeSubTabs = false) {
+            if (!includeSubTabs && container.tabsDisplayables != undefined) {
                 //cache
                 return container.tabsDisplayables;
             }
-            var resultList = [];
+            if (includeSubTabs && container.allTabsDisplayables != undefined) {
+                //cache
+                return container.allTabsDisplayables;
+            }
 
-            angular.forEach(container.displayables, function(displayable) {
-                if (fieldService.isTabOrComposition(displayable) && !displayable.isHidden) {
-                    resultList.push(displayable);
-                } else if (fieldService.isSection(displayable)) {
-                    resultList = resultList.concat(this.tabsDisplayables(displayable));
-                }
-            }, this);
+            const resultList = this.filterTabs(container.displayables, includeSubTabs);
 
-
-            container.tabsDisplayables = resultList;
+            if (!includeSubTabs) {
+                container.tabsDisplayables = resultList;
+            } else {
+                container.allTabsDisplayables = resultList;
+            }
             return resultList;
         },
 
@@ -91,7 +112,9 @@
                 return schema.nonInlineCompositionsDict;
             }
             var resultDict = {};
-            var allTabs = this.tabsDisplayables(schema);
+
+            // all tabs, including subtabs
+            var allTabs = this.tabsDisplayables(schema, true);
             allTabs.forEach(function(tab) {
                 resultDict[tab.relationship] = tab;
             });

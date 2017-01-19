@@ -42,7 +42,9 @@
                 ismodal: '@',
                 lookupAssociationsCode: '=',
                 lookupAssociationsDescription: '=',
-                rendererParameters: '='
+                rendererParameters: '=',
+                tabsection: "@",
+                cancelfn: "&"
             },
             template: "<div></div>",
             link: function (scope, element, attrs) {
@@ -58,7 +60,10 @@
                     "section-parameters='rendererParameters'" +
                     "elementid='{{elementid}}'" +
                     "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
-                    "outerassociationcode='lookupAssociationsCode' outerassociationdescription='lookupAssociationsDescription' issection='true'" +
+                    "outerassociationcode='lookupAssociationsCode' " +
+                    "outerassociationdescription='lookupAssociationsDescription' " +
+                    "issection='true'" +
+                    "tabsection='{{tabsection}}'" +
                     "></crud-input-fields>"
                     );
                     $timeout(function () {
@@ -97,6 +102,8 @@
                 outerassociationdescription: '=',
                 issection: '@',
                 ismodal: '@',
+                tabsection: "@",
+                cancelfn: "&"
             },
 
             link: function (scope, element, attrs) {
@@ -136,12 +143,12 @@
 
             controller: ["$scope", "$http", "$element", "$injector", "$timeout", "$log",
                 "printService", "compositionService", "commandService", "fieldService", "i18NService",
-                "associationService", "expressionService", "styleService",
+                "associationService", "expressionService", "styleService", "tabsService",
                 "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService", 
                 "layoutservice", "attachmentService", "richTextService",
                 function ($scope, $http, $element, $injector, $timeout, $log,
                 printService, compositionService, commandService, fieldService, i18NService,
-                associationService, expressionService, styleService,
+                associationService, expressionService, styleService, tabsService,
                 cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
                 layoutservice, attachmentService, richTextService) {
 
@@ -635,6 +642,19 @@
                     $scope.codeEditorMode = function (fieldMetadata) {
                         return fieldMetadata.rendererParameters ? fieldMetadata.rendererParameters["codemode"] : null;
                     }
+
+                    $scope.isTabSection = function (sectionMetadata) {
+                        if (!sectionMetadata) {
+                            let isTabSection = $scope.tabsection === "true";
+                            return isTabSection;
+                        }
+                        let isTabSection = sectionMetadata.rendererParameters["tabsection"] === "true";
+                        return isTabSection;
+                    }
+
+                    $scope.tabsDisplayables = function (displayables) {
+                        return tabsService.filterTabs(displayables);
+                    };
                 }]
         }
     }])

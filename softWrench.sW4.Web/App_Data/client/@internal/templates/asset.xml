@@ -7,6 +7,7 @@
     <template path="@locationmeter.xml"/>
     <template path="@sparepart.xml"/>
     <template path="@meter.xml"/>
+    <template path="@safety.xml"/>
     
   </templates>
   <entities>
@@ -107,9 +108,25 @@
           <!--Required to have a relationshipAttribute on relationship declaration, real query build in prefilterfunction-->
           <relationshipAttribute query=""/>
         </relationship>
-        <relationship to="safetylexicon">
+        <relationship to="safetylexicon" qualifier="hazards" collection="true">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute query="safetylexicon.tagoutid is null and sl.tagoutid is null"/>
+        </relationship>
+        <relationship to="safetylexicon" qualifier="hazardrousmaterials" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute query="hazard_.hazmatenabled = 1"/>
+        </relationship>
+        <relationship to="safetylexicon" qualifier="tagouts" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute query="safetylexicon.tagoutid is not null"/>
+        </relationship>
+        <relationship to="sprelatedasset" collection="true">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
       </relationships>
 
@@ -154,31 +171,6 @@
         <connectorParameter key="dbtable" value="condition" />
       </connectorParameters>
     </entity>
-
-    <entity name="safetylexicon" idAttribute="safetylexiconid">
-      <attributes>
-        <attribute name="safetylexiconid" type="bigint" required="true" />
-        <attribute name="location" type="varchar" required="false" />
-        <attribute name="assetnum" type="varchar" required="false" />
-        <attribute name="hazardid" type="varchar" required="false" />
-        <attribute name="tagoutid" type="varchar" required="false" />
-        <attribute name="applyseq" type="smallint" required="false" />
-        <attribute name="removeseq" type="smallint" required="false" />
-        <attribute name="orgid" type="varchar" required="true" />
-        <attribute name="siteid" type="varchar" required="true" />
-        <attribute name="sl01" type="varchar" required="false" />
-        <attribute name="sl02" type="varchar" required="false" />
-        <attribute name="sl03" type="datetime" required="false" />
-        <attribute name="sl04" type="decimal" required="false" />
-        <attribute name="sl05" type="int" required="false" />
-        <attribute name="rowstamp" type="timestamp" required="true" />
-      </attributes>
-      <connectorParameters>
-        <connectorParameter key="dbtable" value="safetylexicon" />
-      </connectorParameters>
-    </entity>
-
-
   </entities>
   <applications>
     <application name="asset" title="Asset" entity="asset" id="00000000-0000-0000-0000-000000000001" >
@@ -355,12 +347,32 @@
               <collectionproperties listschema="assetsparepartlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
             </composition>
           </tab>
-          <!--<tab id="safety" label="Safety">
-            <field attribute="assetnum" label="Asset" readonly="true"/>
-            <field attribute="description" label="Description" readonly="true"/>
-            <field attribute="location" label="Location" readonly="true"/>
-            <field attribute="location_.description" label="Description" readonly="true"/>
-          </tab>-->
+          <tab id="safety" label="Safety" icon="fa-shield">
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=medium" />
+              <field attribute="assetnum" label="Asset" readonly="true"/>
+              <field attribute="description" label="Description" readonly="true"/>
+              <field attribute="siteid" label="Site" readonly="true"/>
+            </section>
+            
+            <section>
+              <renderer type="default" params="tabsection=true"/>
+              <tab id="hazardsprecation" label="Hazards and Precautions" icon="fa-bullhorn" countrelationship="hazards">
+                <composition relationship="hazards" inline="true" label="Hazards" detailschema="hazarddetail" printschema="" >
+                  <collectionproperties listschema="hazardlist" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="FilterHazards"/>
+                </composition>
+              </tab>
+              <composition relationship="hazardrousmaterials" label="Hazardous Materials" detailschema="hazardrousmaterialsdetail" printschema="">
+                <collectionproperties listschema="hazardrousmaterialslist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+              </composition>
+              <composition relationship="tagouts" label="Lock Out/Tag Out" detailschema="" printschema="">
+                <collectionproperties listschema="tagoutslist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+              </composition>
+              <composition relationship="sprelatedasset" label="Safety-Related Assets" detailschema="" printschema="">
+                <collectionproperties listschema="sprelatedassetlist" allowcreation="false" allowremoval="false" allowupdate="false"/>
+              </composition>
+            </section>
+          </tab>
           <tab id="meters" label="Meters" icon="fa-tachometer" countrelationship="assetmeter">
             <section orientation="horizontal">
               <field attribute="assetnum" label="Asset" readonly="true"/>

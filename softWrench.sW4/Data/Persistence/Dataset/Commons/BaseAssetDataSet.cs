@@ -107,6 +107,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return result;
         }
 
+        public SearchRequestDto FilterHazards(CompositionPreFilterFunctionParameters parameter) {
+            parameter.BASEDto.ExtraLeftJoinSection = @" left join safetylexicon sl on (
+                                                        safetylexicon.hazardid = sl.hazardid and 
+                                                        safetylexicon.siteid = sl.siteid and 
+                                                        safetylexicon.assetnum = sl.assetnum and 
+                                                        safetylexicon.safetylexiconid != sl.safetylexiconid) ";
+            return parameter.BASEDto;
+        }
+
         private List<Dictionary<string, string>> GetClassstructureHierarchyPath(List<string> classificationids) {
             var queryString = GetCteQuery(classificationids);
             var result = MaximoHibernateDAO.GetInstance().FindByNativeQuery(queryString);

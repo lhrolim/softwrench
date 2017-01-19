@@ -109,9 +109,9 @@
                         //just in case, enforcing spinners have been stopped.
                         s.stop();
                     });
-                    
-                    tabSpinners.splice(0,tabSpinners.length);
-                    $(".tabRecordspin").each((idx,e) => {
+
+                    tabSpinners.splice(0, tabSpinners.length);
+                    $(".tabRecordspin:not(.spinstop)").each((idx, e) => {
                         tabSpinners.push(spinService.startSpinner(e, { extraSmall: true }));
                     });
 
@@ -149,14 +149,6 @@
                         small: true
                     };
                     spinService.startSpinner(element,spinneroptions);
-                }
-
-                $scope.getTabRecordCount = function (tab) {
-                    return crudContextHolderService.getTabRecordCount(tab);
-                }
-
-                $scope.showTabRecordCount = function (tab) {
-                    return crudContextHolderService.shouldShowRecordCount(tab);
                 }
 
                 $scope.setForm = function (form) {
@@ -228,6 +220,7 @@
                     }
 
                     tabSpinners.forEach(s => {
+                        $(s.el.parentElement).addClass("spinstop"); // to avoid start spin a tab a second time
                         s.stop();
                     });
 
@@ -269,18 +262,6 @@
                 $scope.request = function (datamap, schema) {
                     return datamap[schema.userIdFieldName];
                 };
-
-                $scope.shouldShowComposition = function (composition) {
-                    if (composition.hidden) {
-                        return false;
-                    }
-                    return expressionService.evaluate(composition.showExpression, $scope.datamap, $scope);
-                }
-
-                // method for defined <tab> on metadata
-                $scope.shouldShowTab = function (tab) {
-                    return $scope.shouldShowComposition(tab);
-                }
 
                 $scope.toConfirmBack = function (data, schema) {
                     var previousDataToUse = data;
@@ -367,10 +348,6 @@
 
                 $scope.isHapag = function () {
                     return $rootScope.clientName == "hapag";
-                };
-
-                $scope.getTabIcon = function (tab) {
-                    return tab.schema.schemas.list.properties['icon.composition.tab'];
                 };
 
                 $scope.getDetailTabTitle = function (schema, datamap) {

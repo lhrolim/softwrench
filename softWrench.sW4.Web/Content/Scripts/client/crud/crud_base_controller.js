@@ -77,6 +77,18 @@
             return fieldService.nonTabFields(displayables);
         };
 
+        $scope.getTabRecordCount = function (tab) {
+            return crudContextHolderService.getTabRecordCount(tab);
+        }
+
+        $scope.showTabRecordCount = function (tab) {
+            return crudContextHolderService.shouldShowRecordCount(tab);
+        }
+
+        $scope.getTabIcon = function (tab) {
+            return tab.schema.schemas.list.properties['icon.composition.tab'];
+        };
+
         $scope.contextPath = function (path) {
             return url(path);
         };
@@ -270,6 +282,18 @@
         $scope.isArray = function (value) {
             return angular.isArray(value);
         };
+
+        $scope.shouldShowComposition = function (composition) {
+            if (composition.hidden) {
+                return false;
+            }
+            return expressionService.evaluate(composition.showExpression, $scope.datamap, $scope);
+        }
+
+        // method for defined <tab> on metadata
+        $scope.shouldShowTab = function (tab) {
+            return $scope.shouldShowComposition(tab);
+        }
     }
 
     window.BaseController = BaseController;

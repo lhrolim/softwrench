@@ -19,6 +19,15 @@
     }
 }
 
+.tab-content.tabsection-content {
+    border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    padding-top: 30px;
+    position: relative;
+    top: -30px;
+}
+
 .dash-header {
     padding: 20px 20px 0;
 

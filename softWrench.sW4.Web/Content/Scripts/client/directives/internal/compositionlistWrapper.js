@@ -20,7 +20,8 @@
                   mode: '@',
                   inline: '@',
                   ismodal: '@',
-                  tabid: '@'
+                  tabid: '@',
+                  startlazyloading: "@"
               },
               link: function (scope, element, attrs) {
 
@@ -104,19 +105,24 @@
                       }
                   });
 
+                  const lazyLoad = function() {
+                      if (!compositionService.isCompositionLodaded(scope.tabid)) {
+                          spinService.start({ compositionSpin: true });
+                      }
+                      if (!scope.loaded) {
+                          doLoad();
+                      }
+                  }
+
                   scope.$on("sw_lazyloadtab", function (event, tabid) {
                       if (scope.tabid == tabid) {
-                          if (!compositionService.isCompositionLodaded(scope.tabid)) {
-                              spinService.start({ compositionSpin: true });
-                          }
-                          if (!scope.loaded) {
-                              doLoad();
-                          }
-
+                          lazyLoad();
                       }
-
                   });
 
+                  if (scope.startlazyloading === "true") {
+                      lazyLoad();
+                  }
               }
           }
     });
