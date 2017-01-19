@@ -67,7 +67,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             Log.Debug("init");
         }
 
-        [Transactional(DBType.Swdb)]
         public virtual void HandleCommLogs(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData entity, object rootObject) {
             var user = SecurityFacade.CurrentUser();
             var commlogs = (IEnumerable<CrudOperationData>)entity.GetRelationship(Commlog);
