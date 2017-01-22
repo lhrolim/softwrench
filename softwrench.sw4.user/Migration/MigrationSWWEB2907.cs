@@ -7,7 +7,7 @@ namespace softwrench.sw4.user.Migration {
 
         public override void Up() {
             Alter.Table("SW_USER2").AddColumn("creationdate").AsDateTime().Nullable();
-            Alter.Table("SW_USER2").AddColumn("creationtype").AsString(MigrationUtil.StringSmall);
+            Alter.Table("SW_USER2").AddColumn("creationtype").AsString(MigrationUtil.StringSmall).Nullable();
         }
 
         public override void Down() {
