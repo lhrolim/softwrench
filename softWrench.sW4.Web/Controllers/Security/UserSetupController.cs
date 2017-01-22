@@ -43,7 +43,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly UserManager _userManager;
         private readonly SecurityFacade _facade;
 
-    
+
 
         public UserSetupController(UserManager userManager, SecurityFacade facade) {
             _userManager = userManager;
@@ -104,7 +104,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             }
             try {
                 await _userManager.ActivateAndDefinePassword(user, password);
-                await AfterPasswordSet(user, password, userTimezoneOffset,context);
+                await AfterPasswordSet(user, password, userTimezoneOffset, context);
             } catch (PasswordException.PasswordHistoryException) {
                 return View("DefinePassword", new DefinePasswordModel {
                     RepeatedPassword = true,
@@ -309,6 +309,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             // create user
             var username = json.GetValue("personid").Value<string>();
+            json["#creationtype"] = new JValue(UserCreationType.Self.ToString());
+
             var operationRequest = new OperationDataRequest {
                 ApplicationName = application,
                 Id = username,
@@ -320,7 +322,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(schemaKey, user, ClientPlatform.Web);
             var personDataSet = DataSetProvider.GetInstance().LookupDataSet(application, schemaId);
             await personDataSet.Execute(applicationMetadata, json, operationRequest);
-
+            
             // request user activation to the approvers
             var firstname = json.GetValue("firstname").Value<string>();
             var lastname = json.GetValue("lastname").Value<string>();

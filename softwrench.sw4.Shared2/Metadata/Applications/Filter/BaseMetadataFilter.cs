@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
 
     public class BaseMetadataFilter {
+
         public BaseMetadataFilter(string attribute, string label, string icon, string position, string tooltip, string whereClause, bool remove = false,string style=null) {
             Attribute = attribute;
             Label = label;
@@ -16,11 +17,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             Style = style;
         }
 
-        public virtual string Type {
-            get {
-                return GetType().Name;
-            }
-        }
+        public virtual string Type => GetType().Name;
 
         /// <summary>
         /// whether this filter was auto generated based on a column definition or, metadata declared
@@ -42,8 +39,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         public string Style { get; set; }
 
         public string Attribute {
-            get; set;
-        }
+            get; }
 
         public string Label {
             get; set;
@@ -96,11 +92,11 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
         }
 
         public override string ToString() {
-            return string.Format("Attribute: {0}, Label: {1}", Attribute, Label);
+            return $"Attribute: {Attribute}, Label: {Label}";
         }
 
         public override int GetHashCode() {
-            return (Attribute != null ? Attribute.GetHashCode() : 0);
+            return Attribute?.GetHashCode() ?? 0;
         }
 
         public virtual bool IsValid() {

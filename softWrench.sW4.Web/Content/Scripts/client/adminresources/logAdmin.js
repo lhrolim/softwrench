@@ -18,24 +18,24 @@
         };
 
         $scope.changeLevel = function (logName, level) {
-            var parameters = {
+            const parameters = {
                 logName: logName,
                 newLevel: level,
                 pattern: ''
             };
-            var urlToInvoke = redirectService.getActionUrl('LogAdmin', 'ChangeLevel', parameters);
+            const urlToInvoke = redirectService.getActionUrl('LogAdmin', 'ChangeLevel', parameters);
             return $http.post(urlToInvoke).then(function (response) {
                 init(response.data.resultObject);
             });
         };
 
         $scope.changeAll = function (level) {
-            var parameters = {
+            const parameters = {
                 pattern: $scope.logname,
                 newLevel: level,
                 logName: ''
             };
-            var urlToInvoke = redirectService.getActionUrl('LogAdmin', 'ChangeLevel', parameters);
+            const urlToInvoke = redirectService.getActionUrl('LogAdmin', 'ChangeLevel', parameters);
             return $http.post(urlToInvoke).then(function (response) {
                 init(response.data.resultObject);
             });
@@ -43,17 +43,14 @@
 
         $scope.viewAppenderContent = function (selectedappender, tempfile) {
             $scope.selectedappender = selectedappender;
-            var parameters = {
+            const parameters = {
                 value: tempfile === undefined ? selectedappender.value : tempfile
             };
-            var urlToInvoke = redirectService.getActionUrl('LogAdmin', 'GetAppenderTxtContent', parameters);
+            const urlToInvoke = redirectService.getActionUrl('LogAdmin', 'GetAppenderTxtContent', parameters);
             $http.get(urlToInvoke).
-            success(function (data, status, headers, config) {
-                $scope.appendercontent = data.resultObject;
-            }).
-            error(function (data, status, headers, config) {
-                $scope.appendercontent = "Error " + status;
-            });
+                then(function (response, status, headers, config) {
+                    $scope.appendercontent = response.data.resultObject;
+                });
         };
 
         $scope.downloadFile = function (selectedappender, logrotation, filenumber) {
@@ -64,17 +61,16 @@
             } else {
                 filePath = selectedappender.value;
             }
-            
-            var parameters = {};
+            const parameters = {};
             parameters.fileName = selectedappender.name + ".txt";
             parameters.contentType = 'text/plain';
             parameters.path = filePath;
             parameters.setFileNameWithDate = true;
-            window.location = removeEncoding(url("/Application/DownloadFile" + "?" +$.param(parameters)));
+            window.location = removeEncoding(url("/Application/DownloadFile" + "?" + $.param(parameters)));
         };
 
         $scope.downloadZipFile = function (selectedappender) {
-            var parameters = {};
+            const parameters = {};
             parameters.fileName = selectedappender.name + ".zip";
             parameters.contentType = 'text/plain';
             parameters.path = selectedappender.value;
@@ -83,8 +79,8 @@
         };
 
         function init(data) {
-            var logs = data.logs;
-            var appenders = data.appenders;
+            const logs = data.logs;
+            const appenders = data.appenders;
             $scope.logs = logs;
             $scope.appenders = appenders;
             $scope.initiallogs = logs;
@@ -101,10 +97,9 @@
         };
 
         $scope.setDefaultAppender = function () {
-            var rotation = $scope.logrotation;
-
+            const rotation = $scope.logrotation;
             if (nullOrUndef($scope.selectedappender)) {
-                for (var i = 0; i < $scope.appenders.length; i++) {
+                for (let i = 0; i < $scope.appenders.length; i++) {
                     if ($scope.appenders[i].name == 'MaximoAppender') {
                         $scope.selectedappender = $scope.appenders[i];
                         $scope.viewAppenderContent($scope.selectedappender);
@@ -117,7 +112,7 @@
         $scope.readLogFile = function (logrotation, filenumber) {
 
             if (nullOrUndef($scope.selectedappender)) {
-                for (var i = 0; i < $scope.appenders.length; i++) {
+                for (let i = 0; i < $scope.appenders.length; i++) {
                     if ($scope.appenders[i].name == 'MaximoAppender') {
                         $scope.selectedappender = $scope.appenders[i];
                         $scope.viewAppenderContent($scope.selectedappender);

@@ -119,6 +119,7 @@
 
       <filters>
         <booleanfilter attribute="maxuser_.active" truelabel="Active" falselabel="Inactive"></booleanfilter>
+        <quicksearchfilter id="unregistered" label="Unregistered Users" whereclause="@UnregisteredUsers"/>
       </filters>
 
       <schemas>
@@ -147,6 +148,10 @@
 
           <field attribute="locked" label="Locked" readonly="true" enableexpression="false">
             <renderer type="checkbox" />
+          </field>
+
+          <field attribute="creationdate" label="Creation Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
 
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>

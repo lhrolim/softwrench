@@ -3,6 +3,7 @@
 
     angular.module("sw_layout")
         .controller("GridFilterController", ["$scope", "$rootScope", "gridPreferenceService", "searchService", "i18NService", "alertService", "userPreferencesService", "crudContextHolderService","$log",
+
             function ($scope, $rootScope, gridPreferenceService, searchService, i18NService, alertService, userPreferencesService, crudContextHolderService, $log) {
                 $scope.selectedfilter = null;
                 const log = $log.get("gridfilter#filterchanged", ["filter"]);
@@ -22,7 +23,7 @@
                     if ($scope.cachedFilters) {
                         return $scope.cachedFilters;
                     }
-                    $scope.cachedFilters = gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema.schemaId);
+                    $scope.cachedFilters = gridPreferenceService.loadUserNonSharedFilters($scope.schema.applicationName, $scope.schema);
                     if ($scope.selectedfilter) {
                         const matchingcachedFilter = $scope.cachedFilters.find(f => f.id === $scope.selectedfilter.id);
                         if (matchingcachedFilter)
@@ -86,7 +87,15 @@
                     // have saved filter selected
                     // or any filter applied
                     // or a quick search
-                    return $scope.selectedfilter || $scope.hasFilterData() || hasAdvancedSearch();
+                    return ($scope.selectedfilter && $scope.selectedfilter.deletable) || $scope.hasFilterData() || hasAdvancedSearch();
+                }
+
+                $scope.shouldEnableDeleteButton = function () {
+                    const filter = $scope.selectedfilter;
+                    // have saved filter selected
+                    // or any filter applied
+                    // or a quick search
+                    return !!filter && (filter.id !== -2 && filter.deletable);
                 }
 
                 $scope.hasFilterData = function () {

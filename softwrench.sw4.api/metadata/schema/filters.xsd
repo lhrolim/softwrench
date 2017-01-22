@@ -24,6 +24,12 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
     </attribute>
   </complexType>
 
+  <complexType name="QuickSearchFilterType">
+    <attribute name="label" type="string"></attribute>
+    <attribute name="id" type="string"></attribute>
+    <attribute name="whereclause" type="string"></attribute>
+  </complexType>
+
   <complexType name="OptionFilterType">
     <complexContent>
       <extension base="f:BaseFilterType">
@@ -127,5 +133,8 @@ targetNamespace="http://www.controltechnologysolutions.com/filters"
       </annotation>
     </attribute>
   </complexType>
+
+
+
 
 </schema>

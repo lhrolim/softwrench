@@ -48,6 +48,9 @@ namespace softWrench.sW4.Preferences {
         [Property]
         public DateTime? UpdateDate { get; set; }
 
+        /// <summary>
+        /// Maps to a quick search operation
+        /// </summary>
         [Property]
         public string AdvancedSearch { get; set; }
 
@@ -55,7 +58,7 @@ namespace softWrench.sW4.Preferences {
         [ManyToOne(Column = "creator", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public User Creator { get; set; }
 
-        public int? CreatorId { get { return Creator.Id; }}
+        public int? CreatorId => Creator.Id;
 
         public override string ToString() {
             return String.Format("Alias: {0}, Application: {4}, Fields: {1}, Operators: {2}, Values: {3}", Alias, Fields, Operators, Values, Application);

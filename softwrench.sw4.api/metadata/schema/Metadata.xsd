@@ -396,6 +396,10 @@
       <element name="filter" type="f:BaseFilterType" minOccurs="0"
 				maxOccurs="unbounded">
       </element>
+      <element name="quicksearchfilter" type="f:QuickSearchFilterType" minOccurs="0"
+				maxOccurs="unbounded">
+      </element>
+
     </choice>
     <attribute name="removeundeclared" type="boolean"></attribute>
   </complexType>

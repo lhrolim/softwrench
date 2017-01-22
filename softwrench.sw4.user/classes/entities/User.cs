@@ -8,6 +8,7 @@ using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
+using NHibernate.Type;
 
 namespace softwrench.sw4.user.classes.entities {
     [Class(Table = "SW_USER2", Lazy = false)]
@@ -115,6 +116,21 @@ namespace softwrench.sw4.user.classes.entities {
         public DateTime? PasswordExpirationTime {
             get; set;
         }
+
+        [Property]
+        public DateTime? CreationDate {
+            get; set;
+        }
+
+        /// <summary>
+        /// How this user entry was created
+        /// </summary>
+        [Property(Column = "creationtype", TypeType = typeof (UserCreationTypeConverter))]
+        public UserCreationType CreationType { get; set; } = UserCreationType.Admin;
+
+       
+
+
 
         [Property]
         public bool? Locked {

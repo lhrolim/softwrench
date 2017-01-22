@@ -14,6 +14,7 @@ const defaultDto = {
     totalCount:null,
     addPreSelectedFilters:false,
     multiSearchSort:{},
+    schemaFilterId:null,
     needsCountUpdate:true
 }
 
@@ -21,7 +22,7 @@ class SearchDTO {
   
     constructor(
     {searchParams,searchValues,quickSearchDTO,searchSort,pageNumber,
-        pageSize, multiSearchSort, searchOperator, searchData, totalCount,SearchAscending, needsCountUpdate,searchTemplate, numberOfPages, addPreSelectedFilters} = defaultDto ) {
+        pageSize, multiSearchSort, searchOperator, searchData, totalCount,SearchAscending, needsCountUpdate,searchTemplate, numberOfPages, addPreSelectedFilters, schemaFilterId} = defaultDto ) {
 
             this.searchParams = searchParams;
             this.searchValues = searchValues;
@@ -50,6 +51,7 @@ class SearchDTO {
             this.searchTemplate = searchTemplate;
 
             this.addPreSelectedFilters = addPreSelectedFilters;
+            this.schemaFilterId = schemaFilterId;
         }
 
         isDefault() {

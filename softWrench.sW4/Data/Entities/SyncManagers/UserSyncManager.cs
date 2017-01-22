@@ -184,6 +184,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     Password = MetadataProvider.GlobalProperty(SwUserConstants.DefaultUserPassword),
                     MaximoActive = (string)maximoPerson.GetAttribute("status") == "ACTIVE",
                     IsActive = null,
+                    CreationType = UserCreationType.Integration,
                     Person = new Person {
                         FirstName = (string)maximoPerson.GetAttribute("firstname"),
                         LastName = (string)maximoPerson.GetAttribute("lastname"),

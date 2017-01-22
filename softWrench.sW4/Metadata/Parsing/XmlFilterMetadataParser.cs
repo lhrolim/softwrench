@@ -30,14 +30,24 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
             var filters = new LinkedList<BaseMetadataFilter>();
+            var quickSearchFilters = new LinkedList<QuickSearchFilter>();
             foreach (var el in xElements) {
-                var attribute = el.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableAttributeAttribute, true);
                 var label = el.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute);
+                var whereclause = el.AttributeValue(XmlFilterSchema.WhereClauseAttribute);
+
+                if (el.IsNamed(XmlFilterSchema.QuickSearchFilterElement)) {
+                    var id = el.AttributeValue(XmlBaseSchemaConstants.IdAttribute);
+                    quickSearchFilters.AddLast(new QuickSearchFilter(label, whereclause, id));
+                    continue;
+                }
+
+                var attribute = el.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableAttributeAttribute, true);
+
                 var icon = el.AttributeValue(XmlBaseSchemaConstants.IconAttribute);
                 var position = el.AttributeValue(XmlMetadataSchema.CustomizationPositionAttribute);
                 var tooltip = el.AttributeValue(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute);
                 var style = el.AttributeValue(XmlFilterSchema.StyleAttribute);
-                var whereclause = el.AttributeValue(XmlFilterSchema.WhereClauseAttribute);
+
 
                 if (el.IsNamed(XmlFilterSchema.ModalFilterElement)) {
                     var targetSchema = el.AttributeValue(XmlFilterSchema.TargetSchemaAttribute);
@@ -76,7 +86,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     filters.AddLast(new BaseMetadataFilter(attribute, label, icon, position, tooltip, whereclause, toRemove, style));
                 }
             }
-            return new SchemaFilters(filters);
+            return new SchemaFilters(filters, quickSearchFilters);
 
         }
 

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
@@ -85,54 +86,31 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         internal BaseApplicationDataSet() {
         }
 
-        protected IContextLookuper ContextLookuper {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
-            }
+        protected IContextLookuper ContextLookuper => SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
+
+        [Import]
+        public CollectionResolver CollectionResolver {
+            get; set;
         }
 
-        private CollectionResolver CollectionResolver {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<CollectionResolver>();
-            }
+        [Import]
+        public FilterWhereClauseHandler FilterWhereClauseHandler {
+            get; set;
         }
 
+        //TODO: fix BatchReportEmailService which breaks on unit tests, in case of [Import] usage
+        public IBatchSubmissionService BatchSubmissionService => SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>();
 
-        protected FilterWhereClauseHandler FilterWhereClauseHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<FilterWhereClauseHandler>(typeof(FilterWhereClauseHandler));
-            }
-        }
+        [Import]
+        public IWhereClauseFacade WhereClauseFacade { get; set; }
 
-        protected IBatchSubmissionService BatchSubmissionService {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>(typeof(IBatchSubmissionService));
-            }
-        }
+        [Import]
+        public QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler { get; set; }
 
-        protected IWhereClauseFacade WhereClauseFacade {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<IWhereClauseFacade>(typeof(IWhereClauseFacade));
-            }
-        }
+        public AttachmentHandler AttachmentHandler => SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>();
 
-        protected QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchWhereClauseHandler>(typeof(QuickSearchWhereClauseHandler));
-            }
-        }
-
-        protected AttachmentHandler AttachmentHandler {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>(typeof(AttachmentHandler));
-            }
-        }
-
-        protected BaseDataSetSearchHelper BaseDataSetSearchHelper {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<BaseDataSetSearchHelper>(typeof(BaseDataSetSearchHelper));
-            }
-        }
+        [Import]
+        public BaseDataSetSearchHelper BaseDataSetSearchHelper { get; set; }
 
         protected abstract IConnectorEngine Engine();
 
@@ -253,7 +231,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return data;
         }
 
-        protected virtual async  Task HandleAttachments(CompositionFetchResult data) {
+        protected virtual async Task HandleAttachments(CompositionFetchResult data) {
             var attachments = data.ResultObject["attachment_"].ResultList;
             foreach (var attachment in attachments) {
                 if (!attachment.ContainsKey("docinfo_.urlname"))
@@ -328,6 +306,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
             QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
+            
 
             var ctx = ContextLookuper.LookupContext();
 

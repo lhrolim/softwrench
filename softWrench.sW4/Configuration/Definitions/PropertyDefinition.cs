@@ -164,7 +164,7 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public override string ToString() {            
-            return string.Format("FullKey: {0}, Description: {1}, DataType: {2}, Renderer: {3}", FullKey, Description, DataType, Renderer);           
+            return $"FullKey: {FullKey}, Description: {Description}, DataType: {DataType}, Renderer: {Renderer}";           
         }        
     }
 

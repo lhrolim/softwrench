@@ -46,6 +46,7 @@ class SchemaPojo {
             displayables: [],
             properties: {},
             commandSchema: {},
+            schemaFilters: {},
             idFieldName: "id",
             mode:"input"
         };

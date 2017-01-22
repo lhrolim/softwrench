@@ -107,6 +107,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 }
                 record.Add("isactive", swuser.IsActive);
                 record.Add("locked", swuser.Locked);
+                record.Add("creationdate", swuser.CreationDate);
             }
             return result;
         }
@@ -263,17 +264,28 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 username = json.StringValue("#personid");
             }
 
+            var type = UserCreationType.Admin;
+            
+
             var firstName = json.StringValue("firstname");
             var lastName = json.StringValue("lastname");
             var isactive = json.StringValue("isactive").EqualsAny("1", "true");
+
+
+            var creationTypeSt = json.StringValue("#creationtype");
+            if (creationTypeSt != null) {
+                Enum.TryParse(creationTypeSt, out type);
+            }
+
             var isLocked = json.StringValue("locked").EqualsAny("1", "true");
             var signature = json.StringValue("#signature");
-            var dbUser =await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, username);
+            var dbUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, username);
 
             var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
                 LastName = lastName,
-                MaximoPersonId = username
+                MaximoPersonId = username,
+                CreationType = type
             };
             user.IsActive = isactive;
             user.Locked = isLocked;
@@ -315,6 +327,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dict["roles"] = definition.Roles;
             dict["userpreferences"] = definition.UserPreferences;
             return dict;
+        }
+
+
+        public String UnregisteredUsers(FilterWhereClauseParameters parameters) {
+            var personIds = _swdbDAO.FindByNativeQuery("select maximopersonid from sw_user2 where creationtype='self' and isactive = :p0 order by creationdate",false).Select(a=> a["maximopersonid"]);
+            var enumerable = personIds as IList<string> ?? personIds.ToList();
+            if (!enumerable.Any()){
+                return "1!=1";
+            }
+            return "person.personid in ({0})".Fmt(BaseQueryUtil.GenerateInString(enumerable));
         }
 
         private bool ValidateSecurityGroups(String schemaId, User dbUser, ISet<UserProfile> screenProfiles) {

@@ -13,17 +13,16 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Filter {
 
-    public class FilterWhereClauseHandler : ISingletonComponent
-    {
+    public class FilterWhereClauseHandler : ISingletonComponent {
 
         private QuickSearchHelper _quickSearchHelper;
 
-        public FilterWhereClauseHandler(QuickSearchHelper quickSearchHelper)
-        {
+        public FilterWhereClauseHandler(QuickSearchHelper quickSearchHelper) {
             _quickSearchHelper = quickSearchHelper;
         }
 
@@ -33,14 +32,24 @@ namespace softWrench.sW4.Data.Filter {
             var parameters = searchDto.GetParameters();
             var schemaFilters = schema.SchemaFilters;
 
-            // if all filters are the column filters no need to take any action
-            if (schemaFilters == null || !schemaFilters.HasOverridenFilter || parameters == null) {
-                return searchDto;
-            }
 
             var entity = MetadataProvider.EntityByApplication(schema.ApplicationName);
 
             var allFilters = schemaFilters.Filters;
+
+            if (searchDto.SchemaFilterId != null) {
+                var quickFilter = schema.SchemaFilters?.QuickSearchFilters.FirstOrDefault(f => f.Id.EqualsIc(searchDto.SchemaFilterId));
+                if (quickFilter == null) {
+                    throw new InvalidOperationException($"quick filter {searchDto.SchemaFilterId} not found on schema {schema.SchemaId}");
+                }
+                var adaptedParameter = new SearchParameter("");
+                return HandleWhereClause(schema, searchDto, quickFilter.WhereClause, adaptedParameter, entity);
+            }
+
+            // if all filters are the column filters no need to take any action
+            if (schemaFilters == null || !schemaFilters.HasOverridenFilter || parameters == null) {
+                return searchDto;
+            }
 
             foreach (var filter in allFilters) {
                 // mark as ignored until we check whether or not it has a WhereClause
@@ -66,29 +75,35 @@ namespace softWrench.sW4.Data.Filter {
                     continue;
                 }
 
-                if (!whereClause.StartsWith("@")) {
-                    var values = paramValue.Value as IEnumerable<string>;
-                    if (values != null) {
-                        whereClause = whereClause.Replace("!@#value", BaseQueryUtil.GenerateInString(values));
-                    } else if (paramValue.Value is string) {
-                        whereClause = whereClause.Replace("%!@#value%", "'%" + paramValue.Value + "%'");
-                        whereClause = whereClause.Replace("%!@#value", "'%" + paramValue.Value + "'");
-                        whereClause = whereClause.Replace("!@#value%", "'" + paramValue.Value + "%'");
-                        whereClause = whereClause.Replace("!@#value", "'" + paramValue.Value + "'");
-                        whereClause = whereClause.Replace("!@",
-                            MetadataProvider.Entity(schema.EntityName).GetTableName() + ".");
-                    }
-                    whereClause = whereClause.Replace("!@#value", paramValue.Value as string);
-                    whereClause = whereClause.Replace("!@", entity.Name + ".");
-                    //vanilla string case
-                    searchDto.AppendWhereClause(whereClause);
-                } else {
-                    HandleServiceWhereClauseHandler(schema, searchDto, paramValue, whereClause);
-                }
+                HandleWhereClause(schema, searchDto, whereClause, paramValue, entity);
                 // TODO: starts with @: call service that builds whereclause
 
             }
 
+            return searchDto;
+        }
+
+        private static PaginatedSearchRequestDto HandleWhereClause(ApplicationSchemaDefinition schema, PaginatedSearchRequestDto searchDto,
+            string whereClause, SearchParameter paramValue, EntityMetadata entity) {
+            if (!whereClause.StartsWith("@")) {
+                var values = paramValue.Value as IEnumerable<string>;
+                if (values != null) {
+                    whereClause = whereClause.Replace("!@#value", BaseQueryUtil.GenerateInString(values));
+                } else if (paramValue.Value is string) {
+                    whereClause = whereClause.Replace("%!@#value%", "'%" + paramValue.Value + "%'");
+                    whereClause = whereClause.Replace("%!@#value", "'%" + paramValue.Value + "'");
+                    whereClause = whereClause.Replace("!@#value%", "'" + paramValue.Value + "%'");
+                    whereClause = whereClause.Replace("!@#value", "'" + paramValue.Value + "'");
+                    whereClause = whereClause.Replace("!@",
+                        MetadataProvider.Entity(schema.EntityName).GetTableName() + ".");
+                }
+                whereClause = whereClause.Replace("!@#value", paramValue.Value as string);
+                whereClause = whereClause.Replace("!@", entity.Name + ".");
+                //vanilla string case
+                searchDto.AppendWhereClause(whereClause);
+            } else {
+                HandleServiceWhereClauseHandler(schema, searchDto, paramValue, whereClause);
+            }
             return searchDto;
         }
 

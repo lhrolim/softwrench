@@ -82,6 +82,8 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public string SchemaFilterId { get; set; }
+
         [CanBeNull]
         public QuickSearchDTO QuickSearchDTO {
             get {

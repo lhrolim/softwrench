@@ -11,6 +11,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string OptionFilterElement = "optionfilter";
         public const string BooleanFilterElement = "booleanfilter";
         public const string ModalFilterElement = "modalfilter";
+        public const string QuickSearchFilterElement = "quicksearchfilter";
         public const string NumericFilterElement = "numericfilter";
         public const string DateFilterElement = "datefilter";
         public const string BaseFilterElement = "filter";

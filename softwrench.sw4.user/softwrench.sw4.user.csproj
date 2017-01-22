@@ -178,6 +178,8 @@
     <Compile Include="classes\entities\RoleWithErrorMessage.cs" />
     <Compile Include="classes\entities\security\SchemaPermissionMode.cs" />
     <Compile Include="classes\entities\security\SecurityEntityExtensions.cs" />
+    <Compile Include="classes\entities\UserCreationType.cs" />
+    <Compile Include="classes\entities\UserCreationTypeConverter.cs" />
     <Compile Include="classes\entities\UserPreferences.cs" />
     <Compile Include="classes\entities\User.cs" />
     <Compile Include="classes\entities\UserStatistics.cs" />
@@ -198,6 +200,7 @@
     <Compile Include="Migration\MigrationSwweb1216.cs" />
     <Compile Include="Migration\MigrationSwweb2284.cs" />
     <Compile Include="Migration\MigrationSwoff197.cs" />
+    <Compile Include="Migration\MigrationSWWEB2907.cs" />
     <Compile Include="Migration\MigrationSWWEB2827.cs" />
     <Compile Include="Migration\MigrationSWWEB2356.cs" />
     <Compile Include="Migration\MigrationSWWEB2355.cs" />

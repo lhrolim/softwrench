@@ -80,11 +80,13 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             var positionBuffer = AddColumnFilters(schema, schemaFilters, entity);
 
             AddExtraFilters(schema, schemaFilters, positionBuffer, entity);
-            return new SchemaFilters(schemaFilters);
+            return new SchemaFilters(schemaFilters, schema.DeclaredFilters.QuickSearchFilters);
         }
 
 
         /// <summary>
+        /// 
+        /// 
         /// N ==> Fields, M = Filters
         ///  O(N x Log(M) ) but M is so small that it´s not a big deal...
         /// </summary>

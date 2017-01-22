@@ -91,7 +91,7 @@ namespace softWrench.sW4.Security.Services {
                 if (user.MaximoPersonId == null) {
                     user.MaximoPersonId = user.UserName;
                 }
-
+                user.CreationDate = DateTime.Now;
                 user.Profiles = _userProfileManager.GetDefaultGroups();
 
                 isCreation = true;

@@ -65,6 +65,7 @@
     <Compile Include="Metadata\Applications\Filter\MetadataBooleanFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\BaseMetadataFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\MetadataOptionFilter.cs" />
+    <Compile Include="Metadata\Applications\Filter\QuickSearchFilter.cs" />
     <Compile Include="Metadata\Applications\Filter\SchemaFilters.cs" />
     <Compile Include="Metadata\Applications\Notification\SchemaStereotype.cs" />
     <Compile Include="Metadata\Applications\Relationships\Associations\ExtraProjectionProviderHelper.cs" />

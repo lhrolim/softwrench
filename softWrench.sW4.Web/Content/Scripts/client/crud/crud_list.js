@@ -30,14 +30,14 @@
                 forprint: "@"
             },
 
-            controller: ["$scope", "$http", "$q", "$rootScope", "$filter", "$injector", "$log",
+            controller: ["$scope",  "$q", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService", "gridPreferenceService",
                 "searchService", "tabsService", "userPreferencesService", "printService", 
                 "fieldService", "commandService", "i18NService", "modalService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService", "schemaService",
-                function ($scope, $http,$q, $rootScope, $filter, $injector, $log,
+                function ($scope, $q, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService, printService,
                     fieldService, commandService, i18NService, modalService,
@@ -311,7 +311,7 @@
                      * @returns {} 
                      */
                     $scope.refreshGridRequested = function (searchData, searchOperator, 
-                    {panelid,searchSort,quickSearchDTO,metadataid,pageNumber,pageSize,printMode,forcecleanup,avoidspin,addPreSelectedFilters,numberOfPages, multiSort} = {}) {
+                    {panelid,searchSort,quickSearchDTO,metadataid,pageNumber,pageSize,printMode,forcecleanup,avoidspin,addPreSelectedFilters,numberOfPages, multiSort,schemaFilterId} = {}) {
 
                         if (panelid && panelid.toString() !== $scope.panelid) {
                             //this is none of my business --> another dashboard will handle it
@@ -349,7 +349,7 @@
                             $scope.cleanup();
                         }
 
-                        $scope.selectPage(pagetogo, newPageSize, printMode, {addPreSelectedFilters,numberOfPages});
+                        $scope.selectPage(pagetogo, newPageSize, printMode, {addPreSelectedFilters,numberOfPages,schemaFilterId});
                     };
 
                     $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
@@ -492,6 +492,7 @@
                             searchDTO.totalCount = totalCount;
                             searchDTO.pageSize = pageSize;
                             searchDTO.numberOfPages = extraparameters.numberOfPages;
+                            searchDTO.schemaFilterId = extraparameters.schemaFilterId;
                             searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
                             searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
                             searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;

@@ -16,27 +16,41 @@
             }
 
             function doLoadFilter(shared, application, schema) {
+                const schemaId = schema.schemaId;
+
+             
+
                 var user = contextService.getUserData();
                 const gridpreferences = user.gridPreferences;
                 var result = [];
+
+                const declaredQuickFilters = schema.schemaFilters.quickSearchFilters;
+                if (declaredQuickFilters) {
+                    declaredQuickFilters.forEach(d => {
+                        d.deletable = false;
+                        result.push(d);
+                    });
+                }
+
                 if (!gridpreferences) {
                     return result;
                 }
                 const filters = gridpreferences.gridFilters;
                 var log = $log.getInstance("#gridpreferenceservice#doLoadFilter",["filter"]);
 
-                $.each(filters, function (key, association) {
+                filters.forEach(association => {
                     if (association.filter.application.equalIc(application)
-                        && association.filter.schema.equalIc(schema)
+                        && association.filter.schema.equalIc(schemaId)
                         && ((association.filter.creatorId === user.dbId) ^ shared)) {
                         log.debug("loading filter {0}; shared?".format(association.filter.alias, shared));
                         result.push(association.filter);
                     }
                 });
+
                 result = result.sort(compareFilters);
-                const previousFilter = checkpointService.getCheckPointAsFilter(application,schema);
+                const previousFilter = checkpointService.getCheckPointAsFilter(application,schemaId);
                 if (previousFilter != null && previousFilter !== {}) {
-                    log.debug(`Adding previous filter for application ${application} and schema ${schema}: ${previousFilter}`);
+                    log.debug(`Adding previous filter for application ${application} and schema ${schemaId}: ${previousFilter}`);
                     result.push(previousFilter);
                 }
                 return result;
@@ -150,39 +164,41 @@
                     });
                 },
 
-                applyFilter: function (filter, searchOperator = {}, quickSearchDTO = {}, panelid = null) {
-                    let searchDto = filter.searchDTO;
-                    if (!searchDto) {
-                        searchDto = this.buildSearchDTOFromFilter(filter, searchOperator, quickSearchDTO, panelid);
-                    }
-                    let wrappedDTO = searchDto;
-                    if (!(searchDto instanceof SearchDTO)) {
-                        wrappedDTO = new SearchDTO(searchDto);
-                    }
-                    const log = $log.getInstance("#gridpreferenceservice#applyFilter",["filter"]);
-                    log.debug(`applying filter  ${wrappedDTO}`);
-                    return searchService.refreshGrid(searchDto.searchData, searchDto.searchOperator, wrappedDTO);
-                },
+        applyFilter: function (filter, searchOperator = {}, quickSearchDTO = {}, panelid = null) {
+            let searchDto = filter.searchDTO;
+            if (!searchDto) {
+                searchDto = this.buildSearchDTOFromFilter(filter, searchOperator, quickSearchDTO, panelid);
+            }
+            let wrappedDTO = searchDto;
+            if (!(searchDto instanceof SearchDTO)) {
+                wrappedDTO = new SearchDTO(searchDto);
+            }
+            const log = $log.getInstance("#gridpreferenceservice#applyFilter",["filter"]);
+            log.debug(`applying filter  ${wrappedDTO}`);
+            return searchService.refreshGrid(searchDto.searchData, searchDto.searchOperator, wrappedDTO);
+        },
 
-                buildSearchDTOFromFilter: function (filter, searchOperator = {}, quickSearchDTO = {}, panelid = null) {
-                    const searchData = {};
-                    if (filter.fields) {
-                        const fieldsArray = filter.fields.split(",");
-                        const operatorsArray = filter.operators.split(",");
-                        const valuesArray = filter.values.split(",,,");
-                        for (let i = 0; i < fieldsArray.length; i++) {
-                            const field = fieldsArray[i];
-                            searchData[field] = valuesArray[i];
-                            searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
-                        }
-                    } else {
-                        searchOperator = {};
-                    }
-                    const template = filter.template;
-                    const searchSort = filter.searchSort || {};
-
-                    return {searchData,searchOperator, searchTemplate: template, quickSearchDTO, panelid, searchSort};
+        buildSearchDTOFromFilter: function (filter, searchOperator = {}, quickSearchDTO = {}, panelid = null) {
+            const searchData = {};
+            if (filter.fields) {
+                const fieldsArray = filter.fields.split(",");
+                const operatorsArray = filter.operators.split(",");
+                const valuesArray = filter.values.split(",,,");
+                for (let i = 0; i < fieldsArray.length; i++) {
+                    const field = fieldsArray[i];
+                    searchData[field] = valuesArray[i];
+                    searchOperator[field] = searchService.getSearchOperationBySymbol(operatorsArray[i]);
                 }
+            } else {
+                searchOperator = {};
+            }
+            const template = filter.template;
+            const searchSort = filter.searchSort || {};
+
+            const schemaFilterId = filter.type === "QuickSearchFilter"  ? filter.id : null;
+
+            return {searchData,searchOperator, searchTemplate: template, quickSearchDTO, panelid, searchSort,schemaFilterId};
+        }
 
 };
 
