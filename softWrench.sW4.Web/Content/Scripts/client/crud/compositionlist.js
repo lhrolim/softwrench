@@ -48,9 +48,9 @@
             }
             $scope.filterApplied();
         };
-
+      
         $scope.sortLabel = function (column) {
-            return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.label));
+            return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.toolTip ? column.toolTip : column.label));
         }
 
         $scope.hideFilter = function () {

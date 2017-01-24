@@ -130,8 +130,16 @@
                     $scope.lookupModalSearch(1);
                 };
 
-                $scope.sortLabel = function () {
-                    return $scope.i18N("_grid.filter.clicksort", "Click here to sort");
+
+
+                $scope.sortLabel = function (column) {
+                    if (!column) {
+                        return $scope.i18N("_grid.filter.clicksort", "Click here to sort");
+                    }
+                    if (column.rendererParameters.showsort === "false") {
+                        return "";
+                    }
+                    return $scope.i18N("_grid.filter.clicksort", "{0}, Click to sort".format(column.toolTip ? column.toolTip : column.label));
                 }
 
                 $scope.shouldShowSort = function (column, orientation) {

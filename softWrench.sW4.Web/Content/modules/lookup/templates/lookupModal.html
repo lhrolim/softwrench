@@ -56,7 +56,7 @@
                             <th ng-repeat="column in lookupObj.schema.displayables" ng-hide="column.isHidden">
 
                                 <div ng-if="shouldShowHeaderLabel(column)" class="cell-wrapper">
-                                    <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel()}}">
+                                    <div ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
                                         {{i18NLabel(column)}} <i class="fa {{headerIcon(column)}}" ng-show="hasIcon(column)"></i>
                                     </div>
                                     <div class="glyphicon glyphicon-sort-by-attributes part" ng-show="shouldShowSort(column,'asc')"
