@@ -73,30 +73,33 @@
             return result;
         }
 
-        inGroup(groupName) {
+        inGroup(groupName, useMaximoGroups=false) {
             if (groupName == null) {
                 return true;
             }
             const user = this.contextService.getUserData();
             
-            const personGroups = user.personGroups;
-            if (!personGroups || personGroups.length === 0) {
-                //fallingback to generic property
-                const groupsFromProperty = user.genericproperties["persongroups"] || [];
-                return groupsFromProperty.some(s => s === groupName);
-            }
-            for (let i = 0; i < personGroups.length; i++) {
-                const userGroup = personGroups[i];
-                if (userGroup.personGroup.name === groupName) {
-                    return true;
+            if (useMaximoGroups) {
+                const personGroups = user.personGroups;
+                if (!personGroups || personGroups.length === 0) {
+                    //fallingback to generic property
+                    const groupsFromProperty = user.genericproperties["persongroups"] || [];
+                    return groupsFromProperty.some(s => s === groupName);
                 }
-            }
-            return false;
+                for (let i = 0; i < personGroups.length; i++) {
+                    const userGroup = personGroups[i];
+                    if (userGroup.personGroup.name === groupName) {
+                        return true;
+                    }
+                }
+                return false;
+            } 
+            return user.profiles && user.profiles.some(p => groupName.equalIc(p.name));
         }
 
-    }
+        }
 
-    userService.$inject = ["contextService"];
+        userService.$inject = ["contextService"];
 
-    angular.module('webcommons_services').service('userService', userService);
-})(angular);
+        angular.module('webcommons_services').service('userService', userService);
+        })(angular);

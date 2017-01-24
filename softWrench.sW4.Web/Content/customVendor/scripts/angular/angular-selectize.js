@@ -88,7 +88,7 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
             };
 
             config.onOptionAdd = function (value, data) {
-                if (scope.options.indexOf(data) === -1) {
+                if (scope.options && scope.options.indexOf(data) === -1) {
                     scope.options.push(data);
 
                     if (onOptionAdd) {

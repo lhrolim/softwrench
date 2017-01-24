@@ -1907,7 +1907,7 @@
       <schemas>
         <schema id="detail" stereotype="compositiondetail" redeclaring="false">
           <customization position="sendfrom">
-            <field attribute="sendfrom" label="From:" requiredexpression="true" default="support@kdisupport24.com">
+            <field attribute="sendfrom" label="From:" requiredexpression="true" defaultexpression="service:kongsbergCommunicationService.getFromDefaultExpression">
               <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
             </field>
           </customization>

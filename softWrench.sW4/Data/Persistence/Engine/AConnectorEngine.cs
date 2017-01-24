@@ -26,11 +26,11 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             _entityRepository = entityRepository;
         }
 
-        public async Task<int> Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
+        public virtual async Task<int> Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
             return await _entityRepository.Count(entityMetadata, searchDto);
         }
 
-        public async Task<AttributeHolder> FindById(SlicedEntityMetadata entityMetadata, string id, Tuple<string, string> userIdSitetuple) {
+        public virtual async Task<AttributeHolder> FindById(SlicedEntityMetadata entityMetadata, string id, Tuple<string, string> userIdSitetuple) {
             if (id == null && userIdSitetuple == null) {
                 throw new InvalidOperationException("either id or userid needs to be provided");
             }
@@ -40,13 +40,13 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             return await _entityRepository.ByUserIdSite(entityMetadata, userIdSitetuple);
         }
 
-        public async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
+        public virtual async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
             return await Find(slicedEntityMetadata, searchDto, null);
         }
 
 
 
-        public async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
+        public virtual async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
             var list = await _entityRepository.Get(slicedEntityMetadata, searchDto);
 

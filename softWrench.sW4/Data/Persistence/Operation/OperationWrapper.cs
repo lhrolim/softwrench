@@ -97,6 +97,11 @@ namespace softWrench.sW4.Data.Persistence.Operation {
                 if (UserId != null && crudOperationData.UserId == null) {
                     crudOperationData.UserId = UserId;
                 }
+                if (SiteId == null) {
+                    //fallback logic to picksiteid from json
+                    SiteId = crudOperationData.GetStringAttribute("siteid");
+                }
+
                 crudOperationData.SiteId = SiteId;
                 _operationData = crudOperationData;
                 return crudOperationData;

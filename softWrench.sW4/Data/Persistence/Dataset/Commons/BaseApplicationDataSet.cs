@@ -102,15 +102,21 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public IBatchSubmissionService BatchSubmissionService => SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>();
 
         [Import]
-        public IWhereClauseFacade WhereClauseFacade { get; set; }
+        public IWhereClauseFacade WhereClauseFacade {
+            get; set;
+        }
 
         [Import]
-        public QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler { get; set; }
+        public QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler {
+            get; set;
+        }
 
         public AttachmentHandler AttachmentHandler => SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>();
 
         [Import]
-        public BaseDataSetSearchHelper BaseDataSetSearchHelper { get; set; }
+        public BaseDataSetSearchHelper BaseDataSetSearchHelper {
+            get; set;
+        }
 
         protected abstract IConnectorEngine Engine();
 
@@ -306,7 +312,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
             QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
-            
+
 
             var ctx = ContextLookuper.LookupContext();
 
@@ -619,6 +625,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 result.FullRefresh = true;
                 return result;
             }
+            if (OperationConstants.CRUD_CREATE.Equals(operation)) {
+                id = result.Id;
+                var siteId = result.SiteId ?? crudOperationData.SiteId;
+                userIdSite = new Tuple<string, string>(result.UserId, siteId);
+            }
+
             //Main detail reload mode... full refresh would be handled at a higher level
             var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             result.ResultObject = await Engine().FindById(slicedEntityMetadata, id, userIdSite);

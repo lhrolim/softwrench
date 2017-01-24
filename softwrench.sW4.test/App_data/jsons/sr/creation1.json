@@ -1,28 +1,29 @@
 ﻿{
-    "#affecteddateonly": "@currentdatetime",
-    "#affectedtime": "@currentdatetime",
-    "#notusedattribute": "06/03/2014 18:29",
-    "@currentdatetime": "18:29",
-    "affecteddate": "06/03/2014 18:29",
-    affectedperson: "swadmin",
-    "asset_": {
-        "location": "CALGARY",
-        "primaryuser_": {
-            personid: "test"
-        }
-    },
+  "#affecteddateonly": "@currentdatetime",
+  "#affectedtime": "@currentdatetime",
+  "#notusedattribute": "06/03/2014 18:29",
+  "@currentdatetime": "18:29",
+  "affecteddate": "06/03/2014 18:29",
+  affectedperson: "swadmin",
+  "asset_": {
     "location": "CALGARY",
-    "asset_.location": "CALGARY",
-    "assetnum": "T2010",
-    "callbacknum": "1-800-433-7300",
-    "description": "test",
-    "location": "BPM3100",
-    "longdescription_.ldtext": "test",
-    "newattachment": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/...",
-    "newattachment_path": "incident.JPG",
-    "newscreenshot": "",
-    "newscreenshot_path": "Screen201463.html",
-    "reportedby": "swadmin",
-    "ticketid": null,
-    "status":  "new"
+    "primaryuser_": {
+      personid: "test"
+    }
+  },
+  "location": "CALGARY",
+  "asset_.location": "CALGARY",
+  "assetnum": "T2010",
+  "callbacknum": "1-800-433-7300",
+  "description": "test",
+  "location": "BPM3100",
+  "longdescription_.ldtext": "test",
+  "newattachment": "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/...",
+  "newattachment_path": "incident.JPG",
+  "newscreenshot": "",
+  "newscreenshot_path": "Screen201463.html",
+  "reportedby": "swadmin",
+  "ticketid": null,
+  "siteid": "BEDFORD",
+  "status": "new"
 }
