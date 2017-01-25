@@ -95,7 +95,7 @@
                     // have saved filter selected
                     // or any filter applied
                     // or a quick search
-                    return !!filter && (filter.id !== -2 && filter.deletable);
+                    return !!filter && (filter.id !== -2 && filter.deletable!==false);
                 }
 
                 $scope.hasFilterData = function () {
