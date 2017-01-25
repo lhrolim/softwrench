@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .service('checkpointService', ["contextService", "searchService", function (contextService, searchService) {
+        .service('checkpointService', ["contextService", "searchService", "crudContextHolderService", function (contextService, searchService, crudContextHolderService) {
 
 
             /// <summary>
@@ -39,8 +39,15 @@
                 const applicationKey = schema.applicationName + "." + schema.schemaId;
                 const checkpointData = {
                     listContext: searchDTO,
-                    applicationKey: applicationKey
+                    applicationKey
                 };
+                const selectedFilter = crudContextHolderService.getSelectedFilter();
+                if (!!selectedFilter) {
+                    //there´s no point to create a "previous unsaved filter" if a filter has already been applied. 
+                    //Hence setting this flag.
+                    checkpointData["ignorepreviousfilter"] = true;
+                }
+
                 var currentCheckpointItem = contextService.fetchFromContext('checkpointdata', true, false, false);
                 if (!currentCheckpointItem) {
                     currentCheckpointItem = {};
@@ -60,7 +67,7 @@
         
             function getCheckPointAsFilter(applicationName,schemaId) {
                 const checkPoint = this.fetchCheckpoint(applicationName + "." + schemaId);
-                if (!checkPoint) {
+                if (!checkPoint || checkPoint["ignorepreviousfilter"]) {
                     return null;
                 }
 
@@ -91,7 +98,7 @@
 
             function clearCheckpoints() {
                 //just removing from the context here
-//                contextService.deleteFromContext('checkpointdata');
+                contextService.deleteFromContext('checkpointdata');
             }
 
             const api = {

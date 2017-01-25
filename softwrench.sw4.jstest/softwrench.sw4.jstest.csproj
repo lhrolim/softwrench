@@ -83,6 +83,7 @@
     <Content Include="tests\pojos\CompositionDefinitionPojo.js" />
     <Content Include="tests\pojos\SchemaPojo.js" />
     <Content Include="tests\services\adminresources\userprofileservice_test.js" />
+    <Content Include="tests\services\checkpoint_service_test.js" />
     <Content Include="tests\services\lookupservice_test.js" />
     <Content Include="tests\services\associationservice_test.js" />
     <Content Include="tests\services\compositionService_test.js" />

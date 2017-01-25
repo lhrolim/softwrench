@@ -141,7 +141,7 @@
             contextService.insertIntoContext('currentgridarray', null);
             contextService.insertIntoContext("currentmodule", leaf.module);
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
-            checkpointService.clearCheckpoints();
+//            checkpointService.clearCheckpoints();
             redirectService.redirectToAction(leaf.title, leaf.controller, leaf.action, leaf.parameters, leaf.target);
         };
 
@@ -164,7 +164,7 @@
             if (leaf.parameters != null) {
                 parameters.popupmode = leaf.parameters['popupmode'];
             }
-            checkpointService.clearCheckpoints();
+//            checkpointService.clearCheckpoints();
             $rootScope.$broadcast('sw.redirect', leaf);
 
             const previousFilter = gridPreferenceService.getPreviousFilterDto(leaf.application, leaf.schema);
