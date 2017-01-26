@@ -304,22 +304,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchDto.QueryAlias = application.Name + "." + schema.SchemaId;
             }
 
-            var propertyValue = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListSchemaOrderBy);
-            if (searchDto.SearchSort == null && propertyValue != null) {
-                //if the schema has a default sort defined, and we didn´t especifally asked for any sort column, apply the default schema
-                searchDto.SearchSort = propertyValue;
-            }
-
             FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
             QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
 
 
             var ctx = ContextLookuper.LookupContext();
 
-            // add pre selected filter if originally it had not a searchDTO
-            // so is a menu/breadcrumb navigation
+            // add pre selected filter if originally it had not a searchDTO so is a menu/breadcrumb navigation
             if (searchDto.IsDefaultInstance || searchDto.AddPreSelectedFilters) {
                 SchemaFilterBuilder.AddPreSelectedFilters(application.Schema.DeclaredFilters, searchDto);
+                SearchUtils.AddDefaultSort(application.Schema, searchDto);
             }
 
             //count query

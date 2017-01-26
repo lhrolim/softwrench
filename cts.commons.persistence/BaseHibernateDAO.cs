@@ -276,6 +276,7 @@ namespace cts.commons.persistence {
                 var session = GetSession();
                 var transaction = await BeginTransactionAsync(session);
                 await runabble(new TransactionPair(session, transaction));
+                return;
             }
 
             using (var session = GetSession()) {

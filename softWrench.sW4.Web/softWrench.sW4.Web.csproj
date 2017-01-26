@@ -77,8 +77,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.6213.31965, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.6213.31965\lib\net46\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.2.6234.35949, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6234.35949\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
@@ -486,6 +486,7 @@
     <Compile Include="DB_Migration\5.15.0\20160819_SWWEB_2709.cs" />
     <Compile Include="DB_Migration\5.14.0\20160825_SWWEB_2710.cs" />
     <Compile Include="DB_Migration\5.15.0\20161004_SWWEB_2795.cs" />
+    <Compile Include="DB_Migration\5.18.5\20170134_SWWEB_2913.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
@@ -803,6 +804,7 @@
     <Content Include="Content\Scripts\client\constants\MetadataConstants.js" />
     <Content Include="Content\Scripts\client\controllers\metadata_builder.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
+    <Content Include="Content\Scripts\client\crud\multisort_service.js" />
     <Content Include="Content\Scripts\client\crud\crud_crawl_service.js" />
     <Content Include="Content\Scripts\client\crud\composition_list_viewmodel.js" />
     <Content Include="Content\Scripts\client\crud\crud_list_viewmodel.js" />

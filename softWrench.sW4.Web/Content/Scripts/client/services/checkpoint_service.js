@@ -26,7 +26,9 @@
                 if (gridData.vm) {
                     quicksearchDTO = gridData.vm.quickSearchDTO;
                 }
-                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quicksearchDTO, gridData.multiSort);
+
+                const multiSort = crudContextHolderService.getSortModel(gridData.panelid).sortColumns;
+                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quicksearchDTO, multiSort);
                 const dto = new SearchDTO(searchDTO);
                 if (!dto.isDefault()) {
                     this.createGridCheckpoint(schema, dto);

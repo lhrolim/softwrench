@@ -1,15 +1,15 @@
 ﻿<div class="wrap">
     <ul id="sortcolumns" ui-sortable="sortableOptions" ng-model="addedColumns">
-        <li ng-repeat="column in addedColumns | filter:{ added : true }">
+        <li ng-repeat="column in addedColumns()">
             <div class="applicationcommand btn btn-default" ng-click="orderChanged(column)">
                 <i ng-class="column.asc ? 'fa fa-sort-amount-asc' : 'fa fa-sort-amount-desc'"></i>&ensp;{{column.name}}
-                <span ng-hide="true" class="attribute">{{column.attribute}}</span>&emsp;<i ng-click="removeColumn(column)" class="fa fa-times-circle remove-column"></i>
+                <span ng-hide="true" class="attribute">{{column.columnName}}</span>&emsp;<i ng-click="removeColumn(column)" class="fa fa-times-circle remove-column"></i>
             </div>
         </li>
     </ul>
     <div class="add-column">
         <label><i class="fa fa-plus"></i></label>
-        <select class="btn btn-default" ng-model="selected" ng-change="addColumn(selected)" ng-options="column.name for column in columns | filter:{ added : false }">
+        <select class="btn btn-default" ng-model="selected" ng-change="addColumn(selected)" ng-options="column.name for column in notAddedViewColumns()">
             <option value="" disabled selected hidden>Add Column</option>
         </select>
     </div>

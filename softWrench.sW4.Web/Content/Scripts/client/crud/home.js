@@ -21,7 +21,7 @@
             var redirectUrl = url(homeModel.Url);
 
             if (homeModel.RouteListInfo) { // it's a list route -> mark pre filters and page size
-                redirectUrl += "&SearchDTO[AddPreSelectedFilters]=true";
+                redirectUrl += "&SearchDTO[addPreSelectedFilters]=true";
                 const pageSize = userPreferencesService.getSchemaPreference("pageSize", homeModel.RouteListInfo.ApplicationName, homeModel.RouteListInfo.Schemaid);
                 if (pageSize) {
                     redirectUrl += `&SearchDTO[pageSize]=${pageSize}`;

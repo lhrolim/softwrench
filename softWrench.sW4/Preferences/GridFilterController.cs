@@ -18,20 +18,20 @@ namespace softWrench.sW4.Preferences {
             _gridFilterManager = gridFilterManager;
         }
 
-        public IGenericResponseResult CreateNewFilter([NotNull]String application, string schema, string fields, string operators, string values, string template, [NotNull]string alias, string advancedSearch) {
+        public IGenericResponseResult CreateNewFilter([NotNull]String application, string schema, string fields, string operators, string values, string template, [NotNull]string alias, string advancedSearch, string sort) {
             Validate.NotNull(application, "application");
             Validate.NotNull(alias, "alias");
 
-            var association = _gridFilterManager.CreateNewFilter(SecurityFacade.CurrentUser(), application, fields, operators, values, template, alias, advancedSearch, schema);
+            var association = _gridFilterManager.CreateNewFilter(SecurityFacade.CurrentUser(), application, fields, operators, values, template, alias, advancedSearch, sort, schema);
             return new GenericResponseResult<GridFilterAssociation>(association) {
                 SuccessMessage = "Filter {0} created successfully".Fmt(alias)
             };
         }
 
-        public IGenericResponseResult UpdateFilter(int? id, string alias, string fields, string operators, string values, string template, string advancedSearch) {
+        public IGenericResponseResult UpdateFilter(int? id, string alias, string fields, string operators, string values, string template, string advancedSearch, string sort) {
             Validate.NotNull(id, "id");
 
-            var filter = _gridFilterManager.UpdateFilter(SecurityFacade.CurrentUser(), fields, alias, operators, values, template, advancedSearch, id);
+            var filter = _gridFilterManager.UpdateFilter(SecurityFacade.CurrentUser(), fields, alias, operators, values, template, advancedSearch, sort, id);
             return new GenericResponseResult<GridFilter>(filter) {
                 SuccessMessage = "Filter {0} updated successfully".Fmt(filter.Alias)
             };

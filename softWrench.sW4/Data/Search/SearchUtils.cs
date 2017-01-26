@@ -11,7 +11,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Search.QuickSearch;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -210,7 +213,7 @@ namespace softWrench.sW4.Data.Search {
         public static IDictionary<string, object> GetParameters(SearchRequestDto listDto) {
             IDictionary<string, object> resultDictionary = new Dictionary<string, object>();
             // quicksearch statement parameter 
-            if (listDto.QuickSearchDTO!=null) {
+            if (listDto.QuickSearchDTO != null) {
                 resultDictionary[QuickSearchHelper.QuickSearchParamName] = QuickSearchHelper.QuickSearchDataValue(listDto.QuickSearchDTO.QuickSearchData);
             }
             // filter parameters
@@ -400,6 +403,35 @@ namespace softWrench.sW4.Data.Search {
             return lookupAttribute.Literal;
         }
 
+        public static void AddDefaultSort(ApplicationSchemaDefinition schema, SearchRequestDto searchDto) {
+            var defaultSort = schema.GetProperty(ApplicationSchemaPropertiesCatalog.ListSchemaOrderBy);
+            if (string.IsNullOrEmpty(defaultSort)) {
+                return;
+            }
 
+            var entries = defaultSort.Split(',').ToList();
+            if (entries.Count < 2) {
+                searchDto.SearchSort = defaultSort;
+                return;
+            }
+
+            // it is multi sort
+
+            var sortOrderList = new List<SortOrder>();
+            entries.ForEach(multiSort => {
+                multiSort = multiSort.Trim();
+                var indexOfDot = multiSort.IndexOf(".", StringComparison.Ordinal);
+                var indexOfSpace = multiSort.IndexOf(" ", StringComparison.Ordinal);
+                var end = indexOfSpace == -1 ? multiSort.Length : indexOfSpace;
+                var columnName = indexOfDot == -1 ? multiSort.Substring(0, end) : multiSort.Substring(indexOfDot + 1, end - indexOfDot - 1);
+                var asc = !multiSort.EndsWith("desc");
+                var sortOrder = new SortOrder {
+                    ColumnName = columnName,
+                    IsAscending = asc
+                };
+                sortOrderList.Add(sortOrder);
+            });
+            searchDto.MultiSearchSort = sortOrderList;
+        }
     }
 }

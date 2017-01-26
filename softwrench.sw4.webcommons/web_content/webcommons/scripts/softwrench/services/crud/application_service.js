@@ -141,7 +141,7 @@
             if (pageSize) {
                 // searchdto added only because user pref - should mark to add preselected filters
                 if (!parameters["SearchDTO"]) {
-                    parameters["SearchDTO"] = { AddPreSelectedFilters: true }
+                    parameters["SearchDTO"] = { addPreSelectedFilters: true }
                 }
                 parameters["SearchDTO"].pageSize = pageSize;
             }

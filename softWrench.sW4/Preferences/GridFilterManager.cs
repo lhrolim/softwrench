@@ -18,7 +18,7 @@ namespace softWrench.sW4.Preferences {
         }
 
         [Transactional(DBType.Swdb)]
-        public virtual GridFilterAssociation CreateNewFilter(InMemoryUser user, string application, string fields, string operators, string values,string template, string alias, string advancedSearch, string schema = "list") {
+        public virtual GridFilterAssociation CreateNewFilter(InMemoryUser user, string application, string fields, string operators, string values,string template, string alias, string advancedSearch, string sort, string schema = "list") {
             var filter = new GridFilter {
                 Alias = alias,
                 Application = application,
@@ -29,7 +29,8 @@ namespace softWrench.sW4.Preferences {
                 Schema = schema,
                 Creator = user.DBUser,
                 Template = template,
-                AdvancedSearch = advancedSearch
+                AdvancedSearch = advancedSearch,
+                Sort = sort
             };
 
             if (user.GridPreferences.ContainsFilter(filter, user)) {
@@ -51,7 +52,7 @@ namespace softWrench.sW4.Preferences {
         }
 
         [Transactional(DBType.Swdb)]
-        public virtual GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, string template, string advancedSearch, int? id) {
+        public virtual GridFilter UpdateFilter(InMemoryUser user, string fields, string alias, string operators, string values, string template, string advancedSearch, string sort, int? id) {
             var filter = _dao.FindByPK<GridFilter>(typeof(GridFilter), id);
             if (filter == null) {
                 throw GridFilterException.FilterNotFound(id);
@@ -63,6 +64,7 @@ namespace softWrench.sW4.Preferences {
             filter.Template = template;
             filter.AdvancedSearch = advancedSearch;
             filter.UpdateDate = DateTime.Now;
+            filter.Sort = sort;
             var updateFilter = _dao.Save(filter);
             var memoryAssociation = user.GridPreferences.GridFilters.FirstOrDefault(a => a.Filter.Id == id);
             if (memoryAssociation != null) {

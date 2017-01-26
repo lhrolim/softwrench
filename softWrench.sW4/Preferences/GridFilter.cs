@@ -54,6 +54,9 @@ namespace softWrench.sW4.Preferences {
         [Property]
         public string AdvancedSearch { get; set; }
 
+        [Property]
+        public string Sort { get; set; }
+
         [JsonIgnore]
         [ManyToOne(Column = "creator", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public User Creator { get; set; }
@@ -61,7 +64,7 @@ namespace softWrench.sW4.Preferences {
         public int? CreatorId => Creator.Id;
 
         public override string ToString() {
-            return String.Format("Alias: {0}, Application: {4}, Fields: {1}, Operators: {2}, Values: {3}", Alias, Fields, Operators, Values, Application);
+            return string.Format("Alias: {0}, Application: {4}, Fields: {1}, Operators: {2}, Values: {3}, Sort: {5}", Alias, Fields, Operators, Values, Application, Sort);
         }
 
         protected bool Equals(GridFilter other) {

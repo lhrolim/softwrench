@@ -33,14 +33,14 @@
             controller: ["$scope",  "$q", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService", "gridPreferenceService",
                 "searchService", "tabsService", "userPreferencesService", "printService", 
-                "fieldService", "commandService", "i18NService", "modalService",
+                "fieldService", "commandService", "i18NService", "modalService", "multisortService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
                 "checkpointService", "schemaCacheService", "dispatcherService", "schemaService",
                 function ($scope, $q, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService, printService,
-                    fieldService, commandService, i18NService, modalService,
+                    fieldService, commandService, i18NService, modalService, multisortService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
                     checkpointService, schemaCacheService, dispatcherService, schemaService) {
@@ -48,10 +48,16 @@
                     $scope.$name = "crudlist";
 
                     var multiSortVisibleKey = "multiSortVisible";
-                    $scope.multiSortVisible = !!userPreferencesService.getPreference(multiSortVisibleKey);
+                    var sortModel = function() {
+                        return crudContextHolderService.getSortModel($scope.panelid);
+                    }
+
+                    sortModel().multiSortVisible = !!userPreferencesService.getPreference(multiSortVisibleKey);
+                    $scope.multiSortVisible = sortModel().multiSortVisible;
 
                     $scope.toggleMultiSortPanel = function () {
                         $scope.multiSortVisible = !$scope.multiSortVisible;
+                        sortModel().multiSortVisible = $scope.multiSortVisible;
                         userPreferencesService.setPreference(multiSortVisibleKey, $scope.multiSortVisible);
                         fixHeaderService.callWindowResize();
                     };
@@ -194,7 +200,7 @@
                             $scope.searchOperator = {};
                             $scope.searchSort = {};
                             $scope.vm.quickSearchDTO = {};
-                            $scope.multiSort = [];
+                            sortModel().sortColumns = [];
 
                             if (data.pageResultDto) {
                                 if (data.pageResultDto.quickSearchDTO) {
@@ -212,8 +218,10 @@
                                     $scope.searchSort.order = data.pageResultDto["searchAscending"] === false ? "desc" : "asc";
                                 }
 
-                                if (data.pageResultDto["multiSearchSort"]) {
-                                    $scope.multiSort = data.pageResultDto["multiSearchSort"];
+                                const multiSort = data.pageResultDto["multiSearchSort"];
+                                if (multiSort) {
+                                    sortModel().sortColumns = multiSort;
+                                    $scope.multiSortVisible = $scope.multiSortVisible || multisortService.hasMultisort($scope.panelid);
                                 }
                             }
 
@@ -284,7 +292,7 @@
                         $scope.paginationData.filterFixedWhereClause = null;
                         $scope.searchData = {};
                         $scope.searchSort = {};
-                        $scope.multiSort = [];
+                        sortModel().sortColumns = [];
                         $scope.searchOperator = {};
                         $scope.searchValues = "";
                         $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
@@ -325,7 +333,7 @@
                         $scope.searchOperator = searchOperator || $scope.searchOperator || {};
 
                         $scope.searchSort = searchSort || $scope.searchSort || {};
-                        $scope.multiSort = multiSort || $scope.multiSort;
+                        sortModel().sortColumns = multiSort || sortModel().sortColumns;
                         $scope.vm.quickSearchDTO = quickSearchDTO || $scope.vm.quickSearchDTO || { compositionsToInclude: [] };
 
                         $scope.metadataid = metadataid;
@@ -487,7 +495,7 @@
                             searchDTO = extraparameters;
                         } else {
                             searchDTO = 
-                                 searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, $scope.multiSort);    
+                                 searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, sortModel().sortColumns);    
                             searchDTO.pageNumber = pageNumber;
                             searchDTO.totalCount = totalCount;
                             searchDTO.pageSize = pageSize;
@@ -495,7 +503,7 @@
                             searchDTO.schemaFilterId = extraparameters.schemaFilterId;
                             searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
                             searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
-                            searchDTO.AddPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
+                            searchDTO.addPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
                         }
                    
                         // Check for custom param provider
@@ -538,7 +546,11 @@
                         const columnName = column.attribute;
                         const sorting = $scope.searchSort;
                         if (sorting.field != null && sorting.field === columnName) {
-                            sorting.order = sorting.order === "desc" ? "asc" : "desc";
+                            if (sorting.order === "asc") {
+                                sorting.order = "desc";
+                            } else {
+                                $scope.searchSort = {};
+                            }
                         } else {
                             sorting.field = columnName;
                             sorting.order = "asc";
@@ -546,9 +558,8 @@
                         $scope.selectPage(1);
                     };
 
-                    $scope.multisort = function (columns) {
-                        $scope.multiSort = columns;
-                        $scope.selectPage(1);
+                    $scope.multisort = function (addPreSelectedFilters) {
+                        $scope.selectPage(1, $scope.paginationData, false, { addPreSelectedFilters: addPreSelectedFilters});
                     };
 
                     $scope.sortLabel = function (column) {

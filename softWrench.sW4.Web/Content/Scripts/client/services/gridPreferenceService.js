@@ -94,7 +94,7 @@
                     return filters.length > 0;
                 },
 
-                saveFilter: function (schema, searchData, template, searchOperators, searchSort, advancedSearch, alias, id, filterowner, successCbk) {
+                saveFilter: function (schema, searchData, template, searchOperators, searchSort, advancedSearch, sort, alias, id, filterowner, successCbk) {
                     var fields = "";
                     var operators = "";
                     var values = "";
@@ -119,6 +119,7 @@
                         template: template,
                         alias: alias,
                         advancedSearch: advancedSearch,
+                        sort: sort,
                         id: id
                     };
                     if (id == null || filterowner != user.dbId) {

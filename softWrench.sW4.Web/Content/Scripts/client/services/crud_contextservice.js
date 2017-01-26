@@ -105,8 +105,11 @@
                 fixedWhereClause: null,
                 selectedFilter: null
             },
-            customSaveFn: null
-
+            customSaveFn: null,
+            sortModel: {
+                sortColumns: [],
+                multiSortVisible: false
+            }
         };
 
         var _crudContext = angular.copy(_originalContext);
@@ -257,6 +260,9 @@
             return context.detailDataResolved && context.associationsResolved && context.compositionLoadComplete;
         }
 
+        function getSortModel(panelid) {
+            return getContext(panelid).sortModel;
+        }
         //#endregion
 
         //#region hooks
@@ -688,7 +694,8 @@
             getDetailDataResolved,
             clearDetailDataResolved,
             getContext,
-            crudForm
+            crudForm,
+            getSortModel
         };
         const associationServices = {
             updateLazyAssociationOption,

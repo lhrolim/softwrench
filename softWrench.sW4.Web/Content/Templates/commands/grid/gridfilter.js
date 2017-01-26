@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("sw_layout")
-        .controller("GridFilterController", ["$scope", "$rootScope", "gridPreferenceService", "searchService", "i18NService", "alertService", "userPreferencesService", "crudContextHolderService","$log",
+        .controller("GridFilterController", ["$scope", "$rootScope", "gridPreferenceService", "searchService", "i18NService", "alertService", "userPreferencesService", "crudContextHolderService", "multisortService", "$log",
 
-            function ($scope, $rootScope, gridPreferenceService, searchService, i18NService, alertService, userPreferencesService, crudContextHolderService, $log) {
+            function ($scope, $rootScope, gridPreferenceService, searchService, i18NService, alertService, userPreferencesService, crudContextHolderService, multisortService, $log) {
                 $scope.selectedfilter = null;
                 const log = $log.get("gridfilter#filterchanged", ["filter"]);
 
@@ -87,7 +87,8 @@
                     // have saved filter selected
                     // or any filter applied
                     // or a quick search
-                    return ($scope.selectedfilter && $scope.selectedfilter.deletable) || $scope.hasFilterData() || hasAdvancedSearch();
+                    // or multisort
+                    return ($scope.selectedfilter && $scope.selectedfilter.deletable) || $scope.hasFilterData() || hasAdvancedSearch() || multisortService.hasMultisort($scope.panelid);
                 }
 
                 $scope.shouldEnableDeleteButton = function () {
@@ -128,7 +129,8 @@
                     const id = $scope.selectedfilter ? $scope.selectedfilter.id : null;
                     const owner = $scope.selectedfilter ? $scope.selectedfilter.creatorId : null;
                     const advancedSearch = hasAdvancedSearch() ? JSON.stringify($scope.quickSearchDto) : null;
-                    gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, null, advancedSearch, alias, id, owner, (filter) => {
+                    const multiSortString = multisortService.multsortString($scope.panelid);
+                    gridPreferenceService.saveFilter($scope.schema, $scope.searchData, $scope.searchTemplate, $scope.searchOperator, null, advancedSearch, multiSortString, alias, id, owner, (filter) => {
                         $scope.selectedfilter = filter;
                         $scope.cachedFilters = null;
                     });
@@ -138,6 +140,11 @@
 
                 $scope.applyFilter = function (filter) {
                     $scope.quickSearchDto = filter.advancedSearch ? JSON.parse(filter.advancedSearch) : { compositionsToInclude: [] };
+                    if (filter.sort && filter.sort.trim()) {
+                        const sortModel = crudContextHolderService.getSortModel($scope.panelid);
+                        sortModel.sortColumns = multisortService.toMultisortColumns(filter.sort);
+                        sortModel.multiSortVisible = true;
+                    }
                     gridPreferenceService.applyFilter(filter, $scope.searchOperator, $scope.quickSearchDto, $scope.panelid);
                 }
 
