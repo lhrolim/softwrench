@@ -125,7 +125,7 @@
       <components>
 
         <componentdisplayable id="status">
-          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" enableexpression="false">
+          <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true" >
             <dataprovider postfilterfunction="FilterAvailableStatus"/>
             <renderer type="lookup" />
           </association>

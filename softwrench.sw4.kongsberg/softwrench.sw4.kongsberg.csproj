@@ -105,6 +105,7 @@
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergIncidentCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergSolutionCrudConnector.cs" />
     <Compile Include="classes\com\cts\kongsberg\connector\KongsbergServiceRequestCrudConnector.cs" />
+    <Compile Include="classes\com\cts\kongsberg\dataset\KogtStatusTicketHandler.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergIncidentDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergProjectRequestDataSet.cs" />
     <Compile Include="classes\com\cts\kongsberg\dataset\KongsbergServiceRequestDataSet.cs" />

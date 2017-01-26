@@ -1106,20 +1106,11 @@
         <schema parentschema="adetail" id="editdetail" title="Service Request Detail">
           <section id="srsection">
             <field attribute="ticketid" label="SR#" readonly="true" requiredexpression="true" />
-            <optionfield label="Status:" attribute="status">
-              <renderer type="combo" />
+            <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
+              <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <filter clientfunction="statusHandlerService.filterSelectableOptions"/>
-              <option label="Duplicate" value="DUPLICATE"/>
-              <option label="Closed" value="CLOSED"/>
-              <option label="Edited in History" value="HISTEDIT"/>
-              <option label="In Progress" value="INPROG"/>
-              <option label="New" value="NEW"/>
-              <option label="Pending" value="PENDING"/>
-              <option label="Queued" value="QUEUED"/>
-              <option label="Resolved" value="RESOLVED"/>
-              <option label="SLA Hold" value="SLAHOLD"/>
-              <option label="Spam" value="SPAM"/>
-            </optionfield>
+              <renderer type="lookup" />
+            </association>
           </section>
           <section id="compositions">
             <tab label="Solution" id="solution" icon="fa fa-book">

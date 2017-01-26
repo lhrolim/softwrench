@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using cts.commons.portable.Util;
 
 namespace softwrench.sW4.Shared2.Data {
 
@@ -41,10 +42,12 @@ namespace softwrench.sW4.Shared2.Data {
 
         public virtual string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
             var attribute = GetAttribute(attributeName, remove, throwException);
-            if (attribute != null) {
-                return attribute.ToString();
-            }
-            return null;
+            return attribute?.ToString();
+        }
+
+        public virtual bool? GetBooleanAttribute(string attributeName, bool remove = false, bool throwException = false) {
+            var attribute = GetAttribute(attributeName, remove, throwException);
+            return attribute?.ToString().EqualsAny("true", "1", "y");
         }
 
         public void SetAttribute(string attributeName, object value) {
@@ -58,7 +61,7 @@ namespace softwrench.sW4.Shared2.Data {
             if (ContainsAttribute(attributeName, true)) {
                 return;
             }
-            SetAttribute(attributeName,value);
+            SetAttribute(attributeName, value);
         }
 
         public virtual bool ContainsAttribute(string attributeName, bool checksForNonNull = false) {

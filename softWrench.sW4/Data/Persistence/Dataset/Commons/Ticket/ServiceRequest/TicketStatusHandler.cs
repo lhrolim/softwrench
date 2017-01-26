@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using cts.commons.Util;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Util;
 using s = softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest.MaxSrStatus;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest {
@@ -27,7 +30,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             if (postFilter.OriginalEntity.ContainsAttribute("addcurrent")) {
                 addcurrent = bool.Parse(postFilter.OriginalEntity.GetStringAttribute("addcurrent"));
             }
-            
+
 
             if (postFilter.OriginalEntity.ContainsAttribute("originalstatus")) {
                 currentStatus = postFilter.OriginalEntity.GetAttribute("originalstatus").ToString();
@@ -49,7 +52,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
 
             }
 
-            var baseResult = new List<IAssociationOption>();
+            var baseResult = new SortedSet<IAssociationOption>();
             if (currentOption != null && addcurrent) {
                 baseResult.Add(currentOption);
             }
@@ -58,56 +61,80 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             MaxSrStatus statusEnum;
             Enum.TryParse(currentStatus, true, out statusEnum);
 
-            baseResult.AddRange(DoFilterAvailableStatus(statusEnum, filterAvailableStatus));
+            baseResult.AddAll(DoFilterAvailableStatus(postFilter.OriginalEntity, statusEnum, filterAvailableStatus));
 
             return baseResult;
         }
 
-        protected virtual IList<IAssociationOption> DoFilterAvailableStatus(MaxSrStatus statusEnum, ISet<IAssociationOption> filterAvailableStatus) {
+        public virtual ISet<IAssociationOption> DoFilterAvailableStatus(AttributeHolder originalEntity, MaxSrStatus statusEnum, ISet<IAssociationOption> filterAvailableStatus) {
+
+            var slaHoldStatus = HandleSlaHoldStatus(originalEntity);
+
+
+
             switch (statusEnum) {
                 case s.NEW:
 
-                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED, s.QUEUED, s.REJECTED)).ToList();
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED, s.QUEUED, s.REJECTED)).ToHashSet();
 
 
                 case s.QUEUED:
 
-                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.INPROG, s.REJECTED, s.CANCELLED)).ToList();
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.INPROG, s.REJECTED, s.CANCELLED)).ToHashSet();
 
                 case s.INPROG:
                 return
                     filterAvailableStatus.Where(
                         l =>
                             l.Value.EqualsAny(s.CANCELLED, s.PENDING, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED,
-                                s.SLAHOLD)).ToList();
+                                slaHoldStatus)).ToHashSet();
 
                 case s.CLOSED:
-                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED)).ToList();
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED)).ToHashSet();
 
                 case s.RESOLVED:
                 return
                     filterAvailableStatus.Where(
-                        l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF)).ToList();
+                        l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF)).ToHashSet();
 
                 case s.COMP:
-                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED)).ToList();
+                return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CLOSED, s.CANCELLED)).ToHashSet();
 
                 case s.PENDING:
                 return
                     filterAvailableStatus.Where(
                         l =>
                             l.Value.EqualsAny(s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED,
-                                s.SLAHOLD)).ToList();
+                                slaHoldStatus)).ToHashSet();
 
                 case s.SLAHOLD:
+
+              
+
                 return
                     filterAvailableStatus.Where(
                         l =>
                             l.Value.EqualsAny(s.CANCELLED, s.INPROG, s.QUEUED, s.REJECTED, s.RESOLVCONF, s.RESOLVED,
-                                s.PENDING)).ToList();
+                                s.PENDING)).ToHashSet();
 
             }
-            return new List<IAssociationOption>();
+            return new HashSet<IAssociationOption>();
+        }
+
+        /// <summary>
+        /// Implementing SWWEB-2916
+        /// </summary>
+        /// <param name="originalEntity"></param>
+        /// <returns></returns>
+        protected virtual MaxSrStatus HandleSlaHoldStatus(AttributeHolder originalEntity) {
+            var acumulatedHoldTime = originalEntity.GetBooleanAttribute("ACCUMULATESLAHOLDTIME");
+            if (!acumulatedHoldTime.HasValue || acumulatedHoldTime.Value == false) {
+                return s.FAKE;
+            }
+            if (originalEntity.GetStringAttribute("TARGETSTART") != null && originalEntity.GetStringAttribute("ACTUALSTART") == null) {
+                return s.FAKE;
+            }
+            return s.SLAHOLD;
         }
     }
 }
