@@ -2,8 +2,19 @@
     "use strict";
 
     angular.module('sw_layout')
-        .service('checkpointService', ["contextService", "searchService", "crudContextHolderService", function (contextService, searchService, crudContextHolderService) {
+        .service('checkpointService', ["contextService", "searchService", "crudContextHolderService", "userPreferencesService", function (contextService, searchService, crudContextHolderService, userPreferencesService) {
+            const userGridCheckpointKey = "userGridCheckpoint";
 
+            function buildSearchDTO(gridData) {
+                var quicksearchDTO = null;
+                if (gridData.vm) {
+                    quicksearchDTO = gridData.vm.quickSearchDTO;
+                }
+
+                const multiSort = crudContextHolderService.getSortModel(gridData.panelid).sortColumns;
+                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quicksearchDTO, multiSort);
+                return new SearchDTO(searchDTO);
+            }
 
             /// <summary>
             /// 
@@ -17,27 +28,21 @@
             /// paginationData -->
             /// 
             /// </param>
-            function createGridCheckpointFromGridData(schema, gridData) {
+            /// <param name="panelid"></param>
+            function createGridCheckpointFromGridData(schema, gridData, panelid) {
                 if (gridData == null) {
                     throw new Error('gridData should not be null');
                 }
 
-                var quicksearchDTO = null;
-                if (gridData.vm) {
-                    quicksearchDTO = gridData.vm.quickSearchDTO;
-                }
-
-                const multiSort = crudContextHolderService.getSortModel(gridData.panelid).sortColumns;
-                const searchDTO = searchService.buildSearchDTO(gridData.searchData, gridData.searchSort, gridData.searchOperator, null, gridData.paginationData, null, quicksearchDTO, multiSort);
-                const dto = new SearchDTO(searchDTO);
+                const dto = buildSearchDTO(gridData);
                 if (!dto.isDefault()) {
                     this.createGridCheckpoint(schema, dto);
                 }
-                
-//                previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
+
+                //                previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
             };
 
-            function createGridCheckpoint(schema, searchDTO) {
+            function createGridCheckpoint(schema, searchDTO, panelid) {
                 const applicationKey = schema.applicationName + "." + schema.schemaId;
                 const checkpointData = {
                     listContext: searchDTO,
@@ -57,13 +62,25 @@
                 currentCheckpointItem[applicationKey] = checkpointData;
 
                 contextService.insertIntoContext('checkpointdata', currentCheckpointItem, false);
+
+                // creates a user pref for main grids (panelid === undefined) - persists even after logout
+                if (panelid === undefined) {
+                    userPreferencesService.setSchemaPreference(userGridCheckpointKey, checkpointData, schema.applicationName, schema.schemaId, panelid);
+                }
             };
 
             function fetchCheckpoint(applicationKey) {
                 const checkPointArray = this.fetchAllCheckpointInfo();
-                return checkPointArray.firstOrDefault(item => {
+                let checkpoint = checkPointArray.firstOrDefault(item => {
                     return item.applicationKey === applicationKey;
                 });
+
+                if (checkpoint) {
+                    return checkpoint;
+                }
+
+                const tokens = applicationKey.split(".");
+                return userPreferencesService.getSchemaPreference(userGridCheckpointKey, tokens[0], tokens[1]);
             }
 
         
