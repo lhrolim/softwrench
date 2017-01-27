@@ -239,6 +239,30 @@ function emptyIfNull(value) {
     return value;
 }
 
+function booleanEquals(value1, value2) {
+    if (value1 === value2) {
+        return true;
+    }
+    if (value1 == "1" || value1 == "true") {
+        return value2 == "true" || value2 == "1";
+    }
+
+    if (value2 == "1" || value2 == "true") {
+        return value1 == "true" || value1 == "1";
+    }
+
+    if (value1 == "0" || value1 == "false") {
+        return value2 == "false" || value2 == "0";
+    }
+
+    if (value2 == "0" || value2 == "false") {
+        return value1 == "false" || value1 == "0";
+    }
+    return false;
+
+
+}
+
 var nullOrEmpty = function (s) {
     return nullOrUndef(s) || String(s).trim().length == 0;
 };

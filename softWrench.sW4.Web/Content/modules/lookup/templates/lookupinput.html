@@ -1,6 +1,6 @@
 ﻿<div>
     <div class="input-group col-xs-12">
-        <span class="input-group-addon" ng-show="!isFieldHidden(schema,fieldMetadata.detailSection)
+        <span class="input-group-addon" ng-if="!isFieldHidden(schema,fieldMetadata.detailSection)
                   && isExpansionAvailable(fieldMetadata)" ng-click="toggleDetailExpansion(fieldMetadata)">
             <div>
                 <i class="fa fa-caret-right" ng-hide="detailsExpanded(fieldMetadata)"></i>

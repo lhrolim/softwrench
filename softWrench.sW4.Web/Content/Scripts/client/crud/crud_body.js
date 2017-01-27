@@ -100,6 +100,13 @@
                 
                 });
 
+                $scope.$on(JavascriptEventConstants.DetailLoaded, function() {
+                    $(".tabRecordspin.spinstop").each((idx, e) => {
+                        //making sure that the spinners will show again
+                        $(e).removeClass("spinstop");
+                    });
+                });
+
                 $scope.$on(JavascriptEventConstants.TabsLoaded, function (event, firstTabId, panelId) {
                     if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema, crudContextHolderService.currentSchema()))) {
                         return;
@@ -138,7 +145,7 @@
 
                     $timeout(function () {
                         //time for the components to be rendered
-                        focusService.setFocusToFirstField($scope.schema, datamap);
+//                        focusService.setFocusToFirstField($scope.schema, datamap);
                     }, 1000, false);
                     eventService.onschemafullyloaded($scope.schema);
                 
@@ -210,9 +217,6 @@
 //                    $scope.save(parameters);
 //                });
 
-
-
-
                 $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, function (event, data) {
                     const tab = crudContextHolderService.getActiveTab();
                     if (tab != null && data[tab] != null) {
@@ -220,7 +224,9 @@
                     }
 
                     tabSpinners.forEach(s => {
-                        $(s.el.parentElement).addClass("spinstop"); // to avoid start spin a tab a second time
+                        if (s.el && s.el.parentElement) {
+                            $(s.el.parentElement).addClass("spinstop"); // to avoid start spin a tab a second time    
+                        }
                         s.stop();
                     });
 

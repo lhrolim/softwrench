@@ -991,7 +991,7 @@
           <section>
             <header displacement="ontop" label="Project Details" params="fieldset=true"/>
             <optionfield attribute="classstructureid" label="Classification:" providerattribute="_SRClassStructureType" default="@classstructureid" requiredexpression="true" extraprojectionvalues="classificationid">
-              <renderer type="autocompleteclient" />
+              <renderer type="lookup" params="disablemodal=true" />
               <event type="afterchange" expression='$e.parameters.fields["classificationid"] = $e.parameters.fields.extrafields["classstructureid.classificationid"]'/>
             </optionfield>
 
@@ -1115,7 +1115,7 @@
             <association label="Status" target="status" labelfield="synstatus.description" requiredexpression="true">
               <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <filter clientfunction="statusHandlerService.filterSelectableOptions"/>
-              <renderer type="lookup" />
+              <renderer type="lookup" params="disablemodal=true" />
             </association>
           </section>
           <section id="compositions">

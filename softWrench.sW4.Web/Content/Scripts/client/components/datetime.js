@@ -19,6 +19,11 @@ angular.module('sw_components')
             ngModel.$setViewValue(value);
             element.val(value);
             if (datamap != undefined && scope.fieldMetadata != undefined) {
+                const originalUnformattedAttribute = `#${scope.fieldMetadata.attribute}_unformatted`;
+                if (datamap[originalUnformattedAttribute]===undefined) {
+                    //setting the original value for the first time
+                    datamap[originalUnformattedAttribute] = datamap[scope.fieldMetadata.attribute];
+                }
                 datamap[scope.fieldMetadata.attribute] = value;
             }
             ngModel.$render();
@@ -71,12 +76,12 @@ angular.module('sw_components')
                 var endDate = allowfuture ? false : new Date();
                 var minStartDateExpression = attrs.minDateexpression;
 
-                if (minStartDateExpression != null && minStartDateExpression != '') {
+                if (minStartDateExpression != null && minStartDateExpression !== '') {
                     startDate = expressionService.evaluate(minStartDateExpression, datamap);
                     startDate = Date.parse(formatService.formatDate(startDate, attrs.dateFormat));
                     const variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
                     scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
-                        if (newVal != oldVal) {
+                        if (newVal !== oldVal) {
                             startDate = expressionService.evaluate(minStartDateExpression, datamap);
                             startDate = formatService.formatDate(startDate, attrs.dateFormat);
                             element.data('datetimepicker').startDate = Date.parse(startDate);

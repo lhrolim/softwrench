@@ -103,7 +103,8 @@ if (typeof String.prototype.byteSize !== "function") {
     };
 }
 
-String.prototype.containsIgnoreCase = function(search) {
+String.prototype.containsIgnoreCase = function (search) {
+    search = search.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     return new RegExp(search, "i").test(this);
 };
 

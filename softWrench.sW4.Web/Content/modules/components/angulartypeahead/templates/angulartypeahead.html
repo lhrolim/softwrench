@@ -1,7 +1,12 @@
 ﻿<div class="input-group lazy-search">
     <input type="search" class="hidden-phone form-control typeahead" placeholder="Find {{placeholder}}" data-association-key="{{provider}}" data-displayable-path="{{displayablepath}}"/>
-    <span class="input-group-addon last" ng-click="executeMagnetSearch()">
+    <span class="input-group-addon last" ng-click="executeMagnetSearch()" ng-if="shouldShowModal(fieldMetadata)">
         <i class="fa fa-search"></i>
+    </span>
+    <span class="input-group-addon" ng-if="!shouldShowModal(fieldMetadata)" ng-click="toggleDetailExpansion(fieldMetadata)">
+        <div>
+            <i class="fa fa-caret-down"></i>
+        </div>
     </span>
     <div></div><!--stop addon from moving on hover-->
 </div>

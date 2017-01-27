@@ -141,12 +141,12 @@
                 }
             },
 
-            controller: ["$scope", "$http", "$element", "$injector", "$timeout", "$log",
+            controller: ["$scope", "$http", "$element", "$injector", "$timeout", "$log", "alertService",
                 "printService", "compositionService", "commandService", "fieldService", "i18NService",
                 "associationService", "expressionService", "styleService", "tabsService",
-                "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService", 
+                "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService",
                 "layoutservice", "attachmentService", "richTextService",
-                function ($scope, $http, $element, $injector, $timeout, $log,
+                function ($scope, $http, $element, $injector, $timeout, $log, alertService,
                 printService, compositionService, commandService, fieldService, i18NService,
                 associationService, expressionService, styleService, tabsService,
                 cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
@@ -158,9 +158,9 @@
                     //dictionary containing which details are or not expanded
                     $scope.expandeddetails = {};
 
-//                    $scope.setForm = function (form) {
-//                        $scope.crudform = form;
-//                    };
+                    //                    $scope.setForm = function (form) {
+                    //                        $scope.crudform = form;
+                    //                    };
 
                     $scope.$on('sw_block_association', function (event, association) {
                         $scope.blockedassociations[association] = true;
@@ -190,10 +190,10 @@
 
                     $scope.$on(JavascriptEventConstants.AssociationUpdated, function (event, associationoptions) {
                         $scope.associationsloaded = true;
-//                        if (!$scope.associationOptions) {
-//                            //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
-//                            $scope.associationOptions = associationoptions;
-//                        }
+                        //                        if (!$scope.associationOptions) {
+                        //                            //this in scenarios where a section is compiled before the association has returned from the server... angular seems to get lost in the bindings
+                        //                            $scope.associationOptions = associationoptions;
+                        //                        }
                     });
 
                     //$scope.$on("sw.modal.hide", function () {
@@ -250,6 +250,15 @@
                         }
                     });
 
+                    $scope.$on(JavascriptEventConstants.CrudSaved, () => {
+                        const displayables = fieldService.getDisplayablesOfRendererTypes($scope.displayables, ["checkbox"]);
+                        displayables.forEach(f => {
+                            //refreshsing checkboxes so that the undo logic keeps working after a save takes place.
+                            //Basically, need to update the originaldatamap with the formated value
+                            $scope.initCheckbox(f);
+                        });
+                    });
+
                     $scope.browseFile = function ($event) {
                         $event.preventDefault();
                         $("#uploadInput").trigger("click");
@@ -296,6 +305,33 @@
                         }
                         return model.indexOf(option.value) > -1;
                     };
+
+                    $scope.restoreDefault = function (fieldMetadata) {
+                        alertService.confirm("Are you sure you want to restore this field to its default value?").then(r => {
+                            crudContextHolderService.rootDataMap($scope.panelId)[fieldMetadata.attribute] = crudContextHolderService.originalDatamap($scope.panelId)[fieldMetadata.attribute];
+                        });
+                    }
+
+                    $scope.showUndoIcon = function (fieldMetadata) {
+                        if (fieldMetadata.isReadOnly || fieldMetadata.enableExpression === "false" || !crudContextHolderService.getDetailDataResolved()) {
+                            return false;
+                        }
+                        const originalDatamap = crudContextHolderService.originalDatamap($scope.panelId);
+                        const datamap = crudContextHolderService.rootDataMap($scope.panelId);
+                        if (fieldMetadata.rendererType === "datetime") {
+                            //check datetime.js
+                            const originalUnformatted = `#${fieldMetadata.attribute}_unformatted`;
+                            if (!!datamap[originalUnformatted]) {
+                                return originalDatamap[fieldMetadata.attribute] !== datamap[originalUnformatted];
+                            }
+                        }
+                        if (fieldMetadata.rendererType === "checkbox") {
+                            return !booleanEquals(originalDatamap[fieldMetadata.attribute], datamap[fieldMetadata.attribute]);
+                        }
+
+                        return originalDatamap[fieldMetadata.attribute] !== datamap[fieldMetadata.attribute];
+                    }
+
                     $scope.toggleCheckboxSelection = function (option, datamapKey) {
                         var model = $scope.datamap[datamapKey];
                         if (model == undefined) {
@@ -315,9 +351,12 @@
                         }
                         $scope.datamap[datamapKey] = model;
                     };
+
                     $scope.initCheckbox = function (fieldMetadata) {
                         const content = $scope.datamap[fieldMetadata.attribute];
-                        $scope.datamap[fieldMetadata.attribute] = formatService.isChecked(content);
+                        const formattedValue = formatService.isChecked(content);
+                        $scope.datamap[fieldMetadata.attribute] = formattedValue;
+                        crudContextHolderService.originalDatamap($scope.panelid)[fieldMetadata.attribute] = formattedValue;
                     }
 
                     $scope.isChecked = function (fieldMetadata) {
@@ -538,28 +577,6 @@
                         (fieldMetadata.header == null);
 
                     };
-
-//                    $scope.associationOptionsToStringArray = function (fieldMetadata) {
-//                        if (!$scope.associationsloaded) {
-//                            return [];
-//                        }
-//
-//                        $scope.schema.jscache = $scope.schema.jscache || {};
-//                        const cacheKey = fieldMetadata.associationKey + "stringarraycache";
-//                        if ($scope.schema.jscache[cacheKey]) {
-//                            return $scope.schema.jscache[cacheKey];
-//                        }
-//                        const options = $scope.associationOptions[fieldMetadata.associationKey];
-//                        const strArr = new Array();
-//                        for (let option in options) {
-//                            if (!options.hasOwnProperty(option)) {
-//                                continue;
-//                            }
-//                            strArr.push(options[option].value);
-//                        }
-//                        $scope.schema.jscache[cacheKey] = strArr;
-//                        return strArr;
-//                    }
 
                     $scope.sectionHasSameLineLabel = function (fieldMetadata) {
                         return $scope.hasSameLineLabel(fieldMetadata) && fieldMetadata.type === 'ApplicationSection' && fieldMetadata.resourcepath == null;

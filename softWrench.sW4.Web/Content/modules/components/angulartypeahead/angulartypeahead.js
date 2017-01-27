@@ -6,7 +6,7 @@
 
 
     function angularTypeahead(restService, $timeout, $log, $rootScope,
-        contextService, associationService, lookupService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService) {
+        contextService, associationService, lookupService, crudContextHolderService, schemaService, datamapSanitizeService, compositionService, expressionService, fieldService, spinService) {
         /// <summary>
         /// This directive integrates with bootsrap-typeahead 0.10.X
         /// </summary>
@@ -15,7 +15,13 @@
         function beforeSendPostJsonDatamap(jqXhr, settings) {
             const datamap = this.datamap;
             const isComposition = this.mode === "composition";
+            this.loading = true;
+            //            if (!this.spinnerElement) {
+            //                //caching spinner
+            //                this.spinerElement = $('[data-field="spinner_' + this.provider + '"]');
+            //            }
 
+            this.spinner = spinService.start({ savingDetail: true });
 
             if (datamap) {
                 let datamapToSend = datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(datamap);
@@ -31,9 +37,20 @@
             return true;
         }
 
-      
+        function filter(parsedResponse) {
+            this.loading = false;
+            spinService.stop();
+            if (angular.isDefined(this.attrs.externalFilter)) {
+                //if we are on filterMode, we´ll use only the Bloodhound engine, but rather have an external control for the list instead of the typeahead default
+                return this.externalFilter(parsedResponse);
+            }
+            return parsedResponse;
+        }
 
-        var configureSearchEngine = function (scope, attrs, schema, provider, attribute, rateLimit, datamap, mode, fieldMetadata) {
+
+
+
+        var configureSearchEngine = function (scope, schema, provider, attribute, rateLimit, datamap, mode, fieldMetadata) {
             const isDataEagerFetched = fieldMetadata.type === "OptionField";
             const parameters = {
                 key: schemaService.buildApplicationMetadataSchemaKey(schema),
@@ -52,20 +69,15 @@
             };
 
             const beforeSendPostJsonDatamapFn = beforeSendPostJsonDatamap.bind(scope);
+            const filterFn = filter.bind(scope);
 
-      
+
             if (!isDataEagerFetched) {
                 bloodHoundOptions.remote = {
                     url: urlToUse,
                     rateLimitFn: 'debounce',
                     rateLimitWait: rateLimit,
-                    filter: function (parsedResponse) {
-                        if (angular.isDefined(attrs.externalFilter)) {
-                            //if we are on filterMode, we´ll use only the Bloodhound engine, but rather have an external control for the list instead of the typeahead default
-                            return scope.externalFilter(parsedResponse);
-                        }
-                        return parsedResponse;
-                    },
+                    filter: filterFn,
                     ajax: {
                         beforeSend: beforeSendPostJsonDatamapFn
                     }
@@ -112,7 +124,10 @@
         }
 
         var configureJqueryHooks = function (scope, element, engine, fieldMetadata) {
-            const minLength = scope.minLength || 2;
+            let minLength = scope.minLength || 2;
+            if (!scope.shouldShowModal()) {
+                minLength = 0;
+            }
 
             const engineSourceFn = engine.ttAdapter();
             const sourceFn = fieldMetadata.type === "OptionField" ?
@@ -142,14 +157,28 @@
                 associationService.updateUnderlyingAssociationObject(scope.fieldMetadata, datum, scope);
                 scope.itemSelected({ item: datum });
                 $rootScope.$digest();
+                scope.jelement.blur();
             });
 
             element.on("focus", function (e) {
                 $timeout(function () {
                     element.typeahead("moveToBegin");
                     element.typeahead("highlight");
+                    $log.get("angulartypeahed#foucushandler", ["typeahead"]).trace("focus handler called moving to beginning and highlighting");
                 }, 0, false);
+            });
 
+
+            element.on("typeahead:opened", function () {
+                var initial = element.val(),
+                    ev = $.Event("keydown");
+                ev.keyCode = ev.which = 40;
+                $(this).trigger(ev);
+                if (element.val() !== initial) {
+                    element.val(initial);
+                }
+                $log.get("angulartypeahed#typeaheadopened", ["typeahead"]).trace("opeend method called, triggering key down");
+                return true;
             });
 
             element.on("keyup", function (e) {
@@ -167,13 +196,15 @@
                     //scope digest is enough if we´re not clearing nor selecting an entry (i.e, not changing the datamap)
                     scope.$digest();
                 }
-
-
-
             });
         }
 
         function link(scope, el, attrs) {
+
+            scope.shouldShowModal = function () {
+                return scope.fieldMetadata.rendererType === "lookup" && !fieldService.isPropertyTrue(scope.fieldMetadata, "disablemodal");
+            }
+
             scope.name = "angulartypeahead";
             var log = $log.getInstance('angulartypeahed', ['association', 'lookup']);
             //setting defaults
@@ -183,6 +214,7 @@
             var parElement = element.parent();
 
             scope.jelement = element;
+
             scope.log = log;
 
             var attribute = scope.attribute;
@@ -191,10 +223,12 @@
 
             log.debug("initing angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
 
+            scope.attrs = attrs;
+
             $timeout(function () {
                 //let´s put this little timeout to delay the bootstrap-typeahead initialization to the next digest loop so that
                 //it has enough to time to render itself on screen
-                const engine = configureSearchEngine(scope, attrs, schema, provider, attribute, rateLimit, scope.datamap, scope.mode, scope.fieldMetadata);
+                const engine = configureSearchEngine(scope, schema, provider, attribute, rateLimit, scope.datamap, scope.mode, scope.fieldMetadata);
                 scope.engine = engine;
                 log.debug("configuring (after timeout) angulartypeahead for attribute {0}, provider {1}".format(attribute, provider));
                 configureJqueryHooks(scope, element, engine, scope.fieldMetadata);
@@ -220,6 +254,28 @@
                 }
             });
 
+            scope.expandSearch = function () {
+                const jel = scope.jelement;
+                if (jel.typeahead("isOpen")) {
+                    console.log("expand close");
+                    jel.typeahead("close");
+                } else {
+                    console.log("expand open");
+                    const val = jel.typeahead('val');
+                    jel.typeahead('val', '');
+                    jel.typeahead("open");
+                    jel.typeahead('val', val);
+                    jel.typeahead("highlight");
+                }
+
+            }
+
+            function clearCache(jelement, engine) {
+                jelement.typeahead("clearCache");
+                engine.clearRemoteCache();
+                engine.clearPrefetchCache();
+                engine.clear();
+            }
 
             scope.$on(JavascriptEventConstants.ClearAutoCompleteCache, (event, associationKey) => {
                 if (scope.provider !== associationKey) {
@@ -227,10 +283,24 @@
                     return;
                 }
                 $log.get("angulartypeahead#clearcache", ["detail"]).debug(`clearing autocomplete cache for ${associationKey}`);
-                scope.engine.clearRemoteCache();
-                scope.engine.clearPrefetchCache();
+                clearCache(scope.jelement, scope.engine);
             });
 
+            scope.$on(JavascriptEventConstants.DetailLoaded, function(event) {
+                if (scope.engine) {
+                    $log.get("angulartypeahead#clearcache", ["detail"]).debug(`clearing autocomplete cache for ${scope.provider}`);
+                    //upon detail navigation
+                    clearCache(scope.jelement, scope.engine);
+                }
+            });
+
+            scope.$on(JavascriptEventConstants.CrudSaved, function (event) {
+                if (scope.engine) {
+                    $log.get("angulartypeahead#clearcache", ["detail"]).debug(`clearing autocomplete cache for ${scope.provider}`);
+                    //once the crud has been saved we might also need to clear it, since different rules may apply
+                    clearCache(scope.jelement, scope.engine);
+                }
+            });
 
             scope.$on(JavascriptEventConstants.AssociationResolved, function (event, panelid) {
                 if (panelid != scope.panelid && !(panelid == null && scope.panelid === "")) {
@@ -238,15 +308,10 @@
                     log.debug("ignoring event sw_associationsresolved for panelid {0} since we are on {1}".format(panelid, scope.panelid));
                     return;
                 }
-                $log.get("angulartypeahead#associations resolved", ["detail"]).debug(`clearing autocomplete cache for ${scope.provider}`);
-                if (scope.engine) {
-                    //upon detail navigation
-                    scope.engine.clearRemoteCache();
-                    scope.engine.clearPrefetchCache();
-                }
-
                 setInitialText(element, scope);
             });
+
+
 
             scope.isModifiableEnabled = function (fieldMetadata) {
                 const result = expressionService.evaluate(fieldMetadata.enableExpression, scope.datamap, scope);
@@ -259,11 +324,15 @@
             link: link,
             restrict: 'E',
             replace: true,
-            template: '<div class="input-group lazy-search">' +
+            template:
+                '<div class="input-group lazy-search">' +
                 '<input type="search" class="hidden-phone form-control typeahead" ng-enabled="isModifiableEnabled(fieldMetadata)" placeholder="Find {{placeholder}}" ' +
                 'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}" data-field="{{provider}}"/>' +
-                '<span class="input-group-addon last" ng-click="!isModifiableEnabled(fieldMetadata) || executeMagnetSearch()">' +
+                '<span class="input-group-addon last" ng-click="!isModifiableEnabled(fieldMetadata) || executeMagnetSearch()" ng-if="shouldShowModal()">' +
                 '<i class="fa fa-search"></i>' +
+                '</span>' +
+                '<span class="input-group-addon last " ng-click="expandSearch()" ng-if="!shouldShowModal()">' +
+                '<i class="fa fa-caret-down"></i>' +
                 '</span>' +
                 '<div></div><!--stop addon from moving on hover-->' +
                 '</div>',
@@ -316,7 +385,7 @@
         return directive;
     }
 
-    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', '$rootScope', 'contextService', 'associationService', 'lookupService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', angularTypeahead]);
+    angular.module('sw_typeahead', []).directive('angulartypeahead', ['restService', '$timeout', '$log', '$rootScope', 'contextService', 'associationService', 'lookupService', 'crudContextHolderService', 'schemaService', 'datamapSanitizeService', 'compositionService', 'expressionService', 'fieldService', 'spinService', angularTypeahead]);
 
 })(angular, Bloodhound);
 

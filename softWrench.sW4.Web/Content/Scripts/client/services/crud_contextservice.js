@@ -182,7 +182,7 @@
         function originalDatamap(panelid, datamap) {
             const context = getContext(panelid);
             if (datamap) {
-                context.originalDatamap = datamap;
+                context.originalDatamap = angular.copy(datamap);
             }
             return context.originalDatamap;
         }

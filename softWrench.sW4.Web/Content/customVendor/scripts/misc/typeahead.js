@@ -1432,6 +1432,11 @@
             isVisible: function isVisible() {
                 return this.isOpen && !this.isEmpty;
             },
+
+            isOpenFn: function isOpenFn() {
+                return this.isOpen;
+            },
+
             destroy: function destroy() {
                 this.$menu.off(".tt");
                 this.$menu = null;
@@ -1521,12 +1526,14 @@
             },
             _onFocused: function onFocused() {
                 this.isActivated = true;
-                this.dropdown.open();
+                //cts:luiz --> little tweak to avoid calling open on a angulartypeahead without actually showing it
+//                this.dropdown.open();
             },
             _onBlurred: function onBlurred() {
                 this.isActivated = false;
                 this.dropdown.empty();
-                this.dropdown.close();
+                //cts:luiz --> little tweak to avoid closing the dropdown before it´s needed leading to a bad status
+//                this.dropdown.close();
             },
             _onEnterKeyed: function onEnterKeyed(type, $e) {
                 var cursorDatum, topSuggestionDatum;
@@ -1623,6 +1630,20 @@
             open: function open() {
                 this.dropdown.open();
             },
+
+            isVisible : function isVisible() {
+                return this.dropdown.isVisible();
+            },
+
+            isOpen: function isOpen() {
+                
+                return this.dropdown.isOpenFn();
+            },
+
+            clearCache: function isVisible() {
+                return this.dropdown.empty();
+            },
+
             close: function close() {
                 this.dropdown.close();
             },
@@ -1784,6 +1805,39 @@
                     if (typeahead = $input.data(typeaheadKey)) {
                         $input.setCursorPosition(0);
                     }
+                }
+            },
+
+            isOpen: function () {
+                return isVisible(this.first());
+                function isVisible($input) {
+                    var typeahead, query;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        query = typeahead.isOpen();
+                    }
+                    return query;
+                }
+            },
+
+            isVisible: function () {
+                return isVisible(this.first());
+                function isVisible($input) {
+                    var typeahead, query;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        query = typeahead.isVisible();
+                    }
+                    return query;
+                }
+            },
+
+            clearCache: function () {
+                return clearCacheFn(this.first());
+                function clearCacheFn($input) {
+                    var typeahead, query;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        query = typeahead.clearCache();
+                    }
+                    return query;
                 }
             },
 

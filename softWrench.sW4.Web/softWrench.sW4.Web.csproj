@@ -778,7 +778,6 @@
     <Content Include="Content\Images\tree-node-collapsed.png" />
     <Content Include="Content\Images\tree-node-expanded.png" />
     <Content Include="Content\modules\components\angulartypeahead\angulartypeahead.js" />
-    <Content Include="Content\modules\components\angulartypeahead\templates\angulartypeahead.html" />
     <Content Include="Content\modules\components\autocompleteclient\autocompleteClientInput.js" />
     <Content Include="Content\modules\lookup\aa_lookupmoduledef.js" />
     <Content Include="Content\modules\lookup\lookupservice.js" />
