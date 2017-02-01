@@ -378,10 +378,13 @@
         crudContextHolderService.rootDataMap(null, datamap);
         crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
 
+        spyOn(compositionService, "getCompositionDetailItem").and.returnValue($q.when({ resultObject: compositionDetailDatamap }));
+
 
         mockScope.toggleDetails(compositionDatamap, FieldMetadataPojo.Required("attr1"), "row", { stopImmediatePropagation: () => { } }, 0).then(() => {
             //asserting that the main validation of the root datamap wasn´t called, and modal wasn´t show either
             expect(commandService.executeClickCustomCommand).toHaveBeenCalled();
+            expect(compositionService.getCompositionDetailItem).not.toHaveBeenCalled();
         }).catch(e => {
             console.log(e);
             expect(true).toBeFalsy();
