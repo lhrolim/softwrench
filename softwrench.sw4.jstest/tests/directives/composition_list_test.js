@@ -367,18 +367,27 @@
 
         const previousData = mockScope.compositionschemadefinition;
 
+
+
         mockScope.compositionschemadefinition = new ApplicationCompositionSchemaDTO(new CompositionSchemas(SchemaPojo.CompositionDetailSchema(), listSchema));
         mockScope.init();
 
+        //setting parent data
+        const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
+        const datamap = {};
+        crudContextHolderService.rootDataMap(null, datamap);
+        crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
 
-        mockScope.toggleDetails(compositionDatamap, FieldMetadataPojo.Required("attr1"), "row", { stopImmediatePropagation: () => {} }, 0).then(() => {
+
+        mockScope.toggleDetails(compositionDatamap, FieldMetadataPojo.Required("attr1"), "row", { stopImmediatePropagation: () => { } }, 0).then(() => {
             //asserting that the main validation of the root datamap wasn´t called, and modal wasn´t show either
             expect(commandService.executeClickCustomCommand).toHaveBeenCalled();
+        }).catch(e => {
+            console.log(e);
+            expect(true).toBeFalsy();
         }).finally(r => {
             done();
             mockScope.compositionschemadefinition = previousData;
-        }).catch(e => {
-            expect(true).toBeFalsy();
         });
 
         $rootScope.$digest();
@@ -396,7 +405,7 @@
 
         mockScope.relationship = "worklog_";
 
-        
+
         mockScope.compositionschemadefinition = new ApplicationCompositionSchemaDTO(new CompositionSchemas(WorklogPojo.DetailSchema(), WorklogPojo.ListSchema()));
         mockScope.compositiondata = [WorklogPojo.ListItem("1", "test1", "100", "sr"), WorklogPojo.ListItem("2", "test2", "100", "sr")];
 
