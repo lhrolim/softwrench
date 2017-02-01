@@ -68,7 +68,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
 
         public virtual ISet<IAssociationOption> DoFilterAvailableStatus(AttributeHolder originalEntity, MaxSrStatus statusEnum, ISet<IAssociationOption> filterAvailableStatus) {
 
-            var slaHoldStatus = HandleSlaHoldStatus(originalEntity);
+            var slaHoldStatus = HandleSlaHoldStatus(originalEntity, statusEnum);
 
 
 
@@ -109,7 +109,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
 
                 case s.SLAHOLD:
 
-              
+
 
                 return
                     filterAvailableStatus.Where(
@@ -125,12 +125,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
         /// Implementing SWWEB-2916
         /// </summary>
         /// <param name="originalEntity"></param>
+        /// <param name="statusEnum"></param>
         /// <returns></returns>
-        protected virtual MaxSrStatus HandleSlaHoldStatus(AttributeHolder originalEntity) {
+        protected virtual MaxSrStatus HandleSlaHoldStatus(AttributeHolder originalEntity, MaxSrStatus statusEnum) {
             var acumulatedHoldTime = originalEntity.GetBooleanAttribute("ACCUMULATESLAHOLDTIME");
             if (!acumulatedHoldTime.HasValue || acumulatedHoldTime.Value == false) {
                 return s.FAKE;
             }
+            if (statusEnum.Equals(MaxSrStatus.QUEUED)) {
+                return s.SLAHOLD;
+            }
+
             if (originalEntity.GetStringAttribute("TARGETSTART") != null && originalEntity.GetStringAttribute("ACTUALSTART") == null) {
                 return s.FAKE;
             }
