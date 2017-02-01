@@ -25,10 +25,13 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
 
         public override ISet<IAssociationOption> DoFilterAvailableStatus(AttributeHolder originalEntity, MaxSrStatus statusEnum, ISet<IAssociationOption> filterAvailableStatus) {
             var available = base.DoFilterAvailableStatus(originalEntity, statusEnum, filterAvailableStatus);
+
+            var slaHoldStatus = HandleSlaHoldStatus(originalEntity);
+
             if (statusEnum.Equals(MaxSrStatus.QUEUED)) {
                 available.Clear();
                 //Closed, In Progress, Pending, Duplicate, Resolved, Spam, SLA Hold 
-                available.AddAll(filterAvailableStatus.Where(f => f.Value.EqualsAny(MaxSrStatus.CLOSED,MaxSrStatus.INPROG, MaxSrStatus.PENDING, MaxSrStatus.DUPLICATE, MaxSrStatus.RESOLVED, MaxSrStatus.SPAM, MaxSrStatus.SLAHOLD)));
+                available.AddAll(filterAvailableStatus.Where(f => f.Value.EqualsAny(MaxSrStatus.CLOSED,MaxSrStatus.INPROG, MaxSrStatus.PENDING, MaxSrStatus.DUPLICATE, MaxSrStatus.RESOLVED, MaxSrStatus.SPAM, slaHoldStatus)));
             }
             if (statusEnum.Equals(MaxSrStatus.SLAHOLD)) {
                 available.Clear();
@@ -39,7 +42,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             if (statusEnum.Equals(MaxSrStatus.INPROG)) {
                 available.Clear();
                 //Closed, Pending, Queued, Duplicate, Resolved, Spam, SLA Hold
-                available.AddAll(filterAvailableStatus.Where(f => f.Value.EqualsAny(MaxSrStatus.CLOSED, MaxSrStatus.PENDING, MaxSrStatus.QUEUED, MaxSrStatus.DUPLICATE, MaxSrStatus.RESOLVED, MaxSrStatus.SPAM, MaxSrStatus.SLAHOLD)));
+                available.AddAll(filterAvailableStatus.Where(f => f.Value.EqualsAny(MaxSrStatus.CLOSED, MaxSrStatus.PENDING, MaxSrStatus.QUEUED, MaxSrStatus.DUPLICATE, MaxSrStatus.RESOLVED, MaxSrStatus.SPAM, slaHoldStatus)));
             }
 
             if (statusEnum.Equals(MaxSrStatus.RESOLVED)) {
