@@ -580,7 +580,7 @@
                 const clonedItem = angular.copy(item);
 
                 if (fullServiceName != null) {
-                    return executeCompositionCustomClickService(fullServiceName, column, compositionlistschema,  item, clonedItem);
+                    return $scope.executeCompositionCustomClickService(fullServiceName, column, compositionlistschema,  item, clonedItem);
                 };
 
                 if (!$scope.hasDetailSchema()) {

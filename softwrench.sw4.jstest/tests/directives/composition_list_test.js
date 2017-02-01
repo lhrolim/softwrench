@@ -11,6 +11,7 @@
     var crud_inputcommons;
     var compositionService;
     var compositionListViewModel;
+    var commandService;
 
     var $httpBackend;
 
@@ -20,7 +21,7 @@
 
         angular.mock.module('sw_layout');
         angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_,
-            _crudContextHolderService_, _redirectService_, _applicationService_, _crud_inputcommons_, _compositionService_, _compositionListViewModel_, _$httpBackend_) {
+            _crudContextHolderService_, _redirectService_, _applicationService_, _crud_inputcommons_, _compositionService_, _compositionListViewModel_, _$httpBackend_, _commandService_) {
             $rootScope = _$rootScope_;
             mockScope = $rootScope.$new();
             const element = angular.element('<div></div>');
@@ -34,6 +35,7 @@
             compositionService = _compositionService_;
             compositionListViewModel = _compositionListViewModel_;
             $httpBackend = _$httpBackend_;
+            commandService = _commandService_;
 
             mockScope.relationship = "worklog_";
             mockScope.compositiondata = [];
@@ -351,6 +353,37 @@
 
 
     });
+
+    it("test toggle details hit with service registered", done => {
+        const compositionDatamap = { attr1: 'x', id: '100' };
+        const compositionDetailDatamap = { attr1: 'x', detailHidden: "y", id: '100' };
+
+        spyOn(validationService, "validatePromise").and.callThrough();
+        spyOn(redirectService, "redirectToTab").and.returnValue($q.when());
+        spyOn(commandService, "executeClickCustomCommand").and.returnValue($q.when(true));
+
+        const listSchema = SchemaPojo.CompositionListSchema();
+        listSchema.properties["list.click.service"] = "attachmentService.selectAttachment";
+
+        const previousData = mockScope.compositionschemadefinition;
+
+        mockScope.compositionschemadefinition = new ApplicationCompositionSchemaDTO(new CompositionSchemas(SchemaPojo.CompositionDetailSchema(), listSchema));
+        mockScope.init();
+
+
+        mockScope.toggleDetails(compositionDatamap, FieldMetadataPojo.Required("attr1"), "row", { stopImmediatePropagation: () => {} }, 0).then(() => {
+            //asserting that the main validation of the root datamap wasn´t called, and modal wasn´t show either
+            expect(commandService.executeClickCustomCommand).toHaveBeenCalled();
+        }).finally(r => {
+            done();
+            mockScope.compositionschemadefinition = previousData;
+        }).catch(e => {
+            expect(true).toBeFalsy();
+        });
+
+        $rootScope.$digest();
+    });
+
 
     it("test expand all", done => {
 

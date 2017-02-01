@@ -313,6 +313,10 @@
                     }
 
                     $scope.showUndoIcon = function (fieldMetadata) {
+                        if (crudContextHolderService.isShowingModal()) {
+                            return false;
+                        }
+
                         if (fieldMetadata.isReadOnly || fieldMetadata.enableExpression === "false" || !crudContextHolderService.getDetailDataResolved()) {
                             return false;
                         }

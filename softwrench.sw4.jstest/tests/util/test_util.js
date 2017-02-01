@@ -58,7 +58,6 @@ var objectComparison = (baseObject, assertionObject) => {
 
             const comparison = String(baseObject[k]) === String(assertionObject[k]);
             if (!comparison) {
-                debugger;
                 console.log(" found " +baseObject[k] + " expected " + assertionObject[k]);    
             }
             return !comparison;
