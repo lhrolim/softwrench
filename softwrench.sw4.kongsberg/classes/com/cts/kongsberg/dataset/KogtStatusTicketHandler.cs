@@ -26,7 +26,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
         public override ISet<IAssociationOption> DoFilterAvailableStatus(AttributeHolder originalEntity, MaxSrStatus statusEnum, ISet<IAssociationOption> filterAvailableStatus) {
             var available = base.DoFilterAvailableStatus(originalEntity, statusEnum, filterAvailableStatus);
 
-            var slaHoldStatus = HandleSlaHoldStatus(originalEntity);
+            var slaHoldStatus = HandleSlaHoldStatus(originalEntity, statusEnum);
 
             if (statusEnum.Equals(MaxSrStatus.QUEUED)) {
                 available.Clear();
