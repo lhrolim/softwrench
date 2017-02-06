@@ -1,9 +1,9 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_prelogin').controller('SignInController', ['$scope', "$http", SignInController]);
+    angular.module('sw_prelogin').controller('SignInController', ['$scope', "$http", "alertService", SignInController]);
 
-    function SignInController($scope, $http) {
+    function SignInController($scope, $http, alertService) {
         $scope.showforgotPasswordForm = false;
 
         $scope.forgotPassword = function () {
@@ -123,6 +123,21 @@
             };
         })();
 
+        if (!loginModel || !loginModel.Error) {
+            return;
+        }
+        const error = loginModel.Error;
+        if (error.ErrorStack) {
+            const errorData = {
+                errorMessage: error.ErrorMessage,
+                errorStack: error.ErrorStack,
+                errorType: error.ErrorType,
+                outlineInformation: error.OutlineInformation
+            }
+            alertService.notifyexception(errorData);
+        } else {
+            alertService.notifymessage("error", error.ErrorMessage);
+        }
     }
 
 })(angular);

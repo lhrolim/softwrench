@@ -6,14 +6,6 @@ namespace softWrench.sW4.Web {
         public static void RegisterRoutes(RouteCollection routes) {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            // route to not found page
-            // whenever a 404 occours it's redirectedto this route
-            routes.MapRoute(
-                name: "NotFound",
-                url: "web/notfound",
-                defaults: new { controller = "Route", action = "NotFoundFallback" }
-            );
-
             // route to crud detail using the entity id
             routes.MapRoute(
                 name: "RouteUID",

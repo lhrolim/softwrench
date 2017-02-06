@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Web.Models.Home {
@@ -23,6 +24,7 @@ namespace softWrench.sW4.Web.Models.Home {
         public string ClassificationColorJson { get; set; }
 
         public string Message { get; set; }
+        public ErrorDto Error { get; set; }
         public string MessageType { get; set; }
         public string WindowTitle { get; set; }
 

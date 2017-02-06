@@ -18,12 +18,12 @@
                 forprint: "="
             },
 
-            controller: ["$scope", "$injector", "$q", "$timeout", "compositionService", "fieldService", "i18NService", "layoutservice", "expressionService", "formatService", "printService",
-                function ($scope, $injector, $q, $timeout, compositionService, fieldService, i18NService, layoutservice, expressionService, formatService, printService) {
+            controller: ["$scope", "$injector", "$q", "$timeout", "compositionService", "fieldService", "i18NService", "layoutservice", "expressionService", "formatService", "printAwaitableService",
+                function ($scope, $injector, $q, $timeout, compositionService, fieldService, i18NService, layoutservice, expressionService, formatService, printAwaitableService) {
 
                     if ($scope.forprint) {
                         $scope.printDefered = $q.defer();
-                        printService.registerAwaitable($scope.printDefered.promise);
+                        printAwaitableService.registerAwaitable($scope.printDefered.promise);
                     }
 
                     $scope.contextPath = function (path) {

@@ -1,8 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_layout").directive("richtextField", ["contextService", "$interval", "$log", "$q", "$timeout", "printService",
-        function (contextService, $interval, $log, $q, $timeout, printService) {
+    angular.module("sw_prelogin").directive("richtextField", ["contextService", "$interval", "$log", "$q", "$timeout", "printAwaitableService",
+        function (contextService, $interval, $log, $q, $timeout, printAwaitableService) {
 
         const directive = {
             restrict: "E",
@@ -21,7 +21,7 @@
 
                 if ($scope.forprint) {
                     $scope.printDefered = $q.defer();
-                    printService.registerAwaitable($scope.printDefered.promise);
+                    printAwaitableService.registerAwaitable($scope.printDefered.promise);
                 }
 
                 $scope.richtext = {

@@ -21,6 +21,8 @@ using softWrench.sW4.Data.Entities.Audit;
 using System;
 using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.ldap;
+using softWrench.sW4.Exceptions;
+using softWrench.sW4.Web.Models;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignInController : Controller {
@@ -41,16 +43,10 @@ namespace softWrench.sW4.Web.Controllers {
             if (User.Identity.IsAuthenticated) {
                 Response.Redirect(FormsAuthentication.GetRedirectUrl(User.Identity.Name, false));
             }
-
-            LoginHandlerModel model;
-            string loginMessage = null;
-            if (!IsLoginEnabled(ref loginMessage)) {
-                model = new LoginHandlerModel(false, loginMessage, ClientName(), ProfileName());
-            } else {
-                model = new LoginHandlerModel(true, IsHapagClient(), ClientName(), ProfileName());
-            }
+            var model = BuildLoginHandlerModel();
             model.Inactivity = timeout;
             model.Forbidden = forbidden;
+            model.Error = ErrorConfig.GetLastError();
             return View(model);
         }
 
@@ -88,11 +84,17 @@ namespace softWrench.sW4.Web.Controllers {
 
         [HttpPost]
         public async Task<ActionResult> Index(string userName, string password, string userTimezoneOffset) {
-            LoginHandlerModel model = null;
             var context = System.Web.HttpContext.Current; // needed due to the possible change of thread by async/await
+
             var validationMessage = GetValidationMessage(userName, password);
             if (!string.IsNullOrEmpty(validationMessage)) {
-                model = new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName(), ProfileName());
+                return View(new LoginHandlerModel(true, true, validationMessage, IsHapagClient(), ClientName(), ProfileName()));
+            }
+
+            var error = ErrorConfig.GetLastError();
+            if (error != null){
+                var model = BuildLoginHandlerModel();
+                model.Error = error;
                 return View(model);
             }
             userName = userName.ToLower();
@@ -261,6 +263,11 @@ namespace softWrench.sW4.Web.Controllers {
             return enabled;
         }
 
-
+        private LoginHandlerModel BuildLoginHandlerModel() {
+            string loginMessage = null;
+            return !IsLoginEnabled(ref loginMessage) ?
+                new LoginHandlerModel(false, loginMessage, ClientName(), ProfileName()) :
+                new LoginHandlerModel(true, IsHapagClient(), ClientName(), ProfileName());
+        }
     }
 }

@@ -23,6 +23,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using softWrench.sW4.Web.Models;
 using softWrench.sW4.Web.Security;
 
 
@@ -219,7 +220,7 @@ namespace softWrench.sW4.Web {
                 }
             }
 
-
+            ErrorConfig.Handle(Context, Server.GetLastError());
         }
 
 

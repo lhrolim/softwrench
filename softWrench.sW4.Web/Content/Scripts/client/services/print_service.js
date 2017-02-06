@@ -5,10 +5,8 @@
 
 angular.module('sw_layout')
     .service('printService', [
-        "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", 
-        function ($rootScope, $http, $timeout, $log, $q, tabsService, fixHeaderService, redirectService, searchService, alertService) {
-
-     const awaitables = [];
+        "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", "printAwaitableService",
+        function ($rootScope, $http, $timeout, $log, $q, tabsService, fixHeaderService, redirectService, searchService, alertService, printAwaitableService) {
 
      var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
@@ -219,11 +217,8 @@ angular.module('sw_layout')
             $rootScope.$broadcast(JavascriptEventConstants.PrintHideModal);
         },
 
-        registerAwaitable: function(awaitable) {
-            awaitables.push(awaitable);
-        },
-
         awaitToPrint: function () {
+            var awaitables = printAwaitableService.getAwaitables();
             return $q.all(awaitables).then(() => {
                 awaitables.length = 0;
             });

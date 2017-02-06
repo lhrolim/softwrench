@@ -2,7 +2,7 @@
 (function (angular) {
     'use strict';
 
-    angular.module('sw_layout').service('notificationViewModel', ['contextService', '$timeout', '$log', '$injector', '$rootScope', notificationViewModel]);
+    angular.module('sw_prelogin').service('notificationViewModel', ['contextService', '$timeout', '$log', '$injector', '$rootScope', notificationViewModel]);
     function notificationViewModel(contextService, $timeout, $log, $injector, $rootScope) {
         var log = $log.getInstance('sw4.notificationViewModel');
 

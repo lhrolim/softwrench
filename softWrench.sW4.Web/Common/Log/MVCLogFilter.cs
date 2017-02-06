@@ -37,7 +37,10 @@ namespace softWrench.sW4.Web.Common.Log {
                 UserName = userName
             };
 
-            HttpContext.Current.Items.Add(LogInfo, logInfo);
+            if (!HttpContext.Current.Items.Contains(LogInfo)) {
+                HttpContext.Current.Items.Add(LogInfo, logInfo);
+            }
+
             if (!Log.IsDebugEnabled) {
                 filterContext.HttpContext.Response.Filter = new CapturingResponseFilter(filterContext.HttpContext.Response.Filter, logInfo);
                 return;

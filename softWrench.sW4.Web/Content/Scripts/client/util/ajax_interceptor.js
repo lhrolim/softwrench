@@ -18,6 +18,7 @@
                     config.headers['mockmaximo'] = sessionStorage['mockmaximo'];
                     config.headers['mocksecurity'] = sessionStorage['mocksecurity'];
                     config.headers['requesttime'] = new Date().getTime();
+                    config.headers["isajax"] = true;
                     config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
                     const log = $log.getInstance('sw4.ajaxint#started');
                     if (config.url.indexOf("/Content/") < 0) {

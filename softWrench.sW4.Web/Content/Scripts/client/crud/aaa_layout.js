@@ -1,7 +1,10 @@
 ﻿(function (angular) {
     "use strict";
+    
+    angular.module("sw_prelogin", ["webcommons_services", "ngSanitize", "angular-clipboard", "ui.tinymce"]);
 
     const app = window.app = angular.module("sw_layout", [
+        "sw_prelogin", 
         "pasvaz.bindonce",
         "angularTreeview",
         "ngSanitize",
@@ -28,8 +31,6 @@
         'ui.grid.edit',
         'ui.grid.cellNav'
     ]);
-
-    angular.module("sw_prelogin", ["webcommons_services"]);
 
     app.run(["editableOptions", function (editableOptions) {
         editableOptions.theme = "bs3"; // bootstrap3 theme. Can be also 'bs2', 'default'

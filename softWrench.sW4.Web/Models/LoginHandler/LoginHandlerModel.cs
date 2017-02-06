@@ -1,6 +1,7 @@
 using System;
 using softWrench.sW4.Util;
 using System.Configuration;
+using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Web.Models.LoginHandler {
     public class LoginHandlerModel {
@@ -13,6 +14,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         public bool Inactivity { get; set; }
         public bool Forbidden { get; set; }
         public bool UserNotActive { get; set; }
+        public ErrorDto Error { get; set; }
 
         public bool UserLocked {get; set;}
 

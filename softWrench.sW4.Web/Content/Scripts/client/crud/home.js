@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout,  $log, contextService,  i18NService, alertService, statuscolorService,
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout,  $log, $q, contextService,  i18NService, alertService, statuscolorService,
         classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService,schemaCacheService) {
         const APP_VERION = 'sw_system_version_key';
         $scope.$name = 'HomeController';
@@ -12,6 +12,21 @@
         function initController() {
         
             log.debug("init home controller");
+
+            if (homeModel.Error) {
+                if (homeModel.Error.ErrorStack) {
+                    const errorData = {
+                        errorMessage: homeModel.Error.ErrorMessage,
+                        errorStack: homeModel.Error.ErrorStack,
+                        errorType: homeModel.Error.ErrorType,
+                        outlineInformation: homeModel.Error.OutlineInformation
+                    }
+                    alertService.notifyexception(errorData);
+                } else {
+                    alertService.notifymessage("error", homeModel.Error.ErrorMessage);
+                }
+            }
+
             //workaround for knowing where the user is already loggedin
             sessionStorage["ctx_loggedin"] = true;
             if (homeModel.RouteInfo) { // store route info on local storage
@@ -41,7 +56,7 @@
             $scope.$emit("sw_loadmenu", menuModel);
 
             const sessionRedirectUrl = contextService.fetchFromContext("swGlobalRedirectURL", false, false);
-            if (sessionRedirectUrl != null && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0)) && !homeModel.FromRoute) {
+            if (sessionRedirectUrl != null && redirectUrl && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0)) && !homeModel.FromRoute) {
                 redirectUrl = sessionRedirectUrl;
             }
             const locationUrl = historyService.getLocationUrl();
@@ -54,6 +69,10 @@
             //Check if the user is sysadmin and the application version has changed since last login for this user
             if (contextService.HasRole(["sysadmin"]) && appVersionChanged(homeModel.ApplicationVersion)) {
                 redirectUrl = restService.getActionUrl("DeployValidation", "Index", null);
+            }
+
+            if (!redirectUrl) {
+                return $q.when(null);
             }
 
             return redirect(redirectUrl);
@@ -136,7 +155,7 @@
         initController();
     }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "$q", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", HomeController]);
     window.HomeController = HomeController;
 
 })(angular);

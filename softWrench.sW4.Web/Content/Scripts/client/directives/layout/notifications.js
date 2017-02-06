@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-angular.module('sw_layout')
+angular.module('sw_prelogin')
     .directive('notifications', function (contextService, notificationViewModel) {
     "ngInject";
 
