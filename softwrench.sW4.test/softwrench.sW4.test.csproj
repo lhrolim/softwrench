@@ -222,6 +222,7 @@
     <Compile Include="Configuration\Service\ConfigurationServiceTest.cs" />
     <Compile Include="Configuration\Service\ConfigurationCacheTest.cs" />
     <Compile Include="Configuration\Service\WhereClauseRegisterServiceTest.cs" />
+    <Compile Include="Data\Commons\Ticket\SlaHolderServiceTest.cs" />
     <Compile Include="Data\CompositeDatamapTest.cs" />
     <Compile Include="Data\Entities\EntityBuilderTest2.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />

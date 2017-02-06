@@ -65,7 +65,15 @@ namespace softwrench.sW4.Shared2.Data {
         }
 
         public virtual bool ContainsAttribute(string attributeName, bool checksForNonNull = false) {
-            return ContainsKey(attributeName);
+            var containsAttribute = ContainsKey(attributeName);
+            if (containsAttribute && checksForNonNull) {
+                var attribute = GetAttribute(attributeName);
+                if (attribute is string) {
+                    return !string.IsNullOrEmpty((string)attribute);
+                }
+                return attribute != null;
+            }
+            return containsAttribute;
         }
 
         public abstract string HolderName();
