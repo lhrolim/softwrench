@@ -58,16 +58,18 @@
   </environment>
 
   <environment key="prod">
-    <!--Sample UNC Doclink Path-->
     <property key="maximourldoclinkspath" value="https://smartcloud.kdisupport24.com"/>
-    
+
     <property key="maximoutc" value="Central Standard Time"/>
     <property key="maximo_DB_url" value="Data Source=172.24.16.110;Initial Catalog=KOGTPROD;User Id=MAXIMO;password=M@x1m0;" />
     <property key="swdb_url" value="Data Source=172.24.16.110;Initial Catalog=SWDB_KOGTPROD;User Id=sw;password=$0ftWr3nch;" />
-    <property key="basewsURL" value="https://smartcloud.kdisupport24.com/meaweb/wsdl/" />
-    <!--<property key="basewsURL" value="http://172.24.32.39:9080/meaweb/wsdl/" />-->
-    <property key="email.smtp.host" value="172.24.16.101"/>
-    <property key="email.stmp.enableSSL" value="true"/>
+    <property key="basewsURL" value="http://smartcloud.kdisupport24.com/meaweb/wsdl/" />
+    <property key="email.smtp.host" value="172.24.16.101"/> -->
+    <!--<property key="email.smtp.host" value="172.24.32.39"/> -->
+    <!--<property key="basewsURL" value="http://172.24.32.120/meaweb/wsdl/" /> -->
+    <!--<property key="basewsURL" value="https://smartcloud.kdisupport24.com/meaweb/wsdl/" /> -->
+    <property key="ignoreWsCertErrors" value="true"/>
+  
   </environment>
 
 </Properties>
