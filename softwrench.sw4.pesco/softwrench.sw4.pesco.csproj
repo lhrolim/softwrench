@@ -100,8 +100,8 @@
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.1.6207.1737, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.1.6207.1737\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.1.6253.29351, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.1.6253.29351\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.user, Version=1.1.6177.40622, Culture=neutral, processorArchitecture=MSIL">

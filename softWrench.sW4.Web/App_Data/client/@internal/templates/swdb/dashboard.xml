@@ -254,6 +254,10 @@
             <option label="12"  value="12" />
           </optionfield>
 
+          <field label="Where Clause" attribute="whereClause" tooltip="A where Clause to use on the dashboard. Remember to fully qualify the tables (ex: workorder.wonum)" helpicon="right">
+            <renderer type="textarea"/>
+          </field>
+          
           <commandbars>
             <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>

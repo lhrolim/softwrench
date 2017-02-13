@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -43,6 +44,12 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         public void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
+            var validators = CustomValidators();
+            var customValidator = validators?.FirstOrDefault(validator => validator.DoesValidate(applicationName, conditionToValidateAgainst));
+            if (customValidator != null) {
+                customValidator.Validate(applicationName, whereClause, conditionToValidateAgainst);
+                return;
+            }
 
             var searchRequestDto = new SearchRequestDto {
                 WhereClause = WhereClauseFacade.BuildWhereClauseResult(whereClause).Query
@@ -174,6 +181,10 @@ namespace softWrench.sW4.Configuration.Services {
             //updating existing condition of same alias
             return await _dao.SaveAsync(realValue);
 
+        }
+
+        private static IEnumerable<IWhereClauseValidator> CustomValidators() {
+            return SimpleInjectorGenericFactory.Instance.GetObjectsOfType<IWhereClauseValidator>(typeof(IWhereClauseValidator)).ToList();
         }
     }
 }

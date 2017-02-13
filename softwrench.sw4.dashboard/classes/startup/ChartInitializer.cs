@@ -1,4 +1,6 @@
-﻿using cts.commons.simpleinjector.Core.Order;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Metadata;
@@ -16,6 +18,18 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
         public const string QuickSrChartDashboardAlias = "quickservicerequest";
         public const string QuickSrChartDashboardTitle = "Quick Requests";
+
+        public static readonly Dictionary<string, string> AliasMetadataIdDict = new Dictionary<string, string>() {
+            { "dashboard:wo.status.openclosed.gauge", "WOOpenCloseDashBoardGauge" },
+            { "dashboard:wo.status.openclosed", "WOOpenCloseDashBoardPie" },
+            { "dashboard:wo.status.top5", "WOStatusDashboardQuery" },
+            { "dashboard:sr.status.top5", "SRStatusDashboardQuery" },
+            { "dashboard:sr.status.line", "SRStatusDashboardQueryLine" },
+            { "dashboard:sr.status.pie", "SRStatusDashboardQueryPie" },
+            { "dashboard:quicksr.status.top5", "QuickSRStatusDashboardQuery" },
+            { "dashboard:quicksr.status.line", "QuickSRStatusDashboardQueryLine" },
+            { "dashboard:quicksr.status.pie", "QuickSRStatusDashboardQueryPie" }
+        };
 
         /// <summary>
         /// (WO.status is 'open') != (WO.status isn't 'close') --> special query

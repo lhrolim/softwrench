@@ -158,6 +158,7 @@
     <Compile Include="classes\model\migration\Migration20160331Swweb2334.cs" />
     <Compile Include="classes\model\migration\Migration20160601Swweb2538.cs" />
     <Compile Include="classes\model\migration\Migration20160817Swweb2603.cs" />
+    <Compile Include="classes\service\statistics\StatisticsWhereClauseValidator.cs" />
     <Compile Include="classes\startup\DashboardDefaultDataProvider.cs" />
     <Compile Include="classes\startup\StatisticsQueryProvider.cs" />
     <Compile Include="classes\service\graphic\exception\GraphicStorageSystemException.cs" />

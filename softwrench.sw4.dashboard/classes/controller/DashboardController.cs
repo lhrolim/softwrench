@@ -9,6 +9,7 @@ using Iesi.Collections.Generic;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.service.graphic;
+using softwrench.sw4.dashboard.classes.startup;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
@@ -17,7 +18,6 @@ using softWrench.sW4.Security.Services;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.SPF;
@@ -179,7 +179,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
         public IGenericResponseResult LoadFields([FromUri]string applicationName) {
             var app = MetadataProvider.Application(applicationName);
             var schema = app.GetListSchema();
-            if (schema == null){
+            if (schema == null) {
                 //sometimes this method is getting called using _dashboard as application.
                 //TODO: fix it.
                 return new GenericResponseResult<IEnumerable<IAssociationOption>>(new List<IAssociationOption>());
@@ -194,8 +194,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         [HttpGet]
         public async Task<string> LoadPanelWhereClause([FromUri]string applicationName, [FromUri]string panelAlias) {
-            var queryResult = await _whereClauseFacade.LookupAsync(applicationName,new ApplicationLookupContext() { MetadataId = "dashboard:" + panelAlias });
-            return queryResult?.Query ;
+            var queryResult = await _whereClauseFacade.LookupAsync(applicationName, new ApplicationLookupContext() { MetadataId = "dashboard:" + panelAlias });
+            return queryResult?.Query;
         }
 
         [HttpGet]
@@ -239,8 +239,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpPost]
-        public IGenericResponseResult SaveGraphicPanel(DashboardGraphicPanel panel) {
+        public async Task<IGenericResponseResult> SaveGraphicPanel(DashboardGraphicPanel panel) {
             panel.Filter = new DashboardFilter();
+            await SaveGraphicDashWc(panel);
             return new GenericResponseResult<DashboardBasePanel>(_dao.Save(panel));
         }
 
@@ -300,6 +301,29 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 return enumerable.FirstOrDefault();
             }
             return enumerable.FirstOrDefault(s => s.Id == dashBoardId);
+        }
+
+        private async Task SaveGraphicDashWc(DashboardGraphicPanel panel) {
+            if (string.IsNullOrEmpty(panel.Configuration)) {
+                throw new Exception("Widget configuration not found.");
+            }
+
+            var props = panel.Configuration.Split(';');
+            var prop = props.FirstOrDefault(possibleProp => possibleProp.StartsWith("applicationName="));
+            if (prop == null) {
+                throw new Exception("Missing field 'Application' on widget configuration.");
+            }
+            var applicationName = prop.Replace("applicationName=", "");
+
+            var metadataId = "dashboard:" + panel.Alias;
+            var conditionAlias = ChartInitializer.AliasMetadataIdDict.ContainsKey(metadataId) ? ChartInitializer.AliasMetadataIdDict[metadataId] : metadataId;
+
+            await _whereClauseFacade.RegisterAsync(applicationName, panel.WhereClause, new WhereClauseRegisterCondition() {
+                Alias = conditionAlias,
+                AppContext = new ApplicationLookupContext() {
+                    MetadataId = metadataId
+                }
+            }, true);
         }
 
         public IGenericResponseResult EditDashBoard(DashboardBasePanel dashBoardPanel) {
