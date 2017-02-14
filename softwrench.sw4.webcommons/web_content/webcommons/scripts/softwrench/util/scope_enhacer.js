@@ -7,6 +7,12 @@
         const _broadcast = $delegate.$broadcast;
         const _on = $delegate.$on;
 
+        $delegate.constructor.prototype.$onRootScope = function (name, listener) {
+            var unsubscribe = $delegate.$on(name, listener);
+            this.$on('$destroy', unsubscribe);
+            return $delegate;
+        }
+
         $delegate.$emit = function () {
             const log = $log.get("rootscope#emit");
             if (!arguments[0]) {

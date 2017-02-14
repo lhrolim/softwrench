@@ -125,8 +125,12 @@ namespace softWrench.sW4.Web {
 
             // app scripts
             var appBundle = new ScriptBundle(Bundles.Local.AppScripts)
-//                .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
+                //uncomment next line to test local html template caching
+                //                .Include("~/Content/dist/scripts/htmltemplates.js")
+
+                //                .Include("~/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js")
                 .Include("~/Content/Scripts/client/crud/aaa_layout.js")
+
 //                .IncludeDirectory("~/Content/Shared/webcommons/scripts/softwrench/util", "*.js")
 //                .IncludeDirectory("~/Content/Shared/webcommons", "*.js", true)
                 .IncludeDirectory("~/Content/Scripts/client/crud", "*.js", true)
@@ -148,7 +152,8 @@ namespace softWrench.sW4.Web {
             var scriptBundle = new ScriptBundle(Bundles.Distribution.AllScripts)
                 .Include("~/Content/dist/scripts/vendor.js")
                 .Include("~/Content/dist/scripts/customvendor.js")
-                .Include("~/Content/dist/scripts/app.js");
+                .Include("~/Content/dist/scripts/app.js")
+                .Include("~/Content/dist/scripts/htmltemplates.js");
             scriptBundle.Orderer = new PassthroughBundleOrderer();
             bundles.Add(scriptBundle);
         }

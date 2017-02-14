@@ -462,7 +462,7 @@ function url(path) {
     if (path == null) {
         return null;
     }
-
+    path = path.toLowerCase();
     var root = location.protocol + '//' + location.hostname +
         (location.port ? ":" + location.port : "");
 

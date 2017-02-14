@@ -540,7 +540,7 @@
     <Compile Include="Util\StaticFileLoad\PassthroughBundleOrderer.cs" />
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
-    <Content Include="apple-touch-icon.png" />
+    <Content Include="Content\Images\apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\bulletinboard.xml" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
     <Content Include="App_Data\Client\%40internal\target\rest.xml">
@@ -1176,7 +1176,7 @@
     <Content Include="Gruntfile.js" />
     <Content Include="IBM.Data.DB2.dll" />
     <None Include="Content\styles\default\_site.scss" />
-    <Content Include="favicon.ico" />
+    <Content Include="Content\Images\favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />

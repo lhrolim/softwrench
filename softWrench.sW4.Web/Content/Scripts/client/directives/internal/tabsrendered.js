@@ -34,7 +34,7 @@
                 }
 
                 // covers a redirect for same application and schema but to another entry
-                $rootScope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
+                scope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
                     scope.schema = renderedSchema;
                     $rootScope.$broadcast(JavascriptEventConstants.TabsLoaded, null, scope.panelid);
                 });

@@ -83,19 +83,19 @@
 
    
 
-        $rootScope.$on(JavascriptEventConstants.AjaxInit, function () {
+        $scope.$on(JavascriptEventConstants.AjaxInit, function () {
             const savingMain = true === $rootScope.savingMain;
             spinService.start({ savingDetail: savingMain });
 
         });
 
-        $rootScope.$on(JavascriptEventConstants.AjaxFinished, function () {
+        $scope.$on(JavascriptEventConstants.AjaxFinished, function () {
             spinService.stop();
             $rootScope.savingMain = undefined;
             fixHeaderService.callWindowResize();
         });
 
-        $rootScope.$on(JavascriptEventConstants.ErrorAjax, function () {
+        $scope.$on(JavascriptEventConstants.ErrorAjax, function () {
             spinService.stop();
             $rootScope.savingMain = undefined;
             fixHeaderService.callWindowResize();
@@ -131,13 +131,13 @@
         });
 
 
-        $rootScope.$on(JavascriptEventConstants.ActionAfterRedirection, function (event, result) {
+        $scope.$on(JavascriptEventConstants.ActionAfterRedirection, function (event, result) {
             const log = $log.getInstance('layoutcontroller#onsw_redirectactionsuccess', ["navigation", "route"]);
             log.debug("received event");
             $scope.AjaxResult(result);
         });
 
-        $rootScope.$on(JavascriptEventConstants.REDIRECT_AFTER, function (event, result, mode, applicationName) {
+        $scope.$on(JavascriptEventConstants.REDIRECT_AFTER, function (event, result, mode, applicationName) {
             const log = $log.getInstance('layoutcontroller#onsw_redirectapplicationsuccess',["navigation","route"]);
             //todo: are these 2 parameters really necessary?
             $scope.applicationname = applicationName;

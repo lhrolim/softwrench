@@ -179,7 +179,7 @@
                 * Listener responsible for invoking providerloaded events.
                 *  
                 */
-                $rootScope.$on(JavascriptEventConstants.Association_EagerOptionUpdated, function (event, associationKey, options, contextData) {
+                $scope.$on(JavascriptEventConstants.Association_EagerOptionUpdated, function (event, associationKey, options, contextData) {
                     if (contextData && contextData.schemaId === "#modal" && "true" !== $scope.ismodal) {
                         //ignoring 
                         return $q.reject();

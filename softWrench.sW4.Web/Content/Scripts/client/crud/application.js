@@ -18,11 +18,11 @@
 
 
 
-        $rootScope.$on(JavascriptEventConstants.ResetFocusToCurrent, function (event, schema, field) {
+        $scope.$on(JavascriptEventConstants.ResetFocusToCurrent, function (event, schema, field) {
             focusService.resetFocusToCurrent(schema, field);
         });
 
-        $rootScope.$on(JavascriptEventConstants.MoveFocus, function (event, datamap, schema, attribute) {
+        $scope.$on(JavascriptEventConstants.MoveFocus, function (event, datamap, schema, attribute) {
             if (datamap[attribute] != null && datamap[attribute] != '') {
                 focusService.moveFocus(datamap, schema, attribute);
             }

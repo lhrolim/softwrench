@@ -40,7 +40,7 @@
                     $scope.processBreadcrumb();
                 });
 
-                $rootScope.$on("sw.breadcrumb.history.redirect.sametitle", function () {
+                $scope.$on("sw.breadcrumb.history.redirect.sametitle", function () {
                     $scope.processBreadcrumb();
                 });
             }

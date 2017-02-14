@@ -198,7 +198,7 @@
 
                     locationChanged();
 
-                    $rootScope.$on("sw4_activetabchanged", function (event, tabid) {
+                    $scope.$on("sw4_activetabchanged", function (event, tabid) {
                         tabidChanged(tabid);
                     });
 

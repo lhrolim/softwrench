@@ -341,7 +341,7 @@ module.exports = function (grunt) {
                         // customers shared
                         "<%= app.content %>/Scripts/customers/shared/*.js",
                         // customers: outer build process guarantees there's only the selected customer in the path
-                        "<%= app.customers %>/**/scripts/**/*.js"
+                        "<%= app.customers %>/**/scripts/**/*.js",
                 ],
 
                 dest: "<%= app.tmp %>/scripts/app.concat.js"
@@ -360,6 +360,29 @@ module.exports = function (grunt) {
             }
         },
         //#endregion
+
+        ngtemplates: {
+            app: {
+                src: ['<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'],
+                dest: '<%= app.dist %>/scripts/htmltemplates.js',
+                options: {
+                    module: "sw_layout",
+                    url: function (url) {
+                        var idx = url.indexOf("/Content");
+                        url=url.replace("/templates","/Templates")
+                        return url.substring(idx);
+                    },
+                    templateWrap: function (path, template, index, files) {
+                        var fullPath =`contextService.getResourceUrl('${path}')`;
+                        return `$templateCache.put(${fullPath},${template})`;
+                    },
+                    bootstrap: function (module, script) {
+                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" + script + "\n}]);\n";
+                    }
+                }
+            }
+        },
+
 
         //#region uglify js
         uglify: {
@@ -460,6 +483,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks("grunt-karma");
     require("load-grunt-tasks")(grunt);
 
@@ -478,6 +502,7 @@ module.exports = function (grunt) {
         "concat:customVendorScripts", // concat custom vendors's scripts in 'temp/scripts/customvendor.js'
         "uglify:rawVendors", // minifies unminified vendors
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
+        "ngtemplates", // minify angular html templates into a single file
         //"ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:customVendors", "concat:finalCustomVendorScripts", // distributes 'scripts/customvendor.js'

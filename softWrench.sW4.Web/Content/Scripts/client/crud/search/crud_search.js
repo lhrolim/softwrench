@@ -108,7 +108,7 @@
                     });
                 }
 
-                $rootScope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
+                $scope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
                     if (!applicationName || !renderedSchema) {
                         log.debug("no applicationName ({0}) or renderedSchema ({1})".format(applicationName, renderedSchema));
                         sidePanelService.hide($scope.panelid);

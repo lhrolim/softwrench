@@ -112,7 +112,7 @@
         }
 
         // listen to a location change to redirect on browser back and forward navigation
-        $rootScope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
+        $scope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
             if (newUrl === oldUrl || oldUrl && oldUrl.endsWith(location.pathname)) {
                 return false;
             }

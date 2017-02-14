@@ -29,6 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F3FBB2C5
 		Build\rmtables.sql = Build\rmtables.sql
 		Build\SharedBuild.targets = Build\SharedBuild.targets
 		..\..\Visual Studio 2013\My Exported Templates\softwrench.sw4.newcustomer.zip = ..\..\Visual Studio 2013\My Exported Templates\softwrench.sw4.newcustomer.zip
+		TestSettings1.testsettings = TestSettings1.testsettings
 		Web.TEMPLATE.config = Web.TEMPLATE.config
 	EndProjectSection
 EndProject
