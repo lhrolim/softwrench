@@ -111,12 +111,18 @@ namespace softWrench.sW4.Web.Controllers {
         /// </summary>
         public async Task<IApplicationResponse> Delete([FromUri]OperationDataRequest operationDataRequest) {
             operationDataRequest.Operation = OperationConstants.CRUD_DELETE;
-            var response =await DoExecute(operationDataRequest, new JObject());
+            ApplicationSchemaDefinition nextSchema = null;
+            if (operationDataRequest.RouteParametersDTOHandled.NextSchemaKey == null) {
+                nextSchema = MetadataProvider.Application(operationDataRequest.ApplicationName).SchemaByStereotype("list");
+            }
+            var response = await DoExecute(operationDataRequest, new JObject(), null, nextSchema?.GetSchemaKey());
             var application = operationDataRequest.ApplicationName;
             var id = operationDataRequest.Id;
-            var defaultMsg = String.Format("{0} {1} deleted successfully", application, operationDataRequest.UserId);
-            response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
+            var defaultMsg = $"{application} {operationDataRequest.UserId} deleted successfully";
+            if (response.SuccessMessage == null) {
+                response.SuccessMessage = _i18NResolver.I18NValue("general.defaultcommands.delete.confirmmsg", defaultMsg, new object[]{
                 application, id});
+            }
             return response;
         }
 
@@ -160,7 +166,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// </summary>
         [HttpPost]
         //TODO: modify here, and on mobile in order to have the same api as the other methods
-        public async Task<IApplicationResponse> Operation(String application, String operation, JObject json, ClientPlatform platform, string id = "") {
+        public async Task<IApplicationResponse> Operation(string application, string operation, JObject json, ClientPlatform platform, string id = "") {
             var currentschemaKey = _nextSchemaRouter.GetSchemaKeyFromJson(application, json, true);
             var nextSchemaKey = _nextSchemaRouter.GetSchemaKeyFromJson(application, json, false);
             currentschemaKey.Platform = platform;
@@ -217,7 +223,8 @@ namespace softWrench.sW4.Web.Controllers {
 
                 transactionEnd = DateTime.UtcNow;
 
-                this.txService.AuditTransaction(operationDataRequest.ApplicationName, string.Format("{0}:{1}", operationDataRequest.ApplicationName, operationDataRequest.Operation), transactionStart, transactionEnd);
+                this.txService.AuditTransaction(operationDataRequest.ApplicationName,
+                    $"{operationDataRequest.ApplicationName}:{operationDataRequest.Operation}", transactionStart, transactionEnd);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

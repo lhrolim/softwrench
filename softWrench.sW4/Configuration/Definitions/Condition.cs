@@ -9,7 +9,7 @@ namespace softWrench.sW4.Configuration.Definitions {
     [Class(Table = "CONF_CONDITION", Lazy = false)]
     public class Condition : IBaseEntity {
 
-        public const string ByAlias = "from Condition where Alias =?";
+        public const string ByAlias = "from Condition where Alias =? and FullKey = ?";
         public const string GlobalConditions = "from Condition where Global = 1";
 
         [Id(0, Name = "Id")]

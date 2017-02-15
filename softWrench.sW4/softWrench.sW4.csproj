@@ -179,8 +179,8 @@
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.user, Version=1.2.6231.19272, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.user.1.2.6231.19272\lib\net46\softwrench.sw4.user.dll</HintPath>
+    <Reference Include="softwrench.sw4.user, Version=1.2.6254.19524, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.2.6254.19524\lib\net46\softwrench.sw4.user.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
@@ -372,6 +372,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseDynamicDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BaseProblemDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\SWDB\BasePropertyDefinitionDataSet.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\SWDB\WhereClause\BaseWhereClauseDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\BaseTicketDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ChangeStatusTicketHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Commlog\BaseCommlogDataset.cs" />
@@ -482,7 +483,6 @@
     <Compile Include="Configuration\Definitions\ConditionMatchResult.cs" />
     <Compile Include="Configuration\Services\Api\WhereClauseRegisterCondition.cs" />
     <Compile Include="Configuration\Services\Api\ConfigTypes.cs" />
-    <Compile Include="Configuration\Services\ApplicationWhereClauseRegistry.cs" />
     <Compile Include="Configuration\Services\ConditionService.cs" />
     <Compile Include="Configuration\Util\CategoryDTO.cs" />
     <Compile Include="Configuration\Util\CategoryTreeCache.cs" />
@@ -1102,6 +1102,7 @@
   <ItemGroup>
     <Folder Include="Data\Entities\Attachment\" />
     <Folder Include="Data\Entities\ServiceRequest\" />
+    <Folder Include="Data\Persistence\Operation\SWDB\" />
     <Folder Include="Data\Persistence\Sync\" />
     <Folder Include="Data\Persistence\WS\Mea\Entities\" />
     <Folder Include="Data\Persistence\WS\Mif\Entities\" />

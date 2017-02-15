@@ -1,3 +1,4 @@
 <!-- to run a build set client and profile, like below -->
 nant -f:build.xml zip -D:client=kongsberg -D:profile=dev
 nant -f:build.xml webcompile -D:client=kongsberg -D:profile=dev
+nant -f:Build/build.xml compile test -D:MsTestPath="C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\MSTest.exe"

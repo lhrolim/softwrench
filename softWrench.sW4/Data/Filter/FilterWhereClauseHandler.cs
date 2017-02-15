@@ -94,8 +94,6 @@ namespace softWrench.sW4.Data.Filter {
                     whereClause = whereClause.Replace("%!@#value", "'%" + paramValue.Value + "'");
                     whereClause = whereClause.Replace("!@#value%", "'" + paramValue.Value + "%'");
                     whereClause = whereClause.Replace("!@#value", "'" + paramValue.Value + "'");
-                    whereClause = whereClause.Replace("!@",
-                        MetadataProvider.Entity(schema.EntityName).GetTableName() + ".");
                 }
                 whereClause = whereClause.Replace("!@#value", paramValue.Value as string);
                 whereClause = whereClause.Replace("!@", entity.Name + ".");

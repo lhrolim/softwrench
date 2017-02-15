@@ -9,6 +9,7 @@ using softWrench.sW4.Util;
 using softwrench.sW4.TestBase;
 
 namespace softwrench.sW4.test {
+    [TestClass]
     public abstract class BaseOtbMetadataTest : BaseMetadataTest {
 
         [TestInitialize]

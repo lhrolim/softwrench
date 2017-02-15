@@ -131,6 +131,10 @@ angular.module('sw_layout')
             if (!fullName) {
                 return false;
             }
+            if (fullName.startsWith("@")) {
+                return false;
+            }
+
             const idx = fullName.indexOf(".");
             const serviceName = fullName.substring(0, idx);
             if (!serviceName) {

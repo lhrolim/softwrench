@@ -208,6 +208,13 @@
         </documentation>
       </annotation>
     </attribute>
+     <attribute name="innerjoin" type="boolean">
+      <annotation>
+        <documentation>
+        If true a inner join will be used instead of a (default)left join.
+        </documentation>
+      </annotation>
+    </attribute>
   </complexType>
 
   <complexType name="RelationshipAttribute">
@@ -910,6 +917,7 @@
   <simpleType name="StereotypeType">
     <restriction base="string">
       <enumeration value="list"></enumeration>
+      <enumeration value="listinlinedetail"></enumeration>
       <enumeration value="detail"></enumeration>
       <enumeration value="detailnew"></enumeration>
       <enumeration value="compositionlist"></enumeration>

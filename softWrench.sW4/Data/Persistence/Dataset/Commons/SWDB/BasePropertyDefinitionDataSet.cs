@@ -25,7 +25,6 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using PropertyDefinition = softWrench.sW4.Configuration.Definitions.PropertyDefinition;
 using softWrench.sW4.Configuration.Definitions;
-using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
     public class BasePropertyDefinitionDataSet : SWDBApplicationDataset {

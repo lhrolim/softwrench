@@ -72,6 +72,27 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
 
         }
 
+
+        [TestMethod]
+        public async Task TestExecuteCreationReturningNullEntity() {
+
+            var json = JSonUtil.FromRelativePath("jsons\\sr\\creation1.json");
+
+            var ds = DataSetProvider.GetInstance();
+            ds.HandleEvent(new ApplicationStartedEvent());
+            var maximoDataSet = new FakeSRApplicationDataSet();
+
+            var userSiteTuple = new Tuple<string, string>("100", "BEDFORD");
+            var dm = DataMap.BlankInstance("servicerequest");
+            _maximoEngine.Setup(e => e.FindById(It.Is<SlicedEntityMetadata>(w => w.ApplicationName.Equals("servicerequest")), "100", userSiteTuple)).ReturnsAsync(dm);
+
+            var result = await maximoDataSet.Execute(_applicationMetadata, json, "-1", OperationConstants.CRUD_CREATE, false, null);
+
+            TestUtil.VerifyMocks(_maximoEngine);
+            Assert.AreEqual(result.ResultObject, dm);
+
+        }
+
         public class FakeSRApplicationDataSet : BaseServiceRequestDataSet {
             public override TargetResult DoExecute(OperationWrapper operationWrapper) {
                 var data = operationWrapper.OperationData() as CrudOperationData;
@@ -85,6 +106,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
                 return "newdetail";
             }
         }
+    
 
     }
 }

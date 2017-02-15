@@ -31,17 +31,10 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         }
 
         [NotNull]
-        public ICommonOperationData GetOperationData {
-            get {
-                return OperationData();
-            }
-        }
+        public ICommonOperationData GetOperationData => OperationData();
 
         public string GetStringAttribute(string attribute) {
-            if (GetOperationData.Holder != null) {
-                return GetOperationData.Holder.GetStringAttribute(attribute);
-            }
-            return null;
+            return GetOperationData.Holder?.GetStringAttribute(attribute);
         }
 
         public WsProvider? Wsprovider {
@@ -76,11 +69,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             }
         }
 
-        public EntityMetadata EntityMetadata {
-            get {
-                return _entityMetadata;
-            }
-        }
+        public EntityMetadata EntityMetadata => _entityMetadata;
+         
 
         public string Id {
             get; private set;

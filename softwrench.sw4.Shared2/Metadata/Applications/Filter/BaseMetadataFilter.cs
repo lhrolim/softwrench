@@ -109,7 +109,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             //transient filters do not need whereclauses since the filter will be applied on the attribute
             var hasValidWhereClause = !IsTransient() || WhereClause != null;
 
-            return (Attribute != null && Label != null && hasValidWhereClause);
+            return (Attribute != null && hasValidWhereClause);
         }
 
         #region utility methods

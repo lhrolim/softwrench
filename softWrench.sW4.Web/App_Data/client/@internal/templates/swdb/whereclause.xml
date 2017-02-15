@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+
+    <entity name="whereclause" idAttribute="id" useridAttribute="id" whereclause="propdefinition_.key_='whereclause'" parententity="PropertyValue">
+      <relationships>
+        <relationship to="WhereClauseCondition_" qualifier="condition">
+          <relationshipAttribute from="condition_id" to="WcWcId"/>
+        </relationship>
+        <relationship to="PropertyDefinition_" qualifier="propdefinition" collection="false">
+          <relationshipAttribute from="definition_id" to="fullkey"/>
+        </relationship>
+        <relationship to="UserProfile_" qualifier="profile">
+          <relationshipAttribute from="userprofile" to="id"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+  </entities>
+
+  <applications>
+
+    <application name="whereclause" entity="whereclause" title="Where Clause">
+      <properties>
+        <property key="application.security.clientadmin" value="true"/>
+      </properties>
+      <filters>
+        <optionfilter attribute="profile_.name" provider="profile_.name" whereclause="userprofile in (!@#value)"/>
+      </filters>
+      
+      <schemas>
+        <schema id="list" stereotype="list" title="Where Clauses">
+          <filters>
+            <filter attribute="#application" whereclause="!@definition_id like !@#value"/>
+          </filters>
+          <field attribute="id" hidden="true"/>
+          <field attribute="definition_id" hidden="true"/>
+          <field attribute="propdefinition_.key" hidden="true"/>
+          <field attribute="#application" label="Application"/>
+          <field attribute="profile_.name" label="Security Group"/>
+          <field attribute="condition_.metadataid" label="Metadata Id"/>
+          <field attribute="condition_.offlineonly" label="Offline" tooltip="Whether this whereclause only applies to the offline solution" >
+            <renderer type="checkbox"/>
+          </field>
+          <properties>
+            <property key="list.defaultorderby" value="definition_id"/>
+<!--            <property key="list.click.service" value="whereClauseService.loadPropertyValue"/>-->
+          </properties>
+        </schema>
+
+        <schema id="detail" stereotype="detail">
+          <field attribute="definition_id" hidden="true"/>
+          <field attribute="value" hidden="true"/>
+          <field attribute="#application" label="Application" readonly="true"/>
+<!--          <field attribute="definition_.defaultvalue" hidden="true"/>-->
+          <section orientation="horizontal">
+            <field attribute="profile_.name" label="Security Group"
+                   attributeToServer="#userprofile"
+                   tooltip="This whereclause would only be applied for users that are members of this security group. If multiple whereclauses are match a combobox will be presented" helpicon="right" readonly="true"/>
+            <field attribute="condition_.metadataid"  attributeToServer="#metadataid"
+                   label="Metadata Id" tooltip="This is an optional identifier of the WhereClause. It could be used to simplify the match for some special conditions" helpicon="right" readonly="true"/>
+            <field attribute="condition_.schema"  attributeToServer="#schema"
+               label="Schema" tooltip="Optional. If present the whereclause would only be applied to the given schema. Leave blank to apply it across the entire application" helpicon="right" readonly="true"/>
+
+            <field attribute="condition_.offlineonly"
+                   attributeToServer="#offline"
+                   label="Offline" tooltip="Whether this whereclause only applies to the offline solution" helpicon="right" readonly="true" enableexpression="false">
+              <renderer type="checkbox"/>
+            </field>
+          </section>
+          <field attribute="#value" label="Current Value" tooltip="This is the actual where clause that would be applied for the application whenever the conditions are matched" helpicon="right">
+            <renderer type="textarea"/>
+          </field>
+          <field attribute="systemvalue" label="System Value" tooltip="This value can only be set at development time. It would be overriden by the 'Current Value' declaration. Values that start with an @ indicate a server side method invocation" helpicon="right" readonly="true">
+            <renderer type="textarea"/>
+          </field>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command icon="fa-trash" label="Delete" service="whereClauseService" method="removeWhereClause" id="delete" cssclasses="large-button" />
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" stereotype="detailnew">
+          <optionfield label="Application" attribute="#application" providerattribute="applications">
+            <renderer type="lookup" params="disablemodal=true"/>
+          </optionfield>
+          <section orientation="horizontal">
+            <optionfield label="Security Group" attribute="userprofile" providerattribute="profiles" tooltip="This whereclause would only be applied for users that are members of this security group. If multiple whereclauses are match a combobox will be presented" helpicon="right">
+              <renderer type="lookup" params="disablemodal=true"/>
+            </optionfield>
+            <field label="Metadata Id" attribute="#metadataid" tooltip="This is an optional identifier of the WhereClause. It could be used to simplify the match for some special conditions" helpicon="right" />
+            <field attribute="#schema"  label="Schema" tooltip="Optional. If present the whereclause would only be applied to the given schema. Leave blank to apply it across the entire application" helpicon="right" />
+            <field label="Offline" attribute="#offline" tooltip="Whether this whereclause only applies to the offline solution" helpicon="right">
+              <renderer type="checkbox"/>
+            </field>
+          </section>
+
+          <field attribute="#value" label="Value" requiredexpression="true">
+            <renderer type="textarea"/>
+          </field>
+          <properties>
+            <property key="nextschema.schemaid" value="list"/>
+          </properties>
+        </schema>
+      </schemas>
+    </application>
+
+
+  </applications>
+</metadata>

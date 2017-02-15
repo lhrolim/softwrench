@@ -56,7 +56,7 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             if (idAttributeName == null) throw new ArgumentNullException("idAttributeName");
             EntityName = entityName;
             _attributes = attributes == null ? new HashSet<EntityAttribute>() : new HashSet<EntityAttribute>(attributes);
-            if (includeRowstamp) {
+            if (includeRowstamp && !entityName.EndsWith("_")) {
                 _rowstampAttribute = RowStampUtil.RowstampEntityAttribute();
                 _attributes.Add(_rowstampAttribute);
             }
@@ -74,37 +74,17 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
         }
 
         [NotNull]
-        public ISet<EntityAttribute> Attributes {
-            get {
-                return _attributes;
-            }
-        }
+        public ISet<EntityAttribute> Attributes => _attributes;
 
         [NotNull]
-        public EntityAttribute IdAttribute {
-            get {
-                return _idAttribute.Value;
-            }
-        }
+        public EntityAttribute IdAttribute => _idAttribute.Value;
 
-        public EntityAttribute UserIdAttribute {
-            get {
-                return _userIdAttribute.Value;
-            }
-        }
+        public EntityAttribute UserIdAttribute => _userIdAttribute.Value;
 
 
-        public EntityAttribute SiteIdAttribute {
-            get {
-                return _siteIdAttribute.Value;
-            }
-        }
+        public EntityAttribute SiteIdAttribute => _siteIdAttribute.Value;
 
 
-        public EntityAttribute RowstampAttribute {
-            get {
-                return _rowstampAttribute;
-            }
-        }
+        public EntityAttribute RowstampAttribute => _rowstampAttribute;
     }
 }

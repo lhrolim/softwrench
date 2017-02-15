@@ -22,11 +22,7 @@ namespace softWrench.sW4.Metadata.Entities.Connectors {
         }
 
         [NotNull]
-        public IDictionary<string, string> Parameters {
-            get {
-                return _parameters;
-            }
-        }
+        public IDictionary<string, string> Parameters => _parameters;
 
         public static ConnectorParameters DefaultInstance() {
             return new ConnectorParameters(new Dictionary<string, string>(), false);

@@ -50,6 +50,19 @@ namespace softwrench.sW4.Shared2.Data {
             return attribute?.ToString().EqualsAny("true", "1", "y");
         }
 
+        public virtual int? GetIntAttribute(string attributeName, bool remove = false, bool throwException = false) {
+            var attribute = GetStringAttribute(attributeName, remove, throwException);
+            int result;
+            var success = int.TryParse(attribute, out result);
+            if (!success) {
+                if (throwException) {
+                    throw new InvalidCastException("cannot cast attribute {0} valued as {1} to int".Fmt(attributeName, attribute));
+                }
+                return null;
+            }
+            return result;
+        }
+
         public void SetAttribute(string attributeName, object value) {
             if (ContainsKey(attributeName)) {
                 Remove(attributeName);

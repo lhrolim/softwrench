@@ -352,7 +352,7 @@
                     var cancelSchema = $scope.schema.properties['detail.cancel.click'];
                     // Check the context for an overloaded detail.cancel.click application and schema
                     var overloadedCancelSchema = contextService.retrieveFromContext('detail.cancel.click', null, true);
-                    cancelSchema = overloadedCancelSchema != 'undefined' ? overloadedCancelSchema : cancelSchema;
+                    cancelSchema = (overloadedCancelSchema && overloadedCancelSchema != 'undefined') ? overloadedCancelSchema : cancelSchema;
                     if (cancelSchema) {
                         //if this schema registers another application/schema/mode entry for the cancel click, let´s use it
                         var result = schemaService.parseAppAndSchema(cancelSchema);

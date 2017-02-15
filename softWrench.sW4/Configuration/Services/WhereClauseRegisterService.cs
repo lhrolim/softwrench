@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using JetBrains.Annotations;
 using log4net;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Definitions;
@@ -16,6 +18,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -30,6 +33,15 @@ namespace softWrench.sW4.Configuration.Services {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WhereClauseRegisterService));
 
+        public class WhereClauseRegisterResult {
+            public WCRegisterOperation Operation {
+                get; set;
+            }
+            public PropertyValue PropertyValue {
+                get; set;
+            }
+        }
+
         public enum WCRegisterOperation {
             SimpleDefinitionUpdate, ValueUpdate, ValueCreation, Skip, SkipProfileNotFound
         }
@@ -43,7 +55,12 @@ namespace softWrench.sW4.Configuration.Services {
             _configurationCache = configurationCache;
         }
 
-        public void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
+        public void ValidateWhereClause([NotNull]string applicationName, [NotNull]string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
+            if (string.IsNullOrEmpty(whereClause) || whereClause.EqualsAny("1=1", "1!=1")){
+                //common whereclauses which validation can be skipped
+                return;
+            }
+
             var validators = CustomValidators();
             var customValidator = validators?.FirstOrDefault(validator => validator.DoesValidate(applicationName, conditionToValidateAgainst));
             if (customValidator != null) {
@@ -82,11 +99,42 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         [Transactional(DBType.Swdb)]
-        public virtual async Task<WCRegisterOperation> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition) {
+        public virtual async Task<PropertyValue> UpdateExisting(int propValueId, string newValue) {
+            var propertyValue = await _dao.FindByPKAsync<PropertyValue>(propValueId);
+            if (newValue == "") {
+                newValue = "1=1";
+            }
+            propertyValue.Value = newValue;
+            return await _dao.SaveAsync(propertyValue);
+        }
 
+
+
+
+        [Transactional(DBType.Swdb)]
+        public virtual async Task DeleteExisting(int propertyValueId) {
+            var propertyValue = await _dao.FindByPKAsync<PropertyValue>(propertyValueId);
+            await _dao.DeleteAsync(propertyValue);
+        }
+
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<PropertyValue> Create(string application, string query, WhereClauseRegisterCondition condition) {
+            var configKey = $"/_whereclauses/{application}/whereclause";
+
+            var result = await DoRegister(configKey, query, condition, false,true);
+            return result.PropertyValue;
+        }
+
+
+        // [Transactional(DBType.Swdb)]
+        //TODO: asyncHelper wont work here with tx
+        public virtual async Task<WhereClauseRegisterResult> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition, bool systemValueRegister = true, bool wcCreation =false)
+        {
             if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
                 //we don´t need to register this property here.
-                return WCRegisterOperation.Skip;
+                return new WhereClauseRegisterResult {
+                    Operation = WCRegisterOperation.Skip
+                };
             }
 
             //if the condition is null, we need to apply the default value inside the definition itself
@@ -94,53 +142,76 @@ namespace softWrench.sW4.Configuration.Services {
 
             var savedDefinition = await _dao.SaveAsync(definition);
 
-            if (condition == null) {
-                Log.DebugFormat("No Condition: just updating base definition data");
-                //if no condition is passed, we just need to update the base definition data
-                return WCRegisterOperation.SimpleDefinitionUpdate;
-            }
 
-
-            if (condition.Alias == null && condition.AppContext != null && condition.AppContext.MetadataId != null) {
+            if (condition?.Alias == null && condition?.AppContext?.MetadataId != null) {
                 //generating an alias based on the metadataid
                 condition.Alias = condition.AppContext.MetadataId;
             }
 
-            var storedCondition = await GetStoredCondition(condition);
+           
+            var storedCondition = await GetStoredCondition(condition, configKey, wcCreation);
+          
 
             var profile = new UserProfile();
-            if (condition.UserProfile != null) {
+            if (condition?.UserProfile != null) {
                 profile = _userProfileManager.FindByName(condition.UserProfile);
                 if (condition.UserProfile != null && profile == null) {
-                    Log.Warn(string.Format("unable to register definition as profile {0} does not exist", condition.UserProfile));
-                    return WCRegisterOperation.SkipProfileNotFound;
+                    Log.Warn($"unable to register definition as profile {condition.UserProfile} does not exist");
+                    return new WhereClauseRegisterResult {
+                        Operation = WCRegisterOperation.SkipProfileNotFound
+                    };
                 }
+            } else if (condition?.ProfileId != null) {
+                profile.Id = condition.ProfileId;
             }
 
             var id = storedCondition?.Id;
 
-            var storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(
+            PropertyValue storedValue;
+
+            if (condition != null && id!=null) {
+                storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(
                   PropertyValue.ByDefinitionConditionIdModuleProfile,
                   configKey, id, condition.Module, profile.Id);
+            } else {
+                storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(PropertyValue.ByDefinitionNoCondition, configKey, profile.Id);
+            }
+
 
             if (storedValue == null) {
                 Log.DebugFormat("creating new PropertyValue for {0}", configKey);
                 var newValue = new PropertyValue {
                     Condition = storedCondition,
                     Definition = savedDefinition,
-                    SystemStringValue = query,
-                    Module = condition.Module,
-                    UserProfile = profile.Id
+                    Module = condition?.Module,
+                    UserProfile = profile.Id,
+                    ClientName = ApplicationConfiguration.ClientName,
                 };
-                await _dao.SaveAsync(newValue);
-                return WCRegisterOperation.ValueCreation;
+                if (systemValueRegister) {
+                    newValue.SystemStringValue = query;
+                } else {
+                    newValue.Value = query;
+                }
+
+                newValue = await _dao.SaveAsync(newValue);
+                return new WhereClauseRegisterResult {
+                    Operation = WCRegisterOperation.ValueCreation,
+                    PropertyValue = newValue
+                };
             }
             Log.DebugFormat("updating existing PropertyValue for {0}", configKey);
-            storedValue.SystemStringValue = query;
-            await _dao.SaveAsync(storedValue);
+            if (systemValueRegister) {
+                storedValue.SystemStringValue = query;
+            } else {
+                storedValue.Value = query;
+            }
+            storedValue = await _dao.SaveAsync(storedValue);
             //TODO: investigate a way to populate cache immediately
             _configurationCache.ClearCache(configKey);
-            return WCRegisterOperation.ValueUpdate;
+            return new WhereClauseRegisterResult {
+                Operation = WCRegisterOperation.ValueUpdate,
+                PropertyValue = storedValue
+            };
 
         }
 
@@ -157,19 +228,24 @@ namespace softWrench.sW4.Configuration.Services {
             return definition;
         }
 
-        private async Task<Condition> GetStoredCondition(WhereClauseRegisterCondition condition) {
+        private async Task<Condition> GetStoredCondition(WhereClauseRegisterCondition condition,string configKey, bool wcCreation) {
 
-            if (condition.Alias == null) {
+            if (condition == null) {
                 return null;
             }
+            condition.GenerateAlias();
 
             //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
-            var storedCondition = await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAlias, condition.Alias);
+            var storedCondition = await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAlias, condition.Alias, configKey);
             if (storedCondition != null) {
+                if (wcCreation) {
+                    throw new InvalidOperationException("The exact same condition is already setup for this application, cannot override it");
+                }
                 condition.Id = storedCondition.Id;
             }
 
             var realValue = condition.RealCondition;
+            realValue.FullKey = configKey;
 
             if (realValue.Equals(storedCondition)) {
                 Log.DebugFormat("No change on condition, returning existing condition");

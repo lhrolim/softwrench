@@ -4,7 +4,9 @@ using System.Linq;
 using System.Reflection;
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
+using Castle.Core.Internal;
 using NHibernate.Mapping.Attributes;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Metadata.Entities.Schema;
@@ -17,7 +19,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         protected override IEnumerable<EntityMetadata> InitializeEntityInternalMetadata() {
-            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(AssemblyLocator.GetSWAssemblies(),typeof(ClassAttribute),typeof(JoinedSubclassAttribute));
+            var findTypesAnnotattedWith = AttributeUtil.FindTypesAnnotattedWith(AssemblyLocator.GetSWAssemblies(), typeof(ClassAttribute), typeof(JoinedSubclassAttribute));
             var resultEntities = findTypesAnnotattedWith.Select(Convert).ToList();
 
             //            var subEntities = AttributeUtil.FindTypesAnnotattedWith(typeof(JoinedSubclassAttribute));
@@ -29,55 +31,65 @@ namespace softWrench.sW4.Metadata.Validator {
 
         }
 
-        private EntityMetadata Convert(Type type) {
+        public EntityMetadata Convert(Type type) {
             //TODO: relationships
             var name = type.Name + "_";
             Log.DebugFormat("adding swdb internal entity {0}", name);
             var properties = ParseProperties(name, type);
-            var idAttribute = "PropertyDefinition_".Equals(name) ? "FullKey" : "id";
+            var idAttribute = properties.Item3 ?? "id";
             var entitySchema = new EntitySchema(name, properties.Item1, idAttribute, idAttribute, true, true, null, null, type, false);
-            return new EntityMetadata(name, entitySchema, properties.Item2, ConnectorParameters(type));
+            return new EntityMetadata(name, entitySchema, properties.Item2, ConnectorParameters(type), type);
         }
 
-        private static Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>> ParseProperties(string entityName, Type type) {
+        private static Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string> ParseProperties(string entityName, Type type) {
 
             var resultAttributes = new List<EntityAttribute>();
             var resultAssociations = new List<EntityAssociation>();
+            PropertyInfo idAttribute = null;
+            var idAttributeName = "id";
+            var isJoinedSubclass = type.ReadAttribute<JoinedSubclassAttribute>() != null;
+
 
             var connectorParameters = new ConnectorParameters(new Dictionary<string, string>(), true);
             foreach (var memberInfo in type.GetProperties()) {
                 var attr = memberInfo.ReadAttribute<PropertyAttribute>();
-                var query = attr == null ? null : attr.Column;
+                var query = attr?.Column;
                 var isId = memberInfo.ReadAttribute<IdAttribute>() != null;
+                var isJoinedSubClassId = isJoinedSubclass && memberInfo.ReadAttribute<KeyAttribute>() != null && memberInfo.GetCustomAttributes(true).Length == 1;
+                if (isJoinedSubClassId) {
+                    idAttributeName = memberInfo.ReadAttribute<KeyAttribute>().Column;
+                }
                 var isColumn = memberInfo.ReadAttribute<PropertyAttribute>() != null;
                 var attribute = memberInfo.Name.ToLower();
-                if (!memberInfo.GetMethod.ReturnType.IsPrimitive
-                    && memberInfo.PropertyType != typeof(string)
-                    && memberInfo.PropertyType != typeof(DateTime)
-                    && memberInfo.PropertyType != typeof(DateTime?)
-                    && memberInfo.PropertyType != typeof(Int32)
-                    && memberInfo.PropertyType != typeof(Int64)
-                    && memberInfo.PropertyType != typeof(int?)
-                    && memberInfo.PropertyType != typeof(long?)
-                    && memberInfo.PropertyType != typeof(int)
-                    && memberInfo.PropertyType != typeof(long)
-                    && memberInfo.PropertyType != typeof(byte[])
-                    && !memberInfo.PropertyType.IsEnum
-                    ) {
-                    //TODO: components embeddables
+                if (IsNotAPrimitiveType(memberInfo)) {
                     //avoid adding relationships
                     var oneTomany = memberInfo.ReadAttribute<OneToManyAttribute>();
+                    var manyToOne = memberInfo.ReadAttribute<ManyToOneAttribute>();
                     if (oneTomany != null) {
-                        resultAssociations.Add(HandleOneToMany(memberInfo, oneTomany));
+                        resultAssociations.Add(HandleOneToMany(memberInfo, oneTomany, idAttribute));
                     }
+                    if (manyToOne != null) {
+                        resultAttributes.Add(HandleManyToOneHiddenAttribute(memberInfo, manyToOne));
+                    }
+
+                    var embeddable = memberInfo.ReadAttribute<ComponentPropertyAttribute>();
+                    if (embeddable != null) {
+                        resultAttributes.AddRange(HandleEmbedabble(memberInfo));
+                    }
+
                     //TODO: other relationships like many to one
 
                     continue;
                 }
 
-                if (!isId && !isColumn) {
+                if (!isId && !isColumn && !isJoinedSubClassId) {
                     //these are transient fields --> fields which are not mapped to columns, but can be used in applications
                     attribute = "#" + attribute;
+                } else if (isId) {
+                    if (!isJoinedSubclass) {
+                        idAttribute = memberInfo;
+                        idAttributeName = idAttribute.Name;
+                    }
                 }
 
                 Log.DebugFormat("adding swdb attribute {0} to entity {1}", attribute, entityName);
@@ -87,18 +99,54 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
                 resultAttributes.Add(entityAttribute);
             }
-            return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>>(resultAttributes, resultAssociations);
+            return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string>(resultAttributes, resultAssociations, idAttributeName);
         }
 
-        private static EntityAssociation HandleOneToMany(PropertyInfo memberInfo, OneToManyAttribute oneTomany) {
+        private static EntityAttribute HandleManyToOneHiddenAttribute(PropertyInfo memberInfo, ManyToOneAttribute manyToOne) {
+            var defaultInstance = Metadata.Entities.Connectors.ConnectorParameters.DefaultInstance();
+            var idProperty = memberInfo.PropertyType.FindPropertiesWithAttribute(typeof(IdAttribute));
+            var idPropertyType = "int";
+            if (idProperty != null && idProperty.Any()) {
+                idPropertyType = typeof(string) == idProperty.First().PropertyType ? "varchar" : "int";
+            }
+
+            return new EntityAttribute(manyToOne.Column, idPropertyType, false, true, defaultInstance, null);
+        }
+
+        private static bool IsNotAPrimitiveType(PropertyInfo memberInfo) {
+            return !memberInfo.GetMethod.ReturnType.IsPrimitive
+                   && memberInfo.PropertyType != typeof(string)
+                   && memberInfo.PropertyType != typeof(DateTime)
+                   && memberInfo.PropertyType != typeof(DateTime?)
+                   && memberInfo.PropertyType != typeof(Int32)
+                   && memberInfo.PropertyType != typeof(Int64)
+                   && memberInfo.PropertyType != typeof(int?)
+                   && memberInfo.PropertyType != typeof(long?)
+                   && memberInfo.PropertyType != typeof(int)
+                   && memberInfo.PropertyType != typeof(long)
+                   && memberInfo.PropertyType != typeof(byte[])
+                   && !memberInfo.PropertyType.IsEnum;
+        }
+
+        private static IEnumerable<EntityAttribute> HandleEmbedabble(PropertyInfo memberInfo) {
+            var embeddableType = memberInfo.PropertyType;
+            var tuple = ParseProperties(embeddableType.Name, embeddableType);
+            return tuple.Item1;
+
+
+        }
+
+        private static EntityAssociation HandleOneToMany(PropertyInfo memberInfo, OneToManyAttribute oneTomany, PropertyInfo idAttribute) {
             var keyAttr = memberInfo.ReadAttribute<KeyAttribute>();
-            var qualifier = memberInfo.Name;
+            var qualifier = memberInfo.Name.ToLower();
             var to = oneTomany.ClassType.Name.ToLower() + "_";
             //            //TODO: Add reverse customization
             //            string reverse = null;
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
-            attributes.Add(new EntityAssociationAttribute(keyAttr.Column, "id", null, true));
-            return new EntityAssociation(qualifier + "_", to, attributes, true,false, false, null, false);
+            var idAttributeName = idAttribute?.Name.ToLower() ?? "id";
+
+            attributes.Add(new EntityAssociationAttribute(keyAttr.Column, idAttributeName, null, true));
+            return new EntityAssociation(qualifier + "_", to, attributes, true, false, false, null, false, false);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {

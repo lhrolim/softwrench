@@ -144,8 +144,8 @@
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.user, Version=1.2.6231.19272, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.user.1.2.6231.19272\lib\net46\softwrench.sw4.user.dll</HintPath>
+    <Reference Include="softwrench.sw4.user, Version=1.2.6254.19524, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.2.6254.19524\lib\net46\softwrench.sw4.user.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -248,6 +248,7 @@
     <Compile Include="Data\Search\QuickSearch\LookupQuickSearchTest.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandlerTest.cs" />
     <Compile Include="Data\Search\SearchTest2.cs" />
+    <Compile Include="Data\Search\SearchUtilsTest.cs" />
     <Compile Include="Email\CommLogTemplateMergerTest.cs" />
     <Compile Include="ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Hapag\Data\Connector\Imac\ImacServicePlanHelperTest.cs" />
@@ -274,6 +275,7 @@
     <Compile Include="Metadata\Parsing\XmlMCommandBarMetadataParserTest.cs" />
     <Compile Include="Metadata\Schema\ApplicationSchemaFactoryTest.cs" />
     <Compile Include="Metadata\SyncSchemaTest.cs" />
+    <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializerTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />
     <Compile Include="Poco\PocoSr.cs" />
     <Compile Include="Resources\MifSRSample.cs" />

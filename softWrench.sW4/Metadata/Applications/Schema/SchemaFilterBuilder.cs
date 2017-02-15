@@ -122,12 +122,19 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
                     //no declared filter let´s just generate a default filter for the column
                     var attr = entity.LocateAttribute(field.Attribute);
-                    if (attr == null) {
+                    if (attr == null && !field.Attribute.Contains(".")) {
                         Log.WarnFormat("column {0} not found on entity {1}. Review your metadata", field.Attribute, entity.Name);
                         continue;
                     }
+                    string type;
+                    if (attr == null) {
+                        //TODO: implement other possibilities
+                        type = field.RendererType == "checkbox" ? "boolean" : "varchar";
+                    } else {
+                        type = attr.Type;
+                    }
 
-                    var generatedFilter = BaseMetadataFilter.FromField(field.Attribute, field.Label, field.ToolTip, attr.Type);
+                    var generatedFilter = BaseMetadataFilter.FromField(field.Attribute, field.Label, field.ToolTip, type);
                     AddAssociationData(field, generatedFilter, entity);
 
                     positionBuffer.Add(field.Attribute, resultSchemaFilters.AddLast(generatedFilter));
@@ -165,7 +172,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             foreach (var filter in declaredFilters.Filters) {
                 var field = applicationFieldDefinitions.FirstOrDefault(f => f.Attribute.EqualsIc(filter.Attribute));
 
-                if (field != null) {
+                if (field != null && !filter.IsTransient()) {
                     //this filter has already been added on first step
                     continue;
                 }
@@ -178,9 +185,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 }
 
                 if (!filter.IsValid()) {
-                    throw new MetadataException(
-                        "Filter {0} is not correctly declared for application {1} (missing some fields). check your metadata".Fmt(filter.Attribute,
-                            applicationName));
+                    Log.WarnFormat("Filter {0} is not correctly declared for application {1} (missing some fields). check your metadata",filter.Attribute,
+                            applicationName);
+                    continue;
                 }
 
                 ValidateServiceWhereClauseProvider(schema, filter, entity);
@@ -333,7 +340,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 var optionValues = metadataFilterOptions.Where(o => o.PreSelected).Select(o => o.Value);
                 var values = string.Join(",", optionValues);
 
-                if (string.IsNullOrEmpty(values)) { return; }
+                if (string.IsNullOrEmpty(values)) {
+                    return;
+                }
                 dto.AppendSearchParam(optionFilter.Attribute);
                 dto.AppendSearchValue("=" + values);
             }

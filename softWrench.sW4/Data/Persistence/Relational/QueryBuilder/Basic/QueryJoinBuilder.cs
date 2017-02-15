@@ -12,7 +12,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
         public static string Build(EntityMetadata entityMetadata, EntityAssociation association) {
             var sb = new StringBuilder();
-            sb.AppendFormat("left join {0} on (", BaseQueryUtil.AliasEntity(association.To, association.Qualifier));
+            var join = association.InnnerJoin ? "inner join" : "left join";
+
+            sb.AppendFormat("{0} {1} on (",join, BaseQueryUtil.AliasEntity(association.To, association.Qualifier));
 
             sb.Append(AppendJoinConditions(entityMetadata, association)).Append(")");
             return sb.ToString();

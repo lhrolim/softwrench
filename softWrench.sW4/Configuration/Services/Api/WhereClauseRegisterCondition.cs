@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Security.Context;
@@ -17,11 +20,45 @@ namespace softWrench.sW4.Configuration.Services.Api {
             get; set;
         }
 
+        public int? ProfileId {
+            get; set;
+        }
+
+        public string GenerateAlias() {
+            if (Alias != null) {
+                return Alias;
+            }
+
+//            if (AppContext?.MetadataId != null) {
+//                //generating an alias based on the metadataid
+//                return AppContext.MetadataId;
+//            }
+            IDictionary<string, object> sortedDict = new SortedDictionary<string, object>();
+            sortedDict.Add("profileid", ProfileId);
+            sortedDict.Add("userprofile", UserProfile);
+            if (OfflineOnly) {
+                sortedDict.Add("offline", true);
+            }
+            if (AppContext != null) {
+                sortedDict.Add("schema", AppContext.Schema);
+                sortedDict.Add("metadataid", AppContext.MetadataId);
+            }
+            var sb = new StringBuilder();
+            foreach (var key in sortedDict.Keys.Where(k => sortedDict[k] != null)) {
+                sb.Append(key + ":" + sortedDict[key].ToString().ToLower()).Append(";");
+            }
+            Alias = sb.ToString();
+            return Alias;
+
+
+        }
+
+
         public Condition RealCondition {
             get {
                 if (Alias == null) {
                     //check documentation of Alias --> no alias means the framework can´t locate the existing condition to perform an update
-                    return null;
+                    Alias = GenerateAlias();
                 }
                 if (AppContext == null && !OfflineOnly) {
                     return (Condition)ReflectionUtil.Clone(new Condition(), this);
@@ -34,6 +71,24 @@ namespace softWrench.sW4.Configuration.Services.Api {
                 return whereClauseCondition;
             }
         }
+
+        public static WhereClauseRegisterCondition FromDataOrNull(string metadataId, int? profileId, bool? offline, string schema = null) {
+
+            if (!string.IsNullOrEmpty(metadataId) || profileId.HasValue || offline.HasValue) {
+                return new WhereClauseRegisterCondition {
+                    AppContext = new ApplicationLookupContext {
+                        MetadataId = metadataId,
+                        Schema = schema
+                    },
+                    OfflineOnly = offline ?? false,
+                    ProfileId = profileId
+                };
+            }
+            return null;
+        }
+
+
+
 
         public static WhereClauseRegisterCondition ForSchema(string schema) {
             return new WhereClauseRegisterCondition().AppendSchema(schema);

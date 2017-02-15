@@ -6,7 +6,6 @@ using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
-using NHibernate.Linq;
 using NHibernate.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;

@@ -169,7 +169,7 @@ namespace softWrench.sW4.Configuration.Definitions {
     }
 
     /// <summary>
-    /// The datatype enum for the <see cref="PropertyDefinition" class./>
+    /// The datatype enum for the <see cref="PropertyDefinition" />
     /// </summary>
     public enum PropertyDataType {
         STRING = 0,

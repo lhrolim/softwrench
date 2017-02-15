@@ -130,6 +130,7 @@
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\globalsearch\globalsearch_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\asset_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\inventory\inventory_service_shared.js" />
+    <Content Include="web_content\webcommons\scripts\softwrench\services\applications\swdb\whereClauseService.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\applications\workorder\workorder_service.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\commandcommons.js" />
     <Content Include="web_content\webcommons\scripts\softwrench\services\configurationservice.js" />
@@ -213,7 +214,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="web_content\webcommons\scripts\softwrench\services\applications\swdb\" />
     <Folder Include="web_content\webcommons\scripts\vendor\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

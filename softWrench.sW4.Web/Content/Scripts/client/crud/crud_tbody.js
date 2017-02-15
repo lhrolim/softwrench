@@ -84,7 +84,7 @@
     function hasDataClass(column, formattedText) {
         var classString = '';
 
-        if ((formattedText != null && formattedText != "") || column.rendererType == 'color' || column.rendererType == 'statusicons') {
+        if ((formattedText != null && formattedText != "") || (column.rendererType && column.rendererType.equalsAny("color","statusicon","icon"))) {
             classString = 'has-data';
         } else {
             classString = 'no-data';
@@ -164,14 +164,14 @@
                     var iconHTML = "";
                     iconHTML += "<i class=\"fa {0}\"".format(iconClass);
 
-                    if (column.rendererType == 'priorityicon' && column.rendererParameters.changevalue != undefined && column.rendererParameters.changevalue == 'true') {
+                    if (column.rendererType === 'priorityicon' && column.rendererParameters.changevalue != undefined && column.rendererParameters.changevalue === 'true') {
                         iconHTML += 'data-toggle="dropdown" aria-expanded="false"';
                     } else {
                         iconHTML += "onclick='griditemclick(event,{0},\"{1}\",this)'".format(rowIdx, column.attribute);
                     }
 
                     //if no color or value, hide the icon
-                    if (foreground == null && (text == 0 || text == null)) {
+                    if (foreground == null && (text === 0 || text == null)) {
                         foreground = 'transparent';
                     }
 

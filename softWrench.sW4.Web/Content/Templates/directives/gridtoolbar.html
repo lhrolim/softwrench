@@ -6,6 +6,7 @@
                     ng-init="initIfToggleCommand(command)"
                     ng-click="executeService(getCommand(command), toggleCommandOrNull(command))" href=""
                     ng-if="(command.type == 'ApplicationCommand' || command.type == 'ToggleCommand') && shouldShowCommand(getCommand(command))"
+                    ng-enabled="isCommandEnabled(getCommand(command))"
                     data-original-title="{{commandtooltip(getCommand(command))}}"
                     rel="tooltip"
                     data-container="body"

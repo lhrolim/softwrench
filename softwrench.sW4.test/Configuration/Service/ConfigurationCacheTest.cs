@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Security.Context;
 

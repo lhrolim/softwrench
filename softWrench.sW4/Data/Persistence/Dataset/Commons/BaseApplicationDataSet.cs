@@ -47,6 +47,7 @@ using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata.Applications.Schema;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -599,7 +600,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
-            var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
+            var operationWrapper = BuildOperationWrapper(application, json, id, operation, entityMetadata);
             if (userIdSite != null) {
                 operationWrapper.UserId = userIdSite.Item1;
                 operationWrapper.SiteId = userIdSite.Item2;
@@ -625,12 +626,20 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 userIdSite = new Tuple<string, string>(result.UserId, siteId);
             }
 
+            if (id == null && userIdSite == null) {
+                return result;
+            }
+
             //Main detail reload mode... full refresh would be handled at a higher level
             var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             result.ResultObject = await Engine().FindById(slicedEntityMetadata, id, userIdSite);
             return result;
 
 
+        }
+
+        protected virtual OperationWrapper BuildOperationWrapper(ApplicationMetadata application, JObject json, string id, string operation, EntityMetadata entityMetadata) {
+            return new OperationWrapper(application, entityMetadata, operation, json, id);
         }
 
         public virtual TargetResult DoExecute(OperationWrapper operationWrapper) {

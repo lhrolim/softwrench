@@ -35,7 +35,7 @@ namespace softWrench.sW4.Data.Search {
 
         public const string SearchParamOrSeparator = "||,";
 
-        public const string SearchParamSpliter = @"[^\w.]";
+        public const string SearchParamSpliter = @"[^\w.#.]";
 
         public const string DateSearchParamBegin = "_begin";
 

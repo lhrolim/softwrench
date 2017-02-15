@@ -70,12 +70,12 @@ namespace softWrench.sW4.Util {
         /// </summary>
         public static string ClientName {
             get {
+                if (_testclientName != null && IsUnitTest) {
+                    return _testclientName;
+                }
                 if (_clientName != null) {
                     //caching file system access
                     return _clientName;
-                }
-                if (_testclientName != null && IsUnitTest) {
-                    return _testclientName;
                 }
                 _clientName = ConfigurationManager.AppSettings["clientkey"];
                 return _clientName;

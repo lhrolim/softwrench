@@ -16,52 +16,80 @@ namespace softWrench.sW4.Configuration.Definitions {
 
         public const string ByDefinitionConditionIdModuleProfile = "from PropertyValue v where Definition.FullKey = ? and Condition.Id = ? and Module = ? and UserProfile = ?";
 
+        public const string ByDefinitionNoCondition = "from PropertyValue v where Definition.FullKey = ? and UserProfile = ?";
+
         public const string DistinctModules = "select distinct(Module) from PropertyValue";
 
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
-        public virtual int? Id { get; set; }
+        public virtual int? Id {
+            get; set;
+        }
 
         [Property]
         [JsonIgnore]
-        public virtual string Value { get; set; }
+        public virtual string Value {
+            get; set;
+        }
 
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
-        public virtual byte[] BlobValue { get; set; }
+        public virtual byte[] BlobValue {
+            get; set;
+        }
 
 
 
         [Newtonsoft.Json.JsonIgnore]
         [ManyToOne(Column = "definition_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
-        public virtual PropertyDefinition Definition { get; set; }
+        public virtual PropertyDefinition Definition {
+            get; set;
+        }
 
         [Newtonsoft.Json.JsonIgnore]
         [ManyToOne(Column = "condition_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
-        public virtual Condition Condition { get; set; }
+        public virtual Condition Condition {
+            get; set;
+        }
 
         [Property]
-        public virtual string Module { get; set; }
+        public virtual string Module {
+            get; set;
+        }
 
         [Property]
-        public virtual int? UserProfile { get; set; }
+        public virtual int? UserProfile {
+            get; set;
+        }
+
+        /// <summary>
+        /// To allow some level of multitenancy, especially at dev environments where the database can be shared across several customers
+        /// </summary>
+        [Property]
+        public virtual string ClientName {
+            get; set;
+        }
 
 
         [Property]
         [JsonIgnore]
-        public virtual string SystemValue { get; set; }
+        public virtual string SystemValue {
+            get; set;
+        }
 
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
-        public virtual byte[] SystemBlobValue { get; set; }
+        public virtual byte[] SystemBlobValue {
+            get; set;
+        }
 
         public virtual string SystemStringValue {
             get {
                 return SystemBlobValue != null ? StringExtensions.GetString(CompressionUtil.Decompress(SystemBlobValue)) : SystemValue;
             }
             set {
-                if (value !=null && value.Length > 1000) {
+                if (value != null && value.Length > 1000) {
                     SystemBlobValue = CompressionUtil.Compress(value.GetBytes());
                 } else {
                     SystemValue = value;
@@ -70,7 +98,9 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public virtual int? ConditionId {
-            get { return Condition == null ? null : Condition.Id; }
+            get {
+                return Condition == null ? null : Condition.Id;
+            }
         }
 
         public virtual string StringValue {
@@ -86,8 +116,13 @@ namespace softWrench.sW4.Configuration.Definitions {
             }
         }
 
-        public virtual ConditionMatchResult MatchesConditions(ContextHolder context) {
+        public virtual ConditionMatchResult MatchesConditions(ContextHolder context, string clientName) {
             var result = new ConditionMatchResult(Module, UserProfile);
+            if (this.ClientName != null && this.ClientName.Equals(clientName)) {
+                //preventing wrong customers to match on multitenancy databases
+                result.Append(ConditionMatch.No);
+                return result;
+            }
             result.AppendModule(Module, context.Module);
             result.AppendSelectedProfile(UserProfile, context.CurrentSelectedProfile);
             result.AppendAvailableProfile(UserProfile, context.UserProfiles);
@@ -105,9 +140,12 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (obj.GetType() != this.GetType())
+                return false;
             return Equals((PropertyValue)obj);
         }
 

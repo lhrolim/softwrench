@@ -18,47 +18,43 @@ namespace softWrench.sW4.Metadata.Entities {
     public class EntityMetadata {
 
         private const string ConnectorTableName = "dbtable";
-        private readonly string _name;
-        private readonly EntitySchema _schema;
-        private readonly ISet<EntityAssociation> _associations;
-        private readonly ConnectorParameters _connectorParameters;
-
-        private IDictionary<QueryCacheKey, string> _queryStringCache = new Dictionary<QueryCacheKey, string>();
 
         private readonly Lazy<IEnumerable<EntityAttribute>> _nonCollectionrelationshipAttributes;
 
         private readonly Lazy<IEnumerable<EntityAttribute>> _relationshipAttributes;
 
+
         public EntityMetadata([NotNull] string name, [NotNull] EntitySchema schema, [NotNull] IEnumerable<EntityAssociation> associations,
-            [NotNull] ConnectorParameters connectorParameters) {
+            [NotNull] ConnectorParameters connectorParameters, Type backendType = null) {
 
             Validate.NotNull(name, "name");
             Validate.NotNull(schema, "schema");
             Validate.NotNull(associations, "associations");
             Validate.NotNull(connectorParameters, "connectorParameters");
 
-            _name = name;
-            _schema = schema;
-            _associations = new HashSet<EntityAssociation>(associations);
-            _connectorParameters = connectorParameters;
+            Name = name;
+            Schema = schema;
+            BackEndType = backendType;
+            Associations = new HashSet<EntityAssociation>(associations);
+            ConnectorParameters = connectorParameters;
             _relationshipAttributes = new Lazy<IEnumerable<EntityAttribute>>(AddRelationshipAttributes);
             _nonCollectionrelationshipAttributes = new Lazy<IEnumerable<EntityAttribute>>(AddNonCollectionRelationshipAttributes);
         }
 
         internal void MergeWithParent() {
-            var parent = MetadataProvider.Entity(_schema.ParentEntity);
+            var parent = MetadataProvider.Entity(Schema.ParentEntity);
             var parentAssociations = parent.Associations;
             var parentAttributes = parent.Schema.Attributes;
             var parentConnectors = parent.ConnectorParameters;
 
             if (!Schema.ExcludeUndeclaredAssociations) {
                 foreach (var parentAssociation in parentAssociations) {
-                    _associations.Add(parentAssociation);
+                    Associations.Add(parentAssociation);
                 }
             }
 
-            if (!_connectorParameters.ExcludeUndeclared) {
-                var thisParameters = _connectorParameters.Parameters;
+            if (!ConnectorParameters.ExcludeUndeclared) {
+                var thisParameters = ConnectorParameters.Parameters;
                 foreach (var parentParameter in parentConnectors.Parameters) {
                     if (!thisParameters.ContainsKey(parentParameter.Key)) {
                         thisParameters.Add(parentParameter.Key, parentParameter.Value);
@@ -66,57 +62,44 @@ namespace softWrench.sW4.Metadata.Entities {
                 }
             }
 
-            if (!_schema.ExcludeUndeclaredAttributes) {
+            if (!Schema.ExcludeUndeclaredAttributes) {
                 foreach (var parentAttribute in parentAttributes) {
                     Schema.Attributes.Add(parentAttribute);
                 }
             }
 
             if (!HasWhereClause && parent.HasWhereClause) {
-                _schema.WhereClause = parent.Schema.WhereClause;
+                Schema.WhereClause = parent.Schema.WhereClause;
             }
         }
+
+        [CanBeNull]
+        public Type BackEndType { get; }
 
 
         [NotNull]
-        public string Name {
-            get {
-                return _name;
-            }
-        }
+        public string Name { get; }
 
         [NotNull]
-        public EntitySchema Schema {
-            get {
-                return _schema;
-            }
-        }
+        public EntitySchema Schema { get; }
 
 
         [NotNull]
-        public ConnectorParameters ConnectorParameters {
-            get {
-                return _connectorParameters;
-            }
-        }
+        public ConnectorParameters ConnectorParameters { get; }
 
         [NotNull]
-        public ISet<EntityAssociation> Associations {
-            get {
-                return _associations;
-            }
-        }
+        public ISet<EntityAssociation> Associations { get; }
 
         public ISet<EntityAssociation> ReverseAssociations() {
-            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (entityAssociation.Reverse)));
+            return new HashSet<EntityAssociation>(Associations.Where(entityAssociation => (entityAssociation.Reverse)));
         }
 
         public ISet<EntityAssociation> ListAssociations() {
-            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (entityAssociation.Collection)));
+            return new HashSet<EntityAssociation>(Associations.Where(entityAssociation => (entityAssociation.Collection)));
         }
 
         public virtual ISet<EntityAssociation> NonListAssociations(bool innerCall = false) {
-            return new HashSet<EntityAssociation>(_associations.Where(entityAssociation => (!entityAssociation.Collection && !entityAssociation.Reverse)));
+            return new HashSet<EntityAssociation>(Associations.Where(entityAssociation => (!entityAssociation.Collection && !entityAssociation.Reverse)));
         }
 
         public virtual AttributeHolder GetAttributeHolder(IEnumerable<KeyValuePair<string, object>> keyValuePairs) {
@@ -135,17 +118,10 @@ namespace softWrench.sW4.Metadata.Entities {
             get; set;
         }
 
-        public IDictionary<QueryCacheKey, string> QueryStringCache {
-            get {
-                return _queryStringCache;
-            }
-            set {
-                _queryStringCache = value;
-            }
-        }
+        public IDictionary<QueryCacheKey, string> QueryStringCache { get; set; } = new Dictionary<QueryCacheKey, string>();
 
         public IEnumerable<EntityAttribute> Attributes(AttributesMode includeCollections) {
-            var entityAttributes = _schema.Attributes.ToList();
+            var entityAttributes = Schema.Attributes.ToList();
             var associationAttributes = includeCollections == AttributesMode.IncludeCollections ?
                 _relationshipAttributes.Value : _nonCollectionrelationshipAttributes.Value;
             entityAttributes.AddRange(associationAttributes);
@@ -204,36 +180,20 @@ namespace softWrench.sW4.Metadata.Entities {
             return value;
         }
 
-        public Boolean HasParent {
-            get {
-                return _schema.ParentEntity != null;
-            }
-        }
+        public Boolean HasParent => Schema.ParentEntity != null;
 
-        public Boolean HasWhereClause {
-            get {
-                return !string.IsNullOrEmpty(_schema.WhereClause);
-            }
-        }
+        public Boolean HasWhereClause => !string.IsNullOrEmpty(Schema.WhereClause);
 
-        public string IdFieldName {
-            get {
-                return Schema.IdAttribute.Name;
-            }
-        }
+        public string IdFieldName => Schema.IdAttribute.Name;
 
-        public string UserIdFieldName {
-            get {
-                return Schema.UserIdAttribute.Name;
-            }
-        }
+        public string UserIdFieldName => Schema.UserIdAttribute.Name;
 
         public string WhereClause {
             get {
-                return _schema.WhereClause;
+                return Schema.WhereClause;
             }
             set {
-                _schema.WhereClause = value;
+                Schema.WhereClause = value;
             }
         }
 
@@ -310,26 +270,29 @@ namespace softWrench.sW4.Metadata.Entities {
         }
 
         public override string ToString() {
-            return string.Format("Name: {0}", _name);
+            return string.Format("Name: {0}", Name);
         }
 
         protected bool Equals(EntityMetadata other) {
-            return string.Equals(_name, other._name);
+            return string.Equals(Name, other.Name);
         }
 
         public override bool Equals(object obj) {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (!(obj.GetType().IsAssignableFrom(GetType()) || GetType().IsInstanceOfType(obj))) return false;
+            if (ReferenceEquals(null, obj))
+                return false;
+            if (ReferenceEquals(this, obj))
+                return true;
+            if (!(obj.GetType().IsAssignableFrom(GetType()) || GetType().IsInstanceOfType(obj)))
+                return false;
             return Equals((EntityMetadata)obj);
         }
 
         public override int GetHashCode() {
-            return (_name != null ? _name.GetHashCode() : 0);
+            return (Name != null ? Name.GetHashCode() : 0);
         }
 
         public bool SWEntity() {
-            return this._name.EndsWith("_");
+            return this.Name.EndsWith("_");
         }
     }
 }

@@ -57,13 +57,14 @@ namespace softWrench.sW4.Metadata {
 
         // MAximo entities and applications
         private static EntityQueries _entityQueries;
+
         private static ICollection<EntityMetadata> _entityMetadata;
         private static IReadOnlyCollection<CompleteApplicationMetadataDefinition> _applicationMetadata;
 
         private static IDictionary<string, CommandBarDefinition> _commandBars;
         private static System.Collections.Generic.ISet<string> _appsAndEntitiesUsedCache = null;
 
-        private static IList<CompleteApplicationMetadataDefinition> _transientApplicationMetadataDefinitions = new List<CompleteApplicationMetadataDefinition>();
+        private static readonly IList<CompleteApplicationMetadataDefinition> TransientApplicationMetadataDefinitions = new List<CompleteApplicationMetadataDefinition>();
 
 
 
@@ -116,7 +117,7 @@ namespace softWrench.sW4.Metadata {
             try {
                 _appsAndEntitiesUsedCache = null;
                 ComponentsDictionary.Clear();
-                _transientApplicationMetadataDefinitions.Clear();
+                TransientApplicationMetadataDefinitions.Clear();
                 FinishedParsing = false;
                 //this is needed because we may access the API method inside the validation process
                 //                _metadataValidator = new MetadataValidator();
@@ -138,7 +139,7 @@ namespace softWrench.sW4.Metadata {
                 FillFields();
                 FillRoleAlias();
                 FinishedParsing = true;
-                _transientApplicationMetadataDefinitions.Clear();
+                TransientApplicationMetadataDefinitions.Clear();
                 new MetadataXmlTargetInitializer().Validate();
                 BuildSlicedMetadataCache();
             } catch (Exception) {
@@ -301,7 +302,7 @@ namespace softWrench.sW4.Metadata {
             IEnumerable<CompleteApplicationMetadataDefinition> apps = name.StartsWith("_") ? _swdbapplicationMetadata : _applicationMetadata;
             if (!FinishedParsing) {
                 //if we are parsing schemas from an application, let´s retrieve the app from this map instead
-                apps = _transientApplicationMetadataDefinitions;
+                apps = TransientApplicationMetadataDefinitions;
             }
 
             var application = apps.FirstOrDefault(
@@ -860,7 +861,7 @@ namespace softWrench.sW4.Metadata {
         }
 
         public static void AddTransientApplication(CompleteApplicationMetadataDefinition completeApplicationMetadataDefinition) {
-            _transientApplicationMetadataDefinitions.Add(completeApplicationMetadataDefinition);
+            TransientApplicationMetadataDefinitions.Add(completeApplicationMetadataDefinition);
         }
     }
 }

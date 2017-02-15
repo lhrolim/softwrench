@@ -82,14 +82,15 @@
 
 
         function translateFields(displayables, datamap) {
-            const fieldsToTranslate = $.grep(displayables, function (e) {
-                return e.attributeToServer != null;
+            displayables.forEach(field => {
+                if (field.attributeToServer != null) {
+                    datamap[field.attributeToServer] = datamap[field.attribute];
+                    delete datamap[field.attribute];
+                }
+                if (field.displayables != undefined) {
+                    translateFields(field.displayables, datamap);
+                }
             });
-            for (let i = 0; i < fieldsToTranslate.length; i++) {
-                const field = fieldsToTranslate[i];
-                datamap[field.attributeToServer] = datamap[field.attribute];
-                delete datamap[field.attribute];
-            }
         }
 
         function createSubmissionParameters(datamap, schema, nextSchemaObj, id, compositionData) {

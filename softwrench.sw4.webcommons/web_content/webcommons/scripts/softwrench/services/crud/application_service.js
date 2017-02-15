@@ -3,7 +3,7 @@
     'use strict';
 
 
-    angular.module('webcommons_services').service('applicationService', ["$q", '$http', '$rootScope','$injector', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", applicationService]);
+    
 
     function fillApplicationParameters(parameters, applicationName, schemaId, mode) {
         /// <returns type=""></returns>
@@ -20,7 +20,7 @@
         return parameters;
     };
 
-    function applicationService($q, $http, $rootScope,$injector, contextService, crudContextHolderService, userPreferencesService, alertService) {
+    function applicationService($q, $http, $rootScope,$injector, contextService, crudContextHolderService, userPreferencesService, alertService,submitServiceCommons) {
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
@@ -99,8 +99,39 @@
                 originalDatamap
             });
 
-     
         }
+
+     
+        function deleteCrud(confirmationMessage) {
+            let confirmationPromise = $q.when();
+            if (confirmationMessage) {
+                confirmationPromise =alertService.confirm(confirmationMessage);
+            }
+            return confirmationPromise.then(r => {
+                const schema = crudContextHolderService.currentSchema();
+                const datamap = crudContextHolderService.rootDataMap();
+
+                const idFieldName = schema.idFieldName;
+                const applicationName = schema.applicationName;
+                const id = datamap[idFieldName];
+                var parameters = {};
+                if (sessionStorage.mockmaximo == "true") {
+                    parameters.mockmaximo = true;
+                }
+                parameters.applicationName = applicationName;
+                parameters.id = id;
+                parameters.platform = platform();
+                parameters = submitServiceCommons.addSchemaDataToParameters(parameters, schema);
+                const deleteParams = $.param(parameters);
+                const deleteUrl = removeEncoding(url("/api/data/" + applicationName + "/" + id + "?" + deleteParams));
+                return $http.delete(deleteUrl)
+                    .then(function(response) {
+                        const data = response.data;
+                        return $injector.get('redirectService').redirectFromServerResponse(data, "input");
+                    });
+            });
+        }
+
 
         /// <summary>
         ///  refactor to use promises
@@ -172,6 +203,8 @@
             return $http.post(postUrl, jsonString);
         };
 
+       
+
         function invokeOperation(applicationName, schemaId, operation, datamap, extraParameters) {
             var parameters = extraParameters ? extraParameters : {};
             parameters.Operation = operation;
@@ -209,11 +242,14 @@
             getApplicationDataPromise,
             getApplicationWithInitialDataPromise,
             submitData,
-            save
+            save,
+            deleteCrud
         };
         return service;
 
     }
+    angular.module('webcommons_services').service('applicationService', ["$q", '$http', '$rootScope','$injector', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService","submitServiceCommons", applicationService]);
+
 })(angular);
 
 

@@ -208,16 +208,16 @@
       <HintPath>..\packages\softwrench.sW4.batches.1.1.6207.1155\lib\net46\softwrench.sW4.batches.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.1.6253.29351, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.1.6253.29351\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.2.6254.18161, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.2.6254.18161\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.user, Version=1.2.6231.19272, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.user.1.2.6231.19272\lib\net46\softwrench.sw4.user.dll</HintPath>
+    <Reference Include="softwrench.sw4.user, Version=1.2.6254.19524, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.2.6254.19524\lib\net46\softwrench.sw4.user.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="SpreadsheetLight">
@@ -487,6 +487,7 @@
     <Compile Include="DB_Migration\5.14.0\20160825_SWWEB_2710.cs" />
     <Compile Include="DB_Migration\5.15.0\20161004_SWWEB_2795.cs" />
     <Compile Include="DB_Migration\5.18.5\20170134_SWWEB_2913.cs" />
+    <Compile Include="DB_Migration\5.19.0\20170210_SWWEB_2918.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
@@ -540,6 +541,7 @@
     <Compile Include="Util\StaticFileLoad\PassthroughBundleOrderer.cs" />
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\whereclause.xml" />
     <Content Include="Content\Images\apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\bulletinboard.xml" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
@@ -958,6 +960,7 @@
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
     <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
     <Content Include="Content\templates\swlabel.html" />
+    <Content Include="favicon.ico" />
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
   </ItemGroup>
   <ItemGroup>
@@ -1176,7 +1179,6 @@
     <Content Include="Gruntfile.js" />
     <Content Include="IBM.Data.DB2.dll" />
     <None Include="Content\styles\default\_site.scss" />
-    <Content Include="Content\Images\favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="App_Data\Client\hapag\i18n\es\labels.json" />
     <Content Include="App_Data\Client\otb\statuscolors.json" />

@@ -108,7 +108,9 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
                      .ToList());
 
             usedAttributes.Add(entityMetadata.Schema.IdAttribute);
-            usedAttributes.Add(entityMetadata.Schema.RowstampAttribute);
+            if (entityMetadata.Schema.RowstampAttribute != null) {
+                usedAttributes.Add(entityMetadata.Schema.RowstampAttribute);
+            }
 
             var result = SlicedRelationshipBuilderHelper.HandleRelationshipFields(attributes.Where(r => r.Contains('.')), entityMetadata);
             usedRelationships.UnionWith(result.DirectRelationships);

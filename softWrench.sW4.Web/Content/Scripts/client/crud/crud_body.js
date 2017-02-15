@@ -372,23 +372,7 @@
                 };
 
                 $scope.delete = function () {
-                    const schema = $scope.schema;
-                    const idFieldName = schema.idFieldName;
-                    const applicationName = schema.applicationName;
-                    const id = $scope.datamap[idFieldName];
-                    var parameters = {};
-                    if (sessionStorage.mockmaximo == "true") {
-                        parameters.mockmaximo = true;
-                    }
-                    parameters.platform = platform();
-                    parameters = addSchemaDataToParameters(parameters, $scope.schema);
-                    const deleteParams = $.param(parameters);
-                    const deleteURL = removeEncoding(url("/api/data/" + applicationName + "/" + id + "?" + deleteParams));
-                    return $http.delete(deleteURL)
-                        .then(function (response) {
-                            const data = response.data;
-                            defaultSuccessFunction(data);
-                        });
+              
                 };
 
                 this.cancel = function (data, schema) {

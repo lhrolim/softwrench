@@ -53,12 +53,12 @@ namespace softWrench.sW4.Configuration.Services {
                 return default(T);
             }
             var values = definition.Values;
-            if (!values.Any()) {
+            if (values == null || !values.Any()) {
                 return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
             }
             if (values.Count == 1) {
                 var propertyValue = values.First();
-                if (!ConditionMatch.No.Equals(propertyValue.MatchesConditions(lookupContext).MatchType)) {
+                if (!ConditionMatch.No.Equals(propertyValue.MatchesConditions(lookupContext, ApplicationConfiguration.ClientName).MatchType)) {
                     return ValueMatched<T>(propertyValue, definition.FullKey, lookupContext, ignoreCache);
                 }
                 return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
@@ -122,7 +122,7 @@ namespace softWrench.sW4.Configuration.Services {
         public static SortedDictionary<ConditionMatchResult, PropertyValue> BuildResultValues(IEnumerable<PropertyValue> values, ContextHolder lookupContext) {
             var resultingValues = new SortedDictionary<ConditionMatchResult, PropertyValue>();
             foreach (var propertyValue in values) {
-                var conditionMatchResult = propertyValue.MatchesConditions(lookupContext);
+                var conditionMatchResult = propertyValue.MatchesConditions(lookupContext, ApplicationConfiguration.ClientName);
                 if (!conditionMatchResult.MatchType.Equals(ConditionMatch.No)) {
                     Log.DebugFormat("Property \"{0}\" match for context \"{1}\"", propertyValue, lookupContext);
                     resultingValues.Add(conditionMatchResult, propertyValue);
@@ -163,7 +163,7 @@ namespace softWrench.sW4.Configuration.Services {
         public virtual async Task<SortedSet<PropertyDefinition>> UpdateDefinitions(CategoryDTO category) {
             var definitions = category.Definitions;
             var updatedDefinitions = new SortedSet<PropertyDefinition>();
-            var condition = category.Condition == null ? null : category.Condition.RealCondition;
+            var condition = category.Condition?.RealCondition;
 
             //TODO: we are only retrieving again, because a bug where the definition values are not sent over the wire
             var fullKeys = definitions.Select(def => def.FullKey).ToArray();
@@ -189,7 +189,8 @@ namespace softWrench.sW4.Configuration.Services {
                         Module = category.Module.Id,
                         UserProfile = category.UserProfile,
                         Condition = condition,
-                        StringValue = value
+                        StringValue = value,
+                        ClientName = ApplicationConfiguration.ClientName
                     });
                     if (definition.Values == null) {
                         definition.Values = new LinkedHashSet<PropertyValue>();

@@ -67,7 +67,8 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
             }
 
             foreach (var innerMetadata in InnerMetadatas) {
-                resultList.AddRange(innerMetadata.NonListAssociations(true));
+                var innerAssociations = innerMetadata.NonListAssociations(true);
+                resultList.AddRange(innerAssociations);
             }
 
             if (!innerCall) {

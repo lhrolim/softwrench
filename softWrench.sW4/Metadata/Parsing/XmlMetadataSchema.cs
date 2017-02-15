@@ -85,6 +85,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string RelationshipLazyAttribute = "lazy";
         public const string RelationshipAttributeReverse = "reverselookupattribute";
         public const string IgnorePrimaryAttribute = "ignoreprimary";
+        public const string InnerJoinAttribute = "innerjoin";
         public const string RelationshipAttributeElement = "relationshipAttribute";
         public const string RelationshipAttributeAttributeTo = "to";
         public const string RelationshipAttributeAttributeFrom = "from";

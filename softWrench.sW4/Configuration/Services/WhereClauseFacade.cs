@@ -193,7 +193,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
 
-        [Transactional(DBType.Swdb)]
+//        [Transactional(DBType.Swdb)]
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             foreach (var entry in _toRegister) {
                 var localEntry = entry;

@@ -11,20 +11,15 @@ using cts.commons.portable.Util;
 
 namespace softWrench.sW4.Data.Entities {
     public class Entity : AttributeHolder {
-
-        private readonly String _id;
-        private IDictionary<string, object> _associationAttributes;
-        private readonly IDictionary<string, string> _unmappedAttributes = new Dictionary<string, string>();
-        private readonly EntityMetadata _metadata;
-
         public Entity([CanBeNull] string id, [NotNull] IDictionary<string, object> attributes,
             [NotNull] IDictionary<string, object> associationAttributes, [NotNull] EntityMetadata metadata)
             : base(attributes) {
-            if (attributes == null) throw new ArgumentNullException("attributes");
+            if (attributes == null)
+                throw new ArgumentNullException("attributes");
 
-            _id = id;
-            _associationAttributes = associationAttributes;
-            _metadata = metadata;
+            Id = id;
+            AssociationAttributes = associationAttributes;
+            Metadata = metadata;
         }
 
         public static Entity GetInstance(EntityMetadata metadata, string id = null) {
@@ -33,9 +28,7 @@ namespace softWrench.sW4.Data.Entities {
 
         [CanBeNull]
         public string Id {
-            get {
-                return _id;
-            }
+            get;
         }
 
         [NotNull]
@@ -44,24 +37,20 @@ namespace softWrench.sW4.Data.Entities {
         }
 
         public IDictionary<string, object> AssociationAttributes {
-            get {
-                return _associationAttributes;
-            }
+            get; private set;
         }
 
         public EntityMetadata Metadata {
-            get {
-                return _metadata;
-            }
+            get;
         }
 
 
         public object GetRelationship(string attributeName) {
             object relationship;
             attributeName = attributeName.EndsWith("_") ? attributeName : attributeName + "_";
-            _associationAttributes.TryGetValue(attributeName, out relationship);
+            AssociationAttributes.TryGetValue(attributeName, out relationship);
             if (relationship == null) {
-                if (_metadata.ListAssociations().Any(l => l.Qualifier.EqualsAny(attributeName))) {
+                if (Metadata.ListAssociations().Any(l => l.Qualifier.EqualsAny(attributeName))) {
                     return BlankList();
                 }
             }
@@ -71,16 +60,16 @@ namespace softWrench.sW4.Data.Entities {
 
         public void ClearRelationShips(params string[] exceptFor) {
             if (exceptFor == null) {
-                _associationAttributes.Clear();
+                AssociationAttributes.Clear();
             } else {
-                var tempDict  = new Dictionary<string,object>();
+                var tempDict = new Dictionary<string, object>();
                 var set = new HashSet<string>(exceptFor);
                 foreach (var association in AssociationAttributes) {
                     if (set.Contains(association.Key)) {
-                        tempDict.Add(association.Key,association.Value);
+                        tempDict.Add(association.Key, association.Value);
                     }
                 }
-                _associationAttributes = tempDict;
+                AssociationAttributes = tempDict;
             }
         }
 
@@ -92,15 +81,11 @@ namespace softWrench.sW4.Data.Entities {
             return new List<Entity>();
         }
 
-        public IDictionary<string, string> UnmappedAttributes {
-            get {
-                return _unmappedAttributes;
-            }
-        }
+        public IDictionary<string, string> UnmappedAttributes { get; } = new Dictionary<string, string>();
 
         public override string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
             var value = GetAttribute(attributeName, remove, throwException);
-            return value != null ? value.ToString() : null;
+            return value?.ToString();
         }
 
         public override object GetAttribute(string attributeName, bool remove = false, bool throwException = false) {
@@ -172,7 +157,7 @@ namespace softWrench.sW4.Data.Entities {
         }
 
         public override string HolderName() {
-            return _metadata.Name;
+            return Metadata.Name;
         }
     }
 }
