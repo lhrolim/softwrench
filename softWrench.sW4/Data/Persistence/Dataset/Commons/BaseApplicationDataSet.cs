@@ -319,6 +319,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             // add pre selected filter if originally it had not a searchDTO so is a menu/breadcrumb navigation
             if (searchDto.IsDefaultInstance || searchDto.AddPreSelectedFilters) {
                 SchemaFilterBuilder.AddPreSelectedFilters(application.Schema.DeclaredFilters, searchDto);
+            }
+
+            // no sort or multisort - adds the default sort
+            if ((searchDto.MultiSearchSort == null || searchDto.MultiSearchSort.Count == 0) && string.IsNullOrEmpty(searchDto.SearchSort)) {
                 SearchUtils.AddDefaultSort(application.Schema, searchDto);
             }
 
