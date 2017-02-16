@@ -48,6 +48,28 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        /// <summary>
+        /// this field can reflect a SearchSort translated on the server side by taking into consideration the attributeToServer attribute;
+        /// 
+        /// The client uses the SearchSort, instead, to apply the filters on the screen, but this is the one being applied on the query
+        /// 
+        /// Should not be directly set
+        /// </summary>
+        [JsonIgnore]
+        public string TranslatedSearchSort {
+            get; set;
+        }
+
+        /// <summary>
+        /// this field can reflect a MultiSearchSort translated on the server side by taking into consideration the attributeToServer attribute
+        /// 
+        /// Should not be directly set
+        /// </summary>
+        [JsonIgnore]
+        public List<SortOrder> TranslatedMultiSearchSort {
+            get; set;
+        }
+
         public List<SortOrder> MultiSearchSort {
             get; set;
         }

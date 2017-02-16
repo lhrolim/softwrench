@@ -17,26 +17,28 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         private const EntityMetadata.AttributesMode NoCollections = EntityMetadata.AttributesMode.NoCollections;
 
         public static string BuildSearchSort(EntityMetadata entityMetadata, SearchRequestDto dto) {
-            var searchSort = dto.SearchSort;
+            var searchSort = dto.TranslatedSearchSort ?? dto.SearchSort;
+            var multiSearchSort = dto.TranslatedMultiSearchSort?? dto.MultiSearchSort;
+
             //third condition due to http://stackoverflow.com/questions/39559858/mvc-4-converting-to-one-element-list-with-null
-            if (string.IsNullOrWhiteSpace(searchSort) && (dto.MultiSearchSort == null || dto.MultiSearchSort.Count == 0 || dto.MultiSearchSort.All(a => a == null))) {
-                return string.Format(" order by {0} desc", entityMetadata.Schema.UserIdAttribute.Name);
+            if (string.IsNullOrWhiteSpace(searchSort) && (multiSearchSort == null || multiSearchSort.Count == 0 || multiSearchSort.All(a => a == null))) {
+                return $" order by {entityMetadata.Schema.UserIdAttribute.Name} desc";
             }
 
-            if (dto.MultiSearchSort != null && dto.MultiSearchSort.Any(a => a != null)) {
+            if (multiSearchSort != null && multiSearchSort.Any(a => a != null)) {
                 var builder = new StringBuilder();
                 //TODO: review this method
-                foreach (var column in dto.MultiSearchSort) {
+                foreach (var column in multiSearchSort) {
                     if (!string.IsNullOrWhiteSpace(column.ColumnName)) {
-                        var sort = string.Format(" {0} {1}, ", column.ColumnName, column.IsAscending ? " asc " : " desc ");
+                        var sort = $" {column.ColumnName} {(column.IsAscending ? " asc " : " desc ")}, ";
                         builder.Append(sort);
                     }
                 }
                 if (builder.Length > 0) {
-                    return string.Format(" order by {0}", builder.ToString().TrimEnd(',', ' '));
+                    return $" order by {builder.ToString().TrimEnd(',', ' ')}";
                 }
                 if (string.IsNullOrWhiteSpace(searchSort)) {
-                    return string.Format(" order by {0} desc", entityMetadata.Schema.UserIdAttribute.Name);
+                    return $" order by {entityMetadata.Schema.UserIdAttribute.Name} desc";
                 }
             }
             var suffix = dto.SearchAscending ? " asc " : " desc ";
@@ -55,11 +57,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 //                if (!dto.ExpressionSort) {
                 //                    return String.Format(" order by {0}.{1} {2}", entityMetadata.Name, searchSort, suffix);
                 //                }
-                return string.Format(" order by {0} {1}", searchSort, suffix);
+                return $" order by {searchSort} {suffix}";
             }
 
 
-            return string.Format(" order by {0} {1}", searchSort, suffix);
+            return $" order by {searchSort} {suffix}";
         }
 
         private static string GetQuerySortBy(EntityMetadata entityMetadata, EntityAttribute attribute, string suffix) {
@@ -67,10 +69,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 var a = (SlicedEntityMetadata)entityMetadata;
                 if (a.HasUnion()) {
                     //TODO: review this entirely
-                    return string.Format(" order by {0} {1}", attribute.Name, suffix);
+                    return $" order by {attribute.Name} {suffix}";
                 }
             }
-            return string.Format(" order by {0} {1}", attribute.GetQueryReplacingMarkers(entityMetadata.Name), suffix);
+            return $" order by {attribute.GetQueryReplacingMarkers(entityMetadata.Name)} {suffix}";
         }
     }
 

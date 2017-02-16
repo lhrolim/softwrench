@@ -37,14 +37,14 @@
           <field attribute="id" hidden="true"/>
           <field attribute="definition_id" hidden="true"/>
           <field attribute="propdefinition_.key" hidden="true"/>
-          <field attribute="#application" label="Application"/>
+          <field attribute="#application" label="Application" attributeToServer="definition_id"/>
           <field attribute="profile_.name" label="Security Group"/>
           <field attribute="condition_.metadataid" label="Metadata Id"/>
           <field attribute="condition_.offlineonly" label="Offline" tooltip="Whether this whereclause only applies to the offline solution" >
             <renderer type="checkbox"/>
           </field>
           <properties>
-            <property key="list.defaultorderby" value="definition_id"/>
+            <property key="list.defaultorderby" value="definition_id asc"/>
 <!--            <property key="list.click.service" value="whereClauseService.loadPropertyValue"/>-->
           </properties>
         </schema>

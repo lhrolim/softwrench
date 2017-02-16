@@ -10,6 +10,7 @@ using Quartz.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Metadata;
@@ -48,18 +49,19 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
 
             var entity = MetadataProvider.Entity(schema.EntityName);
             //caching this call
-            var attributes = entity.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            
 
             var schemaFilters = schema.SchemaFilters;
             if (schemaFilters == null) {
                 return dto;
             }
 
+            // filter out datetime and boolean filters
+            var filtersToApply = schemaFilters.Filters
+                .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter) && !StatusFilter(f.Attribute, schema));
 
-            var validFilterAttributes = schemaFilters.Filters
-                    // filter out datetime and boolean filters
-                    .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter) && !StatusFilter(f.Attribute, schema))
-                    .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, entity, attributes));
+            var validFilterAttributes = filtersToApply
+                    .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, entity,  schema.Fields));
 
             var sb = new StringBuilder();
             sb.Append("(");
@@ -184,11 +186,20 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             return fieldDefinition.DataType != null && fieldDefinition.DataType.Equals("text") && !fieldDefinition.DeclaredAsQueryOnEntity;
         }
 
-        private static string AttribteAppendingApplicationPrefix(string attribute, EntityMetadata entity, IEnumerable<EntityAttribute> attributes) {
+        internal static string AttribteAppendingApplicationPrefix(string attribute, EntityMetadata entity, IList<ApplicationFieldDefinition> displayables) {
 
+            var attributes = entity.Attributes(EntityMetadata.AttributesMode.NoCollections);
             var result = entity.LocateNonCollectionAttribute(attribute, attributes);
 
-            if (result.Item1.Query != null) {
+            if (result == null && attribute.StartsWith("#")) {
+                var field = displayables.FirstOrDefault(d => d.Attribute.Equals(attribute));
+                if (field?.AttributeToServer != null) {
+                    attribute = field.AttributeToServer;
+                }
+            }
+
+
+            if (result?.Item1.Query != null) {
                 return AssociationHelper.PrecompiledAssociationAttributeQuery(entity.Name, result.Item1);
             }
             if (attribute.Contains(".")) {

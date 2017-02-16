@@ -23,11 +23,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
         }
 
 
-        public static string QuickSearchParamName {
-            get {
-                return QUICK_SEARCH_PARAM_NAME;
-            }
-        }
+        public static string QuickSearchParamName => QUICK_SEARCH_PARAM_NAME;
 
         public static string QuickSearchDataValue(string data) {
             return string.Format(QUICK_SEARCH_PARAM_VALUE_PATTERN, data).ToUpper();

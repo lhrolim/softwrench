@@ -16,10 +16,10 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic
     [TestClass]
     public class QueryWhereBuilderTest
     {
-        IEnumerable<string> attributes = new List<string> { "itemnum", "description" };
-        IEnumerable<string> attributesWithRelationships = new List<string> { "itemnum", "location_.location", "location_.description", "description" };
+        readonly IEnumerable<string> attributes = new List<string> { "itemnum", "description" };
+        readonly IEnumerable<string> attributesWithRelationships = new List<string> { "itemnum", "location_.location", "location_.description", "description" };
 
-        private QuickSearchHelper QuickSearchHelper = new QuickSearchHelper();
+        private readonly QuickSearchHelper QuickSearchHelper = new QuickSearchHelper();
 
         [TestInitialize]
         public void Init() { }

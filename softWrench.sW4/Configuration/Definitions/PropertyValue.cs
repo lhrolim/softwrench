@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
 using System;
+using NHibernate.Engine;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
 namespace softWrench.sW4.Configuration.Definitions {
@@ -48,7 +49,7 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         [Newtonsoft.Json.JsonIgnore]
-        [ManyToOne(Column = "condition_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+        [ManyToOne(Column = "condition_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "delete-orphan")]
         public virtual Condition Condition {
             get; set;
         }

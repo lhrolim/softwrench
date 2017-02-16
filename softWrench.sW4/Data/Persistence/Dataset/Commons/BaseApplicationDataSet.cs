@@ -112,6 +112,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             get; set;
         }
 
+        [Import]
+        public SortHandler SortHandler {
+            get; set;
+        }
+
         public AttachmentHandler AttachmentHandler => SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>();
 
         [Import]
@@ -307,7 +312,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
             QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
-
+            SortHandler.HandleSearchDTO(application.Schema, searchDto);
 
             var ctx = ContextLookuper.LookupContext();
 

@@ -249,6 +249,7 @@
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandlerTest.cs" />
     <Compile Include="Data\Search\SearchTest2.cs" />
     <Compile Include="Data\Search\SearchUtilsTest.cs" />
+    <Compile Include="Data\Search\SortHandlerTest.cs" />
     <Compile Include="Email\CommLogTemplateMergerTest.cs" />
     <Compile Include="ExtensionsForICustomAttributeProvider.cs" />
     <Compile Include="Hapag\Data\Connector\Imac\ImacServicePlanHelperTest.cs" />
