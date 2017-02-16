@@ -555,10 +555,12 @@
                             sorting.field = columnName;
                             sorting.order = "asc";
                         }
+                        sortModel().sortColumns = [];
                         $scope.selectPage(1);
                     };
 
                     $scope.multisort = function (addPreSelectedFilters) {
+                        $scope.searchSort = {};
                         $scope.selectPage(1, $scope.paginationData, false, { addPreSelectedFilters: addPreSelectedFilters});
                     };
 
