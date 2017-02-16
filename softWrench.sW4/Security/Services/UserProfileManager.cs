@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace softWrench.sW4.Security.Services {
 
         protected static readonly ILog Log = LogManager.GetLogger(typeof(UserProfileManager));
 
-        private static readonly IDictionary<int?, UserProfile> ProfileCache = new Dictionary<int?, UserProfile>();
+        private static readonly IDictionary<int?, UserProfile> ProfileCache = new ConcurrentDictionary<int?, UserProfile>();
 
         private static bool _cacheStarted;
 
