@@ -105,7 +105,7 @@
             $scope.dashboards.forEach(sortPanels);
             $scope.dashboards.forEach(createDashboardCheckPoint);
             const userData = contextService.getUserData();
-            $scope.userid = userData.id;
+            $scope.userid = userData.dbId;
         };
 
         $scope.getCurrentDashboardById = function (id) {
