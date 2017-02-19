@@ -41,7 +41,7 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-!function ($) {
+!function ($, angular) {
     "use strict";// jshint ;_;
 
     if (typeof ko !== 'undefined' && ko.bindingHandlers && !ko.bindingHandlers.multiselect) {
@@ -1278,7 +1278,7 @@
          * @returns {Array}
          */
         mergeOptions: function(options) {
-            return $.extend(true, {}, this.defaults, this.options, options);
+            return angular.extend({}, this.defaults, this.options, options);
         },
 
         /**
@@ -1434,4 +1434,4 @@
         $("select[data-role=multiselect]").multiselect();
     });
 
-}(window.jQuery);
+}(window.jQuery,angular);
