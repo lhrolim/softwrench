@@ -24,8 +24,8 @@
                 scope.$name = 'crudbody';
             },
 
-            controller: ["$scope", "$http", "$log", "$interval", "$timeout", "redirectService", "contextService", "$rootScope", "alertService", "sidePanelService", "userService",
-                function ($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope, alertService, sidePanelService, userService) {
+            controller: ["$scope", "$http", "$log", "$interval", "$timeout", "redirectService", "contextService", "$rootScope", "alertService", "sidePanelService", "userService","restService",
+                function ($scope, $http, $log, $interval, $timeout, redirectService, contextService, $rootScope, alertService, sidePanelService, userService, restService) {
 
                     var log = $log.getInstance('sw4.activityStream');
 
@@ -33,11 +33,9 @@
                     $scope.hiddenToggle = false;
                     $scope.enableFilter = false;
                     $scope.availableProfiles = [];
-
-                    var activityStreamEnabled = function () {
+                    const activityStreamEnabled = function () {
                         return contextService.fetchFromContext('activityStreamFlag', false, true);
                     };
-
                     if (!activityStreamEnabled()) {
                         sidePanelService.hide($scope.panelid);
                     };
@@ -75,13 +73,11 @@
                     };
 
                     $scope.formatDate = function (notificationDate) {
-                        var currentDate = new Date();
-                        var nowMils = currentDate.getTime();
-
-                        var notificationMils = new Date(notificationDate).getTime();
-                        var differenceMils = nowMils - notificationMils;
-                        var dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
-
+                        const currentDate = new Date();
+                        const nowMils = currentDate.getTime();
+                        const notificationMils = new Date(notificationDate).getTime();
+                        const differenceMils = nowMils - notificationMils;
+                        const dateMessage = moment.duration(differenceMils, "milliseconds").humanize();
                         return 'About ' + dateMessage + ' ago'; // + ' (' + notificationMils + ')';
                     };
 
@@ -99,15 +95,13 @@
 
                     $scope.markAllRead = function () {
                         log.debug('markAllRead');
-
-                        var confirmationMessage = "Mark all notifications as read?";
+                        const confirmationMessage = "Mark all notifications as read?";
                         return alertService.confirm(confirmationMessage).then(function () {
-                            var controllerToUse = "Notification";
-                            var actionToUse = "UpdateNotificationReadFlag";
-                            var parameters = {};
+                            const controllerToUse = "Notification";
+                            const actionToUse = "UpdateNotificationReadFlag";
+                            const parameters = {};
                             parameters.securityGroup = $scope.activityProfile;
-
-                            var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+                            const rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                             $http.post(rawUrl, angular.toJson($scope.activities)).then(function () {
                                 log.debug('Mark All Read Complete');
                                 $scope.refreshStream();
@@ -120,15 +114,13 @@
 
                         var controllerToUse = "Notification";
                         var actionToUse = "UpdateNotificationReadFlag";
-
-                        var parameters = {};
+                        const parameters = {};
                         parameters.securityGroup = $scope.activityProfile;
                         parameters.application = activity.application;
                         parameters.id = activity.id;
                         parameters.rowstamp = activity.rowstamp;
                         parameters.isread = !activity.isRead;
-
-                        var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+                        const rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
                         $http.post(rawUrl).then(function (response) {
                             const data = response.data;
                             log.debug('Mark Read Complete');
@@ -136,17 +128,17 @@
                         }).catch(
                             function (response) {
                                 const data = response.data;
-                                var errordata = {
+                                const errordata = {
                                     errorMessage: "error opening action {0} of controller {1} ".format(actionToUse, controllerToUse),
                                     errorStack: data.message
-                                }
+                                };
                                 $rootScope.$broadcast(JavascriptEventConstants.ErrorAjax, errordata);
                                 alertService.notifyexception(errordata);
                             });
                     };
 
                     $scope.buildActivityNotificationParam = function (activity, parent) {
-                        var param = {
+                        const param = {
                             id: activity.uId,
                             applicationName: activity.application
                         };
@@ -173,17 +165,16 @@
 
                     $scope.openLink = function (activity, parent) {
                         log.debug('openLink');
-                        var redirectParameters = $scope.buildActivityNotificationParam(activity, parent);
-
+                        const redirectParameters = $scope.buildActivityNotificationParam(activity, parent);
                         redirectService.goToApplicationView(redirectParameters.applicationName, "editdetail", "input", null, redirectParameters)
                             .then(function (data) {
-                                var parameters = {
+                                const parameters = {
                                     securityGroup: $scope.activityProfile,
                                     application: activity.application,
                                     id: activity.id,
                                     rowstamp: activity.rowstamp
                                 };
-                                var rawUrl = url("/api/generic/Notification/UpdateNotificationReadFlag?" + $.param(parameters));
+                                const rawUrl = url("/api/generic/Notification/UpdateNotificationReadFlag?" + $.param(parameters));
                                 return $http.post(rawUrl);
                             }).then(function (data) {
                                 $scope.disposeActivityStream(activity, parent);
@@ -193,16 +184,13 @@
 
                     $scope.refreshStream = function (silent) {
                         log.debug('refreshStream');
-
-                        var controllerToUse = "Notification";
-                        var actionToUse = "GetNotifications";
-
-                        var parameters = {
+                        const controllerToUse = "Notification";
+                        const actionToUse = "GetNotifications";
+                        const parameters = {
                             currentProfile: $scope.activityProfile
                         };
-
-                        var rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
-                        $http.get(rawUrl, { avoidspin: true }).then(function (response) {
+//                        const rawUrl = url("/api/generic/" + controllerToUse + "/" + actionToUse + "?" + $.param(parameters));
+                        restService.getPromiseNoDigest(controllerToUse, actionToUse, $.param(parameters), { avoidspin: true }).then(function (response) {
                             const data = response.data;
                             $scope.readCount = data.readCount;
                             $scope.activities = data.notifications;

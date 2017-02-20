@@ -10,14 +10,14 @@ namespace softWrench.sW4.Web {
         public void PopulateStyleBundles(BundleCollection bundles) {
             if (ApplicationConfiguration.IsLocal()) {
                 PopulateLocalStyleBundles(bundles);
+                // from bower fonts
+                bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
+                    .Include("~/Content/fonts/font.css"));
             } else {
                 PopulateDistributionStyleBundles(bundles);
             }
 
-            // from bower fonts
-            bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
-                .Include("~/Content/fonts/font.css")
-                );
+            
         }
 
         private void PopulateLocalStyleBundles(BundleCollection bundles) {

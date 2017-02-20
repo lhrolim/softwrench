@@ -40,9 +40,9 @@
 
             public static readonly string[] Styles = {
                 VendorStyles,
-                Local.FontsStyles,
+//                Local.FontsStyles,
                 Local.AppStyles,
-                Local.SharedAppStyles
+//                Local.SharedAppStyles
             };
 
             public static readonly string AllScripts = "~/Content/dist/scripts";

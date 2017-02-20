@@ -123,10 +123,11 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         public List<Dictionary<string, string>> GetAvailableWorkflows(string appName, string workflowName, string appId) {
 
             var entityName = _cachedWorkorderSchemas[appName].Schema.EntityName;
+            
 
             var queryString = workflowName != null
-                ? WfQueryString.FormatInvariant("processname", workflowName, entityName, appId)
-                : WfQueryString.FormatInvariant("objectname", entityName, entityName, appId);
+                ? Quartz.Util.StringExtensions.FormatInvariant(WfQueryString, workflowName, entityName, appId)
+                : Quartz.Util.StringExtensions.FormatInvariant(WfQueryString,"objectname", entityName, entityName, appId);
 
             return _maxDAO.FindByNativeQuery(queryString);
         }
@@ -181,7 +182,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             //                BuildKeyAttributeString(entityName, appUserId), siteid, personId);
             //
             //            await RestUtil.CallRestApi(requestUri, "POST", null, msg);
-            var successMessage = "Workflow {0} has been initiated.".FormatInvariant(workflowName);
+            var successMessage = "Workflow {0} has been initiated.".Fmt(workflowName);
             return new BlankApplicationResponse {
                 SuccessMessage = successMessage
             };
@@ -233,7 +234,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         private string BuildKeyAttributeString(string entityName, string applicationItemId) {
             string keyTemplate = "<{0}>{1}</{0}>";
             EntityMetadata entity = MetadataProvider.Entity(entityName);
-            var formattedKey = keyTemplate.FormatInvariant(entity.UserIdFieldName.ToUpper(), applicationItemId);
+            var formattedKey = Quartz.Util.StringExtensions.FormatInvariant(keyTemplate,entity.UserIdFieldName.ToUpper(), applicationItemId);
             return formattedKey;
         }
 

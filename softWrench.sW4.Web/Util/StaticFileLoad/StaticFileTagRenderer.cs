@@ -4,23 +4,22 @@ using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using log4net;
+using softwrench.sw4.webcommons.classes.bundles;
 using softWrench.sW4.Util;
 using Local = softWrench.sW4.Web.Util.StaticFileLoad.Bundles.Local;
 using Prod = softWrench.sW4.Web.Util.StaticFileLoad.Bundles.Distribution;
 
 namespace softWrench.sW4.Web.Util.StaticFileLoad {
-    public static class StaticFileTagRenderer
-    {
+    public static class StaticFileTagRenderer {
 
-        private static ILog Log = LogManager.GetLogger(typeof (StaticFileTagRenderer));
+        private static ILog Log = LogManager.GetLogger(typeof(StaticFileTagRenderer));
 
-        public static ICollection<IHtmlString> RenderScripts()
-        {
-            
+        public static ICollection<IHtmlString> RenderScripts() {
+
             var scripts = ApplicationConfiguration.IsLocal() ? Local.Scripts : Prod.Scripts;
             var scriptTags = scripts.Select(path => RowStampScriptHelper.Render(path));
             var watch = Stopwatch.StartNew();
-//            var renderScripts = RenderDistinctTags(scriptTags, "</script>");
+            //            var renderScripts = RenderDistinctTags(scriptTags, "</script>");
             watch.Stop();
             Log.DebugOrInfoFormat("static rendering scripts, took {0} ms", watch.ElapsedMilliseconds);
             return scriptTags.ToList();
@@ -28,12 +27,21 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
 
         public static ICollection<HtmlString> RenderStyles() {
             var watch = Stopwatch.StartNew();
-            var styles = ApplicationConfiguration.IsLocal() ? Local.Styles : Prod.Styles;
+            var styles = ApplicationConfiguration.IsLocal() ? Local.Styles : Prod.Styles.Where(ShouldBeApplied);
+
+
             var styleTags = styles.Select(path => RowStampScriptHelper.RenderCss(path));
             var renderDistinctTags = RenderDistinctTags(styleTags, "/>");
             watch.Stop();
             Log.DebugOrInfoFormat("static rendering styles, took {0} ms", watch.ElapsedMilliseconds);
             return renderDistinctTags;
+        }
+
+        private static bool ShouldBeApplied(string arg) {
+            if (!SharedBundleConfigProvider.HasCustom && Bundles.Local.AppStyles.Equals(arg)) {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -44,7 +52,7 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
         /// <returns></returns>
         private static ICollection<HtmlString> RenderDistinctTags(IEnumerable<IHtmlString> tags, string splitter) {
             return tags.Select(t => t.ToHtmlString())
-                .Select(t => 
+                .Select(t =>
                     t.Split(new[] { splitter }, StringSplitOptions.RemoveEmptyEntries)
                     .Where(s => !string.IsNullOrWhiteSpace(s))
                     .Select(s => (s + splitter).Trim())

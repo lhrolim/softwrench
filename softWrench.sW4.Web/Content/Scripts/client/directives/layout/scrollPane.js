@@ -1,7 +1,7 @@
 ﻿(function (angular, app) {
     "use strict";
 
-    app.directive('scrollPane', function (contextService, $log, $timeout,$window) {
+    app.directive('scrollPane', function (contextService, $log, $timeout, $window) {
         return {
             restrict: 'E',
             replace: false,
@@ -11,26 +11,34 @@
                 useAvailableHeight: '='
             },
 
-            link: function(scope, element, attrs) {
-                var log = $log.getInstance('sw4.scrollPane');
+            link: function (scope, element, attrs) {
+                scope.$name = "scrollPane";
+
+                var log = $log.getInstance('sw4.scrollPane', ["layout"]);
+                log.debug("init scrollpane");
 
                 var scrollPaneData = null;
                 var scrollElement = $('.scroll', element);
 
+                //TODO: performance: improve
                 scope.$watch(
                     function () {
-                        var scrollParent = $(element[0].offsetParent).is(':visible');
+                        log.trace('checking scroll pane');
+                        var t0 = performance.now();
+                        const scrollParent = $(element[0].offsetParent).is(':visible');
 
                         //if scroll pane exists and parent is visible
                         if (!scrollPaneData && !scrollParent) {
                             return;
                         }
+                        const length = element[0].innerHTML.length;
 
-                        return element[0].innerHTML.length;
+                        log.debug('checking scroll pane finish, took:(ms) ' + (performance.now() - t0));
+                        return length;
                     },
                     function (newValue, oldValue) {
                         if (newValue !== oldValue) {
-                            log.debug('content changed, resize scroll pane');
+                            log.trace('content changed, resize scroll pane');
 
                             //allow the parent to update before resize
                             lazyLayout();
@@ -67,10 +75,10 @@
                     //create the scrollPane
                     if (pane == null) {
                         pane = scroll.jScrollPane().data('jsp');
-                    } 
+                    }
 
                     //add a delay to resize the scroll panes (to account for opening the sidePanels)
-                    $timeout(function() {
+                    $timeout(function () {
                         pane.reinitialise();
                     }, 200, false);
 
@@ -78,8 +86,7 @@
                 }
 
                 function setScrollHeight() {
-                    var contentHeight = getContentHeight(scrollElement, scope.availableFn()());
-
+                    const contentHeight = getContentHeight(scrollElement, scope.availableFn()());
                     if (contentHeight != null) {
                         scrollElement.height(contentHeight);
                         scrollPaneData = initScrollPane(scrollPaneData, scrollElement);
@@ -91,8 +98,8 @@
                 function stopWindowScroll(prevent) {
                     //prevent window scrolling after reaching end of navigation pane if enabled
                     if (prevent) {
-                        scrollElement.on('mousewheel', function(e) {
-                            var delta = e.originalEvent.wheelDelta;
+                        scrollElement.on('mousewheel', function (e) {
+                            const delta = e.originalEvent.wheelDelta;
                             this.scrollTop += (delta < 0 ? 1 : -1) * 30;
                             e.preventDefault();
                         });

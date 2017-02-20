@@ -29,7 +29,7 @@
                 cacheTimestamp: contextService.get(timestampKey, true)
             };
             const config = { avoidspin: true };
-            return restService.getPromise("Configuration", "GetClientSideConfigurations", parameters, config).then(result => {
+            return restService.getPromiseNoDigest("Configuration", "GetClientSideConfigurations", parameters, config).then(result => {
                 const data = result.data;
                 if (!data || data === "null") {
                     return null;

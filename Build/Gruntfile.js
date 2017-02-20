@@ -24,6 +24,8 @@ module.exports = function (grunt) {
         app: {
             content: fullPath + "Content",
             vendor: fullPath + "Content/vendor",
+            defaultstyles: fullPath + "Content/styles/default",
+            shared: fullPath + "Content/Shared/",
             customVendor: fullPath + "Content/customVendor",
             customers: fullPath + "Content/Customers",
             tests: /*fullPath +*/ "../softwrench.sw4.jstest",
@@ -152,7 +154,7 @@ module.exports = function (grunt) {
                     "angular-xeditable.js": "angular-xeditable/dist/js/xeditable.min.js",
                     "angular-file-upload.js": "angular-file-upload/angular-file-upload.min.js",
                     "angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js",
-                    "sortable.js": "angular-ui-sortable/sortable.js",
+                    "sortable.js": "angular-ui-sortable/sortable.min.js",
                     "ui-grid.js": "angular-ui-grid/ui-grid.min.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
@@ -233,11 +235,14 @@ module.exports = function (grunt) {
         concat: {
             vendorStyles: {
                 src: [
-                    "<%= bowercopy.css.options.destPrefix %>/*.css",
+                    "<%= app.tmp %>/css/vendor.min.css",
+//                    "<%= bowercopy.css.options.destPrefix %>/*.css",
                     // TODO: have customVendor be a part of the app's css instead of the vendor's css
-                    "<%= app.tmp %>/css/customVendor.min.css"
+                    "<%= app.tmp %>/css/customVendor.min.css",
+                    "<%= app.tmp %>/css/app.min.css",
+                    "<%= app.content %>/fonts/font.css"
                 ],
-                dest: "<%= app.dist %>/css/vendor.css"
+                dest: "<%= app.dist %>/css/site.css"
             },
             vendorScripts: {
                 options: {
@@ -262,6 +267,8 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/dx.chartjs.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/dx.vectormap.usa.js",
                     // angular
+//                    "angular.js": "angular/angular.js",
+//                    "<%= app.content %>/scripts/angular.inst.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-sanitize.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-strap.js",
@@ -351,13 +358,56 @@ module.exports = function (grunt) {
 
         //#region minify css
         cssmin: {
+            app: {
+                files: [{
+                    src: ["<%= app.defaultstyles %>/*.css", "<%= app.defaultstyles %>/application/*.css", "<%= app.defaultstyles %>/media/*.css",
+                        "<%= app.defaultstyles %>/vendor/*.css", "<%= app.shared %>/**/styles/*.css"],
+                    dest: "<%= app.tmp %>/css/app.min.css",
+                    ext: ".min.css"
+                }],
+                options: {
+                    level: {
+                        1: {
+                            specialComments: 0
+                        },
+                        2: {}
+                    }
+                }
+            },
+
             customVendor: {
                 files: [{
                     src: ["<%= app.customVendor %>/css/*.css"],
                     dest: "<%= app.tmp %>/css/customVendor.min.css",
                     ext: ".min.css"
-                }]
+                }],
+                options: {
+                    level: {
+                        1: {
+                            specialComments: 0
+                        },
+                        2: {}
+                    }
+                }
+            },
+
+            vendor: {
+                files: [{
+                    src: ["<%= bowercopy.css.options.destPrefix %>/*.css"],
+                    dest: "<%= app.tmp %>/css/vendor.min.css",
+                    ext: ".min.css"
+                }],
+                options: {
+                    level: {
+                        1: {
+                            specialComments: 0
+                        },
+                        2: {}
+                    }
+                }
             }
+
+
         },
         //#endregion
 
@@ -369,11 +419,11 @@ module.exports = function (grunt) {
                     module: "sw_layout",
                     url: function (url) {
                         var idx = url.indexOf("/Content");
-                        url=url.replace("/templates","/Templates")
+                        url = url.replace("/templates", "/Templates")
                         return url.substring(idx);
                     },
                     templateWrap: function (path, template, index, files) {
-                        var fullPath =`contextService.getResourceUrl('${path}')`;
+                        var fullPath = `contextService.getResourceUrl('${path}')`;
                         return `$templateCache.put(${fullPath},${template})`;
                     },
                     bootstrap: function (module, script) {
@@ -383,6 +433,18 @@ module.exports = function (grunt) {
             }
         },
 
+
+        // Remove unused CSS across multiple files, compressing the final output
+        uncss: {
+            dist: {
+                files: [
+                    { src: ['<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'], dest: 'dist/css/compiled.min.css' }
+                ]
+            },
+            options: {
+                compress: true
+            }
+        },
 
         //#region uglify js
         uglify: {
@@ -482,6 +544,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-ng-annotate");
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks('grunt-uncss');
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks("grunt-karma");
@@ -498,6 +561,8 @@ module.exports = function (grunt) {
         "cleanAll", // clean folders: preparing for copy
         "copyAll", // copying bower files
         "cssmin:customVendor", // minify and concat 'customized from vendor' css
+        "cssmin:vendor", // minify and concat 'customized from vendor' css
+        "cssmin:app", // minify and concat 'customized from vendor' css
         "concat:vendorStyles", // concat vendors's css + minified 'customized from vendor' and distribute as 'css/vendor.css'
         "concat:customVendorScripts", // concat custom vendors's scripts in 'temp/scripts/customvendor.js'
         "uglify:rawVendors", // minifies unminified vendors

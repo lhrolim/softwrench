@@ -91,6 +91,13 @@ modules.webcommons.service('restService', ["$http", "$log", "contextService", fu
             return $http.get(url, config);
         },
 
+        getPromiseNoDigest: function (controller, action, queryParameters, config = {}) {
+             var url = this.getActionUrl(controller, action, queryParameters);
+             var log = $log.getInstance("restService#invokeGet");
+             log.info("invoking get on url {0}".format(url));
+             return $http.get("nodigest:"+url, config);
+        },
+
         get: function() {
             return this.getPromise.apply(this, arguments);
         }

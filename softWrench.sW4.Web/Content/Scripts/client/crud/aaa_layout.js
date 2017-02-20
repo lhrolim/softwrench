@@ -36,8 +36,9 @@
         editableOptions.theme = "bs3"; // bootstrap3 theme. Can be also 'bs2', 'default'
     }]);
 
-    app.config(function($locationProvider) {
+    app.config(function($locationProvider, $httpProvider) {
         $locationProvider.html5Mode(true);
+        $httpProvider.useApplyAsync(true);
     });
 
     //#region extra directives
