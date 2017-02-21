@@ -16,7 +16,8 @@
     
   </templates>
   <entities>
-    <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid">
+    <!-- whereclause applied to all srs - excludes anomalous srs with changedates way in the future-->
+    <entity name="SR" idAttribute="ticketuid" useridAttribute="ticketid" whereclause="SR.ticketid not in ('20587', '20588', '20590', '21582', '21583', '21585', '21588', '21591', '21592', '21593', '21594', '21595')"> 
       <attributes>
         <attribute name="originalstatus" query="!@status" type="varchar"/>
         <attribute name="accumulatedholdtime" type="float" required="false" />
