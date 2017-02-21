@@ -71,6 +71,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
                 return base.GetList(application, searchDto);
             }
 
+            // TODO Consider implementing this on whereclause app, enabling composite conditions
             var appWcs = allWcs[application.Name];
             appWcs.ToList().ForEach(pair => {
                 if (!metadataid.ContainsIgnoreCase(pair.Key)) {
