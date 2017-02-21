@@ -178,7 +178,7 @@ namespace softwrench.sw4.Hapag.Security {
             if (user.IsInGroup(HapagPersonGroupConstants.XITC) && !user.Genericproperties.ContainsKey(HapagPersonGroupConstants.HlagLocationXITCProperty)) {
                 //HAP-1017 , for XITC we need to fill the list of "sub" locations so that these job plan actions of them become also available
                 //TODO: move to a better place...
-                var allGroups = GetLocationsOfUser(user,true);
+                var allGroups = GetLocationsOfUser(user, true);
                 var xitcgroups = new HashSet<string>();
                 foreach (var hlagGroupedLocation in allGroups) {
                     var descriptions = hlagGroupedLocation.GetGroupDescriptions();
@@ -384,25 +384,23 @@ namespace softwrench.sw4.Hapag.Security {
 
             costCentersToUse = BuildCostCentersFromMaximo(subCustomer, personId);
 
-            //            if (personId == null) {
-            //                //we´re interested in the current user, so we can assume its groups are synced fine.
-            //                //pick the groups from SWDB
-            //                personId = SecurityFacade.CurrentUser().MaximoPersonId;
-            //                var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-            //                var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
-            //                var context = _contextLookuper.LookupContext();
-            //                //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
-            //                var locationsToUse = context.IsInModule(FunctionalRole.XItc)
-            //                    ? result.GroupedLocations
-            //                    : result.DirectGroupedLocations;
-            //                var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
-            //                if (groupedLocation == null) {
-            //                    return null;
-            //                }
-            //                costCentersToUse = groupedLocation.CostCentersForQuery("glaccount");
-            //            } else {
-            //                
-            //            }
+            if (costCentersToUse.Equals("1!=1")) {
+                //we´re interested in the current user, so we can assume its groups are synced fine.
+                //pick the groups from SWDB
+                personId = SecurityFacade.CurrentUser().MaximoPersonId;
+                var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
+                var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
+                var context = _contextLookuper.LookupContext();
+                //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
+                var locationsToUse = context.IsInModule(FunctionalRole.XItc)
+                    ? result.GroupedLocations
+                    : result.DirectGroupedLocations;
+                var groupedLocation = locationsToUse.FirstOrDefault(f => f.SubCustomerSuffix == subCustomer);
+                if (groupedLocation == null) {
+                    return null;
+                }
+                costCentersToUse = groupedLocation.CostCentersForQuery("glaccount");
+            }
 
             var dto = new SearchRequestDto();
             dto.AppendProjectionField(new ProjectionField("accountname", "accountname"));
@@ -429,7 +427,7 @@ namespace softwrench.sw4.Hapag.Security {
             return options;
         }
 
-      
+
 
         public HlagGroupedLocation[] GetLocationsOfLoggedUser(bool forceXITCContext = false) {
             var user = SecurityFacade.CurrentUser();
