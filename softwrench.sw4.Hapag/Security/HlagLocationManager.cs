@@ -387,7 +387,6 @@ namespace softwrench.sw4.Hapag.Security {
             if (costCentersToUse.Equals("1!=1")) {
                 //we´re interested in the current user, so we can assume its groups are synced fine.
                 //pick the groups from SWDB
-                personId = SecurityFacade.CurrentUser().MaximoPersonId;
                 var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
                 var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
                 var context = _contextLookuper.LookupContext();
