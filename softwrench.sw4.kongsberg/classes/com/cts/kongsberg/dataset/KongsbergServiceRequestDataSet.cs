@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using softwrench.sw4.api.classes.fwk.filter;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Search;
@@ -16,10 +19,13 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
-    class KongsbergServiceRequestDataSet : BaseServiceRequestDataSet {
+    public class KongsbergServiceRequestDataSet : BaseServiceRequestDataSet {
 
         [Import]
         public SlaHolderService SlaHolderService { get; set; }
+
+        [Import]
+        public readonly KongsbergDashboardWcProvider dashboardWcProvider;
 
         public SearchRequestDto FilterByPersonGroup(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
@@ -47,6 +53,38 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             fields["ticketid"] = "";
             adapterParameters.OriginalEntity = new DataMap("servicerequest", fields, "ticketid");
             return GetSRClassStructureType(adapterParameters);
+        }
+
+        public override Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var context = ContextLookuper.LookupContext();
+            if (context == null || context.ApplicationLookupContext == null) {
+                return base.GetList(application, searchDto);
+            }
+
+            var metadataid = context.ApplicationLookupContext.MetadataId;
+            if (string.IsNullOrEmpty(metadataid) || !metadataid.StartsWith("dashboard:")) {
+                return base.GetList(application, searchDto);
+            }
+
+            var allWcs = dashboardWcProvider.DashBoardWhereClauses;
+            if (!allWcs.ContainsKey(application.Name)) {
+                return base.GetList(application, searchDto);
+            }
+
+            var appWcs = allWcs[application.Name];
+            appWcs.ToList().ForEach(pair => {
+                if (!metadataid.ContainsIgnoreCase(pair.Key)) {
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(searchDto.WhereClause)) {
+                    searchDto.WhereClause = pair.Value;
+                } else {
+                    searchDto.WhereClause = searchDto.WhereClause + " AND " + pair.Value;
+                }
+            });
+
+            return base.GetList(application, searchDto);
         }
 
         public override string ApplicationName() {
