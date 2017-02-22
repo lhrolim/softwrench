@@ -101,7 +101,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (queryParameter.Id != null) {
                 //TODO: make some kind of hash to determine if this is needed...
                 whereBuilders.Add(new ByIdWhereBuilder(entityMetadata, queryParameter.Id));
-                return new CompositeWhereBuilder(whereBuilders);
+//                return new CompositeWhereBuilder(whereBuilders);
             }
             whereBuilders.Add(new EntityWhereClauseBuilder());
             whereBuilders.Add(new FixedSearchWhereClauseBuilder());
