@@ -12,39 +12,47 @@
             },
 
             link: function (scope, element, attrs) {
-                scope.$name = "scrollPane";
+                scope.$name = "scrollpane";
 
-                var log = $log.getInstance('sw4.scrollPane', ["layout"]);
+                var log = $log.get('sw4.scrollPane', ["layout"]);
                 log.debug("init scrollpane");
 
                 var scrollPaneData = null;
                 var scrollElement = $('.scroll', element);
 
+
+                var lazyLayout = () =>{
+                    window.debounce(setScrollHeight, 100);
+                }
+
+                $(window).resize(lazyLayout);
+
                 //TODO: performance: improve
-                scope.$watch(
-                    function () {
-                        log.trace('checking scroll pane');
-                        var t0 = performance.now();
-                        const scrollParent = $(element[0].offsetParent).is(':visible');
-
-                        //if scroll pane exists and parent is visible
-                        if (!scrollPaneData && !scrollParent) {
-                            return;
-                        }
-                        const length = element[0].innerHTML.length;
-
-                        log.debug('checking scroll pane finish, took:(ms) ' + (performance.now() - t0));
-                        return length;
-                    },
-                    function (newValue, oldValue) {
-                        if (newValue !== oldValue) {
-                            log.trace('content changed, resize scroll pane');
-
-                            //allow the parent to update before resize
-                            lazyLayout();
-                        }
-                    }
-                );
+//                scope.$watch(
+//                    function () {
+//                        log.trace('checking scroll pane');
+//                        const t0 = performance.now();
+//                        const scrollParent = $(element[0].offsetParent).is(':visible');
+//
+//                        //if scroll pane exists and parent is visible
+//                        if (!scrollPaneData && !scrollParent) {
+//                            log.trace('no scroll pane to adjust, took:(ms) ' + (performance.now() - t0));
+//                            return;
+//                        }
+//                        const length = element[0].innerHTML.length;
+//
+//                        log.debug('checking scroll pane finish, took:(ms) ' + (performance.now() - t0));
+//                        return length;
+//                    },
+//                    function (newValue, oldValue) {
+//                        if (newValue !== oldValue) {
+//                            log.trace('content changed, resize scroll pane');
+//
+//                            //allow the parent to update before resize
+//                            lazyLayout();
+//                        }
+//                    }
+//                );
 
                 function getContentHeight(scrollElement, available) {
                     //if set use the avaialbe height as the pane size
@@ -107,8 +115,6 @@
                 }
                 stopWindowScroll(scope.preventWindowScroll);
 
-                var lazyLayout = window.debounce(setScrollHeight, 100);
-                $(window).resize(lazyLayout);
 
             }
         };

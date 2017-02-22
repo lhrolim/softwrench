@@ -5,13 +5,12 @@ angular.module('sw_layout')
     .service('fixHeaderService', ["$rootScope", "$log", "$timeout", "contextService", function ($rootScope, $log, $timeout, contextService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
-        var affixpaginationid = $("#affixpagination");
-        var listgridtheadid = $("#listgridthread");
-        var listgridid = $("#listgrid");
-        var paginationerrormessageclass = "pagination-errormessage";
-        var listtheaderrormessageclass = "listgrid-thead-errormessage";
-        var listgriderrormessageclass = "listgrid-table-errormessage";
-
+        const affixpaginationid = $("#affixpagination");
+        const listgridtheadid = $("#listgridthread");
+        const listgridid = $("#listgrid");
+        const paginationerrormessageclass = "pagination-errormessage";
+        const listtheaderrormessageclass = "listgrid-thead-errormessage";
+        const listgriderrormessageclass = "listgrid-table-errormessage";
         if (showerrormessage) {
             affixpaginationid.addClass(paginationerrormessageclass);
             listgridtheadid.addClass(listtheaderrormessageclass);
@@ -25,9 +24,9 @@ angular.module('sw_layout')
 
     var addClassSuccessMessageListHander = function (showerrormessage) {
         if ($rootScope.clientName == 'hapag') {
-            var headerHeight = $('.site-header').height() + 70;
-            var paginationHeight = $('.affix-pagination').height();
-            var theaderHeight = $('.listgrid-thead').height();
+            const headerHeight = $('.site-header').height() + 70;
+            const paginationHeight = $('.affix-pagination').height();
+            const theaderHeight = $('.listgrid-thead').height();
             $('.affix-pagination').css('top', headerHeight);
             $('.listgrid-thead').css('top', headerHeight + paginationHeight);
             $('.listgrid-table').css('margin-top', paginationHeight + theaderHeight - 1);
@@ -35,26 +34,23 @@ angular.module('sw_layout')
     };
 
     function setHeaderPosition() {
-        var siteHeaderElement = $('.site-header');
+        const siteHeaderElement = $('.site-header');
         //var toolbarElement = $('.toolbar-primary:not(.affix-pagination)');
-        var toolbarElement = $('.toolbar-primary:visible');
-        var listTheadElement = $('.listgrid-thead:visible');
-
+        const toolbarElement = $('.toolbar-primary:visible');
+        const listTheadElement = $('.listgrid-thead:visible');
         if (siteHeaderElement.css('position') === 'fixed') {
             //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
-            var headerHeight = siteHeaderElement.height();
-            var toolbarHeight = toolbarElement.height();
-            var theaderHeight = listTheadElement.height();
-            var offsetMargin = toolbarHeight + theaderHeight - 1;
-
+            const headerHeight = siteHeaderElement.height();
+            const toolbarHeight = toolbarElement.height();
+            const theaderHeight = listTheadElement.height();
+            const offsetMargin = toolbarHeight + theaderHeight - 1;
             $('.content').css('margin-top', headerHeight);
 
             //only adjust if toolbar is fixed 
             if (toolbarElement.css('position') === 'fixed') {
                 toolbarElement.css('top', headerHeight);
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
-
-                var dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
+                const dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
                 $('.dash-header').css('margin-top', dashToolbar.height());
             } else {
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', 'auto');
@@ -63,13 +59,11 @@ angular.module('sw_layout')
             //only adjust if table header is fixed
             if (listTheadElement.css('position') === 'fixed') {
                 //move fixed listgrid header up in IE9
-                var adjustment = 0;
+                let adjustment = 0;
                 if (isIe9()) {
                     adjustment = 135;
                 }
-
-                var offsetTop = headerHeight + toolbarHeight - adjustment - 1;
-
+                const offsetTop = headerHeight + toolbarHeight - adjustment - 1;
                 listTheadElement.css('top', offsetTop);
                 $('.listgrid-table').css('margin-top', offsetMargin);
             }
@@ -86,24 +80,22 @@ angular.module('sw_layout')
     $(window).resize(window.debounce(setHeaderPosition, 250));
 
     function setHeaderColumnWidths() {
-        var modalGrid = $('.modal .listgrid-table:visible');
-
+        const modalGrid = $('.modal .listgrid-table:visible');
         if (modalGrid.length == 0) {
             var table = $('.listgrid-table:visible');
-            var rows = $('tbody tr', table);
-            var firstRow = $('td', rows[0]);
+            const rows = $('tbody tr', table);
+            const firstRow = $('td', rows[0]);
 
             //if no records to display, make sure the header row matches the table width
             if (firstRow.length === 0) {
-                var headerRow = $('.header-row th', table);
-
+                const headerRow = $('.header-row th', table);
                 table.hide();
                 headerRow.each(function () {
-                    var widthText = $(this).css('width');
+                    const widthText = $(this).css('width');
 
                     //set the min-width of each th
                     if (widthText.indexOf('%') > 0) {
-                        var percentage = parseFloat(widthText.substring(0, widthText.length - 1)) / 100;
+                        const percentage = parseFloat(widthText.substring(0, widthText.length - 1)) / 100;
                         $(this).css('min-width', table.width() * percentage);
                     }
                 });
@@ -113,10 +105,9 @@ angular.module('sw_layout')
             }
 
             firstRow.each(function() {
-                var tdClass = $(this)[0].classList[0];
-                var tdWidth = $(this).width();
-                var th = $('thead th.{0}'.format(tdClass), table);
-
+                const tdClass = $(this)[0].classList[0];
+                const tdWidth = $(this).width();
+                const th = $('thead th.{0}'.format(tdClass), table);
                 th.width(tdWidth);
                 $('.cell-wrapper', th).width(tdWidth);
             });
@@ -127,8 +118,7 @@ angular.module('sw_layout')
     $(window).resize(window.debounce(setHeaderColumnWidths, 50));
 
     function alignGridHeader() {
-        var offset = $('.scroll-helper').offset();
-
+        const offset = $('.scroll-helper').offset();
         if (!!offset) {
             $('#listgrid thead').css('left', 0 - offset.left);
 
@@ -160,31 +150,27 @@ angular.module('sw_layout')
 
     //register layout functions, debounced to stop repeated calls while resizing the browser window
     $(window).scroll(alignGridHeader);
-
-    var topMessageAddClass = function (div) {
-        div.addClass("affix-thead");
-        div.addClass("topMessageAux");
-    };
-
-    var topMessageRemoveClass = function (div) {
-        div.removeClass("affix-thead");
-        div.removeClass("topMessageAux");
-        $('html, body').animate({ scrollTop: 0 }, 'fast');
-    };
-
-    var buildTheadArray = function(log, table, emptyGrid) {
+        const topMessageAddClass = function (div) {
+            div.addClass("affix-thead");
+            div.addClass("topMessageAux");
+        };
+        const topMessageRemoveClass = function (div) {
+            div.removeClass("affix-thead");
+            div.removeClass("topMessageAux");
+            $('html, body').animate({ scrollTop: 0 }, 'fast');
+        };
+        var buildTheadArray = function(log, table, emptyGrid) {
         if ($rootScope.clientName == 'hapag') {
             var thead = [];
             // loop over the first row of td's in &lt;tbody> and get the widths of individual &lt;td>'s
-            var classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
-
+            const classToUse = emptyGrid ? 'thead tr:eq(0) th' : 'tbody tr:eq(0) td';
             $(classToUse, table).each(function(i, firstrow) {
-                var width = $(firstrow).width();
+                const width = $(firstrow).width();
                 thead.push(width);
             });
             log.trace('thead array: ' + thead);
-            var total = 0;
-            for (var i = 0; i < thead.length; i++) {
+            let total = 0;
+            for (let i = 0; i < thead.length; i++) {
                 total += thead[i] << 0;
             }
             log.trace('total ' + total);
@@ -209,12 +195,12 @@ angular.module('sw_layout')
             /// </summary>
             /// <param name="schema">the schema is used to determine when we should show the advanced allowtoggle options</param>
             //update which filter row will be displayed and input text width
-            var table = $(".listgrid-table");
+            const table = $(".listgrid-table");
             var showAdvancedFilter = false;
 
             if (schema != null) {
-                var estimatedNeededSize = schema.displayables.length * 150;
-                var allowtoggle = "true" == schema.properties['list.advancedfilter.allowtoggle'];
+                const estimatedNeededSize = schema.displayables.length * 150;
+                const allowtoggle = "true" == schema.properties['list.advancedfilter.allowtoggle'];
                 showAdvancedFilter = allowtoggle && estimatedNeededSize > table.width();
             }
 
@@ -230,20 +216,20 @@ angular.module('sw_layout')
 
             //thead tr:eq(2) th ==> picks all the elements of the second line of the thead of the table, i.e the filters
             $('thead tr:eq(2) th', table).each(function (i, v) {
-                var inputGroupElements = $('.input-group', v).children();
+                const inputGroupElements = $('.input-group', v).children();
                 //filtering only the inputs (ignoring divs...)
                 var addonWidth = 0;
-                for (var j = 1; j < inputGroupElements.length; j++) {
+                for (let j = 1; j < inputGroupElements.length; j++) {
                     //sums both the filter input + the filter button
                     addonWidth += inputGroupElements.eq(j).outerWidth();
                 }
                 //first element will be the filter input itself
-                var input = inputGroupElements.eq(0);
-                var width = input.width();
-                var inputPaddingAndBorder = input.outerWidth() - width;
-                var trWidth = theadArray[i];
-                var resultValue = trWidth - addonWidth - inputPaddingAndBorder;
-                $log.getInstance('fixheader#updateFilterVisibility').debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
+                const input = inputGroupElements.eq(0);
+                const width = input.width();
+                const inputPaddingAndBorder = input.outerWidth() - width;
+                const trWidth = theadArray[i];
+                const resultValue = trWidth - addonWidth - inputPaddingAndBorder;
+                $log.get('fixheader#updateFilterVisibility',["layout"]).debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
                 input.width(resultValue);
             });
         },
@@ -251,11 +237,11 @@ angular.module('sw_layout')
 
         fixTableTop: function (tableElement, params={}) {
             if ($rootScope.clientName == 'hapag') {
-                var thead = $('thead', tableElement);
+                const thead = $('thead', tableElement);
                 $(".listgrid-table").addClass("affixed");
                 $(".listgrid-table").removeClass("unfixed");
-                var theadHeight = thead.height();
-                $log.getInstance("fixheaderService#fixTableTop").debug("head height: " + theadHeight);
+                const theadHeight = thead.height();
+                $log.get("fixheaderService#fixTableTop",["layout"]).debug("head height: " + theadHeight);
                 if (isIe9() && "true" != sessionStorage.mockie9) {
                     //if mocking ie9, lets keep default behaviour, otherwise will break all the grids
                     tableElement.css('margin-top', theadHeight + 19);
@@ -269,15 +255,13 @@ angular.module('sw_layout')
 
         fixThead: function (schema, params, listTableRenderedEvent) {
             //console.log('fixThead', schema, params, listTableRenderedEvent);
-
-            var log = $log.getInstance('sw4.fixThead');
-
+            const log = $log.get('sw4.fixThead',["layout"]);
             if ($rootScope.clientName == 'hapag') {
                 log.debug('starting fix Thead');
                 if (!params || !params.resizing) {
                     this.unfix();
                 }
-                var table = $(".listgrid-table");
+                const table = $(".listgrid-table");
                 var thead = buildTheadArray(log, table, params.empty);
 
                 $('thead tr:eq(0) th', table).each(function(i, v) {
@@ -306,11 +290,11 @@ angular.module('sw_layout')
             this.callWindowResize();
         },
 
-        callWindowResize: window.debounce(function () { // debouncing so it doesn't trigger resize all the time 
-            var log = $log.getInstance('sw4.fixheader_service');
+        callWindowResize: window.debounce(()=> { // debouncing so it doesn't trigger resize all the time 
+            var log = $log.get('sw4.fixheader_service',["layout"]);
 
             //trigger resize to postition fixed header elements
-            $timeout(function () {
+            $timeout(()=> {
                 log.debug('callWindowResize');
                 setHeaderColumnWidths();
                 setHeaderPosition();
@@ -324,11 +308,13 @@ angular.module('sw_layout')
                 var highResolution = width >= resolutionBarrier;
                 var fn = this;
                 $(window).resize(function () {
-                    var newWidth = $(this).width();
-                    var isNewHighResolution = newWidth > resolutionBarrier + 15; // lets add some margin to give the browser time to render the new table...
-                    var isNewLowResolution = newWidth < resolutionBarrier - 15; // lets add some margin to give the browser time to render the new table...
+                    const newWidth = $(this).width();
+                    const isNewHighResolution = newWidth > resolutionBarrier + 15;
+                    // lets add some margin to give the browser time to render the new table...
+                    const isNewLowResolution = newWidth < resolutionBarrier - 15;
+                    // lets add some margin to give the browser time to render the new table...
                     if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
-                        $log.getInstance("crudlistdir#resize").debug('switching resolutions');
+                        $log.get("crudlistdir#resize",["layout"]).debug('switching resolutions');
                         fn.fixThead(null, {
                             resizing: true
                         });
@@ -344,24 +330,23 @@ angular.module('sw_layout')
 
             var table;
             var originalOffset;
-            var scrollHandler = window.throttle(function () {
+            const scrollHandler = window.throttle(function () {
                 if (table == null) {
                     table = $("#listgrid");
                     originalOffset = $("thead", table).top;
                 }
-                var windowTop = $(window).scrollTop();
+                const windowTop = $(window).scrollTop();
                 $("thead", table).css({ "top" : (windowTop + originalOffset) + "px" });
             }, 300, { leading: false });
-
             $(window).scroll(scrollHandler);
 
             scrollHandlerRegistered = true;
         },
 
         unfix: function () {
-            var log = $log.getInstance('sw4.fixheader_service#unfix');
+            const log = $log.get('sw4.fixheader_service#unfix',["layout"]);
             log.debug('unfix started');
-            var table = $(".listgrid-table");
+            const table = $(".listgrid-table");
             table.removeClass("affixed");
             table.addClass("unfixed");
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
@@ -392,7 +377,7 @@ angular.module('sw_layout')
             if ($(".listgrid-table").position() != undefined) {
                 addClassSuccessMessageListHander(false);
                 if (!nullOrUndef(schema)) {
-                    var params = {
+                    const params = {
                     };
                     this.fixThead(schema, params);
                 }

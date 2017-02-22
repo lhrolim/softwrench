@@ -22,7 +22,7 @@
                 };
             },
             controller: ["$scope", "$http", "$log", "sidePanelService", function ($scope, $http, $log, sidePanelService) {
-                var log = $log.getInstance("sw4.crudSearch");
+                var log = $log.getInstance("sw4.sidepanel",["layout"]);
 
                 // register the current side panel on service
                 // the next registers need this to know the panel handle top value

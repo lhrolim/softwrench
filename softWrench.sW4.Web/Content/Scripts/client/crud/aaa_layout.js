@@ -91,8 +91,13 @@
         });
 
         $scope.$on(JavascriptEventConstants.AjaxFinished, function () {
+            $log.get("sw4layout.ajaxfinished", ["layout"]).debug("ajax finished");
             spinService.stop();
             $rootScope.savingMain = undefined;
+//            fixHeaderService.callWindowResize();
+        });
+
+        $scope.$on(JavascriptEventConstants.DetailLoaded, () => {
             fixHeaderService.callWindowResize();
         });
 

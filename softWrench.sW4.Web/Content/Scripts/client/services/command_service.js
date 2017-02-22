@@ -134,6 +134,9 @@ angular.module('sw_layout')
             if (fullName.startsWith("@")) {
                 return false;
             }
+            if (fullName.startsWith("service:")) {
+                return true;
+            }
 
             const idx = fullName.indexOf(".");
             const serviceName = fullName.substring(0, idx);
@@ -155,6 +158,10 @@ angular.module('sw_layout')
 
         //TODO: make it generic
         executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid, newValue) {
+            if (fullServiceName.startsWith("service:")) {
+                fullServiceName = fullServiceName.substr(8);
+            }
+
             const idx = fullServiceName.indexOf(".");
             const serviceName = fullServiceName.substring(0, idx);
             const methodName = fullServiceName.substring(idx + 1);
@@ -182,8 +189,7 @@ angular.module('sw_layout')
             if (expression == undefined || expression === "") {
                 return false;
             }
-            const expressionToEval = expressionService.getExpression(expression, datamap);
-            return eval(expressionToEval);
+            return  expressionService.evaluate(expression, datamap);
         }
 
     };

@@ -180,7 +180,11 @@
 
     $scope.isCommandEnabled = function (command) {
         const enableExpression = command.enableExpression;
-        if (enableExpression && enableExpression.startsWith("$scope:")) {
+        if (!enableExpression) {
+            return true;
+        }
+
+        if (enableExpression.startsWith("$scope:")) {
             const result = $scope.invokeOuterScopeFn(enableExpression);
             if (result == null) {
                 return true;
@@ -188,8 +192,7 @@
             return result;
         }
         const datamap = $scope.datamap;
-        const expressionToEval = expressionService.getExpression(enableExpression, datamap);
-        return eval(expressionToEval);
+        return expressionService.evaluate(enableExpression, datamap);
     }
 
     $scope.buttonType = (command) => {

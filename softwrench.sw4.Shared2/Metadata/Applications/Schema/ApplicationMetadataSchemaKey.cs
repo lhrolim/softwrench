@@ -54,26 +54,25 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         protected bool Equals(ApplicationMetadataSchemaKey other) {
             var blankMode = Mode == null || other.Mode == null || Mode == SchemaMode.None || other.Mode == SchemaMode.None;
-            return string.Equals(SchemaId, other.SchemaId) && (blankMode || string.Equals(Mode, other.Mode)) &&
+            return string.Equals(SchemaId, other.SchemaId,StringComparison.InvariantCultureIgnoreCase) && (blankMode || string.Equals(Mode, other.Mode)) &&
                 (Platform == null || other.Platform == null || Platform == other.Platform);
         }
 
         public override bool Equals(object obj) {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((ApplicationMetadataSchemaKey)obj);
+            return obj.GetType() == GetType() && Equals((ApplicationMetadataSchemaKey)obj);
         }
 
         public override int GetHashCode() {
             unchecked {
-                int hashCode = (SchemaId != null ? SchemaId.GetHashCode() : 0);
+                var hashCode = SchemaId?.ToLower().GetHashCode() ?? 0;
                 return hashCode;
             }
         }
 
         public override string ToString() {
-            return string.Format("SchemaId: {0}, Mode: {1}, Platform: {2}", SchemaId, Mode, Platform);
+            return $"SchemaId: {SchemaId}, Mode: {Mode}, Platform: {Platform}";
         }
 
         public static ApplicationMetadataSchemaKey GetSyncInstance() {
