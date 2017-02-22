@@ -15,6 +15,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using softwrench.sw4.Hapag.Data;
+using softWrench.sW4.Security.Services;
 using softWrench.sW4.Web.Util;
 using ContextLookuper = softWrench.sW4.Web.Security.ContextLookuper;
 
@@ -31,20 +33,35 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string PrintMode = "printmode";
 
         public override void OnActionExecuting(HttpActionContext actionContext) {
-            
+
             var currentModule = RequestUtil.GetValue(actionContext.Request, CurrentModuleKey);
+            var currentUSer = SecurityFacade.CurrentUser();
+            if (currentModule != null && currentUSer != null) {
+
+                FunctionalRole fr;
+                Enum.TryParse(currentModule, true, out fr);
+                if (!currentUSer.IsInRole(fr.ToString())) {
+                    throw new InvalidOperationException(
+                        "this user is not allowed for this role. Please contact your administrator");
+                }
+            }
+
             var currentMetadataId = RequestUtil.GetValue(actionContext.Request, CurrentMetadataKey);
             var currentMetadataParameter = RequestUtil.GetValue(actionContext.Request, CurrentMetadataParameterKey);
             var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
             ApplicationLookupContext appCtx = null;
             if (currentMetadataId != null) {
-                appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
+                appCtx = new ApplicationLookupContext {
+                    MetadataId = currentMetadataId
+                };
             }
-            ContextLookuper.AddContext(new ContextHolder() { Module = currentModule, ApplicationLookupContext = appCtx, PrintMode = printMode, MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter) }, true);
+            ContextLookuper.AddContext(new ContextHolder() {
+                Module = currentModule, ApplicationLookupContext = appCtx, PrintMode = printMode, MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter)
+            }, true);
             base.OnActionExecuting(actionContext);
         }
 
-      
+
 
     }
 }

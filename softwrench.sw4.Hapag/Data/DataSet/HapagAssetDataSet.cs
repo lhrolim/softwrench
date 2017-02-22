@@ -60,7 +60,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var dbDetail = base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
-            if (application.Schema.SchemaId == "detail" && application.Schema.Mode == SchemaMode.output) {
+            if (resultObject != null && application.Schema.SchemaId == "detail" && application.Schema.Mode == SchemaMode.output) {
                 HandleAssetTree(resultObject);
                 FetchRemarks(resultObject);
                 JoinHistoryData(resultObject);

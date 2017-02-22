@@ -240,6 +240,7 @@ app.directive('crudList', function (contextService) {
                 if (schemaid == null) {
                     schemaid = detailSchema();
                 }
+                contextService.insertIntoContext("currentmodulenewwindow", contextService.retrieveFromContext('currentmodule'));
                 $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, { id: id, popupmode: popupmode });
             };
 

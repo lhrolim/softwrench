@@ -105,7 +105,12 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 return GetList(application, (PaginatedSearchRequestDto)request);
             }
             if (request is DetailRequest) {
-                return GetApplicationDetail(application, user, (DetailRequest)request);
+                try {
+                    return GetApplicationDetail(application, user, (DetailRequest)request);
+                } catch (InvalidOperationException e) {
+                    return new ApplicationDetailResult(null, null, application.Schema, null, ((DetailRequest)request).Id);
+                }
+
             }
             if (application.Schema.Stereotype == SchemaStereotype.List) {
                 return GetList(application, PaginatedSearchRequestDto.DefaultInstance(application.Schema));
@@ -129,6 +134,10 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
                 datamap =
                     (DataMap)
                         _maximoConnectorEngine.FindById(application.Schema, entityMetadata, id);
+                if (datamap == null) {
+                    throw new InvalidOperationException("You don´t have enough permissions to see that register. contact your administrator");
+                }
+
                 var prefetchCompositions = "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) || "#all".Equals(request.CompositionsToFetch);
                 var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
                 foreach (var compositionEntry in applicationCompositionSchemas) {
