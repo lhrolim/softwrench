@@ -64,6 +64,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
             _wcFacade.Register("incident", qc.DefaultIncidentGridQuery);
             // applied for XITC,TOM and ITOM
             _wcFacade.Register("problem", qc.DefaultProblemGridQuery);
+            _wcFacade.Register("servicerequest", "@changeDetailUnionQueryGenerator.GenerateSrQuery", MetadataIdForAll("changedetail"));
         }
 
         private void CreateEndUserWhereClause() {
@@ -109,6 +110,7 @@ namespace softwrench.sw4.Hapag.Data.Configuration {
 
         private void CreateChangeWhereClauses() {
             _wcFacade.Register("change", ChangeWhereClause("ChangeGridQuery"), ForAllModules());
+            _wcFacade.Register("change", "@changeDetailUnionQueryGenerator.GenerateQuery", MetadataIdForAll("changedetail"));
             _wcFacade.Register("srforchange", ChangeWhereClause("ChangeSRUnionGridQuery"), ForAllModules().AppendSchema("changeunionschema"));
             _wcFacade.Register("woactivity", ChangeWhereClause("DashboardChangeTasksWhereClause"), MetadataIdForAll(dc.OpenChangeTasks));
             _wcFacade.Register("change", ChangeWhereClause("DashboardChangeTasksWhereClauseViewAll"), MetadataIdForAll(dc.OpenChangeTasks));

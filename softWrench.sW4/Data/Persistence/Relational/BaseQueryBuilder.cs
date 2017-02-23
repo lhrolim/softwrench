@@ -101,16 +101,20 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             if (queryParameter.Id != null) {
                 //TODO: make some kind of hash to determine if this is needed...
                 whereBuilders.Add(new ByIdWhereBuilder(entityMetadata, queryParameter.Id));
-//                return new CompositeWhereBuilder(whereBuilders);
+                //                return new CompositeWhereBuilder(whereBuilders);
+            } else {
+                //not needed to avoid extra useless conditions, such as the sr out of changes
+                whereBuilders.Add(new EntityWhereClauseBuilder());
+                if (queryParameter.SearchDTO != null) {
+                    var searchParameterUtilsList = GetSearchParameterUtilsList(entityMetadata, queryParameter.SearchDTO);
+                    whereBuilders.Add(searchParameterUtilsList.Count == 0
+                        ? new SearchUtils(queryParameter.SearchDTO, entityMetadata.Name, entityMetadata.GetTableName())
+                        : new SearchUtils(queryParameter.SearchDTO, entityMetadata.Name, entityMetadata.GetTableName(), searchParameterUtilsList));
+                }
             }
-            whereBuilders.Add(new EntityWhereClauseBuilder());
+            
             whereBuilders.Add(new FixedSearchWhereClauseBuilder());
-            if (queryParameter.SearchDTO != null) {
-                var searchParameterUtilsList = GetSearchParameterUtilsList(entityMetadata, queryParameter.SearchDTO);
-                whereBuilders.Add(searchParameterUtilsList.Count == 0
-                    ? new SearchUtils(queryParameter.SearchDTO, entityMetadata.Name, entityMetadata.GetTableName())
-                    : new SearchUtils(queryParameter.SearchDTO, entityMetadata.Name, entityMetadata.GetTableName(), searchParameterUtilsList));
-            }
+           
             if (queryParameter.Rowstamps != null) {
                 whereBuilders.Add(new RowstampQueryBuilder(queryParameter.Rowstamps));
             }

@@ -12,7 +12,8 @@ namespace softwrench.sw4.Hapag.Data {
 
         private readonly IContextLookuper _contextLookuper;
 
-        public ChangeWhereClauseProvider(IContextLookuper contextLookuper) {
+        public ChangeWhereClauseProvider(IContextLookuper contextLookuper)
+        {
             _contextLookuper = contextLookuper;
         }
 
@@ -36,6 +37,12 @@ namespace softwrench.sw4.Hapag.Data {
             or exists (select 1 from WOACTIVITY as woactivity_ where wochange.wonum = woactivity_.parent and woactivity_.ownergroup in ({0}) )"
                 , personGroupsForQuery);
         }
+
+
+//        public String ChangeDetailQuery() {
+//            var user = SecurityFacade.CurrentUser();
+//            return _changeDetailGenerator.GenerateQuery();
+//        }
 
         //used on the sr union schema
         public String ChangeSRUnionGridQuery() {
@@ -81,6 +88,10 @@ namespace softwrench.sw4.Hapag.Data {
 
         public string GetTemplateIds() {
             var module = _contextLookuper.LookupContext().Module;
+            if (module == null) {
+                return HapagChangeHandler.GetAllTemplateString();
+            }
+
             if (module.Equals(FunctionalRole.Sso.ToString(), StringComparison.InvariantCultureIgnoreCase)) {
                 return HapagChangeHandler.GetSSOTemplateString();
             }

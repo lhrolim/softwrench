@@ -19,10 +19,16 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
     };
 
     var buildApplicationURLForBrowser = function (applicationName, parameters) {
+        parameters = parameters || {};
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
         currentModule = adjustCurrentModuleForNewWindow(currentModule);
-        var currentMetadata = parameters.currentmetadata = "null";
+        
+        var currentMetadata = parameters.currentmetadata;
+        if (!parameters.keepmetadataonbrowser) {
+            //nullifying on browser request, to avoid dashboard whereclause eventually
+            currentMetadata = parameters.currentmetadata = "null";
+        }
         parameters.currentmodule = currentModule;
         var params = $.param(parameters);
         params = replaceAll(params, "=", "$");
@@ -39,9 +45,17 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
     };
 
     var buildActionURLForBrowser = function (controller, action, parameters) {
+        parameters = parameters || {};
+
         var crudUrl = $(routes_homeurl)[0].value;
         var currentModule = contextService.retrieveFromContext('currentmodule');
-        var currentMetadata = parameters.currentmetadata = "null";
+        
+        var currentMetadata = parameters.currentmetadata;
+        if (!parameters.keepmetadataonbrowser) {
+            //nullifying on browser request, to avoid dashboard whereclause eventually
+            currentMetadata = parameters.currentmetadata = "null";
+        }
+
         currentModule = adjustCurrentModuleForNewWindow(currentModule);
         parameters.currentmodule = currentModule;
         parameters.currentmetadata = currentMetadata;

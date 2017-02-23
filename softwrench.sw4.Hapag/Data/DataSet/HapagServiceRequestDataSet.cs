@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagServiceRequestDataSet : HapagBaseApplicationDataSet {
@@ -62,8 +63,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     }";
         #endregion
 
-        public HapagServiceRequestDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) : base(locationManager, entityRepository, maxDao)
-        {
+        private IContextLookuper _contextLookuper;
+
+        public HapagServiceRequestDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao, IContextLookuper contextLookuper) : base(locationManager, entityRepository, maxDao) {
+            _contextLookuper = contextLookuper;
         }
 
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
@@ -75,6 +78,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 AdjustInitialValues(request.InitialValues, application.Schema.SchemaId);
                 request.AssociationsToFetch = "#all";
             }
+            if (application.Schema.SchemaId == "changedetail") {
+                _contextLookuper.LookupContext().ApplicationLookupContext.MetadataId = "changedetail";
+            }
+
             var dbDetail = base.GetApplicationDetail(application, user, request);
             var resultObject = dbDetail.ResultObject;
             if (resultObject == null) {

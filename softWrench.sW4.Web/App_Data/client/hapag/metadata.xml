@@ -1314,6 +1314,8 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           </commands>
         </detail>
 
+        <schema id="changedetail" mode="output" parentschema="detail"/>
+        
         <schema id="AnewSR" abstract="true" stereotype="detail" mode="input" title="Service Request">
           <properties>
             <property key="nextschema.schemaid" value="creationSummary"/>

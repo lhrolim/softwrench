@@ -54,7 +54,15 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
                 
             }
             var parameters = { id: id, popupmode: 'browser' };
-            redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
+
+            var detailSchemaId = "detail";
+
+            if (isSr) {
+                //This will be changed on the server side tweaking the whereclause to use for the SR from Changes
+                detailSchemaId = "changedetail";
+            }
+
+            redirectService.goToApplicationView(application, detailSchemaId, 'output', null, parameters);
         },
 
         duplicate: function (schema, datamap) {

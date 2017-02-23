@@ -15,18 +15,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Context;
 using c = softwrench.sw4.Hapag.Data.DataSet.Helper.ApproverConstants;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     public class HapagChangeDataSet : HapagBaseApplicationDataSet {
 
-        private ChangeGridUnionQueryGenerator _changeGridUnionQueryGenerator;
+        private readonly ChangeGridUnionQueryGenerator _changeGridUnionQueryGenerator;
+        private readonly ChangeDetailUnionQueryGenerator _changeDetailGenerator;
+        private IContextLookuper _context;
 
-        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao, ChangeGridUnionQueryGenerator changeGridUnionQueryGenerator)
+        public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao,
+            ChangeGridUnionQueryGenerator changeGridUnionQueryGenerator, ChangeDetailUnionQueryGenerator changeDetailGenerator, IContextLookuper context)
             : base(locationManager, entityRepository, maxDao) {
             _changeGridUnionQueryGenerator = changeGridUnionQueryGenerator;
+            _changeDetailGenerator = changeDetailGenerator;
+            _context = context;
+        }
+
+        protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            _context.LookupContext().ApplicationLookupContext.MetadataId = "changedetail";
+            return base.GetApplicationDetail(application, user, request);
         }
 
 
@@ -128,7 +140,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
             //approval["#shouldshowaction"] = LevelMatches(result, approval) && user.HasPersonGroup(approvalGroup); ;
             //removed due to thomas comments, on HAP-976
-            approval["#shouldshowaction"] = user.HasPersonGroup(approvalGroup); ;
+            approval["#shouldshowaction"] = user.HasPersonGroup(approvalGroup);
+            ;
 
             if (apprWl != null || rejWl != null) {
 
