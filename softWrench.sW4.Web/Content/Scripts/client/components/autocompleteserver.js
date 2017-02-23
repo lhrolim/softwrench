@@ -2,6 +2,8 @@
 
 app.factory('cmpAutocompleteServer', function ($log, associationService) {
 
+    "ngInject";
+
     function beforeSendPostJsonDatamap(jqXhr, settings, datamap) {
         var jsonString = angular.toJson(datamap);
         settings.type = 'POST';

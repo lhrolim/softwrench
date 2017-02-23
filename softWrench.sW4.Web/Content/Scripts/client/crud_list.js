@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.directive('advancedFilterToogle', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,
@@ -10,6 +11,7 @@ app.directive('advancedFilterToogle', function (contextService) {
 
 
 app.directive('crudListWrapper', function (contextService, $compile) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,
@@ -47,6 +49,7 @@ app.directive('crudListWrapper', function (contextService, $compile) {
 
 
 app.directive('crudList', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

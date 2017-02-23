@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 function SamelinePickersController($scope, $rootScope, formatService) {
-
+    "ngInject";
     var getCurrentDateString = function() {
         var date = new Date();
         return date.mmddyyyy();

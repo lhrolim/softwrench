@@ -15,7 +15,7 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
 
         public static ICollection<IHtmlString> RenderScripts() {
 
-            var scripts = ApplicationConfiguration.IsLocal() ? Local.Scripts : Prod.Scripts;
+            var scripts = false && ApplicationConfiguration.IsLocal() ? Local.Scripts : Prod.Scripts;
             var scriptTags = scripts.Select(path => RowStampScriptHelper.Render(path));
             var watch = Stopwatch.StartNew();
             //            var renderScripts = RenderDistinctTags(scriptTags, "</script>");

@@ -2,6 +2,8 @@
 
 app.factory('oferringservice', function ($http, redirectService, formatService, fieldService) {
 
+    "ngInject";
+
     return {
 
         /// <summary>

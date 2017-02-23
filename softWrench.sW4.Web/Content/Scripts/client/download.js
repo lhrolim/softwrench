@@ -1,5 +1,5 @@
 ﻿function DownloadController($scope, i18NService, fieldService, alertService, formatService) {
-
+    "ngInject";
 
     $scope.getFormattedValue = function (value, format) {
         var column = {};

@@ -2,6 +2,8 @@
 
 
 app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextService, spinService) {
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -42,6 +44,7 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextServi
 
 
 app.directive('crudBody', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

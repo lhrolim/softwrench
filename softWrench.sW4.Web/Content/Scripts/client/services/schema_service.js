@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('schemaService', function () {
-
+    "ngInject";
  
 
     return {

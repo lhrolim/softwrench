@@ -1,6 +1,25 @@
-var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize']).config(function ($controllerProvider) {
+
+LayoutController.$inject = ["$scope", "$http", "$log", "$templateCache", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "$location", "$window", "logoutService", "spinService", "schemaCacheService"];
+AboutController.$inject = ["$scope", "$http", "$templateCache", "i18NService"];
+ApplicationController.$inject = ["$scope", "$http", "$templateCache", "$timeout", "$log", "fixHeaderService", "$rootScope", "associationService", "alertService", "contextService", "detailService", "spinService", "schemaCacheService", "crudContextHolderService"];
+BaseController.$inject = ["$scope", "i18NService", "fieldService", "commandService"];
+ConfigController.$inject = ["$scope", "$http", "i18NService", "alertService"];
+DashboardController.$inject = ["$scope", "$http", "$templateCache", "$rootScope", "formatService", "i18NService", "contextService", "schemaService", "fixHeaderService"];
+DownloadController.$inject = ["$scope", "i18NService", "fieldService", "alertService", "formatService"];
+ErrorController.$inject = ["$scope", "i18NService"];
+FaqController.$inject = ["$scope", "i18NService", "redirectService", "$timeout"];
+HomeController.$inject = ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "$compile", "contextService", "menuService", "i18NService", "alertService"];
+LogAdminController.$inject = ["$scope", "$http", "i18NService", "redirectService"];
+MakeSWAdminController.$inject = ["$scope", "$http", "$timeout", "redirectService"];
+MyProfileController.$inject = ["$scope", "$http", "$templateCache", "i18NService", "$rootScope", "redirectService"];
+RoleController.$inject = ["$scope", "$http", "$templateCache", "i18NService"];
+SamelinePickersController.$inject = ["$scope", "$rootScope", "formatService"];
+SchedulerSetupController.$inject = ["$scope", "$http", "$templateCache", "i18NService"];
+AceController.$inject = ["$scope", "$http", "$templateCache", "$window", "i18NService"];
+UserController.$inject = ["$scope", "$http", "$templateCache", "i18NService"];
+UserProfileController.$inject = ["$scope", "$http", "$templateCache", "i18NService"];var app = angular.module('sw_layout', ['pasvaz.bindonce', 'angularTreeview', 'ngSanitize']).config(["$controllerProvider", function ($controllerProvider) {
 //    $controllerProvider.allowGlobals()
-});
+}]);
 
 
 app.filter('linebreak', function () {
@@ -21,7 +40,7 @@ app.filter('html', ['$sce', function ($sce) {
 
 
 
-app.directive('onFinishRender', function ($timeout) {
+app.directive('onFinishRender', ["$timeout", function ($timeout) {
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -32,7 +51,7 @@ app.directive('onFinishRender', function ($timeout) {
             }
         }
     };
-});
+}]);
 
 
 
@@ -1261,7 +1280,7 @@ function AboutController($scope, $http, $templateCache, i18NService) {
 
 angular.module('sw_layout').config(['$httpProvider', function ($httpProvider) {
 
-    $httpProvider.interceptors.push(function ($q, $rootScope, $timeout, contextService, $log, logoutService, schemaCacheService) {
+    $httpProvider.interceptors.push(["$q", "$rootScope", "$timeout", "contextService", "$log", "logoutService", "schemaCacheService", function ($q, $rootScope, $timeout, contextService, $log, logoutService, schemaCacheService) {
         var activeRequests = 0;
         var started = function (config) {
             lockCommandBars();
@@ -1363,7 +1382,7 @@ angular.module('sw_layout').config(['$httpProvider', function ($httpProvider) {
                 return $q.reject(rejection);
             }
         };
-    });
+    }]);
 
     $httpProvider.defaults.transformRequest.push(function (data, headers) {
         if (data == undefined) {
@@ -1392,7 +1411,7 @@ window.onpopstate = function (e) {
 
 var app = angular.module('sw_layout');
 
-app.directive('bodyrendered', function ($timeout, $log, menuService) {
+app.directive('bodyrendered', ["$timeout", "$log", "menuService", function ($timeout, $log, menuService) {
 
     "ngInject";
 
@@ -1412,10 +1431,10 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
             }
         }
     };
-});
+}]);
 
 
-app.directive('listtablerendered', function ($timeout, $log, menuService) {
+app.directive('listtablerendered', ["$timeout", "$log", "menuService", function ($timeout, $log, menuService) {
 
     "ngInject";
 
@@ -1437,9 +1456,9 @@ app.directive('listtablerendered', function ($timeout, $log, menuService) {
             }
         }
     };
-});
+}]);
 
-app.directive('filterrowrendered', function ($timeout) {
+app.directive('filterrowrendered', ["$timeout", function ($timeout) {
 
     "ngInject";
 
@@ -1453,7 +1472,7 @@ app.directive('filterrowrendered', function ($timeout) {
             }
         }
     };
-});
+}]);
 
 function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService, spinService, schemaCacheService, crudContextHolderService) {
     "ngInject";
@@ -1771,7 +1790,7 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
 
 
 
-    app.directive('expandedItemOutput', function ($compile) {
+    app.directive('expandedItemOutput', ["$compile", function ($compile) {
     
         "ngInject";
 
@@ -1797,9 +1816,9 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             }
         }
     }
-});
+}]);
 
-    app.directive('expandedItemInput', function ($compile) {
+    app.directive('expandedItemInput', ["$compile", function ($compile) {
 
         "ngInject";
     return {
@@ -1828,9 +1847,9 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             }
         }
     }
-});
+}]);
 
-    app.directive('newItemInput', function ($compile) {
+    app.directive('newItemInput', ["$compile", function ($compile) {
 
         "ngInject";
 
@@ -1874,9 +1893,9 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
             }
         }
     }
-});
+}]);
 
-    app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope, spinService, compositionService) {
+    app.directive('compositionListWrapper', ["$compile", "i18NService", "$log", "$rootScope", "spinService", "compositionService", function ($compile, i18NService, $log, $rootScope, spinService, compositionService) {
 
         "ngInject";
 
@@ -1944,10 +1963,10 @@ function ApplicationController($scope, $http, $templateCache, $timeout, $log, fi
 
 
     }
-});
+}]);
 
 
-app.directive('compositionList', function (contextService, spinService) {
+app.directive('compositionList', ["contextService", "spinService", function (contextService, spinService) {
 
     "ngInject";
 
@@ -2329,13 +2348,13 @@ app.directive('compositionList', function (contextService, spinService) {
             };
         }]
     };
-});
+}]);
 
 })(app, angular, jQuery);;
 var app = angular.module('sw_layout');
 var CONDITIONMODAL_$_KEY = '[data-class="conditionModal"]';
 
-app.directive('configrendered', function ($timeout) {
+app.directive('configrendered', ["$timeout", function ($timeout) {
 
     "ngInject";
 
@@ -2350,9 +2369,9 @@ app.directive('configrendered', function ($timeout) {
             }
         }
     };
-});
+}]);
 
-app.directive('conditionmodal', function (contextService) {
+app.directive('conditionmodal', ["contextService", function (contextService) {
     "ngInject";
 
     return {
@@ -2366,7 +2385,7 @@ app.directive('conditionmodal', function (contextService) {
             condition: '=',
             fullkey: '='
         },
-        controller: function ($scope, $http, i18NService) {
+        controller: ["$scope", "$http", "i18NService", function ($scope, $http, i18NService) {
 
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -2392,9 +2411,9 @@ app.directive('conditionmodal', function (contextService) {
             $scope.init();
 
 
-        }
+        }]
     };
-});
+}]);
 
 function ConfigController($scope, $http, i18NService, alertService) {
 
@@ -2788,7 +2807,7 @@ function BaseController($scope, i18NService, fieldService,commandService) {
 var app = angular.module('sw_layout');
 
 
-app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextService, spinService) {
+app.directive('tabsrendered', ["$timeout", "$log", "$rootScope", "contextService", "spinService", function ($timeout, $log, $rootScope, contextService, spinService) {
     "ngInject";
 
     return {
@@ -2827,10 +2846,10 @@ app.directive('tabsrendered', function ($timeout, $log, $rootScope, contextServi
             }, 0, false);
         }
     };
-});
+}]);
 
 
-app.directive('crudBody', function (contextService) {
+app.directive('crudBody', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -2856,7 +2875,7 @@ app.directive('crudBody', function (contextService) {
             checked: '='
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector,
+        controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "formatService", "fixHeaderService", "searchService", "tabsService", "fieldService", "commandService", "i18NService", "validationService", "submitService", "redirectService", "associationService", "$timeout", "dispatcherService", function ($scope, $http, $rootScope, $filter, $injector,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
@@ -3138,12 +3157,12 @@ app.directive('crudBody', function (contextService) {
                 commandService: commandService
             });
 
-        }
+        }]
     };
-});
+}]);
 
 ;
-app.directive('crudInputWrapper', function (contextService, $compile, $rootScope) {
+app.directive('crudInputWrapper', ["contextService", "$compile", "$rootScope", function (contextService, $compile, $rootScope) {
     "ngInject";
     return {
         restrict: 'E',
@@ -3194,10 +3213,10 @@ app.directive('crudInputWrapper', function (contextService, $compile, $rootScope
             };
         }
     }
-});
+}]);
 
 
-app.directive('crudInput', function (contextService) {
+app.directive('crudInput', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -3218,7 +3237,7 @@ app.directive('crudInput', function (contextService) {
             elementid: '@'
         },
 
-        controller: function ($scope, $http,$injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
+        controller: ["$scope", "$http", "$injector", "$element", "printService", "compositionService", "commandService", "fieldService", "i18NService", function ($scope, $http,$injector, $element, printService, compositionService, commandService, fieldService, i18NService) {
             $scope.$name = 'crudinput';
 
             $scope.cancel = function () {
@@ -3246,10 +3265,10 @@ app.directive('crudInput', function (contextService) {
                 fieldService: fieldService,
                 commandService:commandService
             });
-        }
+        }]
     };
-});;
-app.directive('configAssociationListInputDatamap', function ($timeout) {
+}]);;
+app.directive('configAssociationListInputDatamap', ["$timeout", function ($timeout) {
     "ngInject";
     return {
         restrict: 'A',
@@ -3268,9 +3287,9 @@ app.directive('configAssociationListInputDatamap', function ($timeout) {
             scope.datamap[scope.fieldMetadata.attribute].push(item);
         }
     };
-});
+}]);
 
-app.directive('configUpdateSectionDatamap', function ($timeout) {
+app.directive('configUpdateSectionDatamap', ["$timeout", function ($timeout) {
     "ngInject";
     return {
         restrict: 'A',
@@ -3295,9 +3314,9 @@ app.directive('configUpdateSectionDatamap', function ($timeout) {
             scope.datamap[scope.fieldMetadata.id].push(item);
         }
     };
-});
+}]);
 
-app.directive('sectionElementInput', function ($compile) {
+app.directive('sectionElementInput', ["$compile", function ($compile) {
     "ngInject";
     return {
         restrict: "E",
@@ -3332,10 +3351,10 @@ app.directive('sectionElementInput', function ($compile) {
             }
         }
     }
-});
+}]);
 
 
-app.directive('crudInputFields', function (contextService) {
+app.directive('crudInputFields', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -3353,7 +3372,7 @@ app.directive('crudInputFields', function (contextService) {
             insidelabellesssection: '@',
         },
 
-        controller: function ($scope, $http, $element, $injector, $timeout,
+        controller: ["$scope", "$http", "$element", "$injector", "$timeout", "printService", "compositionService", "commandService", "fieldService", "i18NService", "associationService", "expressionService", "styleService", "cmpfacade", "cmpComboDropdown", "redirectService", "dispatcherService", function ($scope, $http, $element, $injector, $timeout,
             printService, compositionService, commandService, fieldService, i18NService,
             associationService, expressionService, styleService,
             cmpfacade, cmpComboDropdown, redirectService,dispatcherService) {
@@ -3989,12 +4008,12 @@ app.directive('crudInputFields', function (contextService) {
                 }
             }
             init();
-        }
+        }]
 
 
 
     }
-});
+}]);
 
 //No longer used
 //app.directive('selectCombo', function () {
@@ -4013,17 +4032,17 @@ app.directive('crudInputFields', function (contextService) {
 //});;
 var app = angular.module('sw_layout');
 
-app.directive('advancedFilterToogle', function (contextService) {
+app.directive('advancedFilterToogle', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
         replace: true,
         templateUrl: contextService.getResourceUrl('/Content/Templates/crud/advanced_filter_toogle.html')
     };
-});
+}]);
 
 
-app.directive('crudListWrapper', function (contextService, $compile) {
+app.directive('crudListWrapper', ["contextService", "$compile", function (contextService, $compile) {
     "ngInject";
     return {
         restrict: 'E',
@@ -4058,10 +4077,10 @@ app.directive('crudListWrapper', function (contextService, $compile) {
     }
 
 
-});
+}]);
 
 
-app.directive('crudList', function (contextService) {
+app.directive('crudList', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -4081,7 +4100,7 @@ app.directive('crudList', function (contextService) {
             timestamp: '@',
         },
 
-        controller: function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
+        controller: ["$scope", "$http", "$rootScope", "$filter", "$injector", "$log", "$timeout", "formatService", "fixHeaderService", "searchService", "tabsService", "fieldService", "commandService", "i18NService", "validationService", "submitService", "redirectService", "associationService", "contextService", "schemaCacheService", function ($scope, $http, $rootScope, $filter, $injector, $log, $timeout,
             formatService, fixHeaderService,
             searchService, tabsService,
             fieldService, commandService, i18NService,
@@ -4424,12 +4443,12 @@ app.directive('crudList', function (contextService) {
                 commandService: commandService
             });
 
-        }
+        }]
     };
-});
+}]);
 
 ;
-app.directive('crudOutputWrapper', function (contextService, $compile, $rootScope) {
+app.directive('crudOutputWrapper', ["contextService", "$compile", "$rootScope", function (contextService, $compile, $rootScope) {
     "ngInject";
     return {
         restrict: 'E',
@@ -4471,10 +4490,10 @@ app.directive('crudOutputWrapper', function (contextService, $compile, $rootScop
 
         }
     }
-});
+}]);
 
 
-app.directive('crudOutput', function (contextService) {
+app.directive('crudOutput', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -4490,7 +4509,7 @@ app.directive('crudOutput', function (contextService) {
             hasError: '='
         },
 
-        controller: function ($scope,$injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService) {
+        controller: ["$scope", "$injector", "formatService", "printService", "tabsService", "fieldService", "commandService", "redirectService", "i18NService", function ($scope,$injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService) {
             $scope.$name = 'crudoutput';
 
             $scope.cancel = function (previousdata,previousschema) {
@@ -4527,11 +4546,11 @@ app.directive('crudOutput', function (contextService) {
                 commandService: commandService
             });
 
-        }
+        }]
 
     };
-});;
-app.directive('sectionElementOutput', function ($compile) {
+}]);;
+app.directive('sectionElementOutput', ["$compile", function ($compile) {
     "ngInject";
     return {
         restrict: "E",
@@ -4555,9 +4574,9 @@ app.directive('sectionElementOutput', function ($compile) {
             }
         }
     }
-});
+}]);
 
-app.directive('crudOutputFields', function (contextService) {
+app.directive('crudOutputFields', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -4570,7 +4589,7 @@ app.directive('crudOutputFields', function (contextService) {
             orientation: '@'
         },
 
-        controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService) {
+        controller: ["$scope", "$injector", "formatService", "printService", "tabsService", "fieldService", "commandService", "redirectService", "i18NService", "expressionService", function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService) {
             $scope.$name = 'crud_output_fields';
 
             $scope.contextPath = function (path) {
@@ -4689,10 +4708,10 @@ app.directive('crudOutputFields', function (contextService) {
             $scope.selectNodeLabel = function () {
                 //workaround to avoid treeview node to be selected
             };
-        }
+        }]
 
     };
-});;
+}]);;
 var app = angular.module('sw_layout');
 
 function griditemclick(rowNumber, columnNumber, element) {
@@ -4728,7 +4747,7 @@ function buildStyle(minWidth, maxWidth, width,isdiv) {
     return style + " \"";
 };
 
-app.directive('crudtbody', function (contextService, $compile, $parse, formatService, i18NService, fieldService, commandService, $injector, $timeout, $log) {
+app.directive('crudtbody', ["contextService", "$compile", "$parse", "formatService", "i18NService", "fieldService", "commandService", "$injector", "$timeout", "$log", function (contextService, $compile, $parse, formatService, i18NService, fieldService, commandService, $injector, $timeout, $log) {
     "ngInject";
     return {
         restrict: 'A',
@@ -4906,12 +4925,12 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
     }
 
 
-});
+}]);
 
 
 ;
 
-app.directive('dashboardsdone', function ($timeout) {
+app.directive('dashboardsdone', ["$timeout", function ($timeout) {
     "ngInject";
     return {
         restrict: 'A',
@@ -4923,7 +4942,7 @@ app.directive('dashboardsdone', function ($timeout) {
             }
         }
     };
-});
+}]);
 
 function DashboardController($scope, $http, $templateCache, $rootScope, formatService, i18NService, contextService, schemaService,fixHeaderService) {
     "ngInject";
@@ -5534,7 +5553,7 @@ function HomeController($scope, $http, $templateCache, $rootScope, $timeout,$log
 var app = angular.module('sw_layout');
 
 
-app.directive('inlineCompositionListWrapper', function ($compile) {
+app.directive('inlineCompositionListWrapper', ["$compile", function ($compile) {
     "ngInject";
     return {
         restrict: 'E',
@@ -5570,10 +5589,10 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
 
         }
     };
-});
+}]);
 
 
-app.directive('inlineCompositionList', function (contextService, commandService) {
+app.directive('inlineCompositionList', ["contextService", "commandService", function (contextService, commandService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -5587,7 +5606,7 @@ app.directive('inlineCompositionList', function (contextService, commandService)
             compositiondata:'=',
         },
 
-        controller: function ($scope, $filter, $http, $element, $rootScope, tabsService) {
+        controller: ["$scope", "$filter", "$http", "$element", "$rootScope", "tabsService", function ($scope, $filter, $http, $element, $rootScope, tabsService) {
 
             $scope.contextPath = function (path) {
                 return url(path);
@@ -5599,9 +5618,9 @@ app.directive('inlineCompositionList', function (contextService, commandService)
                 }
             }
 
-        }
+        }]
     };
-});;
+}]);;
 function LogAdminController($scope, $http, i18NService, redirectService) {
     "ngInject";
     $scope.filter = function (data) {
@@ -5694,7 +5713,7 @@ function LogAdminController($scope, $http, i18NService, redirectService) {
 };
 var app = angular.module('sw_layout');
 
-app.directive('lookupModalWrapper', function ($compile) {
+app.directive('lookupModalWrapper', ["$compile", function ($compile) {
     "ngInject";
     return {
         restrict: "E",
@@ -5719,9 +5738,9 @@ app.directive('lookupModalWrapper', function ($compile) {
         },
 
     }
-}),
+}]),
 
-app.directive('lookupModal', function (contextService) {
+app.directive('lookupModal', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -5735,7 +5754,7 @@ app.directive('lookupModal', function (contextService) {
             datamap: '='
         },
 
-        controller: function ($scope, $http, $element, searchService, i18NService, associationService) {
+        controller: ["$scope", "$http", "$element", "searchService", "i18NService", "associationService", function ($scope, $http, $element, searchService, i18NService, associationService) {
 
             $scope.lookupModalSearch = function (pageNumber) {
                 var schema = $scope.schema;
@@ -5859,9 +5878,9 @@ app.directive('lookupModal', function (contextService) {
                     $scope.lookupModalSearch();
                 }
             });
-        }
+        }]
     };
-});;
+}]);;
 function MakeSWAdminController($scope, $http, $timeout, redirectService) {
     "ngInject";
     $scope.submit = function () {
@@ -5901,12 +5920,12 @@ function MakeSWAdminController($scope, $http, $timeout, redirectService) {
 };
 var app = angular.module('sw_layout');
 
-app.directive('messagesection', function (contextService, $timeout, logoutService) {
+app.directive('messagesection', ["contextService", "$timeout", "logoutService", function (contextService, $timeout, logoutService) {
     "ngInject";
     return {
         restrict: 'E',
         templateUrl: contextService.getResourceUrl('Content/Templates/message_section.html'),
-        controller: function ($scope, i18NService, $rootScope, fixHeaderService) {
+        controller: ["$scope", "i18NService", "$rootScope", "fixHeaderService", function ($scope, i18NService, $rootScope, fixHeaderService) {
 
             $scope.contextPath = function (path) {
                 return url(path);
@@ -6026,9 +6045,9 @@ app.directive('messagesection', function (contextService, $timeout, logoutServic
             $scope.closeSuccessMessage = function() {
                 hideSuccessMessage();
             }
-        }
+        }]
     };
-});
+}]);
 
 
 
@@ -6148,7 +6167,7 @@ function MyProfileController($scope, $http, $templateCache, i18NService, $rootSc
         user.language = $scope.currentUser.language;
     }
 };
-app.directive('pagination', function (contextService) {
+app.directive('pagination', ["contextService", function (contextService) {
     "ngInject";
     return {
         restrict: 'E',
@@ -6165,7 +6184,7 @@ app.directive('pagination', function (contextService) {
             disableExport: '@'
         },
 
-        controller: function ($scope,
+        controller: ["$scope", "$http", "$rootScope", "$timeout", "printService", "searchService", "i18NService", "redirectService", "contextService", "excelService", function ($scope,
             $http,
             $rootScope,
             $timeout,
@@ -6241,9 +6260,9 @@ app.directive('pagination', function (contextService) {
             }
 
             $scope.adjustMargin(i18NService.getCurrentLanguage());
-        }
+        }]
     };
-});;
+}]);;
 $(function () {
 
     if (typeof jScrollPane === 'undefined') {
@@ -6826,7 +6845,7 @@ function UserProfileController($scope, $http, $templateCache, i18NService) {
 };
 var app = angular.module('sw_layout');
 
-app.factory('alertService', function ($rootScope, $timeout, i18NService) {
+app.factory('alertService', ["$rootScope", "$timeout", "i18NService", function ($rootScope, $timeout, i18NService) {
     "ngInject";
     return {
 
@@ -6907,7 +6926,7 @@ app.factory('alertService', function ($rootScope, $timeout, i18NService) {
             }
         }
     };
-});
+}]);
 
 
 ;
@@ -6916,7 +6935,7 @@ var app = angular.module('sw_layout');
 /*
 /Just a holder for multiple inner services
 */
-app.factory('applicationFacade', function (i18NService,compositionService,printService,tabsService) {
+app.factory('applicationFacade', ["i18NService", "compositionService", "printService", "tabsService", function (i18NService,compositionService,printService,tabsService) {
     "ngInject";
 
 
@@ -6934,13 +6953,13 @@ app.factory('applicationFacade', function (i18NService,compositionService,printS
 
     };
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
+app.factory('associationService', ["$injector", "$http", "$timeout", "$log", "$rootScope", "submitService", "fieldService", function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
     "ngInject";
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('associationService#doUpdateExtraFields');
@@ -7403,13 +7422,13 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
 
     };
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('commandService', function (i18NService, $injector, expressionService) {
+app.factory('commandService', ["i18NService", "$injector", "expressionService", function (i18NService, $injector, expressionService) {
 
     "ngInject";
 
@@ -7516,7 +7535,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
 
     };
 
-});
+}]);
 
 
 ;
@@ -7818,7 +7837,7 @@ app.factory('commandService', function (i18NService, $injector, expressionServic
 ;
 var app = angular.module('sw_layout');
 
-app.factory('contextService', function ($rootScope) {
+app.factory('contextService', ["$rootScope", function ($rootScope) {
     "ngInject";
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.
@@ -8028,13 +8047,13 @@ app.factory('contextService', function ($rootScope) {
 
 
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('crudextraService', function ($http, $rootScope, printService, alertService) {
+app.factory('crudextraService', ["$http", "$rootScope", "printService", "alertService", function ($http, $rootScope, printService, alertService) {
     "ngInject";
     return {
 
@@ -8065,7 +8084,7 @@ app.factory('crudextraService', function ($http, $rootScope, printService, alert
 
     };
 
-});
+}]);
 
 
 ;
@@ -8244,7 +8263,7 @@ app.factory('crudextraService', function ($http, $rootScope, printService, alert
  */
 var app = angular.module('sw_layout');
 
-app.factory('dispatcherService', function ($injector, $log) {
+app.factory('dispatcherService', ["$injector", "$log", function ($injector, $log) {
 
     "ngInject";
 
@@ -8273,7 +8292,7 @@ app.factory('dispatcherService', function ($injector, $log) {
         }
     };
 
-});
+}]);
 
 ;
 var app = angular.module('sw_layout');
@@ -8281,7 +8300,7 @@ var app = angular.module('sw_layout');
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
 
-app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
+app.factory('excelService', ["$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService", "i18NService", "userService", "redirectService", "searchService", "contextService", "fileService", "alertService", "restService", function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
     i18NService,userService,
     redirectService, searchService, contextService, fileService, alertService,restService) {
 
@@ -8469,12 +8488,12 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
         }
     }
 
-});
+}]);
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('expressionService', function ($rootScope,contextService) {
+app.factory('expressionService', ["$rootScope", "contextService", function ($rootScope,contextService) {
 
     "ngInject";
 
@@ -8538,13 +8557,13 @@ app.factory('expressionService', function ($rootScope,contextService) {
 
     };
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('fieldService', function (expressionService,$log) {
+app.factory('fieldService', ["expressionService", "$log", function (expressionService,$log) {
 
     "ngInject";
 
@@ -8744,7 +8763,7 @@ app.factory('fieldService', function (expressionService,$log) {
         }
     };
 
-});
+}]);
 
 
 ;
@@ -8753,7 +8772,7 @@ app.factory('fieldService', function (expressionService,$log) {
 */
 var app = angular.module('sw_layout');
 
-app.factory('fileService', function ($rootScope, contextService) {
+app.factory('fileService', ["$rootScope", "contextService", function ($rootScope, contextService) {
 
     "ngInject";
 
@@ -8793,10 +8812,10 @@ app.factory('fileService', function ($rootScope, contextService) {
             });
         }
     }
-});;
+}]);;
 var app = angular.module('sw_layout');
 
-app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
+app.factory('fixHeaderService', ["$rootScope", "$log", "$timeout", "contextService", "fieldService", function ($rootScope, $log, $timeout, contextService, fieldService) {
     "ngInject";
 
     var addClassErrorMessageListHander = function (showerrormessage) {
@@ -9094,7 +9113,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
         }
     };
 
-});
+}]);
 
 
 // In chrome you have to fire the window.location.reload event to fire a print event when a socket event is in progress.. 
@@ -9104,7 +9123,7 @@ app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextSer
 //};
 var app = angular.module('sw_layout');
 
-app.factory('formatService', function ($filter, i18NService) {
+app.factory('formatService', ["$filter", "i18NService", function ($filter, i18NService) {
 
     "ngInject";
 
@@ -9219,10 +9238,10 @@ app.factory('formatService', function ($filter, i18NService) {
 
     };
 
-});;
+}]);;
 var app = angular.module('sw_layout');
 
-app.factory('i18NService', function ($rootScope, contextService) {
+app.factory('i18NService', ["$rootScope", "contextService", function ($rootScope, contextService) {
     "ngInject";
 
     var verifyKeyInAllCatalogsButEn = function (key) {
@@ -9434,7 +9453,7 @@ app.factory('i18NService', function ($rootScope, contextService) {
 
     };
 
-});
+}]);
 
 
 ;
@@ -9832,7 +9851,7 @@ app.factory('i18NService', function ($rootScope, contextService) {
 ;
 var app = angular.module('sw_layout');
 
-app.factory('logoutService', function (contextService, i18NService, $window) {
+app.factory('logoutService', ["contextService", "i18NService", "$window", function (contextService, i18NService, $window) {
 
     "ngInject";
 
@@ -9880,13 +9899,13 @@ app.factory('logoutService', function (contextService, i18NService, $window) {
         },
      
     };
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService, $log) {
+app.factory('menuService', ["$rootScope", "redirectService", "contextService", "i18NService", "$log", function ($rootScope, redirectService, contextService, i18NService, $log) {
 
     "ngInject";
 
@@ -10066,13 +10085,13 @@ app.factory('menuService', function ($rootScope, redirectService, contextService
         }
     };
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('mockService', function (contextService) {
+app.factory('mockService', ["contextService", function (contextService) {
     "ngInject";
 
     return {
@@ -10089,7 +10108,7 @@ app.factory('mockService', function (contextService) {
 
     };
 
-});
+}]);
 
 
 ;
@@ -10097,7 +10116,7 @@ var app = angular.module('sw_layout');
 
 //var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
-app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsService, fixHeaderService, redirectService, searchService) {
+app.factory('printService', ["$rootScope", "$http", "$timeout", "$log", "tabsService", "fixHeaderService", "redirectService", "searchService", function ($rootScope, $http, $timeout,$log, tabsService, fixHeaderService, redirectService, searchService) {
 
     "ngInject";
 
@@ -10313,13 +10332,13 @@ app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsServ
         }
     };
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService) {
+app.factory('redirectService', ["$http", "$rootScope", "$log", "contextService", "fixHeaderService", "restService", function ($http, $rootScope, $log, contextService, fixHeaderService, restService) {
 
     "ngInject";
 
@@ -10548,7 +10567,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
         }
     };
 
-});
+}]);
 
 function openPopup(redirectURL) {
     var width = 1024;
@@ -10563,7 +10582,7 @@ function openPopup(redirectURL) {
     return w;
 }
 ;
-angular.module('sw_layout').factory('restService', function ($http, $log, contextService) {
+angular.module('sw_layout').factory('restService', ["$http", "$log", "contextService", function ($http, $log, contextService) {
     "ngInject";
 
     return {
@@ -10632,7 +10651,7 @@ angular.module('sw_layout').factory('restService', function ($http, $log, contex
 
     };
 
-});
+}]);
 
 
 ;
@@ -10799,7 +10818,7 @@ app.factory('schemaService', function () {
 ;
 var app = angular.module('sw_layout');
 
-app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $log) {
+app.factory('screenshotService', ["$rootScope", "$timeout", "i18NService", "$log", function ($rootScope, $timeout, i18NService, $log) {
 
     "ngInject";
 
@@ -10901,13 +10920,13 @@ app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $l
 
 
     };
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('searchService', function (i18NService, $rootScope, contextService) {
+app.factory('searchService', ["i18NService", "$rootScope", "contextService", function (i18NService, $rootScope, contextService) {
     "ngInject";
 
     var objCache = {};
@@ -11122,7 +11141,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
     };
 
 
-});;
+}]);;
 
 (function (angular) {
     'use strict';
@@ -11220,7 +11239,7 @@ app.factory('searchService', function (i18NService, $rootScope, contextService) 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('styleService', function ($rootScope, $timeout, i18NService) {
+app.factory('styleService', ["$rootScope", "$timeout", "i18NService", function ($rootScope, $timeout, i18NService) {
 
     "ngInject";
 
@@ -11241,13 +11260,13 @@ app.factory('styleService', function ($rootScope, $timeout, i18NService) {
       
     };
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('submitService', function ($rootScope, fieldService,contextService,restService,spinService) {
+app.factory('submitService', ["$rootScope", "fieldService", "contextService", "restService", "spinService", function ($rootScope, fieldService,contextService,restService,spinService) {
 
     "ngInject";
 
@@ -11377,10 +11396,10 @@ app.factory('submitService', function ($rootScope, fieldService,contextService,r
 
     };
 
-});;
+}]);;
 var app = angular.module('sw_layout');
 
-app.factory('tabsService', function (fieldService,i18NService) {
+app.factory('tabsService', ["fieldService", "i18NService", function (fieldService,i18NService) {
 
     "ngInject";
 
@@ -11559,13 +11578,13 @@ app.factory('tabsService', function (fieldService,i18NService) {
         }
 
     };
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('userService', function (contextService) {
+app.factory('userService', ["contextService", function (contextService) {
 
     "ngInject";
 
@@ -11614,13 +11633,13 @@ app.factory('userService', function (contextService) {
 
 
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService) {
+app.factory('validationService', ["i18NService", "fieldService", "$rootScope", "dispatcherService", "expressionService", function (i18NService, fieldService, $rootScope, dispatcherService, expressionService) {
 
     "ngInject";
 
@@ -11673,11 +11692,11 @@ app.factory('validationService', function (i18NService, fieldService, $rootScope
 
     };
 
-});
+}]);
 
 
 ;
-app.directive('commandbar', function (contextService) {
+app.directive('commandbar', ["contextService", function (contextService) {
 
     "ngInject";
 
@@ -11697,7 +11716,7 @@ app.directive('commandbar', function (contextService) {
             searchSort: '='
         },
 
-        controller: function ($scope, $http, $element, $log, $rootScope, printService, i18NService, commandService, redirectService, alertService) {
+        controller: ["$scope", "$http", "$element", "$log", "$rootScope", "printService", "i18NService", "commandService", "redirectService", "alertService", function ($scope, $http, $element, $log, $rootScope, printService, i18NService, commandService, redirectService, alertService) {
 
             $scope.defaultCommands = function () {
 
@@ -11965,12 +11984,12 @@ app.directive('commandbar', function (contextService) {
                 return false;
             }
 
-        }
+        }]
     };
-});
+}]);
 
 ;
-app.directive("fileread", function (alertService, $log, contextService, submitService) {
+app.directive("fileread", ["alertService", "$log", "contextService", "submitService", function (alertService, $log, contextService, submitService) {
 
     "ngInject";
 
@@ -12025,8 +12044,8 @@ app.directive("fileread", function (alertService, $log, contextService, submitSe
             });
         }
     };
-});;
-app.directive('menuWrapper', function ($compile) {
+}]);;
+app.directive('menuWrapper', ["$compile", function ($compile) {
 
     "ngInject";
 
@@ -12047,9 +12066,9 @@ app.directive('menuWrapper', function ($compile) {
             }
         }
     }
-});
+}]);
 
-app.directive('menu', function (contextService) {
+app.directive('menu', ["contextService", function (contextService) {
     "ngInject";
 
     return {
@@ -12059,7 +12078,7 @@ app.directive('menu', function (contextService) {
         scope: {
             menu: '='
         },
-        controller: function ($scope, $rootScope, $timeout) {
+        controller: ["$scope", "$rootScope", "$timeout", function ($scope, $rootScope, $timeout) {
 
             $scope.level = -1;
 
@@ -12131,11 +12150,11 @@ app.directive('menu', function (contextService) {
                     //}
                 }
             });
-        }
+        }]
     };
-});
+}]);
 
-app.directive('subMenu', function ($compile) {
+app.directive('subMenu', ["$compile", function ($compile) {
 
     "ngInject";
 
@@ -12157,9 +12176,9 @@ app.directive('subMenu', function ($compile) {
             }
         }
     }
-});
+}]);
 
-app.directive('menuItem', function (contextService) {
+app.directive('menuItem', ["contextService", function (contextService) {
 
     "ngInject";
 
@@ -12172,7 +12191,7 @@ app.directive('menuItem', function (contextService) {
             displacement: '=',
             level: '='
         },
-        controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService) {
+        controller: ["$scope", "$http", "$rootScope", "menuService", "i18NService", "mockService", function ($scope, $http, $rootScope, menuService, i18NService, mockService) {
 
             $scope.level = $scope.level + 1;
 
@@ -12237,9 +12256,9 @@ app.directive('menuItem', function (contextService) {
 
 
             };
-        }
+        }]
     };
-});;
+}]);;
 //ie9 fix, since performance object doesn´t exist
 if (!performance) {
     var performance = {};
@@ -12251,7 +12270,7 @@ if (!performance.now) {
 }
 
 
-app.directive('ngrepeatinspector', function ($timeout, $log) {
+app.directive('ngrepeatinspector', ["$timeout", "$log", function ($timeout, $log) {
 
     "ngInject";
 
@@ -12273,7 +12292,7 @@ app.directive('ngrepeatinspector', function ($timeout, $log) {
             }
         }
     };
-});
+}]);
 
 app.directive('localClick', ['$parse', '$rootScope', '$exceptionHandler', function ($parse, $rootScope, $exceptionHandler) {
 
@@ -12320,7 +12339,7 @@ app.directive('localClick', ['$parse', '$rootScope', '$exceptionHandler', functi
 }]);
 var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
-app.directive('printModal', function ($log, contextService) {
+app.directive('printModal', ["$log", "contextService", function ($log, contextService) {
     "ngInject";
 
     return {
@@ -12332,7 +12351,7 @@ app.directive('printModal', function ($log, contextService) {
             datamap: '=',
         },
 
-        controller: function ($scope, printService, tabsService, i18NService) {
+        controller: ["$scope", "printService", "tabsService", "i18NService", function ($scope, printService, tabsService, i18NService) {
                         
             $scope.i18N = function (key, defaultValue, paramArray) {
                 return i18NService.get18nValue(key, defaultValue, paramArray);
@@ -12401,12 +12420,12 @@ app.directive('printModal', function ($log, contextService) {
             };
 
             init();
-        }
+        }]
     };
-});;
+}]);;
 var app = angular.module('sw_layout');
 
-app.directive('printsectionrendered', function ($timeout, $log) {
+app.directive('printsectionrendered', ["$timeout", "$log", function ($timeout, $log) {
 
     "ngInject";
 
@@ -12431,9 +12450,9 @@ app.directive('printsectionrendered', function ($timeout, $log) {
             }
         }
     };
-});
+}]);
 
-app.directive('printSection', function (contextService) {
+app.directive('printSection', ["contextService", function (contextService) {
 
     "ngInject";
 
@@ -12446,7 +12465,7 @@ app.directive('printSection', function (contextService) {
             datamap: '=',
         },
 
-        controller: function ($scope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService) {
+        controller: ["$scope", "$timeout", "$log", "printService", "tabsService", "i18NService", "compositionService", "fieldService", function ($scope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService) {
 
             $scope.compositionstoprint = [];
             $scope.shouldPageBreak = true;
@@ -12527,12 +12546,12 @@ app.directive('printSection', function (contextService) {
                 $scope.printSchema = null;
             });
 
-        }
+        }]
     };
-});;
+}]);;
 var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService, contextService) {
+app.factory('cmpAutocompleteClient', ["$rootScope", "$timeout", "fieldService", "contextService", function ($rootScope, $timeout, fieldService, contextService) {
 
     "ngInject";
 
@@ -12590,13 +12609,13 @@ app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldServic
 
     }
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('cmpAutocompleteServer', function ($log, associationService) {
+app.factory('cmpAutocompleteServer', ["$log", "associationService", function ($log, associationService) {
 
     "ngInject";
 
@@ -12691,13 +12710,13 @@ app.factory('cmpAutocompleteServer', function ($log, associationService) {
 
     }
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('cmpCombobox', function ($rootScope, $timeout, fieldService) {
+app.factory('cmpCombobox', ["$rootScope", "$timeout", "fieldService", function ($rootScope, $timeout, fieldService) {
 
     "ngInject";
 
@@ -12746,13 +12765,13 @@ app.factory('cmpCombobox', function ($rootScope, $timeout, fieldService) {
 
     }
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
+app.factory('cmpComboDropdown', ["$rootScope", "$timeout", "i18NService", function ($rootScope, $timeout, i18NService) {
 
     "ngInject";
 
@@ -12822,13 +12841,13 @@ app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
 
     }
 
-});
+}]);
 
 
 ;
 var app = angular.module('sw_layout');
 
-app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocompleteClient, cmpAutocompleteServer, cmpCombobox, screenshotService, fieldService) {
+app.factory('cmpfacade', ["$timeout", "$log", "cmpComboDropdown", "cmpAutocompleteClient", "cmpAutocompleteServer", "cmpCombobox", "screenshotService", "fieldService", function ($timeout, $log, cmpComboDropdown, cmpAutocompleteClient, cmpAutocompleteServer, cmpCombobox, screenshotService, fieldService) {
 
     "ngInject";
 
@@ -12945,7 +12964,7 @@ app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocomp
 
     }
 
-});
+}]);
 
 
 ;

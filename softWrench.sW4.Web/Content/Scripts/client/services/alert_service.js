@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('alertService', function ($rootScope, $timeout, i18NService) {
-
+    "ngInject";
     return {
 
         confirm: function (applicationName, applicationId, callbackFunction, msg, cancelcallback) {

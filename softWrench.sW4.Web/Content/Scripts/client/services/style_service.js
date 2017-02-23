@@ -2,6 +2,8 @@
 
 app.factory('styleService', function ($rootScope, $timeout, i18NService) {
 
+    "ngInject";
+
     return {
 
         getLabelStyle: function (fieldMetadata,key) {

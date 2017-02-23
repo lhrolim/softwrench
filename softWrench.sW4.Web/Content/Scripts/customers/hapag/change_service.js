@@ -2,6 +2,8 @@
 
 app.factory('changeservice', function ($http, redirectService, formatService, fieldService, alertService) {
 
+    "ngInject";
+
     /**
      * Parses a string into a date. Expects the format 'dd/MM/yyyy HH:mm'.
      * @param {String} value 

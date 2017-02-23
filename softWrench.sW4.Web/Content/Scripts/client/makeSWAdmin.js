@@ -1,5 +1,5 @@
 ﻿function MakeSWAdminController($scope, $http, $timeout, redirectService) {
-
+    "ngInject";
     $scope.submit = function () {
         var parameters = {
             password: $scope.password

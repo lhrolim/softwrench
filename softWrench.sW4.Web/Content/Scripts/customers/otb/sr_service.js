@@ -2,6 +2,8 @@
 
 app.factory('srService', function (alertService, associationService, fieldService) {
 
+    "ngInject";
+
     return {
         beforeChangeLocation: function (event) {
             if (event.fields['assetnum'] == null) {

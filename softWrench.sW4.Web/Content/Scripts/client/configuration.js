@@ -2,6 +2,9 @@
 var CONDITIONMODAL_$_KEY = '[data-class="conditionModal"]';
 
 app.directive('configrendered', function ($timeout) {
+
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -16,6 +19,8 @@ app.directive('configrendered', function ($timeout) {
 });
 
 app.directive('conditionmodal', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -59,6 +64,7 @@ app.directive('conditionmodal', function (contextService) {
 
 function ConfigController($scope, $http, i18NService, alertService) {
 
+    "ngInject";
 
 
     var noneProfile = {

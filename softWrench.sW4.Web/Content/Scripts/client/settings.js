@@ -1,5 +1,5 @@
 ﻿function AceController($scope, $http, $templateCache, $window, i18NService) {
-
+    "ngInject";
     $scope.save = function () {
         var urlToUse = $scope.type == 'menu' ? "/api/generic/EntityMetadata/SaveMenu" : "/api/generic/EntityMetadata/SaveMetadata";
         $http({

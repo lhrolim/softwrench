@@ -2,6 +2,7 @@
 
 app.factory('submitService', function ($rootScope, fieldService,contextService,restService,spinService) {
 
+    "ngInject";
 
     return {
         ///used for ie9 form submission

@@ -2,6 +2,8 @@
 
 app.factory('userService', function (contextService) {
 
+    "ngInject";
+
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.
         //see SWWEB-239

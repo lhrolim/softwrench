@@ -3,6 +3,9 @@
 var app = angular.module('sw_layout');
 
 app.factory('dispatcherService', function ($injector, $log) {
+
+    "ngInject";
+
     var loadService = function (service, method) {
         var log = $log.getInstance('dispatcherService#loadService');
 

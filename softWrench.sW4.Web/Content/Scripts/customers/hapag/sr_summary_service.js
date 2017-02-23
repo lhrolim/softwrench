@@ -2,6 +2,8 @@
 
 app.factory('srsummaryService', function (redirectService) {
 
+    "ngInject";
+
     return {
 
         redirectToHapagHome: function () {

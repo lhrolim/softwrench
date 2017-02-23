@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
-app.directive('messagesection', function (contextService,$timeout,logoutService) {
+app.directive('messagesection', function (contextService, $timeout, logoutService) {
+    "ngInject";
     return {
         restrict: 'E',
         templateUrl: contextService.getResourceUrl('Content/Templates/message_section.html'),

@@ -1,4 +1,7 @@
 ﻿app.directive("fileread", function (alertService, $log, contextService, submitService) {
+
+    "ngInject";
+
     return {
         scope: {
             fileread: "=",

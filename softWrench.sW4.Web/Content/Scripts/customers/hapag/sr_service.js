@@ -2,6 +2,8 @@
 
 app.factory('srservice', function ($http, alertService, fieldService, $rootScope,contextService) {
 
+    "ngInject";
+
     return {
         //This service is to add the new field ACTION in Service Request details for resolved tickets
      

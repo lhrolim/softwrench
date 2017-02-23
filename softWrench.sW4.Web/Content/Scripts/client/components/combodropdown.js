@@ -2,6 +2,8 @@
 
 app.factory('cmpComboDropdown', function ($rootScope, $timeout, i18NService) {
 
+    "ngInject";
+
     return {
 
         block: function (attribute) {

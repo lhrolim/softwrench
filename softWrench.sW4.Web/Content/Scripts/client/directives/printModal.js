@@ -1,6 +1,8 @@
 ﻿var PRINTMODAL_$_KEY = '[data-class="printModal"]';
 
 app.directive('printModal', function ($log, contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,

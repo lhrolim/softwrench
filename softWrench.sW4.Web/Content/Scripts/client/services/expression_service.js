@@ -2,6 +2,8 @@
 
 app.factory('expressionService', function ($rootScope,contextService) {
 
+    "ngInject";
+
     var preCompiledReplaceRegex = /(?:^|\W)@(\#*)(\w+)(?!\w)/g;
 
     return {

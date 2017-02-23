@@ -2,6 +2,8 @@
 
 app.factory('cmpfacade', function ($timeout, $log, cmpComboDropdown, cmpAutocompleteClient, cmpAutocompleteServer, cmpCombobox, screenshotService, fieldService) {
 
+    "ngInject";
+
     return {
 
         unblock: function (displayable, scope) {

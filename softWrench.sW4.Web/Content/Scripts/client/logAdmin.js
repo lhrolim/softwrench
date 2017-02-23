@@ -1,5 +1,5 @@
 ﻿function LogAdminController($scope, $http, i18NService, redirectService) {
-
+    "ngInject";
     $scope.filter = function (data) {
         var logname = data.logname;
         $scope.logs = $.grep($scope.initiallogs, function (element) {

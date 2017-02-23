@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('contextService', function ($rootScope) {
-
+    "ngInject";
     return {
         //using sessionstorage instead of rootscope, as the later would be lost upon F5.
         //see SWWEB-239

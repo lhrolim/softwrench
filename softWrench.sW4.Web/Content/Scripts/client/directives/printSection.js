@@ -1,6 +1,9 @@
 ﻿var app = angular.module('sw_layout');
 
 app.directive('printsectionrendered', function ($timeout, $log) {
+
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -25,6 +28,9 @@ app.directive('printsectionrendered', function ($timeout, $log) {
 });
 
 app.directive('printSection', function (contextService) {
+
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,

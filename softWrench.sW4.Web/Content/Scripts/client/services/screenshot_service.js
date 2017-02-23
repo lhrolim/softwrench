@@ -2,6 +2,8 @@
 
 app.factory('screenshotService', function ($rootScope, $timeout, i18NService, $log) {
 
+    "ngInject";
+
     return {
 
         init: function (bodyElement, datamap) {

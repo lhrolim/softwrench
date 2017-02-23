@@ -4,7 +4,7 @@
 /Just a holder for multiple inner services
 */
 app.factory('applicationFacade', function (i18NService,compositionService,printService,tabsService) {
-
+    "ngInject";
 
 
     return {

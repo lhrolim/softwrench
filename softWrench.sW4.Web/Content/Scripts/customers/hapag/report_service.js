@@ -2,6 +2,8 @@
 
 app.factory('reportservice', function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService) {
 
+    "ngInject";
+
     var getDefaultFilterValue = function (displayable) {
         var defaultValue = null;
         if (displayable.filter.default == '@MIN_DATE') {

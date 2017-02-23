@@ -1,4 +1,5 @@
 ﻿app.directive('configAssociationListInputDatamap', function ($timeout) {
+    "ngInject";
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -19,6 +20,7 @@
 });
 
 app.directive('configUpdateSectionDatamap', function ($timeout) {
+    "ngInject";
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -45,6 +47,7 @@ app.directive('configUpdateSectionDatamap', function ($timeout) {
 });
 
 app.directive('sectionElementInput', function ($compile) {
+    "ngInject";
     return {
         restrict: "E",
         replace: true,
@@ -82,6 +85,7 @@ app.directive('sectionElementInput', function ($compile) {
 
 
 app.directive('crudInputFields', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

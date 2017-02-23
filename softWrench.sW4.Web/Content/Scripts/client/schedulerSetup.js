@@ -1,5 +1,5 @@
 ﻿function SchedulerSetupController($scope, $http, $templateCache, i18NService) {
-
+    "ngInject";
     function toList(data) {
         if (data != null) {
             $scope.listObjects = data;

@@ -1,5 +1,6 @@
 ﻿
 app.directive('dashboardsdone', function ($timeout) {
+    "ngInject";
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -13,7 +14,7 @@ app.directive('dashboardsdone', function ($timeout) {
 });
 
 function DashboardController($scope, $http, $templateCache, $rootScope, formatService, i18NService, contextService, schemaService,fixHeaderService) {
-
+    "ngInject";
     $scope.i18N = function (key, defaultValue, paramArray) {
         return i18NService.get18nValue(key, defaultValue, paramArray);
     };

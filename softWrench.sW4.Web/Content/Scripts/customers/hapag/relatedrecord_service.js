@@ -2,6 +2,8 @@
 
 app.factory('relatedrecordservice', function ($http, redirectService, alertService) {
 
+    "ngInject";
+
     return {
         
         opendetail: function (datamap, schema) {

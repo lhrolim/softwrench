@@ -1,7 +1,7 @@
 ﻿
 
 function UserController($scope, $http, $templateCache, i18NService) {
-
+    "ngInject";
     var app = angular.module('plunker', ['ui.multiselect']);
 
     $scope.addSelectedProfiles = function (availableprofilesselected) {

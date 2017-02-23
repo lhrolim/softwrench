@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('searchService', function (i18NService, $rootScope, contextService) {
+    "ngInject";
 
     var objCache = {};
 

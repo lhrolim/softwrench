@@ -1,4 +1,5 @@
 ﻿function AssetRemarksController($scope, $http, i18NService, fieldService) {
+    "ngInject";
 
     function init() {
 

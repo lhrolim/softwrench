@@ -3,7 +3,10 @@
 
 
 
-app.directive('expandedItemOutput', function ($compile) {
+    app.directive('expandedItemOutput', function ($compile) {
+    
+        "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -28,7 +31,9 @@ app.directive('expandedItemOutput', function ($compile) {
     }
 });
 
-app.directive('expandedItemInput', function ($compile) {
+    app.directive('expandedItemInput', function ($compile) {
+
+        "ngInject";
     return {
         restrict: "E",
         replace: true,
@@ -57,7 +62,9 @@ app.directive('expandedItemInput', function ($compile) {
     }
 });
 
-app.directive('newItemInput', function ($compile) {
+    app.directive('newItemInput', function ($compile) {
+
+        "ngInject";
 
     return {
         restrict: "E",
@@ -101,7 +108,10 @@ app.directive('newItemInput', function ($compile) {
     }
 });
 
-app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope, spinService, compositionService) {
+    app.directive('compositionListWrapper', function ($compile, i18NService, $log, $rootScope, spinService, compositionService) {
+
+        "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -170,6 +180,8 @@ app.directive('compositionListWrapper', function ($compile, i18NService, $log, $
 
 
 app.directive('compositionList', function (contextService, spinService) {
+
+    "ngInject";
 
     return {
         restrict: 'E',

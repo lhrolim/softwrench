@@ -58,16 +58,16 @@ namespace softWrench.sW4.Web {
 
         private static void PopulateDistributionScriptBundles(BundleCollection bundles) {
             var scriptBundle = new ScriptBundle("~/Content/dist/scripts")
-//                .Include("~/Content/temp/scripts/vendor.js")
-//                .Include("~/Content/dist/scripts/app.js");
+                .Include("~/Content/dist/scripts/vendor.js")
+                .Include("~/Content/dist/scripts/app.js");
 
-                            .Include("~/Content/temp/scripts/vendor.concat.js")
-                            .Include("~/Content/temp/scripts/app.concat.js");
+//                            .Include("~/Content/temp/scripts/vendor.concat.js")
+//                            .Include("~/Content/temp/scripts/app.concat.js");
             bundles.Add(scriptBundle);
         }
 
         private static void AddScripts(BundleCollection bundles) {
-            if (!ApplicationConfiguration.IsLocal()) {
+            if (true || !ApplicationConfiguration.IsLocal()) {
                 PopulateDistributionScriptBundles(bundles);
                 return;
             }

@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('associationService', function ($injector, $http, $timeout, $log, $rootScope, submitService, fieldService) {
-
+    "ngInject";
     var doUpdateExtraFields = function (associationFieldMetadata, underlyingValue, datamap) {
         var log = $log.getInstance('associationService#doUpdateExtraFields');
         var key = associationFieldMetadata.associationKey;

@@ -1,4 +1,5 @@
 ﻿app.directive('pagination', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

@@ -1,5 +1,5 @@
 ﻿angular.module('sw_layout').factory('restService', function ($http, $log, contextService) {
-
+    "ngInject";
 
     return {
 

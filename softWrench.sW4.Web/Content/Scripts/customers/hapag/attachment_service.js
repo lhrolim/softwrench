@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('attachmentservice', function (submitService) {
-
+    "ngInject";
     return {
 
         validateNewForm: function (schema, datamap) {

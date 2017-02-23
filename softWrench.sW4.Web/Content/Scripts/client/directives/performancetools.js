@@ -10,6 +10,9 @@ if (!performance.now) {
 
 
 app.directive('ngrepeatinspector', function ($timeout, $log) {
+
+    "ngInject";
+
     return {
         restrict: 'A',
         scope: {
@@ -31,6 +34,9 @@ app.directive('ngrepeatinspector', function ($timeout, $log) {
 });
 
 app.directive('localClick', ['$parse', '$rootScope', '$exceptionHandler', function ($parse, $rootScope, $exceptionHandler) {
+
+    "ngInject";
+
     var directiveName = 'localClick';
     var eventName = 'click';
     return {

@@ -2,6 +2,8 @@
 
 app.factory('formatService', function ($filter, i18NService) {
 
+    "ngInject";
+
     var doFormatDate = function (value, dateFormat, forceConversion) {
         if (value == null) {
             return null;

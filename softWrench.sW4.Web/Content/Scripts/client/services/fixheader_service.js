@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('fixHeaderService', function ($rootScope, $log, $timeout, contextService, fieldService) {
+    "ngInject";
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         var affixpaginationid = $("#affixpagination");

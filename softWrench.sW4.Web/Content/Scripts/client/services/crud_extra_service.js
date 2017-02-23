@@ -1,7 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('crudextraService', function ($http, $rootScope, printService, alertService) {
-
+    "ngInject";
     return {
 
         deletefn: function (schema, datamap) {

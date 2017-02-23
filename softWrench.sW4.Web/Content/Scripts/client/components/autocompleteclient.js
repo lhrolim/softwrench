@@ -2,6 +2,8 @@
 
 app.factory('cmpAutocompleteClient', function ($rootScope, $timeout, fieldService, contextService) {
 
+    "ngInject";
+
     return {
 
         unblock: function (displayable) {

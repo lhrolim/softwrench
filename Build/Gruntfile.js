@@ -59,6 +59,30 @@ module.exports = function (grunt) {
         },
         //#endregion
 
+        //#region ng-annotate
+        ngAnnotate: {
+            options: {
+                separator: ";\n"
+            },
+            app: {
+                files: [{
+                    src: [
+                        "<%= app.scripts %>/client/aaa_layout.js", // sw
+                           // customized angular vendor modules
+                      "<%= app.scripts %>/signin.js",
+                      "<%= app.scripts %>/client/*!(aaa_layout).js",
+                      "<%= app.scripts %>/client/services/*.js",
+                      "<%= app.scripts %>/client/directives/*.js",
+                      "<%= app.scripts %>/client/components/*.js",
+                      "<%= app.scripts %>/client/util/*.js"
+                    ],
+
+                    dest: "<%= app.tmp %>/scripts/app.annotated.js"
+                }]
+            }
+        },
+        //#endregion
+
 
         //#region concat
         concat: {
@@ -117,9 +141,11 @@ module.exports = function (grunt) {
                     separator: ";\n"
                 },
                 src: [
+                       "<%= app.scripts %>/client/aaa_layout.js", // sw
+
                         // customized angular vendor modules
                       "<%= app.scripts %>/signin.js",
-                      "<%= app.scripts %>/client/*.js",
+                      "<%= app.scripts %>/client/*!(aaa_layout).js",
                       "<%= app.scripts %>/client/services/*.js",
                       "<%= app.scripts %>/client/directives/*.js",
                       "<%= app.scripts %>/client/components/*.js",
@@ -141,7 +167,7 @@ module.exports = function (grunt) {
                     ]
                 }
             },
-          
+
 
             vendors: {
                 files: [{
@@ -152,7 +178,7 @@ module.exports = function (grunt) {
 
             app: {
                 files: [{
-                    src: ["<%= app.tmp %>/scripts/app.concat.js"],
+                    src: ["<%= app.tmp %>/scripts/app.annotated.js"],
                     dest: "<%= app.dist %>/scripts/app.js"
                 }]
             }
@@ -182,13 +208,14 @@ module.exports = function (grunt) {
     var defaultTasks = [
         "cleanAll", // clean folders: preparing for copy
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
+        "ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
         "uglify:vendors" // minify app script and distribute as 'scripts/app.js'
         // "clean:vendor", "clean:tmp" // clean temporary folders 
     ];
-//    defaultTasks.push("clean:vendor"); // clean temporary folders
-//    defaultTasks.push("clean:tmp");
+    //    defaultTasks.push("clean:vendor"); // clean temporary folders
+    //    defaultTasks.push("clean:tmp");
 
     grunt.registerTask("default", defaultTasks);
 

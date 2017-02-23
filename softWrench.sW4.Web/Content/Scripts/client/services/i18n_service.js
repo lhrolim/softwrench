@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('i18NService', function ($rootScope, contextService) {
+    "ngInject";
 
     var verifyKeyInAllCatalogsButEn = function (key) {
         var catalogs = $rootScope['sw_i18ncatalogs'];

@@ -1,4 +1,7 @@
 ﻿app.directive('menuWrapper', function ($compile) {
+
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -19,6 +22,8 @@
 });
 
 app.directive('menu', function (contextService) {
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,
@@ -103,6 +108,9 @@ app.directive('menu', function (contextService) {
 });
 
 app.directive('subMenu', function ($compile) {
+
+    "ngInject";
+
     return {
         restrict: "E",
         replace: true,
@@ -124,6 +132,9 @@ app.directive('subMenu', function ($compile) {
 });
 
 app.directive('menuItem', function (contextService) {
+
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,

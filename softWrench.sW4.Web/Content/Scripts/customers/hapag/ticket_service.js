@@ -2,6 +2,8 @@
 
 app.factory('ticketservice', function ($http, redirectService,alertService,fieldService) {
 
+    "ngInject";
+
     return {
 
 

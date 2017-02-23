@@ -1,5 +1,7 @@
 ﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService, schemaService) {
 
+    "ngInject";
+
     var imacOptions = [
                 { label: 'Select One', value: 'Select One' },
                 { label: 'Completed', value: 'COMP' },

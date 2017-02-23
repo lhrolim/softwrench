@@ -1,5 +1,5 @@
 ﻿function MyProfileController($scope, $http, $templateCache, i18NService, $rootScope, redirectService) {
-
+    "ngInject";
     init($scope.resultData);
 
     function init(data) {

@@ -1,5 +1,7 @@
 ﻿function CreateFromAssetController($scope, $http, i18NService, fieldService, redirectService) {
 
+    "ngInject";
+
     var OPERATING = "OPERATING";
     var ACTIVE = "120 Active";
     var IDLE = "150 Idle";

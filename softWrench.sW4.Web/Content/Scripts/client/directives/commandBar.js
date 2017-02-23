@@ -1,4 +1,7 @@
 ﻿app.directive('commandbar', function (contextService) {
+
+    "ngInject";
+
     return {
         restrict: 'E',
         replace: true,

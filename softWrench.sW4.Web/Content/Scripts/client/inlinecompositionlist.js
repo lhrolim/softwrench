@@ -2,7 +2,7 @@
 
 
 app.directive('inlineCompositionListWrapper', function ($compile) {
-
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,
@@ -41,7 +41,7 @@ app.directive('inlineCompositionListWrapper', function ($compile) {
 
 
 app.directive('inlineCompositionList', function (contextService, commandService) {
-
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

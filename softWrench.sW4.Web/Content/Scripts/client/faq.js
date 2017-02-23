@@ -1,4 +1,5 @@
 ﻿function FaqController($scope, i18NService, redirectService, $timeout) {
+    "ngInject";
     var isOpen = 0;
     $scope.showDefinitions = function (data) {
         if (data != null && data.solutionId != null) {

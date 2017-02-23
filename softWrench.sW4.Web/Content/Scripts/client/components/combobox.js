@@ -1,6 +1,9 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('cmpCombobox', function ($rootScope, $timeout, fieldService) {
+
+    "ngInject";
+
     /// <summary>
     ///  for ie9 we have to handle crazy angular bug where we need to repaint the component whenever it´s values changes by a non "user-action"
     /// </summary>

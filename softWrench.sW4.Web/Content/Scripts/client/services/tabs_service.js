@@ -2,6 +2,8 @@
 
 app.factory('tabsService', function (fieldService,i18NService) {
 
+    "ngInject";
+
     var nonInlineCompositionsDict = function (schema) {
         if (schema.nonInlineCompositionsDict != undefined) {
             //caching

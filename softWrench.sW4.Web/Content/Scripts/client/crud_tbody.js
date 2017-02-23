@@ -34,6 +34,7 @@ function buildStyle(minWidth, maxWidth, width,isdiv) {
 };
 
 app.directive('crudtbody', function (contextService, $compile, $parse, formatService, i18NService, fieldService, commandService, $injector, $timeout, $log) {
+    "ngInject";
     return {
         restrict: 'A',
         replace: false,

@@ -1,5 +1,5 @@
 ﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,$log, $compile, contextService, menuService, i18NService, alertService) {
-
+    "ngInject";
     $scope.$name = 'HomeController';
 
     function initController() {

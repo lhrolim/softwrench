@@ -1,4 +1,5 @@
 ﻿app.directive('crudOutputWrapper', function (contextService, $compile, $rootScope) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,
@@ -43,6 +44,7 @@
 
 
 app.directive('crudOutput', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

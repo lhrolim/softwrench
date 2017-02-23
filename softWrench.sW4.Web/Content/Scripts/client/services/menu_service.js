@@ -2,6 +2,8 @@
 
 app.factory('menuService', function ($rootScope, redirectService, contextService, i18NService, $log) {
 
+    "ngInject";
+
     var cleanSelectedLeaf = function () {
         var menu = $("#applicationmenu");
 

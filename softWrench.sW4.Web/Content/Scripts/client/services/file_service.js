@@ -5,6 +5,8 @@ var app = angular.module('sw_layout');
 
 app.factory('fileService', function ($rootScope, contextService) {
 
+    "ngInject";
+
     return {
         download: function (url, successCallback, failCallback) {
             //needed since this is non-ajax call

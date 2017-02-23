@@ -7,6 +7,8 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
     i18NService,userService,
     redirectService, searchService, contextService, fileService, alertService,restService) {
 
+    "ngInject";
+
     function needsRegionSelection(mode) {
         if (mode != "assetlistreport") {
             return false;

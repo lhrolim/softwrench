@@ -1,5 +1,5 @@
 ﻿function RoleController($scope, $http, $templateCache, i18NService) {
-
+    "ngInject";
     function bind(application) {
         $scope.application = application;
         $scope.title = application.title;

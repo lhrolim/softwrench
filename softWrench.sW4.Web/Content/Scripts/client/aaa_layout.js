@@ -69,6 +69,7 @@ app.directive("ngEnabled", function () {
 
 
 function LayoutController($scope, $http, $log, $templateCache, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, $location, $window, logoutService, spinService, schemaCacheService) {
+    "ngInject";
 
     $scope.$name = 'LayoutController';
 

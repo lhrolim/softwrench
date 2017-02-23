@@ -4,6 +4,8 @@
 
 app.factory('printService', function ($rootScope, $http, $timeout,$log, tabsService, fixHeaderService, redirectService, searchService) {
 
+    "ngInject";
+
    var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
         if (expansibleData != null) {

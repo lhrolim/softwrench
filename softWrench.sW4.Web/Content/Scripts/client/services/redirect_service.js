@@ -2,6 +2,8 @@
 
 app.factory('redirectService', function ($http, $rootScope, $log, contextService, fixHeaderService, restService) {
 
+    "ngInject";
+
     var adjustCurrentModuleForNewWindow = function (currentModule) {
         var currentModuleNewWindow = contextService.retrieveFromContext('currentmodulenewwindow');
         if (currentModuleNewWindow != "null" && currentModuleNewWindow != "") {

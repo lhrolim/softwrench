@@ -2,7 +2,7 @@
 
 app.factory('validationService', function (i18NService, fieldService, $rootScope, dispatcherService, expressionService) {
 
-
+    "ngInject";
 
     return {
         validate: function (schema, displayables, datamap, innerValidation) {

@@ -1,6 +1,7 @@
 ﻿var app = angular.module('sw_layout');
 
 app.directive('lookupModalWrapper', function ($compile) {
+    "ngInject";
     return {
         restrict: "E",
         replace: true,
@@ -27,6 +28,7 @@ app.directive('lookupModalWrapper', function ($compile) {
 }),
 
 app.directive('lookupModal', function (contextService) {
+    "ngInject";
     return {
         restrict: 'E',
         replace: true,

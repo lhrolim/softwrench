@@ -1,5 +1,7 @@
 ﻿function AboutController($scope, $http, $templateCache, i18NService) {
 
+    "ngInject";
+
     var data = $scope.resultData;
     if (data != null) {
         $scope.aboutData = data;

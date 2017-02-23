@@ -3,6 +3,9 @@
 var app = angular.module('sw_layout');
 
 app.directive('bodyrendered', function ($timeout, $log, menuService) {
+
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -23,6 +26,9 @@ app.directive('bodyrendered', function ($timeout, $log, menuService) {
 
 
 app.directive('listtablerendered', function ($timeout, $log, menuService) {
+
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -44,6 +50,9 @@ app.directive('listtablerendered', function ($timeout, $log, menuService) {
 });
 
 app.directive('filterrowrendered', function ($timeout) {
+
+    "ngInject";
+
     return {
         restrict: 'A',
         link: function (scope, element, attr) {
@@ -57,6 +66,8 @@ app.directive('filterrowrendered', function ($timeout) {
 });
 
 function ApplicationController($scope, $http, $templateCache, $timeout, $log, fixHeaderService, $rootScope, associationService, alertService, contextService, detailService, spinService, schemaCacheService, crudContextHolderService) {
+    "ngInject";
+
     $scope.$name = 'applicationController';
 
     function switchMode(mode, scope) {

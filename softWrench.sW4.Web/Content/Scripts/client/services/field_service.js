@@ -2,6 +2,8 @@
 
 app.factory('fieldService', function (expressionService,$log) {
 
+    "ngInject";
+
     var isFieldHidden = function (datamap, application, fieldMetadata) {
         fieldMetadata.jscache = instantiateIfUndefined(fieldMetadata.jscache);
         if (fieldMetadata.jscache.isHidden != undefined) {

@@ -2,7 +2,7 @@
 
 app.factory('commandService', function (i18NService, $injector, expressionService) {
 
-
+    "ngInject";
 
     return {
         commandLabel: function (schema, id, defaultValue) {

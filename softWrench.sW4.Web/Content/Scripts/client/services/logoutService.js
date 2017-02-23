@@ -2,6 +2,8 @@
 
 app.factory('logoutService', function (contextService, i18NService, $window) {
 
+    "ngInject";
+
     return {
 
         logout: function (mode) {

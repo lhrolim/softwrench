@@ -1,6 +1,9 @@
 ﻿var app = angular.module('sw_layout');
 
 app.factory('imacservice', function ($http, $rootScope, alertService, fieldService, redirectService, i18NService, associationService) {
+
+    "ngInject";
+
     /*
     * The location could point either to a building only, or to the entire building+floor+room, but never straight 
     * to the floor alone as it does not exist as an entry on hapag database.
