@@ -32,7 +32,7 @@
   </if>
 
 
-  <target name="fulldeploy" depends="compile,copydlls,deploy"/>
+  <target name="fulldeploy" depends="compile,webcompile,copydlls,deploy"/>
 
   <target name="fullbuildlocal" depends="compile,zip"/>
 
@@ -181,7 +181,7 @@
                value="${profile}" failonerror="true"/>
   </target>
 
-  <target name="zip" depends="copydlls,setclient,setenv">
+  <target name="zip" depends="copydlls,setclient,setenv,webcompile">
     
     <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
       
