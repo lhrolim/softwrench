@@ -87,6 +87,7 @@
         <exclude name="*.suo"/>
         <exclude name="*.csproj"/>
         <exclude name="App_Data/client/**"/>
+        <exclude name="Content/Scripts/**"/>
         <exclude name="**.csproj.*"/>
         <exclude name=".nuget/**"/>
         <exclude name="Dependencies/**"/>
@@ -113,7 +114,7 @@
     <attrib readonly="false">
       <fileset basedir="${OutputDir}/deploy">
         <include name="**"/>
-      </fileset>
+      </fileset>p
     </attrib>
   </target>
 
@@ -181,13 +182,25 @@
                value="${profile}" failonerror="true"/>
   </target>
 
-  <target name="zip" depends="copydlls,setclient,setenv,webcompile">
+  <target name="peekversion">
+
+    <xmlpeek property="internalversion" file="../softWrench.sW4.Web/Web.config"
+          xpath="/configuration/appSettings/add[@key = 'internalversion']/@value">
+<!--      <namespaces>-->
+<!--        <namespace prefix="x" uri="http://www.example.org/metadata" />-->
+<!--      </namespaces>-->
+    </xmlpeek>
+
+  </target>
+  
+  <target name="zip" depends="peekversion,webcompile,copydlls,setclient,setenv">
     
     <tstamp property="build.date" pattern="yyyy_MM_dd_hhmm" verbose="true" />
       
-    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4_${build.date}.zip">
+    <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/${internalversion}_sw4_${build.date}.zip">
       <fileset basedir="${OutputDir}/deploy/">
         <include name="**/*" />
+        <exclude name="Content/Scripts/**" />
       </fileset>
     </zip>
   </target>
@@ -204,6 +217,7 @@
     <zip includeemptydirs="true" zipfile="${OutputDir}/deploy/sw4.zip">
       <fileset basedir="${OutputDir}/deploy/">
         <include name="**/*" />
+        <exclude name="Content/Scripts/**" />
       </fileset>
     </zip>
   </target>
