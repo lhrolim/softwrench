@@ -25,3 +25,6 @@ GitTfs/git2.*
 .vs/config/applicationhost.config
 Backup/
 UpgradeLog.htm
+
+softWrench.sW4.Web/node_modules/
+Build/node_modules/

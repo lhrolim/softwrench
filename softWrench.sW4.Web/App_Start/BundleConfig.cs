@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Web.Optimization;
 using softWrench.sW4.Util;
+using softWrench.sW4.Web.Util;
+using softWrench.sW4.Web.Util.StaticFileLoad;
 
 namespace softWrench.sW4.Web {
     public class BundleConfig {
@@ -54,82 +56,95 @@ namespace softWrench.sW4.Web {
                 "~/Content/fonts/font.css"));
         }
 
+        private static void PopulateDistributionScriptBundles(BundleCollection bundles) {
+            var scriptBundle = new ScriptBundle("~/Content/dist/scripts")
+//                .Include("~/Content/temp/scripts/vendor.js")
+//                .Include("~/Content/dist/scripts/app.js");
+
+                            .Include("~/Content/temp/scripts/vendor.concat.js")
+                            .Include("~/Content/temp/scripts/app.concat.js");
+            bundles.Add(scriptBundle);
+        }
+
         private static void AddScripts(BundleCollection bundles) {
-            bundles.Add(new ScriptBundle("~/Content/Scripts/jquery/jquery").Include(
-                "~/Content/Scripts/jquery/jquery-2.0.3-max.js",
-                "~/Content/Scripts/jquery/jquery-ui-1.10.3.js",
-                "~/Content/Scripts/jquery/jquery-file-style.js",
-                "~/Content/Scripts/jquery/jquery-filedownload-1.2.0.js",
-                "~/Content/Scripts/jquery/jquery-fileupload-5.40.1.js",
-                "~/Content/Scripts/spin-min.js"
-                ));
+            if (!ApplicationConfiguration.IsLocal()) {
+                PopulateDistributionScriptBundles(bundles);
+                return;
+            }
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty").Include(
-                "~/Content/Scripts/thirdparty/*.js"));
+            PopulateLocalScriptBundles(bundles);
+        }
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryui").Include(
-                "~/Content/Scripts/jquery-ui-{version}.js"));
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/jqueryval").Include(
-                "~/Content/Scripts/jquery.unobtrusive*",
-                "~/Content/Scripts/jquery.validate*"));
+        private static void PopulateLocalScriptBundles(BundleCollection bundles)
+        {
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/thirdparty/jscrollpane").Include(
-                "~/Content/Scripts/thirdparty/jscrollpane/*.js"));
+            var vendorBundle = new ScriptBundle(Bundles.Local.VendorScripts)
+                .Include(
+                    "~/Content/Scripts/jquery/jquery-2.0.3-max.js",
+                    "~/Content/Scripts/jquery/jquery-ui-1.10.3.js",
+                    "~/Content/Scripts/jquery/jquery-file-style.js",
+                    "~/Content/Scripts/jquery/jquery-filedownload-1.2.0.js",
+                    "~/Content/Scripts/jquery/jquery-fileupload-5.40.1.js",
+                    "~/Content/Scripts/spin-min.js"
+                )
 
-            // Use the development version of Modernizr to develop with and learn from. Then, when you're
-            // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/Content/Scripts/modernizr").Include(
-                "~/Content/Scripts/modernizr-*"));
+                .Include("~/Content/Scripts/thirdparty/*.js")
+                .Include("~/Content/Scripts/jquery-ui-{version}.js")
+                .Include("~/Content/Scripts/jquery.unobtrusive*", "~/Content/Scripts/jquery.validate*")
+                .Include("~/Content/Scripts/thirdparty/jscrollpane/*.js")
+//                .Include("~/Content/Scripts/modernizr-*")
+                .Include("~/Content/Scripts/angular/angular.js",
+                    "~/Content/Scripts/angular/angular-strap.js",
+                    "~/Content/Scripts/angular/angular-sanitize.js",
+                    "~/Content/Scripts/angular/bindonce.js"
+                ).Include(
+                    "~/Content/Scripts/bootstrap.max.js",
+                    "~/Content/Scripts/bootstrap-datepicker.js",
+                    "~/Content/Scripts/bootstrap-combobox.js",
+                    "~/Content/Scripts/bootstrap-datetimepicker.js",
+                    "~/Content/Scripts/bootstrap-collapse.js",
+                    "~/Content/Scripts/bootbox.js",
+                    "~/Content/Scripts/typeahead.js",
+                    "~/Content/Scripts/hogan.js",
+                    "~/Content/Scripts/locales/bootstrap-datepicker.de.js",
+                    "~/Content/Scripts/locales/bootstrap-datetimepicker.de.js",
+                    "~/Content/Scripts/locales/bootstrap-datepicker.es.js",
+                    "~/Content/Scripts/locales/bootstrap-datetimepicker.es.js",
+                    "~/Content/Scripts/modal.js",
+                    "~/Content/Scripts/bootstrap-multiselect.js"
+                ).Include("~/Content/Scripts/ace/ace.js").
+                Include("~/Content/Scripts/angulartreeview.js");
+            
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/angular/angular").Include(
-                "~/Content/Scripts/" + "angular/angular.js",
-                "~/Content/Scripts/" + "angular/angular-strap.js",
-                "~/Content/Scripts/" + "angular/angular-sanitize.js",
-                "~/Content/Scripts/" + "angular/bindonce.js"
-                ));
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/twitter-bootstrap").Include(
-                "~/Content/Scripts/bootstrap.max.js",
-                "~/Content/Scripts/bootstrap-datepicker.js",
-                "~/Content/Scripts/bootstrap-combobox.js",
-                "~/Content/Scripts/bootstrap-datetimepicker.js",
-                "~/Content/Scripts/bootstrap-collapse.js",
-                "~/Content/Scripts/bootbox.js",
-                "~/Content/Scripts/typeahead.js",
-                "~/Content/Scripts/hogan.js",
-                "~/Content/Scripts/locales/bootstrap-datepicker.de.js",
-                "~/Content/Scripts/locales/bootstrap-datetimepicker.de.js",
-                "~/Content/Scripts/locales/bootstrap-datepicker.es.js",
-                "~/Content/Scripts/locales/bootstrap-datetimepicker.es.js",
-                "~/Content/Scripts/modal.js",
-                "~/Content/Scripts/bootstrap-multiselect.js"
-                ));
+            vendorBundle.Orderer = new PassthroughBundleOrderer(); // enforcing import order
+            bundles.Add(vendorBundle);
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/ace/ace").Include(
-                "~/Content/Scripts/ace/ace.js"));
 
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin").Include(
-                "~/Content/Scripts/signin.js"
-                ));
-
-            bundles.Add(new ScriptBundle("~/Content/Scripts/client/application").Include(
+            // app scripts
+            var appBundle = new ScriptBundle(Bundles.Local.AppScripts)
+                .Include(
+                "~/Content/Scripts/signin.js",
                 "~/Content/Scripts/client/*.js",
                 "~/Content/Scripts/client/services/*.js",
                 "~/Content/Scripts/client/directives/*.js",
                 "~/Content/Scripts/client/components/*.js",
                 "~/Content/Scripts/client/util/*.js"
-                ));
+                );
+
 
             var clientName = ApplicationConfiguration.ClientName;
             var clientPath = String.Format("~/Content/Scripts/customers/{0}", clientName);
             var scriptBundle = new ScriptBundle("~/Content/Scripts/client/client-js");
             try {
                 bundles.Add(scriptBundle.IncludeDirectory(clientPath, "*.js"));
-            }
-            catch {
+            } catch {
                 //nothing to do
             }
+        
+            appBundle.Orderer = new PassthroughBundleOrderer();
+            bundles.Add(appBundle);
         }
 
         private static void AddClientBundle(BundleCollection bundles) {
@@ -143,8 +158,7 @@ namespace softWrench.sW4.Web {
             try {
                 bundles.Add(styleBundle.IncludeDirectory(clientPath, "*.css"));
                 bundles.Add(styleBundle.IncludeDirectory(clientPathAppCustom, "*.css"));
-            }
-            catch {
+            } catch {
                 //nothing to do
             }
         }
