@@ -74,7 +74,8 @@ module.exports = function (grunt) {
                       "<%= app.scripts %>/client/services/*.js",
                       "<%= app.scripts %>/client/directives/*.js",
                       "<%= app.scripts %>/client/components/*.js",
-                      "<%= app.scripts %>/client/util/*.js"
+                      "<%= app.scripts %>/client/util/*.js",
+                      "<%= app.scripts %>/customers/hapag/*.js"
                     ],
 
                     dest: "<%= app.tmp %>/scripts/app.annotated.js"
@@ -134,26 +135,9 @@ module.exports = function (grunt) {
 
                 ],
                 dest: "<%= app.tmp %>/scripts/vendor.concat.js"
-            },
-
-            appScripts: {
-                options: {
-                    separator: ";\n"
-                },
-                src: [
-                       "<%= app.scripts %>/client/aaa_layout.js", // sw
-
-                        // customized angular vendor modules
-                      "<%= app.scripts %>/signin.js",
-                      "<%= app.scripts %>/client/*!(aaa_layout).js",
-                      "<%= app.scripts %>/client/services/*.js",
-                      "<%= app.scripts %>/client/directives/*.js",
-                      "<%= app.scripts %>/client/components/*.js",
-                      "<%= app.scripts %>/client/util/*.js"
-                ],
-
-                dest: "<%= app.tmp %>/scripts/app.concat.js"
             }
+
+           
         },
         //#endregion
 
@@ -209,7 +193,6 @@ module.exports = function (grunt) {
         "cleanAll", // clean folders: preparing for copy
         "concat:vendorScripts", // concat vendors's scripts and distribute as 'scripts/vendor.js'
         "ngAnnotate:app", // ng-annotates app's scripts
-        "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:app", // minify app script and distribute as 'scripts/app.js'
         "uglify:vendors" // minify app script and distribute as 'scripts/app.js'
         // "clean:vendor", "clean:tmp" // clean temporary folders 

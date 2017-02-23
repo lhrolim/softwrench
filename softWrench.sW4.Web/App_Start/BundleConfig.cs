@@ -136,9 +136,9 @@ namespace softWrench.sW4.Web {
 
             var clientName = ApplicationConfiguration.ClientName;
             var clientPath = String.Format("~/Content/Scripts/customers/{0}", clientName);
-            var scriptBundle = new ScriptBundle("~/Content/Scripts/client/client-js");
+            
             try {
-                bundles.Add(scriptBundle.IncludeDirectory(clientPath, "*.js"));
+                bundles.Add(appBundle.IncludeDirectory(clientPath, "*.js"));
             } catch {
                 //nothing to do
             }
