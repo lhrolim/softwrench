@@ -1,5 +1,6 @@
 ﻿@using softWrench.sW4.Metadata.Security
 @using softWrench.sW4.Web.Util
+@using softWrench.sW4.Web.Util.StaticFileLoad
 <!DOCTYPE html>
 <html ng-app="sw_layout">
 <head>
@@ -16,16 +17,9 @@
 </head>
 <body class="otb">
     @model softWrench.sW4.Web.Models.Home.HomeModel
-    @RowStampScriptHelper.Render("~/Content/Scripts/modernizr")
-    @RowStampScriptHelper.Render("~/Content/Scripts/jquery/jquery")
-    @RowStampScriptHelper.Render("~/Content/Scripts/twitter-bootstrap")
-    @RowStampScriptHelper.Render("~/Content/Scripts/angular/angular")
-    @RowStampScriptHelper.Render("~/Content/Scripts/client/application")
-    @RowStampScriptHelper.Render("~/Content/Scripts/client/client-js")
-    @RowStampScriptHelper.Render("~/Content/Scripts/angulartreeview.js")
-    @RowStampScriptHelper.Render("~/Content/Scripts/responsive.js") @*SM - 07/03 - ADD - responsive jQuery*@
-    @RowStampScriptHelper.Render("~/Content/Scripts/thirdparty")
-
+    @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
+        @tag;
+    }
     <input type="hidden" id="hddn_configs" value="@Model.ConfigJSON" />
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />

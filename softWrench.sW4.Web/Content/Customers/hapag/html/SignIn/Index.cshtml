@@ -3,6 +3,7 @@
 @using DocumentFormat.OpenXml.Wordprocessing
 @using NHibernate.Hql.Ast.ANTLR
 @using softWrench.sW4.Web.Controllers
+@using softWrench.sW4.Web.Util.StaticFileLoad
 @using Styles = System.Web.Optimization.Styles
 @model softWrench.sW4.Web.Models.LoginHandler.LoginHandlerModel
 
@@ -22,11 +23,9 @@
     @Scripts.Render("~/Content/Scripts/modernizr")
 </head>
 <body>
-    @Scripts.Render("~/Content/Scripts/jquery/jquery")
-    @Scripts.Render("~/Content/Scripts/twitter-bootstrap")
-    @Scripts.Render("~/Content/Scripts/angular/angular")
-    @Scripts.Render("~/Content/Scripts/client/application")
-    @Scripts.Render("~/Content/Scripts/client/signin")
+    @foreach (var tag in StaticFileTagRenderer.RenderScripts()) {
+        @tag;
+    }
 
     <article class="container">
         <div class="row hidden-phone">

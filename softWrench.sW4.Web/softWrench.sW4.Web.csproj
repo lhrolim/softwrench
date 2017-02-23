@@ -300,8 +300,11 @@
     </Compile>
     <Compile Include="Util\I18NUtil.cs" />
     <Compile Include="Util\MigrationUtil.cs" />
+    <Compile Include="Util\PassThroughBundleOrder.cs" />
     <Compile Include="Util\RequestUtil.cs" />
     <Compile Include="Util\RowStampScriptHelper.cs" />
+    <Compile Include="Util\StaticFileLoad\Bundles.cs" />
+    <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="App_Data\Client\%40internal\source\maximo7.2.1.xml">
       <SubType>Designer</SubType>
     </Content>
