@@ -58,7 +58,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
     -- those with joined tickets for approvals group 2
       UNION ALL
       select
-      wochange.workorderid AS workorderid,
+      wochange.workorderid AS workorderid
       FROM wochange AS wochange
       INNER JOIN sr AS sr_ ON
       (
@@ -93,7 +93,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
       {2}";
 
         const string NonTicketIdUnionQuery = @"UNION ALL
-select wochange.workorderid   AS workorderid, 
+select wochange.workorderid   AS workorderid 
        FROM   wochange AS wochange
        INNER JOIN pmchgotherapprovers approvals_ 
        ON ( wochange.wonum = approvals_.wonum  AND approvals_.approvergroup IN ({0})) 
@@ -103,7 +103,7 @@ select wochange.workorderid   AS workorderid,
       
     -- those WITHOUT joined tickets for ownergroup 2
     UNION ALL
-      select wochange.workorderid   AS workorderid, 
+      select wochange.workorderid   AS workorderid 
        FROM   wochange AS wochange
        INNER JOIN  woactivity AS woactivity_ 
        ON  wochange.wonum = woactivity_.parent 
@@ -114,7 +114,7 @@ select wochange.workorderid   AS workorderid,
 
 
         const string SRIDUnionQuery = @"SELECT
-      srforchange.ticketid AS ticketid,
+      srforchange.ticketid AS ticketid
       FROM sr AS srforchange
       LEFT JOIN asset AS asset_ ON
       (
@@ -174,7 +174,7 @@ select wochange.workorderid   AS workorderid,
 
             var completeUnionIdQuery = BaseIdWoChangeQuery.Fmt(externalTemplateIds, personGroupsForQuery, extraUnions);
 
-            return " and wochange.workorderid in ({0}) ".Fmt(completeUnionIdQuery);
+            return "wochange.workorderid in ({0}) ".Fmt(completeUnionIdQuery);
         }
 
         public string GenerateSrQuery() {
@@ -186,7 +186,7 @@ select wochange.workorderid   AS workorderid,
                 return null;
             }
 
-            return "servicerequest.ticketid in ({0})".Fmt(SRIDUnionQuery);
+            return "SR.ticketid in ({0})".Fmt(SRIDUnionQuery);
 
 
         }
