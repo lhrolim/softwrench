@@ -378,17 +378,22 @@ namespace softwrench.sw4.Hapag.Security {
 
         public IEnumerable<IAssociationOption> FindCostCentersOfITC(string subCustomer, string personId = null) {
             string costCentersToUse = "";
+            InMemoryUser inMemoryUser = null;
             if (personId == null) {
                 personId = SecurityFacade.CurrentUser().MaximoPersonId;
+                inMemoryUser = SecurityFacade.CurrentUser();
             }
 
             costCentersToUse = BuildCostCentersFromMaximo(subCustomer, personId);
 
             if (costCentersToUse.Equals("1!=1")) {
+                if (inMemoryUser == null) {
+                    var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
+                    inMemoryUser=new InMemoryUser(user, new List<UserProfile>(), null);
+                }
                 //we´re interested in the current user, so we can assume its groups are synced fine.
                 //pick the groups from SWDB
-                var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-                var result = FillUserLocations(new InMemoryUser(user, new List<UserProfile>(), null));
+                var result = FillUserLocations(inMemoryUser);
                 var context = _contextLookuper.LookupContext();
                 //if the user is not on XITC context, then we should pick just the costcenters directly bound to him (HAP-799)
                 var locationsToUse = context.IsInModule(FunctionalRole.XItc)
