@@ -67,7 +67,7 @@ namespace softWrench.sW4.Web {
         }
 
         private static void AddScripts(BundleCollection bundles) {
-            if (true || !ApplicationConfiguration.IsLocal()) {
+            if (!ApplicationConfiguration.IsLocal()) {
                 PopulateDistributionScriptBundles(bundles);
                 return;
             }

@@ -146,6 +146,24 @@
     </attrib>
   </target>
 
+
+  <target name="webcompile" description="Runs fron-end tools (package management, transpilers, etc)">
+    <!-- install npm dependencies -->
+    <echo message="installing npm dependencies"></echo>
+    <exec program="cmd" workingdir="." failonerror="true">
+      <arg value="/c"></arg>
+      <arg value="npm install"></arg>
+    </exec>
+    <!-- grunt toolchain -->
+    <echo message="running grunt"></echo>
+   
+    <echo message="grunt"></echo>
+    <exec program="cmd" workingdir="." failonerror="true">
+      <arg value="/c"></arg>
+      <arg value='grunt"'></arg>
+    </exec>
+    
+  </target>
   
 
   <target name="setclient">
