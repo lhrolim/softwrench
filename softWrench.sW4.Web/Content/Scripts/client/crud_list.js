@@ -226,6 +226,7 @@ app.directive('crudList', function (contextService) {
                 }
 
                 if (fullServiceName != null) {
+                    contextService.insertIntoContext("currentmodulenewwindow", contextService.retrieveFromContext('currentmodule'));
                     commandService.executeClickCustomCommand(fullServiceName, rowdm.fields, column);
                     return;
                 };
