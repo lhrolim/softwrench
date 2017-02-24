@@ -301,6 +301,8 @@ namespace softWrench.sW4.Util {
             }
         }
 
+        public static bool CrudSearchFlag { get; set; }
+
         public static string NotificationRefreshRate {
             get {
                 var flagValue = MetadataProvider.GlobalProperty("notifications.updateJob.refreshRate");

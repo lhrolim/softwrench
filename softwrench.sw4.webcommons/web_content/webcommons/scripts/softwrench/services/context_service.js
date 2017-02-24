@@ -197,6 +197,7 @@
                 this.insertIntoContext('newKeyISsueDetailScanOrder', config.newKeyIssueDetailScanOrder);
 
                 this.insertIntoContext("activityStreamFlag", config.activityStreamFlag, true);
+                this.insertIntoContext("crudSearchFlag", config.crudSearchFlag, true);
                 this.insertIntoContext("UIShowClassicAdminMenu", config.uiShowClassicAdminMenu, true);
                 this.insertIntoContext("UIShowToolbarLabels", config.uiShowToolbarLabels, true);
                 this.insertIntoContext("isLocal", config.isLocal);

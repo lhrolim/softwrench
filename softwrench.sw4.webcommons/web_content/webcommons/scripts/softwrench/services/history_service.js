@@ -157,7 +157,7 @@
 
             const params = JSON.parse(`{"${paramsStr.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"')}"}`);
 
-            const schemaId = params["key[schemaId]"];
+            const schemaId = params["key[schemaId]"] || params["key[schemaid]"];
             if (!schemaId) {
                 return changePath(contextPath);
             }

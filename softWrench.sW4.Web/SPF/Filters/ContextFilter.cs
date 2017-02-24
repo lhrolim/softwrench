@@ -46,7 +46,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 OfflineMode = offlineMode,
                 MockMaximo = mockMaximo,
                 MockSecurity = mockSecurity,
-                CurrentSelectedProfile = profileAsString == null ? (int?) null : int.Parse(profileAsString),
+                CurrentSelectedProfile = string.IsNullOrEmpty(profileAsString) ? (int?) null : int.Parse(profileAsString),
                 MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter)
             });
 

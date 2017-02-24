@@ -17,10 +17,6 @@
                     enableFilter: false
                 };
 
-                const configuration = {
-                    enabled: "/Global/BulletinBoard/Enabled"
-                };
-
                 var bulletinBoardEventSource = null;
 
                 $scope.setPaneHeight = function () {
@@ -59,27 +55,16 @@
                 }
 
                 function init() {
-                    // start hidden: we don't know yet if customer has enabled the bulletin board
-                    sidePanelService.hide($scope.panelid);
+                    // connect to bulletinboard SSE source
+                    bulletinBoardEventSource = sseService.connect("BulletinBoard", "Subscribe");
+                    bulletinBoardEventSource
+                        .onMessage(event => onBulletinBoardUpdate(event.data), { runApply: true, dataType: "json" })
+                        .on("subscriber:count", event => $log.get("bulletinboard#onSubscriberChanged", ["bulletinboard"]).debug(`SSE subscriber count = ${event.data}`))
+                        .onOpen(event => $log.get("bulletinboard#onConnect", ["bulletinboard"]).debug("SSE connected", event))
+                        .onError(error => $log.get("bulletinboard#onError", ["bulletinboard"]).error("SSE error", error));
 
-                    // fetch bulletin board feature configs then start
-                    configurationService.fetchConfigurations(Object.values(configuration))
-                        .then(configs => {
-                            const enabled = configs[configuration.enabled];
-                            if (![true, "true", "True", 1, "1"].includes(enabled)) return;
-                            sidePanelService.show($scope.panelid);
-
-                            // connect to bulletinboard SSE source
-                            bulletinBoardEventSource = sseService.connect("BulletinBoard", "Subscribe");
-                            bulletinBoardEventSource
-                                .onMessage(event => onBulletinBoardUpdate(event.data), { runApply: true, dataType: "json" })
-                                .on("subscriber:count", event => $log.get("bulletinboard#onSubscriberChanged", ["bulletinboard"]).debug(`SSE subscriber count = ${event.data}`))
-                                .onOpen(event => $log.get("bulletinboard#onConnect", ["bulletinboard"]).debug("SSE connected", event))
-                                .onError(error => $log.get("bulletinboard#onError", ["bulletinboard"]).error("SSE error", error));
-
-                            // initial bulletinboard data
-                            return fetchActiveMessages();
-                        });
+                    // initial bulletinboard data
+                    return fetchActiveMessages();
                 }
 
                 $scope.$on("$destroy", () => {

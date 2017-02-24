@@ -133,8 +133,8 @@
       <HintPath>..\packages\slf4net.0.1.32.1\lib\net35\slf4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.activitystream, Version=1.1.6207.36173, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.activitystream.1.1.6207.36173\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
+    <Reference Include="softwrench.sw4.activitystream, Version=1.1.6263.26722, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.activitystream.1.1.6263.26722\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.34730, Culture=neutral, processorArchitecture=MSIL">
@@ -385,8 +385,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Dependencies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" />
-    <Content Include="web_content\activitystream\scripts\activitystream.js" />
-    <Content Include="web_content\problem\templates\problemsection.html" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>

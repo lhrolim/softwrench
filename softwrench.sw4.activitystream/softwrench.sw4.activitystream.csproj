@@ -178,7 +178,9 @@
     <Compile Include="classes\Util\NotificationsRolesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="web_content\activitystream\scripts\sidePanels.js" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>

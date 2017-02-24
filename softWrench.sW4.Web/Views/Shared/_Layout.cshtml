@@ -78,15 +78,7 @@
             </div>
         </footer>
     </div>
-    <sidepanel panelid="activitystream" handleicon="fa-rss" handletitle="Activity" handlewidth="128">
-        <activitystream class="notificationstream"></activitystream>
-    </sidepanel>
-    <sidepanel panelid="crudsearch">
-        <crudsearch></crudsearch>
-    </sidepanel>
-    <sidepanel panelid="bulletinboard" handleicon="fa-bullhorn" handletitle="Bulletin Board" handlewidth="156">
-        <bulletin-board panelid="bulletinboard" class="notificationstream"></bulletin-board>
-    </sidepanel>
+    <sidepanels/>
     <script type="text/javascript">
         $(document).on('touch click', '*[data-calendericon="true"]', function (e) {
             $('input[type="text"]', $(this).parent()).focus();

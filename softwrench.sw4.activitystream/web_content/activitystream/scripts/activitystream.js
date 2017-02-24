@@ -34,15 +34,6 @@
                     $scope.enableFilter = false;
                     $scope.availableProfiles = [];
 
-                    var activityStreamEnabled = function () {
-                        return contextService.fetchFromContext('activityStreamFlag', false, true);
-                    };
-
-                    if (!activityStreamEnabled()) {
-                        sidePanelService.hide($scope.panelid);
-                    };
-
-
                     $scope.hasmultipleprofiles = function () {
                         return this.getMultiplesProfiles().length > 1;
                     };
@@ -269,10 +260,6 @@
                         log.debug('refreshTimeout', refreshTimeout);
                     };
                     refreshLoop();
-
-                    if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
-                        $scope.toggleActivityStream();
-                    }
                 }]
         }
     });

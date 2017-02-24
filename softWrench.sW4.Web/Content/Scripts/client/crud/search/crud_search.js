@@ -10,7 +10,8 @@
             scope: true,
             link: function () {
             },
-            controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "schemaCacheService", "restService", "searchService", "redirectService", "applicationService", "$http", "validationService", "focusService", "crudContextHolderService", "fieldService", function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, schemaCacheService, restService, searchService, redirectService, applicationService, $http, validationService, focusService, crudContextHolderService, fieldService) {
+            controller: ["$scope", "$rootScope", "$log", "$q", "$timeout", "sidePanelService", "restService", "searchService", "redirectService", "validationService", "focusService", "crudContextHolderService", "fieldService", "crudSearchService",
+                function ($scope, $rootScope, $log, $q, $timeout, sidePanelService, restService, searchService, redirectService, validationService, focusService, crudContextHolderService, fieldService, crudSearchService) {
 
                 $scope.panelid = $scope.$parent.panelid;
                 $scope.crudPanelid = "search";
@@ -19,13 +20,6 @@
                 var lastApplication = "";
                 var lastSchemaId = "";
 
-                // workaround - if the schemaCacheService.getCachedSchema is used before $http.get(applicationService.getApplicationUrl(...))
-                // the null schema result is considered cached and the server don't build the correct schema after that
-                // only the key is cached here to avoid invoke schemaCacheService.getCachedSchema first
-                // TODO Fix schemaCacheService.getCachedSchema + $http.get(applicationService.getApplicationUrl(...))
-                var schemacache = {};
-
-                sidePanelService.hide($scope.panelid, true);
                 sidePanelService.setIcon($scope.panelid, "fa-search");
 
                 // calcs the crudsearch panel height - used on scroll pane
@@ -46,60 +40,55 @@
                     }, 1000, false);
                 }
 
-                function getSearchSchema(applicationName, schemaId) {
-                    if (!applicationName || !schemaId) {
-                        log.debug("getSearchSchema  - no applicationName ({0}) or schemaId ({1})".format(applicationName, schemaId));
-                        return $q.when(null);
+                // runs the as soon as the side panel is added
+                // the show/hidden initial state is set on sidepanels before the panel is added
+                function init() {
+                    const ctx = sidePanelService.getContext($scope.panelid);
+                    lastApplication = ctx.application;
+                    lastSchemaId = ctx.schema ? ctx.schema.schemaId : null;
+                    updateContent(ctx.schema);
+                }
+
+                function updateContent(schema) {
+                    if (!schema) {
+                        crudContextHolderService.clearCrudContext($scope.crudPanelid);
+                        return;
                     }
 
-                    if (schemacache[applicationName + "." + schemaId]) {
-                        log.debug("getSearchSchema  - cache hit on applicationName ({0}) and  schemaId ({1})".format(applicationName, schemaId));
-                        return $q.when(schemaCacheService.getCachedSchema(applicationName, schemaId));
+                    $scope.datamap = {};
+                    fieldService.fillDefaultValues(schema.displayables, $scope.datamap);
+                    $scope.defaultDatamap = angular.copy($scope.datamap);
+                    $scope.schema = schema;
+                    $scope.title = schema.title;
+
+                    crudContextHolderService.applicationChanged(schema, $scope.datamap, $scope.crudPanelid);
+                    const ctx = sidePanelService.getContext($scope.panelid);
+                    ctx.toggleCallback = setFocus;
+
+                    // controls the initial state of side panel
+                    const startExpanded = schema.properties && schema.properties["search.startexpanded"] === "true";
+                    if (!startExpanded) {
+                        return;
                     }
-                    const redirectUrl = applicationService.getApplicationUrl(applicationName, schemaId, "input");
-                    return $http.get(redirectUrl).then(function (httpResponse) {
-                        log.debug("getSearchSchema - server response on applicationName ({0}) and  schemaId ({1})".format(applicationName, schemaId));
-                        const schema = httpResponse.data.schema;
-                        schemaCacheService.addSchemaToCache(schema);
-                        schemacache[applicationName + "." + schemaId] = true;
-                        return schema;
-                    });
+                    if (sidePanelService.isOpened($scope.panelid)) {
+                        setFocus(ctx);
+                        return;
+                    }
+                    if ($rootScope.deviceType === "desktop") {
+                        sidePanelService.toggle($scope.panelid);
+                    }
                 }
 
                 function updateSearchForm(applicationName, schemaId) {
-                    getSearchSchema(applicationName, schemaId).then(function (schema) {
+                    crudSearchService.getSearchSchema(applicationName, schemaId).then((schema) => {
+                        crudSearchService.updateCrudSearchSidePanel($scope.panelid, schema);
+                        updateContent(schema);
+
                         if (!schema) {
-                            sidePanelService.hide($scope.panelid);
-                            crudContextHolderService.clearCrudContext($scope.crudPanelid);
                             return;
                         }
 
-                        sidePanelService.setTitle($scope.panelid, schema.title);
-                        const handleWidth = schema.properties ? schema.properties["search.panelwidth"] : null;
-                        sidePanelService.setHandleWidth($scope.panelid, handleWidth);
-
-                        sidePanelService.show($scope.panelid);
-                        $scope.datamap = {};
-                        fieldService.fillDefaultValues(schema.displayables, $scope.datamap);
-                        $scope.defaultDatamap = angular.copy($scope.datamap);
-                        $scope.schema = schema;
-                        $scope.title = schema.title;
-
-                        crudContextHolderService.applicationChanged(schema, $scope.datamap, $scope.crudPanelid);
-                        const ctx = sidePanelService.getContext($scope.panelid);
-                        ctx.toggleCallback = setFocus;
-
-                        // controls the initial state of side panel
-                        const startExpanded = schema.properties && schema.properties["search.startexpanded"] === "true";
-                        if (startExpanded) {
-                            if (!sidePanelService.isOpened($scope.panelid)) {
-                                sidePanelService.toggle($scope.panelid);
-                            } else {
-                                setFocus(ctx);
-                            }
-                        }
-
-                        if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
+                        if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid) && $rootScope.deviceType === "desktop") {
                             sidePanelService.toggle($scope.panelid);
                         }
                         setTimeout(function () {
@@ -109,15 +98,8 @@
                 }
 
                 $scope.$on(JavascriptEventConstants.ApplicationRedirected, function (event, applicationName, renderedSchema) {
-                    if (!applicationName || !renderedSchema) {
-                        log.debug("no applicationName ({0}) or renderedSchema ({1})".format(applicationName, renderedSchema));
-                        sidePanelService.hide($scope.panelid);
-                        crudContextHolderService.clearCrudContext($scope.crudPanelid);
-                        return;
-                    }
-                    const searchSchemaid = renderedSchema.properties ? renderedSchema.properties["search.schemaid"] : null;
+                    const searchSchemaid = crudSearchService.getSearchSchemaId(applicationName, renderedSchema);
                     if (!searchSchemaid) {
-                        log.debug("no searchSchemaid on applicationName ({0}) and renderedSchema ({1})".format(applicationName, renderedSchema));
                         sidePanelService.hide($scope.panelid);
                         crudContextHolderService.clearCrudContext($scope.crudPanelid);
                         return;
@@ -220,6 +202,8 @@
                     clear($scope.datamap);
                     copy($scope.defaultDatamap, $scope.datamap);
                 });
+
+                init();
             }]
         }
     });

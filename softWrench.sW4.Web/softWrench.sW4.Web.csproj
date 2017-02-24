@@ -197,8 +197,8 @@
       <HintPath>..\packages\slf4net.0.1.32.1\lib\net35\slf4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.activitystream, Version=1.1.6207.36173, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.activitystream.1.1.6207.36173\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
+    <Reference Include="softwrench.sw4.activitystream, Version=1.1.6263.26722, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.activitystream.1.1.6263.26722\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="softwrench.sW4.audit, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">

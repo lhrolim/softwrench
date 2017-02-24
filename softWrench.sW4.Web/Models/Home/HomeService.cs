@@ -122,6 +122,7 @@ namespace softWrench.sW4.Web.Models.Home {
                 Environment = ApplicationConfiguration.Profile,
                 IsLocal = ApplicationConfiguration.IsLocal(),
                 ActivityStreamFlag = ApplicationConfiguration.ActivityStreamFlag,
+                CrudSearchFlag = ApplicationConfiguration.CrudSearchFlag,
                 ClientSideLogLevel = clientSideLogLevel,
                 SuccessMessageTimeOut = GetSuccessMessageTimeOut(),
                 InitTimeMillis = ApplicationConfiguration.GetStartTimeInMillis(),

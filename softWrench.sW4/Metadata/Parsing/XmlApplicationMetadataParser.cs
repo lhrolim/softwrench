@@ -781,6 +781,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             foreach (var property in properties.Elements()) {
                 var key = property.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value;
+                if (ApplicationSchemaPropertiesCatalog.SearchSchemaId.Equals(key)) {
+                    ApplicationConfiguration.CrudSearchFlag = true;
+                }
                 if (propertiesDictionary.ContainsKey(key)) {
                     throw new InvalidOperationException("property {0} already present for application/schema {1}".Fmt(key, schemaId));
                 }

@@ -8,11 +8,11 @@
             restrict: "E",
             templateUrl: contextService.getResourceUrl("/Content/Shared/activitystream/templates/sidePanel.html"),
             transclude: true,
+            replace: true,
             scope: {
                 panelid: "@",
                 handletitle: "@",
-                handleicon: "@",
-                handlewidth: "@"
+                handleicon: "@"
             },
             compile: function(element, attrs, linker) {
                 return function (scope, el) {
@@ -23,10 +23,6 @@
             },
             controller: ["$scope", "$http", "$log", "sidePanelService", function ($scope, $http, $log, sidePanelService) {
                 var log = $log.getInstance("sw4.sidepanel",["layout"]);
-
-                // register the current side panel on service
-                // the next registers need this to know the panel handle top value
-                sidePanelService.registerPanel($scope.panelid, $scope.handlewidth);
 
                 // toggles expanded - collapsed
                 $scope.toggle = function () {
@@ -85,10 +81,6 @@
                         return contextIcon;
                     }
                     return $scope.handleicon;
-                }
-
-                if (sidePanelService.getExpandedPanelFromPreference() === $scope.panelid && !sidePanelService.isOpened($scope.panelid)) {
-                    sidePanelService.toggle($scope.panelid);
                 }
             }]
         }
