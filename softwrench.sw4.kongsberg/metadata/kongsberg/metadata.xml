@@ -175,6 +175,7 @@
         <attribute name="virtualenv" type="smallint" required="false" />
         <attribute name="wellname" type="varchar" required="false" />
         <attribute name="attachments" type="int" query="(select count(*) from doclinks where ownertable = 'SR' and ownerid = !@ticketuid)" required="false"/>
+        <attribute name="numericsortableticketid" type="varchar" query="(CASE ISNUMERIC(!@ticketid) WHEN 1 THEN RIGHT(('00000000000000000000' + !@ticketid), 20) ELSE !@ticketid end)" required="false"/>
       </attributes>
       <relationships>
         <relationship to="asset">
@@ -792,6 +793,9 @@
 
       <schemas>
         <list title="Service Request Grid">
+          <field attribute="numericsortableticketid" label="SR# Numeric Sortable" hidden="true">
+            <renderer type="default" params="forcesortable=true" />
+          </field>
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="width=4%" />
           </field>
@@ -841,7 +845,10 @@
           </properties>
         </list>
 
-        <schema id="supportlist" stereotype="list">
+        <schema id="supportlist" stereotype="list" title="Support Grid">
+          <field attribute="numericsortableticketid" label="SR# Numeric Sortable" hidden="true">
+            <renderer type="default" params="forcesortable=true" />
+          </field>
           <field attribute="ticketid" label="Service Request">
             <renderer type="default"  params="width=9%" />
           </field>
@@ -876,7 +883,10 @@
           </properties>
         </schema>
 
-        <schema id="ledaflowlist" stereotype="list">
+        <schema id="ledaflowlist" stereotype="list" title="Ledaflow Grid">
+          <field attribute="numericsortableticketid" label="SR# Numeric Sortable" hidden="true">
+            <renderer type="default" params="forcesortable=true" />
+          </field>
           <field attribute="ticketid" label="SR#">
             <renderer type="default" params="width=6%" />
           </field>
@@ -911,7 +921,10 @@
           </properties>
         </schema>
 
-        <schema id="closelist" stereotype="list">
+        <schema id="closelist" stereotype="list" title="Resolved and Closed Grid">
+          <field attribute="numericsortableticketid" label="SR# Numeric Sortable" hidden="true">
+            <renderer type="default" params="forcesortable=true" />
+          </field>
           <field attribute="ticketid" label="Service Request">
             <renderer type="default"  params="width=9%" />
           </field>

@@ -38,13 +38,14 @@ angular.module('sw_layout')
         controller: ["$scope", "$compile", "$element", function ($scope, $compile, $element) {
             function init() {
                 doInit($scope);
+                $scope.multiSort = searchService.parseMultiSort($scope.paneldatasource.panel["defaultSortField"]);
                 searchService.refreshGrid({}, null, {
                     panelid: $scope.paneldatasource.id,
                     metadataid: $scope.metadataid,
                     pageSize: $scope.paneldatasource.panel['limit'],
                     searchSort: $scope.paneldatasource.panel['defaultSortField'],
                     fieldstodisplay: $scope.paneldatasource.panel['appFields'],
-                    multiSort: searchService.parseMultiSort($scope.paneldatasource.panel['defaultSortField'])
+                    multiSort: $scope.multiSort
                 });
             }
 

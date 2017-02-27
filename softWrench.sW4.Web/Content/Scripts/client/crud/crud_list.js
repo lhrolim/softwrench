@@ -27,7 +27,8 @@
                 timestamp: '@',
                 panelid: "@",
                 metadataid: "@",
-                forprint: "@"
+                forprint: "@",
+                multisortinitdata: "="
             },
 
             controller: ["$scope",  "$q", "$rootScope", "$filter", "$injector", "$log",
@@ -545,23 +546,26 @@
                         }
                         const columnName = column.attribute;
                         const sorting = $scope.searchSort;
+                        let hasSort = true;
                         if (sorting.field != null && sorting.field === columnName) {
                             if (sorting.order === "asc") {
                                 sorting.order = "desc";
                             } else {
                                 $scope.searchSort = {};
+                                hasSort = false;
                             }
                         } else {
                             sorting.field = columnName;
                             sorting.order = "asc";
                         }
-                        sortModel().sortColumns = [];
+
+                        sortModel().sortColumns = !hasSort && $scope.multisortinitdata ? $scope.multisortinitdata : [];
                         $scope.selectPage(1);
                     };
 
-                    $scope.multisort = function (addPreSelectedFilters) {
+                    $scope.multisort = function () {
                         $scope.searchSort = {};
-                        $scope.selectPage(1, $scope.paginationData, false, { addPreSelectedFilters: addPreSelectedFilters});
+                        $scope.selectPage(1, $scope.paginationData, false);
                     };
 
                     $scope.sortLabel = function (column) {

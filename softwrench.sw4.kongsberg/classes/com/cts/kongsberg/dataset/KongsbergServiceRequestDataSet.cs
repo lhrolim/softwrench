@@ -25,7 +25,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
         public SlaHolderService SlaHolderService { get; set; }
 
         [Import]
-        public readonly KongsbergDashboardWcProvider dashboardWcProvider;
+        public KongsbergDashboardWcProvider DashboardWcProvider { get; set; }
 
         public SearchRequestDto FilterByPersonGroup(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
@@ -66,7 +66,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
                 return base.GetList(application, searchDto);
             }
 
-            var allWcs = dashboardWcProvider.DashBoardWhereClauses;
+            var allWcs = DashboardWcProvider.DashBoardWhereClauses;
             if (!allWcs.ContainsKey(application.Name)) {
                 return base.GetList(application, searchDto);
             }

@@ -85,7 +85,7 @@
                 if (idx !== -1) {
                     sortColumns.splice(idx, 1);
                 }
-                refreshGrid(false);
+                refreshGrid();
             };
 
             $scope.addColumn = function (viewColumn) {
@@ -98,17 +98,18 @@
                     columnName: viewColumn.attribute,
                     isAscending: viewColumn.asc
                 });
-                refreshGrid(false);
+                refreshGrid();
             };
 
             function reset() {
                 $scope.viewColumns = [];
+                sortModel().sortColumns = [];
                 init();
             }
 
             $scope.resetSortOrder = function () {
                 reset();
-                refreshGrid(true);
+                refreshGrid();
             };
 
             $scope.$watch("schema", (newValue, oldValue) => {
@@ -131,7 +132,7 @@
 
                 let displayables = $scope.displayables;
                 if (!displayables && $scope.schema) {
-                    displayables = $scope.schema.nonHiddenFields;
+                    displayables = $scope.schema.sortableFields;
                 }
 
                 if (!displayables) {
@@ -169,8 +170,8 @@
                 return viewColumn.label || viewColumn.attribute;
             };
 
-            function refreshGrid(addPreSelectedFilters) {
-                $scope.sort({ addPreSelectedFilters: addPreSelectedFilters });
+            function refreshGrid() {
+                $scope.sort();
             };
 
             init();

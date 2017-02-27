@@ -308,8 +308,29 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
+        public IEnumerable<ApplicationFieldDefinition> SortableFields {
+            get {
+                return Fields.Where(f => (!f.IsHidden || IsForcedToBeSortable(f)) && !IsForcedNotToBeSortable(f));
+            }
+        }
 
+        private static bool IsForcedToBeSortable(ApplicationFieldDefinition f) {
+            if (f == null || f.RendererParameters == null || !f.RendererParameters.ContainsKey("forcesortable")) {
+                return false;
+            }
 
+            var forcedSortable = f.RendererParameters["forcesortable"] as string;
+            return "true".Equals(forcedSortable);
+        }
+
+        private static bool IsForcedNotToBeSortable(ApplicationFieldDefinition f) {
+            if (f == null || f.RendererParameters == null || !f.RendererParameters.ContainsKey("showsort")) {
+                return false;
+            }
+
+            var showsort = f.RendererParameters["showsort"] as string;
+            return "false".Equals(showsort);
+        }
 
         [CanBeNull]
         public SchemaFilters SchemaFilters {
