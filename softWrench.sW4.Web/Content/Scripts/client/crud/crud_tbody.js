@@ -2,6 +2,17 @@
     "use strict";
 
     var app = angular.module('sw_layout');
+    var hasSelection = false;
+    var doubleClicked = false;
+
+    function gridDoubleClick(event) {
+        doubleClicked = true;
+        setTimeout(function () {
+            if (getSelection().toString() !== "") {
+                hasSelection = true;
+            }
+        }, 100);
+    }
 
     function griditemclick(event, rowNumber, columnAttribute, element, forceEdition) {
         //this is a trick to call a angular scope function from an ordinary onclick listener (same used by batarang...)
@@ -9,15 +20,31 @@
         //first tests pointed a 100ms gain, but need to gather more data.
         var scope = angular.element(element).scope();
 
+        doubleClicked = false;
 
-        if (scope.showDetail) {
-            scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition);
-        }
+        setTimeout(function () {
+
+            if (hasSelection) {
+                hasSelection = false;
+                return;
+            }
+
+            if (getSelection().toString() === "" && !hasSelection) {
+                if (scope.showDetail) {
+                    scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition);
+                }
+            } else {
+                hasSelection = true;
+            }
+        }, 100);
+
+
         // to process the checkbox values and select-all state from parent (crud_list) too
         scope.$root.$digest();
         event.stopImmediatePropagation();
     }
     window.griditemclick = griditemclick;
+    window.gridDoubleClick = gridDoubleClick;
 
     function changePriority(rowNumber, priority, element, columnAttribute) {
         var scope = angular.element(element).scope();
@@ -84,7 +111,7 @@
     function hasDataClass(column, formattedText) {
         var classString = '';
 
-        if ((formattedText != null && formattedText != "") || (column.rendererType && column.rendererType.equalsAny("color","statusicon","icon"))) {
+        if ((formattedText != null && formattedText != "") || (column.rendererType && column.rendererType.equalsAny("color", "statusicon", "icon"))) {
             classString = 'has-data';
         } else {
             classString = 'no-data';
@@ -101,7 +128,7 @@
 
     window.parseBooleanValue = parseBooleanValue;
 
-    app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService,eventService,
+    app.directive('crudtbody', function (contextService, $rootScope, $compile, $parse, formatService, i18NService, eventService,
     fieldService, commandService, statuscolorService, $injector, $timeout, $log, searchService, iconService, gridSelectionService, crudContextHolderService, classificationColorService, priorityService) {
         "ngInject";
 
@@ -330,7 +357,7 @@
                             html += "<td {0} class='{1} {2} {3}'".format(isHidden ? 'style="display:none"' : '', safeCSSselector(column.attribute), hasDataClass(column, formattedText), column.rendererType);
 
                             if (column.rendererType != 'priorityicon' || (column.rendererParameters.changevalue == undefined || column.rendererParameters.changevalue == 'false')) {
-                                html += " onclick='griditemclick(event,{0},\"{1}\",this)'".format(i, attribute);
+                                html += " onclick='griditemclick(event,{0},\"{1}\",this)' dblclick='gridDoubleClick(event)'".format(i, attribute);
                             }
 
                             html += " data-title='{0}'".format(column.label ? column.label : column.toolTip);
@@ -395,7 +422,7 @@
                                 if (column.rendererParameters.iconcolumns) {
                                     var iconColumns = column.rendererParameters.iconcolumns.split(',');
 
-                                    iconColumns.forEach(function(field) {
+                                    iconColumns.forEach(function (field) {
                                         var iconColumn = displayableObject[field];
                                         var value = datamap[i][field];
                                         var foreground = null;
@@ -421,7 +448,7 @@
                             else if (column.type === 'ApplicationFieldDefinition') {
                                 if (!editable) {
                                     if (column.rendererType === 'statuscolor') {
-                                        
+
                                         var background = scope.statusColor(dm[column.attribute], schema.applicationName);
                                         var foreground = statuscolorService.foregroundColor(background);
 
