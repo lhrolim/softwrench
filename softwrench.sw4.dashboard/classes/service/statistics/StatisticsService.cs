@@ -66,8 +66,10 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         private static IEnumerable<StatisticsResponseEntry> FormatQueryResult(IEnumerable<dynamic> resultSet, string propertyName, string nullValueLabel) {
             return resultSet.Cast<IDictionary<string, object>>()
                 // cast so ExpandoObject's properties can be indexed by string key
-                .Select(d => {
-                    var fieldValue = d[propertyName].ToString();
+                .Select(d =>
+                {
+                    var fieldObjectValue = d[propertyName];
+                    var fieldValue = fieldObjectValue?.ToString();
                     var fieldCountLong = d[ctes.FIELD_VALUE_VARIABLE_NAME] as long?;
                     var fieldCount = fieldCountLong ?? Convert.ToInt64((int)d[ctes.FIELD_VALUE_VARIABLE_NAME]);
                     // value is `null`: label configured by request. Otherwise try and grab the label from the query
