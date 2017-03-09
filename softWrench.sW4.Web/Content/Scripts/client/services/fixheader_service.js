@@ -50,7 +50,7 @@ angular.module('sw_layout')
             if (toolbarElement.css('position') === 'fixed') {
                 toolbarElement.css('top', headerHeight);
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
-                const dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
+                const dashToolbar = $('.dash-toolbar.toolbar-primary:not(.affix-pagination)');
                 $('.dash-header').css('margin-top', dashToolbar.height());
                 dashToolbar.css('top', headerHeight);
             } else {
