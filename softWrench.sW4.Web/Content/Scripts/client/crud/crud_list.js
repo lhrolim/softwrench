@@ -53,13 +53,15 @@
                         return crudContextHolderService.getSortModel($scope.panelid);
                     }
 
+                    $scope.multiSortVisible = function() {
+                        return sortModel().multiSortVisible;
+                    }
+
                     sortModel().multiSortVisible = !!userPreferencesService.getPreference(multiSortVisibleKey);
-                    $scope.multiSortVisible = sortModel().multiSortVisible;
 
                     $scope.toggleMultiSortPanel = function () {
-                        $scope.multiSortVisible = !$scope.multiSortVisible;
-                        sortModel().multiSortVisible = $scope.multiSortVisible;
-                        userPreferencesService.setPreference(multiSortVisibleKey, $scope.multiSortVisible);
+                        sortModel().multiSortVisible = !$scope.multiSortVisible();
+                        userPreferencesService.setPreference(multiSortVisibleKey, sortModel().multiSortVisible);
                         fixHeaderService.callWindowResize();
                     };
 
@@ -222,7 +224,7 @@
                                 const multiSort = data.pageResultDto["multiSearchSort"];
                                 if (multiSort) {
                                     sortModel().sortColumns = multiSort;
-                                    $scope.multiSortVisible = $scope.multiSortVisible || multisortService.hasMultisort($scope.panelid);
+                                    sortModel().multiSortVisible = sortModel().multiSortVisible || multisortService.hasMultisort($scope.panelid);
                                 }
                             }
 
@@ -297,7 +299,7 @@
                         $scope.searchOperator = {};
                         $scope.searchValues = "";
                         $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
-                        crudContextHolderService.setSelectedFilter({}, $scope.panelid);
+                        crudContextHolderService.setSelectedFilter(null, $scope.panelid);
                     }
 
                     /**
@@ -394,6 +396,10 @@
                         // no saved filter selected just do the quick search considering existing search data (filters)
                         searchService.refreshGrid($scope.searchData, $scope.searchOperator, { quickSearchDTO: filterdata, panelid: $scope.panelid });
                     };
+
+                    $scope.autoQuicksearch = function() {
+                        return $scope.schema.properties && $scope.schema.properties["list.quicksearch.auto"] === "true";
+                    }
 
                     $scope.cursortype = function () {
                         const editDisabled = $scope.schema.properties["list.disabledetails"];

@@ -22,10 +22,19 @@
                     <div class="quick-search col-xs-12 col-sm-6 col-md-5" ng-class="{'no-search-options' : shouldShowSearchOptions()}">
                         <div class="input-group">
                             <input type="text"
-                                    placeholder="Search"
-                                    class="form-control ng-pristine ng-valid ng-touched"
-                                    ng-model="vm.quickSearchDTO.quickSearchData"
-                                    ng-enter="quickSearch(vm.quickSearchDTO)">
+                                   placeholder="Search"
+                                   class="form-control ng-pristine ng-valid ng-touched"
+                                   ng-model="vm.quickSearchDTO.quickSearchData"
+                                   ng-enter="quickSearch(vm.quickSearchDTO)"
+                                   ng-if="!autoQuicksearch()">
+                            <input type="search"
+                                   placeholder="Search"
+                                   class="form-control ng-pristine ng-valid ng-touched"
+                                   ng-model-options="{ debounce: 350 }"
+                                   ng-model="vm.quickSearchDTO.quickSearchData"
+                                   ng-enter="quickSearch(vm.quickSearchDTO)"
+                                   ng-change="quickSearch(vm.quickSearchDTO)"
+                                   ng-if="autoQuicksearch()">
                             <span class="input-group-btn">
                                 <button class="btn btn-default"
                                         type="button" ng-enabled="!!vm.quickSearchDTO.quickSearchData"
@@ -87,7 +96,7 @@
                             pagination-simple-layout
                             class="large-button" />
             </div>
-            <div class="row tool-row multi-sort" ng-show="multiSortVisible">
+            <div class="row tool-row multi-sort" ng-show="multiSortVisible()">
                 <multi-sort schema="schema" sort="multisort()" initData="multisortinitdata" panelid="paneldid"></multi-sort>
             </div>
         </div>       
@@ -159,7 +168,7 @@
                                 <div class="fa fa-sort-amount-desc part" ng-show="shouldShowSort(column,'desc')"
                                      rel="tooltip" data-original-title="Sorted descendant">
                                 </div>
-                                <div class="filter-label part" ng-show="shouldShowGridNavigation()" filterrowrendered>
+                                <div class="filter-label part" ng-show="shouldShowGridNavigation() && shouldShowHeaderFilter(column)" filterrowrendered>
                                     <crud-filter-dropdown filter="columnFilter"
                                                           schema="schema" datamap="datamap" panelid="panelid"
                                                           advanced-filter-mode="advancedFilterMode" select-all="selectAllChecked"

@@ -79,7 +79,7 @@
         };
     });
 
-    app.directive('bcMenuItem', function ($log, menuService, adminMenuService, checkpointService) {
+    app.directive('bcMenuItem', function ($log, menuService, adminMenuService, checkpointService, dispatcherService) {
         "ngInject";
 
         return {
@@ -128,6 +128,10 @@
                     crudContextHolderService.clearCrudContext();
                     $scope.closeBreadcrumbs();
                 };
+
+                $scope.dispatch = function(leaf) {
+                    dispatcherService.invokeService(leaf.service, leaf.method);
+                }
 
                 $scope.redirectIfNeeded = function (leaf) {
                     if (leaf.redirectURL) {

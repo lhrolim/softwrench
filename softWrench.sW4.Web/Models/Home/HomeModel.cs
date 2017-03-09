@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using softwrench.sw4.webcommons.classes.api;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Security;
 

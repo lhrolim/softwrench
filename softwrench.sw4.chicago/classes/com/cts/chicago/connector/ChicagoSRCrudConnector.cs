@@ -8,7 +8,10 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using log4net;
+using Newtonsoft.Json.Linq;
+using NHibernate.Util;
 using softwrench.sw4.problem.classes;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Exceptions;
@@ -35,7 +38,6 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
             get; set;
         }
 
-
         public ChicagoSRCrudConnector() {
             Log.Debug("init log...");
         }
@@ -58,6 +60,23 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.connector {
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var sr = maximoTemplateData.IntegrationObject;
             SetSwChangeBy(sr);
+
+            var operationData = maximoTemplateData.OperationData;
+            var crudOperationData = operationData as CrudOperationData;
+            if (crudOperationData == null){
+                base.BeforeCreation(maximoTemplateData);
+                return;
+            }
+
+            var formData = crudOperationData.GetUnMappedAttribute("form");
+            var formName = crudOperationData.GetUnMappedAttribute("newattachment_path");
+            if (string.IsNullOrEmpty(formData) || string.IsNullOrEmpty(formName)) {
+                base.BeforeCreation(maximoTemplateData);
+                return;
+            }
+            var attachList = AttachmentHandler.BuildAttachments(formName, formData);
+            AttachmentHandler.AddAttachment(sr, attachList[0]);
+
             base.BeforeCreation(maximoTemplateData);
         }
 

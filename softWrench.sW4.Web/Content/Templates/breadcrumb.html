@@ -1,23 +1,26 @@
 ﻿<div ng-if="isDesktop()" ng-repeat="bcItem in breadcrumbItems" class="parts">
     <div ng-switch on="bcItem.type" ng-class="{'main' : $first}" class="part">
-        <a ng-switch-when="MenuContainerDefinition" data-toggle="dropdown" aria-expanded="false">
+        <a class="menu-item" ng-switch-when="MenuContainerDefinition" data-toggle="dropdown" aria-expanded="false">
             <i class="{{bcItem.icon}}"></i><span ng-if="!$first">&ensp;{{bcItem.title}}</span>&ensp;<i class="fa fa-caret-down"></i>
         </a>
         <ul ng-if="bcItem.leafs" leafs="bcItem.leafs" class="dropdown-menu" role="menu" bc-menu-dropdown></ul>
 
-        <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(bcItem.click)" bc-menu-item>
+        <a class="menu-item" ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(bcItem.click)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
-        <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(bcItem, $event)" bc-menu-item>
+        <a class="menu-item" ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(bcItem, $event)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
-        <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(bcItem, $event)" bc-menu-item>
+        <a class="menu-item" ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(bcItem, $event)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
-        <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{bcItem.link}}" target="_blank">
+        <a class="menu-item" ng-switch-when="ServiceMenuItemDefinition" ng-click="dispatch(bcItem)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
-        <a ng-switch-when="UnknownMenuItemDefinition" ng-click="redirectIfNeeded(bcItem)" bc-menu-item>
+        <a class="menu-item" ng-switch-when="ExternalLinkMenuItemDefinition" href="{{bcItem.link}}" target="_blank">
+            <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
+        </a>
+        <a class="menu-item" ng-switch-when="UnknownMenuItemDefinition" ng-click="redirectIfNeeded(bcItem)" bc-menu-item>
             <i class="{{bcItem.icon}}"></i>&ensp;{{bcItem.title}}
         </a>
         <span ng-switch-when="EllipsisItemDefinition">...</span>

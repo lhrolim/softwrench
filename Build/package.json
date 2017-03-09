@@ -28,7 +28,7 @@
     "karma-phantomjs-launcher": "^0.2.3",
     "karma-xml-reporter": "^0.1.4",
     "load-grunt-tasks": "^3.5.0",
-    "phantomjs": "^1.9.19"
+    "phantomjs": "^2.1.7"
   },
   "engines": {
     "node": ">=0.10.0"

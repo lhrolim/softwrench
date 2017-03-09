@@ -1,0 +1,39 @@
+﻿<nav>
+    <div class="context" style="text-align: center">
+        <h3>{{pdfName}}</h3>
+
+        <form class="form-inline pdf-toolbar">
+            <button type="button" ng-click="goPrevious()" class="btn btn-context" data-original-title="Previous Page" rel="tooltip" accesskeydata-container="body">
+                <i class="icon fa fa-caret-left"></i>
+            </button>
+
+            <button type="button" ng-click="goNext()" class="btn btn-context" data-original-title="Next Page" rel="tooltip" data-container="body">
+                <i class="icon fa fa-caret-right"></i>
+            </button>
+
+            <div class="input-group" data-original-title="Current Page" rel="tooltip">
+                <span class="input-group-addon">Page: </span>
+                <input type="text" class="form-control" min=1 ng-model="pageNum"/>
+                <span class="input-group-addon"> / {{pageCount}}</span>
+            </div>
+
+            <button type="button" ng-click="zoomIn()" class="btn btn-context" data-original-title="Zoom In" rel="tooltip" data-container="body">
+                <i class="icon fa fa-search-plus"></i>
+            </button>
+
+            <button type="button" ng-click="fit()" class="btn btn-context" data-original-title="Fit Width" rel="tooltip" data-container="body">
+                <i class="icon fa fa-arrows-h"></i>
+            </button>
+
+            <button type="button" ng-click="zoomOut()" class="btn btn-context" data-original-title="Zoom Out" rel="tooltip" data-container="body">
+                <i class="icon fa fa-search-minus"></i>
+            </button>
+
+            <button type="button" ng-click="download()" class="btn btn-context" data-original-title="Download" rel="tooltip" data-container="body">
+                <i class="icon fa fa-download"></i>
+            </button>
+        </form>
+    </div>
+</nav>
+
+<canvas id="pdf-canvas"></canvas>

@@ -11,6 +11,8 @@
         "textAngular",
         "angularFileUpload",
         "angular-clipboard",
+        "angular-click-outside",
+        "pdf",
         "xeditable",
         "sw_lookup",
         "sw_typeahead",

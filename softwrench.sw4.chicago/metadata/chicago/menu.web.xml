@@ -3,5 +3,6 @@
 
   <reference id="servicereq"/>
   <reference id="qservicereq"/>
+  <service id="DOWNFORM" icon="fa fa-download" title="Download Form" service="chicagoformsService" method="openFormsModal" tooltip="Click to preview or download a pdf form"/>
 </Menu>
 

@@ -606,6 +606,13 @@
                         return validationFunction;
                     };
 
+                    $scope.uploadAcceptedFiles = function (fieldMetadata) {
+                        if (!fieldMetadata || !fieldMetadata.rendererParameters || !fieldMetadata.rendererParameters.acceptedfiles) {
+                            return ".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html";
+                        }
+                        return fieldMetadata.rendererParameters.acceptedfiles;
+                    }
+
                     function init() {
                         if (!$scope.isVerticalOrientation()) {
                             const countVisibleDisplayables = fieldService.countVisibleDisplayables($scope.datamap, $scope.schema, $scope.displayables);

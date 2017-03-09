@@ -10,16 +10,19 @@
 
     <!-- Common Items -->
     <ul ng-if="item.leafs" leafs="item.leafs" ng-class="{'submenu' : isMobile(), 'dropdown-menu' : isDesktop()}" role="menu" bc-menu-dropdown></ul>
-    <a ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(item.click)" bc-menu-item>
+    <a class="menu-item" ng-switch-when="AdminMenuItemDefinition" ng-click="adminEval(item.click)" bc-menu-item>
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
-    <a ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(item, $event)" bc-menu-item>
+    <a class="menu-item" ng-switch-when="ActionMenuItemDefinition" ng-click="doAction(item, $event)" bc-menu-item>
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
-    <a ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(item, $event, true)" bc-menu-item>
+    <a class="menu-item" ng-switch-when="ApplicationMenuItemDefinition" ng-click="goToApplication(item, $event, true)" bc-menu-item>
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
-    <a ng-switch-when="ExternalLinkMenuItemDefinition" href="{{item.link}}" target="_blank">
+    <a class="menu-item" ng-switch-when="ServiceMenuItemDefinition" ng-click="dispatch(item)" bc-menu-item>
+        <i class="{{item.icon}}"></i>&ensp;{{item.title}}
+    </a>
+    <a class="menu-item" ng-switch-when="ExternalLinkMenuItemDefinition" href="{{item.link}}" target="_blank">
         <i class="{{item.icon}}"></i>&ensp;{{item.title}}
     </a>
 </li>

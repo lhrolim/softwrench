@@ -113,6 +113,13 @@
             crud_inputcommons.initField($scope, fieldMetadata, "compositiondata[{0}]".format(idx), idx);
         };
 
+        $scope.uploadAcceptedFiles = function(fieldMetadata) {
+            if (!fieldMetadata || !fieldMetadata.rendererParameters || !fieldMetadata.rendererParameters.acceptedfiles) {
+                return ".jpg,.bmp,.png,.pdf,.zip,text/plain,.doc,.docx,.dwg,.csv,.xls,.xlsx,.ppt,application/xml,.xsl,text/html";
+            }
+            return fieldMetadata.rendererParameters.acceptedfiles;
+        }
+
         function watchForDirty(index) {
             return $scope.$watch("compositiondata[{0}]".format(index), function (newValue, oldValue) {
                 //make sure any change on the composition marks it as dirty

@@ -85,7 +85,8 @@
                         title: properties.title,
                         cssclass: properties.cssclass,
                         onloadfn: properties.onloadfn,
-                        closeAfterSave: properties.closeAfterSave
+                        closeAfterSave: properties.closeAfterSave,
+                        cancelOnClickOutside: properties.cancelOnClickOutside
                     };
 
                     

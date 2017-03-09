@@ -10,7 +10,12 @@ namespace softWrench.sW4.Util {
 
     class EntityUtil {
         public static bool IsRelationshipNameEquals(string firstName, string secondName) {
-            return GetRelationshipName(firstName) == GetRelationshipName(secondName);
+            var first = GetRelationshipName(firstName);
+            var second = GetRelationshipName(secondName);
+            if (first == null) {
+                return second == null;
+            }
+            return first.EqualsIc(second);
         }
 
         public static string GetRelationshipName(string attribute) {

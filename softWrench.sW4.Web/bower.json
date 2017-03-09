@@ -47,7 +47,9 @@
     "angular-drag-and-drop-lists": "^1.4.0",
     "colorbox": "git://github.com/jackmoore/colorbox.git",
     "angular-ui-sortable": "0.14.3",
-    "angular-ui-grid": "^3.2.9"
+    "angular-ui-grid": "^3.2.9",
+    "angular-click-outside": "^2.10.2",
+    "angular-pdf": "^1.5.1"
   },
   "resolutions": {
     "angular": "1.6.0"

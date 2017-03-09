@@ -9,7 +9,10 @@
 
         $rootScope.$on("sw.attachment.file.changed", function (event, fileNames) {
             const panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
-            const dm = crudContextHolderService.rootDataMap(panelId);
+            let dm = crudContextHolderService.rootDataMap(panelId);
+            if (!dm) {
+                dm = crudContextHolderService.rootDataMap(panelId, {});
+            }
             const log = $log.get("attachmentService#filechange", ["attachment"]);
 
 

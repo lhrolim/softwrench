@@ -1,4 +1,4 @@
-<div class="modal fade container {{cssclass}}" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade container {{cssclass}}" id="crudmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" click-outside="clickOutside()" outside-if-not="applicationcommand, icon, text, menu-item">
     <scroll-pane data-available-fn="setPaneHeight">
         <div class="modal-content">
             <div class="modal-header">
@@ -15,7 +15,6 @@
                                datamap="datamap"
                                original-datamap="originalDatamap"
                                blockedassociations="blockedassociations"
-                               title="title"
                                is-list="isList"
                                is-detail="isDetail"
                                previousdata="previousdata"

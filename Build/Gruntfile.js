@@ -156,6 +156,7 @@ module.exports = function (grunt) {
                     "angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.min.js",
                     "sortable.js": "angular-ui-sortable/sortable.min.js",
                     "ui-grid.js": "angular-ui-grid/ui-grid.min.js",
+                    "clickoutside.directive.js": "angular-click-outside/clickoutside.directive.js",
                     // bootstrap
                     "bootstrap.js": "bootstrap/dist/js/bootstrap.min.js",
                     // ace
@@ -177,6 +178,10 @@ module.exports = function (grunt) {
                     "jquery-knob.js": "jquery-knob/dist/jquery.knob.min.js",
                     // tinymce
                     "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
+                    // pdf
+                    "pdf.worker.js": "pdfjs-dist/build/pdf.worker.min.js",
+                    "pdf.js": "pdfjs-dist/build/pdf.min.js",
+                    "angular-pdf.js": "angular-pdf/dist/angular-pdf.min.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
@@ -279,8 +284,13 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-drag-and-drop-lists.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/ui-grid.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/sortable.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/clickoutside.directive.js",
                     // tinymce
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
+                    // pdf
+                    "<%= bowercopy.scripts.options.destPrefix %>/pdf.worker.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/pdf.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/angular-pdf.js",
                     // ace
                     "<%= bowercopy.scripts.options.destPrefix %>/ace.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/mode-xml.js",

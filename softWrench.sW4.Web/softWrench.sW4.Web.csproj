@@ -435,6 +435,8 @@
     <Compile Include="Controllers\Dynamic\ScriptsController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />
     <Compile Include="Controllers\LabtransController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\NoMenuErrorController.cs" />
     <Compile Include="Controllers\RoutePageController.cs" />
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SqlClient\SqlClientController.cs" />
@@ -521,7 +523,6 @@
     <Compile Include="Models\Home\HomeService.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
     <Compile Include="Models\Home\RouteService.cs" />
-    <Compile Include="Models\IBaseLayoutModel.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />
     <Compile Include="Models\Report\ReportModel.cs" />
     <Compile Include="Models\SqlClient\SqlQueryResultModel.cs" />
@@ -808,6 +809,7 @@
     <Content Include="Content\Scripts\client\constants\MetadataConstants.js" />
     <Content Include="Content\Scripts\client\controllers\metadata_builder.js" />
     <Content Include="Content\Scripts\client\crud\composition_masterdetails.js" />
+    <Content Include="Content\Scripts\client\crud\pdf.js" />
     <Content Include="Content\Scripts\client\crud\multisort_service.js" />
     <Content Include="Content\Scripts\client\crud\crud_crawl_service.js" />
     <Content Include="Content\Scripts\client\crud\composition_list_viewmodel.js" />
@@ -961,6 +963,7 @@
     <Compile Include="SimpleInjector\WebApi\IAPIControllerFactory.cs" />
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
     <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
+    <Content Include="Content\templates\crud\pdf.html" />
     <Content Include="Content\templates\swlabel.html" />
     <Content Include="favicon.ico" />
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
@@ -1251,6 +1254,7 @@
     <Content Include="Views\Shared\_NoMenuLayout.cshtml" />
     <Content Include="Views\TransactionStatsReport\Index.cshtml" />
     <Content Include="Views\UserSetup\Error.cshtml" />
+    <Content Include="Views\ChicagoForms\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />

@@ -118,6 +118,9 @@
         <relationship to="classstructure">
           <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
         </relationship>
+        <relationship to="form">
+          <relationshipAttribute from="ticketid" to="ticketid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="customconnector" value="softwrench.sw4.chicago.classes.com.cts.chicago.connector.ChicagoSRCrudConnector" />
@@ -191,6 +194,12 @@
           <relationshipAttribute literal="DEPARTMENTS" to="domainid" quoteLiteral="true"/>
         </relationship>
       </relationships>
+    </entity>
+    <entity name="form" idAttribute="name" useridAttribute="name">
+      <attributes>
+        <attribute name="name" type="varchar"/>
+        <attribute name="isibm" type="boolean"/>
+      </attributes>
     </entity>
   </entities>
 
@@ -396,6 +405,7 @@
                   <renderer type="checkbox"/>
                 </field>
               </section>
+              <section id="upload"></section> <!-- used on newdetail -->
             </section>
             <section orientation="vertical">
               <header label="Dates" displacement="ontop" params="fieldset=true"/>
@@ -515,6 +525,13 @@
           <section id="statussection">
             <field attribute="status" label="Status" default="NEW" readonly="true"/>
           </section>
+
+          <section id="upload" orientation="horizontal">
+            <renderer type="default" params="childinputsize=xlarge" />
+            <field attribute="form" label="Attachment" helpicon="right" tooltip="After editing the downloaded pdf form attach it to the ticket">
+              <renderer type="upload" params="acceptedfiles=.pdf"/>
+            </field>
+          </section>
         </schema>
 
         <schema id="editdetail" parentschema="adetail" stereotype="detail" title="Service Request Details" redeclaring="true">
@@ -624,6 +641,13 @@
               <field attribute="affecteddate" label="Affected Date" default="@currentdatetime" hidden="true">
                 <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
               </field>
+              
+            </section>
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=xlarge" />
+              <field attribute="form" label="Attachment" helpicon="right" tooltip="After editing the downloaded pdf form attach it to the ticket">
+                <renderer type="upload" params="acceptedfiles=.pdf"/>
+              </field>
             </section>
           </customization>
         </schema>
@@ -716,6 +740,36 @@
           <!-- TODO: use section+id instead of field when it's eventually possible -->
           <field attribute="position_attachment" hidden="true"></field>
 
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="form" name="form" title="Forms">
+      <schemas>
+        <schema id="list" title="Preview/Download Form" stereotype="list">
+          <field attribute="name" label="Name">
+            <renderer type="default" params="hidefilter=true;width=90%"/>
+          </field>
+          <field attribute="isibm" hidden="true"/>
+          <field attribute="download" label="Download">
+            <renderer type="icon" params="expression={'#default':'fa-download'}"/>
+          </field>
+
+          <commandbars>
+            <commandgroup position="gridtop">
+              <removecommand id="new"/>
+              <removecommand id="print"/>
+              <removecommand id="export"/>
+            </commandgroup>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
+
+          <properties>
+            <property key="list.click.service" value="chicagoformsService.downloadForm"/>
+            <property key="list.quicksearch.auto" value="true"/>
+          </properties>
         </schema>
       </schemas>
     </application>

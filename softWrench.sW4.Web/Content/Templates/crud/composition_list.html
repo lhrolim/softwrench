@@ -159,6 +159,20 @@
                                         {{getFormattedValue(compositionitem[column.attribute],column,compositionData())}}
                                     </span>
                                 </div>
+                                <div ng-switch-when="upload">
+                                    <div file-upload class="input-group" id="file-upload-{{column.attribute+rowindex}}">
+                                        <input id="uploadFile" class="form-control" placeholder="No file chosen" disabled="disabled" />
+                                        <div class="input-group-addon fileUpload" data-upload="files">
+                                            <span>Choose File</span>
+                                            <input class="form-control uploadfile_tooltip upload"
+                                                   name="file-upload-{{column.attribute+rowindex}}"
+                                                   id="uploadBtn"
+                                                   type="file" accept="{{uploadAcceptedFiles(column)}}"
+                                                   fileread="compositionitem[column.attribute]"
+                                                   path="compositionitem.newattachment_path" />
+                                        </div>
+                                    </div>
+                                </div>
                                 <div ng-switch-when="datetime">
                                     <div id="datetimepicker" class="input-group" data-datepicker="true" ng-if="column.rendererParameters['editable'] == 'true'">
                                         <input type="text" ng-model="compositionitem[column.attribute]"

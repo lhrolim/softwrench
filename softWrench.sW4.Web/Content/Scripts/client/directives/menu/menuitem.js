@@ -143,7 +143,7 @@
                 displacement: '=',
                 level: '='
             },
-            controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService, alertService, validationService, crudContextHolderService) {
+            controller: function ($scope, $http, $rootScope, menuService, i18NService, mockService, alertService, validationService, crudContextHolderService, dispatcherService) {
 
                 $scope.level = $scope.level + 1;
 
@@ -187,6 +187,10 @@
                         menuService.goToApplication(leaf, target);
                     }
                 };
+
+                $scope.dispatch = function (leaf) {
+                    dispatcherService.invokeService(leaf.service, leaf.method);
+                }
 
                 $scope.doAction = function (leaf, $event) {
                     var target = $event.target;

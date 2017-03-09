@@ -110,6 +110,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.2.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Interactive.Async, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -170,13 +174,17 @@
     <Compile Include="classes\com\cts\chicago\configuration\Reports\ChicagoReportProvider.cs" />
     <Compile Include="classes\com\cts\chicago\configuration\UserDepartmentFetcher.cs" />
     <Compile Include="classes\com\cts\chicago\connector\ChicagoSRCrudConnector.cs" />
+    <Compile Include="classes\com\cts\chicago\controller\ChicagoFormsController.cs" />
     <Compile Include="classes\com\cts\chicago\controller\ChicagoSrController.cs" />
+    <Compile Include="classes\com\cts\chicago\dataset\ChicagoFormsDataSet.cs" />
+    <Compile Include="classes\com\cts\chicago\dataset\ChicagoFormsEngine.cs" />
     <Compile Include="classes\com\cts\chicago\dataset\ChicagoProblemDataSet.cs" />
     <Compile Include="classes\com\cts\chicago\dataset\ChicagoServiceRequestDataSet.cs" />
     <Compile Include="classes\com\cts\chicago\exception\ISMSyncException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web_content\chicago\scripts\chicago_forms_controller.js" />
     <EmbeddedResource Include="metadata\chicago\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -190,8 +198,10 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="web_content\chicago\htmls\chicago_forms_download.html" />
     <Content Include="web_content\chicago\images\logo-pdf.png" />
     <Content Include="web_content\chicago\scripts\aaa_chicagomodule.js" />
+    <Content Include="web_content\chicago\scripts\chicago_forms_service.js" />
     <Content Include="web_content\chicago\scripts\chicago_chart_service.js" />
     <Content Include="web_content\chicago\scripts\chicagosr_service.js" />
     <EmbeddedResource Include="metadata\chicago\properties.xml">
@@ -223,7 +233,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="classes\com\cts\chicago\migration\" />
-    <Folder Include="web_content\chicago\htmls\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
@@ -237,6 +246,10 @@
     <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
       <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
       <Name>softwrench.sw4.user</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
+      <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
+      <Name>softwrench.sw4.webcommons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>

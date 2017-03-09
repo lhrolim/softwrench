@@ -1,17 +1,23 @@
 <li ng-switch on="leaf.type">
-    <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ActionMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
+    <a id="{{leaf.type + '_' + leaf.id}}" class="menu-item" ng-switch-when="ActionMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
        ng-click="doAction(leaf, $event)" href=""
        class="level{{level}}">
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
-    <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ApplicationMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
+    <a id="{{leaf.type + '_' + leaf.id}}" class="menu-item" ng-switch-when="ApplicationMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
        ng-click="goToApplication(leaf, $event)" href=""
        class="level{{level}}">
         <i class="{{isMenuItemIcon(leaf)}}"> </i>
         {{i18NMenuLabel(leaf,false)}}
     </a>
-    <a id="{{leaf.type + '_' + leaf.id}}" ng-switch-when="ExternalLinkMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
+    <a id="{{leaf.type + '_' + leaf.id}}" class="menu-item" ng-switch-when="ServiceMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
+       ng-click="dispatch(leaf)" href=""
+       class="level{{level}}">
+        <i class="{{isMenuItemIcon(leaf)}}"> </i>
+        {{i18NMenuLabel(leaf,false)}}
+    </a>
+    <a id="{{leaf.type + '_' + leaf.id}}" class="menu-item" ng-switch-when="ExternalLinkMenuItemDefinition" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
        href="{{leaf.link}}"
        target="_blank"
        class="level{{level}}">
@@ -22,23 +28,23 @@
         <div ng-include="contextPath(leaf.path)" href="#" class="level{{level}}"/>
     </div>
     <div ng-switch-when="MenuContainerDefinition" class="dropdown dropdown-container btn-group" ng-class="{'dropdown-submenu' : !isButtonStyleContainer(level,leaf) && isMenuContainer(level,leaf)}">
-        <button ng-if="!leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle non-isolate" data-toggle="dropdown"
+        <button ng-if="!leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default dropdown-toggle non-isolate menu-item" data-toggle="dropdown"
                 rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event)">
             <i class="{{isMenuItemIcon(leaf)}}"></i>&ensp;{{i18NMenuLabel(leaf,false)}}
             <span class="level{{level}}" ng-class="{'right-caret': displacement == 'vertical', 'bottom-caret' : displacement == 'horizontal'}" />
         </button>
-        <button ng-if="leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default btn-split dropdown-toggle"
+        <button ng-if="leaf.hasMainAction && isButtonStyleContainer(level,leaf)" type="button" class="btn btn-default btn-split dropdown-toggle menu-item"
                 rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}" ng-click="handleContainerClick(leaf,$event)">
             <i class="{{isMenuItemIcon(leaf)}}"> </i>
             {{i18NMenuLabel(leaf,false)}}
         </button>
-        <button type="button" class="btn btn-default btn-split dropdown-toggle" data-toggle="dropdown" aria-expanded="false" ng-if="leaf.hasMainAction">
+        <button type="button" class="btn btn-default btn-split dropdown-toggle menu-item" data-toggle="dropdown" aria-expanded="false" ng-if="leaf.hasMainAction">
             <span class="caret"></span>
             <span class="sr-only">Toggle Dropdown</span>
         </button>
         <a ng-if="!isButtonStyleContainer(level,leaf)" href=""
            data-toggle="dropdown" rel="tooltip" data-original-title="{{i18NMenuLabel(leaf,true)}}"
-           ng-click="handleContainerClick(leaf,$event)" class="level{{level}}">
+           ng-click="handleContainerClick(leaf,$event)" class="level{{level}} menu-item">
             <i class="{{isMenuItemIcon(leaf)}}"></i>&ensp;{{i18NMenuLabel(leaf,false)}}
         </a>
         <sub-menu leaf="leaf" displacement="displacement" level="level"></sub-menu>

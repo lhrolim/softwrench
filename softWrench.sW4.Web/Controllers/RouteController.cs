@@ -1,23 +1,18 @@
 ﻿using System;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
-using Microsoft.Ajax.Utilities;
 using softwrench.sw4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
-using softWrench.sW4.Util;
-using softWrench.sW4.Web.Models;
 using softWrench.sW4.Web.Models.Home;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -34,13 +29,6 @@ namespace softWrench.sW4.Web.Controllers {
             _homeService = homeService;
             _entityRepository = entityRepository;
             _routeService = routeService;
-        }
-
-        public ActionResult ErrorFallback() {
-            var model = _homeService.BaseHomeModel(Request, null);
-            model.Error = ErrorConfig.GetLastError();
-            model.Title = "Error | softWrench";
-            return View(Index, model);
         }
 
         public async Task<ActionResult> Route(string application, string extra, string uid, [FromUri] string siteid) {

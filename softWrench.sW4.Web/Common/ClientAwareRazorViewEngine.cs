@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
+using softwrench.sw4.webcommons.classes.api;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Controllers.Security;
 using softWrench.sW4.Web.Controllers;
@@ -7,11 +8,11 @@ using softWrench.sW4.Web.Controllers;
 namespace softWrench.sW4.Web.Common {
     public class ClientAwareRazorViewEngine : RazorViewEngine {
 
-        private const string ClientPattern = "~/Content/Customers/{0}/html";
+        private const string ClientPattern = "~/Content/Customers/{0}/htmls";
         private const string DefaultPattern = "~/Views";
         private const string DefaultLayout = "~/Views/Shared/_Layout.cshtml";
         private const string NoMenuLayout = "~/Views/Shared/_NoMenuLayout.cshtml";
-        private const string ClientLayoutPattern = "~/Content/Customers/{0}/html/Shared/_Layout.cshtml";
+        private const string ClientLayoutPattern = "~/Content/Customers/{0}/htmls/Shared/_Layout.cshtml";
 
         public ClientAwareRazorViewEngine() {
             ViewLocationFormats = new string[] {
@@ -46,9 +47,10 @@ namespace softWrench.sW4.Web.Common {
         }
 
         private string FetchMasterPath(ControllerContext controllerContext, string viewPath) {
-            var clientLayout = String.Format(ClientLayoutPattern, ApplicationConfiguration.ClientName);
-            if (controllerContext.Controller is UserSetupController || controllerContext.Controller is TransactionStatsReportController) {
-                //TODO: create some sort of annotation here
+            var clientLayout = string.Format(ClientLayoutPattern, ApplicationConfiguration.ClientName);
+
+            var noMenuAttribute = Attribute.GetCustomAttribute(controllerContext.Controller.GetType(), typeof(NoMenuController));
+            if (noMenuAttribute != null) {
                 return NoMenuLayout;
             }
             if (!controllerContext.HttpContext.User.Identity.IsAuthenticated ||

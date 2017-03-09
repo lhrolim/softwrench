@@ -15,6 +15,7 @@ using softwrench.sw4.Shared2.Util;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.services.setup;
+using softwrench.sw4.webcommons.classes.api;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -35,6 +36,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
     /// <summary>
     /// A user controller which contains methods specifically oriented for setup, that do not require any authentication.
     /// </summary>
+    [NoMenuController]
     public class UserSetupController : Controller {
 
         private const string WrongLinkException = "The link you are trying to access is not valid: Either the user is already active or the link provided is incorrect.";

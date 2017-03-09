@@ -27,43 +27,45 @@
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
-    <div ng-controller="NoMenuLayoutController" class="{{clientName}} {{deviceType}} {{browserType}}">
-        <div class="spinner" data-class="spinner" id="mainspinner"></div>
-        <div class="container {{clientName}} {{deviceType}} {{browserType}}">
+<div ng-controller="NoMenuLayoutController" class="{{clientName}} {{deviceType}} {{browserType}}">
+    <notifications></notifications>
+    <div class="spinner" data-class="spinner" id="mainspinner"></div>
+    <div class="container {{clientName}} {{deviceType}} {{browserType}}">
 
-            <header class="site-header navbar-fixed-top hiddenonprint">
-                <div class="branding">
-                    <div class="logo">
-                        @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
-                        {
-                            <img ng-src="{{resourceUrl('/Content/Images/@Model.ClientName/logo-main.png')}}">
-                        }
-                        else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
-                        {
-                            <img ng-src="{{resourceUrl('/Content/Customers/@Model.ClientName/images/logo-main.png' )}}">
-                        }
-                        else
-                        {
-                            <img ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
-                        }
-                    </div>
+        <header class="site-header navbar-fixed-top hiddenonprint">
+            <div class="branding">
+                <div class="logo">
+                    @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-main.png")))
+                    {
+                        <img ng-src="{{resourceUrl('/Content/Images/@Model.ClientName/logo-main.png')}}">
+                    }
+                    else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-main.png")))
+                    {
+                        <img ng-src="{{resourceUrl('/Content/Customers/@Model.ClientName/images/logo-main.png' )}}">
+                    }
+                    else
+                    {
+                        <img ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
+                    }
                 </div>
-            </header>
-            <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
-                @RenderBody()
             </div>
-            <footer class="site-footer hiddenonprint">
-                <div class="page-overlay">
-                    <div class="logo"><img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}"></div>
-                </div>
-            </footer>
+        </header>
+        <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
+            @RenderBody()
         </div>
-        <script type="text/javascript">
-            $(document).on('touch click', '*[data-calendericon="true"]', function (e) {
-                $('input[type="text"]', $(this).parent()).focus();
-            });
-        </script>
-        @RenderSection("scripts", required: false)
+        <footer class="site-footer hiddenonprint">
+            <div class="page-overlay">
+                <div class="logo"><img ng-src="{{resourceUrl('/Content/Images/logo-footer.png')}}">
+                </div>
+            </div>
+        </footer>
     </div>
+    <script type="text/javascript">
+        $(document).on('touch click', '*[data-calendericon="true"]', function(e) {
+            $('input[type="text"]', $(this).parent()).focus();
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+</div>
 </body>
 </html>

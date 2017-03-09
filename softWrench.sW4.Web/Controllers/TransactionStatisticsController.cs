@@ -1,11 +1,12 @@
 ﻿using softWrench.sW4.Security.Attributes;
 using softWrench.sW4.Util;
 using softWrench.sW4.Util.TransactionStatistics;
-using softWrench.sW4.Web.Models;
 using System.Collections.Generic;
 using System.Web.Mvc;
+using softwrench.sw4.webcommons.classes.api;
 
 namespace softWrench.sW4.Web.Controllers {
+    [NoMenuController]
     public class TransactionStatsReportController : Controller {
         private readonly TransactionStatisticsService service;
 

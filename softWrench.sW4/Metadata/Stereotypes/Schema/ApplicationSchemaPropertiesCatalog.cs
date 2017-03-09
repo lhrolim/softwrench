@@ -92,6 +92,11 @@
         public const string ListQuickSearchFields = "list.search.quicksearchfields";
 
         /// <summary>
+        /// If true the quick search does not requires a enter or click to start a search.
+        /// </summary>
+        public const string ListAutoQuickSearch = "list.quicksearch.auto";
+
+        /// <summary>
         /// Comma separated list of compositions that should not be included in the list of available search options
         /// </summary>
         public const string ListQuickSearchCompositionsToExclude = "list.search.compositionstoexclude";

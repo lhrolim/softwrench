@@ -71,7 +71,7 @@
                 return null;
             }
             if (quickSearchDTO) {
-                const quickSearchData = quickSearchDTO.quickSearchData;
+                const quickSearchData = quickSearchDTO.quickSearchData || "";
                 eagerOptions = eagerOptions.filter(a => {
                     return a.value.containsIgnoreCase(quickSearchData) || a.label.containsIgnoreCase(quickSearchData);
                 });

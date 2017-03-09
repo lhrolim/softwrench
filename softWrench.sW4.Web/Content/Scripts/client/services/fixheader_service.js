@@ -36,8 +36,8 @@ angular.module('sw_layout')
     function setHeaderPosition() {
         const siteHeaderElement = $('.site-header');
         //var toolbarElement = $('.toolbar-primary:not(.affix-pagination)');
-        const toolbarElement = $('.toolbar-primary:visible');
-        const listTheadElement = $('.listgrid-thead:visible');
+        const toolbarElement = $('[ismodal=false] .toolbar-primary:visible');
+        const listTheadElement = $('[ismodal=false] .listgrid-thead:visible');
         if (siteHeaderElement.css('position') === 'fixed') {
             //if the header is fixed to the top of the page, set the location of the content, context menu, grid header and filter bar
             const headerHeight = siteHeaderElement.height();
@@ -52,6 +52,7 @@ angular.module('sw_layout')
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', offsetMargin);
                 const dashToolbar = $('.toolbar-primary:not(.affix-pagination)');
                 $('.dash-header').css('margin-top', dashToolbar.height());
+                dashToolbar.css('top', headerHeight);
             } else {
                 $('#crudbodyform:not([data-modal="true"])').css('margin-top', 'auto');
             }

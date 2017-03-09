@@ -92,7 +92,8 @@ namespace softWrench.sW4.Web {
                     "~/Content/vendor/scripts/angular/angular-xeditable.js",
                     "~/Content/vendor/scripts/angular/angular-file-upload.js",
                     "~/Content/vendor/scripts/angular/angular-drag-and-drop-lists.js",
-                    "~/Content/vendor/scripts/angular/sortable.js"
+                    "~/Content/vendor/scripts/angular/sortable.js",
+                    "~/Content/vendor/scripts/angular/clickoutside.directive.js"
                 ).Include(
                     "~/Content/vendor/scripts/angular-ui-grid/ui-grid.js"
                 )
@@ -113,6 +114,11 @@ namespace softWrench.sW4.Web {
                 // tiny-mce
                 .Include(
                     "~/Content/vendor/scripts/tinymce/angular-ui-tinymce.js"
+                )
+                // pdf
+                .Include(
+                    "~/Content/vendor/scripts/pdf/pdf.combined.js",
+                    "~/Content/vendor/scripts/pdf/angular-pdf.js"
                 );
 
             vendorBundle.Orderer = new PassthroughBundleOrderer(); // enforcing import order

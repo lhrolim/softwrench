@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using cts.commons.simpleinjector;
+using softwrench.sw4.webcommons.classes.api;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Web.Controllers;
@@ -55,13 +56,28 @@ namespace softWrench.sW4.Web.Models {
                 return;
             }
 
-            var controller = SimpleInjectorGenericFactory.Instance.GetObject<RouteController>() as IController;
+            var isNoMenu = IsNomenuController(wrapper);
+
+            var controller = isNoMenu ? (IController)SimpleInjectorGenericFactory.Instance.GetObject<NoMenuErrorController>() : SimpleInjectorGenericFactory.Instance.GetObject<ErrorController>();
             var routeData = new RouteData();
 
-            routeData.Values["controller"] = "Route";
+            routeData.Values["controller"] = isNoMenu ? "NoMenuError" : "Error";
             routeData.Values["action"] = "ErrorFallback";
 
             controller.Execute(new RequestContext(wrapper, routeData));
+        }
+
+        private static bool IsNomenuController(HttpContextBase context) {
+            var urlRouteData = RouteTable.Routes.GetRouteData(context);
+            if (urlRouteData == null) {
+                return false;
+            }
+            var controllerName = urlRouteData.Values["controller"].ToString();
+            var requestContext = new RequestContext(context, urlRouteData);
+            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
+            var controller = (ControllerBase)controllerFactory.CreateController(requestContext, controllerName);
+            var noMenuAttribute = Attribute.GetCustomAttribute(controller.GetType(), typeof(NoMenuController));
+            return noMenuAttribute != null;
         }
     }
 }

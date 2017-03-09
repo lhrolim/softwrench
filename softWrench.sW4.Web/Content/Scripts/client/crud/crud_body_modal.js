@@ -40,6 +40,13 @@
             crudContextHolderService.disposeModal();
         };
 
+        $scope.clickOutside = function() {
+            if ($scope.cancelOnClickOutside) {
+                crudContextHolderService.clearCrudContext(modalService.panelid);
+                $scope.cancel();
+            }
+        }
+
         $scope.cancel = function () {
             $scope.closeModal();
             if ($scope.cancelfn) {
@@ -99,6 +106,7 @@
             $scope.modaltitle = modaldata.title;
             $scope.cssclass = modaldata.cssclass;
             $scope.closeAfterSave = modaldata.closeAfterSave || true;
+            $scope.cancelOnClickOutside = modaldata.cancelOnClickOutside || false;
             //by default modals, should render as detail stereotype mode
             $scope.isDetail = schemaService.isDetail(schema, true);
             $scope.isList = schemaService.isList(schema);

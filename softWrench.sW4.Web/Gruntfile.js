@@ -107,6 +107,7 @@ module.exports = function (grunt) {
                     "angular/angular-bindonce.js": "angular-bindonce/bindonce.js",
                     "angular/angular-drag-and-drop-lists.js": "angular-drag-and-drop-lists/angular-drag-and-drop-lists.js",
                     "angular/sortable.js": "angular-ui-sortable/sortable.js",
+                    "angular/clickoutside.directive.js": "angular-click-outside/clickoutside.directive.js",
                     // devextreme
                     "devextreme/globalize.js": "globalize/lib/globalize.js",
                     "devextreme/dx.chartjs.js": "devextreme-web/js/dx.chartjs.js",
@@ -118,6 +119,9 @@ module.exports = function (grunt) {
                     "ace/mode-xml.js": "ace-builds/src/mode-xml.js",
                     "ace/mode-csharp.js": "ace-builds/src/mode-csharp.js",
                     "ace/ui-ace.js": "angular-ui-ace/ui-ace.js",
+                    // pdf
+                    "pdf/pdf.combined.js": "pdfjs-dist/build/pdf.combined.js",
+                    "pdf/angular-pdf.js": "angular-pdf/dist/angular-pdf.js",
                     // utils
                     "utils/a-moment.js": "moment/min/moment.min.js",
                     "utils/moment-locale-de.js": "moment/locale/de.js",
@@ -165,6 +169,7 @@ module.exports = function (grunt) {
                     "<%= app.vendor %>/scripts/devextreme/dx.chartjs.js",
                     "<%= app.vendor %>/scripts/devextreme/vectormap/usa.js",
                     "<%= app.vendor %>/scripts/tinymce/angular-ui-tinymce.js",
+                    "<%= app.vendor %>/scripts/pdf/**/*.js",
 
                     // ace
                     "<%= app.vendor %>/scripts/ace/ace.js",
