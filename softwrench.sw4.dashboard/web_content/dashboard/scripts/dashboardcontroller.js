@@ -20,8 +20,8 @@
     });
 
     app.controller("DashboardController", [
-        "$scope","$q", "$log", "$timeout", "modalService", "fieldService", "dashboardAuxService", "contextService", "alertService", "crudContextHolderService", "redirectService",
-    function ($scope,$q, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService, redirectService) {
+        "$scope","$q", "$log", "$timeout", "modalService", "fieldService", "dashboardAuxService", "contextService", "alertService", "crudContextHolderService", "redirectService", "fixHeaderService",
+    function ($scope, $q, $log, $timeout, modalService, fieldService, dashboardAuxService, contextService, alertService, crudContextHolderService, redirectService, fixHeaderService) {
 
         // #region Utils (state control)
         var selectedDashboardIds = [];
@@ -254,6 +254,7 @@
                         log.trace("lazy loading dashboard {0}".format(dashid));
                     });
                 });
+                fixHeaderService.callWindowResize();
             }, 0, false);
         });
 
