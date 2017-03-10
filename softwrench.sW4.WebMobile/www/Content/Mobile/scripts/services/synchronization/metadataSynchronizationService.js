@@ -2,8 +2,8 @@
     "use strict";
 
     mobileServices.factory("metadataSynchronizationService",
-        ["$http", "$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService", "securityService","searchIndexService",
-            function ($http, $q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService, securityService, searchIndexService) {
+        ["$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService", "securityService","searchIndexService",
+            function ( $q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService, securityService, searchIndexService) {
 
     var toConfigurationArray = function (configuration) {
         const configArray = Object.keys(configuration).map(k => ({ key: k, value: configuration[k] }));

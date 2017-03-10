@@ -30,12 +30,13 @@ module.exports = function (grunt) {
     /** reusable online & offline lib scripts (ours)  */
     var sharedScripts = [
         "www/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/statuscolor_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/applications/statuscolor_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_arrayutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/object_util.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/context_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/cycle.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/data/context_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/crud/tabs_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/crud/tabs_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/i18n_service.js",
@@ -43,8 +44,8 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/crud/field_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/validation/passwordvalidationservice.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/validation/validation_service.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/alert_service.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/format_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/layout/alert_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/data/format_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/event_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/rest_service.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/expression_service.js",
@@ -54,15 +55,17 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/services/crud/composition_commons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/storage/compressionservice.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/storage/localstorageservice.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/storage/dynamicScriptsCacheService.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/storage/schemaCacheService.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/data/datamapSanitize_service.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/notificationService.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/crud/notificationService.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/application/physicalinventory_service.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/services/commandcommons.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/services/crud/commandcommons.js",
         "www/Content/Shared/webcommons/scripts/softwrench/components/richtext.js",
         "www/Content/Shared/webcommons/scripts/softwrench/directive/floatconverter.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/util/log_enhacer.js",
-        "www/Content/Shared/webcommons/scripts/softwrench/util/clientawareserviceprovider.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/angular/log_enhacer.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/angular/lazy_service_provider.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/angular/clientawareserviceprovider.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"
     ];
 
@@ -185,7 +188,7 @@ module.exports = function (grunt) {
                     "polyfill.js": "babel-polyfill/browser-polyfill.js",
                     // angular
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
-                    "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.js",
+                    "angular-ui-router.js": "../node_modules/angular-ui-router/release/angular-ui-router.js",
                     "angular-animate.js": "angular-animate/angular-animate.js",
                     "angular.js": "angular/angular.js",
                     // ionic
@@ -285,7 +288,7 @@ module.exports = function (grunt) {
                     // angular
                     "angular.js": "angular/angular.min.js",
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",
-                    "angular-ui-router.js": "angular-ui-router/release/angular-ui-router.min.js",
+                    "angular-ui-router.js": "../node_modules/angular-ui-router/release/angular-ui-router.min.js",
                     "angular-animate.js": "angular-animate/angular-animate.min.js",
                     // ionic
                     "ionic.min.js": "ionic/release/js/ionic.min.js",
@@ -459,7 +462,7 @@ module.exports = function (grunt) {
         babel: {
             options: {
                 sourceMap: false,
-                presets: ["es2015"]
+                presets: ["latest"],
             },
             release: { // transpiles result of concat
                 files: {
@@ -588,7 +591,7 @@ module.exports = function (grunt) {
                 options: {
                     babelPreprocessor: {
                         options: {
-                            presets: ["es2015"],
+                            presets: ["latest"],
                             sourceMap: false
                         }
                     },
@@ -599,7 +602,7 @@ module.exports = function (grunt) {
                 options: {
                     babelPreprocessor: {
                         options: {
-                            presets: ["es2015"],
+                            presets: ["latest"],
                             sourceMap: false
                         }
                     },
@@ -614,7 +617,7 @@ module.exports = function (grunt) {
                 options: {
                     babelPreprocessor: {
                         options: {
-                            presets: ["es2015"],
+                            presets: ["latest"],
                             sourceMap: false
                         }
                     },

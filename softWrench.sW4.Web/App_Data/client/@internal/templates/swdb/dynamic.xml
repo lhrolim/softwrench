@@ -10,7 +10,7 @@
       <properties>
         <property key="application.security.systemadmin" value="true"/>
       </properties>
-      
+
       <schemas>
         <list stereotype="list" title="Dynamic Components Grid">
           <field attribute="id" hidden="true"/>
@@ -26,7 +26,7 @@
             <renderer type="checkbox"/>
           </field>
           <field attribute="status" label="Status"/>
-          
+
 
           <commandbars>
             <commandgroup position="gridtop">
@@ -60,7 +60,7 @@
           <properties>
             <property key="nextschema.schemaid" value="list"/>
           </properties>
-        
+
           <commandbars>
             <commandgroup position="detail.primary">
               <command id="savedeploy" icon="fa-arrow-circle-o-up " label="Save and Deploy" service="dynComponentService" cssclasses="large-button" method="saveAndReload" parameters="datamap" enableexpression="service:dynComponentService.showSaveAndDeploy" position="+save" tooltip="Saves the dynamic component and deploys it; Only possible if marked to be deployed, if it has the same version as the system and has changes that affects the state on container;"/>
@@ -83,6 +83,169 @@
             <renderer type="checkbox"/>
           </field>
           <field attribute="status" label="Status" readonly="true" helpicon="right" tooltip="The current status of the dynamic component on container: &lt;br/&gt;  - Will be Deployed: the component will be deployed on the next container reload;&lt;br/&gt; - Outdated: the component is on container but not it's most current version, will be updated on next container reload;&lt;br/&gt; - Up to Date: the component is on container and up to date;&lt;br/&gt; - Will be Deployed: the component is on container but will be undeployed on next reload;&lt;br/&gt; - Undeployed: the component is not on the container."/>
+          <field attribute="script" label="Script" requiredexpression="true" helpicon="right" tooltip="Tips for the script: &lt;br/&gt;  - The imports come first (including of the extended class or interface);&lt;br/&gt; - No namespace is needed only the class;&lt;br/&gt; - If the base class does not have a parameterless contructor a constructor with at least the same parameters has to be created;&lt;br/&gt; -The return of the script has to be the Type of the class created. ex.: return typeof(MyClass).">
+            <renderer type="code" params="codemode=csharp"/>
+          </field>
+          <field attribute="description" label="Description">
+            <renderer type="textarea" params="inputclass=dyn-com-description"/>
+          </field>
+          <field attribute="comment" label ="Comment" requiredexpression="true" showexpression="service:dynComponentService.showUsernameAndComment"/>
+          <field attribute="username" label ="Changed By" requiredexpression="true" showexpression="service:dynComponentService.showUsernameAndComment"/>
+
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="print"/>
+              <command id="savedeploy" icon="fa-arrow-circle-o-up " label="Save and Deploy" service="dynComponentService" cssclasses="large-button" method="saveAndReload" parameters="datamap" enableexpression="service:dynComponentService.showSaveAndDeploy" position="+save" tooltip="Saves the dynamic component and deploys it; Only possible if marked to be deployed, if it has the same version as the system and has changes that affects the state on container;"/>
+              <command id="saveundeploy" icon="fa-arrow-circle-o-down " label="Save and Undeploy" service="dynComponentService" cssclasses="large-button" method="saveAndReload" parameters="datamap" enableexpression="service:dynComponentService.showSaveAndUndeploy" position="+save" tooltip="Saves the dynamic component and undeploys it; Only possible if not marked to be deployed, or if it has not the same version as the system and has changes that affects the state on container;"/>
+              <command id="delete" icon="fa-trash" label="Delete" service="dynComponentService" cssclasses="large-button" method="deleteComponent" position="+cancel" tooltip="Also undeploy the dynamic component if necessary"/>
+            </commandgroup>
+          </commandbars>
+
+          <properties>
+            <property key="nextschema.schemaid" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="reloadcontainermodal" stereotype="detail" title="Reload Contaier">
+          <field attribute="comment" label ="Comment" requiredexpression="true"/>
+          <field attribute="username" label ="Changed By" requiredexpression="true"/>
+
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="reload" icon="fa-refresh" label="Confirm Reload Container" service="dynComponentService" primary="true" method="reloadContainerConfirm" parameters="datamap" position="-cancel"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="deletecomponentmodal" stereotype="detail" title="Delete Dynamic Component">
+          <field attribute="comment" label ="Comment" requiredexpression="true"/>
+          <field attribute="username" label ="Changed By" requiredexpression="true"/>
+
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="delete" icon="fa-trash" label="Delete" service="dynComponentService" primary="true" method="deleteComponentConfirm" parameters="datamap" position="-cancel"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+      </schemas>
+    </application>
+
+
+    <application entity="JavaScriptEntry" name="jsdynamic" title="Dynamic Component">
+      <properties>
+        <property key="application.security.systemadmin" value="true"/>
+      </properties>
+
+      <schemas>
+        <list stereotype="list" title="Dynamic Components Grid">
+          <field attribute="id" hidden="true"/>
+          <field attribute="name" label="Name"/>
+          <field attribute="target" label="Target" tooltip="Name of the target component to replace by the dynamic component."/>
+          <field attribute="lastupdate" label="Last Update">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;"/>
+          </field>
+          <field attribute="deploy" label="Active" tooltip="Whether the script is active or not">
+            <renderer type="checkbox"/>
+          </field>
+          <field attribute="platform" label="Platform"/>
+          <field attribute="offlinedevice" label="Device Filter"/>
+          <field attribute="appliestoversion" label="Version to Deploy" tooltip="Server side version for the script"/>
+          <field attribute="offlineversions" label="Offline Versions" tooltip="Client side version(s) for the script"/>
+
+          <commandbars>
+            <commandgroup position="gridtop">
+              <removecommand id="print"/>
+              <removecommand id="export"/>
+            </commandgroup>
+          </commandbars>
+        </list>
+
+        <schema id="detailnew" stereotype="detailnew" title="Javascript Component">
+          <field attribute="id" hidden="true"/>
+          <field attribute="isoncontainer" hidden="true"/>
+          <field attribute="isuptodate" hidden="true"/>
+          <field attribute="systemversion" hidden="true"/>
+<!--          <field attribute="appliestoversion" label="Version to Deploy" hidden="true" helpicon="right" tooltip="The dynamic component will only be deployed to the given version."/>-->
+
+          <section orientation="horizontal">
+            <field attribute="name" label="Name" requiredexpression="true" helpicon="right" tooltip="Just an alias to help identifying the script"/>
+            <field attribute="target" label="Target" requiredexpression="true" helpicon="right" tooltip="Name of the target angular javascript service to replace. If there´s no match it can also be registered as a new one"/>
+            <field attribute="deploy" label="Active" helpicon="right" tooltip="If Marked it will be activated right away and used for the specified devices">
+              <renderer type="checkbox"/>
+            </field>
+          </section>
+          
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Criteria" params="fieldset=true" />
+            <optionfield attribute="platform" label="Platform">
+              <option label="Both" value="Both"/>
+              <option label="Offline Only" value="Mobile"/>
+              <option label="Web Only" value="Web"/>
+            </optionfield>
+
+            <optionfield attribute="offlineDevice" label="OffLine Device" showexpression="@platform != null &amp;&amp; @platform.equalsAny('Both','Mobile')">
+              <option label="Any" value="All"/>
+              <option label="Android" value="Android"/>
+              <option label="IOS" value="Ios"/>
+            </optionfield>
+
+            <field attribute="offlineversions" requiredexpression="true"
+                   label="Offline Versions" showexpression=" @platform != null &amp;&amp; @platform.equalsAny('Both','Mobile')" helpicon="right" tooltip="Comma separated list of versions to apply this script"></field>
+
+          </section>
+          
+
+          <field attribute="script" label="Script" requiredexpression="true" helpicon="right" tooltip="">
+            <renderer type="code" params="codemode=javascript"/>
+          </field>
+
+          <field attribute="description" label="Description">
+            <renderer type="textarea" params="inputclass=dyn-com-description"/>
+          </field>
+
+          <field attribute="username" label ="Created By" requiredexpression="true"/>
+
+
+          <properties>
+            <property key="nextschema.schemaid" value="list"/>
+          </properties>
+
+        </schema>
+
+        <schema id="detail" stereotype="detail" title="Dynamic Component Detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="isoncontainer" hidden="true"/>
+          <field attribute="isuptodate" hidden="true"/>
+          <field attribute="systemversion" hidden="true"/>
+          <section orientation="horizontal">
+            <field attribute="name" label="Name" requiredexpression="true" helpicon="right" tooltip="Just an alias to help identifying the script"/>
+            <field attribute="target" label="Target" requiredexpression="true" helpicon="right" tooltip="Name of the target angular javascript service to replace. If there´s no match it can also be registered as a new one"/>
+            <field attribute="deploy" label="Active" helpicon="right" tooltip="If Marked it will be activated right away and used for the specified devices">
+              <renderer type="checkbox"/>
+            </field>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Criteria" params="fieldset=true" />
+            <field attribute="appliestoversion" label="Version to Deploy" readonly="true" helpicon="right" requiredexpression="true" tooltip="The dynamic component will only be deployed to the given version."/>
+            <optionfield attribute="platform" label="Platform">
+              <option label="Both" value="Both"/>
+              <option label="Offline Only" value="Mobile"/>
+              <option label="Web Only" value="Web"/>
+            </optionfield>
+
+            <optionfield attribute="offlineDevice" label="OffLine Device" showexpression="@platform != null &amp;&amp; @platform.equalsAny('Both','Mobile')">
+              <option label="Any" value="All"/>
+              <option label="Android" value="Android"/>
+              <option label="IOS" value="Ios"/>
+            </optionfield>
+
+            <field attribute="offlineversions" requiredexpression="true"
+                   label="Offline Versions" showexpression=" @platform != null &amp;&amp; @platform.equalsAny('Both','Mobile')" helpicon="right" tooltip="Comma separated list of versions to apply this script"></field>
+
+          </section>
           <field attribute="script" label="Script" requiredexpression="true" helpicon="right" tooltip="Tips for the script: &lt;br/&gt;  - The imports come first (including of the extended class or interface);&lt;br/&gt; - No namespace is needed only the class;&lt;br/&gt; - If the base class does not have a parameterless contructor a constructor with at least the same parameters has to be created;&lt;br/&gt; -The return of the script has to be the Type of the class created. ex.: return typeof(MyClass).">
             <renderer type="code" params="codemode=csharp"/>
           </field>

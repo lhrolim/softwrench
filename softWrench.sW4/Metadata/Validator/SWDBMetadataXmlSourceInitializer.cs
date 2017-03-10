@@ -6,6 +6,7 @@ using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using Castle.Core.Internal;
 using NHibernate.Mapping.Attributes;
+using NHibernate.Mapping.ByCode;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -113,19 +114,22 @@ namespace softWrench.sW4.Metadata.Validator {
             return new EntityAttribute(manyToOne.Column, idPropertyType, false, true, defaultInstance, null);
         }
 
-        private static bool IsNotAPrimitiveType(PropertyInfo memberInfo) {
+        private static bool IsNotAPrimitiveType(PropertyInfo memberInfo)
+        {
             return !memberInfo.GetMethod.ReturnType.IsPrimitive
-                   && memberInfo.PropertyType != typeof(string)
-                   && memberInfo.PropertyType != typeof(DateTime)
-                   && memberInfo.PropertyType != typeof(DateTime?)
-                   && memberInfo.PropertyType != typeof(Int32)
-                   && memberInfo.PropertyType != typeof(Int64)
-                   && memberInfo.PropertyType != typeof(int?)
-                   && memberInfo.PropertyType != typeof(long?)
-                   && memberInfo.PropertyType != typeof(int)
-                   && memberInfo.PropertyType != typeof(long)
-                   && memberInfo.PropertyType != typeof(byte[])
-                   && !memberInfo.PropertyType.IsEnum;
+                   && memberInfo.PropertyType != typeof (string)
+                   && memberInfo.PropertyType != typeof (DateTime)
+                   && memberInfo.PropertyType != typeof (DateTime?)
+                   && memberInfo.PropertyType != typeof (Int32)
+                   && memberInfo.PropertyType != typeof (Int64)
+                   && memberInfo.PropertyType != typeof (int?)
+                   && memberInfo.PropertyType != typeof (long?)
+                   && memberInfo.PropertyType != typeof (int)
+                   && memberInfo.PropertyType != typeof (long)
+                   && memberInfo.PropertyType != typeof (byte[])
+                   && !memberInfo.PropertyType.IsEnumOrNullableEnum();
+
+
         }
 
         private static IEnumerable<EntityAttribute> HandleEmbedabble(PropertyInfo memberInfo) {

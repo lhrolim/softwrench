@@ -4,7 +4,8 @@
     angular.module("sw_prelogin", ["webcommons_services", "ngSanitize", "angular-clipboard", "ui.tinymce"]);
 
     const app = window.app = angular.module("sw_layout", [
-        "sw_prelogin", 
+        "sw_rootcommons",
+        "sw_prelogin",
         "pasvaz.bindonce",
         "angularTreeview",
         "ngSanitize",
@@ -197,31 +198,8 @@
             const log = $log.get("LayoutController#init", ["init", "navigation", "route"]);
             log.debug("init Layout controller");
 
-            const configsJSON = $(hddn_configs)[0].value;
-            const userJSON = $(hiddn_user)[0].value;
-            if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON) || contextService.get("sw:changepasword")) {
-                contextService.deleteFromContext("sw:changepasword");
-                //this means user tried to hit back button after logout
-                logoutService.logout();
-                return;
-            }
-            const config = JSON.parse(configsJSON);
-            const user = JSON.parse(userJSON);
-            contextService.loadUserContext(user);
-            contextService.loadConfigs(config);
-
-            
-            $rootScope.defaultEmail = config.defaultEmail;
-            $rootScope.clientName = config.clientName;
-            $rootScope.environment = config.environment;
-            $rootScope.i18NRequired = config.i18NRequired;
             $rootScope.deviceType = DeviceDetect.catagory.toLowerCase();
             $rootScope.browserType = BrowserDetect.browser.toLowerCase();
-
-
-
-            $scope.mainlogo = config.logo;
-            $scope.myprofileenabled = config.myProfileEnabled;
 
             const popupMode = GetPopUpMode();
             $scope.popupmode = popupMode;

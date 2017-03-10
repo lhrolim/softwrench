@@ -1,6 +1,6 @@
 ﻿using cts.commons.simpleinjector;
 
-namespace softWrench.sW4.Dynamic {
+namespace softWrench.sW4.Dynamic.Example {
     public class ScriptExample : ISingletonComponent {
         protected ScriptExampleCalculator Calculator;
 

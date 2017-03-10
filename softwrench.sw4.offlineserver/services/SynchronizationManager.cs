@@ -321,7 +321,9 @@ namespace softwrench.sw4.offlineserver.services {
             var searchDto = string.IsNullOrWhiteSpace(rowstamps.Lowerlimit) ? new SearchRequestDto() { SearchSort = "rowstamp desc" } : new SearchRequestDto();
             searchDto.Key = new ApplicationMetadataSchemaKey() {
                 ApplicationName = appMetadata.Name
+                
             };
+
 
             if (itemsToDownload != null) {
                 //ensure only the specified items are downloaded

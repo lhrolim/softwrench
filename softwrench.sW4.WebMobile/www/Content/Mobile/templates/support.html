@@ -10,6 +10,27 @@
                 Send Log Files
             </button>
         </div>
+
+<!--        <div class="responsive-container lg">-->
+<!--            <button class="button button-positive button-block icon-left ion-alert"-->
+<!--                    ng-click="reset()">-->
+<!--                Reset Configurations-->
+<!--            </button>-->
+<!--        </div>-->
+
+        <div class="responsive-container lg">
+
+            <label class="item item-input" ng-show="!isFieldHidden(field)">
+                <span class="input-label">Log Level</span>
+                <option-field header-text="Log Level"
+                              allow-empty="false"
+                              value="vm.loglevel"
+                              text="Choose"
+                              items="[{value:'TRACE',label:'Trace'},{value:'DEBUG',label:'Debug'},{value:'INFO',label:'Info'}, {value:'WARN',label:'Warn'}]"
+                              callback2="changeloglevel(callback)"/>
+            </label>
+        </div>
+
     </ion-content>
 </ion-view>
 

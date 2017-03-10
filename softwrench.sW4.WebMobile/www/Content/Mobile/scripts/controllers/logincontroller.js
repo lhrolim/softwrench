@@ -1,8 +1,8 @@
 ﻿(function(app) {
     "use strict";
 
-    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "loadingService", "settingsService",
-        function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, loadingService, settingsService) {
+    app.controller('LoginController', ["$scope", "swAlertPopup", "routeService", "securityService", "$timeout", "$stateParams", "loadingService", "settingsService", "dynamicScriptsCacheService",
+    function ($scope, swAlertPopup, routeService, securityService, $timeout, $stateParams, loadingService, settingsService, dynamicScriptsCacheService) {
 
             $scope.data = {};
 
@@ -36,6 +36,7 @@
                         routeService.go('main.home');
                         //enforcing SWOFF-93
                         $scope.data = {};
+                        dynamicScriptsCacheService.clearEntries();
                     })
                     .catch(function (error) {
                         securityService.logout();

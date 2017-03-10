@@ -1,7 +1,7 @@
 (function (modules) {
     "use strict";
 
-modules.webcommons.service('restService', ["$http", "$log", "contextService", function ($http, $log, contextService) {
+modules.rootCommons.service('restService', ["$http", "$log", "contextService", function ($http, $log, contextService) {
 
     return {
 

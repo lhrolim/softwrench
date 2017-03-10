@@ -51,7 +51,7 @@
             log.info("Initing Persistence...");
             // initializing database
             persistence.store.cordovasql.config(persistence, "offlineswdb", "1.0", "SWDB OffLine instance", 5 * 1024 * 1024, 0);
-            persistence.debug = sessionStorage["logsql"] === "true" || sessionStorage["loglevel"] === "debug";
+            persistence.debug = sessionStorage["logsql"] === "true" || sessionStorage["loglevel"] === "debug" || sessionStorage["log_persistence"] === "debug";
             // adding some functionalities to persistence
             persistence.runSql = runSql;
             

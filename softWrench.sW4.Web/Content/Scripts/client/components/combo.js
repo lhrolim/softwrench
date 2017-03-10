@@ -31,6 +31,7 @@
             }
 
         }
+
     }
 
     comboComponent.$inject = ['$rootScope', '$timeout', 'i18NService'];

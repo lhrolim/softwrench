@@ -7,6 +7,7 @@ using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.Email;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -112,8 +113,7 @@ namespace softWrench.sW4.Web.Email {
         }
 
         protected virtual string GetSubject(string sufix) {
-            return string.Format("[softWrench {0} - {1}] {2}", _appConfig.GetClientKey(),
-                ApplicationConfiguration.Profile, sufix);
+            return $"[softWrench {_appConfig.GetClientKey()} - {ApplicationConfiguration.Profile}] {sufix}";
         }
 
         protected virtual Hash BaseDynComponentHash(BaseDynComponentEmailDto email) {

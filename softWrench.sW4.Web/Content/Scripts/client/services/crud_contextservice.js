@@ -2,119 +2,132 @@
 (function (angular) {
     "use strict";
 
-    function crudContextHolderService($rootScope, $log, $injector, $timeout, contextService, schemaCacheService) {
+    class crudContextHolderService{
 
-        //#region private variables
+        constructor($rootScope, $log, $injector,contextService, schemaCacheService) {
+            this.$rootScope = $rootScope;
+            this.$log = $log;
+            this.$injector = $injector;
+            this.contextService = contextService;
+            this.schemaCacheService = schemaCacheService;
 
+            this._originalContext = {
+                currentSchema: null,
+                rootDataMap: null,
+                originalDatamap: null,
+                isList: null,
+                isDetail: null,
+                crudForm:null,
 
-
-        //TODO: continue implementing this methods, removing crud_context object references from the contextService
-        // ReSharper disable once InconsistentNaming
-        var _originalContext = {
-            currentSchema: null,
-            rootDataMap: null,
-            originalDatamap: null,
-            isList: null,
-            isDetail: null,
-            crudForm:null,
-
-            currentApplicationName: null,
-            //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
-            auxDataMap: null,
-            /*{
-            #global:{
-             eagerassociation1_ :[],
-             eagerassociation2_ :[],
-            },
-            
-             composition1_ : {
-                    #global:{
-                    eagerassociation1_:[],
-                    eagerassociation2_:[],
+                currentApplicationName: null,
+                //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
+                auxDataMap: null,
+                /*{
+                #global:{
+                 eagerassociation1_ :[],
+                 eagerassociation2_ :[],
+                },
+                
+                 composition1_ : {
+                        #global:{
+                        eagerassociation1_:[],
+                        eagerassociation2_:[],
+                        }
+                        'itemid1':{
+                            eagerassociation3_:[],
+                            eagerassociation4_:[],
+                        },
+                        'itemid2':{
+                            eagerassociation3_:[],
+                            eagerassociation4_:[],
+                        }
                     }
-                    'itemid1':{
-                        eagerassociation3_:[],
-                        eagerassociation4_:[],
-                    },
-                    'itemid2':{
-                        eagerassociation3_:[],
-                        eagerassociation4_:[],
-                    }
+                }*/
+
+                _eagerassociationOptions: {
+                    "#global": {}
+                },
+
+                ///
+                ///  asset_:{
+                //      '1': {code:'1',description:'100'},  
+                //      '2': {code:'2',description:'2'},  
+                //   },
+                //
+                //  owner_:{
+                //      '1': {code:'1',description:'100'},  
+                //      '2': {code:'2',description:'2'},  
+                //   },
+                ///
+                ///
+                ///
+                ///
+                ///
+                _lazyAssociationOptions: {},
+                /**
+                 * asset_
+                 * 
+                 */
+                _blockedAssociations: {},
+
+                compositionLoadEventQueue: {},
+
+                //TODO: below is yet to be implemented/refactored
+                detail_previous: { id: "0" },
+                detail_next: { id: "0" },
+                list_elements: [],
+                previousData: null,
+                paginationData: null,
+                isDirty: false,
+                detailDataResolved: false,
+                needsServerRefresh: false,
+                //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
+                affectedProfiles: [],
+                //current profile selected, if multiple are available, considering whereclauses
+                currentSelectedProfile: null,
+                tabRecordCount: {},
+                compositionLoadComplete: false,
+                gridSelectionModel: {
+                    selectionBuffer: {}, // buffer of all selected row
+                    selectionBufferIdCollumn: null, // preset of columns name to be used as buffer key
+                    onPageSelectedCount: 0, // number of selected rows on current page
+                    pageSize: 0, // number of rows of page (no same of pagination on show only selected)
+                    selectAllValue: false, // whether or not select all checkbox is selected
+                    showOnlySelected: false,
+                    selectionMode: false
+                },
+                commandsModel: {
+                    toggleCommands: {}
+                },
+                // pagination data before the toggle selected
+                originalPaginationData: null,
+                gridModel: {
+                    //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
+                    fixedWhereClause: null,
+                    selectedFilter: null
+                },
+                customSaveFn: null,
+                sortModel: {
+                    sortColumns: [],
+                    multiSortVisible: false
                 }
-            }*/
+            };
 
-            _eagerassociationOptions: {
-                "#global": {}
-            },
+            //#region private variables
 
-            ///
-            ///  asset_:{
-            //      '1': {code:'1',description:'100'},  
-            //      '2': {code:'2',description:'2'},  
-            //   },
-            //
-            //  owner_:{
-            //      '1': {code:'1',description:'100'},  
-            //      '2': {code:'2',description:'2'},  
-            //   },
-            ///
-            ///
-            ///
-            ///
-            ///
-            _lazyAssociationOptions: {},
-            /**
-             * asset_
-             * 
-             */
-            _blockedAssociations: {},
 
-            compositionLoadEventQueue: {},
 
-            //TODO: below is yet to be implemented/refactored
-            detail_previous: { id: "0" },
-            detail_next: { id: "0" },
-            list_elements: [],
-            previousData: null,
-            paginationData: null,
-            isDirty: false,
-            detailDataResolved: false,
-            needsServerRefresh: false,
-            //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
-            affectedProfiles: [],
-            //current profile selected, if multiple are available, considering whereclauses
-            currentSelectedProfile: null,
-            tabRecordCount: {},
-            compositionLoadComplete: false,
-            gridSelectionModel: {
-                selectionBuffer: {}, // buffer of all selected row
-                selectionBufferIdCollumn: null, // preset of columns name to be used as buffer key
-                onPageSelectedCount: 0, // number of selected rows on current page
-                pageSize: 0, // number of rows of page (no same of pagination on show only selected)
-                selectAllValue: false, // whether or not select all checkbox is selected
-                showOnlySelected: false,
-                selectionMode: false
-            },
-            commandsModel: {
-                toggleCommands: {}
-            },
-            // pagination data before the toggle selected
-            originalPaginationData: null,
-            gridModel: {
-                //this is used to set a transient whereclause to the grid that should be appended on all subsequent server calls
-                fixedWhereClause: null,
-                selectedFilter: null
-            },
-            customSaveFn: null,
-            sortModel: {
-                sortColumns: [],
-                multiSortVisible: false
-            }
-        };
+            //TODO: continue implementing this methods, removing crud_context object references from the contextService
+            // ReSharper disable once InconsistentNaming
+     
 
-        var _crudContext = angular.copy(_originalContext);
+            this._crudContext = angular.copy(this._originalContext);
 
-        var _crudContexts = {};
+            this._crudContexts = {};
+
+        }
+
+        
 
         /**
          * Returns (or create an returns) a context for the given paneilId.
@@ -124,14 +137,14 @@
          * @param {} panelid 
          * @returns {} 
          */
-        var getContext = function (panelid) {
+         getContext (panelid) {
             if (!panelid) {
-                return _crudContext;
+                return this._crudContext;
             }
-            var context = _crudContexts[panelid];
+            var context = this._crudContexts[panelid];
             if (!context) {
-                _crudContexts[panelid] = angular.copy(_originalContext);
-                context = _crudContexts[panelid];
+                this._crudContexts[panelid] = angular.copy(this._originalContext);
+                context = this._crudContexts[panelid];
             }
             return context;
         }
@@ -142,133 +155,132 @@
 
         //#region simple getters/setters
 
-        function getActiveTab() {
-            return contextService.getActiveTab();
+        getActiveTab() {
+            return this.contextService.getActiveTab();
         }
 
-        function setActiveTab(tabId) {
-            contextService.setActiveTab(tabId);
+        setActiveTab(tabId) {
+            this.contextService.setActiveTab(tabId);
         }
 
-        function currentApplicationName(panelid) {
-            return getContext(panelid).currentApplicationName;
+        currentApplicationName(panelid) {
+            return this.getContext(panelid).currentApplicationName;
         }
 
-        function crudForm(panelid, crudForm) {
-            const context = getContext(panelid);
+        crudForm(panelid, crudForm) {
+            const context = this.getContext(panelid);
             if (!!crudForm) {
                 context.crudForm = crudForm;
             }
             return context.crudForm || {};
-
         }
 
-        function currentSchema(panelid, schema) {
-            const context = getContext(panelid);
+        currentSchema(panelid, schema) {
+            const context = this.getContext(panelid);
             if (schema) {
                 context.currentSchema = schema;
             }
             return context.currentSchema;
         }
 
-        function rootDataMap(panelid, datamap) {
-            const context = getContext(panelid);
+        rootDataMap(panelid, datamap) {
+            const context = this.getContext(panelid);
             if (datamap) {
                 context.rootDataMap = datamap;
             }
             return context.rootDataMap;
         }
 
-        function originalDatamap(panelid, datamap) {
-            const context = getContext(panelid);
+        originalDatamap(panelid, datamap) {
+            const context = this.getContext(panelid);
             if (datamap) {
                 context.originalDatamap = angular.copy(datamap);
             }
             return context.originalDatamap;
         }
 
-        function getAffectedProfiles(panelid) {
-            return getContext(panelid).affectedProfiles || [];
+        getAffectedProfiles(panelid) {
+            return this.getContext(panelid).affectedProfiles || [];
         }
 
-        function getCurrentSelectedProfile(panelid) {
-            return getContext(panelid).currentSelectedProfile;
+        getCurrentSelectedProfile(panelid) {
+            return this.getContext(panelid).currentSelectedProfile;
         }
 
-        function setCurrentSelectedProfile(currentProfile, panelid) {
-            return getContext(panelid).currentSelectedProfile = currentProfile;
+        setCurrentSelectedProfile(currentProfile, panelid) {
+            return this.getContext(panelid).currentSelectedProfile = currentProfile;
         }
 
-        function setDirty(panelid) {
-            getContext(panelid).isDirty = true;
-        };
-
-        function getDirty(panelid) {
-            return getContext(panelid).isDirty;
-        };
-
-        function clearDirty(panelid) {
-            getContext(panelid).isDirty = false;
+        setDirty(panelid) {
+           this.getContext(panelid).isDirty = true;
         }
 
-        function needsServerRefresh(panelid) {
-            return getContext(panelid).needsServerRefresh;
+        getDirty(panelid) {
+            return this.getContext(panelid).isDirty;
         }
 
-        const getTabCountQualifier = function (tab) {
+        clearDirty(panelid) {
+            this.getContext(panelid).isDirty = false;
+        }
+
+        needsServerRefresh(panelid) {
+            return this.getContext(panelid).needsServerRefresh;
+        }
+
+        getTabCountQualifier (tab) {
             if (!tab.countRelationship) {
                 return tab.tabId;
             }
             return tab.countRelationship.endsWith("_") ? tab.countRelationship : tab.countRelationship + "_";
         }
 
-        function getTabRecordCount(tab, panelid) {
-            const context = getContext(panelid);
-            const qualifier = getTabCountQualifier(tab);
+        getTabRecordCount(tab, panelid) {
+            const context = this.getContext(panelid);
+            const qualifier = this.getTabCountQualifier(tab);
             if (context.tabRecordCount && context.tabRecordCount[qualifier]) {
                 return context.tabRecordCount[qualifier];
             }
             return 0;
         }
 
-        function shouldShowRecordCount(tab, panelid) {
-            const context = getContext(panelid);
-            const qualifier = getTabCountQualifier(tab);
+        shouldShowRecordCount(tab, panelid) {
+            const context = this.getContext(panelid);
+            const qualifier = this.getTabCountQualifier(tab);
             return context.tabRecordCount && context.tabRecordCount[qualifier];
         }
 
-        function setTabRecordCount(tabId, panelId, count) {
-            const context = getContext(panelId);
+        setTabRecordCount(tabId, panelId, count) {
+            const context = this.getContext(panelId);
             if (context.tabRecordCount) {
                 context.tabRecordCount[tabId] = count;
             }
         }
 
-        function setDetailDataResolved(panelid) {
-            $log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("marking details as resolved");
-            getContext(panelid).detailDataResolved = true;
+        setDetailDataResolved(panelid) {
+            this.$log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("marking details as resolved");
+            this.getContext(panelid).detailDataResolved = true;
         }
 
 
-        function clearDetailDataResolved(panelid, relationshipData) {
-            $log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("cleaning detailresolved flag");
-            getContext(panelid).detailDataResolved = false;
+        clearDetailDataResolved(panelid, relationshipData) {
+            this.$log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("cleaning detailresolved flag");
+            this.getContext(panelid).detailDataResolved = false;
         }
 
-        function getDetailDataResolved(panelid) {
-            const context = getContext(panelid);
+        getDetailDataResolved(panelid) {
+            const context = this.getContext(panelid);
             return context.detailDataResolved && context.associationsResolved && context.compositionLoadComplete;
         }
 
-        function getSortModel(panelid) {
-            return getContext(panelid).sortModel;
+        getSortModel(panelid) {
+            return this.getContext(panelid).sortModel;
         }
         //#endregion
 
         //#region hooks
-        function updateCrudContext(schema, rootDataMap, panelid) {
-            const log = $log.get("crudContextService#updateCrudContext", ["route"]);
-            const context = getContext(panelid);
+        updateCrudContext(schema, rootDataMap, panelid) {
+            const log = this.$log.get("crudContextService#updateCrudContext", ["route"]);
+            const context = this.getContext(panelid);
             schema.properties = schema.properties || {};
             context.currentSchema = schema;
             context.rootDataMap = rootDataMap;
@@ -276,78 +288,80 @@
             context.currentApplicationName = schema.applicationName;
             context.gridSelectionModel.selectionMode = "true" === schema.properties["list.selectionmodebydefault"];
             context.gridSelectionModel.selectionBufferIdCollumn = context.gridSelectionModel.selectionBufferIdCollumn || schema.idFieldName;
-            schemaCacheService.addSchemaToCache(schema);
+            this.schemaCacheService.addSchemaToCache(schema);
             log.debug("crudcontext updated");
         }
 
     
-        function applicationChanged(schema, rootDataMap, panelid) {
+        applicationChanged(schema, rootDataMap, panelid) {
             this.clearCrudContext(panelid);
             this.updateCrudContext(schema, rootDataMap, panelid);
-            $rootScope.$broadcast(JavascriptEventConstants.AppChanged, schema, rootDataMap, panelid);
+            this.$rootScope.$broadcast(JavascriptEventConstants.AppChanged, schema, rootDataMap, panelid);
         }
 
-        function clearCrudContext(panelid) {
+        clearCrudContext(panelid) {
             if (!panelid) {
-                _crudContext = angular.copy(_originalContext);
-                return _crudContext;
+                this._crudContext = angular.copy(this._originalContext);
+                return this._crudContext;
             }
-            _crudContexts[panelid] = angular.copy(_originalContext);
-            return _crudContext[panelid];
+            this._crudContexts[panelid] = angular.copy(this._originalContext);
+            return this._crudContext[panelid];
         }
 
-        function afterSave(panelid,datamap) {
+        afterSave(panelid,datamap) {
             this.clearDirty(panelid);
-            getContext(panelid).needsServerRefresh = true;
+            this.getContext(panelid).needsServerRefresh = true;
             this.originalDatamap(panelid, datamap);
-            $rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
+            this.$rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
         }
 
-        function detailLoaded(panelid) {
+        detailLoaded(panelid) {
             this.clearDirty(panelid);
             this.disposeDetail(panelid, false);
-            getContext(panelid).needsServerRefresh = false;
-            $log.get("crudContextHolderService#detailLoaded", ["navigation", "detail"]).debug("detail loaded");
-            $rootScope.$broadcast(JavascriptEventConstants.DetailLoaded);
+            this.getContext(panelid).needsServerRefresh = false;
+            this.$log.get("crudContextHolderService#detailLoaded", ["navigation", "detail"]).debug("detail loaded");
+            this.$rootScope.$broadcast(JavascriptEventConstants.DetailLoaded);
         }
 
-        function gridLoaded(applicationListResult, panelid) {
+        gridLoaded(applicationListResult, panelid) {
             this.disposeDetail(panelid, true);
             this.setActiveTab(null, panelid);
-            const context = getContext(panelid);
+            const context = this.getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
             //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
-            contextService.insertIntoContext("grid_refreshdata", { data: applicationListResult, panelid }, true);
+            this.contextService.insertIntoContext("grid_refreshdata", { data: applicationListResult, panelid }, true);
         }
 
-        function disposeDetail(panelid, clearTab) {
-            const context = getContext(panelid);
-            clearDetailDataResolved(panelid);
+        disposeDetail(panelid, clearTab) {
+            const context = this.getContext(panelid);
+            this.clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
-            _crudContext._lazyAssociationOptions = {};
+            this._crudContext._lazyAssociationOptions = {};
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
             if (!!clearTab) {
-                contextService.setActiveTab(null);
+                this.contextService.setActiveTab(null);
             }
             context.compositionLoadEventQueue = {};
         }
 
-        function compositionsLoaded(result, panelid) {
-            $log.get("crudContextService#compositionsLoaded", ["dirty", "detail", "composition"]).debug("marking compositions as resolved");
-            const context = getContext(panelid);
+        compositionsLoaded(result, panelid) {
+            this.$log.get("crudContextService#compositionsLoaded", ["dirty", "detail", "composition"]).debug("marking compositions as resolved");
+            const context = this.getContext(panelid);
             for (let relationship in result) {
-                const tab = result[relationship];
-                context.tabRecordCount = context.tabRecordCount || {};
-                context.tabRecordCount[relationship] = tab.paginationData.totalCount;
+                if (result.hasOwnProperty(relationship)) {
+                    const tab = result[relationship];
+                    context.tabRecordCount = context.tabRecordCount || {};
+                    context.tabRecordCount[relationship] = tab.paginationData.totalCount;
+                }
             }
             context.compositionLoadComplete = true;
         }
 
-        function clearCompositionsLoaded(panelid) {
-            const context = getContext(panelid);
+        clearCompositionsLoaded(panelid) {
+            const context = this.getContext(panelid);
             context.compositionLoadComplete = false;
         }
 
@@ -365,8 +379,8 @@
          * @param {} panelid 
          * @returns {} 
          */
-        function updateLazyAssociationOption(associationKey, options, notIndexed, panelid) {
-            const log = $log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
+        updateLazyAssociationOption(associationKey, options, notIndexed, panelid) {
+            const log = this.$log.get("crudcontextHolderService#updateLazyAssociationOption", ["association"]);
             if (!!notIndexed && options != null) {
                 const objIdxKey = options.value.toLowerCase();
                 const idxedObject = {};
@@ -377,17 +391,17 @@
             if (options) {
                 length = options.length ? options.length : 1;
             }
-            const lazyAssociationOptions = _crudContext._lazyAssociationOptions[associationKey];
+            const lazyAssociationOptions = this._crudContext._lazyAssociationOptions[associationKey];
             if (lazyAssociationOptions == null) {
                 log.debug("creating lazy option(s) to association {0}. size: {1}".format(associationKey, length));
-                _crudContext._lazyAssociationOptions[associationKey] = options;
+                this._crudContext._lazyAssociationOptions[associationKey] = options;
             } else {
                 log.debug("appending new option(s) to association {0}. size: {1} ".format(associationKey, length));
-                _crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
+                this._crudContext._lazyAssociationOptions[associationKey] = angular.extend(lazyAssociationOptions, options);
             }
             //to avoid circular dependency, cannot inject it
-            const fieldService = $injector.get("fieldService");
-            const displayables = fieldService.getDisplayablesByAssociationKey(_crudContext.currentSchema, associationKey);
+            const fieldService = this.$injector.get("fieldService");
+            const displayables = fieldService.getDisplayablesByAssociationKey(this._crudContext.currentSchema, associationKey);
             if (displayables && displayables.length === 1 && options) {
                 //when we have a reverse relationship, let´s add it to the parentdatamap, to make "life" easier for the outer components, such as the angulartypeahead, 
                 //and/or expressions
@@ -395,25 +409,25 @@
                 const key = Object.keys(options)[0];
                 if (displayable.reverse && key) {
                     //Object.keys(options)[0] --> this would be the key of the association
-                    _crudContext.rootDataMap[displayable.target] = key.toLowerCase();
+                    this._crudContext.rootDataMap[displayable.target] = key.toLowerCase();
                 }
             }
 
 
         }
 
-        function blockOrUnblockAssociations(associationKey, blocking) {
+        blockOrUnblockAssociations(associationKey, blocking) {
             const panelId = this.isShowingModal() ? "#modal" : null;
-            getContext(panelId)["_blockedAssociations"][associationKey] = blocking;
+            this.getContext(panelId)["_blockedAssociations"][associationKey] = blocking;
         }
 
-        function isAssociationBlocked(associationKey) {
+        isAssociationBlocked(associationKey) {
             const panelId = this.isShowingModal() ? "#modal" : null;
-            return getContext(panelId)["_blockedAssociations"][associationKey];
+            return this.getContext(panelId)["_blockedAssociations"][associationKey];
         }
 
-        function fetchLazyAssociationOption(associationKey, key, panelid) {
-            const associationOptions = _crudContext._lazyAssociationOptions[associationKey];
+        fetchLazyAssociationOption(associationKey, key, panelid) {
+            const associationOptions = this._crudContext._lazyAssociationOptions[associationKey];
             if (associationOptions == null) {
                 return null;
             }
@@ -421,7 +435,7 @@
             return associationOptions[keyToUse];
         }
 
-        function setDefaultValue(context,path, dmValue) {
+        setDefaultValue(context,path, dmValue) {
             //temporarily setting a value 
             const resultOptions = [];
             //temporarily setting a value 
@@ -438,8 +452,8 @@
          * @param {} dmValue the current value on the datamap, needed in order to instantiate an array with that value upfront preventing bugs on the select component (SWWEB-2607)
          * @returns an Array object with the eager options
          */
-        function fetchEagerAssociationOptions(associationKey, contextData, panelid, dmValue) {
-            const context = getContext(panelid);
+        fetchEagerAssociationOptions(associationKey, contextData, panelid, dmValue) {
+            const context = this.getContext(panelid);
             //if (context.showingModal) {
             //    contextData = { schemaId: "#modal" };
             //}
@@ -448,7 +462,7 @@
             if (contextData == null) {
                 resultOptions = context._eagerassociationOptions["#global"][associationKey];
                 if (dmValue && !resultOptions) {
-                    setDefaultValue(context,`#global.${associationKey}`, dmValue);
+                    this.setDefaultValue(context,`#global.${associationKey}`, dmValue);
                 }
                 return resultOptions;
             }
@@ -459,14 +473,14 @@
             context._eagerassociationOptions[schemaId][entryId] = context._eagerassociationOptions[schemaId][entryId] || {};
             resultOptions = context._eagerassociationOptions[schemaId][entryId][associationKey];
             if (dmValue && !resultOptions) {
-                setDefaultValue(context, `${schemaId}.${entryId}.${associationKey}`, dmValue);
+                this.setDefaultValue(context, `${schemaId}.${entryId}.${associationKey}`, dmValue);
             }
 
             return resultOptions;
         }
 
-        function fetchEagerAssociationOption(associationKey, itemValue) {
-            const options = fetchEagerAssociationOptions(associationKey);
+        fetchEagerAssociationOption(associationKey, itemValue) {
+            const options = this.fetchEagerAssociationOptions(associationKey);
             // normalize value to string
             var value = angular.isUndefined(itemValue) || itemValue === null ? itemValue : String(itemValue);
             return !options
@@ -477,21 +491,21 @@
         }
 
 
-        function updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
+        updateEagerAssociationOptions(associationKey, options, contextData, panelid) {
             if (options == null) {
                 //case for dependant associations
                 return;
             }
-            const context = getContext(panelid);
+            const context = this.getContext(panelid);
             if (context.showingModal) {
                 contextData = contextData || {};
                 contextData.schemaId = "#modal";
             }
-            const log = $log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
+            const log = this.$log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
             if (contextData == null) {
                 log.info("update eager global list for {0}. Size: {1}".format(associationKey, options.length));
                 context._eagerassociationOptions["#global"][associationKey] = options;
-                $rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData);
+                this.$rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData);
                 return;
             }
             const schemaId = contextData.schemaId;
@@ -504,20 +518,20 @@
             log.info("update eager list for {0}. Size: {1}".format(associationKey, options.length));
 
 
-            $rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData, panelid);
+            this.$rootScope.$broadcast(JavascriptEventConstants.Association_EagerOptionUpdated, associationKey, options, contextData, panelid);
 
 
         }
 
-        function markAssociationsResolved(panelid) {
-            $log.get("crudContextService#markAssociationsResolved", ["dirty", "detail", "association"]).debug("marking associations as resolved");
-            getContext(panelid).associationsResolved = true;
-            $rootScope.$broadcast(JavascriptEventConstants.AssociationResolved, panelid);
-            contextService.insertIntoContext("associationsresolved", true, true);
+        markAssociationsResolved(panelid) {
+            this.$log.get("crudContextService#markAssociationsResolved", ["dirty", "detail", "association"]).debug("marking associations as resolved");
+            this.getContext(panelid).associationsResolved = true;
+            this.$rootScope.$broadcast(JavascriptEventConstants.AssociationResolved, panelid);
+            this.contextService.insertIntoContext("associationsresolved", true, true);
         }
 
-        function associationsResolved(panelid) {
-            return getContext(panelid).associationsResolved;
+        associationsResolved(panelid) {
+            return this.getContext(panelid).associationsResolved;
         }
 
 
@@ -525,37 +539,37 @@
 
         //#region modal
 
-        function disposeModal() {
-            _crudContext.showingModal = false;
-            _crudContext._eagerassociationOptions["#modal"] = { "#global": {} };
-            clearCrudContext("#modal");
-        };
-
-        function modalLoaded(datamap, schema) {
-            _crudContext.showingModal = true;
-            rootDataMap("#modal", datamap);
-            currentSchema("#modal", schema);
+        disposeModal() {
+            this._crudContext.showingModal = false;
+            this._crudContext._eagerassociationOptions["#modal"] = { "#global": {} };
+            this.clearCrudContext("#modal");
         }
 
-        function isShowingModal() {
-            return _crudContext.showingModal;
+        modalLoaded(datamap, schema) {
+            this._crudContext.showingModal = true;
+            this.rootDataMap("#modal", datamap);
+            this.currentSchema("#modal", schema);
         }
 
-        function registerSaveFn(saveFn) {
-            getContext("#modal").customSaveFn = saveFn;
-        };
+        isShowingModal() {
+            return this._crudContext.showingModal;
+        }
 
-        function getSaveFn() {
-            return getContext("#modal").customSaveFn;
-        };
+        registerSaveFn(saveFn) {
+            this.getContext("#modal").customSaveFn = saveFn;
+        }
 
-        function registerPrimaryCommand(command) {
-            getContext("#modal").primaryCommand = command;
-        };
+         getSaveFn() {
+             return this.getContext("#modal").customSaveFn;
+        }
 
-        function getPrimaryCommand() {
-            return getContext("#modal").primaryCommand;
-        };
+         registerPrimaryCommand(command) {
+             this.getContext("#modal").primaryCommand = command;
+        }
+
+        getPrimaryCommand() {
+            return this.getContext("#modal").primaryCommand;
+        }
 
 
         //#endregion
@@ -564,64 +578,64 @@
 
 
 
-        function addSelectionToBuffer(rowId, row, panelid) {
-            getContext(panelid).gridSelectionModel.selectionBuffer[rowId] = row;
+        addSelectionToBuffer(rowId, row, panelid) {
+            this.getContext(panelid).gridSelectionModel.selectionBuffer[rowId] = row;
         }
 
-        function removeSelectionFromBuffer(rowId, panelid) {
-            delete getContext(panelid).gridSelectionModel.selectionBuffer[rowId];
+        removeSelectionFromBuffer(rowId, panelid) {
+            delete this.getContext(panelid).gridSelectionModel.selectionBuffer[rowId];
         }
 
-        function clearSelectionBuffer(panelid) {
-            getContext(panelid).gridSelectionModel.selectionBuffer = {};
+        clearSelectionBuffer(panelid) {
+            this.getContext(panelid).gridSelectionModel.selectionBuffer = {};
         }
 
-        function toggleShowOnlySelected(panelid) {
-            const context = getContext(panelid);
+        toggleShowOnlySelected(panelid) {
+            const context = this.getContext(panelid);
             context.gridSelectionModel.showOnlySelected = !context.gridSelectionModel.showOnlySelected;
             return context.gridSelectionModel.showOnlySelected;
         }
 
 
-        function getSelectionModel(panelid) {
-            const context = getContext(panelid);
+        getSelectionModel(panelid) {
+            const context = this.getContext(panelid);
             return context.gridSelectionModel;
         }
 
-        function toggleSelectionMode(panelid) {
-            const context = getContext(panelid);
+        toggleSelectionMode(panelid) {
+            const context = this.getContext(panelid);
             context.gridSelectionModel.selectionMode = !context.gridSelectionModel.selectionMode;
             return context.gridSelectionModel.selectionMode;
         }
 
-        function getOriginalPaginationData(panelid) {
-            return getContext(panelid).originalPaginationData;
+        getOriginalPaginationData(panelid) {
+            return this.getContext(panelid).originalPaginationData;
         }
 
-        function setOriginalPaginationData(paginationData, panelid) {
-            getContext(panelid).originalPaginationData = angular.copy(paginationData);
+        setOriginalPaginationData(paginationData, panelid) {
+            this.getContext(panelid).originalPaginationData = angular.copy(paginationData);
         }
         //#endregion
 
         //#region gridServices
 
-        function setFixedWhereClause(panelId, fixedWhereClause) {
-            const context = getContext(panelId);
+        setFixedWhereClause(panelId, fixedWhereClause) {
+            const context = this.getContext(panelId);
             context.gridModel.fixedWhereClause = fixedWhereClause;
         }
 
-        function getFixedWhereClause(panelId) {
-            const context = getContext(panelId);
+        getFixedWhereClause(panelId) {
+            const context = this.getContext(panelId);
             return context.gridModel.fixedWhereClause;
         }
 
-        function setSelectedFilter(filter, panelId) {
-            const context = getContext(panelId);
+        setSelectedFilter(filter, panelId) {
+            const context = this.getContext(panelId);
             context.gridModel.selectedFilter = filter;
         }
 
-        function getSelectedFilter(panelId) {
-            const context = getContext(panelId);
+        getSelectedFilter(panelId) {
+            const context = this.getContext(panelId);
             return context.gridModel.selectedFilter;
         }
 
@@ -629,16 +643,16 @@
 
         //#region commandsServices
 
-        function getCommandsModel(panelid) {
-            return getContext(panelid).commandsModel;
+        getCommandsModel(panelid) {
+            return this.getContext(panelid).commandsModel;
         }
 
-        function getToggleCommand(commandId, panelid) {
-            return getCommandsModel(panelid).toggleCommands[commandId];
+        getToggleCommand(commandId, panelid) {
+            return this.getCommandsModel(panelid).toggleCommands[commandId];
         }
 
-        function addToggleCommand(command, panelid) {
-            return getCommandsModel(panelid).toggleCommands[command.id] = command;
+        addToggleCommand(command, panelid) {
+            return this.getCommandsModel(panelid).toggleCommands[command.id] = command;
         }
 
         //#endregion
@@ -646,126 +660,34 @@
 
         //#region navigationServices
 
-        function isList(panelid) {
-            return getContext(panelid).isList;
+        isList(panelid) {
+            return this.getContext(panelid).isList;
         }
 
-        function isDetail(commandId, panelid) {
-            return getContext(panelid).isDetail;
+        isDetail(commandId, panelid) {
+            return this.getContext(panelid).isDetail;
         }
 
-        function setList(list) {
-            getContext(panelid).isList = true;
-            getContext(panelid).isDetail = false;
+        setList(list) {
+            this.getContext(panelid).isList = true;
+            this.getContext(panelid).isDetail = false;
         }
 
-        function setDetail(list) {
-            getContext(panelid).isList = false;
-            getContext(panelid).isDetail = true;
+        setDetail(list) {
+            this.getContext(panelid).isList = false;
+            this.getContext(panelid).isDetail = true;
         }
 
-        function compositionQueue(panelid) {
-            return getContext(panelid).compositionLoadEventQueue;
+        compositionQueue(panelid) {
+            return this.getContext(panelid).compositionLoadEventQueue;
         }
 
 
-
-        //#endregion
-
-        //#region Service Instance
-        const generalServices = {
-            getAffectedProfiles,
-            getActiveTab,
-            setActiveTab,
-            getTabRecordCount,
-            setTabRecordCount,
-            shouldShowRecordCount,
-            getCurrentSelectedProfile,
-            setCurrentSelectedProfile,
-            currentSchema,
-            currentApplicationName,
-            updateCrudContext,
-            applicationChanged,
-            clearCrudContext,
-            needsServerRefresh,
-            rootDataMap,
-            originalDatamap,
-            setDetailDataResolved,
-            getDetailDataResolved,
-            clearDetailDataResolved,
-            getContext,
-            crudForm,
-            getSortModel
-        };
-        const associationServices = {
-            updateLazyAssociationOption,
-            fetchLazyAssociationOption,
-            updateEagerAssociationOptions,
-            fetchEagerAssociationOptions,
-            fetchEagerAssociationOption,
-            associationsResolved,
-            markAssociationsResolved,
-            blockOrUnblockAssociations,
-            isAssociationBlocked
-        };
-        const hookServices = {
-            afterSave,
-            detailLoaded,
-            disposeDetail,
-            gridLoaded,
-            compositionsLoaded,
-            clearCompositionsLoaded
-        };
-        const modalService = {
-            disposeModal,
-            getSaveFn,
-            getPrimaryCommand,
-            isShowingModal,
-            modalLoaded,
-            registerSaveFn,
-            registerPrimaryCommand
-        };
-        const gridServices = {
-            setFixedWhereClause,
-            getFixedWhereClause,
-            setSelectedFilter,
-            getSelectedFilter
-        };
-        const selectionService = {
-            addSelectionToBuffer,
-            clearSelectionBuffer,
-            getOriginalPaginationData,
-            getSelectionModel,
-            removeSelectionFromBuffer,
-            setOriginalPaginationData,
-            toggleSelectionMode,
-            toggleShowOnlySelected
-        };
-        const commandsServices = {
-            getCommandsModel,
-            getToggleCommand,
-            addToggleCommand
-        };
-        const detailServices = {
-            setDirty,
-            getDirty,
-            clearDirty,
-            compositionQueue
-        };
-        const navigationServices = {
-            isList,
-            isDetail,
-            setList,
-            setDetail,
-        };
-        return angular.extend({}, generalServices, hookServices, associationServices, modalService, selectionService, gridServices, commandsServices, detailServices, navigationServices);
-
-
-        //#endregion
     }
 
+    crudContextHolderService.$inject = ["$rootScope", "$log", "$injector", "contextService", "schemaCacheService"];
 
-    angular.module("sw_layout").service("crudContextHolderService", ["$rootScope", "$log", "$injector", "$timeout", "contextService", "schemaCacheService", crudContextHolderService]);
+    angular.module("sw_layout").service("crudContextHolderService", crudContextHolderService);
 
 
 

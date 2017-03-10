@@ -6,6 +6,8 @@ using log4net;
 using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Model;
+using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.SimpleInjector {

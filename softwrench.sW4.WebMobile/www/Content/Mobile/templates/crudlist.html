@@ -29,7 +29,13 @@
 
     <ion-content has-header="true" has-bouncing="false">
 
-        <ion-list class="has-header crud-list">
+        <div class="row" ng-if="crudlist.items.length == 0">
+            <div class="col col-center text-center">
+                <h4 class="gray">No Entries Found</h4>
+            </div>
+        </div>
+
+        <ion-list class="has-header crud-list" ng-if="crudlist.items.length >0">
             <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->
             <ion-item class="crud-item"
                       ng-repeat="item in crudlist.items track by item.generatedRowStamp"

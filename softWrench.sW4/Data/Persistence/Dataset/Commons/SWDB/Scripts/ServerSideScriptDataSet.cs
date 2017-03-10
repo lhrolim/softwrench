@@ -14,19 +14,19 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
-using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Model;
+using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
-    public class BaseDynamicDataSet : SWDBApplicationDataset {
+namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.Scripts {
+    public class ServerSideScriptDataSet : BaseDynamicScriptDataSet {
 
         private readonly ScriptsService _scriptsService;
-        private readonly IDynComponentEmailer _dynComponentEmailer;
 
-        public BaseDynamicDataSet(ScriptsService scriptsService, IDynComponentEmailer dynComponentEmailer) {
+        public ServerSideScriptDataSet(ScriptsService scriptsService, IDynComponentEmailer dynComponentEmailer) : base(dynComponentEmailer, scriptsService) {
             _scriptsService = scriptsService;
-            _dynComponentEmailer = dynComponentEmailer;
         }
 
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
@@ -53,15 +53,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var result = await base.GetApplicationDetail(application, user, request);
-            result.ResultObject["systemversion"] = _scriptsService.GetSystemVersion();
 
-            if (application.Schema.Stereotype == SchemaStereotype.DetailNew) {
-                result.ResultObject["deploy"] = true;
-                result.ResultObject["appliestoversion"] = _scriptsService.GetSystemVersion();
-                return result;
+            if (application.Schema.Stereotype != SchemaStereotype.DetailNew) {
+                SetDatesAndFlags(result.ResultObject);
             }
 
-            SetDatesAndFlags(result.ResultObject);
             return result;
         }
 
@@ -75,17 +71,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return result;
         }
 
-        protected virtual ScriptEntry SaveEntry(ref int? id, JObject daramap, ScriptEntry origEntry) {
-            var script = daramap["script"].ToObject<string>();
+        protected virtual ScriptEntry SaveEntry(ref int? id, JObject datamap, ScriptEntry origEntry) {
+            var script = datamap["script"].ToObject<string>();
             var entry = new ScriptEntry {
                 Id = id,
-                Name = daramap["name"].ToObject<string>(),
-                Target = daramap["target"].ToObject<string>(),
-                Description = daramap["description"] == null ? null : daramap["description"].ToObject<string>(),
+                Name = datamap["name"].ToObject<string>(),
+                Target = datamap["target"].ToObject<string>(),
+                Description = datamap["description"] == null ? null : datamap["description"].ToObject<string>(),
                 Script = script,
-                Deploy = daramap["deploy"].ToObject<bool>(),
-                Lastupdate = DateTime.Now,
-                Appliestoversion = (string)daramap["appliestoversion"],
+                Deploy = datamap["deploy"].ToObject<bool>(),
+                Lastupdate = DateTime.Now.ToUnixTimeStamp(),
+                Appliestoversion = (string)datamap["appliestoversion"],
                 Isuptodate = origEntry != null && _scriptsService.SameScript(script, origEntry.Script),
                 Isoncontainer = origEntry != null && origEntry.Isoncontainer
             };
@@ -95,7 +91,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
             entry = SWDAO.Save(entry);
 
-            var saveAndReloadToken = daramap["saveandreload"];
+            var saveAndReloadToken = datamap["saveandreload"];
             var saveAndReload = saveAndReloadToken != null && saveAndReloadToken.ToObject<bool>();
             if (saveAndReload) {
                 _scriptsService.ReloadContainer(entry);
@@ -103,8 +99,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
             // those transient need to be set after save
             entry.Status = _scriptsService.GetStatus(shouldbeoncontainer, entry.Isoncontainer, entry.Isuptodate);
-            entry.Comment = daramap["comment"] == null ? "" : daramap["comment"].ToObject<string>();
-            entry.Username = daramap["username"] == null ? "" : daramap["username"].ToObject<string>();
+            entry.Comment = datamap["comment"] == null ? "" : datamap["comment"].ToObject<string>();
+            entry.Username = datamap["username"] == null ? "" : datamap["username"].ToObject<string>();
 
             var emailEntry = entry.ShallowCopy();
             Task.Run(() => {
@@ -114,20 +110,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return entry;
         }
 
-        protected virtual void DeleteEntry(ScriptEntry entry, JObject json) {
-            var emailEntry = entry.ShallowCopy();
-            Task.Run(() => {
-                SendDeleteEmail(emailEntry, json);
-            });
-
-            // force container undeploy
-            if (entry.Isoncontainer) {
-                entry.Deploy = false;
-                _scriptsService.ReloadContainer(entry);
-            }
-
-            SWDAO.Delete(entry);
-        }
+       
 
         protected virtual void SetDatesAndFlags(AttributeHolder datamap) {
             var deploy = (bool)datamap["deploy"];
@@ -138,51 +121,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             datamap["status"] = _scriptsService.GetStatus(shouldBeOnContainer, isOnContainer, isUpToDate);
         }
 
-        protected virtual void SendEmail(ScriptEntry entry, ScriptEntry origEntry, bool saveAndReload) {
-            var reloadSufix = saveAndReload ? (entry.Deploy ? " and Deployed" : " and Undeployed") : "";
-            if (origEntry != null) {
-                SendUpdateEmail(entry, origEntry, reloadSufix);
-                return;
-            }
-
-            var email = new DynComponentCreatedEmail {
-                Entry = entry,
-                ReloadSufix = reloadSufix
-            };
-            _dynComponentEmailer.FillBaseEmailDTO(email, "", entry.Comment, entry.Username, "Dynamic Component Created" + reloadSufix);
-            _dynComponentEmailer.SendDynComponentCreatedEmail(email);
-        }
-
-        protected virtual void SendUpdateEmail(ScriptEntry entry, ScriptEntry origEntry, string reloadSufix) {
-            var sendEmail = !entry.Target.Equals(origEntry.Target);
-            sendEmail = sendEmail || !entry.Appliestoversion.Equals(origEntry.Appliestoversion);
-            sendEmail = sendEmail || !entry.Deploy.Equals(origEntry.Deploy);
-            sendEmail = sendEmail || !_scriptsService.SameScript(origEntry.Script, entry.Script);
-            if (!sendEmail) {
-                return;
-            }
-
-            var email = new DynComponentUpdatedEmail {
-                OldEntry = origEntry,
-                NewEntry = entry,
-                ReloadSufix = reloadSufix
-            };
-            _dynComponentEmailer.FillBaseEmailDTO(email, "", entry.Comment, entry.Username, "Dynamic Component Updated" + reloadSufix);
-            _dynComponentEmailer.SendDynComponentUpdatedEmail(email);
-        }
-
-        protected virtual void SendDeleteEmail(ScriptEntry origEntry, JObject json) {
-            origEntry.Comment = json["comment"].ToObject<string>();
-            origEntry.Username = json["username"].ToObject<string>();
-            var email = new DynComponentDeleteEmail {
-                Entry = origEntry,
-                ReloadSufix = origEntry.Isoncontainer ? " and Undeployed" : ""
-            };
-
-            var title = "Dynamic Component Deleted" + email.ReloadSufix;
-            _dynComponentEmailer.FillBaseEmailDTO(email, "", origEntry.Comment, origEntry.Username, title);
-            _dynComponentEmailer.SendDynComponentDeletedEmail(email);
-        }
+    
 
         public override string ApplicationName() {
             return "_dynamic";

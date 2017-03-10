@@ -4,9 +4,13 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
+using Newtonsoft.Json.Linq;
 using NHibernate.Util;
+using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API.Response;
-using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Model;
+using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Web.Email;
 using softWrench.sW4.Web.SimpleInjector;
@@ -18,11 +22,13 @@ namespace softWrench.sW4.Web.Controllers.Dynamic {
     [SWControllerConfiguration]
     public class ScriptsController : ApiController {
         private readonly ScriptsService _scriptsService;
+        private readonly JavascriptDynamicService _jsscriptsService;
         private readonly ScriptsEmailer _scriptsEmailer;
 
-        public ScriptsController(ScriptsService scriptsService, ScriptsEmailer scriptsEmailer) {
+        public ScriptsController(ScriptsService scriptsService, ScriptsEmailer scriptsEmailer, JavascriptDynamicService jsscriptsService) {
             _scriptsService = scriptsService;
             _scriptsEmailer = scriptsEmailer;
+            _jsscriptsService = jsscriptsService;
         }
 
         [HttpGet]
@@ -34,7 +40,7 @@ namespace softWrench.sW4.Web.Controllers.Dynamic {
         [HttpPost]
         public GenericResponseResult<string> Evaluate([FromBody] ScriptsService.ScriptDTO scriptDto, HttpRequestMessage request) {
             var result = _scriptsService.EvaluateScript(scriptDto.Script);
-            return new GenericResponseResult<string>(result == null ? "The result was null." : result.ToString());
+            return new GenericResponseResult<string>(result?.ToString() ?? "The result was null.");
         }
 
         [HttpPost]
@@ -44,7 +50,7 @@ namespace softWrench.sW4.Web.Controllers.Dynamic {
             var dynTypesAfter = DynamicScannerHelper.CloneDynTypes();
 
             Task.Run(() => {
-                var deployed = dynTypesAfter.Where(afterPair => !dynTypesBefore.ContainsKey(afterPair.Key)); ;
+                var deployed = dynTypesAfter.Where(afterPair => !dynTypesBefore.ContainsKey(afterPair.Key));
                 var undeployed = dynTypesBefore.Where(beforePair => !dynTypesAfter.ContainsKey(beforePair.Key));
 
                 var email = new ContainerReloadEmail {
@@ -59,6 +65,15 @@ namespace softWrench.sW4.Web.Controllers.Dynamic {
 
             return new GenericResponseResult<string>("");
         }
+
+        [HttpPost]
+        public async Task<ISet<ScriptSyncResultDTO>> BuildSyncMap([FromBody]IDictionary<string,long> clientState) {
+            return await _jsscriptsService.SyncResult(clientState, new ScriptDeviceInfo {
+                Platform = ClientPlatform.Web
+            });
+        }
+
+
 
         private static string JoinRecords(IEnumerable<KeyValuePair<string, DynamicScannerHelper.DynamicComponentRecord>> recordsMap) {
             var nameList = new List<string>();

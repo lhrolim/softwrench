@@ -72,7 +72,7 @@
             }
 
             const isLoggingMethod = name => _.contains(logMethods, name);
-            
+
 
             /**
              * Enhances the logger's method by logging it's arguments to 
@@ -111,16 +111,20 @@
             //#endregion
 
             //#region Decorator
-            
+
             var getInstance = $delegate.getInstance;
 
             $delegate.getInstance = function () {
-                initRollingLog();
-
+                if (!arguments[1] || arguments[1].indexOf("angular") === -1) {
+                    //prevent initing the rolling logs for log calls that are specific to angular initialization logic, and would possibly trigger a circular dependency
+                    //let´s init it later
+                    initRollingLog();
+                }
                 const args = [].slice.call(arguments);
                 const instance = getInstance.apply($delegate, args);
                 enhanceLogger(instance);
                 return instance;
+                return $delegate;
             }
 
             return $delegate;

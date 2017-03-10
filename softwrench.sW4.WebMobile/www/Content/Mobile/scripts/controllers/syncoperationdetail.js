@@ -2,9 +2,9 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q",
-            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService", "metadataModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", 
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, offlineSchemaService, crudContextService, crudContextHolderService) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q","$timeout",
+            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService", "metadataModelService","menuModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", 
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q,$timeout, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService,menuModelService, offlineSchemaService, crudContextService, crudContextHolderService) {
 
             $scope.data = {
                 operation: null,
@@ -49,6 +49,12 @@
             var loadData = function (initial) {
                 // show loading if initial page load
                 if (!!initial) {
+                    if (menuModelService.getMenuItems().length === 0) {
+                        //login has just happened, no menu items, forcing first sync
+                        return $timeout(() => {
+                            $scope.fullSynchronize()
+                        }, 0, false);
+                    }
                     loadingService.showDefault();
                 }
                 var operationPromise = loadSyncOperation();

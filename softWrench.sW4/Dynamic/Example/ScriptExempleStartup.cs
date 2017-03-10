@@ -3,11 +3,14 @@ using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using softWrench.sW4.Dynamic.Model;
+using softWrench.sW4.Dynamic.Services;
+using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Dynamic {
+namespace softWrench.sW4.Dynamic.Example {
     public class ScriptExempleStartup : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
         private const string Script = @"// The imports are provided on the beginning of the script.
-using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Example;
 
 // No namespace definition is needed only
 // the dyn component class, in this example
@@ -67,7 +70,7 @@ return typeof(DynScriptExample);";
             entry.Target = Target;
             entry.Script = Script;
             entry.Deploy = false;
-            entry.Lastupdate = DateTime.Now;
+            entry.Lastupdate = DateTime.Now.ToUnixTimeStamp();
             entry.Isoncontainer = false;
             entry.Isuptodate = true;
             entry.Appliestoversion = _service.GetSystemVersion();

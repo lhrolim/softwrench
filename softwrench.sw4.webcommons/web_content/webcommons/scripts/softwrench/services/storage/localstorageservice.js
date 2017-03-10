@@ -101,7 +101,7 @@
         //#region Service Instance
         const service = {
             put,
-            get: get,
+            get,
             remove
         };
         return service;
@@ -109,7 +109,7 @@
     }
 
     //#region Service registration
-    angular.module("webcommons_services").service("localStorageService", ["compressionService", localStorageService]);
+    angular.module("sw_rootcommons").service("localStorageService", ["compressionService", localStorageService]);
     //#endregion
 
 })(angular);

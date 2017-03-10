@@ -19,7 +19,7 @@
 
 
         function resultHandlePromise(result) {
-            const log = $log.get("dataSynchronizationService#createAppSyncPromise");
+            const log = $log.get("dataSynchronizationService#createAppSyncPromise", ["sync"]);
             const topApplicationData = result.data.topApplicationData;
             const compositionData = result.data.compositionData;
 

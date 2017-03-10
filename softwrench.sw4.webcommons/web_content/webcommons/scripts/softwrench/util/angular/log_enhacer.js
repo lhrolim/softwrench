@@ -110,7 +110,7 @@ window.swlog = new LogHelper();
      * Enhancing $log with angular decorator so it can be further decorated with other decorators
      * (altering the singleton in 'module.run' makes it harder to chain decorators).
      */
-    modules.webcommons.config(["$provide", function ($provide) {
+    modules.rootCommons.config(["$provide", function ($provide) {
         $provide.decorator("$log", ["$delegate", "$injector", function ($delegate, $injector) {
             enhanceAngularLog($delegate, $injector);
             return $delegate;
@@ -195,6 +195,9 @@ window.swlog = new LogHelper();
 
     function enhanceAngularLog($log, $injector) {
         $log.enabledContexts = [];
+
+        window.rootlogger = $log;
+
 
         var contextService;
 

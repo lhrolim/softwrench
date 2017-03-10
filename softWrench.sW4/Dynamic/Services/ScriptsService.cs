@@ -7,15 +7,16 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
-using NHibernate.Linq;
 using NHibernate.Util;
-using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Dynamic.Model;
 using softWrench.sW4.Util;
 
-namespace softWrench.sW4.Dynamic {
-    public class ScriptsService : ISingletonComponent {
+namespace softWrench.sW4.Dynamic.Services {
+    public class ScriptsService : BaseScriptService {
 
-        protected readonly Regex IsImport = new Regex(@"^\s*using\s+.*$", RegexOptions.Multiline);
+        protected readonly SimpleInjectorGenericFactory SimpleInjectorGenericFactory;
+        private readonly I18NResolver _i18NResolver;
+
         protected readonly Dictionary<DynComponentStatus, string> DefaultI18N = new Dictionary<DynComponentStatus, string>{
             { DynComponentStatus.Outdated, "Outdated"},
             { DynComponentStatus.Undeployed, "Undeployed"},
@@ -24,18 +25,15 @@ namespace softWrench.sW4.Dynamic {
             { DynComponentStatus.WillBeUndeployed, "Will be Undeployed"},
         };
 
-        protected readonly ISWDBHibernateDAO DAO;
-        protected readonly SimpleInjectorGenericFactory SimpleInjectorGenericFactory;
-        protected readonly I18NResolver I18NResolver;
-        protected string SystemVersion;
-
-        public ScriptsService(ISWDBHibernateDAO dao, SimpleInjectorGenericFactory simpleInjectorGenericFactory, I18NResolver i18NResolver) {
-            DAO = dao;
+        public ScriptsService(ISWDBHibernateDAO dao, SimpleInjectorGenericFactory simpleInjectorGenericFactory, I18NResolver i18NResolver) : base(dao)
+        {
             SimpleInjectorGenericFactory = simpleInjectorGenericFactory;
-            I18NResolver = i18NResolver;
+            _i18NResolver = i18NResolver;
         }
 
-        public IContainerReloader Reloader { get; set; }
+        public IContainerReloader Reloader {
+            get; set;
+        }
 
         public virtual object EvaluateScript(string script) {
             if (string.IsNullOrEmpty(script)) {
@@ -65,7 +63,7 @@ namespace softWrench.sW4.Dynamic {
 
         public virtual void ValidateScriptEntry(ScriptEntry entry, bool shouldBeOnContainer) {
             if (!SimpleInjectorGenericFactory.ContainsService(entry.Target)) {
-                var msg = string.Format("Target invalid. There is no component with name \"{0}\".", entry.Target);
+                var msg = $"Target invalid. There is no component with name \"{entry.Target}\".";
                 throw ExceptionUtil.InvalidOperation(msg);
             }
 
@@ -92,8 +90,8 @@ namespace softWrench.sW4.Dynamic {
             }
         }
 
-        public virtual void ReloadContainer(ScriptEntry singleDynComponent) {
-            Reloader.ReloadContainer(singleDynComponent);
+        public override void ReloadContainer(AScriptEntry singleDynComponent) {
+            Reloader.ReloadContainer((ScriptEntry) singleDynComponent);
         }
 
         [Transactional(DBType.Swdb)]
@@ -111,26 +109,8 @@ namespace softWrench.sW4.Dynamic {
             DAO.Save(singleDynComponent);
         }
 
-        public virtual string GetSystemVersion() {
-            if (!string.IsNullOrEmpty(SystemVersion)) {
-                return SystemVersion;
-            }
-            var version = ApplicationConfiguration.SystemVersion;
-            var dashIndex = version.IndexOf("-", StringComparison.Ordinal);
-            SystemVersion = dashIndex > 0 ? version.Substring(0, dashIndex) : version;
-            return SystemVersion;
-        }
 
-        public virtual bool SameScript(string scriptA, string scriptB) {
-            var spacelessScriptA = Regex.Replace(scriptA, "\\s", "");
-            var spacelessScriptB = Regex.Replace(scriptB, "\\s", "");
-            return spacelessScriptA.Equals(spacelessScriptB);
-        }
-
-        public virtual string GetStatus(bool shouldBeOnContainer, bool isOnContainer, bool isUpToDate) {
-            var status = CalcStatus(shouldBeOnContainer, isOnContainer, isUpToDate);
-            return I18NResolver.I18NValue("dynamc.status." + status, DefaultI18N[status]);
-        }
+      
 
         public virtual bool ShouldBeOnContainer(ScriptEntry entry) {
             return ShouldBeOnContainer(entry.Deploy, entry.Appliestoversion);
@@ -138,6 +118,11 @@ namespace softWrench.sW4.Dynamic {
 
         public virtual bool ShouldBeOnContainer(bool deploy, string appliestoversion) {
             return deploy && GetSystemVersion().Equals(appliestoversion);
+        }
+
+        public virtual string GetStatus(bool shouldBeOnContainer, bool isOnContainer, bool isUpToDate) {
+            var status = CalcStatus(shouldBeOnContainer, isOnContainer, isUpToDate);
+            return _i18NResolver.I18NValue("dynamc.status." + status, DefaultI18N[status]);
         }
 
         protected virtual DynComponentStatus CalcStatus(bool shouldBeOnContainer, bool isOnContainer, bool isUpToDate) {
@@ -161,7 +146,8 @@ namespace softWrench.sW4.Dynamic {
                 return;
             }
 
-            var msg = string.Format("There is already a dynamic component with the target \"{0}\" marked to be on container.", entry.Target);
+            var msg =
+                $"There is already a dynamic component with the target \"{entry.Target}\" marked to be on container.";
             if (entry.Id == null) {
                 throw ExceptionUtil.InvalidOperation(msg);
             }
@@ -177,6 +163,8 @@ namespace softWrench.sW4.Dynamic {
             task.Wait();
             return task.Result;
         }
+
+
 
         private IEnumerable<string> ProcessImports(string script, out string newScript) {
             var imports = new List<string>();
@@ -195,16 +183,30 @@ namespace softWrench.sW4.Dynamic {
         }
 
         public class ScriptDTO {
-            public int? Id { get; set; }
-            public string Name { get; set; }
-            public string Target { get; set; }
-            public string Description { get; set; }
-            public string Script { get; set; }
+            public int? Id {
+                get; set;
+            }
+            public string Name {
+                get; set;
+            }
+            public string Target {
+                get; set;
+            }
+            public string Description {
+                get; set;
+            }
+            public string Script {
+                get; set;
+            }
         }
 
         public class ReloadContainerDTO {
-            public string Comment { get; set; }
-            public string Username { get; set; }
+            public string Comment {
+                get; set;
+            }
+            public string Username {
+                get; set;
+            }
         }
     }
 }

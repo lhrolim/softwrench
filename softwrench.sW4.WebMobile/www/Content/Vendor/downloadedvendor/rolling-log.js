@@ -23,7 +23,13 @@
             return arg;
         }
         if (!angular.isString(arg)) {
-            return angular.toJson(arg);
+            try {
+                const jsonValue = JSON.stringify(JSON.decycle(arg));
+                return jsonValue;
+            } catch (err) {
+                return arg;
+            }
+            
         }
         return arg;
     }

@@ -1,7 +1,8 @@
 ﻿using cts.commons.simpleinjector;
+using softWrench.sW4.Dynamic.Model;
 using softWrench.sW4.Email;
 
-namespace softWrench.sW4.Dynamic {
+namespace softWrench.sW4.Dynamic.Services {
     public interface IDynComponentEmailer : ISingletonComponent {
         void SendDynComponentCreatedEmail(DynComponentCreatedEmail email);
         void SendDynComponentUpdatedEmail(DynComponentUpdatedEmail email);
@@ -14,15 +15,15 @@ namespace softWrench.sW4.Dynamic {
     }
 
     public class DynComponentCreatedEmail : BaseDynComponentEmailDto {
-        public ScriptEntry Entry { get; set; }
+        public AScriptEntry Entry { get; set; }
     }
 
     public class DynComponentUpdatedEmail : BaseDynComponentEmailDto {
-        public ScriptEntry OldEntry { get; set; }
-        public ScriptEntry NewEntry { get; set; }
+        public AScriptEntry OldEntry { get; set; }
+        public AScriptEntry NewEntry { get; set; }
     }
 
     public class DynComponentDeleteEmail : BaseDynComponentEmailDto {
-        public ScriptEntry Entry { get; set; }
+        public AScriptEntry Entry { get; set; }
     }
 }

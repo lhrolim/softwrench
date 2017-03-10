@@ -86,13 +86,11 @@ modules.webcommons.service('statuscolorService', ["$rootScope", "contextService"
             return fallbackFunction(status, applicationname);
         },
 
-        load: function (jsonString) {
+        load: function (jsonString, fallbackJson) {
             contextService.insertIntoContext("statuscolor", jsonString);
+            contextService.insertIntoContext("statuscolorfallback", fallbackJson);
         },
 
-        loadFallback: function (jsonString) {
-            contextService.insertIntoContext("statuscolorfallback", jsonString);
-        },
 
         /// <summary>
         /// convert named color or #rgb into #rrggbb format

@@ -1,7 +1,7 @@
 ﻿!(function (modules, angular) {
     "use strict";
 
-    modules.webcommons.service("contextService", ["$log", "$rootScope", function ($log, $rootScope) {
+    modules.rootCommons.service("contextService", ["$log", "$rootScope", function ($log, $rootScope) {
 
         return {
             //using sessionstorage instead of rootscope, as the later would be lost upon F5.
@@ -209,6 +209,11 @@
                 }
 
                 this.insertIntoContext('dateTimeFormat', dateTimeFormat);
+
+                $rootScope.defaultEmail = config.defaultEmail;
+                $rootScope.clientName = config.clientName;
+                $rootScope.environment = config.environment;
+                $rootScope.i18NRequired = config.i18NRequired;
             },
 
             getResourceUrl: function (path) {
@@ -236,10 +241,6 @@
                     if (key.startsWith(urlContext + ':ctx_')) {
                         sessionStorage.removeItem(key);
                     }
-                }
-                if (!angular.mock && !window.cordova) {
-                    $(hiddn_user)[0].value = null;
-                    $(hddn_configs)[0].value = null;
                 }
             },
 

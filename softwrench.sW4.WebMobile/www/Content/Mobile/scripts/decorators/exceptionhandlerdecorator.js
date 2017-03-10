@@ -43,6 +43,10 @@
             }
 
             return function (exception, cause) {
+                if (exception && isString(exception) && exception.startsWith("Possibly unhandled rejection:")) {
+                    return;
+                }
+
                 // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScope
                 $log = lazyInstance($log, "$log");
                 logger = lazyInstance(logger, "$exceptionHandler", $log);

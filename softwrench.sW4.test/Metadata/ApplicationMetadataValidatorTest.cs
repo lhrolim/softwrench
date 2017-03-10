@@ -15,6 +15,7 @@ using softWrench.sW4.Metadata.Applications.Validator;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.TestBase;
 using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Services;
 
 namespace softwrench.sW4.test.Metadata {
 

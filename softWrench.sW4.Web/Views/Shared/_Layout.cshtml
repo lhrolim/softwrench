@@ -23,11 +23,10 @@
         @tag;
     }
 
-    <input type="hidden" id="hddn_configs" value="@Model.ConfigJSON" />
+@*    <input type="hidden" id="hddn_configs" value="@Model.ConfigJSON" />*@
     <input type="hidden" id="routes_homeurl" value="@Url.Action("RedirectToAction", "Home")" />
     <input type="hidden" id="routes_basecontext" value="@Request.ApplicationPath" />
     <input type="hidden" id="hddn_popupmode" value="@Request.Params.Get("popupmode")" />
-    <input type="hidden" id="hiddn_user" value="@Model.UserJSON" />
     <div class="spinner" data-class="spinner" id="mainspinner"></div>
     <div ng-controller="LayoutController" class="container {{clientName}} {{deviceType}} {{browserType}}">
         <notifications></notifications>

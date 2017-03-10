@@ -1,60 +1,100 @@
 ﻿(function (angular) {
     "use strict";
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout,  $log, $q, contextService,  i18NService, alertService, statuscolorService,
-        classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService,schemaCacheService) {
+
+    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $log, $q, contextService, i18NService, alertService, statuscolorService,
+        classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService, schemaCacheService, logoutService, dynamicScriptsCacheService) {
         const APP_VERION = 'sw_system_version_key';
         $scope.$name = 'HomeController';
 
         const log = $log.get("HomeController#init", ["init", "navigation", "route"]);
-        
+
+
+
 
         function initController() {
-        
+
             log.debug("init home controller");
 
-            if (homeModel.Error) {
-                if (homeModel.Error.ErrorStack) {
-                    const errorData = {
-                        errorMessage: homeModel.Error.ErrorMessage,
-                        errorStack: homeModel.Error.ErrorStack,
-                        errorType: homeModel.Error.ErrorType,
-                        outlineInformation: homeModel.Error.OutlineInformation
-                    }
-                    alertService.notifyexception(errorData);
-                } else {
-                    alertService.notifymessage("error", homeModel.Error.ErrorMessage);
-                }
+            var localHomeModel = homeModel;
+
+            if (localHomeModel.Error) {
+                handleError(localHomeModel);
+            }
+
+            const configsJSON = localHomeModel.ConfigJSON;
+            const userJSON = localHomeModel.UserJSON;
+
+            if (nullOrEmpty(configsJSON) || nullOrEmpty(userJSON) || contextService.get("sw:changepasword")) {
+                contextService.deleteFromContext("sw:changepasword");
+                //this means user tried to hit back button after logout
+                return logoutService.logout();
+            }
+
+            //parsing only if if needed
+            const config = JSON.parse(configsJSON);
+            const user = JSON.parse(userJSON);
+
+            contextService.loadUserContext(user);
+            contextService.loadConfigs(config);
+
+            $scope.mainlogo = config.logo;
+            $scope.myprofileenabled = config.myProfileEnabled;
+
+            if (!sessionStorage["ctx_loggedin"]) {
+                //if the session storage flag was null it meanas login has just happened. Otherwise we´re talking about a browser refresh
+                $rootScope.$broadcast(JavascriptEventConstants.Login);
+                dynamicScriptsCacheService.syncWithServerSideScripts();
             }
 
             //workaround for knowing where the user is already loggedin
             sessionStorage["ctx_loggedin"] = true;
-            if (homeModel.RouteInfo) { // store route info on local storage
-                localStorageService.put(historyService.routeInfoKey, homeModel.RouteInfo);
+
+
+
+            if (localHomeModel.RouteInfo) { // store route info on local storage
+                localStorageService.put(historyService.routeInfoKey, localHomeModel.RouteInfo);
             }
 
-            var redirectUrl = url(homeModel.Url);
+            var redirectUrl = url(localHomeModel.Url);
 
-            if (homeModel.RouteListInfo) { // it's a list route -> mark pre filters and page size
+            if (localHomeModel.RouteListInfo) { // it's a list route -> mark pre filters and page size
                 redirectUrl += "&SearchDTO[addPreSelectedFilters]=true";
-                const pageSize = userPreferencesService.getSchemaPreference("pageSize", homeModel.RouteListInfo.ApplicationName, homeModel.RouteListInfo.Schemaid);
+                const pageSize = userPreferencesService.getSchemaPreference("pageSize", localHomeModel.RouteListInfo.ApplicationName, localHomeModel.RouteListInfo.Schemaid);
                 if (pageSize) {
                     redirectUrl += `&SearchDTO[pageSize]=${pageSize}`;
                 }
             }
 
-            const menuModel = JSON.parse(homeModel.MenuJSON);
+            const menuModel = JSON.parse(localHomeModel.MenuJSON);
 
             //force initialization of schema cache for this given app
-            schemaCacheService.getCachedSchema(homeModel.ApplicationName, homeModel.SchemaId);
+            schemaCacheService.getCachedSchema(localHomeModel.ApplicationName, localHomeModel.SchemaId);
+            i18NService.load(localHomeModel.I18NJsons, userLanguage);
+            statuscolorService.load(localHomeModel.StatusColorJson, localHomeModel.StatusColorFallbackJson);
 
-            i18NService.load(homeModel.I18NJsons, userLanguage);
-            statuscolorService.load(homeModel.StatusColorJson);
-            statuscolorService.loadFallback(homeModel.StatusColorFallbackJson);
-            classificationColorService.load(homeModel.ClassificationColorJson);
+            classificationColorService.load(localHomeModel.ClassificationColorJson);
 
             $scope.$emit("sw_loadmenu", menuModel);
+            return handleRedirect(redirectUrl, localHomeModel);
 
+        }
+
+        function handleError(localHomeModel) {
+            if (localHomeModel.Error.ErrorStack) {
+                const errorData = {
+                    errorMessage: localHomeModel.Error.ErrorMessage,
+                    errorStack: localHomeModel.Error.ErrorStack,
+                    errorType: localHomeModel.Error.ErrorType,
+                    outlineInformation: localHomeModel.Error.OutlineInformation
+                }
+                alertService.notifyexception(errorData);
+            } else {
+                alertService.notifymessage("error", localHomeModel.Error.ErrorMessage);
+            }
+        }
+
+        function handleRedirect(redirectUrl, localHomeModel) {
             const sessionRedirectUrl = contextService.fetchFromContext("swGlobalRedirectURL", false, false);
             if (sessionRedirectUrl != null && redirectUrl && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("MakeSWAdmin") < 0)) && !homeModel.FromRoute) {
                 redirectUrl = sessionRedirectUrl;
@@ -67,7 +107,7 @@
             }
 
             //Check if the user is sysadmin and the application version has changed since last login for this user
-            if (contextService.HasRole(["sysadmin"]) && appVersionChanged(homeModel.ApplicationVersion)) {
+            if (contextService.HasRole(["sysadmin"]) && appVersionChanged(localHomeModel.ApplicationVersion)) {
                 redirectUrl = restService.getActionUrl("DeployValidation", "Index", null);
             }
 
@@ -77,6 +117,7 @@
 
             return redirect(redirectUrl);
         }
+
 
         function redirect(redirectUrl, avoidTemplateCache) {
             const parameters = {
@@ -132,7 +173,7 @@
             return redirect(redirectUrl, true);
         });
 
-        $scope.onTemplateLoad = function (event) {
+        $scope.onTemplateLoad = function () {
             $timeout(function () {
                 $scope.$emit("ngLoadFinished");
                 const windowTitle = homeModel.WindowTitle;
@@ -155,7 +196,7 @@
         initController();
     }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "$q", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "$q", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", "logoutService", "dynamicScriptsCacheService", HomeController]);
     window.HomeController = HomeController;
 
 })(angular);

@@ -51,6 +51,8 @@ const TitleChanged = "sw.crud.navigation.titlechanged";
 
 const RenderView = "sw.crud.navigation.renderview";
 
+const LoginHappened = "sw.crud.navigation.login";
+
 /**
  * Event that happens when a detail page has finish loading. Note that neither the compositions nor the associations have yet been loaded at this stage.
  */
@@ -222,7 +224,9 @@ class JavascriptEventConstants {
         return AppChanged;
     }
 
-
+    static get Login() {
+        return LoginHappened;
+    }
 
     static get AppBeforeRedirection() {
         return REDIRECT_BEFORE;

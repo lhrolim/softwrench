@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
+    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
         asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking) {
 
         //#region Utils
@@ -125,6 +125,7 @@
 
             const httpPromises = [
                 metadataSynchronizationService.syncData("1.0"),
+                scriptsSynchronizationService.syncData(),
                 associationDataSynchronizationService.syncData()
             ].concat(dataSynchronizationService.syncData());
 
@@ -134,8 +135,8 @@
                     log.info("finished full download process. Ellapsed {0}".format(end - start));
 
                     const metadataDownloadedResult = results[0];
-                    const associationDataDownloaded = results[1];
-                    const dataDownloadedResult = results.subarray(2);
+                    const associationDataDownloaded = results[2];
+                    const dataDownloadedResult = results.subarray(3);
                     const totalNumber = getDownloadDataCount(dataDownloadedResult);
 
                     return synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
@@ -223,7 +224,7 @@
                    .finally(() => {
                        loadingService.hide();
                        tracking.trackFullState("synchornizationFacace#syncItem post-quicksync");
-                    });
+                   });
         }
 
         /**
@@ -278,7 +279,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "associationDataSynchronizationService", "batchService",
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
         "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", synchronizationFacade]);
     //#endregion
 

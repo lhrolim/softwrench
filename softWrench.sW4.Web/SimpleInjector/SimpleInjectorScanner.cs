@@ -13,6 +13,8 @@ using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Dynamic;
+using softWrench.sW4.Dynamic.Model;
+using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.SimpleInjector.WebApi;
 

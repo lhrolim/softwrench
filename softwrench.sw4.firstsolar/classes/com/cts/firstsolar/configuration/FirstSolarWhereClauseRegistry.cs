@@ -22,7 +22,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         /// Brings all assignments, where exists a workorder of interest, narrowing by the facility query that will be replaced at {0}
         /// </summary>
         private const string AssignedWhereClause =
-            @"exists (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
+            @"assignment.laborcode = '@user.properties['laborcode']' and assignment.scheduledate >= @past(1week) and assignment.scheduledate <= @future(1week)
+                and exists (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
                 workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and {0} )";
 
 
@@ -59,7 +60,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
             var offLineCondition = new WhereClauseRegisterCondition() { Alias = "offline", OfflineOnly = true, Global = true };
 
-            _whereClauseFacade.Register("workorder", WOAssignedWhereClause, offLineCondition);
+            _whereClauseFacade.Register("workorder", "@firstSolarWhereClauseRegistry.AssignedByGroup", offLineCondition);
             _whereClauseFacade.Register("otherworkorder", "@firstSolarWhereClauseRegistry.WorkordersByGroup", offLineCondition);
 
 
@@ -95,6 +96,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
                 var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"),true);
+                sb.AppendFormat(" and ({0})", locationQuery);
+            }
+            return sb.ToString();
+        }
+
+        public string AssignedByGroup() {
+            var user = SecurityFacade.CurrentUser();
+            var sb = new StringBuilder();
+            sb.Append(DefaultValuesBuilder.ConvertAllValues(WOAssignedWhereClause, user));
+            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
+                var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"), true);
                 sb.AppendFormat(" and ({0})", locationQuery);
             }
             return sb.ToString();

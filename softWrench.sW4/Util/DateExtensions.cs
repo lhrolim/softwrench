@@ -23,7 +23,7 @@ namespace softWrench.sW4.Util {
         /// <returns></returns>
         public static long ToUnixTimeStamp(this DateTime dateTime) {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var unixDateTime = (dateTime.ToUniversalTime() - epoch).TotalSeconds;
+            var unixDateTime = (dateTime.ToUniversalTime() - epoch).TotalMilliseconds;
             return (long) Math.Truncate(unixDateTime);
         }
 

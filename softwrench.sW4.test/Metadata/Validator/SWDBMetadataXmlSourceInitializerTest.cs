@@ -5,6 +5,7 @@ using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
+using softWrench.sW4.Dynamic.Model;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Validator;
@@ -60,6 +61,16 @@ namespace softwrench.sW4.test.Metadata.Validator {
             var service = new SWDBMetadataXmlSourceInitializer();
             var entityMetadata = service.Convert(typeof(WhereClauseCondition));
             Assert.AreEqual("wcwcid", entityMetadata.IdFieldName);
+
+        }
+
+        [TestMethod]
+        public void TestEnums() {
+            var service = new SWDBMetadataXmlSourceInitializer();
+            var entityMetadata = service.Convert(typeof(JavascriptEntry));
+            var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            Assert.IsTrue(attributes.Any(a=> a.Name.EqualsIc("offlinedevice")));
+            Assert.IsTrue(attributes.Any(a=> a.Name.EqualsIc("platform")));
 
         }
     }

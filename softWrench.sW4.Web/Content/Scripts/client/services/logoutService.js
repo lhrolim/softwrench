@@ -15,7 +15,7 @@
                 schemaCacheService.wipeSchemaCacheIfNeeded();
             }
             contextService.clearContext();
-            sessionStorage['ctx_loggedin'] = false;
+            delete sessionStorage['ctx_loggedin'];
             contextService.deleteFromContext("swGlobalRedirectURL");
             $window.location.href = url('/SignOut/SignOut');
         }

@@ -275,7 +275,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps, searchDto);
             //TODO: hack to avoid garbage data and limit size of list queries.
             var sql = query.Sql;
-            var queryResult = await GetDao(entityMetadata).FindByNativeQueryAsync(sql, query.Parameters);
+            var queryResult = await GetDao(entityMetadata).FindByNativeQueryAsync(sql, query.Parameters,null,searchDto.QueryAlias);
             var rows = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>();
             return rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
 

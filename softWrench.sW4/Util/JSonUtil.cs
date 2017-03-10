@@ -26,13 +26,13 @@ namespace softWrench.sW4.Util {
             }
 
             var prop = ob.Property(propertyName);
-            if (prop == null || prop.Value == null) {
+            if (prop?.Value == null) {
                 return null;
             }
             var val = prop.Value;
             if (val is JValue) {
                 var jvalValue = ((JValue)val).Value;
-                return jvalValue == null ? null : jvalValue.ToString();
+                return jvalValue?.ToString();
             }
             return val.ToString();
         }

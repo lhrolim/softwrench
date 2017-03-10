@@ -3,7 +3,7 @@
 // I SHOULD NOT BE LOADED AFTER THE USER HAS LOGGED IN
 $(document).ready(function () {
     $("#userTimezoneOffset").val(new Date().getTimezoneOffset());
-    sessionStorage['ctx_loggedin'] = false;
+    delete sessionStorage['ctx_loggedin'];
     
     $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
 

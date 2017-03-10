@@ -13,7 +13,7 @@
         /// <param name="applicationToFetch">a single application to fetch. If not provided, all the applications would be fetched</param>
         /// <returns type=""></returns>
         syncData: function (applicationToFetch) {
-            const log = $log.get("associationDataSynchronizationService#syncData");
+            const log = $log.get("associationDataSynchronizationService#syncData",["sync"]);
 
             const currentApps = metadataModelService.getApplicationNames();
             const firstTime = currentApps.length === 0;

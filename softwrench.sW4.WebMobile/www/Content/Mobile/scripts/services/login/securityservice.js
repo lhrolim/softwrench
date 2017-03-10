@@ -159,7 +159,7 @@
          * 
          * @return Promise resolved with the logged out user 
          */
-        const logout = function () {
+        const logout = function (clearSettings =false) {
             // invalidate current session
             const current = localStorageService.remove(config.authkey); 
             // making sure the previous user is always the last "active" user
@@ -167,9 +167,10 @@
                 localStorageService.put(config.previouskey, current);
             }
             $rootScope.$broadcast($event("logout"), current);
+            const toAvoid = clearSettings ? [] : ["Settings"];
 
             return $q.all([
-                dao.resetDataBase(["Settings"]),
+                dao.resetDataBase(toAvoid),
                 cookieService.clearCookies() // clear cookies 
             ]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login

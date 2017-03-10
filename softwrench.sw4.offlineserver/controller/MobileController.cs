@@ -19,6 +19,8 @@ using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Offline;
+using softWrench.sW4.Dynamic.Model;
+using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.Metadata.Menu;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
@@ -48,18 +50,21 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly MenuSecurityManager _menuManager;
 
+        private readonly JavascriptDynamicService _jsService;
+
         private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
-            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper) {
+            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService) {
             _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
             _menuManager = menuManager;
             _contextLookuper = contextLookuper;
-        }
+            _jsService = jsService;
+            }
 
         /// <summary>
         /// The main purpose here is to retrieve all the metadata information 
@@ -103,6 +108,15 @@ namespace softwrench.sw4.offlineserver.controller {
         [HttpPost]
         public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
             return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
+        }
+
+        [HttpPost]
+        public async Task<ISet<ScriptSyncResultDTO>> BuildSyncMap([FromBody]OfflineScriptSyncDtoRequest clientRequest) {
+            return await _jsService.SyncResult(clientRequest.ClientState, new ScriptDeviceInfo {
+                Platform = ClientPlatform.Mobile,
+                OfflineDevice = clientRequest.offlineDevice,
+                OfflineVersions = clientRequest.offlineVersion
+            });
         }
 
 

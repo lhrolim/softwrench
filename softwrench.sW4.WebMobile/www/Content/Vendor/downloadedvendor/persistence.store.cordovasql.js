@@ -71,7 +71,7 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
      */
     persistence.db.sqliteplugin.connect = function (dbname, backgroundProcessing) {
         var that = {};
-        var conn = window.sqlitePlugin.openDatabase({ name: dbname, bgType: backgroundProcessing, location:"default" });
+        var conn = window.sqlitePlugin.openDatabase({ name: dbname, bgType: backgroundProcessing, location: "default" });
 
         that.transaction = function (fn) {
             return conn.transaction(function (sqlt) {
@@ -91,9 +91,7 @@ persistence.store.cordovasql.config = function (persistence, dbname, dbversion, 
     persistence.db.sqliteplugin.transaction = function (t) {
         var that = {};
         that.executeSql = function (query, args, successFn, errorFn) {
-            if (persistence.debug) {
-                console.log(query, args);
-            }
+            window.rootlogger.get("persistence#transaction", ["persistence", "sql"]).debug(query, args);
             t.executeSql(query, args, function (_, result) {
                 if (successFn) {
                     var results = [];
