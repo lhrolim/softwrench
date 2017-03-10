@@ -112,6 +112,7 @@
         $scope.$on('ngLoadFinished', function () {
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
             menuService.adjustHeight();
+            fixHeaderService.callWindowResize();
         });
 
         $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
