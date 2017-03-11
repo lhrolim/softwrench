@@ -33,7 +33,7 @@
 
     angular.module('sw_layout').config([
         '$provide', '$httpProvider', function ($provide, $httpProvider) {
-            $provide.decorator('$httpBackend', function ($delegate, $rootScope) {
+            $provide.decorator('$httpBackend', ["$delegate", "$rootScope", function ($delegate, $rootScope) {
 
                 if (angular.mock) {
                     //do not register for unit tests
@@ -57,7 +57,7 @@
                 };
 
                 return decoratedHttpBackend;
-            });
+            }]);
 
         }
     ]);

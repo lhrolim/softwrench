@@ -4,7 +4,7 @@
 
     angular.module('webcommons_services').config(['$provide', function ($provide) {
 
-        $provide.decorator('dynamicScriptsCacheService', function ($delegate, $rootScope) {
+        $provide.decorator('dynamicScriptsCacheService',  ["$delegate", "$injector", function ($delegate, $rootScope) {
 
             const _register = $delegate.registerScript;
             const _usecustom = $delegate.useCustomServiceIfPresent;
@@ -18,7 +18,7 @@
             return $delegate;
 
 
-        });
+        }]);
 
     }
     ]);
