@@ -3,12 +3,25 @@
 
 
 
-    function queryListBuilderService(offlineSchemaService, searchIndexService, metadataModelService, $log) {
+    function queryListBuilderService(offlineSchemaService, searchIndexService, metadataModelService, $log, securityService) {
         //#region Utils
 
         const log = $log.get("queryListBuilderService", ["list", "search"]);
 
+        function buildExtraLaborAttribute(childListSchema, childEntityName) {
+            //TODO: make more generic...
+            const laborCode = securityService.currentFullUser()["PersonId"];
+            
+            const laborIdxName = searchIndexService.getIndexColumn(childListSchema.applicationName, childListSchema, "laborcode" ).replace("`root`", "`" + childEntityName + "`");
+
+            return `${laborIdxName} = '${laborCode}'`;
+
+        }
+
+
         function doBuildLeftJoin(mainListSchema, childEntityName) {
+
+            
 
             const entityAssociation = mainListSchema.offlineAssociations[childEntityName];
             const application = metadataModelService.getApplicationByName(entityAssociation.to, true);
@@ -23,7 +36,17 @@
             const mainIdx = searchIndexService.getIndexColumn(mainListSchema.applicationName, mainListSchema, primaryAttribute.from);
             const leftJoinedIndex = searchIndexService.getIndexColumn(childListSchema.applicationName, childListSchema, primaryAttribute.to).replace("`root`", "`" + childEntityName + "`");
 
-            query += `${mainIdx} = ${leftJoinedIndex} )`;
+
+            let extraLaborQuery = "1=1";
+            if (mainListSchema.applicationName === "workorder") {
+                extraLaborQuery = buildExtraLaborAttribute(childListSchema, childEntityName);
+            }
+            
+
+            query += `${mainIdx} = ${leftJoinedIndex} and ${extraLaborQuery})`;
+
+            
+
 
             return query;
         }
@@ -95,7 +118,7 @@
 
     //#region Service registration
 
-    angular.module("persistence.offline").factory("queryListBuilderService", ["offlineSchemaService", "searchIndexService", "metadataModelService", "$log", queryListBuilderService]);
+    angular.module("persistence.offline").factory("queryListBuilderService", ["offlineSchemaService", "searchIndexService", "metadataModelService", "$log", "securityService", queryListBuilderService]);
 
     //#endregion
 

@@ -31,16 +31,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid 
             and 
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
-                and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))";
+                and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))
+          ";
 
         /// <summary>
-        /// Brings all workorders excluding the ones which already have an assignment for the current user on the week. Facility filters will be applied on top of this to narrow the list
+        /// Brings all workorders excluding the ones which already have an assignment for the current user on the week (but that have at least one assignment for other users).
+        ///  Facility filters will be applied on top of this to narrow the list
         /// </summary>
         private const string WOGroupByBaseWhereClause =
           @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid
             and not
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
-                and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))";
+                and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))
+            and exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
+                and a.laborcode != '@user.properties['laborcode']')";
 
 
         private const string UserLaborWhereClause = "labor.laborcode='@user.properties['laborcode']' and labor.orgid=@orgid";

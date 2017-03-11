@@ -2,7 +2,7 @@
     "use strict";
 
 
-    function searchIndexService(dispatcherService, offlineSchemaService) {
+    function searchIndexService(dispatcherService, offlineSchemaService, $log) {
 
 
         var indexColumnCache = {}; // cache of attribute -> index column
@@ -142,7 +142,11 @@
         //#endregion
 
         // builds an array of index values parameters to be stored on client db
-        const buildIndexes = function (textIndexes, numericIndexes, dateIndexes, newDataMap) {
+        const buildIndexes = function (textIndexes, numericIndexes, dateIndexes, newDataMap, appName) {
+            const log = $log.get("searchIndexService#buildIndexes", ["sync", "index"]);
+
+            log.info(`building indexes for application ${appName}`);
+
             const indexesData = {
                 t1: null,
                 t2: null,
@@ -158,13 +162,17 @@
 
             if (textIndexes) {
                 angular.forEach(textIndexes, (indexName, i) => {
-                    indexesData[`t${i + 1}`] = newDataMap[indexName] || null;
+                    var indexValue = newDataMap[indexName] || null;
+                    indexesData[`t${i + 1}`] = indexValue;
+                    log.trace(`adding text index t${i + 1} for application ${appName} from field ${indexName} with value ${indexValue} `);
                 });
             }
 
             if (numericIndexes) {
                 angular.forEach(numericIndexes, (indexName, i) => {
-                    indexesData[`n${i + 1}`] = newDataMap[indexName] || null;
+                    let indexValue = newDataMap[indexName] || null;
+                    indexesData[`n${i + 1}`] = indexValue;
+                    log.trace(`adding numeric index n${i + 1} for application ${appName} from field ${indexName} with value ${indexValue} `);
                 });
             }
 
@@ -178,8 +186,11 @@
                         convertedValue = new Date(value).getTime();
                     }
                     indexesData[`d${i + 1}`] = convertedValue;
+                    log.trace(`adding numeric index d${i + 1} for application ${appName} from field ${indexName} with value ${convertedValue} `);
                 });
             }
+
+            
 
             return indexesData;
         };
@@ -313,5 +324,5 @@
 
     }
 
-    mobileServices.factory("searchIndexService", ["dispatcherService", "offlineSchemaService", searchIndexService]);
+    mobileServices.factory("searchIndexService", ["dispatcherService", "offlineSchemaService", "$log", searchIndexService]);
 })(angular);

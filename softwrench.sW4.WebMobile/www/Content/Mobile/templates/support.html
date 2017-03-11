@@ -2,7 +2,6 @@
     <ion-nav-buttons side="left">
         <button class="button-icon" menu-toggle="left"><i class="fa fa-bars"></i></button>
     </ion-nav-buttons>
-
     <ion-content class="padding" has-header="true" has-bouncing="false">
         <div class="responsive-container lg">
             <button class="button button-positive button-block icon-left ion-email"
@@ -10,27 +9,46 @@
                 Send Log Files
             </button>
         </div>
-
-<!--        <div class="responsive-container lg">-->
-<!--            <button class="button button-positive button-block icon-left ion-alert"-->
-<!--                    ng-click="reset()">-->
-<!--                Reset Configurations-->
-<!--            </button>-->
-<!--        </div>-->
-
-        <div class="responsive-container lg">
-
-            <label class="item item-input" ng-show="!isFieldHidden(field)">
-                <span class="input-label">Log Level</span>
-                <option-field header-text="Log Level"
-                              allow-empty="false"
-                              value="vm.loglevel"
-                              text="Choose"
-                              items="[{value:'TRACE',label:'Trace'},{value:'DEBUG',label:'Debug'},{value:'INFO',label:'Info'}, {value:'WARN',label:'Warn'}]"
-                              callback2="changeloglevel(callback)"/>
-            </label>
+        <!--        <div class="responsive-container lg">-->
+        <!--            <button class="button button-positive button-block icon-left ion-alert"-->
+        <!--                    ng-click="reset()">-->
+        <!--                Reset Configurations-->
+        <!--            </button>-->
+        <!--        </div>-->
+        <div class="list card responsive-container lg">
+            <div class="item item-divider app-summary-title" ng-click="toggleSQLClientState()">
+                <label class="item item-input" ng-show="!isFieldHidden(field)">
+                    <span class="input-label">Log Level</span>
+                    <option-field header-text="Log Level"
+                                  allow-empty="false"
+                                  value="vm.loglevel"
+                                  text="Choose"
+                                  items="[{value:'TRACE',label:'Trace'},{value:'DEBUG',label:'Debug'},{value:'INFO',label:'Info'}, {value:'WARN',label:'Warn'}]"
+                                  callback2="changeloglevel(callback)" />
+                </label>
+            </div>
         </div>
 
+
+
+
+        <div class="list card responsive-container lg">
+            <div class="item item-divider app-summary-title" ng-click="toggleSQLClientState()">
+                <i class="fa" ng-class="{'fa-caret-down': vm.sqlClientCollapsed, 'fa-caret-up': !vm.sqlClientCollapsed}"></i>&ensp;SQL Client
+            </div>
+
+            <div class="item item-text-wrap" ng-show="!vm.sqlClientCollapsed">
+                <textarea ng-model="queryModel.sqlQuery" wrap="hard" rows="10" style="width: 100%; resize: none; border-style: solid; border-width: 1px; border-color: #ddd"></textarea>
+                <div style="padding-top: 5px">
+                    <input style="vert-align: middle" type="checkbox" ng-model="queryModel.limitRows" />
+                    <span style="vert-align: middle">Limit Rows:</span>
+                    <input type="number" style="display: inline-block; border-style: solid; border-width: 1px; border-color: #ddd" ng-model="queryModel.limitRowsSize" min="1" max="10000000" ng-readonly="!queryModel.limitRows" />
+                </div>
+                <button class="button button-positive button-block icon-left ion-flash" ng-click="runSQL()">
+                    Run SQL
+                </button>
+                <textarea ng-model="queryModel.resultMessage" wrap="hard" rows="3" style="width: 100%; border-style: solid; border-width: 1px; border-color: #ddd" ng-readonly="true" ng-style="queryModel.resultMessageStyle"></textarea>
+            </div>
+        </div>
     </ion-content>
 </ion-view>
-
