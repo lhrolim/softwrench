@@ -42,9 +42,7 @@
             <ion-item class="crud-item"
                       ng-repeat="item in crudlist.items track by item.generatedRowStamp"
                       item="item"
-                      on-swipe-left="quickSync(item)"
-                      on-hold="deleteOrRestoreItem(item)">
-
+                      on-hold="showGridItemOptions($event,item)">
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col col-25 crud-icon">
                         <crud-icon item="item"></crud-icon>
