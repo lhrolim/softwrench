@@ -16,6 +16,8 @@
             $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
         }
 
+        $ionicPopover.fromTemplateUrl("Content/Mobile/templates/griditemoptionsmenu.html", { scope: $scope }).then(popover => $scope.optionspopover = popover);
+
         function init() {
             log.get("crud_detail#init").debug("crud detail init");
             $scope.allDisplayables = crudContextService.mainDisplayables();
@@ -238,6 +240,19 @@
 
         $scope.$on('sw_cruddetailrefreshed', function () {
             $scope.datamap = crudContextService.currentDetailItemDataMap();
+        });
+
+        $scope.showDirtyOptions = function ($event) {
+            var item = $scope.item;
+            if (item.isDirty) {
+                $scope.currentSelectedItem = item;
+                $scope.optionspopover.show($event);
+            }
+        }
+
+        $scope.$on("sw_griditemoperationperformed", () => {
+            $scope.optionspopover.hide();
+            $scope.currentSelectedItem = null;
         });
 
         $scope.$on('$stateChangeSuccess',
