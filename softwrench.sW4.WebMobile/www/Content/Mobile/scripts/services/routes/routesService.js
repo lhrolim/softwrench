@@ -1,42 +1,50 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('routeService', ["$state", "contextService", "settingsService", "localStorageService", "loadingService", "$rootScope", "routeConstants",
-        function ($state, contextService, settingsService, localStorageService, loadingService, $rootScope, routeConstants) {
 
-            const loginURL = () => settingsService.getServerUrl().then(url => url + "/SignIn/SignInReturningUserData");
 
-            const go = function (stateName, params) {
-                // TODO: insert params in the context and recover
-                contextService.insertIntoContext("currentstate", stateName);
-                return loadingService.showDefault().finally(() => {
-                    const isSameState = $state.$current.name === stateName;
-                    const stateTransition = $state.go(stateName, params);
-                    if (isSameState) {
-                        stateTransition.then(state => $rootScope.$broadcast(routeConstants.events.sameStateTransition, state));
-                    }
-                    loadingService.hide();
-                });
-            };
+    class routeService {
+        constructor($state, contextService, settingsService, localStorageService, loadingService, $rootScope, routeConstants) {
+            this.$state = $state;
+            this.localStorageService = localStorageService;
+            this.contextService = contextService;
+            this.settingsService = settingsService;
+            this.loadingService = loadingService;
+            this.$rootScope = $rootScope;
+            this.routeConstants = routeConstants;
+            this.loginURL = () => this.settingsService.getServerUrl().then(url => url + "/SignIn/SignInReturningUserData");
+        }
 
-            const loadInitialState = function (authenticated) {
-                if (!authenticated) {
-                    return !localStorageService.get("settings:serverurl") ? this.go("settings") : this.go("login");
+        go(stateName, params) {
+            // TODO: insert params in the context and recover
+            this.contextService.insertIntoContext("currentstate", stateName);
+            return this.loadingService.showDefault().finally(() => {
+                const isSameState = this.$state.$current.name === stateName;
+                const stateTransition = this.$state.go(stateName, params);
+                if (isSameState) {
+                    stateTransition.then(state => this.$rootScope.$broadcast(this.routeConstants.events.sameStateTransition, state));
                 }
-                const currentState = contextService.getFromContext("currentstate");
-                if (isRippleEmulator() && currentState) {
-                    return this.go(currentState);
-                }
-                return this.go("main.home");
-            };
+                this.loadingService.hide();
+            });
+        }
 
-            const api = {
-                go,
-                loginURL,
-                loadInitialState
+
+        loadInitialState(authenticated) {
+            if (!authenticated) {
+                return !this.localStorageService.get("settings:serverurl") ? this.go("settings") : this.go("login");
             }
-            return api;
+            const currentState = this.contextService.getFromContext("currentstate");
+            if (isRippleEmulator() && currentState) {
+                return this.go(currentState);
+            }
+            return this.go("main.home");
+        }
 
-        }]);
+    }
+
+    routeService["$inject"] = ["$state", "contextService", "settingsService", "localStorageService", "loadingService", "$rootScope", "routeConstants"];
+
+    mobileServices.service('routeService', routeService);
+
 
 })(mobileServices)

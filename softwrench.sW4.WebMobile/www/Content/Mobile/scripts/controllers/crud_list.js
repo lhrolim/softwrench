@@ -1,8 +1,9 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService",
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants",
+        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate",
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate) {
 
             $scope.crudlist = {
                 items: [],
@@ -36,6 +37,8 @@
                     $scope.quickSearch.value = null;
                 }
             }
+
+            $ionicPopover.fromTemplateUrl("Content/Mobile/templates/griditemoptionsmenu.html", { scope: $scope }).then(popover => $scope.optionspopover = popover);
 
             init();
 
@@ -124,25 +127,37 @@
                 crudContextService.loadDetail(item);
             }
 
+            $scope.toggleMenu = function () {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
+
             $scope.createItem = function () {
                 crudContextService.createDetail();
             }
 
-            $scope.quickSync = function (item) {
-                if (!item.isDirty) {
-                    return;
-                }
-                synchronizationFacade.syncItem(item).then(() => {
+            $scope.fullSync = function (item) {
+                loadingService.showDefault();
+                return synchronizationFacade.fullSync().then(() => {
                     //updating the item on the list after it has been synced
                     crudContextService.refreshGrid();
+                }).finally(() => {
+                    loadingService.hide();
+                    $scope.$broadcast('scroll.refreshComplete');
                 });
             }
-  		
-            $scope.deleteOrRestoreItem = function (item) {
-                return itemActionService.deleteOrRestoreItem(item)
-                    .then(res => res ? crudContextService.refreshGrid() : null);
-            };
 
+
+            $scope.showGridItemOptions = function ($event, item) {
+                if (item.isDirty) {
+                    $scope.currentSelectedItem = item;
+                    $scope.optionspopover.show($event);
+                }
+            }
+
+            $scope.$on("sw_griditemoperationperformed", () => {
+                $scope.optionspopover.hide();
+                $scope.currentSelectedItem = null;
+            });
 
             $scope.$on("$stateChangeSuccess",
                  function (event, toState, toParams, fromState, fromParams) {

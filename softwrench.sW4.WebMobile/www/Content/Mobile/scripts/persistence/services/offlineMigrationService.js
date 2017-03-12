@@ -5,7 +5,7 @@
         const decorateMigrator = function () {
             const migrator = persistence.migrations.Migrator;
             const Migration = persistence.migrations.Migration;
-            const migrations = migrator.migrations.slice(0);
+            const migrations = migrator.migrations.slice(1);
 
             const log = $log.getInstance("offlineMigrationService");
 

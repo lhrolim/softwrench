@@ -61,8 +61,8 @@
                 scope.name = "crud_input_fields";
             },
 
-            controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "swdbDAO",
-                function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, dao) {
+            controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "swdbDAO","searchIndexService","offlineSchemaService",
+                function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, dao,searchIndexService, offlineSchemaService) {
 
                     $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause) {
                         return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause);
@@ -121,7 +121,9 @@
                      * $broadcast's "sw:association:resolved" event with the entity.AssociationData for setting initial labels in the $viewValues.
                      */
                     function triggerAssociationsInitialLabels() {
-                        const log = $log.get("crud_input_fields#triggerAssociationsInitialLabels", ["association"]);
+                        //TODO: move to offlineassociationService
+
+                        const log = $log.get("crud_input_fields#triggerAssociationsInitialLabels", ["association", "detail"]);
 
                         // association fields that have a value set in the datamap
                         const associationFields = fieldService
@@ -144,10 +146,26 @@
                             const associationValue = $scope.datamap[f.attribute];
 
                             // local transient name cache to be used further down the promise chain
-                            f["#associationLocalCache"] = { associationName, associationEntityName }
+                            f["#associationLocalCache"] = { associationName, associationEntityName };
 
+                            var listSchema = offlineSchemaService.locateSchemaByStereotype(associationName, "list");
+                            var nameToUse = associationName;
+                            if (!listSchema) {
+                                //falling back to entityName instead, due to multiple possibilities on the sync process, depending on how the association is declared (qualifier or not)
+                                listSchema = offlineSchemaService.locateSchemaByStereotype(associationEntityName, "list");
+                                nameToUse = associationEntityName;
+                            }
+
+                            const idx = !!listSchema? searchIndexService.getIndexColumn(associationName, listSchema, f.valueField) : null;
+
+                            if (!!idx) {
+                                log.debug("applying index query");
+                                return `( application = '${nameToUse}' and ${idx} = '${associationValue}')`;
+                            }
+
+                            log.warn(`applying non-indexed query consider adjusting your metadata to include the proper index for ${associationName}: ${f.valueField}`);
                             // fetching by application and by value
-                            return `((application='${associationName}' or application='${associationEntityName}') and datamap like '%"${f.valueField}":"${associationValue}"%')`;
+                            return `(application in('${associationName}','${associationEntityName}') and datamap like '%"${f.valueField}":"${associationValue}"%')`;
                         });
 
                         const query = whereClauses.join("or");
@@ -273,6 +291,11 @@
                         triggerAssociationsInitialLabels();
                         watchFields();
                     }
+
+                    $scope.$on("sw_cruddetailrefreshed", () => {
+                        $scope.datamap = crudContextService.currentDetailItemDataMap();
+                        triggerAssociationsInitialLabels();
+                    });
 
                     init();
 
