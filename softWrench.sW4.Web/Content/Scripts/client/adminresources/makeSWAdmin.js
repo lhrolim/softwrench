@@ -13,19 +13,18 @@
             $http.get(urlToInvoke).
             then(function (response, status, headers, config) {
                 const data = response.data;
-                if (data.resultObject == true) {
+                if (data.resultObject === true) {
                     $scope.msg = "";
                     $scope.msgsuccess = "Successfully Authorized";
                     $timeout(function () {
-                        location.reload();
+//                        location.reload();
                     }, 1500);
 
                     redirectService.redirectToHome();
                 } else {
                     $scope.msg = "Unauthorized";
                 }
-            }).
-            error(function (data, status, headers, config) {
+            }).catch(function (data) {
                 $scope.msg = "Error";
             });
         };
