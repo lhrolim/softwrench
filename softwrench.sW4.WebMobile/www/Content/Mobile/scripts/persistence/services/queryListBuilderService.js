@@ -38,12 +38,13 @@
 
 
             let extraLaborQuery = "1=1";
-            if (mainListSchema.applicationName === "workorder") {
+            if (mainListSchema.applicationName === "workorder" ) {
                 extraLaborQuery = buildExtraLaborAttribute(childListSchema, childEntityName);
             }
-            
+            const associatioNameQuqery = "`" + childEntityName + "`" + ".application= 'assignment'";
 
-            query += `${mainIdx} = ${leftJoinedIndex} and ${extraLaborQuery})`;
+            //TODO: make it generic...
+            query += `${mainIdx} = ${leftJoinedIndex} and ${extraLaborQuery} and ${associatioNameQuqery} )`;
 
             
 

@@ -8,19 +8,38 @@
             transclude: false,
             replace: false,
             scope: {
-                item: "="
+                item: "=",
+                isdetail:'='
             },
-            controller: ["$scope", "iconProviderService", function ($scope, iconProviderService) {
+            controller: ["$scope", "iconProviderService", "crudContextService", function ($scope, iconProviderService, crudContextService) {
 
-                $scope.getIconClass = item => iconProviderService.getIconClass(item);
+                $scope.currentItem = function (item) {
+                    return $scope.isdetail ? crudContextService.currentDetailItem() : item;
+                }
 
-                $scope.getIconColor = item => iconProviderService.getIconColor(item);
 
-                $scope.getIconText = item => iconProviderService.getIconText(item);
+//
+                $scope.getIconColor = item => iconProviderService.getIconColor($scope.currentItem(item));
 
-                $scope.getIconIcon = item => iconProviderService.getIconIcon(item);
+                $scope.getIconText = item => iconProviderService.getIconText($scope.currentItem(item));
 
-                $scope.getTextColor = item => iconProviderService.getTextColor(item);
+                $scope.getIconIcon = item => iconProviderService.getIconIcon($scope.currentItem(item));
+
+                $scope.getTextColor = item => iconProviderService.getTextColor($scope.currentItem(item));
+
+
+                //                $scope.getIconClass = item => { iconProviderService.getIconClass($scope.currentItem(item)); }
+
+                $scope.getIconClass = item => iconProviderService.getIconClass($scope.currentItem(item));
+
+//                $scope.getIconColor = item => iconProviderService.getIconColor(item);
+//
+//                $scope.getIconText = item => iconProviderService.getIconText(item);
+//
+//                $scope.getIconIcon = item => iconProviderService.getIconIcon(item);
+//
+//                $scope.getTextColor = item => iconProviderService.getTextColor(item);
+
 
             }]
         };

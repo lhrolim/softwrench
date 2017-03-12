@@ -27,7 +27,7 @@
         <button class="button-icon" ng-show="isList() && !isSearching()" ng-touchstart="enableSearch()"><i class="fa fa-search"></i></button>
     </ion-nav-buttons>
 
-    <ion-content has-header="true" has-bouncing="false">
+    <ion-content has-header="true" has-bouncing="false" on-swipe-right="toggleMenu()" >
 
         <div class="row" ng-if="crudlist.items.length == 0">
             <div class="col col-center text-center">
@@ -35,14 +35,14 @@
             </div>
         </div>
 
-        <ion-list class="has-header crud-list" ng-if="crudlist.items.length >0">
+        <ion-refresher pulling-text="Pull to Sync" on-refresh="fullSync()" pulling-icon="fa fa-refresh" spinner="none"> </ion-refresher>
+
+        <ion-list class="has-header crud-list" ng-if="crudlist.items.length >0" >
             <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->
             <ion-item class="crud-item"
                       ng-repeat="item in crudlist.items track by item.generatedRowStamp"
                       item="item"
-                      on-swipe-left="quickSync(item)"
-                      on-hold="deleteOrRestoreItem(item)">
-
+                      on-hold="showGridItemOptions($event,item)">
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col col-25 crud-icon">
                         <crud-icon item="item"></crud-icon>

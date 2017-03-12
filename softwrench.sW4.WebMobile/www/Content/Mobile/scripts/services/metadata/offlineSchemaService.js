@@ -55,6 +55,13 @@
         };
 
         function locateSchemaByStereotype(application, stereotype) {
+            if (isString(application)) {
+                application = metadataModelService.getApplicationByName(application,true);
+            }
+            if (application == null) {
+                return null;
+            }
+
             var schemasList = application.data.schemasList;
 
             for (var i = 0; i < schemasList.length; i++) {
