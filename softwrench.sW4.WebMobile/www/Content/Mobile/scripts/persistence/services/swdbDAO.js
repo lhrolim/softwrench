@@ -250,7 +250,7 @@
             if (batchMode == undefined) {
                 batchMode = true;
             }
-            
+
             const deferred = $q.defer();
             const promise = deferred.promise;
 
@@ -381,11 +381,36 @@
             return persistence.runSql(statement, args);
         };
 
+        function addIndexQuery(tableName, columnName, unique, indexName) {
+            var originalColumnName = columnName;
+            if (columnName instanceof Array) {
+                originalColumnName = columnName.join("_");
+                columnName = columnName.join(',');
+            }
+
+            const name = indexName || tableName + "__" + originalColumnName;
+            const uniqueString = unique === true ? "UNIQUE" : "";
+            const sql = `CREATE ${uniqueString} INDEX IF NOT EXISTS ${name} ON  ${tableName} (${columnName})`;
+            return sql;
+        }
+
+        function dropIndex(tableName, columnName) {
+            var originalColumnName = columnName;
+            if (columnName instanceof Array) {
+                originalColumnName = columnName.join("_");
+                columnName = columnName.join(',');
+            }
+
+            var sql = 'DROP INDEX IF EXISTS offlineswdb.' + tableName + '_' + columnName;
+            this.executeQuery(sql);
+        }
+
         const api = {
             bulkSave,
             bulkDelete,
             countByQuery,
             createTx,
+            dropIndex,
             executeStatement,
             executeQuery,
             executeQueries,
@@ -399,6 +424,7 @@
             recreateDataBase,
             dropDataBase,
             deleteTable,
+            addIndexQuery,
             resetDataBase
         }
 

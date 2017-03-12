@@ -4,6 +4,10 @@
     function laborTimerIconProvider(laborService) {
         //#region Utils
         function hasActiveLabor(item) {
+            if (!item) {
+                return false;
+            }
+
             var activeLabor = laborService.getActiveLabor();
 
             //is labor composition item

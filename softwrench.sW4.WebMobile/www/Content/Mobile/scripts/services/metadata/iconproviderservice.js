@@ -49,6 +49,10 @@
         //#region Public methods
 
         function getIconColor(item) {
+            if (!item) {
+                return null;
+            }
+
             const datamap = item.datamap;
             const defaultColor = "#808080";
 
@@ -77,6 +81,10 @@
         }
 
         function getIconClass(item) {
+            if (!item) {
+                return null;
+            }
+
             if (item.hasProblem) {
                 return 'hasproblem';
             }
@@ -98,6 +106,9 @@
         }
 
         function getIconText(item) {
+            if (!item) {
+                return null;
+            }
             if (item.isDirty || item.pending || item.hasProblem) {
                 return "";
             }
@@ -136,6 +147,10 @@
         }
 
         function getIconIcon(item) {
+            if (!item) {
+                return null;
+            }
+
             if (item.hasProblem) {
                 return "exclamation-triangle";
             }
