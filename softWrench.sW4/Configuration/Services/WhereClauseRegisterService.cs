@@ -108,6 +108,7 @@ namespace softWrench.sW4.Configuration.Services {
                 newValue = "1=1";
             }
             propertyValue.Value = newValue;
+            _configurationCache.ClearCache(propertyValue.Definition.FullKey);
             return await _dao.SaveAsync(propertyValue);
         }
 
