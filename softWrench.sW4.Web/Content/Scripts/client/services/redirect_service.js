@@ -10,8 +10,12 @@
         };
 
         function redirectToHome() {
+            const previousURL = $location.path();
+            const idx = previousURL.indexOf("#");
             contextService.deleteFromContext("swGlobalRedirectURL");
-            $location.path("");
+            if (idx !== -1) {
+                $location.path(previousURL.subString(0,idx));
+            }
             $location.url($location.path());
             window.location.reload();
         };
