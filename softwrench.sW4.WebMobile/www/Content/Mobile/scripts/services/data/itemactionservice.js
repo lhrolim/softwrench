@@ -15,7 +15,7 @@
          */
         function shouldAllowQuickSyncForCurrentItem() {
             const item = crudContextService.currentDetailItem();
-            return item.isDirty && !crudContextService.hasDirtyChanges();
+            return !!item && item.isDirty && !crudContextService.hasDirtyChanges();
         }
 
         /**
@@ -25,6 +25,9 @@
          */
         function shouldAllowDeleteOrRestoreForCurrentItem() {
             const item = crudContextService.currentDetailItem();
+            if (!item) {
+                return false;
+            }
             const restorable = item.remoteId && item.isDirty && !!item.originaldatamap;
             const deletable = !item.remoteId;
             return !item.pending && (restorable || deletable) && !crudContextService.hasDirtyChanges();

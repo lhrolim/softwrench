@@ -1,8 +1,9 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants", "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService",
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants",
+        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService","loadingService", "$ionicSideMenuDelegate",
+        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate) {
 
             $scope.crudlist = {
                 items: [],
@@ -124,8 +125,23 @@
                 crudContextService.loadDetail(item);
             }
 
+            $scope.toggleMenu = function() {
+                $ionicSideMenuDelegate.toggleLeft();
+            }
+
             $scope.createItem = function () {
                 crudContextService.createDetail();
+            }
+
+            $scope.fullSync = function (item) {
+                loadingService.showDefault();
+                return synchronizationFacade.fullSync().then(() => {
+                    //updating the item on the list after it has been synced
+                    crudContextService.refreshGrid();
+                }).finally(() => {
+                    loadingService.hide();
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
             }
 
             $scope.quickSync = function (item) {

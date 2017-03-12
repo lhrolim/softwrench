@@ -24,6 +24,7 @@
 
             // tag has max length = 26 characters
             addMigration(tag, migration) {
+                console.log(`adding migration ${tag}`)
                 migration.id = this.stringId + "-" + (this.tag || "") + "-" + (tag || "");
                 this.migrations.push(migration);
             }

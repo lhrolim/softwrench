@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
-    'crudContextService', 'fieldService', 'offlineAssociationService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup",
+    'crudContextService', 'fieldService',  '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
-    crudContextService, fieldService, offlineAssociationService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate, swAlertPopup) {
+    crudContextService, fieldService,  $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate, swAlertPopup) {
         
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;

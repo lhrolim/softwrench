@@ -20,6 +20,10 @@
                 $ionicSideMenuDelegate.toggleLeft();
             };
 
+            $scope.closeMenu= function () {
+                $ionicSideMenuDelegate.toggleLeft();
+            };
+
             $scope.title = function () {
                 return crudContextService.currentTitle();
             };

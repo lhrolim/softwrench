@@ -1437,6 +1437,9 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
+     <properties>
+        <property key="list.offline.text.indexlist" value="classstructureid"/>
+      </properties>
     </application>
 
     <application name="failurelistonly" title="Failure List" entity="failurelistonly">
@@ -1448,6 +1451,9 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
+     <properties>
+        <property key="list.offline.text.indexlist" value="failurecode"/>
+      </properties>
     </application>
 
     <application name="problemlist" title="Problem List" entity="problemlist">
@@ -1459,6 +1465,9 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="failurecode"/>
+      </properties>
     </application>
 
     <application name="causelist" title="Cause List" entity="causelist">
@@ -1471,6 +1480,9 @@
 
         </list>
       </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="failurecode"/>
+      </properties>
     </application>
 
     <application name="remedylist" title="Remedy List" entity="remedylist">
@@ -1482,6 +1494,9 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
+     <properties>
+        <property key="list.offline.text.indexlist" value="failurecode"/>
+      </properties>
     </application>
 
     <application name="offlinelocation" entity="location" title="Location">
@@ -1510,7 +1525,7 @@
       </schemas>
 
       <properties>
-        <property key="list.offline.text.indexlist" value="location"/>
+        <property key="list.offline.text.indexlist" value="location,assetnum"/>
       </properties>
     </application>
 

@@ -27,6 +27,11 @@ module.exports = function (grunt) {
         "www/Content/Shared/audit_offline/scripts/offline/audit.js"
     ];
 
+    /** localbuild script to indicate that the app is running on local debug mode */
+    var localDebugScript = [
+        "www/Content/Mobile/scripts/localdev_script.js"
+    ];
+
     /** reusable online & offline lib scripts (ours)  */
     var sharedScripts = [
         "www/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js",
@@ -76,6 +81,8 @@ module.exports = function (grunt) {
         "www/Content/Mobile/scripts/utils/mobileconstants.js"
     ];
 
+    
+
     /** app scripts: angular constructs */
     var appScripts = [
         "www/Content/Mobile/scripts/utils/**/*.js",
@@ -85,7 +92,8 @@ module.exports = function (grunt) {
         "www/Content/Mobile/scripts/directives/**/*.js",
         "www/Content/Mobile/scripts/maximoservices/**/*.js",
         "www/Content/Mobile/scripts/filters/**/*.js",
-        "www/Content/Mobile/scripts/decorators/**/*.js"
+        "www/Content/Mobile/scripts/decorators/**/*.js",
+        "www/Content/Mobile/scripts/migrations/**/*.js"
     ];
 
     //TODO: make a client-based build??
@@ -106,6 +114,10 @@ module.exports = function (grunt) {
         .concat(appBootstrapScripts)
         .concat(appScripts)
         .concat(customerScripts);
+
+    var solutionScriptsDev = solutionScripts
+        .concat(localDebugScript);
+        
 
     var vendorScripts = [
         // complete paths to guarantee load order (instead of **/*.js)
@@ -326,7 +338,7 @@ module.exports = function (grunt) {
                     openTag: "<!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->",
                     closeTag: "<!-- end auto template script tags -->"
                 },
-                src: solutionScripts,
+                src: solutionScriptsDev,
                 dest: "<%= app.index %>"
             },
             buildTranspiledScripts: {
@@ -334,7 +346,7 @@ module.exports = function (grunt) {
                     openTag: "<!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->",
                     closeTag: "<!-- end auto template script tags -->"
                 },
-                src: solutionScripts.map(function(s) { return "www/Content/public/" + s; }),
+                src: solutionScriptsDev.map(function (s) { return "www/Content/public/" + s; }),
                 dest: "<%= app.index %>"
             },
             // vendors's js

@@ -390,6 +390,7 @@
             //#region GridFNS
 
             refreshGrid: function (skipPostFilter) {
+                const log = $log.get("crudContextService#refreshGrid", ["list", "crud"]);
                 var crudContext = crudContextHolderService.getCrudContext();
                 crudContext.itemlist = [];
                 internalListContext.lastPageLoaded = 1;
@@ -398,6 +399,7 @@
                     if (skipPostFilter) {
                         return $q.when();
                     }
+                    log.debug("application grid refreshed");
                     contextService.insertIntoContext("crudcontext", crudContext);
                     return routeService.go("main.crudlist");
                 });
@@ -442,6 +444,8 @@
 
 
             loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
+                const log = $log.get("crudContextService#loadApplicationGrid", ["list", "crud"]);
+                log.debug("loading application grid");
                 if (lastGridApplication && lastGridApplication !== applicationName) {
                     crudContextHolderService.clearGridSearch();
                 }
@@ -542,6 +546,8 @@
             },
 
             loadDetail: function (item) {
+                const log = $log.get("crudContextService#loadDetail", ["crud", "detail"]);
+                log.debug("load detail init");
                 loadingService.showDefault();
                 const crudContext = crudContextHolderService.getCrudContext(); /// <summary>
                 ///  Loads a detail represented by the parameter item.
@@ -560,12 +566,14 @@
                 if (isRippleEmulator()) {
                     contextService.insertIntoContext("crudcontext", crudContext);
                 }
-
+                log.debug("loading problems");
                 return problemService.getProblems(item.id).then(problems => {
+                    log.debug("problems loaded done");
                     crudContext.currentProblems = problems;
                     return routeService.go("main.cruddetail.maininput");
                 }).then(() => {
-                    $rootScope.$emit("sw_cruddetailrefreshed");
+                    log.debug("crud detail finished loading");
+                    $rootScope.$broadcast("sw_cruddetailrefreshed");
                     loadingService.hide();
                 });
             }
