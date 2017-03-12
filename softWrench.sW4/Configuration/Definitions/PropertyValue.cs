@@ -119,7 +119,7 @@ namespace softWrench.sW4.Configuration.Definitions {
 
         public virtual ConditionMatchResult MatchesConditions(ContextHolder context, string clientName) {
             var result = new ConditionMatchResult(Module, UserProfile);
-            if (this.ClientName != null && this.ClientName.Equals(clientName)) {
+            if (this.ClientName != null && !this.ClientName.Equals(clientName)) {
                 //preventing wrong customers to match on multitenancy databases
                 result.Append(ConditionMatch.No);
                 return result;
