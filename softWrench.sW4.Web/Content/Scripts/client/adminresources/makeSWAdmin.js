@@ -17,7 +17,7 @@
                     $scope.msg = "";
                     $scope.msgsuccess = "Successfully Authorized";
                     $timeout(function () {
-//                        location.reload();
+                        location.reload();
                     }, 1500);
 
                     redirectService.redirectToHome();

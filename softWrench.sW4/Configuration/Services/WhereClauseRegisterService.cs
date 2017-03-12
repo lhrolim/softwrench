@@ -13,6 +13,7 @@ using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Configuration.Util;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Exceptions;
@@ -55,7 +56,7 @@ namespace softWrench.sW4.Configuration.Services {
             _configurationCache = configurationCache;
         }
 
-        public void ValidateWhereClause([NotNull]string applicationName, [NotNull]string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
+        public virtual void ValidateWhereClause([NotNull]string applicationName, [NotNull]string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
             if (string.IsNullOrEmpty(whereClause) || whereClause.EqualsAny("1=1", "1!=1")){
                 //common whereclauses which validation can be skipped
                 return;
@@ -68,8 +69,10 @@ namespace softWrench.sW4.Configuration.Services {
                 return;
             }
 
-            var searchRequestDto = new SearchRequestDto {
-                WhereClause = WhereClauseFacade.BuildWhereClauseResult(whereClause).Query
+            var searchRequestDto = new PaginatedSearchRequestDto {
+                WhereClause = WhereClauseFacade.BuildWhereClauseResult(whereClause).Query,
+                PageSize = 1,
+                PageNumber = 1
             };
             var application = MetadataProvider.Application(applicationName, false, true);
             if (application == null) {
