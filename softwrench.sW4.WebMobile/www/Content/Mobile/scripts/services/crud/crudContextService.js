@@ -319,7 +319,7 @@
                         contextService.insertIntoContext("crudcontext", crudContext);
                         if (crudContext.newItem) {
                             crudContext.newItem = false;
-                            return this.refreshGrid().then(() => saved);
+                            return this.refreshGrid(true).then(() => saved);
                         }
                         return this.refreshIfLeftJoinPresent(crudContext, saved);
                     });
