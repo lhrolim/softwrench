@@ -180,7 +180,27 @@ module.exports = function (grunt) {
 
         //#region clean directories
         clean: {
-            vendor: [
+            vendor: [ ngtemplates: {
+            app: {
+                src: ['www/Content/Mobile/templates/**/*.html'],
+                dest: '<%= app.dist %>/scripts/htmltemplates.js',
+                options: {
+                    module: "sw_layout",
+                    url: function (url) {
+                        var idx = url.indexOf("/Content");
+                        url = url.replace("/templates", "/Templates")
+                        return url.substring(idx);
+                    },
+                    templateWrap: function (path, template, index, files) {
+                        var fullPath = `contextService.getResourceUrl('${path}')`;
+                        return `$templateCache.put(${fullPath},${template})`;
+                    },
+                    bootstrap: function (module, script) {
+                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" + script + "\n}]);\n";
+                    }
+                }
+            }
+        },
                 "www/Content/Vendor/scripts/",
                 "www/Content/Vendor/css/"
             ],
@@ -664,6 +684,28 @@ module.exports = function (grunt) {
         }
         //#endregion
 
+		 ngtemplates: {
+            app: {
+                src: ['<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'],
+                dest: '<%= app.dist %>/scripts/htmltemplates.js',
+                options: {
+                    module: "sw_layout",
+                    url: function (url) {
+                        var idx = url.indexOf("/Content");
+                        url = url.replace("/templates", "/Templates")
+                        return url.substring(idx);
+                    },
+                    templateWrap: function (path, template, index, files) {
+                        var fullPath = `contextService.getResourceUrl('${path}')`;
+                        return `$templateCache.put(${fullPath},${template})`;
+                    },
+                    bootstrap: function (module, script) {
+                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" + script + "\n}]);\n";
+                    }
+                }
+            }
+        },
+		
     });
 
     //#region grunt plugins
@@ -680,6 +722,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-rename");
     grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-xmlpoke");
+	grunt.loadNpmTasks('grunt-angular-templates');
     //#endregion
 
     //#region dev tasks
@@ -702,6 +745,7 @@ module.exports = function (grunt) {
         "xmlpoke:bundleid", // update bundleid according to the platform
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
+		"ngtemplates", // minify angular html templates into a single file
         "sass:prod", // compiles sass files
         "babel:release", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
