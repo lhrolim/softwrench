@@ -1,5 +1,5 @@
 /*
-    Copyright 2013-2015 appPlant UG
+    Copyright 2013-2014 appPlant UG
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -23,7 +23,8 @@ using System;
 using System.Linq;
 using System.Runtime.Serialization;
 
-namespace De.APPPlant.Cordova.Plugin.EmailComposer
+
+namespace De.Martinreinhardt.Cordova.Plugins.Email
 {
     /// <summary>
     /// Represents email composer task options

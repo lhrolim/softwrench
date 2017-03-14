@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><widget id="io.cordova.softwrench.sW4.WebMobile" version="3.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps">
+<?xml version="1.0" encoding="utf-8"?><widget id="io.cordova.softwrench.sW4.WebMobile" version="3.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:vs="http://schemas.microsoft.com/appx/2014/htmlapps">
   <name>softWrench</name>
   <description>softWrench simplifies, enhances, and mobilizes the capabilities of IBM Maximo.</description>
   <author email="info@controltechnologysolutions.com" href="http://controltechnologysolutions.com/softwrench/">Control Technology Solutions</author>
@@ -121,6 +121,6 @@
   <plugin name="com.cordova.plugins.cookiemaster" spec="~1.0.0"/>
   <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
   <plugin name="cordova-plugin-whitelist" spec="~1.2.2"/>
-  <plugin name="de.appplant.cordova.plugin.email-composer" spec="https://github.com/katzer/cordova-plugin-email-composer.git#0.8.2"/>
+  <plugin name="cordova-plugin-email" spec="~1.2.6"/>
   <!-- #endregion -->
 </widget>
