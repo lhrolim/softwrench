@@ -145,5 +145,15 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "de.appplant.cordova.plugin.email-composer": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/katzer/cordova-plugin-email-composer.git",
+            "subdir": ".",
+            "ref": "0.8.2"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }
