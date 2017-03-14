@@ -401,7 +401,7 @@
                 columnName = columnName.join(',');
             }
 
-            var sql = 'DROP INDEX IF EXISTS offlineswdb.' + tableName + '_' + columnName;
+            var sql = 'DROP INDEX IF EXISTS offlineswdb.' + tableName + '_' + originalColumnName;
             this.executeQuery(sql);
         }
 
