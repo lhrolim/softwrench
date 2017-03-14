@@ -26,7 +26,7 @@
                 return null;
             }
 
-            log.debug(`using '${iconProviderName}' as icon provider for schema '${schema.schemaId}' in application '${schema.applicationName}'`);
+//            log.debug(`using '${iconProviderName}' as icon provider for schema '${schema.schemaId}' in application '${schema.applicationName}'`);
             return $injector.get(iconProviderName);
         }
 
