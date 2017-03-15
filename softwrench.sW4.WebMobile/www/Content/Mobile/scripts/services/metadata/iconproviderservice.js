@@ -4,6 +4,9 @@
     function iconProviderService($log, crudContextService, $state, $injector, offlineSchemaService, statuscolorService) {
         //#region Utils
 
+        const providerCache = {};
+
+
         function getCurrentSchema() {
             const state = $state.current.name;
             if (state.startsWith("main.crudlist")) {
@@ -14,9 +17,9 @@
             return null;
         }
 
-        function currentIconProvider() {
-            const schema = getCurrentSchema();
-            if (!schema || !schema.properties) return null;
+        const schemaKey = (schema) => schema.applicationName + "#" + schema.schemaId;
+
+        function innerCurrentIconProvider(schema) {
             const iconProviderName = schema.properties["mobile.icon.provider"];
             if (!iconProviderName) return null;
 
@@ -30,10 +33,23 @@
             return $injector.get(iconProviderName);
         }
 
-        function delegateToDeclaredServiceProxy(method, methodName) {
+        function currentIconProvider() {
+            const schema = getCurrentSchema();
+            if (!schema || !schema.properties) return null;
+
+            const key = schemaKey(schema);
+            if (providerCache.hasOwnProperty(key)) {
+                return providerCache[key];
+            }
+
+            const provider = innerCurrentIconProvider(schema);
+            providerCache[key] = provider;
+            return provider;
+        }
+
+        function delegateToDeclaredServiceProxy(method, methodName, iconService) {
             // const methodName = method.name; --> does not work in uglified scripts
             return function () {
-                const iconService = currentIconProvider();
                 if (!iconService || !iconService[methodName] || !angular.isFunction(iconService[methodName])) {
                     return method.apply(null, arguments);
                 }
@@ -180,15 +196,22 @@
             return null;
         }
 
+        function getIcon(item) {
+            const iconService = currentIconProvider();
+            return {
+                color: delegateToDeclaredServiceProxy(getIconColor, "getIconColor", iconService)(item),
+                text: delegateToDeclaredServiceProxy(getIconText, "getIconText", iconService)(item),
+                icon: delegateToDeclaredServiceProxy(getIconIcon, "getIconIcon", iconService)(item),
+                textColor: delegateToDeclaredServiceProxy(getTextColor, "getTextColor", iconService)(item),
+                clazz: delegateToDeclaredServiceProxy(getIconClass, "getIconClass", iconService)(item)
+            }
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
-            getIconClass: delegateToDeclaredServiceProxy(getIconClass, "getIconClass"),
-            getIconColor: delegateToDeclaredServiceProxy(getIconColor, "getIconColor"),
-            getTextColor: delegateToDeclaredServiceProxy(getTextColor, "getTextColor"),
-            getIconText: delegateToDeclaredServiceProxy(getIconText, "getIconText"),
-            getIconIcon: delegateToDeclaredServiceProxy(getIconIcon, "getIconIcon")
+            getIcon: getIcon
         };
         return service;
         //#endregion
@@ -196,8 +219,7 @@
 
     //#region Service registration
 
-    angular.module("sw_mobile_services")
-        .factory("iconProviderService", ["$log", "crudContextService", "$state", "$injector", "offlineSchemaService", "statuscolorService", iconProviderService]);
+    angular.module("sw_mobile_services").factory("iconProviderService", ["$log", "crudContextService", "$state", "$injector", "offlineSchemaService", "statuscolorService", iconProviderService]);
 
     //#endregion
 
