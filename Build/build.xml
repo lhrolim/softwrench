@@ -600,7 +600,7 @@
 
   </target>
 
-  <target name="zip" depends="changelog,copydlls,copylinkedfolders,webcompile,setclient,setenv">
+  <target name="zip" depends="changelog,copydlls,copylinkedfolders,webcompile,setclient,setenv,peekversion">
     <if test="${IsWindows}">
       <logtimestart/>
     </if>

@@ -1,5 +1,5 @@
 /*
-    Copyright 2013-2015 appPlant UG
+    Copyright 2013-2014 appPlant UG
 
     Licensed to the Apache Software Foundation (ASF) under one
     or more contributor license agreements.  See the NOTICE file
@@ -19,7 +19,7 @@
     under the License.
 */
 
-using De.APPPlant.Cordova.Plugin.EmailComposer;
+using De.Martinreinhardt.Cordova.Plugins.Email;
 using Microsoft.Phone.Tasks;
 using System;
 using System.Linq;

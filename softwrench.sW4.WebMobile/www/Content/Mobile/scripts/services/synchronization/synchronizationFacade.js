@@ -1,8 +1,8 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
-        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking) {
+    function synchronizationFacade($log, $q,$timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
+        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService) {
 
         //#region Utils
 
@@ -119,6 +119,9 @@
          * @returns Promise: resolved with created SyncOperation; rejected with HTTP or Database error 
          */
         function fullDownload() {
+            if (networkConnectionService.isOffline()) {
+                return $q.reject({ message: "Cannot synchronize application without internet connection" });
+            }
             const log = $log.get("synchronizationFacade#fullDownload");
             log.info("Executing full download");
             const start = new Date().getTime();
@@ -156,6 +159,10 @@
             const log = $log.get("synchronizationFacade#fullSync", ["sync"]);
             log.info("init full synchronization process");
             tracking.trackFullState("synchornizationFacace#fullSync pre-sync");
+
+            if (networkConnectionService.isOffline()) {
+                return $q.reject({message:"Cannot synchronize application without internet connection"});
+            }
 
             const start = new Date().getTime();
             const dbapplications = metadataModelService.getMetadatas();
@@ -198,6 +205,7 @@
                 })
                 .finally(() => {
                     tracking.trackFullState("synchornizationFacace#fullSync post-sync");
+               
                 });
         }
 
@@ -257,6 +265,15 @@
                 });
         }
 
+        function isFirstSync() {
+            if (menuModelService.getMenuItems().length > 0) {
+                return $q.when(false);
+            }
+            return dao.countByQuery("Menu", "data is not null").then(r => {
+                return r === 0;
+            });
+        }
+
         //#endregion
 
         //#region Service instance
@@ -266,21 +283,24 @@
         // registering completion callback on the asyncSynchronizationService
         asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
+        
+
         const api = {
             hasDataToSync,
             fullDownload,
             fullSync,
             syncItem,
             attempSyncAndContinue,
-            handleDeletableDataEntries
+            handleDeletableDataEntries,
+            isFirstSync
         };
         return api;
         //#endregion
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", synchronizationFacade]);
+    mobileServices.factory("synchronizationFacade", ["$log", "$q","$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
+        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

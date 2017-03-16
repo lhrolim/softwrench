@@ -1,6 +1,6 @@
 ﻿(function (angular, persistence) {
     "use strict";
-    function offlineMigrationService($q, $log, offlineMigrations) {
+    function offlineMigrationService($q, $log, offlineMigrations,swdbDAO) {
 
         const decorateMigrator = function () {
             const migrator = persistence.migrations.Migrator;
@@ -79,15 +79,7 @@
 
             // adding an extra "_" on index name to be the same pattern as indexes created from persistence.js hasOne and hasMany
             Migration.prototype.addIndex = function (tableName, columnName, unique, indexName) {
-                var originalColumnName = columnName;
-                if (columnName instanceof Array) {
-                    originalColumnName = columnName.join("_");
-                    columnName = columnName.join(',');
-                }
-
-                const name = indexName || tableName + "__" + originalColumnName;
-                const uniqueString = unique === true ? "UNIQUE" : "";
-                const sql = `CREATE ${uniqueString} INDEX ${name} ON ${tableName} (${columnName})`;
+                const sql = swdbDAO.addIndexQuery(tableName, columnName, unique, indexName);
                 this.executeSql(sql);
             }
         }
@@ -124,7 +116,7 @@
 
 
     //#region Service registration
-    angular.module("persistence.offline").factory("offlineMigrationService", ["$q", "$log", "offlineMigrations", offlineMigrationService]);
+    angular.module("persistence.offline").factory("offlineMigrationService", ["$q", "$log", "offlineMigrations", "swdbDAO", offlineMigrationService]);
     //#endregion
 
 })(angular, persistence);
