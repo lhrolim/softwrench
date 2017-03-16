@@ -6,6 +6,9 @@ document.addEventListener("deviceready", function () {
 }, false);
 //#endregion
 
+
+
+
 //#region App Modules
 var mobileServices = angular.module('sw_mobile_services', ['sw_rootcommons', 'webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline', "rollingLog"]);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', ['persistence.offline', 'audit.offline']);
@@ -172,6 +175,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             $ionicConfigProvider.navBar.alignTitle("center");
 
             $httpProvider.useApplyAsync(true);
+            $ionicConfigProvider.views.transition('none');
 
             $logProvider.debugEnabled(true);
 
@@ -246,16 +250,16 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                         }
                     }
                 })
-                .state('main.crudlist', {
-                    url: "/crudlist",
-                    cache: false,
-                    views: {
-                        'main': {
-                            templateUrl: "Content/Mobile/templates/crudlist.html",
-                            controller: 'CrudListController'
-                        }
-                    }
-                })
+               .state('main.crudlist', {
+                   url: "/crudlist",
+                   cache: false,
+                   views: {
+                       'main': {
+                           templateUrl: "Content/Mobile/templates/crudlist.html",
+                           controller: 'CrudListController'
+                       }
+                   }
+               })
                 .state('main.crudlist.search', {
                     url: "/crudlistsearch",
                     views: {
