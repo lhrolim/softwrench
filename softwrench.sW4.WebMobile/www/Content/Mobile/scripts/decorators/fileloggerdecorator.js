@@ -119,10 +119,14 @@
             if (sessionStorage.loglevel) {
                 window.loglevel = sessionStorage.loglevel;
             }
-            Object.defineProperty(sessionStorage, "loglevel", {
-                set: (value) => window.loglevel = value,
-                get: () => window.loglevel
-            }, { enumerable: true, writable: true, configurable: true });
+
+            const descriptor = Object.getOwnPropertyDescriptor(sessionStorage, "loglevel");
+            if (!descriptor || descriptor.configurable === true) {
+                Object.defineProperty(sessionStorage, "loglevel", {
+                    set: (value) => window.loglevel = value,
+                    get: () => window.loglevel
+                }, { enumerable: true, writable: true, configurable: true });
+            }
 
             function globalLogLevel() {
                 if (!window.loglevel) {
