@@ -6,6 +6,166 @@ document.addEventListener("deviceready", function () {
 }, false);
 //#endregion
 
+var crudinput = "";
+crudinput += "<div class=\"list\">";
+crudinput += "    <messagesection><\/messagesection>";
+crudinput += "";
+crudinput += "    <crud-input-fields schema=\"schema\" displayables=\"displayables\" all-displayables=\"allDisplayables\" datamap=\"datamap\"><\/crud-input-fields>";
+crudinput += "";
+crudinput += "    <div>";
+crudinput += "        <command-bar schema=\"schema\" datamap=\"datamap\" position=\"mobile.fab\" label=\"Actions\"><\/command-bar>";
+crudinput += "    <\/div>";
+crudinput += "<\/div>";
+
+
+var crudlist = "";
+crudlist += "<ion-view cache-view=\"false\">";
+crudlist += "";
+crudlist += "    <ion-nav-buttons side=\"left\">";
+crudlist += "        <button class=\"button-icon show-phone\" menu-toggle=\"left\"><i class=\"fa fa-bars\"><\/i><\/button>";
+crudlist += "    <\/ion-nav-buttons>";
+crudlist += "";
+crudlist += "    <ion-nav-title>";
+crudlist += "        <div ng-show=\"!isSearching()\">{{gridTitle()}}";
+crudlist += "            <div class=\"buttons\" style=\"position: absolute; right: 5px; top:5px\" ng-show=\"isList()\">";
+crudlist += "                <button class=\"button\" ng-click=\"showFilterOptions($event)\"><i class=\"fa fa-fa-ellipsis-v\"><\/i><\/button>";
+crudlist += "            <\/div>";
+crudlist += "        <\/div>";
+crudlist += "";
+crudlist += "        <div class=\"list-search-bar item-input-inset\" ng-show=\"isSearching() && isList()\">";
+crudlist += "            <label class=\"item-input-wrapper\">";
+crudlist += "                <i class=\"placeholder-icon fa fa-search\"><\/i>";
+crudlist += "                <input type=\"search\" class=\"ion-autocomplete-search\" ng-model=\"quickSearch.value\" ng-change=\"filter()\" placeholder=\"Quick Search\" ng-model-options=\"{ debounce: 500 }\"\/>";
+crudlist += "                <button class=\"button-icon search-disable-button\" ng-touchstart=\"disableSearch(true)\"><i class=\"fa fa-times-circle\"><\/i><\/button>";
+crudlist += "            <\/label>            ";
+crudlist += "        <\/div>";
+crudlist += "    <\/ion-nav-title>";
+crudlist += "";
+crudlist += "   ";
+crudlist += "    <ion-nav-buttons side=\"right\">";
+crudlist += "        <button class=\"button-icon\" ng-show=\"isList() && isSearching()\" ng-touchstart=\"goToAdvancedFilter()\"><i class=\"fa fa-sliders\"><\/i><\/button>";
+crudlist += "        <!--this ng-show is needed due to a possible bug on ionic\/ angular ui-router where the button shows on detail-->";
+crudlist += "        <button class=\"button-icon\" ng-show=\"isList() && !isSearching()\" ng-touchstart=\"enableSearch()\"><i class=\"fa fa-search\"><\/i><\/button>";
+crudlist += "    <\/ion-nav-buttons>";
+crudlist += "";
+crudlist += "    <ion-content has-header=\"true\" has-bouncing=\"false\" on-swipe-right=\"toggleMenu()\" >";
+crudlist += "";
+crudlist += "        <div class=\"row\" ng-if=\"crudlist.items.length == 0\">";
+crudlist += "            <div class=\"col col-center text-center\">";
+crudlist += "                <h4 class=\"gray\">No Entries Found<\/h4>";
+crudlist += "            <\/div>";
+crudlist += "        <\/div>";
+crudlist += "";
+crudlist += "        <ion-refresher pulling-text=\"Pull to Sync\" on-refresh=\"fullSync()\" pulling-icon=\"fa fa-refresh\" spinner=\"none\"> <\/ion-refresher>";
+crudlist += "";
+crudlist += "        <ion-list class=\"has-header crud-list\" ng-if=\"crudlist.items.length >0\" >";
+crudlist += "            <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->";
+crudlist += "            <ion-item class=\"crud-item\"";
+crudlist += "                      ng-repeat=\"item in crudlist.items track by item.generatedRowStamp\"";
+crudlist += "                      item=\"item\"";
+crudlist += "                      on-hold=\"showGridItemOptions($event,item)\">";
+crudlist += "                <div class=\"row\" ng-click=\"openDetail(item)\">";
+crudlist += "                    <div class=\"col col-25 crud-icon\">";
+crudlist += "                        <crud-icon item=\"item\"><\/crud-icon>";
+crudlist += "                    <\/div>";
+crudlist += "                    <div class=\"col\">";
+crudlist += "                        <ul>";
+crudlist += "                            <li class=\"featured\">{{itemFeatured(item.datamap)}}&ensp;<span class=\"details\"><i class=\"fa fa-chevron-right\"><\/i><\/span><\/li>";
+crudlist += "                            <li class=\"title\">{{itemTitle(item.datamap)}}<\/li>";
+crudlist += "                            <li class=\"subtitle\">{{itemSubTitle(item.datamap)}}<\/li>";
+crudlist += "                            <li class=\"excerpt\">{{itemExcerpt(item.datamap)}}<\/li>";
+crudlist += "                        <\/ul>";
+crudlist += "                    <\/div>";
+crudlist += "                <\/div>";
+crudlist += "            <\/ion-item>";
+crudlist += "";
+crudlist += "        <\/ion-list>";
+crudlist += "";
+crudlist += "        <ion-infinite-scroll ng-if=\"crudlist.moreItemsAvailable\" on-infinite=\"loadMore()\" distance=\"10%\"><\/ion-infinite-scroll>";
+crudlist += "";
+crudlist += "    <\/ion-content>";
+crudlist += "";
+crudlist += "    <button class=\"button button-float\" ng-click=\"createItem()\" ng-if=\"createEnabled()\">";
+crudlist += "        <i class=\"fa fa-plus\"><\/i>";
+crudlist += "    <\/button>";
+crudlist += "";
+crudlist += "<\/ion-view>";
+crudlist += "";
+
+
+var strVar = "";
+strVar += "<ion-view>";
+strVar += "";
+strVar += "    <ion-nav-buttons side=\"left\">";
+strVar += "        <button class=\"button-icon\" menu-toggle=\"left\"><i class=\"fa fa-bars\"><\/i><\/button>";
+strVar += "    <\/ion-nav-buttons>";
+strVar += "    ";
+strVar += "    <ion-nav-title>";
+strVar += "        <div>{{title()}}<\/div>";
+strVar += "    <\/ion-nav-title>";
+strVar += "    ";
+strVar += "    ";
+strVar += "    <ion-header-bar class=\"bar-subheader bar-dark\" align-title=\"left\">";
+strVar += "";
+strVar += "        <div class=\"buttons\" style=\"padding-left: 5px\">";
+strVar += "            <button class=\"button\" ng-show=\"shouldShowBack()\" ng-click=\"navigateBack()\"><i class=\"fa fa-arrow-left\"><\/i>&ensp;Back<\/button>";
+strVar += "            <button class=\"button\" ng-show=\"hasDirtyChanges() && !shouldShowWizardBack()\" ng-click=\"cancelChanges()\"><i class=\"fa fa-times-circle\"><\/i>&ensp;Cancel<\/button>";
+strVar += "            <button class=\"button\" ng-show=\"shouldShowWizardBack()\" ng-click=\"wizardNavigateBack()\"><i class=\"fa fa-arrow-left\"><\/i>&ensp;Back<\/button>";
+strVar += "        <\/div>";
+strVar += "";
+strVar += "        <!-- empty title to position the buttons correctly -->";
+strVar += "        <h1 class=\"title\"><\/h1>";
+strVar += "";
+strVar += "        <div class=\"buttons\" style=\"white-space: nowrap\">";
+strVar += "            <button class=\"button navigate\" ng-click=\"navigatePrevious()\" ng-if=\"showNavigation() && hasPreviousItem()\"><i class=\"fa fa-chevron-left\"><\/i><\/button>";
+strVar += "            <button class=\"button navigate\" ng-click=\"navigateNext()\" ng-if=\"showNavigation() && hasNextItem()\"><i class=\"fa fa-chevron-right\"><\/i><\/button>";
+strVar += "            <div class=\"seperator\" ng-if=\"!hasDirtyChanges() && hasAnyComposition() && showNavigation()\"><\/div>";
+strVar += "            <button class=\"button\" ng-click=\"expandCompositions($event)\" ng-if=\"!hasDirtyChanges() && hasAnyComposition()\"><i class=\"fa fa-th\"><\/i><\/button>";
+strVar += "            <button class=\"button\" ng-click=\"saveChanges()\" ng-if=\"hasDirtyChanges() && !shouldShowWizardForward()\"><i class=\"fa fa-check\"><\/i>&ensp;Save<\/button>";
+strVar += "            <button class=\"button\" ng-click=\"wizardNavigateForward()\" ng-if=\"shouldShowWizardForward()\"><i class=\"fa fa-arrow-right\"><\/i>&ensp;Next<\/button>";
+strVar += "        <\/div>";
+strVar += "";
+strVar += "    <\/ion-header-bar>";
+strVar += "";
+strVar += "    <ion-content class=\"crud-details\" has-header=\"true\" has-subheader=\"true\" has-bouncing=\"false\" ";
+strVar += "                 on-swipe-left=\"onSwipeLeft()\" on-swipe-right=\"onSwipeRight()\" on-scroll=\"onScroll()\" delegate-handle=\"detailHandler\">";
+strVar += "        <div class=\"crud-title\" ng-if=\"isOnMainTab()\">";
+strVar += "            <div class=\"row\" on-hold=\"showDirtyOptions($event)\">";
+strVar += "                <div class=\"col col-25 crud-icon\">";
+strVar += "                    <crud-icon item=\"item\" isdetail=\"true\" datamap=\"datamap\"><\/crud-icon>";
+strVar += "                <\/div>";
+strVar += "                <div class=\"col\">";
+strVar += "                    <ul>";
+strVar += "                        <li class=\"featured\">{{detailFeatured()}}<\/li>";
+strVar += "                        <li class=\"title\">{{detailTitle()}}<\/li>";
+strVar += "                        <li class=\"subtitle\">{{detailSubTitle()}}<\/li>";
+strVar += "                        <li class=\"excerpt\">{{detailSummary()}}<\/li>";
+strVar += "                    <\/ul>";
+strVar += "                <\/div>";
+strVar += "            <\/div>";
+strVar += "        <\/div>";
+strVar += "";
+strVar += "        <div div class=\"crud-title h4\" ng-click=\"loadMainTab()\" ng-if=\"!isOnMainTab()\">";
+strVar += "            {{tabTitle()}}";
+strVar += "        <\/div>";
+strVar += "";
+strVar += "        <div class=\"crud-description\">";
+strVar += "            <div ng-if=\"hasProblems()\" class=\"problem-description\">";
+strVar += "                <i class=\"fa fa-exclamation-triangle\"><\/i>&ensp;{{lastProblemMesage()}}";
+strVar += "            <\/div>";
+strVar += "        <\/div>";
+strVar += "";
+strVar += "        <ion-nav-view name=\"body\" class=\"list\" style=\"height: initial\"><\/ion-nav-view>";
+strVar += "";
+strVar += "    <\/ion-content>";
+strVar += "";
+strVar += "    <div ng-if=\"!!compositionListSchema\" ng-show=\"!hasDirtyChanges()\">";
+strVar += "        <command-bar schema=\"compositionListSchema\" datamap=\"datamap\" position=\"mobile.composition\" label=\"Actions\"><\/command-bar>";
+strVar += "    <\/div>";
+strVar += "<\/ion-view>";
+strVar += "";
+
+
 //#region App Modules
 var mobileServices = angular.module('sw_mobile_services', ['sw_rootcommons', 'webcommons_services', 'maximo_applications', 'persistence.offline', 'audit.offline', "rollingLog"]);
 var offlineMaximoApplications = angular.module('maximo_offlineapplications', ['persistence.offline', 'audit.offline']);
@@ -172,6 +332,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             $ionicConfigProvider.navBar.alignTitle("center");
 
             $httpProvider.useApplyAsync(true);
+            $ionicConfigProvider.views.transition('none');
 
             $logProvider.debugEnabled(true);
 
@@ -251,7 +412,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     cache: false,
                     views: {
                         'main': {
-                            templateUrl: "Content/Mobile/templates/crudlist.html",
+                            template: crudlist,
                             controller: 'CrudListController'
                         }
                     }
@@ -269,7 +430,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/cruddetail",
                     views: {
                         'main': {
-                            templateUrl: "Content/Mobile/templates/crud_detail.html",
+                            template: strVar,
                             controller: 'CrudDetailController'
                         }
 
@@ -279,7 +440,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/crudinput",
                     views: {
                         'body': {
-                            templateUrl: "Content/Mobile/templates/crud_input.html",
+                            template: crudinput,
                             controller: 'CrudInputController'
                         }
                     }
