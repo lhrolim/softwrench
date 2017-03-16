@@ -42,7 +42,8 @@
                 
 
                 if (areSettingsFullFilled(s) && authenticated) {
-                    return this.$q.when(null);
+                    this.crudContextService.restoreState();
+                    return this.routeService.loadInitialState(authenticated);
                 }
 
                 this.loadingService.showDefault();

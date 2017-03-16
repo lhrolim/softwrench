@@ -81,7 +81,7 @@ module.exports = function (grunt) {
         "www/Content/Mobile/scripts/utils/mobileconstants.js"
     ];
 
-    
+
 
     /** app scripts: angular constructs */
     var appScripts = [
@@ -117,7 +117,7 @@ module.exports = function (grunt) {
 
     var solutionScriptsDev = solutionScripts
         .concat(localDebugScript);
-        
+
 
     var vendorScripts = [
         // complete paths to guarantee load order (instead of **/*.js)
@@ -145,8 +145,8 @@ module.exports = function (grunt) {
         "www/Content/Vendor/scripts/lz-string.js",
         "www/Content/Vendor/scripts/ngTouch.js"
     ];
-    
-    
+
+
     var testScripts = [
         "tests/**/*.js"
     ];
@@ -160,7 +160,7 @@ module.exports = function (grunt) {
 
     function getKarmaPreprocessorsConfig(scripts) {
         var preprocessors = {};
-        scripts.forEach(function(s) {
+        scripts.forEach(function (s) {
             preprocessors[s] = ["babel"];
         });
         return preprocessors;
@@ -180,27 +180,7 @@ module.exports = function (grunt) {
 
         //#region clean directories
         clean: {
-            vendor: [ ngtemplates: {
-            app: {
-                src: ['www/Content/Mobile/templates/**/*.html'],
-                dest: '<%= app.dist %>/scripts/htmltemplates.js',
-                options: {
-                    module: "sw_layout",
-                    url: function (url) {
-                        var idx = url.indexOf("/Content");
-                        url = url.replace("/templates", "/Templates")
-                        return url.substring(idx);
-                    },
-                    templateWrap: function (path, template, index, files) {
-                        var fullPath = `contextService.getResourceUrl('${path}')`;
-                        return `$templateCache.put(${fullPath},${template})`;
-                    },
-                    bootstrap: function (module, script) {
-                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" + script + "\n}]);\n";
-                    }
-                }
-            }
-        },
+            vendor: [
                 "www/Content/Vendor/scripts/",
                 "www/Content/Vendor/css/"
             ],
@@ -233,7 +213,7 @@ module.exports = function (grunt) {
                     "tinymce.js": "tinymce-dist/tinymce.min.js",
                     "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     "themes/modern/theme.js": "tinymce-dist/themes/modern/theme.min.js",
-                    
+
                     // utils
                     "jquery.js": "jquery/dist/jquery.js",
                     "ng-cordova.js": "ngCordova/dist/ng-cordova.js",
@@ -275,14 +255,14 @@ module.exports = function (grunt) {
                     "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
                     "ionicons.woff": "ionic/release/fonts/ionicons.woff",
 
-                    "tinymce.eot" : "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
-                    "tinymce.svg" : "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
-                    "tinymce.ttf" : "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
+                    "tinymce.eot": "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
+                    "tinymce.svg": "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
+                    "tinymce.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
                     "tinymce.woff": "tinymce-dist/skins/lightgray/fonts/tinymce.woff",
-                    "tinymce-small.eot" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.eot",
-                    "tinymce-small.svg" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.svg",
-                    "tinymce-small.ttf" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.ttf",
-                    "tinymce-small.woff" : "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff",
+                    "tinymce-small.eot": "tinymce-dist/skins/lightgray/fonts/tinymce-small.eot",
+                    "tinymce-small.svg": "tinymce-dist/skins/lightgray/fonts/tinymce-small.svg",
+                    "tinymce-small.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce-small.ttf",
+                    "tinymce-small.woff": "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff",
                 }
             },
             fontsrelease: {
@@ -290,7 +270,7 @@ module.exports = function (grunt) {
                     destPrefix: "www/Content/public/fonts"
                 },
                 files: {
-                	"fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
+                    "fontawesome-webfont.eot": "font-awesome/fonts/fontawesome-webfont.eot",
                     "fontawesome-webfont.svg": "font-awesome/fonts/fontawesome-webfont.svg",
                     "fontawesome-webfont.ttf": "font-awesome/fonts/fontawesome-webfont.ttf",
                     "fontawesome-webfont.woff": "font-awesome/fonts/fontawesome-webfont.woff",
@@ -299,7 +279,7 @@ module.exports = function (grunt) {
                     "ionicons.svg": "ionic/release/fonts/ionicons.svg",
                     "ionicons.ttf": "ionic/release/fonts/ionicons.ttf",
                     "ionicons.woff": "ionic/release/fonts/ionicons.woff",
-                    
+
                     "tinymce.eot": "tinymce-dist/skins/lightgray/fonts/tinymce.eot",
                     "tinymce.svg": "tinymce-dist/skins/lightgray/fonts/tinymce.svg",
                     "tinymce.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce.ttf",
@@ -598,7 +578,7 @@ module.exports = function (grunt) {
             },
             customerTemplates: { // copies customer templates so they are available to the app (symlinks wont work in prod/device)
                 files: [
-                    { expand: true, src: [ "*/templates/**/*.html" ], dest: "www/Content/Customers/templates", cwd: "www/Content/Customers" }
+                    { expand: true, src: ["*/templates/**/*.html"], dest: "www/Content/Customers/templates", cwd: "www/Content/Customers" }
                 ]
             }
         },
@@ -672,40 +652,18 @@ module.exports = function (grunt) {
                     },
                     replacements: [{
                         xpath: "/w:widget/@id",
-                        value: function(node) {
+                        value: function (node) {
                             return currentPlatform === "ios" ? "ControlTechnologySolutions.softWrench" : "io.cordova.softwrench.sW4.WebMobile";
                         }
                     }]
                 },
                 files: {
-                    "config.xml" : "config.xml"
+                    "config.xml": "config.xml"
                 }
             }
         }
         //#endregion
 
-		 ngtemplates: {
-            app: {
-                src: ['<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'],
-                dest: '<%= app.dist %>/scripts/htmltemplates.js',
-                options: {
-                    module: "sw_layout",
-                    url: function (url) {
-                        var idx = url.indexOf("/Content");
-                        url = url.replace("/templates", "/Templates")
-                        return url.substring(idx);
-                    },
-                    templateWrap: function (path, template, index, files) {
-                        var fullPath = `contextService.getResourceUrl('${path}')`;
-                        return `$templateCache.put(${fullPath},${template})`;
-                    },
-                    bootstrap: function (module, script) {
-                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" + script + "\n}]);\n";
-                    }
-                }
-            }
-        },
-		
     });
 
     //#region grunt plugins
@@ -722,7 +680,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-rename");
     grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-xmlpoke");
-	grunt.loadNpmTasks('grunt-angular-templates');
     //#endregion
 
     //#region dev tasks
@@ -745,7 +702,6 @@ module.exports = function (grunt) {
         "xmlpoke:bundleid", // update bundleid according to the platform
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders
         "concatall", // concats the scripts and stylesheets
-		"ngtemplates", // minify angular html templates into a single file
         "sass:prod", // compiles sass files
         "babel:release", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
@@ -810,7 +766,7 @@ module.exports = function (grunt) {
         if (typeof (cordovaPlatforms) == "string") {
             cordovaPlatforms = [cordovaPlatforms];
         }
-        return taco.setupCordova().then(function(cordova) {
+        return taco.setupCordova().then(function (cordova) {
             // Add platforms if not done already
             var promise = addPlatformsToProject(cordova, cordovaPlatforms);
             //Build each platform with args in args object
@@ -844,12 +800,12 @@ module.exports = function (grunt) {
             .then(function () {
                 return taco.packageProject(platformsToBuild);
             })
-            .then(function() {
-            	return done();
+            .then(function () {
+                return done();
             })
-            .catch(function(e) {
-            	console.error("Error building project:\n", e);
-            	return done(false);
+            .catch(function (e) {
+                console.error("Error building project:\n", e);
+                return done(false);
             });
     });
 
