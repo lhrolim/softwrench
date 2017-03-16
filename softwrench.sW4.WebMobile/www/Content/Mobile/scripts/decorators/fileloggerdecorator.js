@@ -113,6 +113,28 @@
             //#region Decorator
 
             var getInstance = $delegate.getInstance;
+            let contextService = null;
+
+            // to improve performance - sessionStorage["loglevel"] is called thousands of times
+            if (sessionStorage.loglevel) {
+                window.loglevel = sessionStorage.loglevel;
+            }
+            Object.defineProperty(sessionStorage, 'loglevel', {
+                set: (value) => window.loglevel = value,
+                get: () => window.loglevel
+            });
+
+            function globalLogLevel() {
+                if (!window.loglevel) {
+                    if (!contextService) {
+                        contextService = $injector.get("contextService");
+                    }
+                    window.loglevel = contextService.retrieveFromContext("defaultlevel") || "warn";
+                }
+                return window.loglevel;
+            }
+
+            const logCache = {};
 
             $delegate.getInstance = function () {
                 if (!arguments[1] || arguments[1].indexOf("angular") === -1) {
@@ -120,11 +142,21 @@
                     //let´s init it later
                     initRollingLog();
                 }
+
+                const level = globalLogLevel();
+                if (!logCache[level]) {
+                    logCache[level] = {}
+                }
+                const cacheKey = arguments[0] + "#" + arguments[1];
+                if (logCache[level][cacheKey]) {
+                    return logCache[level][cacheKey];
+                }
+
                 const args = [].slice.call(arguments);
                 const instance = getInstance.apply($delegate, args);
                 enhanceLogger(instance);
+                logCache[level][cacheKey] = instance;
                 return instance;
-                return $delegate;
             }
 
             return $delegate;
