@@ -105,15 +105,6 @@
         "is_top_level": true,
         "variables": {}
     },
-    "cordova-sqlite-evcore-extbuild-free": {
-        "source": {
-            "type": "git",
-            "url": "https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free",
-            "subdir": "."
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
     "com.cordova.plugins.cookiemaster": {
         "source": {
             "type": "registry",
@@ -138,12 +129,19 @@
         "is_top_level": true,
         "variables": {}
     },
-    "de.appplant.cordova.plugin.email-composer": {
+    "cordova-plugin-email": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-email@~1.2.6"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-sqlite-evcore-extbuild-free": {
         "source": {
             "type": "git",
-            "url": "https://github.com/katzer/cordova-plugin-email-composer.git",
-            "subdir": ".",
-            "ref": "0.8.2"
+            "url": "https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free",
+            "subdir": "."
         },
         "is_top_level": true,
         "variables": {}

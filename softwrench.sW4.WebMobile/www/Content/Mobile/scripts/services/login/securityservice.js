@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, ionic, _) {
     "use strict";
 
-    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory, cookieService, $injector) {
+    function securityService($rootScope, $state, localStorageService, routeService, $http, $q, dao, $ionicHistory, cookieService, $injector, indexCreatorService) {
 
         //#region Utils
 
@@ -175,6 +175,7 @@
             ]).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 cleanLocalStorage(); // clean non-blacklisted localstorage entries used by apps as cache
+                indexCreatorService.dropIndexes(); //drop sql indexes to allow fast sync insertion
                 return current;
             });
         };
@@ -256,7 +257,7 @@
     //#region Service registration
 
     mobileServices.factory("securityService",
-        ["$rootScope", "$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", "cookieService", "$injector", securityService]);
+        ["$rootScope", "$state", "localStorageService", "routeService", "$http", "$q", "swdbDAO", "$ionicHistory", "cookieService", "$injector","indexCreatorService", securityService]);
 
     //#endregion
 

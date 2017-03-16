@@ -449,10 +449,12 @@
       txFailure = null
       # sql statements from queue:
       batchExecutes = @executes
+
       # NOTE: If this is zero it will not work. Workaround is applied in the constructor.
       # FUTURE TBD: It would be better to fix the problem here.
       waiting = batchExecutes.length
       @executes = []
+
       # my tx object (this)
       tx = @
 
@@ -581,13 +583,11 @@
 
           else if r == 'error'
             code = result[ri++]
-            sqliteCode = result[ri++]
+            ++ri # [ignored]
             errormessage = result[ri++]
             q.error
-              result:
-                code: code
-                sqliteCode: sqliteCode
-                message: errormessage
+              code: code
+              message: errormessage
 
           ++i
 
@@ -612,6 +612,7 @@
           error: handlerFor(i, false)
 
         tropts.push
+          qid: null # TBD NEEDED to pass @brodybits/Cordova-sql-test-app for some reason
           sql: request.sql
           params: request.params
 
@@ -620,20 +621,17 @@
       mycb = (result) ->
         #console.log "mycb result #{JSON.stringify result}"
 
-        i = 0
-        reslength = result.length
-        while i < reslength
-          r = result[i]
+        for resultIndex in [0 .. result.length-1]
+          r = result[resultIndex]
           type = r.type
+          # NOTE: r.qid can be ignored
           res = r.result
 
-          q = mycbmap[i]
+          q = mycbmap[resultIndex]
 
           if q
             if q[type]
               q[type] res
-
-          ++i
 
         return
 
@@ -648,13 +646,15 @@
       succeeded = (tx) ->
         txLocks[tx.db.dbname].inProgress = false
         tx.db.startNextTransaction()
-        if tx.error then tx.error txFailure
+        if tx.error and typeof tx.error is 'function'
+          tx.error txFailure
         return
 
       failed = (tx, err) ->
         txLocks[tx.db.dbname].inProgress = false
         tx.db.startNextTransaction()
-        if tx.error then tx.error newSQLError("error while trying to roll back: " + err.message, err.code)
+        if tx.error and typeof tx.error is 'function'
+          tx.error newSQLError 'error while trying to roll back: ' + err.message, err.code
         return
 
       @finalized = true
@@ -674,13 +674,15 @@
       succeeded = (tx) ->
         txLocks[tx.db.dbname].inProgress = false
         tx.db.startNextTransaction()
-        if tx.success then tx.success()
+        if tx.success and typeof tx.success is 'function'
+          tx.success()
         return
 
       failed = (tx, err) ->
         txLocks[tx.db.dbname].inProgress = false
         tx.db.startNextTransaction()
-        if tx.error then tx.error newSQLError("error while trying to commit: " + err.message, err.code)
+        if tx.error and typeof tx.error is 'function'
+          tx.error newSQLError 'error while trying to commit: ' + err.message, err.code
         return
 
       @finalized = true
@@ -752,13 +754,13 @@
           throw newSQLError 'Database name value is missing in openDatabase call'
 
         if !openargs.iosDatabaseLocation and !openargs.location and openargs.location isnt 0 and !openargs.androidDatabaseLocation
-          throw newSQLError 'Database location (or iosDatabaseLocation or androidDatabaseLocation) value is now mandatory in openDatabase call'
+          throw newSQLError 'Database location (or iosDatabaseLocation or androidDatabaseLocation) setting is now mandatory in openDatabase call.'
 
         if !!openargs.location and !!openargs.iosDatabaseLocation
-          throw newSQLError 'AMBIGUOUS: both location or iosDatabaseLocation values are present in openDatabase call'
+          throw newSQLError 'AMBIGUOUS: both location and iosDatabaseLocation settings are present in openDatabase call. Please use either setting, not both.'
 
         if !!openargs.location and !!openargs.androidDatabaseLocation
-          throw newSQLError 'AMBIGUOUS: both location or androidDatabaseLocation values are present in openDatabase call'
+          throw newSQLError 'AMBIGUOUS: both location and androidDatabaseLocation values are present in openDatabase call. Please use either setting, not both.'
 
         dblocation =
           if !!openargs.location and openargs.location is 'default'
@@ -816,13 +818,13 @@
           #args.dblocation = dblocation || dblocations[2]
 
         if !first.iosDatabaseLocation and !first.location and first.location isnt 0 and !first.androidDatabaseLocation
-          throw newSQLError 'Database location (or iosDatabaseLocation or androidDatabaseLocation) value is now mandatory in deleteDatabase call'
+          throw newSQLError 'Database location (or iosDatabaseLocation or androidDatabaseLocation) setting is now mandatory in deleteDatabase call.'
 
         if !!first.location and !!first.iosDatabaseLocation
-          throw newSQLError 'AMBIGUOUS: both location or iosDatabaseLocation values are present in deleteDatabase call'
+          throw newSQLError 'AMBIGUOUS: both location and iosDatabaseLocation settings are present in deleteDatabase call. Please use either setting value, not both.'
 
         if !!first.location and !!first.androidDatabaseLocation
-          throw newSQLError 'AMBIGUOUS: both location or androidDatabaseLocation values are present in deleteDatabase call'
+          throw newSQLError 'AMBIGUOUS: both location and androidDatabaseLocation values are present in deleteDatabase call. Please use either setting value, not both.'
 
         dblocation =
           if !!first.location and first.location is 'default'
@@ -857,8 +859,59 @@
         SQLiteFactory.deleteDatabase {name: SelfTest.DBNAME, location: 'default'},
           (-> SelfTest.start2(successcb, errorcb)),
           (-> SelfTest.start2(successcb, errorcb))
+        return
 
       start2: (successcb, errorcb) ->
+        SQLiteFactory.openDatabase {name: SelfTest.DBNAME, location: 'default'}, (db) ->
+          check1 = false
+          db.transaction (tx) ->
+            tx.executeSql 'SELECT UPPER("Test") AS upperText', [], (ignored, resutSet) ->
+              if !resutSet.rows
+                return SelfTest.finishWithError errorcb, 'Missing resutSet.rows'
+
+              if !resutSet.rows.length
+                return SelfTest.finishWithError errorcb, 'Missing resutSet.rows.length'
+
+              if resutSet.rows.length isnt 1
+                return SelfTest.finishWithError errorcb,
+                  "Incorrect resutSet.rows.length value: #{resutSet.rows.length} (expected: 1)"
+
+              if !resutSet.rows.item(0).upperText
+                return SelfTest.finishWithError errorcb,
+                  'Missing resutSet.rows.item(0).upperText'
+
+              if resutSet.rows.item(0).upperText isnt 'TEST'
+                return SelfTest.finishWithError errorcb,
+                  "Incorrect resutSet.rows.item(0).upperText value: #{resutSet.rows.item(0).data} (expected: 'TEST')"
+
+              check1 = true
+              return
+
+            , (sql_err) ->
+              SelfTest.finishWithError errorcb, "SQL error: #{sql_err}"
+              return
+
+          , (tx_err) ->
+            SelfTest.finishWithError errorcb, "TRANSACTION error: #{tx_err}"
+            return
+
+          , () ->
+            if !check1
+              return SelfTest.finishWithError errorcb,
+                'Did not get expected upperText result data'
+
+            # DELETE INTERNAL STATE to simulate the effects of location refresh or change:
+            delete db.openDBs[SelfTest.DBNAME]
+            delete txLocks[SelfTest.DBNAME]
+
+            SelfTest.start3 successcb, errorcb
+            return
+
+        , (open_err) ->
+          SelfTest.finishWithError errorcb, "Open database error: #{open_err}"
+        return
+
+      start3: (successcb, errorcb) ->
         SQLiteFactory.openDatabase {name: SelfTest.DBNAME, location: 'default'}, (db) ->
           db.sqlBatch [
             'CREATE TABLE TestTable(id integer primary key autoincrement unique, data);'
@@ -988,11 +1041,13 @@
 
         , (open_err) ->
           SelfTest.finishWithError errorcb, "Open database error: #{open_err}"
+        return
 
       finishWithError: (errorcb, message) ->
         SQLiteFactory.deleteDatabase {name: SelfTest.DBNAME, location: 'default'}, ->
           errorcb newSQLError message
         , (err2)-> errorcb newSQLError "Cleanup error: #{err2} for error: #{message}"
+        return
 
 ## Exported API:
 
@@ -1010,7 +1065,7 @@
         error = (e) ->
           errorcb e
 
-        cordova.exec okcb, errorcb, "SQLitePlugin", "echoStringValue", [{value:'test-string'}]
+        cordova.exec ok, error, "SQLitePlugin", "echoStringValue", [{value:'test-string'}]
 
       selfTest: SelfTest.start
 
@@ -1021,4 +1076,3 @@
 
 #### vim: set filetype=coffee :
 #### vim: set expandtab :
-
