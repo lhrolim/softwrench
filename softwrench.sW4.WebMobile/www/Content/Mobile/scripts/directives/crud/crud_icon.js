@@ -9,38 +9,23 @@
             replace: false,
             scope: {
                 item: "=",
-                isdetail:'='
+                isdetail: "=",
+                datamap: "=" // used on detail
             },
             controller: ["$scope", "iconProviderService", "crudContextService", function ($scope, iconProviderService, crudContextService) {
-
-                $scope.currentItem = function (item) {
-                    return $scope.isdetail ? crudContextService.currentDetailItem() : item;
+                const createIcon = function (item) {
+                    $scope.icon = iconProviderService.getIcon(item);
                 }
 
+                createIcon($scope.isdetail ? crudContextService.currentDetailItem() : $scope.item);
 
-//
-                $scope.getIconColor = item => iconProviderService.getIconColor($scope.currentItem(item));
-
-                $scope.getIconText = item => iconProviderService.getIconText($scope.currentItem(item));
-
-                $scope.getIconIcon = item => iconProviderService.getIconIcon($scope.currentItem(item));
-
-                $scope.getTextColor = item => iconProviderService.getTextColor($scope.currentItem(item));
-
-
-                //                $scope.getIconClass = item => { iconProviderService.getIconClass($scope.currentItem(item)); }
-
-                $scope.getIconClass = item => iconProviderService.getIconClass($scope.currentItem(item));
-
-//                $scope.getIconColor = item => iconProviderService.getIconColor(item);
-//
-//                $scope.getIconText = item => iconProviderService.getIconText(item);
-//
-//                $scope.getIconIcon = item => iconProviderService.getIconIcon(item);
-//
-//                $scope.getTextColor = item => iconProviderService.getTextColor(item);
-
-
+                if ($scope.isdetail) {
+                    $scope.$watch("datamap.approwstamp", (newRowstamp, oldRowstamp) => {
+                        if (oldRowstamp && newRowstamp !== oldRowstamp) {
+                            createIcon(crudContextService.currentDetailItem());
+                        }
+                    }, true);
+                }
             }]
         };
 
