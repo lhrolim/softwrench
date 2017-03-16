@@ -4,10 +4,6 @@
     function loadingService($ionicLoading, $q, $timeout, $ionicPlatform) {
         //#region Utils
 
-        const loadingOptions = {
-            template: "<ion-spinner icon='spiral'></ion-spinner><br><span>Loading<span>",
-            animation: "fade-in"
-        };
 
         var deregisterFn=[];
 
@@ -17,10 +13,18 @@
         //#region Public methods
 
         function showDefault() {
+            return this.show("Loading");
+        }
+
+        function show(message) {
             deregisterFn.push($ionicPlatform.registerBackButtonAction(e=> {
                 this.hide();
             }, 501));
-            return $ionicLoading.show(loadingOptions);
+            const options = {
+                template: `<ion-spinner icon='spiral'></ion-spinner><br><span>${message}<span>`,
+                animation: "fade-in"
+            };
+            return $ionicLoading.show(options);
         }
 
         function hide() {
@@ -38,6 +42,7 @@
         //#region Service Instance
         const service = {
             showDefault,
+            show,
             hide
         };
 

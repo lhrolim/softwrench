@@ -1,5 +1,5 @@
 /*
- Copyright 2013-2015 appPlant UG
+ Copyright 2013-2016 appPlant UG
 
  Licensed to the Apache Software Foundation (ASF) under one
  or more contributor license agreements.  See the NOTICE file
@@ -19,160 +19,170 @@
  under the License.
  */
 
-#import "APPEmailComposer.h"
-#import "Cordova/NSData+Base64.h"
-#import "Cordova/CDVAvailability.h"
+#import "APPEmailComposerImpl.h"
+#import <Cordova/CDVAvailability.h>
+#ifndef __CORDOVA_4_0_0
+    #import <Cordova/NSData+Base64.h>
+#endif
+#import <MessageUI/MFMailComposeViewController.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 #include "TargetConditionals.h"
 
-@interface APPEmailComposer ()
-
-@property (nonatomic, retain) CDVInvokedUrlCommand* command;
-
-@end
-
-@implementation APPEmailComposer
+/**
+ * Implements the interface methods of the plugin.
+ */
+@implementation APPEmailComposerImpl
 
 #pragma mark -
-#pragma mark Plugin interface methods
+#pragma mark Public
 
 /**
- * Checks if the mail composer is able to send mails.
+ * Checks if the mail composer is able to send mails and if an app is available
+ * to handle the specified scheme.
  *
- * @param callbackId
- *      The ID of the JS function to be called with the result
+ * @param scheme
+ * An URL scheme, that defaults to 'mailto:
  */
-- (void) isAvailable:(CDVInvokedUrlCommand*)command
+- (NSArray*) canSendMail:(NSString*)scheme
 {
-    [self.commandDelegate runInBackground:^{
-        bool canSendMail = [MFMailComposeViewController canSendMail];
-        CDVPluginResult* result;
+    bool canSendMail = [MFMailComposeViewController canSendMail];
+    bool withScheme  = false;
+    
+    if (![scheme hasSuffix:@":"]) {
+        scheme = [scheme stringByAppendingString:@":"];
+    }
+    
+    scheme = [[scheme stringByAppendingString:@"test@test.de"]
+                stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
-        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                     messageAsBool:canSendMail];
+    NSURL *url = [[NSURL URLWithString:scheme]
+                    absoluteURL];
 
-        [self.commandDelegate sendPluginResult:result
-                                    callbackId:command.callbackId];
-    }];
-}
+    withScheme = [[UIApplication sharedApplication]
+                   canOpenURL:url];
 
-/**
- * Shows the email composer view with pre-filled data.
- *
- * @param properties
- *      The email properties like subject, body, attachments
- */
-- (void) open:(CDVInvokedUrlCommand*)command
-{
-    _command = command;
-
-    if (TARGET_IPHONE_SIMULATOR && IsAtLeastiOSVersion(@"8.0")) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Email-Composer Plug-in"
-                                                        message:@"Plug-in cannot run on the iOS8 Simulator.\nPlease downgrade or use a physical device."
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-        [alert show];
-        [self execCallback];
-        return;
+    if (TARGET_IPHONE_SIMULATOR && [scheme hasPrefix:@"mailto:"]) {
+        canSendMail = withScheme = true;
     }
 
-    [self.commandDelegate runInBackground:^{
-        NSArray* args = command.arguments;
-        NSDictionary* properties = [args objectAtIndex:0];
-        MFMailComposeViewController* draft;
+    NSArray* resultArray = [NSArray arrayWithObjects:@(canSendMail),@(withScheme), nil];
 
-        draft = [self getDraftWithProperties:properties];
-
-        if (!draft) {
-            [self execCallback];
-            return;
-        }
-
-        [self openDraft:draft];
-    }];
+    return resultArray;
 }
-
-#pragma mark -
-#pragma mark MFMailComposeViewControllerDelegate methods
-
-/**
- * Delegate will be called after the mail composer did finish an action
- * to dismiss the view.
- */
-- (void) mailComposeController:(MFMailComposeViewController*)controller
-           didFinishWithResult:(MFMailComposeResult)result
-                         error:(NSError*)error
-{
-    [controller dismissViewControllerAnimated:YES completion:nil];
-
-    [self execCallback];
-}
-
-#pragma mark -
-#pragma mark Plugin core methods
 
 /**
  * Instantiates an email composer view.
  *
  * @param properties
- *      The email properties like subject, body, attachments
- *
+ * The email properties like subject, body, attachments
+ * @param delegateTo
+ * The mail composition view controller’s delegate.
  * @return
- *      The configured email composer view
+ * The configured email composer view
  */
-- (MFMailComposeViewController*) getDraftWithProperties:(NSDictionary*)properties
+- (MFMailComposeViewController*) mailComposerFromProperties:(NSDictionary*)props
+                                                 delegateTo:(id)receiver
 {
-    // Falls das Gerät kein Email Interface unterstützt
-    if (![MFMailComposeViewController canSendMail]) {
-        return NULL;
-    }
-
-    BOOL isHTML = [[properties objectForKey:@"isHtml"] boolValue];
+    BOOL isHTML = [[props objectForKey:@"isHtml"] boolValue];
 
     MFMailComposeViewController* draft;
 
     draft = [[MFMailComposeViewController alloc] init];
 
     // Subject
-    [self setSubject:[properties objectForKey:@"subject"] ofDraft:draft];
+    [self setSubject:[props objectForKey:@"subject"] ofDraft:draft];
     // Body (as HTML)
-    [self setBody:[properties objectForKey:@"body"] ofDraft:draft isHTML:isHTML];
+    [self setBody:[props objectForKey:@"body"] ofDraft:draft isHTML:isHTML];
     // Recipients
-    [self setToRecipients:[properties objectForKey:@"to"] ofDraft:draft];
+    [self setToRecipients:[props objectForKey:@"to"] ofDraft:draft];
     // CC Recipients
-    [self setCcRecipients:[properties objectForKey:@"cc"] ofDraft:draft];
+    [self setCcRecipients:[props objectForKey:@"cc"] ofDraft:draft];
     // BCC Recipients
-    [self setBccRecipients:[properties objectForKey:@"bcc"] ofDraft:draft];
+    [self setBccRecipients:[props objectForKey:@"bcc"] ofDraft:draft];
     // Attachments
-    [self setAttachments:[properties objectForKey:@"attachments"] ofDraft:draft];
+    [self setAttachments:[props objectForKey:@"attachments"] ofDraft:draft];
 
-    draft.mailComposeDelegate = self;
+    draft.mailComposeDelegate = receiver;
 
     return draft;
 }
 
 /**
- * Displays the email draft.
+ * Creates an mailto-url-sheme.
  *
- * @param draft
- *      The email composer view
+ * @param properties
+ * The email properties like subject, body, attachments
+ * @return
+ * The configured mailto-sheme
  */
-- (void) openDraft:(MFMailComposeViewController*)draft
+- (NSURL*) urlFromProperties:(NSDictionary*)props
 {
-    [self.viewController presentViewController:draft
-                                      animated:YES
-                                    completion:NULL];
+    NSString* mailto     = [props objectForKey:@"app"];
+    NSString* query      = @"";
+    
+    BOOL isHTML = [[props objectForKey:@"isHtml"] boolValue];
+
+    NSString* subject    = [props objectForKey:@"subject"];
+    NSString* body       = [props objectForKey:@"body"];
+    NSArray* to          = [props objectForKey:@"to"];
+    NSArray* cc          = [props objectForKey:@"cc"];
+    NSArray* bcc         = [props objectForKey:@"bcc"];
+
+    NSArray* attachments = [props objectForKey:@"attachments"];
+
+    if (![mailto hasSuffix:@":"]) {
+        mailto = [mailto stringByAppendingString:@":"];
+    }
+
+    mailto = [mailto stringByAppendingString:
+              [to componentsJoinedByString:@","]];
+
+    if (body.length > 0) {
+        if (isHTML) {
+            body = [[NSAttributedString alloc] initWithData:[body dataUsingEncoding:NSUTF8StringEncoding] options:@{NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType, NSCharacterEncodingDocumentAttribute: [NSNumber numberWithInt:NSUTF8StringEncoding]} documentAttributes:nil error:nil].string;
+        }
+        query = [NSString stringWithFormat: @"%@%@body=%@",
+                   query, query.length > 0? @"&":@"", [body stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }
+    if (subject.length > 0) {
+        query = [NSString stringWithFormat: @"%@%@subject=%@",
+                   query, query.length > 0? @"&":@"", [subject stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    }
+
+    if (cc.count > 0) {
+        query = [NSString stringWithFormat: @"%@%@cc=%@",
+                   query, query.length > 0? @"&":@"", [cc componentsJoinedByString:@","]];
+    }
+
+    if (bcc.count > 0) {
+        query = [NSString stringWithFormat: @"%@%@bcc=%@",
+                   query, query.length > 0? @"&":@"", [bcc componentsJoinedByString:@","]];
+    }
+
+    if (attachments.count > 0) {
+        NSLog(@"The 'mailto' URI Scheme (RFC 2368) does not support attachments.");
+    }
+
+    if (query.length > 0) {
+        query = [@"?" stringByAppendingString:query];
+    }
+
+    mailto = [mailto stringByAppendingString:query];
+
+    return [[NSURL URLWithString:mailto] absoluteURL];
 }
+
+#pragma mark -
+#pragma mark Private
 
 /**
  * Sets the subject of the email draft.
  *
  * @param subject
- *      The subject of the email
+ * The subject of the email.
  * @param draft
- *      The email composer view
+ * The email composer view.
  */
 - (void) setSubject:(NSString*)subject
             ofDraft:(MFMailComposeViewController*)draft
@@ -184,11 +194,11 @@
  * Sets the body of the email draft.
  *
  * @param body
- *      The body of the email
+ * The body of the email.
  * @param isHTML
- *      Indicates if the body is an HTML encoded string
+ * Indicates if the body is an HTML encoded string.
  * @param draft
- *      The email composer view
+ * The email composer view.
  */
 - (void) setBody:(NSString*)body ofDraft:(MFMailComposeViewController*)draft
           isHTML:(BOOL)isHTML
@@ -200,9 +210,9 @@
  * Sets the recipients of the email draft.
  *
  * @param recipients
- *      The recipients of the email
+ * The recipients of the email.
  * @param draft
- *      The email composer view
+ * The email composer view.
  */
 - (void) setToRecipients:(NSArray*)recipients
                  ofDraft:(MFMailComposeViewController*)draft
@@ -214,9 +224,9 @@
  * Sets the CC recipients of the email draft.
  *
  * @param ccRecipients
- *      The CC recipients of the email
+ * The CC recipients of the email.
  * @param draft
- *      The email composer view
+ * The email composer view.
  */
 - (void) setCcRecipients:(NSArray*)ccRecipients
                  ofDraft:(MFMailComposeViewController*)draft
@@ -228,9 +238,9 @@
  * Sets the BCC recipients of the email draft.
  *
  * @param bccRecipients
- *      The BCC recipients of the email
+ * The BCC recipients of the email.
  * @param draft
- *      The email composer view
+ * The email composer view.
  */
 - (void) setBccRecipients:(NSArray*)bccRecipients
                   ofDraft:(MFMailComposeViewController*)draft
@@ -242,9 +252,9 @@
  * Sets the attachments of the email draft.
  *
  * @param attachments
- *      The attachments of the email
+ * The attachments of the email.
  * @param draft
- *      The email composer view
+ * The email composer view.
  */
 - (void) setAttachments:(NSArray*)attatchments
                 ofDraft:(MFMailComposeViewController*)draft
@@ -259,10 +269,10 @@
             NSString* pathExt  = [basename pathExtension];
             NSString* fileName = [basename pathComponents].lastObject;
             NSString* mimeType = [self getMimeTypeFromFileExtension:pathExt];
-            
+
             // Couldn't find mimeType, must be some type of binary data
             if (mimeType == nil) mimeType = @"application/octet-stream";
-            
+
             [draft addAttachmentData:data mimeType:mimeType fileName:fileName];
         }
     }
@@ -272,10 +282,9 @@
  * Returns the data for a given (relative) attachment path.
  *
  * @param path
- *      An absolute/relative path or the base64 data
- *
+ * An absolute/relative path or the base64 data.
  * @return
- *      The data for the attachment
+ * The data for the attachment.
  */
 - (NSData*) getDataForAttachmentPath:(NSString*)path
 {
@@ -309,10 +318,9 @@
  * Retrieves the data for an absolute attachment path.
  *
  * @param path
- *      An absolute file path
- *
+ * An absolute file path.
  * @return
- *      The data for the attachment
+ * The data for the attachment.
  */
 - (NSData*) dataForAbsolutePath:(NSString*)path
 {
@@ -322,7 +330,7 @@
     absPath = [path stringByReplacingOccurrencesOfString:@"file://"
                                               withString:@""];
 
-    if (![fileManager fileExistsAtPath:absPath]){
+    if (![fileManager fileExistsAtPath:absPath]) {
         NSLog(@"File not found: %@", absPath);
     }
 
@@ -335,29 +343,28 @@
  * Retrieves the data for a resource path.
  *
  * @param path
- *      A relative file path
- *
+ * A relative file path.
  * @return
- *      The data for the attachment
+ * The data for the attachment.
  */
 - (NSData*) dataForResource:(NSString*)path
 {
-    NSFileManager* fileManager = [NSFileManager defaultManager];
-    NSString* absPath;
+    NSString* imgName = [[path pathComponents].lastObject
+                         stringByDeletingPathExtension];
 
-    NSBundle* mainBundle = [NSBundle mainBundle];
-    NSString* bundlePath = [[mainBundle bundlePath]
-                            stringByAppendingString:@"/"];
+#ifdef __CORDOVA_4_0_0
+    if ([imgName isEqualToString:@"icon"]) {
+        imgName = @"AppIcon60x60@3x";
+    }
+#endif
 
-    absPath = [path pathComponents].lastObject;
+    UIImage* img = [UIImage imageNamed:imgName];
 
-    absPath = [bundlePath stringByAppendingString:absPath];
-
-    if (![fileManager fileExistsAtPath:absPath]){
-        NSLog(@"File not found: %@", absPath);
+    if (img == NULL) {
+        NSLog(@"File not found: %@", path);
     }
 
-    NSData* data = [fileManager contentsAtPath:absPath];
+    NSData* data = UIImagePNGRepresentation(img);
 
     return data;
 }
@@ -366,10 +373,9 @@
  * Retrieves the data for a asset path.
  *
  * @param path
- *      A relative www file path
- *
+ * A relative www file path.
  * @return
- *      The data for the attachment
+ * The data for the attachment.
  */
 - (NSData*) dataForAsset:(NSString*)path
 {
@@ -385,7 +391,7 @@
 
     absPath = [bundlePath stringByAppendingString:absPath];
 
-    if (![fileManager fileExistsAtPath:absPath]){
+    if (![fileManager fileExistsAtPath:absPath]) {
         NSLog(@"File not found: %@", absPath);
     }
 
@@ -398,10 +404,9 @@
  * Retrieves the data for a base64 encoded string.
  *
  * @param base64String
- *      Base64 encoded string
- *
+ * Base64 encoded string.
  * @return
- *      The data for the attachment
+ * The data for the attachment.
  */
 - (NSData*) dataFromBase64:(NSString*)base64String
 {
@@ -418,22 +423,22 @@
                                                    range:NSMakeRange(0, length)
                                             withTemplate:@""];
 
+#ifndef __CORDOVA_3_8_0
     NSData* data = [NSData dataFromBase64String:dataString];
+#else
+    NSData* data = [[NSData alloc] initWithBase64EncodedString:dataString options:0];
+#endif
 
     return data;
 }
-
-#pragma mark -
-#pragma mark Plugin helper methods
 
 /**
  * Retrieves the mime type from the file extension.
  *
  * @param extension
- *      The file's extension
- *
+ * The file's extension.
  * @return
- *      The coresponding MIME type
+ * The coresponding MIME type.
  */
 - (NSString*) getMimeTypeFromFileExtension:(NSString*)extension
 {
@@ -445,6 +450,8 @@
     CFStringRef ext = (CFStringRef)CFBridgingRetain(extension);
     CFStringRef type = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, ext, NULL);
 
+    ext = NULL;
+
     // Converting UTI to a mime type
     return (NSString*)CFBridgingRelease(UTTypeCopyPreferredTagWithClass(type, kUTTagClassMIMEType));
 }
@@ -453,10 +460,9 @@
  * Retrieves the attachments basename.
  *
  * @param path
- *      The file path or bas64 data of the attachment
- *
+ * The file path or bas64 data of the attachment.
  * @return
- *      The attachments basename
+ * The attachments basename.
  */
 - (NSString*) getBasenameFromAttachmentPath:(NSString*)path
 {
@@ -472,19 +478,6 @@
     }
 
     return path;
-
-}
-
-/**
- * Invokes the callback without any parameter.
- */
-- (void) execCallback
-{
-    CDVPluginResult *result = [CDVPluginResult
-                               resultWithStatus:CDVCommandStatus_OK];
-
-    [self.commandDelegate sendPluginResult:result
-                                callbackId:_command.callbackId];
 }
 
 @end

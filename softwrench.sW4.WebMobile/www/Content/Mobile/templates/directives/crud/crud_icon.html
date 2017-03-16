@@ -1,2 +1,2 @@
-﻿<button class="button" ng-class="getIconClass(item)" ng-style="{background:getIconColor(item),color:getTextColor(item)}">{{getIconText(item)}}</button>
-<i class="crud-list-icon fa fa-{{getIconIcon(item)}}" ng-class="getIconClass(item)" ng-style="{color:getTextColor(item)}" ng-show="getIconIcon(item)" ng-click></i>
+﻿<button class="button" ng-class="icon.clazz" ng-style="{background:icon.color,color:icon.textColor}">{{icon.text}}</button>
+<i class="crud-list-icon fa fa-{{icon.icon}}" ng-class="icon.clazz" ng-style="{color:icon.textColor}" ng-show="icon.icon" ng-click></i>

@@ -2,9 +2,9 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q","$timeout",
-            "$ionicScrollDelegate", "loadingService","attachmentDataSynchronizationService", "metadataModelService","menuModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", 
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q,$timeout, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService,menuModelService, offlineSchemaService, crudContextService, crudContextHolderService) {
+        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$timeout",
+            "$ionicScrollDelegate", "loadingService", "attachmentDataSynchronizationService", "metadataModelService", "menuModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", "indexCreatorService",
+        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $timeout, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, menuModelService, offlineSchemaService, crudContextService, crudContextHolderService, indexCreatorService) {
 
             $scope.data = {
                 operation: null,
@@ -47,24 +47,26 @@
             };
 
             var loadData = function (initial) {
-                // show loading if initial page load
-                if (!!initial) {
-                    if (menuModelService.getMenuItems().length === 0) {
-                        //login has just happened, no menu items, forcing first sync
+                let isFirstSyncPromise = !initial ? $q.when(false) : synchronizationFacade.isFirstSync();
+                isFirstSyncPromise.then(value => {
+                    if (value) {
+                        //registering first sync call automatically
                         return $timeout(() => {
-                            $scope.fullSynchronize()
+                            $scope.fullSynchronize(true);
                         }, 0, false);
+                    } else {
+                        loadingService.showDefault();
+                        const operationPromise = loadSyncOperation();
+                        const currentStatePromise = loadCurrentApplicationState();
+                        return $q.all([operationPromise, currentStatePromise])
+                            .finally(function () {
+                                if (!!initial) {
+                                    loadingService.hide();
+                                }
+                            });
                     }
-                    loadingService.showDefault();
-                }
-                var operationPromise = loadSyncOperation();
-                var currentStatePromise = loadCurrentApplicationState();
-                return $q.all([operationPromise, currentStatePromise])
-                    .finally(function () {
-                        if (!!initial) {
-                            loadingService.hide();
-                        }
-                    });
+                });
+
             };
 
             $scope.goToHistory = function () {
@@ -80,7 +82,7 @@
             };
 
 
-            $scope.fullSynchronize = function () {
+            $scope.fullSynchronize = function (initialSync) {
                 $scope.data.isSynching = true;
                 loadingService.showDefault();
 
@@ -104,6 +106,7 @@
                         $scope.data.isSynching = false;
                         loadingService.hide();
                         attachmentDataSynchronizationService.downloadAttachments();
+                        indexCreatorService.createIndexAfterFirstSync();
                     });
             };
 
