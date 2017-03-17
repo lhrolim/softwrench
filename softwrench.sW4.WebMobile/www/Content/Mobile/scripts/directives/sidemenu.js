@@ -34,6 +34,10 @@
                         return menuModelService.getUserMenuItems();
                     };
 
+                    $scope.getAppCount = function(appName) {
+                        return menuModelService.getAppCount(appName);
+                    }
+
                     //#region logout
                     function doLogout() {
                         return securityService.logout()

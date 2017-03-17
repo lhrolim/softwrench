@@ -37,7 +37,8 @@
                 searchValues: {}, // all the search values as a object with attribute as key
                 sortables: {}, // the sortableFields as a object with attribute as key
                 sortableFields: [], // the sortableFields as a array
-                sort: {} // sort value
+                sort: {}, // sort value
+                count: 0
             },
 
             //composition

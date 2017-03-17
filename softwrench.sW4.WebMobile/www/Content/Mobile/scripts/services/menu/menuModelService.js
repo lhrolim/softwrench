@@ -5,7 +5,8 @@
 
         const initialMenuModel = {
             dbData: {},
-            listItems: []
+            listItems: [],
+            appCount: {}
         };
 
         var menuModel = angular.copy(initialMenuModel);
@@ -48,6 +49,36 @@
             return getMenuContainerItems(reservedMenuContainers.user);
         }
 
+        function getAppCount(appName) {
+            return menuModel.appCount[appName] || 0;
+        }
+
+        function updateAppCount(appName) {
+            dao.executeStatement("select count(*) from DataEntry where application = :p0", [appName]).then((result) => {
+                if (result[0] && result[0].hasOwnProperty("count(*)")) {
+                    menuModel.appCount[appName] = result[0]["count(*)"];
+                }
+            });
+        }
+
+        function updateAppsCount() {
+            const leafs = getApplicationMenuItems();
+            angular.forEach(leafs, (leaf) => {
+                if (leaf.type === "ApplicationMenuItemDefinition") {
+                    updateAppCount(leaf.application);
+                    return;
+                }
+                if (leaf.type !== "MenuContainerDefinition") {
+                    return;
+                }
+                angular.forEach(leaf.explodedLeafs, (subLeaf) => {
+                    if (subLeaf.type === "ApplicationMenuItemDefinition") {
+                        updateAppCount(subLeaf.application);
+                    }
+                });
+            });
+        }
+
         function initAndCacheFromDB() {
             const log = $log.getInstance("menuModelService#initAndCacheFromDB");
             return dao.findUnique("Menu").then(menu => {
@@ -61,6 +92,7 @@
                 } else if (menu.data) {
                     menuModel.listItems = menu.data.leafs;
                 }
+                updateAppsCount();
                 return menu;
             });
         }
@@ -89,6 +121,8 @@
             getMenuContainerItems,
             getAdminMenuItems,
             getUserMenuItems,
+            getAppCount,
+            updateAppsCount,
             updateMenu,
             initAndCacheFromDB,
             reset

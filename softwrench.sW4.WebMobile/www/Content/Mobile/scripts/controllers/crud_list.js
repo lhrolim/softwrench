@@ -2,7 +2,7 @@
     "use strict";
 
     softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants",
-        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate",
+        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate", 
         function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate) {
 
             $scope.crudlist = {
@@ -100,7 +100,7 @@
 
             $scope.gridTitle = function () {
                 const schema = crudContextHolderService.currentListSchema();
-                return crudContextService.gridTitle(schema);
+                return crudContextService.gridTitle(schema) + " (" + crudContextHolderService.getGridSearchData().count + ")";
             }
 
             $scope.itemTitle = function (item) {
