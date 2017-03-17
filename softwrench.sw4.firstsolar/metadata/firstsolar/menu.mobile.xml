@@ -6,8 +6,8 @@
     <application id="OWO" title="Assigned to Group" ref="otherworkorder" schema="list" icon="fa-table"/>
   </container>
 
-<!--  <container id="user-section">-->
-<!--    <service id="userprofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>-->
-<!--  </container>-->
+  <container id="user-section">
+    <service id="userprofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>
+  </container>
 <!--  -->
 </Menu>
