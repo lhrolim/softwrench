@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -33,7 +34,7 @@ using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
-    public class AttachmentHandler : ISingletonComponent {
+    public class AttachmentHandler : ISingletonComponent, ISWEventListener<RefreshMetadataEvent> {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(AttachmentHandler));
 
@@ -477,5 +478,8 @@ BuildMaximoURL() {
             _baseMaximoURL = MetadataProvider.GlobalProperty(ApplicationMetadataConstants.MaximoDocLinksURLPath) ?? _baseMaximoURL;
         }
 
+        public void HandleEvent(RefreshMetadataEvent eventToDispatch) {
+            _baseMaximoURL = null;
+        }
     }
 }
