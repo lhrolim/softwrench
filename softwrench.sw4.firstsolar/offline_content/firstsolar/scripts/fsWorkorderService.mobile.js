@@ -1,15 +1,41 @@
-﻿(function (angular, _) {
+﻿
+(function (angular,_) {
     "use strict";
 
-    function fsWorkorderOfflineService(crudContextService, dao, $timeout, securityService, offlineSchemaService) {
-        //#region Utils
+    //#region WhereClauses
+    // textindex04 = location of the wo
+    const locationsOfAssignedWos = "select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null";
 
-        //#endregion
+    // textindex01 = location of locancestor
+    // textindex02 = ancestor of locancestor
+    const childLocationOfAssignedWos = `select textindex01 from associationdata where application = 'locancestor' and textindex02 in (${locationsOfAssignedWos})`;
 
-        //#region Public methods
+    // textindex01 = location of location
+    const preferredLocations = `textindex01 in (${locationsOfAssignedWos}) or textindex01 in (${childLocationOfAssignedWos})`;
+
+
+    // textindex01 = location of locancestor
+    // textindex02 = ancestor of locancestor
+    const childLocationsOfGivenLocation = "select textindex01 from associationdata where application = 'locancestor' and textindex02 = @location";
+
+    // textindex01 = location of asset
+    const assetsWithLocationEqualOrDescendant = `textindex01 = @location or textindex01 in (${childLocationsOfGivenLocation})`;
+
+    class fsWorkorderOfflineService {
+
+        constructor($q, crudContextService, swdbDAO, $timeout, securityService, offlineSchemaService) {
+            this.$q = $q;
+            this.crudContextService = crudContextService;
+            this.dao = swdbDAO;
+            this.$timeout = $timeout;
+            this.securityService = securityService;
+            this.offlineSchemaService = offlineSchemaService;
+        }
+
+
         //afterchange
-        function afterFailureChanged() {
-            const dm = crudContextService.currentDetailItemDataMap();
+        afterFailureChanged() {
+            const dm = this.crudContextService.currentDetailItemDataMap();
             if (dm["problemcode"] != null) {
                 dm["problemcode"] = "null$ignorewatch";
             }
@@ -20,9 +46,11 @@
                 dm["fr2code"] = "null$ignorewatch";
             }
         }
+
+
         //afterchange
-        function afterProblemChanged() {
-            const dm = crudContextService.currentDetailItemDataMap();
+        afterProblemChanged() {
+            const dm = this.crudContextService.currentDetailItemDataMap();
             if (dm["fr1code"] != null) {
                 dm["fr1code"] = "null$ignorewatch";
             }
@@ -30,40 +58,52 @@
                 dm["fr2code"] = "null$ignorewatch";
             }
         }
+
         //afterchange
-        function afterCauseChanged() {
-            const dm = crudContextService.currentDetailItemDataMap();
+        afterCauseChanged() {
+            const dm = this.crudContextService.currentDetailItemDataMap();
             if (dm["fr2code"] != null) {
                 dm["fr2code"] = "null$ignorewatch";
             }
         }
         //afterchange
-        function afterRemedyChanged() {
+        afterRemedyChanged() {
 
         }
-        //afterchange
-        function updateLocation(event) {
+
+        //afterchange --> asset selected
+        updateLocation(event) {
             const datamap = event.datamap;
 
             const asset = datamap["assetnum"];
             if (!asset || (angular.isArray(asset) && asset.length === 0)) {
-                return;
+                return this.$q.when();
             }
 
             const location = datamap["offlineasset_.location"];
             const failurecode = datamap["offlineasset_.failurecode"];
             datamap["location"] = `${location}$ignorewatch`;
             datamap["failurecode"] = failurecode;
+            if (!!failurecode) {
+                return this.dao.findSingleByQuery("AssociationData", `textindex01='${failurecode}'`).then(result => {
+                    datamap["failurelistonly_.failurelist"] = result.datamap.failurelist;
+                });
+            }
+
+
         }
         //afterchange
-        function clearAsset(event) {
+        clearAsset(event) {
             const datamap = event.datamap;
             datamap["assetnum"] = "null$ignorewatch";
         }
 
-        function onNewDetailLoad(scope, schema, datamap) {
+        onNewDetailLoad(scope, schema, datamap) {
+            var offlineSchemaService = this.offlineSchemaService;
+            var $timeout = this.$timeout;
+
             // defaults origination to 'Field Analysis'
-            dao.findSingleByQuery("AssociationData", `application='classstructure' and datamap like '%"description":"Field Analysis"%'`)
+            this.dao.findSingleByQuery("AssociationData", `application='classstructure' and datamap like '%"description":"Field Analysis"%'`)
                 .then(a => {
                     if (!a || !a.datamap || !a.datamap.classstructureid) {
                         return;
@@ -96,12 +136,14 @@
          * @param {Datamap} datamap 
          * @returns {Promise<entities.DataEntry>} 
          */
-        function assignWorkOrder(schema, datamap) {
+        assignWorkOrder(schema, datamap) {
+            var crudContextService = this.crudContextService;
+            var $timeout = this.$timeout;
             // const user = securityService.currentFullUser();
             const item = crudContextService.currentDetailItem();
             // datamap["owner"] = user["PersonId"];
             item["application"] = "workorder";
-            return crudContextService.saveChanges()
+            return this.crudContextService.saveChanges()
                 .then(saved =>
                     // TODO: set list model (in the crud context) and list view (in the history stack) manually so screen transition is not so agravating
                     crudContextService.loadApplicationGrid("workorder", "WO - Assigned", "list")
@@ -110,109 +152,38 @@
                 );
         }
 
-        //#region WhereClauses
-        // textindex04 = location of the wo
-        const locationsOfAssignedWos = "select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null";
 
-        // textindex01 = location of locancestor
-        // textindex02 = ancestor of locancestor
-        const childLocationOfAssignedWos = `select textindex01 from associationdata where application = 'locancestor' and textindex02 in (${locationsOfAssignedWos})`;
-
-        // textindex01 = location of location
-        const preferredLocations = `textindex01 in (${locationsOfAssignedWos}) or textindex01 in (${childLocationOfAssignedWos})`;
-
-        function getLocationsWhereClause() {
+        getLocationsWhereClause() {
             return preferredLocations;
         }
 
-        // textindex01 = location of locancestor
-        // textindex02 = ancestor of locancestor
-        const childLocationsOfGivenLocation = "select textindex01 from associationdata where application = 'locancestor' and textindex02 = @location";
+      
 
-        // textindex01 = location of asset
-        const assetsWithLocationEqualOrDescendant = `textindex01 = @location or textindex01 in (${childLocationsOfGivenLocation})`;
-
-        function getAssetWhereClause() {
+         getAssetWhereClause() {
             return assetsWithLocationEqualOrDescendant;
         }
 
-        function getFacilityFilterWhereClause(option) {
+         getFacilityFilterWhereClause(option) {
             const facilities = option.split(",");
             const terms = [];
             angular.forEach(facilities, facility => {
                 const trimmed = facility.trim();
                 if (!trimmed) {
                     return;
-                }
+        }
 
-                // textindex04 = location of the wo
+            // textindex04 = location of the wo
                 terms.push(`root.textindex04 like '${trimmed}%'`);
-            });
+                });
 
             return `(${terms.join(" or ")})`;
-        }
-
-        //#endregion
-
-        //#region Filter providers
-        function getFacilityFilterOptions() {
-            const options = [];
-
-            const user = securityService.currentFullUser();
-            if (!user) {
-                return options;
-            }
-
-            const props = user.properties;
-            if (!props) {
-                return options;
-            }
-
-            const facilities = props["sync.facilities"];
-            if (!facilities) {
-                return options;
-            }
-
-            angular.forEach(facilities.sort(), facility => {
-                const option = { value: facility };
-                option.label = option.value;
-                option.text = option.value;
-                options.push(option);
-            });
-
-            return options;
-        }
-        //#endregion
-
-        //#endregion
-
-        //#region Service Instance
-        const service = {
-            // change event handlers
-            afterFailureChanged,
-            afterProblemChanged,
-            afterCauseChanged,
-            afterRemedyChanged,
-            updateLocation,
-            clearAsset,
-            onNewDetailLoad,
-            assignWorkOrder,
-            // whereclauses
-            getLocationsWhereClause,
-            getAssetWhereClause,
-            getFacilityFilterWhereClause,
-            // filter providers
-            getFacilityFilterOptions
-        };
-        return service;
-        //#endregion
     }
 
-    //#region Service registration
+    }
 
-    angular.module("maximo_offlineapplications")
-        .service("fsWorkorderOfflineService", ["crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService", fsWorkorderOfflineService]);
 
-    //#endregion
+    fsWorkorderOfflineService["$inject"] = ["$q", "crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService"];
 
-})(angular, _);
+    angular.module("maximo_offlineapplications").service("fsWorkorderOfflineService", fsWorkorderOfflineService);
+
+})(angular,_);

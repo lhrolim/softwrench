@@ -33,7 +33,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         }
 
         public static string GenerateInString(IEnumerable<string> items) {
-            var enumerable = items as IList<string> ?? items.ToList();
+            var enumerable = items as ISet<string> ?? items.ToHashSet();
             Validate.NotEmpty(enumerable,"items");
 
             var sb = new StringBuilder();
@@ -47,7 +47,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
         public static string GenerateOrLikeString(string columnName, IEnumerable<string> items, bool bringNoneIfEmpty=false) {
             var sb = new StringBuilder();
-            var enumerable = items as IList<string> ?? items.ToList();
+            var enumerable = items as ISet<string> ?? items.ToHashSet();
             if (items == null || !enumerable.Any()) {
                 return bringNoneIfEmpty ? "1!=1" : "1=1";
             }
@@ -76,12 +76,15 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             if (items == null || !dataMaps.Any()) {
                 return null;
             }
-
+            var usedItems = new HashSet<object>();
             var sb = new StringBuilder();
             foreach (var item in dataMaps) {
                 var id = columnName == null ? item.Id : item.GetAttribute(columnName);
-                sb.Append("'").Append(id).Append("'");
-                sb.Append(",");
+                if (!usedItems.Contains(id)) {
+                    sb.Append("'").Append(id).Append("'");
+                    sb.Append(",");
+                }
+                usedItems.Add(id);
             }
             return sb.ToString(0, sb.Length - 1);
         }
