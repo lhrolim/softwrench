@@ -1,6 +1,8 @@
 ﻿using System;
 using cts.commons.persistence.Util;
 using NHibernate.Mapping.Attributes;
+using NHibernate.SqlTypes;
+using NHibernate.Type;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Dynamic.Model {
@@ -27,7 +29,7 @@ namespace softWrench.sW4.Dynamic.Model {
             get; set;
         }
 
-        [Property]
+        [Property(Length = Int32.MaxValue)]
         public string Script {
             get; set;
         }
