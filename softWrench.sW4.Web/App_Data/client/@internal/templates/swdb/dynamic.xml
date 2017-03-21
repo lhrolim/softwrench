@@ -150,7 +150,7 @@
             <renderer type="checkbox"/>
           </field>
           <field attribute="platform" label="Platform"/>
-          <field attribute="offlinedevice" label="Device Filter"/>
+          <field attribute="offlineDevice" label="Device Filter"/>
           <field attribute="appliestoversion" label="Version to Deploy" tooltip="Server side version for the script"/>
           <field attribute="offlineversions" label="Offline Versions" tooltip="Client side version(s) for the script"/>
 
@@ -186,7 +186,7 @@
             </optionfield>
 
             <optionfield attribute="offlineDevice" label="OffLine Device" showexpression="@platform != null &amp;&amp; @platform.equalsAny('Both','Mobile')">
-              <option label="Any" value="All"/>
+              <option label="Any" value="ALL"/>
               <option label="Android" value="Android"/>
               <option label="IOS" value="Ios"/>
             </optionfield>

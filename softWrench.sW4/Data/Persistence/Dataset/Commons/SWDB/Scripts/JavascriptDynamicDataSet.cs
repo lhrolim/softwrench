@@ -59,7 +59,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.Scripts {
 
 
             Enum.TryParse(datamap.StringValue("platform"), true, out plat);
-            Enum.TryParse(datamap.StringValue("offlinedevice"), true, out dev);
+            Enum.TryParse(datamap.StringValue("offlineDevice"), true, out dev);
             var offlineVersions = datamap.StringValue("offlineversions");
 
             var devInfo = new ScriptDeviceInfo {
