@@ -77,7 +77,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // When getting the person list for the Apply/Remove profile action, we need to filter the list from maximo based on the usernames of the SW users who do/don't have the profile
             if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist") {
                 var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
-                var profileId = searchDto.CustomParameters["profileId"];
+                var profileId = searchDto.CustomParameters["profileid"];
                 var validUsernamesList = await _swdbDAO.FindByNativeQueryAsync("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId));
                 if (!validUsernamesList.Any()) {
                     throw new BlankListException();

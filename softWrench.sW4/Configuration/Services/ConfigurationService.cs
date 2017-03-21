@@ -49,7 +49,10 @@ namespace softWrench.sW4.Configuration.Services {
             }
             var definition = preDefinition ?? await _dao.FindSingleByQueryAsync<PropertyDefinition>(PropertyDefinition.ByKey, configKey);
             if (definition == null) {
-                Log.Warn($"property {configKey} not found");
+                Log.Debug($"property {configKey} not found");
+                if (!ignoreCache) {
+                    _cache.AddToCache(configKey,lookupContext,null);
+                }
                 return default(T);
             }
             var values = definition.Values;
