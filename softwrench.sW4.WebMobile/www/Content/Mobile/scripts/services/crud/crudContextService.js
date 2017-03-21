@@ -315,6 +315,7 @@
                         return offlineSaveService.saveItem(applicationName, item, showConfirmationMessage);
                     })
                     .then(saved => {
+                        menuModelService.updateAppsCount();
                         crudContext.originalDetailItemDatamap = angular.copy(item.datamap);
                         contextService.insertIntoContext("crudcontext", crudContext);
                         if (crudContext.newItem) {
@@ -378,7 +379,10 @@
 
                 const newAttachments = item.datamap["attachment_"] || [];
 
-                const promise = dao.executeStatement(entities.DataEntry.deleteLocalStatement, [item.id, application]);
+                const promise = dao.executeStatement(entities.DataEntry.deleteLocalStatement, [item.id, application]).then((result) => {
+                    menuModelService.updateAppsCount();
+                    return result;
+                });
 
                 return newAttachments.length > 0 
                     ? promise.then(() => offlineAttachmentService.deleteRelatedAttachments(newAttachments))
@@ -425,6 +429,14 @@
                 }
 
                 baseQuery += searchIndexService.buildSearchQuery(appName, listSchema, gridSearch);
+
+                if (internalListContext.lastPageLoaded === 1) {
+                    const countQuery = baseQuery;
+                    dao.countByQuery("DataEntry", countQuery).then((count) => {
+                        crudContextHolderService.getGridSearchData().count = count;
+                    });
+                }
+
 
                 baseQuery += searchIndexService.buildSortQuery(appName, listSchema, gridSearch);
 

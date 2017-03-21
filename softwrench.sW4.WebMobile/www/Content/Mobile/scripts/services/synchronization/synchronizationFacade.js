@@ -205,7 +205,7 @@
                 })
                 .finally(() => {
                     tracking.trackFullState("synchornizationFacace#fullSync post-sync");
-               
+                    menuModelService.updateAppsCount();
                 });
         }
 

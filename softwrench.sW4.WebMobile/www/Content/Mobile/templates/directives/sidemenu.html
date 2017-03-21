@@ -15,13 +15,13 @@
                 <a ng-repeat="subleaf in leaf.leafs"
                    ng-click="loadApplication(subleaf)"
                    class="item subleaf">
-                    <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}
+                    <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}&ensp;({{getAppCount(subleaf.application)}})
                 </a>
             </div>
         </div>
         <!-- exploded items -->
         <a ng-switch-default class="item" ng-click="loadApplication(leaf)">
-            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}
+            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}&ensp;({{getAppCount(leaf.application)}})
         </a>
     </ng-switch>
 
