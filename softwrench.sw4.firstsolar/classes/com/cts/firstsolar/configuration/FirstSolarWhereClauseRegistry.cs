@@ -20,10 +20,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         /// <summary>
         /// Brings all assignments, where exists a workorder of interest, narrowing by the facility query that will be replaced at {0}
+        /// no server side filtering based on labor code should take place since these would happen at client side
         /// </summary>
         private const string AssignedWhereClause =
-            @"assignment.laborcode = '@user.properties['laborcode']' and assignment.scheduledate >= @past(1week) and assignment.scheduledate <= @future(1week)
-                and exists (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
+            @"assignment.scheduledate >= @past(1week) and assignment.scheduledate <= @future(1week) and exists (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
                 workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and {0} )";
 
 
@@ -99,7 +99,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             sb.Append(DefaultValuesBuilder.ConvertAllValues(WOGroupByBaseWhereClause, user));
             if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-                var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"),true);
+                var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"), true);
                 sb.AppendFormat(" and ({0})", locationQuery);
             }
             return sb.ToString();
@@ -122,7 +122,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var sb = new StringBuilder();
             if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-                var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => f + "%"),true);
+                var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => f + "%"), true);
                 sb.AppendFormat("({0})", locationQuery);
             }
             return sb.ToString();
