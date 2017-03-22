@@ -268,6 +268,7 @@
                   if (toState.name.startsWith("main.cruddetail")) {
                       //needs to refresh the displayables and datamap everytime the detail page is loaded.
                       init();
+                      loadingService.hide();
                       if (toState.name === "main.cruddetail.maininput") {
                           crudContextService.resetTab();
                       }
