@@ -158,7 +158,12 @@
 
             registerScript($provide, scriptName,serviceClassBody) {
                 const log = this.$log.get("dynamicScriptsCacheService#register", ["dynscripts","angular", "services"]);
-                const evaluatedClass = eval(serviceClassBody);
+                let evaluatedClass;
+                try {
+                    evaluatedClass = eval(serviceClassBody);
+                } catch (err) {
+                    evaluatedClass = null;
+                }
                 if (!evaluatedClass) {
                     log.warn(`error evaluating class for script ${scriptName}`);
                     return null;
