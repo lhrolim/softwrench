@@ -3,9 +3,9 @@
     "use strict";
 
     softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
-    'crudContextService', 'fieldService',  '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup",
+    'crudContextService', 'fieldService',  '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup","loadingService",
     function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
-    crudContextService, fieldService,  $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService,offlineSchemaService,commandBarDelegate, swAlertPopup) {
+    crudContextService, fieldService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService, offlineSchemaService, commandBarDelegate, swAlertPopup, loadingService) {
         
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;
@@ -116,7 +116,11 @@
         };
 
         $scope.navigateBack = function () {
-            return $ionicHistory.goBack();
+            loadingService.showDefault();
+            //need a timeout in order to force the icon to show up.
+            //the hide would be called on the crud_list statechanged handler method
+            $timeout(() => $ionicHistory.goBack(), 0, false);
+//            loadingService.hide();
         };
 
         $scope.isOnMainTab = function () {

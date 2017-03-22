@@ -172,6 +172,7 @@
                          $timeout(() => $scope.disableSearch(), 500);
                      } else {
                          init();
+                         loadingService.hide();
                      }
                  });
 
