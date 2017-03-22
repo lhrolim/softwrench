@@ -143,7 +143,7 @@
 
 
         initAndCacheFromDB: function () {
-            var log = $log.getInstance("metadataModelService#initAndCacheFromDB",["init","metadata"]);
+            var log = $log.getInstance("metadataModelService#initAndCacheFromDB",["init","metadata", "botstrap"]);
             var defer = $q.defer();
             swdbDAO.findAll("Application").then(function (applications) {
                 metadataModel.associationApplications = [];

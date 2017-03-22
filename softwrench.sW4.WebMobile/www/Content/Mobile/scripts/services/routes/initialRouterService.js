@@ -29,10 +29,19 @@
 
             //should not be present at production mode
             const localdata = window.localdevdata;
+            if (localdata && !!localdata.debuglogs) {
+                const debugarr = localdata.debuglogs;
+                debugarr.forEach(log => {
+                    swlog.debug(log);
+                });
+            }
+
             if (!localdata || localdata.showlogin) {
                 log.debug("redirecting to initial state");
                 return this.routeService.loadInitialState(authenticated);
             }
+
+            
 
             log.debug("applying local rules");
 

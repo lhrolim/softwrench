@@ -80,9 +80,10 @@
         }
 
         function initAndCacheFromDB() {
-            const log = $log.getInstance("menuModelService#initAndCacheFromDB");
-            return dao.findUnique("Menu").then(menu => {
+            const log = $log.getInstance("menuModelService#initAndCacheFromDB", ["init", "metadata", "botstrap"]);
+            return dao.findSingleByQuery("Menu","data is not null").then(menu => {
                 if (!!menu) {
+                    log.info("restoring menu");
                     menuModel.dbData = menu;
                 }
                 if (!menu) {
@@ -90,6 +91,7 @@
                     log.info("creating first menu");
                     return dao.save(menu);
                 } else if (menu.data) {
+                    log.info("restoring menu data");
                     menuModel.listItems = menu.data.leafs;
                 }
                 updateAppsCount();

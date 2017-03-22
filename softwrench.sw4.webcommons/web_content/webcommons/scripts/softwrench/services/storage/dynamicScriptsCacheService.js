@@ -139,8 +139,10 @@
                 if (hasUpdate) {
                     this.localStorageService.put("sw:customservicesentries", this._loadedServices);
                     //true updates will only be applied upon next browser refresh, so forcing it, especially for offline scenarios
-                    //TODO: figure out a way
-                    window.location.reload();
+                    if (!!window.restartApplication) {
+                        window.restartApplication();
+                    }
+                    window.location.reload(true);
                 }
             });
         }
@@ -200,7 +202,11 @@
                 });
                 this._loadedServices = {};
                 if (hadKeys) {
-                    window.location.reload();
+                    if (!!window.restartApplication) {
+                        window.restartApplication();
+                    }
+
+                    window.location.reload(true);
                 }
             }
 

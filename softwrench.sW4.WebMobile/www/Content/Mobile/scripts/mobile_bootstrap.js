@@ -24,7 +24,20 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
     function ($ionicPlatform, swdbDAO, $log, securityService, localStorageService, menuModelService, metadataModelService, routeService, crudContextService, synchronizationNotificationService, offlinePersitenceBootstrap,
         entities, configService, $rootScope, $q, $cordovaSplashscreen, $timeout, offlineCommandService, $ionicScrollDelegate, trackingService, initialRouterService) {
 
+        var initialHref = null;
+
         function initContext() {
+
+            const localdata = window.localdevdata;
+            if (localdata && !!localdata.debuglogs) {
+                const debugarr = localdata.debuglogs;
+                debugarr.forEach(log => {
+                    swlog.debug(log);
+                });
+            }
+
+
+            initialHref= window.location.href;
             trackingService.enable();
             return offlinePersitenceBootstrap.init().then(() => {
                 const menuPromise = menuModelService.initAndCacheFromDB();
@@ -37,6 +50,16 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
                 return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise, restoreAuthPromise]);
             });
+        }
+
+        // keep startup url (in case your app is an SPA with html5 url routing)
+        
+
+        window.restartApplication= function () {
+            // Show splash screen (useful if your app takes time to load) 
+//            navigator.splashscreen.show();
+            // Reload original app url (ie your index.html file)
+            window.location = initialHref;
         }
 
         function disableRipplePopup() {

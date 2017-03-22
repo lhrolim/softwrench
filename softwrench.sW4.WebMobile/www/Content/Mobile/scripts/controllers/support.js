@@ -35,7 +35,7 @@
                 });
                 return confirm.then(res => {
                     dynamicScriptsCacheService.clearEntries();
-                    window.location.reload();
+                    window.location.reload(true);
                     securityService.logout(true).then(() => {
                         return routeService.go("login");
                     }).then(l => {

@@ -7,6 +7,8 @@ window.localdevdata = {
     serverurl: {
         ripple: "http://qa.softwrench.net/firstsolar",
         device: "http://qa.softwrench.net/firstsolar"
-    }
+    },
+    debuglogs:["init"]
+
 
 };
