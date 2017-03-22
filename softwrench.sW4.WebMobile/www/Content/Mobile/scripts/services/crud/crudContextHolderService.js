@@ -41,6 +41,11 @@
                 count: 0
             },
 
+            // menu
+            currentMenuId: null,
+            menuGridTitle: null,
+            menuDisableCreate: false,
+
             //composition
             composition: {
                 currentTab: null,

@@ -34,8 +34,8 @@
                         return menuModelService.getUserMenuItems();
                     };
 
-                    $scope.getAppCount = function(appName) {
-                        return menuModelService.getAppCount(appName);
+                    $scope.getAppCount = function(menuId) {
+                        return menuModelService.getAppCount(menuId);
                     }
 
                     //#region logout

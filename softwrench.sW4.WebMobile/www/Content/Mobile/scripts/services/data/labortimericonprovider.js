@@ -3,29 +3,15 @@
 
     function laborTimerIconProvider(laborService) {
         //#region Utils
-        function hasActiveLabor(item) {
-            if (!item) {
-                return false;
-            }
-
-            var activeLabor = laborService.getActiveLabor();
-
-            //is labor composition item
-            if (!item.application && !!activeLabor) {
-                return activeLabor["#localswdbid"] === item["#localswdbid"];   
-            }
-
-            return laborService.getActiveLaborParent() === item.id;
-        }
         //#endregion
 
         //#region Public methods
         function getIconClass(item) {
-            return hasActiveLabor(item) ? "hasaction" : null;
+            return laborService.hasItemActiveLabor(item) ? "hasaction" : null;
         }
 
         function getIconIcon(item) {
-            return hasActiveLabor(item) ? "clock-o" : null;
+            return laborService.hasItemActiveLabor(item) ? "clock-o" : null;
         }
         //#endregion
 

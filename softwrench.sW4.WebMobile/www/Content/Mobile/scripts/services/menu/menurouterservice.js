@@ -26,7 +26,7 @@
         function routeFromMenuItem(menuleaf) {
             switch (menuleaf.type) {
                 case "ApplicationMenuItemDefinition":
-                    return crudContextService.loadApplicationGrid(menuleaf.application, menuleaf.title, menuleaf.schema);
+                    return crudContextService.loadApplicationGrid(menuleaf.application, menuleaf.schema, menuleaf.id, menuleaf.parameters);
                 case "ServiceMenuItemDefinition":
                     return executeMenuService(menuleaf);
                 default:

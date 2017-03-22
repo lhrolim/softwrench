@@ -1,6 +1,8 @@
 ﻿
-(function (angular,_) {
+(function (angular, _) {
     "use strict";
+
+    const day = 24 * 60 * 60 * 1000;
 
     //#region WhereClauses
     // textindex04 = location of the wo
@@ -146,7 +148,7 @@
             return this.crudContextService.saveChanges()
                 .then(saved =>
                     // TODO: set list model (in the crud context) and list view (in the history stack) manually so screen transition is not so agravating
-                    crudContextService.loadApplicationGrid("workorder", "WO - Assigned", "list")
+                    crudContextService.loadApplicationGrid("workorder", "list")
                         // $timeout required so list controller has time to get and dispose it's viewmodel
                         .then(() => $timeout(() => crudContextService.loadDetail(saved), 0, false))
                 );
@@ -159,26 +161,84 @@
 
       
 
-         getAssetWhereClause() {
+
+        getAssetWhereClause() {
             return assetsWithLocationEqualOrDescendant;
         }
 
-         getFacilityFilterWhereClause(option) {
+        getFacilityFilterWhereClause(option) {
             const facilities = option.split(",");
             const terms = [];
             angular.forEach(facilities, facility => {
                 const trimmed = facility.trim();
                 if (!trimmed) {
                     return;
-        }
+                }
 
-            // textindex04 = location of the wo
+                // textindex04 = location of the wo
                 terms.push(`root.textindex04 like '${trimmed}%'`);
-                });
+            });
 
             return `(${terms.join(" or ")})`;
-    }
+        }
 
+        //#region Filter providers
+        getFacilityFilterOptions() {
+            const options = [];
+
+            const user = this.securityService.currentFullUser();
+            if (!user) {
+                return options;
+            }
+
+            const props = user.properties;
+            if (!props) {
+                return options;
+            }
+
+            const facilities = props["sync.facilities"];
+            if (!facilities) {
+                return options;
+            }
+
+            angular.forEach(facilities.sort(), facility => {
+                const option = { value: facility };
+                option.label = option.value;
+                option.text = option.value;
+                options.push(option);
+            });
+
+            return options;
+        }
+        //#endregion
+
+        //#region Menu whereclauses
+        // `assignment_`.dateindex02 = scheduled date
+        getTodayWosWhereClause() {
+            const now = new Date();
+            const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
+            const tomorrowTime = todayTime + day;
+            return `assignment_.dateindex02 >= ${todayTime} and assignment_.dateindex02 < ${tomorrowTime}`;
+        }
+
+        // `assignment_`.dateindex02 = scheduled date
+        getPastWosWhereClause() {
+            const now = new Date();
+            const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
+            return `assignment_.dateindex02 < ${todayTime}`;
+        }
+
+        // `assignment_`.dateindex02 = scheduled date
+        getFutureWosWhereClause() {
+            const now = new Date();
+            const tomorrowTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime() + day;
+            return `assignment_.dateindex02 >= ${tomorrowTime}`;
+        }
+
+        getCreatedWosWhereClause() {
+            return "`root`.remoteId is null";
+        }
+        //#endregion
     }
 
 
@@ -186,4 +246,4 @@
 
     angular.module("maximo_offlineapplications").service("fsWorkorderOfflineService", fsWorkorderOfflineService);
 
-})(angular,_);
+})(angular, _);

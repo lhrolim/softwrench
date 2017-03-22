@@ -1,19 +1,40 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', 'statuscolorService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants",
-        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate", 
-        function ($log, $scope, crudContextService, offlineSchemaService, statuscolorService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate) {
+    softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants",
+        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate", "laborService", 
+        function ($log, $scope, crudContextService, offlineSchemaService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate, laborService) {
 
             $scope.crudlist = {
                 items: [],
                 moreItemsAvailable: true
             };
 
+            function laborThenDirtyItemsFirst(allItems) {
+                const laborItems = [];
+                const dityItems = [];
+                const nonDirtyItems = [];
+
+                angular.forEach(allItems, (item) => {
+                    if (laborService.hasItemActiveLabor(item)) {
+                        laborItems.push(item);
+                    }else if (item.isDirty) {
+                        dityItems.push(item);
+                    } else {
+                        nonDirtyItems.push(item);
+                    }
+                });
+                return laborItems.concat(dityItems).concat(nonDirtyItems);
+            }
+
             function initializeList() {
                 $scope.crudlist.moreItemsAvailable = true;
+
+                const context = crudContextHolderService.getCrudContext();
+                context.itemlist = laborThenDirtyItemsFirst(context.itemlist);
+
                 // getting references to elements instead of to the whole list
-                $scope.crudlist.items = crudContextService.itemlist().map(i => i);
+                $scope.crudlist.items = context.itemlist.map(i => i);
             }
 
             function init() {
@@ -85,8 +106,12 @@
                 if (!schema) {
                     return false;
                 }
-                const disabled = schema.properties["list.offline.create.disabled"];
-                return disabled !== "true" && disabled !== true && crudContextService.hasNewSchemaAvailable();
+
+                const schemaDisabled = schema.properties["list.offline.create.disabled"];
+                const menuDisabled = crudContextService.getCrudContext().menuDisableCreate;
+                const disabled = schemaDisabled === "true" || schemaDisabled === true || menuDisabled === "true" || menuDisabled === true;
+
+                return !disabled && crudContextService.hasNewSchemaAvailable();
             };
 
             $scope.disableSearch = function (clear) {
@@ -100,7 +125,9 @@
 
             $scope.gridTitle = function () {
                 const schema = crudContextHolderService.currentListSchema();
-                return crudContextService.gridTitle(schema) + " (" + crudContextHolderService.getGridSearchData().count + ")";
+                const context = crudContextHolderService.getCrudContext();
+                const title = context.menuGridTitle || crudContextService.gridTitle(schema);
+                return title + " (" + context.gridSearch.count + ")";
             }
 
             $scope.itemTitle = function (item) {

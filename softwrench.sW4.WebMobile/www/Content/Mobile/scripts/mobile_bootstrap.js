@@ -48,7 +48,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                 const clientConfigPromise = configService.loadClientConfigs();
                 const restoreAuthPromise = securityService.restoreAuthCookie();
 
-                return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise, restoreAuthPromise]);
+                return $q.all([menuPromise, metadataPromise, serverConfigPromise, commandBarsPromise, clientConfigPromise, restoreAuthPromise]).then(() => menuModelService.updateAppsCount());
             });
         }
 

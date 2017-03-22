@@ -14,7 +14,7 @@
             
             const laborIdxName = searchIndexService.getIndexColumn(childListSchema.applicationName, childListSchema, "laborcode" ).replace("`root`", "`" + childEntityName + "`");
 
-            return `${laborIdxName} = '${laborCode}'`;
+            return `${laborIdxName} LIKE '${laborCode}'`;
 
         }
 

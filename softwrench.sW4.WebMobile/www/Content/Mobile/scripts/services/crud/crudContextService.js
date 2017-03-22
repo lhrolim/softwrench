@@ -416,33 +416,28 @@
                 const quickSearch = crudContextHolderService.getQuickSearch();
                 const listSchema = crudContextHolderService.currentListSchema();
                 const appName = crudContextHolderService.currentApplicationName();
-                //appending root prefix, since a left join could be present leading to ambiguity amongst columns
-                var baseQuery = "`root`.application = '{0}'".format(crudContext.currentApplicationName);
+
+                let extraWhereClause = "1=1";
                 if (quickSearch.value) {
-                    baseQuery += ' and `root`.datamap like \'%:"{0}%\''.format(quickSearch.value);
-                }
-                if (!crudFilterContextService.showPending()) {
-                    baseQuery += ' and `root`.pending = 0 ';
-                }
-                if (!crudFilterContextService.showDirty()) {
-                    baseQuery += ' and `root`.isDirty = 0 ';
+                    extraWhereClause += ' and `root`.datamap like \'%:"{0}%\''.format(quickSearch.value);
                 }
 
-                baseQuery += searchIndexService.buildSearchQuery(appName, listSchema, gridSearch);
+                extraWhereClause += searchIndexService.buildSearchQuery(appName, listSchema, gridSearch);
+
+                let baseQuery = menuModelService.buildListQuery(crudContext.currentApplicationName, crudContext.currentMenuId, extraWhereClause);
+
+                const joinObj = queryListBuilderService.buildJoinParameters(listSchema);
 
                 if (internalListContext.lastPageLoaded === 1) {
                     const countQuery = baseQuery;
-                    dao.countByQuery("DataEntry", countQuery).then((count) => {
-                        crudContextHolderService.getGridSearchData().count = count;
+                    dao.countByQuery("DataEntry", countQuery, joinObj).then((count) => {
+                        gridSearch.count = count;
                     });
                 }
 
-
                 baseQuery += searchIndexService.buildSortQuery(appName, listSchema, gridSearch);
 
-                let queryObj = { pagesize: 10, pageNumber: internalListContext.lastPageLoaded };
-
-                queryObj = angular.extend(queryObj, queryListBuilderService.buildJoinParameters(listSchema));
+                const queryObj = angular.extend({ pagesize: 10, pageNumber: internalListContext.lastPageLoaded }, joinObj);
 
                 return dao.findByQuery("DataEntry", baseQuery, queryObj)
                     .then(function (results) {
@@ -455,7 +450,7 @@
             },
 
 
-            loadApplicationGrid: function (applicationName, applicationTitle, schemaId) {
+            loadApplicationGrid: function (applicationName, schemaId, menuId, menuParams) {
                 const log = $log.get("crudContextService#loadApplicationGrid", ["list", "crud"]);
                 log.debug("loading application grid");
                 if (lastGridApplication && lastGridApplication !== applicationName) {
@@ -467,11 +462,16 @@
                 crudContext.currentDetailItem = null;
                 crudContext.composition = {};
                 const application = metadataModelService.getApplicationByName(applicationName);
-                crudContext.currentTitle = applicationTitle;
+                crudContext.currentTitle = application.data.title;
                 crudContext.currentApplicationName = applicationName;
                 crudContext.currentApplication = application;
                 crudContext.newItem = false;
 
+                if (menuId) {
+                    crudContext.currentMenuId = menuId;
+                    crudContext.menuGridTitle = menuParams && menuParams.offlinegridtitle;
+                    crudContext.menuDisableCreate = menuParams && menuParams.offlineDisableCreate === "true";
+                }
 
                 crudContext.currentListSchema = offlineSchemaService.locateSchema(application, schemaId);
                 crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication);

@@ -1,11 +1,12 @@
 ﻿(function (mobileServices, _) {
     "use strict";
 
-    function menuModelService(dao, $log, entities) {
+    function menuModelService(dao, $log, $injector, entities, offlineSchemaService, queryListBuilderService, dispatcherService, metadataModelService) {
 
         const initialMenuModel = {
             dbData: {},
             listItems: [],
+            menuWc: {},
             appCount: {}
         };
 
@@ -49,15 +50,42 @@
             return getMenuContainerItems(reservedMenuContainers.user);
         }
 
-        function getAppCount(appName) {
-            return menuModel.appCount[appName] || 0;
+        function getAppCount(menuId) {
+            return menuModel.appCount[menuId] || 0;
         }
 
-        function updateAppCount(appName) {
-            dao.executeStatement("select count(*) from DataEntry where application = :p0", [appName]).then((result) => {
-                if (result[0] && result[0].hasOwnProperty("count(*)")) {
-                    menuModel.appCount[appName] = result[0]["count(*)"];
-                }
+        function buildListQuery(appName, menuId, extraWhereClause) {
+            const menuWc = menuId && menuModel.menuWc[menuId] ? menuModel.menuWc[menuId] : "1=1";
+
+            extraWhereClause = extraWhereClause || "1=1";
+
+            //appending root prefix, since a left join could be present leading to ambiguity amongst columns
+            return "`root`.application = '{0}' and ({1}) and ({2}) ".format(appName, menuWc, extraWhereClause);
+        }
+
+        function buildJoinObj(menu) {
+            const application = metadataModelService.getApplicationByName(menu.application);
+            if (!application) {
+                return {};
+            }
+            const listSchema = offlineSchemaService.locateSchema(application, menu.schema);
+            if (!listSchema) {
+                return {};
+            }
+            return queryListBuilderService.buildJoinParameters(listSchema);
+        }
+
+        function updateAppCount(menu) {
+            let joinObj = {};
+            if (menu.parameters && menu.parameters.offlinemenuwc) {
+                menuModel.menuWc[menu.id] = dispatcherService.invokeServiceByString(menu.parameters.offlinemenuwc);
+                joinObj = buildJoinObj(menu);
+            }
+
+            const query = buildListQuery(menu.application, menu.id);
+
+            dao.countByQuery("DataEntry", query, joinObj).then((count) => {
+                menuModel.appCount[menu.id] = count;
             });
         }
 
@@ -65,7 +93,7 @@
             const leafs = getApplicationMenuItems();
             angular.forEach(leafs, (leaf) => {
                 if (leaf.type === "ApplicationMenuItemDefinition") {
-                    updateAppCount(leaf.application);
+                    updateAppCount(leaf);
                     return;
                 }
                 if (leaf.type !== "MenuContainerDefinition") {
@@ -73,7 +101,7 @@
                 }
                 angular.forEach(leaf.explodedLeafs, (subLeaf) => {
                     if (subLeaf.type === "ApplicationMenuItemDefinition") {
-                        updateAppCount(subLeaf.application);
+                        updateAppCount(subLeaf);
                     }
                 });
             });
@@ -94,7 +122,6 @@
                     log.info("restoring menu data");
                     menuModel.listItems = menu.data.leafs;
                 }
-                updateAppsCount();
                 return menu;
             });
         }
@@ -123,6 +150,7 @@
             getMenuContainerItems,
             getAdminMenuItems,
             getUserMenuItems,
+            buildListQuery,
             getAppCount,
             updateAppsCount,
             updateMenu,
@@ -132,6 +160,6 @@
         return service;
     };
 
-    mobileServices.factory("menuModelService", ["swdbDAO", "$log", "offlineEntities", menuModelService]);
+    mobileServices.factory("menuModelService", ["swdbDAO", "$log", "$injector", "offlineEntities", "offlineSchemaService", "queryListBuilderService", "dispatcherService", "metadataModelService", menuModelService]);
 
 })(mobileServices, _);

@@ -105,6 +105,10 @@
                 return 'hasproblem';
             }
 
+            if (!item.remoteId) {
+                return "isnew";
+            }
+
             if (item.isDirty || item[constants.localIdKey]) {
                 return 'isdirty';
             }
@@ -169,6 +173,10 @@
 
             if (item.hasProblem) {
                 return "exclamation-triangle";
+            }
+
+            if (!item.remoteId) {
+                return "plus";
             }
 
             if (item.isDirty || item[constants.localIdKey]) {

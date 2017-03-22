@@ -66,12 +66,11 @@
                 return $q.when(false);
             }
 
-            const gridSchema = crudContextService.currentListSchema();
-            const gridTitle = crudContextService.gridTitle(gridSchema);
+            const currentTitle = crudContextService.currentTitle();
 
             const confirmConfig = restorable
-                ? { title: "Cancel Changes", template: `Are you sure you want to cancel changes made to this ${gridTitle}` }
-                : { title: `Delete ${gridTitle}`, template: `Are you sure you want to delete this ${gridTitle} created locally` }
+                ? { title: "Cancel Changes", template: `Are you sure you want to cancel changes made to this ${currentTitle}` }
+                : { title: `Delete ${currentTitle}`, template: `Are you sure you want to delete this ${currentTitle} created locally` }
 
             return $ionicPopup.confirm(confirmConfig).then(res => {
                 if (!res) return false;
@@ -81,7 +80,7 @@
                     : crudContextService.deleteLocalItem(item);
 
                 return promise
-                    .then(() => $ionicPopup.alert({ title: `${gridTitle} was successfuly ${restorable ? "restored" : "deleted"}` }))
+                    .then(() => $ionicPopup.alert({ title: `${currentTitle} was successfuly ${restorable ? "restored" : "deleted"}` }))
                     .then(() => true);
             });
         }

@@ -1,7 +1,7 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, offlineSchemaService, offlineSaveService, $rootScope) {
+    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, offlineSchemaService, offlineSaveService, $rootScope, menuModelService) {
         //#region Utils
 
         const constants = {
@@ -111,6 +111,7 @@
                 .then(initialized => saveLabor(parent, initialized, true))
                 .then(saved => {
                     cacheStartedLabor(parent.id, saved);
+                    menuModelService.updateAppsCount();
                     return saved;
                 });
         }
@@ -291,6 +292,21 @@
             return defaultPostDeleteAction();
         }
 
+        function hasItemActiveLabor(item) {
+            if (!item) {
+                return false;
+            }
+
+            const activeLabor = getActiveLabor();
+
+            //is labor composition item
+            if (!item.application && !!activeLabor) {
+                return activeLabor["#localswdbid"] === item["#localswdbid"];   
+            }
+
+            return getActiveLaborParent() === item.id;
+        }
+
         //#endregion
 
         //#region Service Instance
@@ -309,7 +325,8 @@
             getActiveLaborParent,
             getActiveLabor,
             confirmPossibleTimer,
-            cancelPossibleTimer
+            cancelPossibleTimer,
+            hasItemActiveLabor
         };
         return service;
         //#endregion
@@ -318,7 +335,7 @@
     //#region Service registration
     angular.module("sw_mobile_services")
         .factory("laborService",
-        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "offlineSchemaService", "offlineSaveService", "$rootScope", laborService]);
+        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService", laborService]);
     //#endregion
 
 })(angular, _);

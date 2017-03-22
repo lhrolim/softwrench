@@ -45,6 +45,11 @@ crud-icon {
             border: 3px solid $cts_orange;
         }
 
+        &.isnew {
+            background: rgba($cts_blue, 0.1) !important;
+            border: 3px solid $cts_blue;
+        }
+
         &.ispending {
             background: rgba($cts_gray, 0.1) !important;
             border: 3px solid $cts_gray;
@@ -62,6 +67,10 @@ crud-icon {
 
         &.isdirty {
             color: $cts_orange !important;
+        }
+
+        &.isnew {
+            color: $cts_blue !important;
         }
 
         &.ispending {

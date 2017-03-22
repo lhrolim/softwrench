@@ -299,9 +299,9 @@
          * @param String query 
          * @returns Promise resolved with the count value 
          */
-        function countByQuery(entity, query) {
+        function countByQuery(entity, query, options) {
             const deferred = $q.defer();
-            const filter = createFilter(entity, query);
+            const filter = createFilter(entity, query, options);
             filter.count(count => deferred.resolve(count));
             return deferred.promise;
         };
