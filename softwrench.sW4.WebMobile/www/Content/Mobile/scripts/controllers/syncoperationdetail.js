@@ -2,9 +2,9 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$timeout",
+        ["$scope", "synchronizationOperationService","contextService", "routeService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$timeout",
             "$ionicScrollDelegate", "loadingService", "attachmentDataSynchronizationService", "metadataModelService", "menuModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", "indexCreatorService",
-        function ($scope, service, routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $timeout, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, menuModelService, offlineSchemaService, crudContextService, crudContextHolderService, indexCreatorService) {
+        function ($scope, service, contextService,routeService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $timeout, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, menuModelService, offlineSchemaService, crudContextService, crudContextHolderService, indexCreatorService) {
 
             $scope.data = {
                 operation: null,
@@ -94,6 +94,8 @@
                         swAlertPopup.show({
                             title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
                         });
+                        
+
                         return loadData();
                     })
                     .catch(function (error) {
@@ -107,6 +109,12 @@
                         loadingService.hide();
                         attachmentDataSynchronizationService.downloadAttachments();
                         indexCreatorService.createIndexAfterFirstSync();
+                        if (!!contextService.get("restartneeded")) {
+                            //only if there are dynamic scripts loaded
+                            contextService.deleteFromContext("restartneeded");
+                            window.restartApplication();
+                            return;
+                        }
                     });
             };
 

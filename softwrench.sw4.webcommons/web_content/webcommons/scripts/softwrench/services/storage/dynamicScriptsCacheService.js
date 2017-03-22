@@ -24,7 +24,7 @@
      */
     class dynamicScriptsCacheService {
 
-        constructor($rootScope,$q,$log,localStorageService,$injector) {
+        constructor($rootScope,$q,$log,localStorageService,$injector, contextService) {
             this.localStorageService = localStorageService;
             this.$injector = $injector;
             //DO not inject this one, to reduce number of dependencies. Check clientawareserviceprovider.js
@@ -33,6 +33,7 @@
             this.$q = $q;
             this.$rootScope = $rootScope;
             this.$log = $log;
+            this.contextService = contextService;
 
             //#region private fns
 
@@ -100,6 +101,7 @@
          */
         syncWithServerSideScripts(serverSideData = null) {
             const log = this.$log.get("dynamicScriptsCacheService#syncWithServerSideScripts", ["dynscripts","angular", "services"]);
+            const contextService = this.contextService;
             //            const clientState = { "items": _loadedServices };
             const clientState = this.getClientState();
             if (!this.restService) {
@@ -140,9 +142,13 @@
                     this.localStorageService.put("sw:customservicesentries", this._loadedServices);
                     //true updates will only be applied upon next browser refresh, so forcing it, especially for offline scenarios
                     if (!!window.restartApplication) {
-                        window.restartApplication();
+                        //notify a restart to be called by the end of the whole chain for the offline application
+                        contextService.set("restartneeded", true);
+                    } else {
+                        //reload automatically on the online solution
+                        window.location.reload(true);    
                     }
-                    window.location.reload(true);
+                    
                 }
             });
         }
@@ -214,7 +220,7 @@
 
         }
 
-        dynamicScriptsCacheService["$inject"] = ["$rootScope","$q","$log","localStorageService", "$injector"];
+        dynamicScriptsCacheService["$inject"] = ["$rootScope","$q","$log","localStorageService", "$injector","contextService"];
 
         angular.module("sw_rootcommons").service("dynamicScriptsCacheService", dynamicScriptsCacheService);
 
