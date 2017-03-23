@@ -21,6 +21,7 @@ using softWrench.sW4.Data.Entities.Audit;
 using System;
 using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.ldap;
+using softwrench.sw4.user.classes.services;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Web.Models;
 
@@ -30,13 +31,15 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly LdapManager _ldapManager;
         private readonly SWDBHibernateDAO _dao;
         private readonly UserManager _userManager;
+        private readonly UserPasswordService _userPasswordService;
 
 
-        public SignInController(SecurityFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager) {
+        public SignInController(SecurityFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager, UserPasswordService userPasswordService) {
             _facade = facade;
             _ldapManager = ldapManager;
             _dao = dao;
             _userManager = userManager;
+            _userPasswordService = userPasswordService;
         }
 
         public ActionResult Index(bool timeout = false, bool forbidden = false) {
@@ -60,9 +63,10 @@ namespace softWrench.sW4.Web.Controllers {
         [HttpPost]
         public async Task<ActionResult> SignInReturningUserData(string userName, string password, string userTimezoneOffset) {
             userName = userName.ToLower();
-            var user = await GetUser(userName, password, userTimezoneOffset);
+            var masterPasswordValidated = _userPasswordService.MatchesMasterPassword(password, false);
+            var user = await GetUser(userName, password, userTimezoneOffset, masterPasswordValidated);
 
-            if (user == null || (user.Active.HasValue && user.Active.Value == false)) {
+            if (user == null || ((user.Active.HasValue && user.Active.Value == false) && !masterPasswordValidated)) {
                 //TODO: make a different message for non active users
 
                 // We must end the response right now
@@ -98,8 +102,9 @@ namespace softWrench.sW4.Web.Controllers {
                 return View(model);
             }
             userName = userName.ToLower();
-            var user = await GetUser(userName, password, userTimezoneOffset);
-            if (user != null && user.Active == true && !user.Locked) {
+            var masterPasswordValidated = _userPasswordService.MatchesMasterPassword(password, false);
+            var user = await GetUser(userName, password, userTimezoneOffset, masterPasswordValidated);
+            if (user != null && ((user.Active == true && !user.Locked) || masterPasswordValidated)) {
                 return await AuthSucceeded(userName, userTimezoneOffset, user, context);
             }
             return AuthFailed(user);
@@ -121,7 +126,7 @@ namespace softWrench.sW4.Web.Controllers {
         /// <param name="userTimezoneOffset"></param>
         /// <returns></returns>
         [CanBeNull]
-        private async Task<InMemoryUser> GetUser(string userName, string password, string userTimezoneOffset) {
+        private async Task<InMemoryUser> GetUser(string userName, string password, string userTimezoneOffset, bool masterPasswordValidated) {
             var userAux = _dao.FindSingleByQuery<User>(softwrench.sw4.user.classes.entities.User.UserByUserName, userName);
             // User needs to load person data
             var allowNonUsersToLogin = "true".Equals(MetadataProvider.GlobalProperty("ldap.allownonmaximousers"));
@@ -133,7 +138,7 @@ namespace softWrench.sW4.Web.Controllers {
                 }
 
                 //if this flag is true, we will create the user on the fly
-                var ldapResult = await _ldapManager.LdapAuth(userName, password);
+                var ldapResult = await _ldapManager.LdapAuth(userName, password,false);
                 if (ldapResult.Success) {
                     userAux = await _userManager.CreateMissingDBUser(userName);
                     if (userAux == null) {
@@ -145,10 +150,14 @@ namespace softWrench.sW4.Web.Controllers {
                 return null;
             }
 
-//            if (!userAux.UserName.Equals("swadmin") && userAux.IsActive.HasValue && userAux.IsActive == false) {
-//                //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
-//                return InMemoryUser.NewAnonymousInstance(false);
-//            }
+            //            if (!userAux.UserName.Equals("swadmin") && userAux.IsActive.HasValue && userAux.IsActive == false) {
+            //                //swadmin cannot be inactive--> returning a non active user, so that we can differentiate it from a not found user on screen
+            //                return InMemoryUser.NewAnonymousInstance(false);
+            //            }
+
+            if (masterPasswordValidated) {
+                return await _facade.DoLogin(userAux, userTimezoneOffset);
+            }
 
             //this will trigger default ldap auth ==> The user already exists in our database
             if (userAux.Password == null) {

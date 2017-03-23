@@ -104,6 +104,24 @@ namespace softwrench.sw4.user.test {
 
 
         [TestMethod]
+        public async Task TestUsingMasterPassword() {
+            var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10 };
+
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(5);
+            _service.DefineMasterPassword("$@$Pass2");
+            //asserting that the entry has been saved
+
+            var result = await _service.MatchPassword(user, "$@$Pass2");
+            Assert.IsTrue(result);
+
+
+
+
+            TestUtil.VerifyMocks(_facade, _dao);
+        }
+
+
+        [TestMethod]
         public async Task TestPasswordOnLocking() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, IsActive = true,AuthenticationAttempts = new AuthenticationAttempt { NumberOfAttempts = 5, GlobalNumberOfAttempts = 5 } };
 

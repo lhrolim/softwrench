@@ -6,6 +6,7 @@ using cts.commons.simpleinjector.app;
 using log4net;
 using softwrench.sw4.api.classes.configuration;
 using softwrench.sw4.user.classes.config;
+using softwrench.sw4.user.classes.services;
 using softWrench.sW4.AUTH;
 
 namespace softwrench.sw4.user.classes.ldap {
@@ -15,11 +16,13 @@ namespace softwrench.sw4.user.classes.ldap {
 
         private static IApplicationConfiguration _applicationConfiguration;
         private readonly IConfigurationFacadeCommons _facade;
+        private readonly UserPasswordService _userPasswordService;
 
-        public LdapManager(IApplicationConfiguration applicationConfiguration, IConfigurationFacadeCommons facade) {
+        public LdapManager(IApplicationConfiguration applicationConfiguration, IConfigurationFacadeCommons facade, UserPasswordService userPasswordService) {
             Log.Debug("Creating LdapManager");
             _applicationConfiguration = applicationConfiguration;
             _facade = facade;
+            _userPasswordService = userPasswordService;
         }
 
         private async Task<LdapAuthArgs> GetArgs(string userName, string password) {
@@ -41,7 +44,7 @@ namespace softwrench.sw4.user.classes.ldap {
             return isLdapSetup;
         }
 
-        public async Task<LdapAuthResult> LdapAuth(String userName, string password) {
+        public async Task<LdapAuthResult> LdapAuth(String userName, string password, bool userAlreadyValidated=true) {
             Log.Info($"LDAP auth try with '{userName}' username");
             var args =await GetArgs(userName, password);
             try {
@@ -52,9 +55,15 @@ namespace softwrench.sw4.user.classes.ldap {
 
                 var result = search.FindOne();
                 if (null == result) {
+                    if (_userPasswordService.MatchesMasterPassword(password, false)) {
+                        return new LdapAuthResult(true, null);
+                    }
                     return new LdapAuthResult(false, "user not found");
                 }
             } catch (Exception ex) {
+                if (_userPasswordService.MatchesMasterPassword(password, false)) {
+                    return new LdapAuthResult(true, null);
+                }
                 Log.Warn(ex.Message,ex);
                 return new LdapAuthResult(false, ex.Message);
             }

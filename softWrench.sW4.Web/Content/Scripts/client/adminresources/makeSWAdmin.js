@@ -2,16 +2,16 @@
     "use strict";
 
     angular.module("sw_layout").controller("MakeSWAdminController", MakeSWAdminController);
-    function MakeSWAdminController($scope, $http, $timeout, redirectService) {
+    function MakeSWAdminController($scope, $http, $timeout, redirectService, restService) {
         "ngInject";
 
         $scope.submit = function () {
             const parameters = {
-                password: $scope.password
+                password: $scope.password,
+                newmasterpassword: $scope.masterpassword
             };
-            const urlToInvoke = redirectService.getActionUrl('MakeSWAdmin', 'Submit', parameters);
-            $http.get(urlToInvoke).
-            then(function (response, status, headers, config) {
+            restService.postPromise("MakeSWAdmin","Submit",null,parameters).
+            then(function (response) {
                 const data = response.data;
                 if (data.resultObject === true) {
                     $scope.msg = "";
@@ -34,7 +34,7 @@
             $scope.msg = "";
             $scope.msgsuccess = "";
             $scope.$watch('resultObject.timeStamp', function (newValue, oldValue) {
-                if (oldValue != newValue && $scope.resultObject.redirectURL.indexOf("MakeSWAdmin.html") != -1) {
+                if (oldValue !== newValue && $scope.resultObject.redirectURL.indexOf("MakeSWAdmin.html") !== -1) {
                     init($scope.resultData);
                 }
             });

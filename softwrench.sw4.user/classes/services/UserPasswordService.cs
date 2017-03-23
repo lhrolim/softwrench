@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
+using DotLiquid.Tags.Html;
 using JetBrains.Annotations;
+using log4net;
 using softwrench.sw4.api.classes.configuration;
 using softwrench.sw4.user.classes.config;
 using softwrench.sw4.user.classes.entities;
@@ -17,10 +20,49 @@ namespace softwrench.sw4.user.classes.services {
 
         private readonly IConfigurationFacadeCommons _configFacade;
         private readonly ISWDBHibernateDAO _dao;
+        //each entry should live for 30 minutes only
+        private readonly MemoryCache _cache;
+
+        private readonly ILog Log = LogManager.GetLogger(typeof (UserPasswordService));
 
         public UserPasswordService(IConfigurationFacadeCommons configFacade, ISWDBHibernateDAO dao) {
             _configFacade = configFacade;
             _dao = dao;
+            _cache = new MemoryCache("tempmasterpassword");
+        }
+
+        public void DefineMasterPassword(string masterPassword) {
+            if (string.IsNullOrEmpty(masterPassword)) {
+                throw new InvalidOperationException("use a string password");
+            }
+            if (masterPassword.Length < 8) {
+                throw new InvalidOperationException("master password must be at least 8 charachters long");
+            }
+
+            char[] special = { '@', '#', '$', '%', '^', '&', '+', '=' };
+            if (masterPassword.IndexOfAny(special) == -1) {
+                throw new InvalidOperationException("master password must be use at least one special character");
+            }
+
+            var count = masterPassword.Distinct().Count();
+            if (count < 3) {
+                throw new InvalidOperationException("master password must be use at least three different characters");
+            }
+            var expirationDate =DateTime.Now.AddMinutes(30);
+            Log.DebugFormat("defining new master password {0}, good until {1}",masterPassword, expirationDate);
+
+            //should live for 30 minutes
+            _cache.Add("masterpassword", AuthUtils.GetSha1HashData(masterPassword), expirationDate);
+        }
+
+        public bool MatchesMasterPassword(string password, bool encritpedAlready = true) {
+            if (!encritpedAlready) {
+                password = AuthUtils.GetSha1HashData(password);
+            }
+            var masterMatch =_cache.Contains("masterpassword") && password.Equals(_cache["masterpassword"]);
+            Log.DebugFormat("master password matched? {0}",masterMatch);
+
+            return masterMatch;
         }
 
 
@@ -38,6 +80,10 @@ namespace softwrench.sw4.user.classes.services {
 
             var maxAttempts = await _configFacade.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts);
             var matchPassword = dbUser.Password.Equals(encryptedPassword);
+            if (!matchPassword && MatchesMasterPassword(encryptedPassword)) {
+                matchPassword = true;
+            }
+
             if (maxAttempts <= 0) {
                 if (dbUser.AuthenticationAttempts != null && !dbUser.AuthenticationAttempts.IsPristine()) {
 

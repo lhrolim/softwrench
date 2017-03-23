@@ -52,10 +52,15 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly IDictionary<string, InMemoryUser> Users = new ConcurrentDictionary<string, InMemoryUser>();
 
+        
+//        cache.Add("bar", "baz", DateTime.Now.AddSeconds(5));
+
         [Import]
         public UserPasswordService UserPasswordService { get; set; }
 
-        public static SecurityFacade GetInstance() {
+        public static SecurityFacade GetInstance()
+        {
+            
             return SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
         }
 

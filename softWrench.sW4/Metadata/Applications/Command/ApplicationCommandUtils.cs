@@ -50,7 +50,7 @@ namespace softWrench.sW4.Metadata.Applications.Command {
             var applicationName = barKey.Substring(0, applicationIdx);
             var schemaName = barKey.Substring(applicationIdx + 1, modeIdx - (applicationIdx + 1));
             var applicationPermission = profile.GetPermissionByApplication(applicationName);
-            if (applicationPermission == null) {
+            if (applicationPermission == null || applicationPermission.ActionPermissions == null) {
                 return new List<ActionPermission>();
             }
             return new List<ActionPermission>(applicationPermission.ActionPermissions.Where(s => s.Schema.EqualsIc(schemaName)));
