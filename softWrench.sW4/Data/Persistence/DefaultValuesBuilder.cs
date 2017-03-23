@@ -236,7 +236,7 @@ namespace softWrench.sW4.Data.Persistence {
             return GetDateTimeAsString(value, format);
         }
 
-        private static string GetDateTimeAsString(DateTime date, String format = null) {
+        public static string GetDateTimeAsString(DateTime date, String format = null) {
             if (String.IsNullOrEmpty(format)) {
                 format = "MM/dd/yyyy HH:mm";
             }

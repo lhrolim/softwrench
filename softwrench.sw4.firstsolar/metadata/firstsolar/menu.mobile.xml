@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="vertical" indexitem="WO">
 
-  <container title="Work Order" id="workorder" icon="fa-wrench">
+  <container id="workorder" icon="fa-wrench" parameters="offlinetititlebuilder=@firstSolarOfflineMenuService.BuildWoMenuContainerTitle">
     <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=WO - Created"/>
     <application id="TWO" title="For Today" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=WO - Today"/>
     <application id="PWO" title="Past" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=WO - Past"/>

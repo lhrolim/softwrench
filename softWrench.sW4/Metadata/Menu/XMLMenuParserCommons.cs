@@ -168,6 +168,7 @@ namespace softWrench.sW4.Metadata.Menu {
             var action = containerElement.Attribute(XmlMenuMetadataSchema.ActionMenuActionAttribute).ValueOrDefault((string)null);
             var customizationPosition = containerElement.Attribute(XmlMenuMetadataSchema.CustomizationPositionAttribute).ValueOrDefault((string)null);
             var hasMainAction = containerElement.Attribute(XmlMenuMetadataSchema.ContainerHasMainAction).ValueOrDefault(false);
+            var parameters = containerElement.Attribute(XmlMenuMetadataSchema.ContainerParametersAttribute).ValueOrDefault((string)null);
             if (moduleName != null) {
                 modules.Add(new ModuleDefinition(moduleName, moduleAlias));
             }
@@ -187,13 +188,13 @@ namespace softWrench.sW4.Metadata.Menu {
                 leafs.Add(leaf);
             }
             if (isContainer) {
-                return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, customizationPosition, permissionExpression,leafs);
+                return new MenuContainerDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, customizationPosition, permissionExpression, PropertyUtil.ConvertToDictionary(parameters), leafs);
             }
             if (id == null) {
                 throw MenuMetadataException.MissingIdException();
             }
 
-            return new ReferenceMenuItemDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, permissionExpression,leafs);
+            return new ReferenceMenuItemDefinition(id, title, role, tooltip, icon, moduleName, controller, action, hasMainAction, permissionExpression, PropertyUtil.ConvertToDictionary(parameters), leafs);
         }
 
         [CanBeNull]

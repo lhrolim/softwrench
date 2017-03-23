@@ -10,6 +10,7 @@
         public const string ContainerModuleName = "modulename";
         public const string ContainerModuleAlias = "modulealias";
         public const string ContainerHasMainAction = "hasmainaction";
+        public const string ContainerParametersAttribute = "parameters";
         public const string ApplicationElement = "application";
         public const string ResourceRefElement = "resourceref";
         public const string ActionElement = "action";

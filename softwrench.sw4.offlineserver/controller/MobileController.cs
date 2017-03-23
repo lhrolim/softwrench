@@ -9,6 +9,7 @@ using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using NHibernate.Util;
 using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -18,10 +19,15 @@ using softwrench.sw4.offlineserver.services;
 using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Menu;
+using softwrench.sW4.Shared2.Metadata.Menu.Containers;
+using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Offline;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Dynamic.Model;
 using softWrench.sW4.Dynamic.Services;
 using softWrench.sW4.Metadata.Menu;
+using softWrench.sW4.Metadata.Menu.Containers;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 
@@ -39,6 +45,8 @@ namespace softwrench.sw4.offlineserver.controller {
     public class MobileController : ApiController {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
+
+        private const string MenuBuilderKey = "offlinetititlebuilder";
 
         private readonly IContextLookuper _contextLookuper;
 
@@ -66,6 +74,39 @@ namespace softwrench.sw4.offlineserver.controller {
             _jsService = jsService;
             }
 
+
+        private static string BuildOfflineMenuTitle(IDictionary<string, object> parameters) {
+            if (parameters == null || !parameters.ContainsKey(MenuBuilderKey)) {
+                return null;
+            }
+            var builderString = parameters[MenuBuilderKey] as string;
+            return string.IsNullOrEmpty(builderString) ? null : GenericSwMethodInvoker.Invoke<string>(null, builderString, null);
+        }
+
+        private static void BuildOfflineMenuTitle(MenuBaseDefinition leaf) {
+            var container = leaf as MenuContainerDefinition;
+            if (container != null) {
+                container.Title = BuildOfflineMenuTitle(container.Parameters) ?? container.Title;
+                container.Leafs.ToList().ForEach(BuildOfflineMenuTitle);
+            }
+            var application = leaf as ApplicationMenuItemDefinition;
+            if (application != null) {
+                application.Title = BuildOfflineMenuTitle(application.Parameters) ?? application.Title;
+            }
+        }
+
+        private static MenuDefinition BuildOfflineMenuTitles(MenuDefinition baseMenu) {
+            var builtLeafs = new List<MenuBaseDefinition>();
+            if (baseMenu.Leafs == null) {
+                return new MenuDefinition(builtLeafs, baseMenu.MainMenuDisplacement.ToString(), baseMenu.ItemindexId);
+            }
+            builtLeafs.AddRange(baseMenu.Leafs.Select(leaf => {
+                BuildOfflineMenuTitle(leaf);
+                return leaf;
+            }));
+            return new MenuDefinition(builtLeafs, baseMenu.MainMenuDisplacement.ToString(), baseMenu.ItemindexId);
+        }
+
         /// <summary>
         /// The main purpose here is to retrieve all the metadata information 
         /// needed for the mobile application to this current user in a single step.
@@ -85,7 +126,7 @@ namespace softwrench.sw4.offlineserver.controller {
             var commandBars = user.SecuredBars(ClientPlatform.Mobile, MetadataProvider.CommandBars(platform: ClientPlatform.Mobile, includeNulls: false));
 
             bool fromCache;
-            var securedMenu = _menuManager.Menu(user, ClientPlatform.Mobile, out fromCache);
+            var securedMenu = BuildOfflineMenuTitles(_menuManager.Menu(user, ClientPlatform.Mobile, out fromCache));
 
             var response = new MobileMetadataDownloadResponseDefinition {
                 TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Formatting.None, _jsonSerializerSettings),

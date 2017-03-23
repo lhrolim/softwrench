@@ -203,6 +203,7 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

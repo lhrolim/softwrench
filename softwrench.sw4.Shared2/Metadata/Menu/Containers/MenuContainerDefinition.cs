@@ -34,13 +34,13 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
         public string ApplicationContainer {
             get; set;
         }
-
-
+        
+        public IDictionary<string, object> Parameters { get; set; }
 
         public MenuContainerDefinition() {
         }
 
-        public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, string customizationPosition, string permissionExpression, IEnumerable<MenuBaseDefinition> leafs)
+        public MenuContainerDefinition(string id, string title, string role, string tooltip, string icon, string module, string controller, string action, bool hasMainAction, string customizationPosition, string permissionExpression, IDictionary<string, object> parameters, IEnumerable<MenuBaseDefinition> leafs)
             : base(id, title, role, tooltip, icon, customizationPosition) {
             Module = module;
             var menuBaseDefinitions = leafs as MenuBaseDefinition[] ?? leafs.ToArray();
@@ -51,6 +51,7 @@ namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
             Controller = controller;
             HasMainAction = hasMainAction;
             PermissionExpresion = permissionExpression;
+            Parameters = parameters;
 
             foreach (var leaf in menuBaseDefinitions) {
                 if (leaf.Module == null) {

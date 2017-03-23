@@ -10,8 +10,8 @@ namespace softwrench.sW4.Shared2.Metadata.Menu {
     public class ReferenceMenuItemDefinition : MenuContainerDefinition, IMenuLeaf {
 
         public ReferenceMenuItemDefinition(string id, string title, string role, string tooltip, string icon,
-            string module, string controller, string action, bool hasMainAction,string permissionExpression, IEnumerable<MenuBaseDefinition> leafs)
-            : base(id, title, role, tooltip, icon, module, controller, action, hasMainAction,null, permissionExpression, leafs) {
+            string module, string controller, string action, bool hasMainAction,string permissionExpression, IDictionary<string, object> parameters, IEnumerable<MenuBaseDefinition> leafs)
+            : base(id, title, role, tooltip, icon, module, controller, action, hasMainAction,null, permissionExpression, parameters, leafs) {
 
         }
     }
