@@ -12,6 +12,8 @@
     offlineSaveService, schemaService, contextService, routeService, tabsService,
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities, queryListBuilderService, swAlertPopup, eventService) {
 
+        let service = {};
+
         // ReSharper disable once InconsistentNaming
         var internalListContext = {
             lastPageLoaded: 1
@@ -26,8 +28,15 @@
         // used to know when to clear search and sort data structure
         var lastGridApplication = null;
 
-        return {
+        const afterSaveNew = function (newItem, crudContext) {
+            crudContext.originalDetailItemDatamap = angular.copy(newItem.datamap);
+            return service.refreshGrid(true).then(() => {
+                $rootScope.$broadcast("sw_cruddetailrefreshed");
+                return newItem;
+            });
+        }
 
+        service = {
             //#region delegateMethods
             getCrudContext: function () {
                 return crudContextHolderService.getCrudContext();
@@ -298,10 +307,10 @@
                         .then(saved => this.loadTab(composition.currentTab).then(() => saved));
                 }
 
-                return this.saveCurrentItem(showConfirmationMessage);
+                return this.saveCurrentItem(showConfirmationMessage, true);
             },
 
-            saveCurrentItem: function (showConfirmationMessage) {
+            saveCurrentItem: function (showConfirmationMessage, loadSavedItem) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 const applicationName = crudContext.currentApplicationName;
                 const item = crudContext.currentDetailItem;
@@ -315,14 +324,27 @@
                         return offlineSaveService.saveItem(applicationName, item, showConfirmationMessage);
                     })
                     .then(saved => {
-                        menuModelService.updateAppsCount();
-                        crudContext.originalDetailItemDatamap = angular.copy(item.datamap);
                         contextService.insertIntoContext("crudcontext", crudContext);
-                        if (crudContext.newItem) {
-                            crudContext.newItem = false;
-                            return this.refreshGrid(true).then(() => saved);
+                        if (!crudContext.newItem) {
+                            crudContext.originalDetailItemDatamap = angular.copy(saved.datamap);
+                            return this.refreshIfLeftJoinPresent(crudContext, saved);
                         }
-                        return this.refreshIfLeftJoinPresent(crudContext, saved);
+
+                        menuModelService.updateAppsCount();
+                        crudContext.newItem = false;
+
+                        if (!loadSavedItem) {
+                            return afterSaveNew(saved, crudContext);
+                        }
+
+                        const listSchema = crudContextHolderService.currentListSchema();
+                        const joinObj = queryListBuilderService.buildJoinParameters(listSchema);
+                        const qry = "`root`.application = '{0}' and `root`.id = '{1}'".format(applicationName, saved.newId);
+                        return dao.findByQuery("DataEntry", qry, joinObj).then((results) => {
+                            const newItem = results[0];
+                            crudContext.currentDetailItem = newItem;
+                            return afterSaveNew(newItem, crudContext);
+                        });
                     });
             },
             
@@ -593,7 +615,7 @@
             //#endregion
         }
 
-
+        return service;
 
     }]);
 

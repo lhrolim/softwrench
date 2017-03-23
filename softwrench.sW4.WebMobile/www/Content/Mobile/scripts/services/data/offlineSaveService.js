@@ -11,6 +11,7 @@
 
             const jsonString = JSON.stringify(item.datamap);
             const localId = item.id;
+            const generatedId = localId ? null : persistence.createUUID();
 
             const isAlreadyDirty = _.contains([true, 1, "true"], item.isDirty);
             const cameFromServer = !!item.remoteId;
@@ -22,7 +23,7 @@
 
             const queryToExecute = !localId
                 // inserting new item
-                ? { query: entities.DataEntry.insertLocalPattern, args: [applicationName, jsonString, persistence.createUUID(), idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] }
+                ? { query: entities.DataEntry.insertLocalPattern, args: [applicationName, jsonString, generatedId, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] }
                 // updating existing item
                 : shouldIncludeOriginalDatamap 
                     // setting originaldatamap
@@ -31,11 +32,14 @@
                     : { query: entities.DataEntry.updateLocalPattern, args: [jsonString, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, localId] };
 
             return swdbDAO.executeQuery(queryToExecute)
-                .then(() => 
-                    showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true
-                        ? $ionicPopup.alert({ title: `${messageEntry} Saved Successfully` }).then(() => item) 
-                        : item
-                );
+                .then(() => {
+                    if (!localId) {
+                        item.newId = generatedId;
+                    }
+                    return showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true
+                        ? $ionicPopup.alert({ title: `${messageEntry} Saved Successfully` }).then(() => item)
+                        : item;
+                });
         };
 
         return {

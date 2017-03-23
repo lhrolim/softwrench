@@ -655,7 +655,7 @@
           </properties>
         </list>
 
-        <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail">
+        <schema id="basedetail" title="Work Order" abstract="true" stereotype="detail" platform="mobile">
           <reference id="detailhiddensoffline"/>
 
           <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
@@ -671,8 +671,7 @@
           <!-- do not remove - added to force the sync of numeric domains for priorities -->
           <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
 
-
-          <association label="Status" target="status" labelfield="synstatus.description" >
+          <association label="Status" target="status" labelfield="synstatus.description">
             <dataprovider prefilterfunction="FilterStatusCodes"/>
           </association>
 
@@ -681,15 +680,11 @@
             <renderer type="richtext"/>
           </field>
 
-          <!--          <optionfield attribute="classstructureid" label="Origination" providerattribute="_WOClassStructureType" requiredexpression="true"/>-->
-
           <association label="Origination" target="classstructureid" labelfield="classstructure_.description" requiredexpression="true">
             <renderer type="lookup" params="showCode=false"/>
           </association>
 
           <reference id="offlineworktypes"/>
-
-
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
@@ -715,9 +710,6 @@
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
 
-          <!-- EndRegion-->
-
-          <!-- Region Compositions: materials, labors, attachmets -->
           <composition relationship="matusetrans" label="Materials" >
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
@@ -729,10 +721,9 @@
           <composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
-          <!-- EndRegion -->
-
-
-
+        </schema>
+        
+        <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail" parentschema="basedetail">
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <container id="detail.container" position="detail.container" icon="fa-bolt">
@@ -755,44 +746,10 @@
               </container>
             </commandgroup>
           </commandbars>
-
         </detail>
 
-        <schema id="newdetail" title="Work Order" stereotype="detailnew" platform="mobile" redeclaring="true">
+        <schema id="newdetail" title="Work Order" stereotype="detailnew" platform="mobile" redeclaring="true" parentschema="basedetail">
           <event type="onload" service="fsWorkorderOfflineService" method="onNewDetailLoad"/>
-
-          <field attribute="orgid" hidden="true" requiredexpression="true" />
-          <field attribute="siteid" hidden="true" requiredexpression="true" />
-
-          <field attribute="status" hidden="true" default="WAPPR"/>
-          
-
-          <association target="location" labelfield="offlinelocation.description" requiredexpression="true" label="Location">
-            <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Preferred Locations"/>
-            <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
-            <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
-          </association>
-          <association target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location,failurecode"
-                       requiredexpression="true" label="Asset" showexpression="!!@location">
-            <renderer type="lookup" />
-            <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
-            <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
-          </association>
-
-          <field attribute="description" label="Description" requiredexpression="true" showexpression="@assetnum !=null"/>
-
-          <association  target="classstructureid" labelfield="classstructure_.description"
-                        requiredexpression="true" label="Origination" showexpression="@assetnum !=null">
-            <renderer type="lookup" params="showCode=false"/>
-          </association>
-
-          <reference id="offlineworktypes" showexpression="@assetnum !=null"/>
-
-
-          <composition relationship="attachment" label="Attachments" >
-            <collectionproperties allowupdate="false" />
-          </composition>
-
         </schema>
         <!-- #endregion -->
 
