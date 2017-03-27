@@ -20,30 +20,26 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
-using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
-using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Search;
-using softWrench.sW4.Exceptions;
-using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Data.Configuration;
 
 namespace softWrench.sW4.Web.Controllers.Configuration {
     public class ConfigurationController : ApiController {
 
         private readonly CategoryTreeCache _cache;
-        private readonly ConfigurationService _configService;
+        private readonly ConfigurationFacade _configService;
         private readonly I18NResolver _resolver;
         private readonly SWDBHibernateDAO _dao;
         private readonly ConditionService _conditionService;
         private readonly IConfigurationFacade _facade;
         private readonly SimpleInjectorDomainEventDispatcher _dispatcher;
-        private readonly EntityRepository _entityRepository;
 
         private readonly IWhereClauseFacade _whereClauseFacade;
 
 
-        public ConfigurationController(CategoryTreeCache cache, ConfigurationService configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade,
-            SimpleInjectorDomainEventDispatcher dispatcher, EntityRepository entityRepository, IWhereClauseFacade whereClauseFacade) {
+
+        public ConfigurationController(CategoryTreeCache cache, ConfigurationFacade configService, I18NResolver resolver, SWDBHibernateDAO dao, ConditionService conditionService, IConfigurationFacade facade,
+            SimpleInjectorDomainEventDispatcher dispatcher, IWhereClauseFacade whereClauseFacade) {
             _cache = cache;
             _configService = configService;
             _resolver = resolver;
@@ -51,7 +47,6 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             _conditionService = conditionService;
             _facade = facade;
             _dispatcher = dispatcher;
-            _entityRepository = entityRepository;
             _whereClauseFacade = whereClauseFacade;
         }
 
@@ -140,27 +135,29 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
 
         [HttpGet]
         [SPFRedirect("About", "about.title", "About")]
-        public GenericResponseResult<IList<KeyValuePair<String, String>>> About() {
+        public GenericResponseResult<IList<KeyValuePair<string, string>>> About() {
 
-            IList<KeyValuePair<String, String>> aboutData = new List<KeyValuePair<String, String>>();
+            IList<KeyValuePair<string, string>> aboutData = new List<KeyValuePair<string, string>>();
 
             var maximoDB = ApplicationConfiguration.DBConnectionStringBuilder(DBType.Maximo);
             var swDB = ApplicationConfiguration.DBConnectionStringBuilder(DBType.Swdb);
 
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.version", "Version"), ApplicationConfiguration.SystemVersion));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.revision", "Revision"), ApplicationConfiguration.SystemRevision));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.builddate", "Build Date"), ApplicationConfiguration.SystemBuildDate.ToString(CultureInfo.InvariantCulture.DateTimeFormat)));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.clientname", "Client Name"), ApplicationConfiguration.ClientName));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.profile", "Profile"), ApplicationConfiguration.Profile));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.maximourl", "Maximo URL"), ApplicationConfiguration.WsUrl));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("about.maximodb", "Maximo DB"), String.Format("{0}/{1}", maximoDB.DataSource, maximoDB.Catalog)));
-            aboutData.Add(new KeyValuePair<String, String>(_resolver.I18NValue("maximodb.version", "SW DB"), String.Format("{0}/{1}", swDB.DataSource, swDB.Catalog)));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.version", "Version"), ApplicationConfiguration.SystemVersion));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.revision", "Revision"), ApplicationConfiguration.SystemRevision));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.builddate", "Build Date"), ApplicationConfiguration.SystemBuildDate.ToString(CultureInfo.InvariantCulture.DateTimeFormat)));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.clientname", "Client Name"), ApplicationConfiguration.ClientName));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.profile", "Profile"), ApplicationConfiguration.Profile));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.maximourl", "Maximo URL"), _configService.Lookup<string>(ConfigurationConstants.Maximo.WsdlPath, "baseWSPrefix")));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("about.maximodb", "Maximo DB"),
+                $"{maximoDB.DataSource}/{maximoDB.Catalog}"));
+            aboutData.Add(new KeyValuePair<string, string>(_resolver.I18NValue("maximodb.version", "SW DB"),
+                $"{swDB.DataSource}/{swDB.Catalog}"));
 
-            return new GenericResponseResult<IList<KeyValuePair<String, String>>>(aboutData);
+            return new GenericResponseResult<IList<KeyValuePair<string, string>>>(aboutData);
         }
 
         [HttpPost]
-        public void ChangeClient(String clientName) {
+        public void ChangeClient(string clientName) {
             _dispatcher.Dispatch(new ClearCacheEvent());
             _dispatcher.Dispatch(new ClientChangeEvent(clientName, false));
             _dispatcher.Dispatch(new RestartDBEvent());

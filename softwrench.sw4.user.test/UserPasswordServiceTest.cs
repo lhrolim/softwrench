@@ -35,7 +35,7 @@ namespace softwrench.sw4.user.test {
                 new PasswordHistory {Id = 1, Password = "criptedfake", RegisterTime = DateTime.Now}
             };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.MinPasswordHistorySize)).ReturnsAsync(2);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.MinPasswordHistorySize, null)).ReturnsAsync(2);
             _dao.Setup(d => d.FindByQueryWithLimitAsync<PasswordHistory>(PasswordHistory.ByUserDesc, 2, 10))
                 .ReturnsAsync(list);
 
@@ -61,8 +61,8 @@ namespace softwrench.sw4.user.test {
                 new PasswordHistory {Id = 1, Password = "criptedfake", RegisterTime = DateTime.Now}
             };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.MinPasswordHistorySize)).ReturnsAsync(2);
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.PasswordExpirationTime)).ReturnsAsync(10);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.MinPasswordHistorySize,null)).ReturnsAsync(2);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.PasswordExpirationTime, null)).ReturnsAsync(10);
 
             _dao.Setup(d => d.FindByQueryWithLimitAsync<PasswordHistory>(PasswordHistory.ByUserDesc, 2, 10))
                 .ReturnsAsync(list);
@@ -85,7 +85,7 @@ namespace softwrench.sw4.user.test {
         public async Task TestPasswordBeforeLocking() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10 };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(5);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(5);
 
             //asserting that the entry has been saved
             _dao.Setup(d => d.SaveAsync(It.Is((Expression<Func<AuthenticationAttempt, bool>>)(a => a.IsValid() && a.NumberOfAttempts == 1 && a.GlobalNumberOfAttempts == 1)))).ReturnsAsync(user.AuthenticationAttempts);
@@ -107,7 +107,7 @@ namespace softwrench.sw4.user.test {
         public async Task TestUsingMasterPassword() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10 };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(5);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(5);
             _service.DefineMasterPassword("$@$Pass2");
             //asserting that the entry has been saved
 
@@ -125,7 +125,7 @@ namespace softwrench.sw4.user.test {
         public async Task TestPasswordOnLocking() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, IsActive = true,AuthenticationAttempts = new AuthenticationAttempt { NumberOfAttempts = 5, GlobalNumberOfAttempts = 5 } };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(5);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(5);
 
             //asserting that the entry has been saved
             _dao.Setup(d => d.SaveAsync(It.Is((Expression<Func<AuthenticationAttempt, bool>>)(a => a.IsValid() && a.NumberOfAttempts == 6 && a.GlobalNumberOfAttempts == 6)))).ReturnsAsync(user.AuthenticationAttempts);
@@ -148,7 +148,7 @@ namespace softwrench.sw4.user.test {
         public async Task TestPasswordOnLockingPreventSwAdmin() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, IsActive = true,Locked = false,Systemuser = true };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(5);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(5);
 
             //asserting that the entry has been saved
 
@@ -165,7 +165,7 @@ namespace softwrench.sw4.user.test {
         public async Task UnLockUsersIfLimitGotHigher() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, Locked = true, AuthenticationAttempts = new AuthenticationAttempt { NumberOfAttempts = 5, GlobalNumberOfAttempts = 5 } };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(10);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(10);
 
             //asserting that the entry has been saved
             _dao.Setup(d => d.SaveAsync(It.Is((Expression<Func<AuthenticationAttempt, bool>>)(a => a.IsValid() && a.NumberOfAttempts == 6 && a.GlobalNumberOfAttempts == 6)))).ReturnsAsync(user.AuthenticationAttempts);
@@ -188,7 +188,7 @@ namespace softwrench.sw4.user.test {
         public async Task UserAlreadyLockedDoNotClear() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, Locked = true, AuthenticationAttempts = new AuthenticationAttempt { NumberOfAttempts = 5, GlobalNumberOfAttempts = 5, RegisterTime = DateTime.Now} };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(10);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(10);
 
             //asserting that the entry has been saved
 //            _dao.Setup(d => d.SaveAsync(user)).ReturnsAsync(user);
@@ -210,7 +210,7 @@ namespace softwrench.sw4.user.test {
         public async Task UnLockUsersIfLimitGotNull() {
             var user = new User { Password = AuthUtils.GetSha1HashData("test"), Id = 10, Locked = true, AuthenticationAttempts = new AuthenticationAttempt { NumberOfAttempts = 5, GlobalNumberOfAttempts = 5, UserId = 10 } };
 
-            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts)).ReturnsAsync(0);
+            _facade.Setup(f => f.LookupAsync<int>(UserConfigurationConstants.WrongPasswordAttempts, null)).ReturnsAsync(0);
 
             //asserting that the entry has been saved
             _dao.Setup(d => d.SaveAsync(It.Is((Expression<Func<AuthenticationAttempt, bool>>)(a => a.UserId != null && a.NumberOfAttempts == 0 && a.GlobalNumberOfAttempts == 0)))).ReturnsAsync(user.AuthenticationAttempts);

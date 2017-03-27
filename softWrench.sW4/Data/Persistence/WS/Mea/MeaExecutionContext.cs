@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using cts.commons.simpleinjector;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -16,12 +17,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
 
         public const string _MethodName = "processDocument";
 
-        private DynamicObject _queryProxy =null;
+        private DynamicObject _queryProxy = null;
+
+        public DynamicProxyUtil ProxyUtil => SimpleInjectorGenericFactory.Instance.GetObject<DynamicProxyUtil>();
 
         public MeaExecutionContext(IOperationData operationData, DynamicObject proxy = null)
             : base(operationData) {
             if (proxy == null) {
-                proxy = DynamicProxyUtil.LookupProxy(operationData.EntityMetadata);
+                proxy = ProxyUtil.LookupProxy(operationData.EntityMetadata);
             }
             //            _queryProxy = DynamicProxyUtil.LookupProxy(operationData.EntityMetadata, true);
             var curUser = SecurityFacade.CurrentUser();
@@ -34,16 +37,22 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
             ParameterInfo pi = mi.GetParameters().First();
             object notifyInterface = r.InstanceFromType(pi.ParameterType);
             var header = r.InstantiateProperty(notifyInterface, "Header");
-            r.InstantiateProperty(header, "SenderID", new { Value = SwConstants.ExternalSystemName });
+            r.InstantiateProperty(header, "SenderID", new {
+                Value = SwConstants.ExternalSystemName
+            });
             r.SetProperty(notifyInterface, "Header", header);
             var rootIntegrationObject = r.InstantiateArrayReturningSingleElement(notifyInterface, "Content");
             object integrationObject = r.InstantiateProperty(rootIntegrationObject, 0);
             r.SetProperty(integrationObject, "actionSpecified", true);
-            r.InstantiateProperty(integrationObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
+            r.InstantiateProperty(integrationObject, "CHANGEDATE", new {
+                Value = DateTime.Now.FromServerToRightKind()
+            });
             //TODO: get current user, in the mobile case below code may be wrong
             WsUtil.SetValue(integrationObject, "ORGID", curUser.OrgId);
             WsUtil.SetValue(integrationObject, "SITEID", curUser.SiteId);
-            r.InstantiateProperty(integrationObject, "CHANGEBY", new { Value = curUser.Login });
+            r.InstantiateProperty(integrationObject, "CHANGEBY", new {
+                Value = curUser.Login
+            });
             OperationType operationType = operationData.OperationType;
             EntityMetadata metadata = operationData.EntityMetadata;
             r.SetProperty(integrationObject, "action", operationType.ToString());
@@ -83,8 +92,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mea {
                 }
                 var rootResponse = respArr.GetValue(0);
                 return r.GetProperty(rootResponse, 0);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 var rootException = ExceptionUtil.DigRootException(e);
                 throw rootException;
             }

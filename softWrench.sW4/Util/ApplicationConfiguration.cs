@@ -7,12 +7,16 @@ using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Configuration;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
+using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities;
 
 namespace softWrench.sW4.Util {
@@ -31,6 +35,9 @@ namespace softWrench.sW4.Util {
         private static readonly IDictionary<DBType, ConnectionStringSettings> _connectionStringCache = new Dictionary<DBType, ConnectionStringSettings>();
 
         public static string SystemVersion => ConfigurationManager.AppSettings["version"];
+
+        [Import]
+        private IConfigurationFacade _facade;
 
         public static string SystemVersionIgnoreDash {
             get {
@@ -115,36 +122,17 @@ namespace softWrench.sW4.Util {
         /// </summary>
         public static string ExternalSystemName => MetadataProvider.GlobalProperty("externalSystemName", true);
 
-        /// <summary>
-        /// Identifies the maximo webservice provider
-        /// </summary>
-        public static string WsProvider => WsUtil.WsProvider().ToString().ToLower();
+     
 
 
-        public static string WsUrl => MetadataProvider.GlobalProperty("basewsURL", true);
 
         public static string WfUrl => MetadataProvider.GlobalProperty("basewfURL", true);
 
         public static string WsPrefix => MetadataProvider.GlobalProperty("baseWSPrefix");
 
-        public static bool IgnoreWsCertErrors {
-            get {
-                var strIgnoreWsCertErrors = MetadataProvider.GlobalProperty("ignoreWsCertErrors");
-                return "true".Equals(strIgnoreWsCertErrors, StringComparison.CurrentCultureIgnoreCase);
-            }
-        }
 
         #endregion
 
-
-
-        #region Mif Credentials
-
-        public static string MifCredentialsUser => MetadataProvider.GlobalProperty("mifcredentials.user");
-
-        public static string MifCredentialsPassword => MetadataProvider.GlobalProperty("mifcredentials.password");
-
-        #endregion
 
         #region Ism Credentials
 
@@ -176,15 +164,31 @@ namespace softWrench.sW4.Util {
 
         #region Database default values
 
-        public static string DefaultOrgId => MetadataProvider.GlobalProperty("defaultOrgId");
+        //TODO: remove these static calls
 
-        public static string DefaultSiteId => MetadataProvider.GlobalProperty("defaultSiteId");
+        public static string GetPropertyHandlingTestScenario(string configKey, string propertyName)
+        {
+            if (SimpleInjectorGenericFactory.Instance != null && !IsUnitTest) {
+                //some unit tests might not have an instance defined
+                return SimpleInjectorGenericFactory.Instance.GetObject<IConfigurationFacade>().Lookup<string>(configKey, propertyName);
+            }
+            return MetadataProvider.GlobalProperty(propertyName);
+        }
 
-        public static string DefaultStoreloc => MetadataProvider.GlobalProperty("defaultStoreloc");
+        /// <summary>
+        /// Identifies the maximo webservice provider
+        /// </summary>
+        public static string WsProvider => WsUtil.WsProvider().ToString().ToLower();
+
+        public static string DefaultOrgId => GetPropertyHandlingTestScenario(ConfigurationConstants.Maximo.DefaultOrgId, "defaultOrgId");
+
+        public static string DefaultSiteId => GetPropertyHandlingTestScenario(ConfigurationConstants.Maximo.DefaultSiteId, "defaultSiteId");
+
+        public static string DefaultStoreloc => GetPropertyHandlingTestScenario(ConfigurationConstants.Maximo.DefaultStoreLoc, "defaultStoreloc");
 
         #endregion
 
-        #region Change
+        #region HapagChange
 
         internal static string TemplateIdHandler(string templateid) {
             var templateids = templateid.Split(',');

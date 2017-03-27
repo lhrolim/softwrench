@@ -3,7 +3,6 @@
 namespace softWrench.sW4.Util {
     public class SwConstants {
         public static readonly string ExternalSystemName = ApplicationConfiguration.ExternalSystemName;
-        public static readonly string BaseWsPrefix = ApplicationConfiguration.WsUrl;
         public static readonly string WsProvider = ApplicationConfiguration.WsProvider;
 
         public static readonly string MultiTenantPrefix = "multitenantprefix";

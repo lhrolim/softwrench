@@ -15,6 +15,7 @@ using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using softwrench.sw4.api.classes.configuration;
+using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Configuration.Services {
 
@@ -36,13 +37,21 @@ namespace softWrench.sW4.Configuration.Services {
             _contextLookuper = contextLookuper;
         }
 
-        public T Lookup<T>(string configKey) {
+        public T Lookup<T>(string configKey, string propertyXmlKey = null) {
             return AsyncHelper.RunSync(() => LookupAsync<T>(configKey));
         }
 
-        public async Task<T> LookupAsync<T>(string configKey) {
+        public async Task<T> LookupAsync<T>(string configKey, string propertyXmlKey = null) {
             var lookupContext = _contextLookuper.LookupContext();
-            return await _configService.Lookup<T>(configKey, lookupContext);
+            var dbResult = await _configService.Lookup<T>(configKey, lookupContext);
+            if (dbResult == null && propertyXmlKey != null) {
+                var propertyResult = MetadataProvider.GlobalProperty(propertyXmlKey);
+                if (propertyResult == null) {
+                    return default(T);
+                }
+                return (T)Convert.ChangeType(propertyResult, typeof(T));
+            }
+            return dbResult;
         }
 
         public async Task RegisterAsync(string configKey, PropertyDefinitionRegistry definition) {
@@ -137,6 +146,10 @@ namespace softWrench.sW4.Configuration.Services {
             get {
                 return 100;
             }
+        }
+
+        public async Task<SortedSet<PropertyDefinition>> UpdateDefinitions(CategoryDTO category) {
+            return await _configService.UpdateDefinitions(category);
         }
     }
 }

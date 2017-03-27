@@ -105,11 +105,11 @@ namespace softWrench.sW4.Metadata {
             //            DataSetProvider.GetInstance();
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
-            if (ApplicationConfiguration.IgnoreWsCertErrors) {
-                ServicePointManager.ServerCertificateValidationCallback = delegate {
-                    return true;
-                };
-            }
+//            if (ApplicationConfiguration.IgnoreWsCertErrors) {
+//                ServicePointManager.ServerCertificateValidationCallback = delegate {
+//                    return true;
+//                };
+//            }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]

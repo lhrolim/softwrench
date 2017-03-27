@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using cts.commons.portable.Util;
 using log4net;
 using softWrench.sW4.Metadata.Entities.Connectors;
 using softWrench.sW4.Security.Services;
@@ -12,6 +11,8 @@ using softWrench.sW4.Util;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using System.Net;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.WS.API;
 
 namespace softWrench.sW4.Data.Persistence.WS.Internal {
@@ -21,27 +22,38 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         private const string QueryInterfaceParam = "integration_query_interface";
         private static readonly Dictionary<string, IDynamicProxyFactory> DynamicProxyCache = new Dictionary<string, IDynamicProxyFactory>();
-        private readonly static ILog Log = LogManager.GetLogger(typeof(DynamicProxyUtil));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(DynamicProxyUtil));
+        private readonly IConfigurationFacade _configFacade;
 
-        public DynamicProxyUtil(){
+        public DynamicProxyUtil(IConfigurationFacade facade) {
+            _configFacade = facade;
             Log.Debug("init log");
+            if (_configFacade.Lookup<bool>(ConfigurationConstants.Maximo.IgnoreCertErrors, "ignoreWsCertErrors")) {
+                ServicePointManager.ServerCertificateValidationCallback = SWIgnoreErrorsCertHandler;
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                    | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls12
+                    | SecurityProtocolType.Ssl3;
+            }
         }
 
         //TODO: adjust caching
-        public static DynamicObject LookupProxy(EntityMetadata metaData, bool queryProxy = false) {
+        public DynamicObject LookupProxy(EntityMetadata metaData, bool queryProxy = false) {
             var wsdlUri = GetWsdlUri(metaData, queryProxy);
             try {
                 var factory = LookupFactory(wsdlUri);
                 return factory.CreateMainProxy();
             } catch (Exception e) {
                 var root = ExceptionUtil.DigRootException(e);
-                var maximoException = new MaximoWebServiceNotResolvedException(string.Format("wsdl cannot be downloaded at {0}", wsdlUri), e, root);
+                var maximoException = new MaximoWebServiceNotResolvedException(
+                    $"wsdl cannot be downloaded at {wsdlUri}", e, root);
                 Log.Error("Error LookupProxy", maximoException);
                 throw maximoException;
             }
         }
 
-        public static DynamicObject LookupProxy(string integrationInterface, bool applyPrefix = true) {
+        public DynamicObject LookupProxy(string integrationInterface, bool applyPrefix = true) {
             string wsdlUri = GetWsdlFromKey(integrationInterface, applyPrefix);
             var factory = LookupFactory(wsdlUri);
             return factory.CreateMainProxy();
@@ -52,10 +64,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
 
-        private static IDynamicProxyFactory LookupFactory(string wsdlUri) {
-            
+        private IDynamicProxyFactory LookupFactory(string wsdlUri) {
+
             if (DynamicProxyCache.ContainsKey(wsdlUri)) {
-                Log.DebugFormat("returning factory for wsdl {0} for customer {1}",wsdlUri,ApplicationConfiguration.ClientName);
+                Log.DebugFormat("returning factory for wsdl {0} for customer {1}", wsdlUri, ApplicationConfiguration.ClientName);
                 return DynamicProxyCache[wsdlUri];
             }
             var factory = GetFactory(wsdlUri);
@@ -63,25 +75,19 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return factory;
         }
 
-        private static IDynamicProxyFactory GetFactory(string wsdlUri) {
+        private IDynamicProxyFactory GetFactory(string wsdlUri) {
             Log.InfoFormat("Looking for Dynamic Proxy factory at wsdl {0} for customer {1}", wsdlUri, ApplicationConfiguration.ClientName);
 
-            if (ApplicationConfiguration.IgnoreWsCertErrors) {
-                ServicePointManager.ServerCertificateValidationCallback = SWIgnoreErrorsCertHandler;
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                    | SecurityProtocolType.Tls11
-                    | SecurityProtocolType.Tls12
-                    | SecurityProtocolType.Ssl3;
-            }
+
 
             if (ApplicationConfiguration.IsMea()) {
                 // TODO: support authenticated mea
                 return new DynamicProxyFactory(wsdlUri);
             }
 
-            var credentialsUser = ApplicationConfiguration.MifCredentialsUser;
-            var credentialsPassword = ApplicationConfiguration.MifCredentialsPassword;
+            var credentialsUser = _configFacade.Lookup<string>(ConfigurationConstants.Maximo.MifUser, "mifcredentials.user");
+            var credentialsPassword = _configFacade.Lookup<string>(ConfigurationConstants.Maximo.MifPassword, "mifcredentials.password");
+
             if (string.IsNullOrEmpty(credentialsUser) || string.IsNullOrEmpty(credentialsPassword)) {
                 return new AsmxDynamicProxyFactory(wsdlUri);
             } else {
@@ -93,19 +99,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return true;
         }
 
-        private static string GetWsdlUri(EntityMetadata metaData, bool queryProxy) {
-            string entityKey = null;
+        private string GetWsdlUri(EntityMetadata metaData, bool queryProxy) {
             var connectorParams = metaData.ConnectorParameters.Parameters;
             var keyToUse = queryProxy && ApplicationConfiguration.IsMea() ? QueryInterfaceParam : ConnectorParameters.UpdateInterfaceParam;
             //first we try mea_integration_interface / mif_integration_interface
-            entityKey = metaData.ConnectorParameters.GetWSEntityKey(keyToUse);
+            var entityKey = metaData.ConnectorParameters.GetWSEntityKey(keyToUse);
             if (!string.IsNullOrEmpty(entityKey)) {
                 return GetWsdlFromKey(entityKey);
             }
 
             //fallback if we are talking about queryproxy...
             if (queryProxy) {
-                if (!connectorParams.TryGetValue(ApplicationConfiguration.WsProvider + "_" + ConnectorParameters.UpdateInterfaceParam,
+                if (!connectorParams.TryGetValue(_configFacade.Lookup<string>(ConfigurationConstants.Maximo.WsProvider) + "_" + ConnectorParameters.UpdateInterfaceParam,
                     out entityKey)
                     && !connectorParams.TryGetValue(ConnectorParameters.UpdateInterfaceParam, out entityKey)) {
                     throw new InvalidOperationException(string.Format(MissingKeyMsg, metaData.Name));
@@ -118,10 +123,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             return GetWsdlFromKey(entityKey);
         }
 
-        private static string GetWsdlFromKey(string entityKey, bool applyPrefix = true) {
+        private string GetWsdlFromKey(string entityKey, bool applyPrefix = true) {
 
             if (!entityKey.EndsWith("wsdl")) {
-                if (SwConstants.WsProvider == "mea") {
+                var wsProvider = _configFacade.Lookup<string>(ConfigurationConstants.Maximo.WsProvider);
+                if (wsProvider == "mea") {
                     entityKey = entityKey + "?wsdl";
                 } else {
                     entityKey = entityKey + ".wsdl";
@@ -130,10 +136,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             if (!applyPrefix) {
                 return entityKey;
             }
+            var wsdlPath = _configFacade.Lookup<string>(ConfigurationConstants.Maximo.WsdlPath, "basewsURL");
+
             if (Log.IsDebugEnabled) {
-                Log.DebugFormat("building wsdl url: basewsURL property={0}, entitykey={1}", ApplicationConfiguration.WsUrl, entityKey);
+                Log.DebugFormat("building wsdl url: basewsURL property={0}, entitykey={1}", wsdlPath, entityKey);
             }
-            return ApplicationConfiguration.WsUrl + entityKey;
+            return wsdlPath + entityKey;
         }
 
 
@@ -150,6 +158,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public void HandleEvent(ClearCacheEvent eventToDispatch) {
             ClearCache();
+            if (_configFacade.Lookup<bool>(ConfigurationConstants.Maximo.IgnoreCertErrors, "ignoreWsCertErrors")) {
+                ServicePointManager.ServerCertificateValidationCallback = SWIgnoreErrorsCertHandler;
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                    | SecurityProtocolType.Tls11
+                    | SecurityProtocolType.Tls12
+                    | SecurityProtocolType.Ssl3;
+            }
         }
     }
 }

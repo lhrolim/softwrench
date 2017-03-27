@@ -9,7 +9,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using cts.commons.simpleinjector;
 using cts.commons.Util;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Util.DeployValidation;
 using r = softWrench.sW4.Util.ReflectionUtil;
@@ -23,7 +26,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public static WsProvider WsProvider() {
             var target = MetadataProvider.TargetMapping();
-            var prop = MetadataProvider.GlobalProperty("wsprovider", true);
+            string prop;
+            if (SimpleInjectorGenericFactory.Instance != null && !ApplicationConfiguration.IsUnitTest) {
+                //some unit tests might not have an instance defined
+                prop = SimpleInjectorGenericFactory.Instance.GetObject<IConfigurationFacade>().Lookup<string>(ConfigurationConstants.Maximo.WsProvider, "wsprovider");
+            } else {
+                prop = MetadataProvider.GlobalProperty("wsprovider", true);
+            }
             
             if (prop != null) {
                 WsProvider val;

@@ -113,12 +113,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             }
             var facilitiesProp = preferences.GenericProperties.FirstOrDefault(f => f.Key.Equals(FirstSolarConstants.FacilitiesProp));
             if (facilitiesProp == null) {
-                preferences.GenericProperties.Add(new GenericProperty() {
-                    Key = FirstSolarConstants.FacilitiesProp,
-                    Value = facilitiesToken,
-                    UserPreferences = preferences,
-                    Type = "list"
-                });
+                if (facilitiesToken != null) {
+                    preferences.GenericProperties.Add(new GenericProperty {
+                        Key = FirstSolarConstants.FacilitiesProp,
+                        Value = facilitiesToken,
+                        UserPreferences = preferences,
+                        Type = "list"
+                    });
+                }
             } else {
                 if (facilitiesToken.Equals("")) {
                     preferences.GenericProperties.Remove(facilitiesProp);

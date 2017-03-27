@@ -6,8 +6,22 @@
         public const string PersonGroupAssociationRowstampKey = "/Global/Rowstamps/PersonGroupAssociation";
         public const string MainIconKey = "/Global/Icons/Main";
 
-//        public const string LdapAuthNonMaximoUsers = "/Global/Ldap/AllowNonMaximoUsers";
-//        public const string LdapAuthSyncEveryTime = "/Global/Ldap/SyncEveryTime";
+        public class Maximo {
+            public const string WsdlPath = "/Global/Maximo/WS/WsdlBasePath";
+            public const string IgnoreCertErrors = "/Global/Maximo/WS/IgnoreCertErrors";
+            public const string WsProvider = "/Global/Maximo/WS/WsProvider";
+            public const string MifUser = "/Global/Maximo/WS/UserName";
+            public const string MifPassword = "/Global/Maximo/WS/Password";
+
+            public const string DefaultOrgId = "/Global/Maximo/DefaultOrgId";
+            public const string DefaultSiteId = "/Global/Maximo/DefaultSiteId";
+            public const string DefaultStoreLoc = "/Global/Maximo/DefaultStoreLoc";
+        }
+
+
+
+        //        public const string LdapAuthNonMaximoUsers = "/Global/Ldap/AllowNonMaximoUsers";
+        //        public const string LdapAuthSyncEveryTime = "/Global/Ldap/SyncEveryTime";
 
         public const string MyProfileEnabled = "/Global/MyProfile/Enabled";
         public const string MyProfileReadOnly = "/Global/MyProfile/ReadOnly";
@@ -17,7 +31,7 @@
             public const string ApplyDefaultPreviousFilter = "/Global/Grid/Filter/ApplyDefaultPrevious";
         }
 
-        
+
 
         public const string ClientSideLogLevel = "/Global/Logs/ClientLevel";
 
@@ -34,7 +48,7 @@
         public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
         public const string TransactionStatsReportDuration = "/Global/Transactions/Report/Period";
 
-        
+
 
         #region SW diaplayable formats
 
@@ -70,9 +84,18 @@
             public const string PlacementSpecialLastKey = "/Global/Password/PlacementSpecialLast";
             public const string BlackListKey = "/Global/Password/BlackList";
             public const string LoginKey = "/Global/Password/Login";
-            
-            
         }
+
+        public class Email {
+            public const string Host = "/Global/Email/Smtp/Host";
+            public const string Port = "/Global/Email/Smtp/Port";
+            public const string Timeout = "/Global/Email/Smtp/Timeout";
+            public const string EnableSSL = "/Global/Email/Smtp/EnableSSL";
+            public const string UserName = "/Global/Email/Smtp/Username";
+            public const string Password = "/Global/Email/Smtp/Password";
+            public const string DefaultFromEmail = "/Global/Email/DefaultFrom";
+        }
+
 
         public class BulletinBoard {
             public const string Enabled = "/Global/BulletinBoard/Enabled";
@@ -82,6 +105,5 @@
 
         public const string JsErrorShowDevKey = "/Global/JsError/ShowDev";
         public const string JsErrorShowProdKey = "/Global/JsError/ShowProd";
-
     }
 }

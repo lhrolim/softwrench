@@ -91,7 +91,8 @@
                         clearViewModel();
                     })
                     .catch(function (error) {
-                        var message = !!error.data.errorMessage ? error.data.errorMessage : error.data.message;
+                        const data = !!error.data ? error.data : error;
+                        var message = !!data.errorMessage ? data.errorMessage : data.message;
                         alertMessage("error", message);
                     })
                     .finally(hideLoading);
@@ -111,7 +112,7 @@
             function setUserName() {
                 data.username = !data.firstname || !data.lastname
                     ? ""
-                    : data.firstname.toLowerCase().charAt(0) + data.lastname.split(" ").join("").toLowerCase();
+                    : data.firstname.toLowerCase() + "." + data.lastname.split(" ").join("").toLowerCase();
             }
 
             return {

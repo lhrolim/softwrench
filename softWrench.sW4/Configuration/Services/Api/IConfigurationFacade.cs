@@ -9,7 +9,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
     public interface IConfigurationFacade : IConfigurationFacadeCommons {
 
         [CanBeNull]
-        T Lookup<T>([NotNull]string configKey);
+        T Lookup<T>([NotNull]string configKey, string propertiesXmlKey = null);
 
         Task RegisterAsync([NotNull]string configKey, [NotNull]PropertyDefinition definition);
 

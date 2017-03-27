@@ -23,7 +23,8 @@ namespace softwrench.sw4.Hapag.Data.WS.Ism.Base {
             delegate { return true; }
             );
             var wsdlPath = MetadataProvider.GlobalProperty(ISMConstants.GlobalWsdlProperty);
-            return DynamicProxyUtil.LookupProxy(wsdlPath, false);
+//            return DynamicProxyUtil.LookupProxy(wsdlPath, false);
+            return null;
         }
 
 

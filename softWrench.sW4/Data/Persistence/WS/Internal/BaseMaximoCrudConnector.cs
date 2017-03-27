@@ -5,8 +5,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Security.Services;
 using System;
 using System.Linq;
-using Microsoft.Ajax.Utilities;
-using softwrench.sw4.user.classes.entities;
+using cts.commons.simpleinjector;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 using WcfSamples.DynamicProxy;
@@ -18,8 +17,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         protected static readonly ILog Log = LogManager.GetLogger(typeof(BaseMaximoCrudConnector));
 
+        public DynamicProxyUtil ProxyUtil => SimpleInjectorGenericFactory.Instance.GetObject<DynamicProxyUtil>();
+
         public virtual DynamicObject CreateProxy(EntityMetadata metadata) {
-            return DynamicProxyUtil.LookupProxy(metadata);
+            return ProxyUtil.LookupProxy(metadata);
         }
 
         public abstract MaximoOperationExecutionContext CreateExecutionContext(
@@ -57,7 +58,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 }
             }
             var pluspCustomer = MetadataProvider.GlobalProperty(SwConstants.MultiTenantPrefix);
-            if (pluspCustomer != null && maximoExecutionContext.Metadata.Schema.Attributes.FirstOrDefault(x=>x.Name.Equals("PLUSPCUSTOMER", StringComparison.OrdinalIgnoreCase)) != null) {
+            if (pluspCustomer != null && maximoExecutionContext.Metadata.Schema.Attributes.FirstOrDefault(x => x.Name.Equals("PLUSPCUSTOMER", StringComparison.OrdinalIgnoreCase)) != null) {
                 w.SetValue(integrationObject, "PLUSPCUSTOMER", pluspCustomer);
             }
 

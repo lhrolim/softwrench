@@ -77,7 +77,7 @@ namespace softWrench.sW4.Data.Entities {
                         attributes.Add(property.Name, valueFromJson);
                     } catch (Exception e) {
                         Log.Error("error casting object", e);
-                        throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value));
+                        throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value),e);
                     }
 
                 } else if (property.Value.Type == JTokenType.Array) {

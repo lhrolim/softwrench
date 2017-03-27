@@ -24,7 +24,7 @@ namespace softWrench.sW4.Email {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
 
-        public EmailService(){
+        public EmailService() {
             Log.DebugFormat("init log...");
         }
 
@@ -87,7 +87,7 @@ namespace softWrench.sW4.Email {
                             }
                         }
                     }
-                    
+
                     return tryAgain;
                 })
                 .WaitAndRetry(TRY_AGAIN_COUNT, retryAttempt =>
@@ -114,7 +114,7 @@ namespace softWrench.sW4.Email {
                 throw;
             }
 
-            
+
         }
 
         public virtual EmailAttachment CreateAttachment(Byte[] fileContent, string attachmentName) {

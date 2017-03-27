@@ -6,7 +6,9 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Net;
-using System.Reflection;
+using cts.commons.simpleinjector;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Util.DeployValidation;
 using r = softWrench.sW4.Util.ReflectionUtil;
@@ -16,10 +18,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
     class MifExecutionContext : MaximoOperationExecutionContext {
         private readonly string _methodName;
 
+        public DynamicProxyUtil ProxyUtil => SimpleInjectorGenericFactory.Instance.GetObject<DynamicProxyUtil>();
+        public IConfigurationFacade ConfigFacade => SimpleInjectorGenericFactory.Instance.GetObject<IConfigurationFacade>();
 
         public MifExecutionContext(IOperationData operationData, DynamicObject proxy = null)
             : base(operationData) {
-            Proxy = proxy ?? DynamicProxyUtil.LookupProxy(operationData.EntityMetadata);
+            Proxy = proxy ?? ProxyUtil.LookupProxy(operationData.EntityMetadata);
             CheckCredentials(Proxy);
 
             var curUser = SecurityFacade.CurrentUser();
@@ -44,12 +48,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             }
 
             r.SetProperty(integrationObject, "actionSpecified", true);
-            r.InstantiateProperty(integrationObject, "CHANGEDATE", new { Value = DateTime.Now.FromServerToRightKind() });
+            r.InstantiateProperty(integrationObject, "CHANGEDATE", new {
+                Value = DateTime.Now.FromServerToRightKind()
+            });
             //TODO: get current user, in the mobile case below code may be wrong
-            r.InstantiateProperty(integrationObject, "CHANGEBY", new { Value = curUser.Login });
+            r.InstantiateProperty(integrationObject, "CHANGEBY", new {
+                Value = curUser.Login
+            });
             //TODO: get from user
-            r.InstantiateProperty(integrationObject, "ORGID", new { Value = curUser.OrgId });
-            r.InstantiateProperty(integrationObject, "SITEID", new { Value = curUser.SiteId });
+            r.InstantiateProperty(integrationObject, "ORGID", new {
+                Value = curUser.OrgId
+            });
+            r.InstantiateProperty(integrationObject, "SITEID", new {
+                Value = curUser.SiteId
+            });
             r.SetProperty(integrationObject, "action", operationType.ToString());
 
             IntegrationObject = integrationObject;
@@ -66,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             var pi = mi.GetParameters().First();
             var parameterType = pi.ParameterType;
             var qType = r.InstanceFromType(parameterType);
-            w.SetValue(qType, "WHERE", string.Format("{0}='{1}'", Metadata.Schema.IdAttribute.Name, id));
+            w.SetValue(qType, "WHERE", $"{Metadata.Schema.IdAttribute.Name}='{id}'");
             var parameterList = MifUtils.GetParameterListForQuery(qType);
             var typesFromParameters = DynamicProxyUtil.TypesFromParameters(parameterList);
             var result = Proxy.CallMethod(MethodName(), typesFromParameters, parameterList.ToArray());
@@ -83,14 +95,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
         }
 
         protected override object DoProxyInvocation() {
-            if (ApplicationConfiguration.IgnoreWsCertErrors) {
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-                    | SecurityProtocolType.Tls11
-                    | SecurityProtocolType.Tls12
-                    | SecurityProtocolType.Ssl3;
-            }
+            //            if (ApplicationConfiguration.IgnoreWsCertErrors) {
+            //                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            //                ServicePointManager.Expect100Continue = true;
+            //                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+            //                    | SecurityProtocolType.Tls11
+            //                    | SecurityProtocolType.Tls12
+            //                    | SecurityProtocolType.Ssl3;
+            //            }
             if (Log.IsDebugEnabled) {
                 Log.Debug("sending content to mif :\n " + SerializeIntegrationObject());
             } else if (ApplicationConfiguration.IsLocal() || Log.IsInfoEnabled) {
@@ -112,9 +124,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
         }
 
         internal void CheckCredentials(DynamicObject proxy) {
-            var credentialsUser = ApplicationConfiguration.MifCredentialsUser;
-            var credentialsPassword = ApplicationConfiguration.MifCredentialsPassword;
-            if (string.IsNullOrEmpty(credentialsUser) || string.IsNullOrEmpty(credentialsPassword)) return;
+
+
+            var credentialsUser = ConfigFacade.Lookup<string>(ConfigurationConstants.Maximo.MifUser, "mifcredentials.user");
+            var credentialsPassword = ConfigFacade.Lookup<string>(ConfigurationConstants.Maximo.MifPassword, "mifcredentials.password");
+            if (string.IsNullOrEmpty(credentialsUser) || string.IsNullOrEmpty(credentialsPassword))
+                return;
             var url = (string)ReflectionUtil.GetProperty(proxy.ObjectInstance, "Url");
             var credCache = new CredentialCache();
             var netCred = new NetworkCredential(credentialsUser, credentialsPassword);

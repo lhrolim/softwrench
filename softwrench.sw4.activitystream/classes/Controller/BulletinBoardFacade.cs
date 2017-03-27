@@ -9,6 +9,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
 using cts.commons.web.Formatting;
 using Newtonsoft.Json;
 using softwrench.sw4.activitystream.classes.Controller.Jobs;
@@ -151,12 +152,12 @@ namespace softwrench.sw4.activitystream.classes.Controller {
 
         private void SetBulletinBoardJobCron(long refreshRate) {
             var newCron = GetBulletinBoardUpdateJobCron(refreshRate);
-            _jobManager.ManageJobByCommand(BulletinBoardStreamJob.JobName, JobCommandEnum.ChangeCron, newCron);
+            AsyncHelper.RunSync(()=>_jobManager.ManageJobByCommand(BulletinBoardStreamJob.JobName, JobCommandEnum.ChangeCron, newCron));
         }
 
         private void BulletinBoardEnabledChanged(bool enabled) {
             if (enabled) { // refresh stream
-                UpdateInMemoryBulletinBoard();
+                AsyncHelper.RunSync(UpdateInMemoryBulletinBoard);
             } else { // flush stream
                 ActiveStream.Stream = Enumerable.Empty<BulletinBoard>().ToList();
             }
