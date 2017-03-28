@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
@@ -19,10 +21,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
     public class FirstSolarAdvancedSearchController : ApiController {
 
         private readonly FirstSolarAdvancedSearchHandler _advancedSearchHandler;
+        private readonly FirstSolarUserFacilityBuilder _userFacilityBuilder;
         private DataSetProvider _dataSetProvider;
 
-        public FirstSolarAdvancedSearchController(FirstSolarAdvancedSearchHandler advancedSearchHandler, DataSetProvider dataSetProvider) {
+        public FirstSolarAdvancedSearchController(FirstSolarAdvancedSearchHandler advancedSearchHandler, DataSetProvider dataSetProvider, FirstSolarUserFacilityBuilder userFacilityBuilder) {
             _advancedSearchHandler = advancedSearchHandler;
+            _userFacilityBuilder = userFacilityBuilder;
             _dataSetProvider = dataSetProvider;
         }
 
@@ -63,6 +67,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             var dataSet = _dataSetProvider.LookupDataSet("asset", "assetLookupList");
             var result = await dataSet.GetList(app, dto);
             return result;
+        }
+
+        [HttpGet]
+        public IEnumerable<IAssociationOption> GetAvailableFacilities([FromUri] string maximoPersonId, [FromUri] string siteid) {
+            return _userFacilityBuilder.GetAvailableFacilities(maximoPersonId, siteid);
         }
 
 

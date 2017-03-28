@@ -11,6 +11,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Metadata.Applications.Association;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Util;
@@ -116,7 +117,8 @@ namespace softWrench.sW4.Metadata.Applications.Validator {
             var optionField = displayable as OptionField;
             if (optionField != null && optionField.ProviderAttribute != null && !optionField.ProviderAttribute.StartsWith("#")) {
                 if (add) {
-                    AddOptionProviderToValidate(schema.ApplicationName, schema.SchemaId, optionField.ProviderAttribute);
+                    var methodName = DynamicOptionFieldResolver.GetMethodName(optionField.ProviderAttribute);
+                    AddOptionProviderToValidate(schema.ApplicationName, schema.SchemaId, methodName);
                 } else {
                     RemoveOptionProviderToValidate(schema.ApplicationName, schema.SchemaId, optionField.ProviderAttribute);
                 }

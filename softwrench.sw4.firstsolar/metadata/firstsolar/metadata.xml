@@ -1103,56 +1103,8 @@
 
       <components>
         <componentdisplayable id="facilities">
-          <optionfield attribute="facilities" label="Preferred Facilities" searchoperation="eq" default="">
+          <optionfield attribute="facilities" label="Preferred Facilities" searchoperation="eq" default="" providerattribute="availableFacilities" >
             <renderer type="multiselectautocompleteclient" params="creationallowed=false"/>
-            <filter clientfunction="personService.filterFacilitiesBySite"/>
-            <option label="ACS1"  value="ACS" extraprojections="site=1801;group=1801-ACS"/>
-            <option label="AES1"  value="AES" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="AMH1"  value="AMH" extraprojections="site=1808;group=1808-SAR"/>
-            <option label="AMH2"  value="AMR03,AMR04" extraprojections="site=1808;group=1808-SAR"/>
-            <option label="ALM1"  value="ALM" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="ALP1"  value="ALP" extraprojections="site=1803;group=1803-AVS"/>
-            <option label="AVS1"  value="AVS" extraprojections="site=1803;group=1803-AVS"/>
-            <option label="AVV1"  value="AVV" extraprojections="site=1801;group=1801-AVV"/>
-            <option label="BEL1"  value="BEL" extraprojections="site=1808;group=1808-SAR"/>
-            <option label="BRS1"  value="BRS" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="BWS1"  value="BWS" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="CBLA"  value="CBLA" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="CCS1"  value="CCS" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="CGL1"  value="CGL" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="CID1"  value="CID" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="CIM1"  value="CIM" extraprojections="site=1801"/>
-            <option label="CVS1"  value="CVS" extraprojections="site=1803;group=1803-SGSO"/>
-            <option label="DSS1"  value="DSS" extraprojections="site=1803"/>
-            <option label="GAL1"  value="GAL" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="HON1"  value="HON" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="IVS1"  value="IVS" extraprojections="site=1803;group=1803-IVS"/>
-            <option label="IVW1"  value="IVW" extraprojections="site=1803;group=1803-IVS"/>
-            <option label="KBSA"  value="KBSA" extraprojections="site=1803;group=1803-KBS"/>
-            <option label="KBSB"  value="KBSB" extraprojections="site=1803;group=1803-KBS"/>
-            <option label="KNS1"  value="KNS" extraprojections="site=1803;group=1801-TPZ"/>
-            <option label="KSS1"  value="KSS" extraprojections="site=1803;group=1801-TPZ"/>
-            <option label="LHS1"  value="LHS" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="LMS1"  value="LMS" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="MAN1"  value="MAN" extraprojections="site=1803;group=1801-CIM"/>
-            <option label="MLK1"  value="MLK" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="MSS1"  value="MSS" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="NSS1"  value="NSS" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="ORS1"  value="ORS" extraprojections="site=1803;group=1803-TPZ"/>
-            <option label="OTE1"  value="OTE" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="REE1"  value="REE" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="SAR1"  value="SAR01,SAR02,SAR03,SAR04,SAR05,SAR06,SAR07,SAR08" extraprojections="site=1808;group=1808-SAR"/>
-            <option label="SDVL"  value="SDVL" extraprojections="site=1803;group=1801-CIM"/>
-            <option label="SES1"  value="SES" extraprojections="site=1803;group=1803-SGSO"/>
-            <option label="SES2"  value="SES" extraprojections="site=1803;group=1803-SGSO"/>
-            <option label="SGAH"  value="SGAH" extraprojections="site=1803;group=1803-SGSO"/>
-            <option label="SGAK"  value="SGAK" extraprojections="site=1803;group=1803-SGSO"/>
-            <option label="SGSO"  value="SGSO" extraprojections="site=1803;group=1803-SGSO"/>
-            <option label="SLS1"  value="SLS" extraprojections="site=1803;group=1803-SLS"/>
-            <option label="SSN1"  value="SSN" extraprojections="site=1801;group=1801-SSN"/>
-            <option label="STT1"  value="STT" extraprojections="site=1801;group=1801-CIM"/>
-            <option label="TIL1"  value="TIL" extraprojections="site=1808;group=1808-SAR"/>
-            <option label="TPZ1"  value="TPZ" extraprojections="site=1803;group=1803-TPZ"/>
           </optionfield>
         </componentdisplayable>
       </components>

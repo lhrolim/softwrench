@@ -1,61 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
-using cts.commons.Util;
 using Iesi.Collections.Generic;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.events;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
-    public class FirstSolarUserFacilityBuilder : ISWEventListener<UserLoginEvent>, ISWEventListener<PreSyncEvent> {
+    public class FirstSolarUserFacilityBuilder : ISWEventListener<UserLoginEvent>, ISWEventListener<PreSyncEvent>, ISWEventListener<RefreshMetadataEvent> {
 
+        private const string FacilitiesQuery = @"select omw.location, omw.siteid from omworkgroup omw  
+                                                left join persongroupview pgv on pgv.persongroup = omw.persongroup 
+                                                where pgv.personid = ? and pgv.status = 'ACTIVE' and pgv.persongroup is not null
+                                                order by omw.location asc";
 
         private readonly IMaximoHibernateDAO _dao;
         private readonly ISWDBHibernateDAO _swdbDao;
 
-        private static readonly ILog Log = LogManager.GetLogger(typeof (FirstSolarOfflineSiteIdBuilder));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarOfflineSiteIdBuilder));
 
-        private static readonly IDictionary<string, string[]> PersonGroupFacilityMap = new Dictionary<string, string[]>()
-        {
-            { "1801-ACS", new []{"ACS"} },
-            { "1801-APX", new []{"APX"} },
-            { "1801-AVV", new []{"AVV"} },
-            { "1801-CIM", new []{"CIM","REE","LMS","GAL","STT","ALM","HON","MSS","MLK","CBLA","SDVL","MAN","OTE","BRS"} },
-            { "1801-DCR", new []{"DCR"} },
-            { "1801-GRN", new []{"GRN"} },
-            { "1801-SSN", new []{"SSN"} },
-            { "1801-SPX", new []{"SPX"} },
-            { "1803-ADB", new []{"ADB"} },
-            { "1803-AST", new []{"AST"} },
-            { "1803-AVS", new []{"AVS","ALP"} },
-            { "1803-KBS", new []{"KBS"} },
-            { "1803-CAL", new []{"CAL"} },
-            { "1803-CVS", new []{"CVS","SGSO","SGAH","SGAK","SES"} },
-            { "1803-DSS", new []{"DSS","BLY"} },
-            { "1803-IVS", new []{"IVS","IVW","DUNS"} },
-            { "1803-RSS", new []{"RSS"} },
-            { "1803-SLS", new []{"SLS"} },
-            { "1803-TPZ", new []{"TPZ","AES","KNS","KSS","ORS","CID","LHS","BWS","CGL","CCS","NSS"} },
-            { "1808-SAR", new []{"SAR","TIL","AMR","BEL","AMH","WAL"} },
-            { "4801-ABH", new []{"ABH"} },
-            { "4801-ANY", new []{"ANY"} },
-            { "4801-RTA", new []{"RTA"} },
-            { "4801-VER", new []{"VER"} },
-            { "6801-CLN", new []{"CLN"} },
-        };
+        private static readonly IDictionary<string, Dictionary<string, List<string>>> FacilitiesCache = new ConcurrentDictionary<string, Dictionary<string, List<string>>>();
 
         public FirstSolarUserFacilityBuilder(IMaximoHibernateDAO dao, ISWDBHibernateDAO swdbDao) {
             _dao = dao;
             _swdbDao = swdbDao;
         }
-
 
         public void HandleEvent(UserLoginEvent userEvent) {
             if (!ApplicationConfiguration.IsClient("firstsolar")) {
@@ -63,46 +40,50 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 return;
             }
             var user = userEvent.InMemoryUser;
-            AsyncHelper.RunSync(()=> AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId));
+            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId, user.SiteId);
         }
 
-        public async Task<IDictionary<string, object>> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId) {
-            var hasStoredFacilities = genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp);
-
-            if (hasStoredFacilities && genericproperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
-                Log.DebugFormat("user already has stored facilities: {0}, returning", genericproperties[FirstSolarConstants.FacilitiesProp]);
-                //the list of facilities is already saved on the swdb database, let's use it
-                return genericproperties;
+        public List<string> GetFacilityList(string maximoPersonId, string siteid) {
+            List<string> facilityList;
+            if (FacilitiesCache.ContainsKey(maximoPersonId)) {
+                var siteIdDict = FacilitiesCache[maximoPersonId];
+                facilityList = FilterBySiteId(siteIdDict, siteid);
+                Log.InfoFormat("Facilities from user {0} already on cache, available facilities for siteid {1}: {2}", maximoPersonId, siteid, string.Join(", ", facilityList));
+            } else {
+                Log.InfoFormat("Fetching facilities for user {0}", maximoPersonId);
+                var omworkgroups = _dao.FindByNativeQuery(FacilitiesQuery, maximoPersonId);
+                var siteIdDict = new Dictionary<string, List<string>>();
+                omworkgroups.ForEach(groupRow => {
+                    var facility = groupRow["location"];
+                    var dbSiteId = groupRow["siteid"];
+                    if (!siteIdDict.ContainsKey(dbSiteId)) {
+                        siteIdDict.Add(dbSiteId, new List<string>());
+                    }
+                    siteIdDict[dbSiteId].Add(facility);
+                });
+                FacilitiesCache[maximoPersonId] = siteIdDict;
+                facilityList = FilterBySiteId(siteIdDict, siteid);
+                Log.InfoFormat("Available facilities for user {0} and siteid {1}: {2} ", maximoPersonId, siteid, string.Join(", ", facilityList));
             }
-            //otherwise that list should be populated defaulting to the persongroups of the user
-            var groups =
-                await _dao.FindByNativeQueryAsync("select persongroup from persongroupview where personid = ? and status = 'ACTIVE' and persongroup is not null",
-                    maximoPersonId);
+            return facilityList;
+        }
 
-            Log.InfoFormat("fetching persongroups for user {0}",maximoPersonId);
-
-            var facilityList = new List<string>();
-            foreach (var groupRow in groups) {
-                var group = groupRow["persongroup"];
-                if (PersonGroupFacilityMap.ContainsKey(@group)) {
-                    facilityList.AddRange(PersonGroupFacilityMap[@group]);
-                }
-            }
-
-            Log.InfoFormat("Available facilities for user {0}: {1} ", maximoPersonId,facilityList);
-
-            if (!hasStoredFacilities) {
-                if (genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
-                    genericproperties.Remove(FirstSolarConstants.FacilitiesProp);
-                }
-                genericproperties.Add(FirstSolarConstants.FacilitiesProp, facilityList);
-            }
-
+        public IDictionary<string, object> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId, string siteid) {
+            var facilityList = GetFacilityList(maximoPersonId, siteid);
+            // set/updates the available facilities
             if (genericproperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
-                genericproperties.Remove(FirstSolarConstants.AvailableFacilitiesProp);
+                genericproperties[FirstSolarConstants.AvailableFacilitiesProp] = facilityList;
+            } else {
+                genericproperties.Add(FirstSolarConstants.AvailableFacilitiesProp, facilityList);
             }
-            genericproperties.Add(FirstSolarConstants.AvailableFacilitiesProp, facilityList);
 
+            // sets the selected facilities or filter the selected by available ones
+            if (!genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                Log.InfoFormat("Selected facilities for user {0} not found, using the list of availables facilities.", maximoPersonId);
+                genericproperties.Add(FirstSolarConstants.FacilitiesProp, new List<string>(facilityList));
+            } else {
+                genericproperties[FirstSolarConstants.FacilitiesProp] = FilterFacilities(maximoPersonId, genericproperties[FirstSolarConstants.FacilitiesProp], facilityList);
+            }
             return genericproperties;
         }
 
@@ -128,6 +109,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                     facilitiesProp.Value = facilitiesToken;
                 }
             }
+        }
+
+        public List<string> FilterFacilities(string maximoPersonId, object selectedFacilities, List<string> availableFacilities) {
+            var selectedArray = selectedFacilities as string[];
+            var selectedList = selectedArray != null ? selectedArray.ToList() : selectedFacilities as List<string>;
+            if (selectedList == null) {
+                Log.InfoFormat("Selected facilities for user {0} not of right type, using the list of availables facilities.", maximoPersonId);
+                return new List<string>(availableFacilities);
+            }
+
+            var filteredFacilities = selectedList.Where(selected => availableFacilities.Any(selected.EqualsIc)).ToList();
+            Log.InfoFormat("Selected facilities for user {0} filtered by the available facilities resulting in: {1}", maximoPersonId, string.Join(", ", filteredFacilities));
+            return filteredFacilities;
+        }
+
+        public IEnumerable<IAssociationOption> GetAvailableFacilities(string maximoPersonId, string siteid) {
+            var options = new List<IAssociationOption>();
+            var facilityList = GetFacilityList(maximoPersonId, siteid);
+            facilityList.ForEach(facility => {
+                options.Add(new AssociationOption(facility, facility));
+            });
+            return options;
         }
 
         public void HandleEvent(PreSyncEvent eventToDispatch) {
@@ -161,6 +164,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             PopulatePreferredFacilities(swUser, selectedFacilitiesToken);
             _swdbDao.Save(swUser);
             user.DBUser.UserPreferences = swUser.UserPreferences;
+        }
+
+        public void HandleEvent(RefreshMetadataEvent eventToDispatch) {
+            FacilitiesCache.Clear();
+        }
+
+        private static List<string> FilterBySiteId(IDictionary<string, List<string>> siteIdDict, string siteid) {
+            if (!string.IsNullOrEmpty(siteid)) {
+                return siteIdDict.ContainsKey(siteid) ? siteIdDict[siteid] : new List<string>();
+            }
+            var result = new List<string>();
+            siteIdDict.ToList().ForEach(pair => result.AddRange(pair.Value));
+            result.Sort();
+            return result;
         }
     }
 }

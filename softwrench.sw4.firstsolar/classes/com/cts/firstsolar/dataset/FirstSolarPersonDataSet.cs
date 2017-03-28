@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Iesi.Collections;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
+using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
@@ -14,6 +16,7 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Person;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
@@ -40,19 +43,35 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var detail = await base.GetApplicationDetail(application, user, request);
             var maximoPersonId = detail.ResultObject.GetStringAttribute("personid");
-            var resultProperties = user.Genericproperties;
-            if (maximoPersonId != user.MaximoPersonId) {
-                //sparing some queries for the myprofile scenario, since this data would already have been fetched upon login
-                resultProperties = await
-                    _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId);
+            var siteid = detail.ResultObject.GetStringAttribute("locationsite");
+            var props = _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId, siteid);
+
+            var available = props.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)
+                ? props[FirstSolarConstants.AvailableFacilitiesProp] as List<string>
+                : null;
+            detail.ResultObject.SetAttribute("availablefacilities", available);
+
+            // no selected prop, nothing possible to do
+            if (!props.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                return detail;
             }
-            if (resultProperties.ContainsKey(FirstSolarConstants.FacilitiesProp) && !detail.ResultObject.ContainsAttribute("facilities")) {
-                //if the facility was already stored on the database it would already have been set on the AdjustDatamapFromUser method
-                detail.ResultObject.SetAttribute("facilities", resultProperties[FirstSolarConstants.FacilitiesProp]);
+
+            var result = detail.ResultObject;
+            if (!result.ContainsAttribute("facilities")) {
+                detail.ResultObject.SetAttribute("facilities", props[FirstSolarConstants.FacilitiesProp]);
+                return detail;
             }
-            if (resultProperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
-                detail.ResultObject.SetAttribute("availablefacilities", resultProperties[FirstSolarConstants.AvailableFacilitiesProp]);
+
+            // not possible to filter by available
+            if (available == null) {
+                return detail;
             }
+            
+            // filters by available facilities
+            var fromDatamap = result.GetAttribute("facilities");
+            var filtered = _userFacilityBuilder.FilterFacilities(maximoPersonId, fromDatamap, available);
+            detail.ResultObject.SetAttribute("facilities", filtered);
+
             return detail;
         }
 
@@ -65,6 +84,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                     dataMap.SetAttribute("facilities", fac.Convert());
                 }
             }
+        }
+
+        public IEnumerable<IAssociationOption> GetAvailableFacilities(OptionFieldProviderParameters parameters) {
+            var maximoPersonId = parameters.OriginalEntity.GetStringAttribute("personid");
+            var siteid = parameters.OriginalEntity.GetStringAttribute("locationsite");
+            return _userFacilityBuilder.GetAvailableFacilities(maximoPersonId, siteid);
         }
 
         private static string ParseFacilities(JObject json) {
