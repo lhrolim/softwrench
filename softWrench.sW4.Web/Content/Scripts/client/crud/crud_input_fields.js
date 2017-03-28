@@ -97,6 +97,7 @@
                 previousschema: '=',
                 parentdata: '=',
                 parentschema: '=',
+                panelid: "=", 
                 outerassociationcode: '=',
                 sectionParameters: '=',
                 outerassociationdescription: '=',
@@ -171,8 +172,7 @@
                     });
 
                     $scope.getPanelId = function () {
-                        //TODO: pass whole panelid
-                        return $scope.ismodal === "true" ? "#modal" : null;
+                        return $scope.panelid || ($scope.ismodal === "true" ? "#modal" : null);
                     }
 
                     $scope.getCheckboxOptions = function (fieldMetadata) {

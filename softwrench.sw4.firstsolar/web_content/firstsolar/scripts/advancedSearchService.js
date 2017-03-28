@@ -2,7 +2,7 @@
 (function (angular) {
     "use strict";
 
-    function advancedSearchService($rootScope, $log, $q, restService, crudContextHolderService, searchService, redirectService, alertService, modalService, schemaCacheService) {
+    function advancedSearchService($rootScope, $log, $q, $timeout, restService, crudContextHolderService, searchService, redirectService, alertService, modalService, schemaCacheService) {
         var log = $log.getInstance("sw4.advancedSearchService");
 
         //#region Utils
@@ -96,10 +96,18 @@
         function customizeComboDropdown(fieldMetadata, selectElement, dropdownOptions) {
             dropdownOptions["templates"] = {
                 filter: '<li class="multiselect-item filter">' +
-                '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
-                '<input id="fsblock" class="form-control multiselect-search" placeholder="Block" type="text">' +
-                '<input id="fspcs" class="form-control multiselect-search" placeholder="PCS" type="text" style="margin-top: -1px"></div></li>',
-                filterClearBtn: '<span class="input-group-addon"><i class="fa fa-eraser"></i></span>'
+                    '<div class="input-group"><span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>' +
+                    '<input id="fsblock" class="form-control multiselect-search" placeholder="Block" type="text">' +
+                    '<input id="fspcs" class="form-control multiselect-search" placeholder="PCS" type="text" style="margin-top: -1px"></div></li>',
+                filterClearBtn: '<span class="input-group-addon"><i class="fa fa-eraser"></i></span>',
+
+                // copied from the defaults from bootstrap-multiselect line 335
+                // it was not merging the templates properly
+                button: '<button type="button" class="multiselect dropdown-toggle" data-toggle="dropdown"><span class="multiselect-selected-text"></span> <b class="caret"></b></button>',
+                ul: '<ul class="multiselect-container dropdown-menu"></ul>',
+                li: '<li><a tabindex="0"><label></label></a></li>',
+                divider: '<li class="multiselect-item divider"></li>',
+                liGroup: '<li class="multiselect-item multiselect-group"><label></label></li>'
             }
 
             dropdownOptions["filterFunction"] = function (optionValue, optionText, filterInput) {
@@ -114,10 +122,13 @@
             // recalcs scroll pane height - considering the added or removed values
             dropdownOptions["onChange"] = function () {
                 if (fieldMetadata.rendererParameters["showvaluesbelow"] === "true") {
-                    // adds the tooltips on below values
-                    $(".multiselect-div [rel=tooltip]").tooltip();
+                    $timeout(() => {
+                        // adds the tooltips on below values
+                        $(".multiselect-div [rel=tooltip]").tooltip();
+
+                        $(window).trigger("resize");
+                    });
                 }
-                $(window).trigger("resize");
             }
 
             // calcs the margin top to open the dropdown upward
@@ -186,8 +197,6 @@
         }
 
         function buildLocationAndSiteIdMap() {
-            const location = null;
-            const associationKey = null;
             const searchDatamap = crudContextHolderService.rootDataMap(searchPanelId);
 
 
@@ -253,7 +262,7 @@
 
     angular
       .module('firstsolar')
-      .clientfactory('advancedSearchService', ["$rootScope", "$log", "$q", "restService", "crudContextHolderService", "searchService", "redirectService", "alertService", "modalService", "schemaCacheService", advancedSearchService]);
+      .clientfactory('advancedSearchService', ["$rootScope", "$log", "$q", "$timeout", "restService", "crudContextHolderService", "searchService", "redirectService", "alertService", "modalService", "schemaCacheService", advancedSearchService]);
 
     //#endregion
 

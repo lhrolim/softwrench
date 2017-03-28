@@ -304,7 +304,7 @@
         ///dispatchedbyuser: the method could be called after a user action (changing a field), or internally after a value has been set programatically 
         postAssociationHook(associationMetadata, scope, triggerparams ={}) {
             const parentdata = this.crudContextHolderService.rootDataMap();
-            const fields = triggerparams.fields || parentdata;
+            const fields = triggerparams.fields || scope.fields || parentdata;
 
             // clear the extra fields if new value is null
             if (fields && fields[associationMetadata.attribute] === null && associationMetadata.extraProjectionFields && associationMetadata.extraProjectionFields.length > 0) {
