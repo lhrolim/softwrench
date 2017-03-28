@@ -651,7 +651,7 @@
           <field attribute="worktype" label="Work Type" />
 
           <properties>
-            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime asc, wopriority desc"/>
+            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime desc, wopriority desc"/>
           </properties>
         </list>
 
@@ -831,7 +831,7 @@
           </field>
 
           <properties>
-            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime asc, wopriority desc"/>
+            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime desc, wopriority desc"/>
             <property key="list.offline.create.disabled" value="true"/>
           </properties>
         </list>
