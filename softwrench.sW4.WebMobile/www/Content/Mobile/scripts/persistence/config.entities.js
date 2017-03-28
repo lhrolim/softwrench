@@ -16,7 +16,7 @@
             providerAttribute: 'TEXT', //used for matching which optionfields on the screen are bound to the data
             optionkey: 'TEXT', // the remoteid of the option (assetnum, classificationid, etc..)
             optionvalue: 'TEXT',
-            extraprojectionvalues: 'JSON', //usually null, but can contain a json with extra fields
+            extraprojectionvalues: 'JSON' //usually null, but can contain a json with extra fields
         });
 
         //#region AssociationData
@@ -103,7 +103,7 @@
             //this is the id of the Batch on the server, it will be used for checking the status of it periodically
             remoteId: 'TEXT',
             //either pending, or completed
-            status: 'TEXT',
+            status: 'TEXT'
         });
 
         entities.BatchItem = persistence.define('BatchItem', {
@@ -133,7 +133,7 @@
             datamap: 'JSON',
             remoteId: 'TEXT',//The id of this entry in maximo, it will be null when it´s created locally
             isDirty: 'BOOL', //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-            rowstamp: 'INT',
+            rowstamp: 'INT'
         });
 
         entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values (?,?,0,?,?,?)";
@@ -234,12 +234,12 @@
             datamap: 'JSON',
             operation: 'TEXT',
             //used to execute operations on the right order
-            creationDate: 'DATE',
+            creationDate: 'DATE'
         });
 
         entities.DataEntry.hasMany('operations', entities.Operation, 'entry');
 
-        entities.DataEntry.index(['application', 'remoteid'], { unique: true });
+//        entities.DataEntry.index(['application', 'remoteid'], { unique: true });
 
         entities.DataEntry.maxRowstampByAppQuery = "select max(rowstamp) as rowstamp,application,id from DataEntry where application = '{0}'";
 
@@ -299,18 +299,18 @@
         //#region Commons
         entities.Settings = persistence.define('Settings', {
             localversion: "TEXT",
-            serverurl: 'TEXT',
+            serverurl: 'TEXT'
         });
 
         entities.User = persistence.define('User', {
             name: 'TEXT',
             orgid: 'TEXT',
-            siteid: 'TEXT',
+            siteid: 'TEXT'
         });
 
         entities.Configuration = persistence.define('Configuration', {
             key: 'TEXT',
-            value: 'JSON',
+            value: 'JSON'
         });
 
 
@@ -333,7 +333,7 @@
             parentApplication: "TEXT",
             metadataid: "TEXT",
             //the whereclause it self
-            data: "TEXT",
+            data: "TEXT"
         });
 
         entities.Menu = persistence.define('Menu', {

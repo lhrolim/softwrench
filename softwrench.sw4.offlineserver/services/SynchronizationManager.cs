@@ -24,6 +24,7 @@ using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
@@ -39,15 +40,17 @@ namespace softwrench.sw4.offlineserver.services {
         private readonly IContextLookuper _lookuper;
         private readonly IEventDispatcher _iEventDispatcher;
         private readonly ISWDBHibernateDAO _swdbDAO;
+        private SyncChunkHandler _syncChunkHandler;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO, SyncChunkHandler syncChunkHandler) {
             _resolver = resolver;
             _repository = respository;
             _lookuper = lookuper;
             _iEventDispatcher = iEventDispatcher;
             _swdbDAO = swdbDAO;
+            _syncChunkHandler = syncChunkHandler;
             Log.DebugFormat("init sync log");
         }
 
@@ -122,10 +125,14 @@ namespace softwrench.sw4.offlineserver.services {
                 tasks[i++] = InnerGetAssocData(association, userAppMetadata, rowstamp, results);
             }
             await Task.WhenAll(tasks);
+            results = await _syncChunkHandler.HandleMaxSize(results);
+
             Log.DebugFormat("SYNC:Finished handling all associations. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             return results;
         }
+
+    
 
         private async Task InnerGetAssocData(CompleteApplicationMetadataDefinition association, ApplicationMetadata userAppMetadata, Rowstamps rowstamp, AssociationSynchronizationResultDto results) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
@@ -321,7 +328,7 @@ namespace softwrench.sw4.offlineserver.services {
             var searchDto = string.IsNullOrWhiteSpace(rowstamps.Lowerlimit) ? new SearchRequestDto() { SearchSort = "rowstamp desc" } : new SearchRequestDto();
             searchDto.Key = new ApplicationMetadataSchemaKey() {
                 ApplicationName = appMetadata.Name
-                
+
             };
 
 

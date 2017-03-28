@@ -19,6 +19,13 @@ namespace softwrench.sw4.offlineserver.services.util {
                 PropertyDataType = PropertyDataType.LONG,
             });
 
+            _configFacade.Register(OfflineConstants.MaxDownloadSize, new PropertyDefinition {
+                Description = "maximum number of entries to download at a single operation",
+                StringValue = "50000",
+                DefaultValue = "50000",
+                PropertyDataType = PropertyDataType.LONG,
+            });
+
             _configFacade.Register(OfflineConstants.SupportContactEmail, new PropertyDefinition() {
                 Description = "Support email the offline app should contact",
                 PropertyDataType = PropertyDataType.STRING,

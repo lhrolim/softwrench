@@ -191,6 +191,7 @@
     <Compile Include="dto\SynchronizationApplicationResultData.cs" />
     <Compile Include="services\OffLineCollectionResolver.cs" />
     <Compile Include="services\OffLineBatchService.cs" />
+    <Compile Include="services\SyncChunkHandler.cs" />
     <Compile Include="services\SynchronizationManager.cs" />
     <Compile Include="dto\SynchronizationRequestDto.cs" />
     <Compile Include="dto\SynchronizationResultDto.cs" />

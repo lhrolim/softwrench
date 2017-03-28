@@ -13,6 +13,11 @@ namespace softwrench.sw4.offlineserver.dto.association {
         public IDictionary<string, IList<string>> NumericIndexes { get; set; }
         public IDictionary<string, IList<string>> DateIndexes { get; set; }
 
+        /// <summary>
+        /// If true there´s more data to be downloaded on the syncoperation, used to force a faster sync at the client side
+        /// </summary>
+        public bool HasMoreData { get; set; }
+
         public AssociationSynchronizationResultDto() {
             AssociationData = new ConcurrentDictionary<string, List<DataMap>>();
             TextIndexes = new ConcurrentDictionary<string, IList<string>>();
