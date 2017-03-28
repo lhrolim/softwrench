@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, _) {
     "use strict";
 
-    function menuModelService(dao, $log, $injector, entities, offlineSchemaService, queryListBuilderService, dispatcherService, metadataModelService) {
+    function menuModelService(swdbDAO, $log, $injector, offlineEntities, offlineSchemaService, queryListBuilderService, dispatcherService, metadataModelService) {
 
         const initialMenuModel = {
             dbData: {},
@@ -76,15 +76,14 @@
         }
 
         function updateAppCount(menu) {
-            let joinObj = {};
+            const joinObj = buildJoinObj(menu);
             if (menu.parameters && menu.parameters.offlinemenuwc) {
                 menuModel.menuWc[menu.id] = dispatcherService.invokeServiceByString(menu.parameters.offlinemenuwc);
-                joinObj = buildJoinObj(menu);
             }
 
             const query = buildListQuery(menu.application, menu.id);
 
-            dao.countByQuery("DataEntry", query, joinObj).then((count) => {
+            swdbDAO.countByQuery("DataEntry", query, joinObj).then((count) => {
                 menuModel.appCount[menu.id] = count;
             });
         }
@@ -109,15 +108,15 @@
 
         function initAndCacheFromDB() {
             const log = $log.getInstance("menuModelService#initAndCacheFromDB", ["init", "metadata", "botstrap"]);
-            return dao.findSingleByQuery("Menu","data is not null").then(menu => {
+            return swdbDAO.findSingleByQuery("Menu","data is not null").then(menu => {
                 if (!!menu) {
                     log.info("restoring menu");
                     menuModel.dbData = menu;
                 }
                 if (!menu) {
-                    menu = new entities.Menu();
+                    menu = new offlineEntities.Menu();
                     log.info("creating first menu");
-                    return dao.save(menu);
+                    return swdbDAO.save(menu);
                 } else if (menu.data) {
                     log.info("restoring menu data");
                     menuModel.listItems = menu.data.leafs;
@@ -129,9 +128,9 @@
         function updateMenu(serverMenu) {
             return !serverMenu || _.isEmpty(serverMenu)
                 ? initAndCacheFromDB()
-                : dao.instantiate("Menu", menuModel.dbData).then(menu => {
+                : swdbDAO.instantiate("Menu", menuModel.dbData).then(menu => {
                     menu.data = serverMenu;
-                    return dao.save(menu).then(item => {
+                    return swdbDAO.save(menu).then(item => {
                         menuModel.dbData.data = serverMenu;
                         menuModel.listItems = serverMenu.leafs;
                         return item;
