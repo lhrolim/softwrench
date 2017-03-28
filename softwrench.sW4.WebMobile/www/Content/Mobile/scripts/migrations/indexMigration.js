@@ -26,13 +26,11 @@
             queries.push(this.swdbDAO.addIndexQuery("DataEntry", "textindex02", false));
 //
             queries.push(this.swdbDAO.addIndexQuery("DataEntry", "dateindex01", false));
-            queries.push(this.swdbDAO.addIndexQuery("DataEntry", ["application", "remoteid"], true));
 //
             queries.push(this.swdbDAO.addIndexQuery("AssociationData", "textindex01", false));
             queries.push(this.swdbDAO.addIndexQuery("AssociationData", "textindex02", false));
 //
             queries.push(this.swdbDAO.addIndexQuery("AssociationData", ["application", "textindex01"], false));
-
 
             this.swdbDAO.executeQueries(queries).then(r => {
                 log.info("sql indexes created successfully");
@@ -59,7 +57,6 @@
             this.swdbDAO.dropIndex("AssociationData", "textindex01");
             this.swdbDAO.dropIndex("AssociationData", "textindex02");
             this.swdbDAO.dropIndex("AssociationData", ["application", "textindex01"]);
-            this.swdbDAO.dropIndex("DataEntry", ["application", "remoteid"]);
 
             log.info("sql indexes dropped successfully");
 

@@ -10,8 +10,6 @@ namespace softwrench.sw4.offlineserver.services.util {
         //TODO: allow other paths other than global
         public const string AsyncBatchMinSize = "/Global/Offline/Batch/MinSize";
 
-        public const string MaxDownloadSize = "/Global/Offline/Sync/MaxDownloadChunkSize";
-
         public const string SupportContactEmail = "/Offline/Support/Email";
 
     }

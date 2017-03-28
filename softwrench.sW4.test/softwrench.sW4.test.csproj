@@ -280,7 +280,6 @@
     <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializerTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />
-    <Compile Include="offline\SyncChunkHandlerTest.cs" />
     <Compile Include="Poco\PocoSr.cs" />
     <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="SPF\RouteParameterManagerTest.cs" />
