@@ -76,20 +76,25 @@
         <relationship to="problemlist" qualifier="offlineproblemlist">
           <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
           <relationshipAttribute from="failurelistonly_.failurelist" to="parent"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
         <relationship to="causelist" qualifier="offlinecauselist">
           <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
           <relationshipAttribute from="problemlist_.failurelist" to="parent" />
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
         <relationship to="remedylist" qualifier="offlineremedylist">
           <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
           <relationshipAttribute from="offlinecauselist_.failurelist" to="parent" />
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
         </relationship>
 
         <relationship to="failurelistonly" qualifier="failurelistonly">
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
         <relationship to="asset" qualifier="offlineasset">
@@ -223,7 +228,7 @@
           <field attribute="laborcode" label="Labor" qualifier="featured"/>
           <field attribute="scheduledate" label="Scheduled Start Date" hidden="true"/>
           <field attribute="schedstartnotime" label="Scheduled Start Date" qualifier="featured"/>
-          
+
         </list>
 
 
@@ -651,7 +656,7 @@
           <field attribute="worktype" label="Work Type" />
 
           <properties>
-            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime asc, wopriority desc"/>
+            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime desc, wopriority desc"/>
           </properties>
         </list>
 
@@ -723,7 +728,7 @@
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
         </schema>
-        
+
         <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail" parentschema="basedetail">
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
@@ -737,12 +742,12 @@
                          service="itemActionService" method="deleteOrRestoreCurrentItem"
                          showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
                          icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
-                
+
                 <command id="startlabtrans" service="laborService" method="startLaborTransaction"
-                         showexpression="service:laborService.shouldAllowLaborStart" 
+                         showexpression="service:laborService.shouldAllowLaborStart"
                          icon="ion-play" label="Start Labor Report" cssclasses="green"/>
                 <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
-                         showexpression="service:laborService.shouldAllowLaborFinish" 
+                         showexpression="service:laborService.shouldAllowLaborFinish"
                          icon="ion-stop" label="Finish Labor Report" cssclasses="red" />
               </container>
             </commandgroup>
@@ -791,7 +796,7 @@
         </componentdisplayable>
 
         <componentdisplayable id="offlineworktypes">
-          
+
           <optionfield attribute="worktype" requiredexpression="true" label="Work Type">
             <option value="AD" label="Administrative" extraprojections="type=PM"/>
             <option value="CC" label="Construction and Commissioning" extraprojections="type=CM"/>
@@ -814,12 +819,12 @@
 
       <schemas>
         <list platform="mobile" title="WO - Group">
-          
+
           <filters>
             <datefilter attribute="#assignment_.scheduledate" label="Scheduled Start Date"/>
             <optionfilter attribute="wopriority" provider="realpriority_.description" />
             <optionfilter attribute="location" label="Facility" whereclause="@fsWorkorderOfflineService.getFacilityFilterWhereClause" provider="@fsWorkorderOfflineService.getFacilityFilterOptions"/>
-            <filter attribute="#assignment_.laborcode" label="Labor"/> 
+            <filter attribute="#assignment_.laborcode" label="Labor"/>
           </filters>
 
           <field attribute="location" hidden="true"/>
@@ -833,7 +838,7 @@
           </field>
 
           <properties>
-            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime asc, wopriority desc"/>
+            <property key="list.defaultorderby" value="#assignment_.schedstartnotime is null asc, #assignment_.schedstartnotime desc, wopriority desc"/>
             <property key="list.offline.create.disabled" value="true"/>
           </properties>
         </list>
@@ -870,11 +875,11 @@
             <renderer type="lookup" params="showCode=false"/>
           </association>
 
-          
-          
+
+
           <reference id="offlineworktypes"/>
 
-          
+
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
@@ -926,7 +931,7 @@
                          service="itemActionService" method="deleteOrRestoreCurrentItem"
                          showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
                          icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
-                
+
                 <command id="startlabtrans" service="laborService" method="startLaborTransaction"
                          showexpression="service:laborService.shouldAllowLaborStart"
                          icon="ion-play" label="Start Labor Report" cssclasses="green"/>
@@ -1358,7 +1363,7 @@
         <!-- #endregion -->
       </schemas>
     </application>
-    
+
     <!-- #region: Mobile offline association data -->
 
     <application name="offlineitem" entity="offlineitem" title="Item">
@@ -1396,7 +1401,7 @@
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
-     <properties>
+      <properties>
         <property key="list.offline.text.indexlist" value="classstructureid"/>
       </properties>
     </application>
@@ -1406,11 +1411,13 @@
         <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="status" hidden="true"/>
           <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
-     <properties>
+      <properties>
         <property key="list.offline.text.indexlist" value="failurecode"/>
       </properties>
     </application>
@@ -1421,6 +1428,8 @@
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="status" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
@@ -1434,9 +1443,11 @@
         <list platform="mobile">
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="status" hidden="true"/>
           <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
-
+          
         </list>
       </schemas>
       <properties>
@@ -1450,10 +1461,12 @@
           <field attribute="failurecode" hidden="true"/>
           <field attribute="failurelist" hidden="true"/>
           <field attribute="parent" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="status" hidden="true"/>
           <field attribute="description" label="Description"/>
         </list>
       </schemas>
-     <properties>
+      <properties>
         <property key="list.offline.text.indexlist" value="failurecode"/>
       </properties>
     </application>
@@ -1494,7 +1507,7 @@
           <field attribute="domainid"/>
           <field attribute="value"/>
           <field attribute="description"/>
-        </list>  
+        </list>
       </schemas>
     </application>
 

@@ -1552,6 +1552,7 @@
         <attribute name="parent" type="bigint" required="false" />
         <attribute name="type" type="varchar" required="false" />
         <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="status" type="varchar" required="true" />
         <attribute name="rowstamp" type="timestamp" required="true" />
       </attributes>
       <connectorParameters>
