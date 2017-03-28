@@ -81,7 +81,7 @@
 
         <relationship to="causelist" qualifier="offlinecauselist">
           <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
-          <relationshipAttribute from="problemlist_.failurelist" to="parent" />
+          <relationshipAttribute from="offlineproblemlist_.failurelist" to="parent" />
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
