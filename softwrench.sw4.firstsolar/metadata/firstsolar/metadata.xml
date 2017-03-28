@@ -657,6 +657,7 @@
 
         <schema id="basedetail" title="Work Order" abstract="true" stereotype="detail" platform="mobile">
           <reference id="detailhiddensoffline"/>
+          <field attribute="failurelistonly_.failurelist" hidden="true"></field>
 
           <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
             <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Locations"/>
@@ -786,6 +787,7 @@
           <field attribute="wonum" hidden="true" />
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
+          <field attribute="failurelistonly_.failurelist" hidden="true"></field>
         </componentdisplayable>
 
         <componentdisplayable id="offlineworktypes">
@@ -872,7 +874,7 @@
           
           <reference id="offlineworktypes"/>
 
-
+          
 
           <field label="Warranty Claim Number" attribute="WOLO10"/>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
