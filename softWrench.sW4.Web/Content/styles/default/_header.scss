@@ -216,6 +216,9 @@
                     .dropdown-container {
                         width: 100%;
 
+                        /** IE fix */
+                        display: inline-flex;
+
                         button {
                             width: 100%;
 
@@ -225,6 +228,12 @@
                                 & + .btn-split.dropdown-toggle {
                                     width: initial;
                                 }
+                            }
+
+                            /** IE fix */
+                            &.container-command-toggle {
+                                width: 0px !important;
+                                padding-right: 15px;
                             }
                         }
                     }

@@ -179,15 +179,14 @@ module.exports = function (grunt) {
                     // tinymce
                     "angular-ui-tinymce.js": "angular-ui-tinymce/dist/tinymce.min.js",
                     // pdf
-                    "pdf.worker.js": "pdfjs-dist/build/pdf.worker.min.js",
-                    "pdf.js": "pdfjs-dist/build/pdf.min.js",
                     "angular-pdf.js": "angular-pdf/dist/angular-pdf.min.js",
                     // unminified vendors
                     "raw/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "raw/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
                     "raw/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
                     "raw/moment-locale-de.js": "moment/locale/de.js",
-                    "raw/moment-locale-es.js": "moment/locale/es.js"
+                    "raw/moment-locale-es.js": "moment/locale/es.js",
+                    "raw/pdf.combined.js": "pdfjs-dist/build/pdf.combined.js"
                 }
             }
         },
@@ -288,8 +287,6 @@ module.exports = function (grunt) {
                     // tinymce
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-ui-tinymce.js",
                     // pdf
-                    "<%= bowercopy.scripts.options.destPrefix %>/pdf.worker.js",
-                    "<%= bowercopy.scripts.options.destPrefix %>/pdf.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-pdf.js",
                     // ace
                     "<%= bowercopy.scripts.options.destPrefix %>/ace.js",
@@ -474,6 +471,7 @@ module.exports = function (grunt) {
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-style.js",
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-download.js",
                         "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-upload.js",
+                        "<%= bowercopy.scripts.options.destPrefix %>/raw/pdf.combined.js"
                     ],
                     dest: "<%= app.tmp %>/scripts/rawVendor.min.js"
                 }]
