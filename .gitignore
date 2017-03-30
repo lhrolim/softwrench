@@ -48,6 +48,7 @@ softWrench.sW4.WebMobile/plugins/ios.json
 softWrench.sW4.WebMobile/plugins/remote_ios.json
 softWrench.sW4.WebMobile/plugins/windows.json
 softWrench.sW4.WebMobile/bower_components/
+softWrench.sW4.WebMobile/simulation/
 softWrench.sW4.WebMobile/node_modules/
 softWrench.sW4.WebMobile/tmp/
 softWrench.sW4.WebMobile/www/Content/public/

@@ -25,7 +25,7 @@
             $scope.schema = crudContextService.currentDetailSchema();
             $scope.datamap = crudContextService.currentDetailItemDataMap();
             $scope.item = crudContextHolderService.currentDetailItem();
-            eventService.onload($scope, $scope.schema, $scope.datamap, {});
+            
             $rootScope.areChangeEventsEnabled = true;
         }
 

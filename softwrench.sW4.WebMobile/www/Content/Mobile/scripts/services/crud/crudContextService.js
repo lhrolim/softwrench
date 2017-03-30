@@ -595,6 +595,7 @@
                 datamapSanitizationService.enforceNumericType(item.datamap, fields);
 
                 crudContext.currentDetailItem = item;
+                eventService.onload({}, crudContext.currentDetailSchema, crudContext.currentDetailItem.datamap, {});
                 crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
                 crudContextHolderService.setPreviousAndNextItems(item);
                 if (isRippleEmulator()) {

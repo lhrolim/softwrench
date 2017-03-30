@@ -2,11 +2,11 @@
 window.localdevdata = {
     //set to true to allow starting the app at the login screen
     showlogin:false,
-    username: "swadmin",
-    password: "sw@dm1n",
+    username: "tcottier",
+    password: "password",
     serverurl: {
-        ripple: "http://qa.softwrench.net/firstsolar",
-        device: "http://qa.softwrench.net/firstsolar"
+        ripple: "http://localhost:8080/sw4",
+        device: "http://localhost:8080/sw4"
     },
     debuglogs:["init"]
 

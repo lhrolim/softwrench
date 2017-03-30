@@ -64,6 +64,12 @@
       <attributes>
         <attribute name="schedstartnotime" query="(select DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0) from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
         <attribute name="schedassigneddate" query="(select scheduledate from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
+        <attribute name="failurelist" query="(select failurelist from failurelist fl where fl.failurecode = !@failurecode and fl.orgid = !@orgid and fl.type is null)" type="varchar"/>
+        <attribute name="problemlist" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='PROBLEM' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
+        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
+<!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
+        <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
+        <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
       </attributes>
       <relationships>
 
@@ -662,7 +668,10 @@
 
         <schema id="basedetail" title="Work Order" abstract="true" stereotype="detail" platform="mobile">
           <reference id="detailhiddensoffline"/>
-          <field attribute="failurelistonly_.failurelist" hidden="true"></field>
+<!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->
+          <field attribute="failurelist" hidden="true"></field>
+          <field attribute="problemlist" hidden="true"></field>
+          <field attribute="fr1list" hidden="true"></field>
 
           <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
             <renderer type="lookup" params="hasUseWhereClause=true;useWhereClauseLabel=Locations"/>
@@ -682,7 +691,7 @@
           </association>
 
           <field attribute="description" label="Description" requiredexpression="true"/>
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+          <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
 
@@ -730,6 +739,7 @@
         </schema>
 
         <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail" parentschema="basedetail">
+          <event type="onload" service="fsWorkorderOfflineService" method="onDetailLoad"/>
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
               <container id="detail.container" position="detail.container" icon="fa-bolt">
@@ -772,7 +782,7 @@
       <schemas>
         <detail stereotype="detail" title="Labor Reporting" platform="mobile" redeclaring="false">
           <customization position="+regularhrs">
-            <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO_WARRANTY" requiredexpression="true"/>
+            <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO WARRANTY" requiredexpression="true"/>
           </customization>
         </detail>
       </schemas>
@@ -792,7 +802,10 @@
           <field attribute="wonum" hidden="true" />
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
-          <field attribute="failurelistonly_.failurelist" hidden="true"></field>
+<!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->
+          <field attribute="problemlist" hidden="true"></field>
+          <field attribute="failurelist" hidden="true"></field>
+          <field attribute="fr1list" hidden="true"></field>
         </componentdisplayable>
 
         <componentdisplayable id="offlineworktypes">
@@ -865,7 +878,7 @@
           </association>
 
           <field attribute="description" label="Description" requiredexpression="true"/>
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="true">
+          <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
 
@@ -942,6 +955,7 @@
             </commandgroup>
           </commandbars>
 
+          <event type="onload" service="fsWorkorderOfflineService" method="onDetailLoad"/>
         </detail>
       </schemas>
     </application>

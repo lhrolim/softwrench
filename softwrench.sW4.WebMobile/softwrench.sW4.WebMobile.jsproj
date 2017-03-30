@@ -78,7 +78,7 @@
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.1</TypeScriptToolsVersion>
   </PropertyGroup>
   <PropertyGroup>
     <TypeScriptCompileOnSaveEnabled>false</TypeScriptCompileOnSaveEnabled>
@@ -109,5 +109,19 @@
       <UserProperties />
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="_apacheCordovaProjectSourceItems.Targets" Condition="Exists('_apacheCordovaProjectSourceItems.Targets')" />
+  <ItemGroup>
+    <ProjectCapability Include="UseFileGlobs" />
+  </ItemGroup>
+  <PropertyGroup>
+    <!-- Customize which folders are not shown by default -->
+    <ExcludedItems>bin;bld;platforms;node_modules;simulation</ExcludedItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="**\**" Exclude="**\platforms\**;**\bin\**;**\bld\**;**\node_modules\**;**\simulation\**;.gitignore;softwrench.sW4.WebMobile.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Update="config.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
 </Project>

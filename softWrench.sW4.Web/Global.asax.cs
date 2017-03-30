@@ -159,8 +159,13 @@ namespace softWrench.sW4.Web {
 
             if (/*Request.Browser.IsMobileDevice*/ Request.Headers["Origin"] != null) {
                 //this is for ripple development where CORS is enabled.
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", Request.Headers["Origin"]);
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+                try {
+                    HttpContext.Current.Response.AddHeader("Access-Control-Allow-Origin", Request.Headers["Origin"]);
+                    HttpContext.Current.Response.AddHeader("Access-Control-Allow-Credentials", "true");
+                } catch (Exception) {
+
+                }
+
             }
 
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {

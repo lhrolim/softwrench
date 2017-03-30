@@ -69,6 +69,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
 
             _whereClauseFacade.Register("assignment", "@firstSolarWhereClauseRegistry.AssignmentsByGroup", offLineCondition);
+            _whereClauseFacade.Register("assignment", "@firstSolarWhereClauseRegistry.AssignmentsByGroup", offLineCondition);
+            _whereClauseFacade.Register("classstructure", "useclassindesc= 1 and parent is null and genassetdesc =0 and siteid is null and type is null and haschildren=0 and showinassettopo = 1", offLineCondition);
 
 
             _whereClauseFacade.Register("offlinelocation", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", offLineCondition);

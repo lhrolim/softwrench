@@ -18,5 +18,12 @@
       <attribute name="QTYRETURNED" targetpath="QTYRETURNED" type="double"/>
     </attributes>
   </entity>
+
+  <entity name="workorder">
+    <attributes>
+      <attribute name="fr1code" type="varchar" targetpath="FR1CODE"/>
+      <attribute name="fr2code" type="varchar" targetpath="FR2CODE"/>
+    </attributes>
+  </entity>
   
 </TargetEntities>

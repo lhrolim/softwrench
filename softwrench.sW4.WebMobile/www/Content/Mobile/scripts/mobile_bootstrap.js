@@ -64,7 +64,11 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         function disableRipplePopup() {
             const dialogBody = parent.document.getElementById("exec-dialog");
+            if (!dialogBody) {
+                return;
+            }
             const overlay = parent.document.querySelector(".ui-widget-overlay");
+            
             const ngDialog = angular.element(dialogBody.parentElement);
             const ngOverlay = angular.element(overlay);
             const hideRules = { "height": "0px", "width": "0px", "display": "none" };

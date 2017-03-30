@@ -25,13 +25,14 @@
 
     class fsWorkorderOfflineService {
 
-        constructor($q, crudContextService, swdbDAO, $timeout, securityService, offlineSchemaService) {
+        constructor($q, crudContextService, swdbDAO, $timeout, securityService, offlineSchemaService, $log) {
             this.$q = $q;
             this.crudContextService = crudContextService;
             this.dao = swdbDAO;
             this.$timeout = $timeout;
             this.securityService = securityService;
             this.offlineSchemaService = offlineSchemaService;
+            this.$log = $log;
         }
 
 
@@ -87,7 +88,7 @@
             datamap["location"] = `${location}$ignorewatch`;
             datamap["failurecode"] = failurecode;
             if (!!failurecode) {
-                return this.dao.findSingleByQuery("AssociationData", `textindex01='${failurecode}'`).then(result => {
+                return this.dao.findSingleByQuery("AssociationData", `textindex01='${failurecode}' and application = 'failurelistonly'`).then(result => {
                     datamap["failurelistonly_.failurelist"] = result.datamap.failurelist;
                 });
             }
@@ -98,6 +99,30 @@
         clearAsset(event) {
             const datamap = event.datamap;
             datamap["assetnum"] = "null$ignorewatch";
+        }
+
+        onDetailLoad() {
+            const log = this.$log.get("fsWorkorderOfflineService#onDetailLoad", ["crud", "detail"]);
+            const item = this.crudContextService.currentDetailItem();
+            const dm = item.datamap;
+
+            const problemData = dm["problemlist"];
+            const causeData = dm["fr1list"];
+            const failurelist = dm["failurelist"];
+
+            if (!!problemData) {
+                dm["offlineproblemlist_.failurelist"] = problemData;
+            }
+
+            if (!!failurelist) {
+                dm["failurelistonly_.failurelist"] = failurelist;
+            }
+
+            if (!!causeData) {
+                dm["offlinecauselist_.failurelist"] = causeData;
+            }
+            log.debug("setting failurelist ids");
+
         }
 
         onNewDetailLoad(scope, schema, datamap) {
@@ -242,7 +267,7 @@
     }
 
 
-    fsWorkorderOfflineService["$inject"] = ["$q", "crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService"];
+    fsWorkorderOfflineService["$inject"] = ["$q", "crudContextService", "swdbDAO", "$timeout", "securityService", "offlineSchemaService", "$log"];
 
     angular.module("maximo_offlineapplications").service("fsWorkorderOfflineService", fsWorkorderOfflineService);
 
