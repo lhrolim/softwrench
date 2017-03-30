@@ -353,6 +353,10 @@ namespace softWrench.sW4.Util {
             return isLocal;
         }
 
+        public static bool UseDevScriptsAndStyles() {
+            return IsLocal();
+        }
+
         public static bool IsDev() {
             return Profile.Contains("dev");
         }

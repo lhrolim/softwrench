@@ -8,7 +8,7 @@ namespace softWrench.sW4.Web {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
 
         public void PopulateStyleBundles(BundleCollection bundles) {
-            if (IsLocal()) {
+            if (ApplicationConfiguration.UseDevScriptsAndStyles()) {
                 PopulateLocalStyleBundles(bundles);
                 // from bower fonts
                 bundles.Add(new StyleBundle(Bundles.Local.FontsStyles)
@@ -49,7 +49,7 @@ namespace softWrench.sW4.Web {
         }
 
         public void PopulateScriptBundles(BundleCollection bundles) {
-            if (IsLocal()) {
+            if (ApplicationConfiguration.UseDevScriptsAndStyles()) {
                 PopulateLocalScriptBundles(bundles);
             } else {
                 PopulateDistributionScriptBundles(bundles);
@@ -58,10 +58,6 @@ namespace softWrench.sW4.Web {
             // login script
             bundles.Add(new ScriptBundle("~/Content/Scripts/client/signin")
                 .Include("~/Content/Scripts/client/signin/signin.js"));
-        }
-
-        private static bool IsLocal() {
-            return ApplicationConfiguration.IsLocal();
         }
 
         private void PopulateLocalScriptBundles(BundleCollection bundles) {

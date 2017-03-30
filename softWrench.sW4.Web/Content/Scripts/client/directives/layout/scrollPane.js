@@ -20,12 +20,7 @@
                 var scrollPaneData = null;
                 var scrollElement = $('.scroll', element);
 
-
-                var lazyLayout = () =>{
-                    window.debounce(setScrollHeight, 100);
-                }
-
-                $(window).resize(lazyLayout);
+                $(window).resize(window.debounce(setScrollHeight, 100));
 
                 //TODO: performance: improve
 //                scope.$watch(

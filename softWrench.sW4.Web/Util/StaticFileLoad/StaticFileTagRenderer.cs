@@ -15,7 +15,7 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
         private static ILog Log = LogManager.GetLogger(typeof(StaticFileTagRenderer));
 
         public static ICollection<IHtmlString> RenderScripts() {
-            var scripts = IsLocal() ? Local.Scripts : Prod.Scripts;
+            var scripts = ApplicationConfiguration.UseDevScriptsAndStyles() ? Local.Scripts : Prod.Scripts;
             var scriptTags = scripts.Select(path => RowStampScriptHelper.Render(path));
             var watch = Stopwatch.StartNew();
             //            var renderScripts = RenderDistinctTags(scriptTags, "</script>");
@@ -26,7 +26,7 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
 
         public static ICollection<HtmlString> RenderStyles() {
             var watch = Stopwatch.StartNew();
-            var styles = IsLocal() ? Local.Styles : Prod.Styles.Where(ShouldBeApplied);
+            var styles = ApplicationConfiguration.UseDevScriptsAndStyles() ? Local.Styles : Prod.Styles.Where(ShouldBeApplied);
 
 
             var styleTags = styles.Select(path => RowStampScriptHelper.RenderCss(path));
@@ -34,10 +34,6 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
             watch.Stop();
             Log.DebugOrInfoFormat("static rendering styles, took {0} ms", watch.ElapsedMilliseconds);
             return renderDistinctTags;
-        }
-
-        private static bool IsLocal() {
-            return ApplicationConfiguration.IsLocal();
         }
 
         private static bool ShouldBeApplied(string arg) {

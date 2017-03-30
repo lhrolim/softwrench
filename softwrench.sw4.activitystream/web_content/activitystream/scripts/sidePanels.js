@@ -80,8 +80,8 @@
                         addCrudSearch(applicationName, searchSchema);
                     }
 
-                    const bbConfigValue = configs[bbEnabledKey] || configs[bbEnabledKey.toLocaleLowerCase()];
-                    const bbEnabled = [true, "true", "True", 1, "1"].includes(bbConfigValue);
+                    const bbCValue = configs[bbEnabledKey] || configs[bbEnabledKey.toLocaleLowerCase()];
+                    const bbEnabled = bbCValue === true || bbCValue === "true" || bbCValue === "True" || bbCValue === 1 || bbCValue === "1";
                     if (bbEnabled) {
                         const template = '<sidepanel panelid="bulletinboard" handleicon="fa-bullhorn" handletitle="Bulletin Board"><bulletin-board panelid="bulletinboard" class="notificationstream"></bulletin-board></sidepanel>';
                         addPanel("bulletinboard", 156, template);
