@@ -189,7 +189,7 @@
         entities.Attachment.ByDocInfoId = "select content,mimetype,path from Attachment where docinfoRemoteId = ?";
         entities.Attachment.ByHashId = "select content,mimetype,path from Attachment where id = ?";
         entities.Attachment.DeleteById = "delete from Attachment where id = ?";
-        entities.Attachment.DeleteMultipleByIdsPattern = "delete from Attachment where id = in ({0})";
+        entities.Attachment.DeleteMultipleByIdsPattern = "delete from Attachment where id in ({0})";
 
         //#endregion
 

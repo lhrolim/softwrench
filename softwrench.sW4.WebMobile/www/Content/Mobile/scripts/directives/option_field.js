@@ -26,6 +26,9 @@
                     },
 
                     link: function (scope, element, attrs) {
+                        element.find("textArea").on("focus", (event) => {
+                            event.target.blur(); // avoids the keyboard show
+                        });
 
                         /* Default values */
                         scope.multiSelect = attrs.multiSelect === 'true' ? true : false;
@@ -144,10 +147,10 @@
 
                         /* Show list */
                         scope.showItems = function (event) {
-                            if (scrolling.moved || ionic.scroll.isScrolling) {
-                                return;
-                            }
-                            scrolling.moved = false;
+                            //if (scrolling.moved || ionic.scroll.isScrolling) {
+                            //    return;
+                            //}
+                            //scrolling.moved = false;
                             event.preventDefault();
                             scope.modal.show();
                         }

@@ -2,8 +2,8 @@
     "use strict";
 
 angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
-    '$ionicTemplateLoader', '$ionicBackdrop', '$ionicScrollDelegate', '$rootScope', '$document', '$q', '$parse', '$ionicPlatform','$log' ,
-    function ($ionicTemplateLoader, $ionicBackdrop, $ionicScrollDelegate, $rootScope, $document, $q, $parse, $ionicPlatform, $log) {
+    '$ionicTemplateLoader', '$ionicBackdrop', '$ionicScrollDelegate', '$rootScope', '$document', '$q', '$parse', '$ionicPlatform', '$log', "$timeout",
+    function ($ionicTemplateLoader, $ionicBackdrop, $ionicScrollDelegate, $rootScope, $document, $q, $parse, $ionicPlatform, $log, $timeout) {
         return {
             require: '?ngModel',
             restrict: 'A',
@@ -157,6 +157,10 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 scope.templateCompileStarted = false;
 
                 const compileTemplate = function () {
+                    if (document.activeElement === element[0]) {
+                        element[0].blur(); // avoid keybord popup
+                    }
+
                     if (scope.templateCompileStarted) {
                         return;
                     }
@@ -300,28 +304,29 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                                 var promise = $q.when(compiledTemplate.scope.itemsMethod(queryObject));
 
                                 promise.then(function (promiseData) {
+                                    $timeout(() => {
+                                        // if the given promise data object has a data property use this for the further processing as the
+                                        // standard httpPromises from the $http functions store the response data in a data property
+                                        if (promiseData && promiseData.data) {
+                                            promiseData = promiseData.data;
+                                        }
 
-                                    // if the given promise data object has a data property use this for the further processing as the
-                                    // standard httpPromises from the $http functions store the response data in a data property
-                                    if (promiseData && promiseData.data) {
-                                        promiseData = promiseData.data;
-                                    }
+                                        // set the items which are returned by the items method
+                                        const newItems = compiledTemplate.scope.getItemValue(promiseData, compiledTemplate.scope.itemsMethodValueKey);
+                                        if (pageNumber === 1) {
+                                            compiledTemplate.scope.items = newItems;
+                                        } else {
+                                            compiledTemplate.scope.$broadcast('scroll.infiniteScrollComplete');
+                                            compiledTemplate.scope.items = compiledTemplate.scope.items.concat(newItems);
+                                        }
+                                        compiledTemplate.scope.moreItemsAvailable = newItems.length > 0;
 
-                                    // set the items which are returned by the items method
-                                    const newItems = compiledTemplate.scope.getItemValue(promiseData, compiledTemplate.scope.itemsMethodValueKey);
-                                    if (pageNumber === 1) {
-                                        compiledTemplate.scope.items = newItems;
-                                    } else {
-                                        compiledTemplate.scope.$broadcast('scroll.infiniteScrollComplete');
-                                        compiledTemplate.scope.items = compiledTemplate.scope.items.concat(newItems);
-                                    }
-                                    compiledTemplate.scope.moreItemsAvailable = newItems.length > 0;
+                                        // force the collection repeat to redraw itself as there were issues when the first items were added
+                                        $ionicScrollDelegate.resize();
 
-                                    // force the collection repeat to redraw itself as there were issues when the first items were added
-                                    $ionicScrollDelegate.resize();
-
-                                    // hide the loading icon
-                                    compiledTemplate.scope.showLoadingIcon = false;
+                                        // hide the loading icon
+                                        compiledTemplate.scope.showLoadingIcon = false;
+                                    }, 0);
                                 }, function (error) {
                                     // hide the loading icon
                                     compiledTemplate.scope.showLoadingIcon = false;
@@ -419,15 +424,6 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                             displaySearchContainer();
 
                             doQuery("");
-
-                            // focus on the search input field
-                            if (searchInputElement.length > 0) {
-                                searchInputElement[0].focus();
-                                setTimeout(function () {
-                                    searchInputElement[0].focus();
-                                }, 0);
-                            }
-
                             // force the collection repeat to redraw itself as there were issues when the first items were added
                             $ionicScrollDelegate.resize();
                         }, 0);
