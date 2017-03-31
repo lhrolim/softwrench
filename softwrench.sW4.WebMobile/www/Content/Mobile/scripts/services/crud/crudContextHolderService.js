@@ -2,9 +2,9 @@
 (function (angular) {
     "use strict";
 
-    angular.module("softwrench").factory("crudContextHolderService", ["$log","$state", "contextService", crudContextHolderService]);
+    angular.module("softwrench").factory("crudContextHolderService", ["$log","$state", "$rootScope", "contextService", crudContextHolderService]);
 
-    function crudContextHolderService($log,$state, contextService) {
+    function crudContextHolderService($log, $state, $rootScope, contextService) {
         /// <summary>
         /// 
         /// </summary>
@@ -182,6 +182,13 @@
             return _crudContext.currentProblems;
         }
 
+        function updateCurrentProblem(problem) {
+            if (!!problem) {
+                $rootScope.$broadcast("sw.problem.problemupdated");
+                _crudContext.currentProblems = [problem];
+            }
+        }
+
         function itemlist() {
             return _crudContext.itemlist;
         }
@@ -346,7 +353,7 @@
             currentListSchema,
             currentDetailSchema,
             currentDetailItem,
-            currentProblems,
+            currentProblems, updateCurrentProblem,
             currentSchema,
             itemlist,
             currentDetailItemDataMap,

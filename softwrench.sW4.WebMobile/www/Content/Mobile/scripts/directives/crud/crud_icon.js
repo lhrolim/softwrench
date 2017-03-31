@@ -13,7 +13,7 @@
                 iscomposition: "@",
                 datamap: "=" // used on detail
             },
-            controller: ["$scope", "iconProviderService", "crudContextService", function ($scope, iconProviderService, crudContextService) {
+            controller: ["$scope", "iconProviderService", "crudContextService", "$rootScope", function ($scope, iconProviderService, crudContextService, $rootScope) {
                 const createIcon = function (item) {
                     $scope.icon = iconProviderService.getIcon(item, $scope.iscomposition);
                 }
@@ -21,6 +21,26 @@
                 createIcon($scope.isdetail ? crudContextService.currentDetailItem() : $scope.item);
 
                 if ($scope.isdetail) {
+                    $rootScope.$on(JavascriptEventConstants.CrudSaved,() => {
+                            createIcon(crudContextService.currentDetailItem());
+                    });
+
+                    $rootScope.$on("sw.labor.start", () => {
+                        createIcon(crudContextService.currentDetailItem());
+                    });
+
+                    $rootScope.$on("sw.labor.stop", () => {
+                        createIcon(crudContextService.currentDetailItem());
+                    });
+
+                    $rootScope.$on("sw.sync.quicksyncfinished", () => {
+                        createIcon(crudContextService.currentDetailItem());
+                    });
+
+                    $rootScope.$on("sw.problem.problemupdated", () => {
+                        createIcon(crudContextService.currentDetailItem());
+                    });
+
                     $scope.$watch("datamap.approwstamp", (newRowstamp, oldRowstamp) => {
                         if (oldRowstamp && newRowstamp !== oldRowstamp) {
                             createIcon(crudContextService.currentDetailItem());

@@ -36,6 +36,7 @@ module.exports = function (grunt) {
     var sharedScripts = [
         "www/Content/Shared/webcommons/scripts/softwrench/sharedservices_module.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/applications/statuscolor_service.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/constants/JavascriptEventConstants.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_stringutils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_utils.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/aa_arrayutils.js",
@@ -69,6 +70,7 @@ module.exports = function (grunt) {
         "www/Content/Shared/webcommons/scripts/softwrench/components/richtext.js",
         "www/Content/Shared/webcommons/scripts/softwrench/directive/floatconverter.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/angular/log_enhacer.js",
+        "www/Content/Shared/webcommons/scripts/softwrench/util/angular/scope_enhacer.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/angular/lazy_service_provider.js",
         "www/Content/Shared/webcommons/scripts/softwrench/util/angular/clientawareserviceprovider.js",
         "www/Content/Shared/webcommons/scripts/softwrench/services/applications/inventory/inventory_service_shared.js"

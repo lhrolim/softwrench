@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q,$timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
+    function synchronizationFacade($log, $q,$rootScope,$timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
         asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService) {
 
         //#region Utils
@@ -227,6 +227,9 @@
                             .then(downloadResults => {
                                 var dataCount = getDownloadDataCount(downloadResults);
                                 return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                            }).then(r => {
+                                $rootScope.$broadcast("sw.sync.quicksyncfinished");
+                                return r;
                             });
                     })
                    .finally(() => {
@@ -299,7 +302,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q","$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
+    mobileServices.factory("synchronizationFacade", ["$log", "$q","$rootScope","$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
         "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", synchronizationFacade]);
     //#endregion
 

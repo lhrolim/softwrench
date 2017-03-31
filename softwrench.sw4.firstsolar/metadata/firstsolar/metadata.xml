@@ -691,8 +691,7 @@
           </association>
 
           <field attribute="description" label="Description" requiredexpression="true"/>
-          
-          <field label="Details" attribute="ld_.ldtext" requiredexpression="false">
+          <field label="Details" attribute="ld_.ldtext">      
             <renderer type="richtext"/>
           </field>
 

@@ -1,7 +1,7 @@
 ﻿!(function (angular) {
     "use strict";
 
-    function problemService($q, swdbDAO, offlineEntities) {
+    function problemService($q, swdbDAO, offlineEntities, crudContextHolderService) {
 
         function updateProblem(hasProblem, dataEntriesIds) {
             if (dataEntriesIds.length === 0) {
@@ -29,6 +29,7 @@
             const id = batchItem.dataentry.id;
             if (problemContext.quickSyncItem && problemContext.quickSyncItem.id === id) {
                 problemContext.quickSyncItem.hasProblem = !!batchItem.problem;
+                crudContextHolderService.updateCurrentProblem(batchItem.problem);
             }
             targetIds.push(id);
         }
@@ -100,5 +101,5 @@
         return service;
     }
 
-    mobileServices.factory("problemService", ["$q", "swdbDAO", "offlineEntities", problemService]);
+    mobileServices.factory("problemService", ["$q", "swdbDAO", "offlineEntities", "crudContextHolderService", problemService]);
 })(angular);

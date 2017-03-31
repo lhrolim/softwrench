@@ -1,7 +1,9 @@
 ﻿(function (mobileServices, _) {
     "use strict";
 
-    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService", "metadataModelService", function ($log, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService, metadataModelService) {
+    mobileServices.factory('offlineSaveService', ["$log", "$rootScope", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService","metadataModelService", function ($log, $rootScope, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService,metadataModelService) {
+
+
 
         var entities = offlineEntities;
 
@@ -31,11 +33,15 @@
                     // regular update
                     : { query: entities.DataEntry.updateLocalPattern, args: [jsonString, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, localId] };
 
+            const log = $log.get("offlineSaveService#doSave", ["crud", "detail", "save"]);
+            log.debug(`saving item ${localId} for application ${applicationName}`);
+
             return swdbDAO.executeQuery(queryToExecute)
                 .then(() => {
                     if (!localId) {
                         item.newId = generatedId;
                     }
+                    $rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
                     return showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true
                         ? $ionicPopup.alert({ title: `${title} Saved Successfully` }).then(() => item)
                         : item;
@@ -54,6 +60,9 @@
                 const compositionAppMetadata = metadataModelService.getCompositionByName(compositionMetadata.attribute);
                 const title = (compositionAppMetadata && compositionAppMetadata.data && compositionAppMetadata.data.title) || compositionMetadata.label;
                 datamap[associationKey] = datamap[associationKey] || [];
+
+                const log = $log.get("offlineSaveService#addAndSaveComposition", ["crud", "detail", "save"]);
+                log.debug(`adding and saving a new composition ${compositionMetadata.associationKey} for application ${applicationName}`);
 
                 const isLocalCreate = !compositionItem[constants.localIdKey];
                 if (isLocalCreate) {

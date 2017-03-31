@@ -112,6 +112,7 @@
                 .then(saved => {
                     cacheStartedLabor(parent.id, saved);
                     menuModelService.updateAppsCount();
+                    $rootScope.$broadcast("sw.labor.start");
                     return saved;
                 });
         }
@@ -133,6 +134,7 @@
                 .then(parent => saveLabor(parent, labor, stopingOnCurrentParent))
                 .then(() => {
                     clearCachedLabor();
+                    $rootScope.$broadcast("sw.labor.stop");
                     return labor;
                 });
         }

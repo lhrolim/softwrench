@@ -580,6 +580,8 @@
                     });
             },
 
+           
+
             loadDetail: function (item) {
                 const log = $log.get("crudContextService#loadDetail", ["crud", "detail"]);
                 log.debug("load detail init");
@@ -613,6 +615,8 @@
                     loadingService.hide();
                 });
             }
+
+
 
             //#endregion
         }
