@@ -42,11 +42,11 @@
         function quickSyncCurrentItem() {
             const item = crudContextService.currentDetailItem();
             return synchronizationFacade.syncItem(item)
+                .then(() => crudContextService.refreshGrid())
                 .then(() => $ionicPopup.alert({
                     title: "Quick Sync",
-                    template: "Quick Sync was successful"
+                    template: "Sync Successful"
                 }))
-                .then(() => crudContextService.refreshGrid())
                 .catch(error => $ionicPopup.alert({
                     title: "Quick Sync",
                     template: error.message || "An error happened during quick sync"
