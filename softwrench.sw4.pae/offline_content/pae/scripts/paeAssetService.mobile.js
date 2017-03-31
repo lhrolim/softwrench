@@ -71,7 +71,7 @@
 
                 const promise = maximoDataService.loadItemByMaximoUid("asset", schema, data).then(asset => {
                     asset.isDirty = true;
-                    return offlineSaveService.saveItem("asset", asset, false);
+                    return offlineSaveService.saveItem("asset", asset, "Asset", false);
                 });
 
                 auditAndOpenDetail(promise, "asset", data);
@@ -97,7 +97,7 @@
                     asset.datamap["changedate"] = now;
                     asset.datamap["scanremarks"] = "No Scan Remarks Entered";
 
-                    return offlineSaveService.saveItem("transportation", asset, false);
+                    return offlineSaveService.saveItem("transportation", asset, "Transportation", false);
                 });
 
                 auditAndOpenDetail(promise, "transportation", data);

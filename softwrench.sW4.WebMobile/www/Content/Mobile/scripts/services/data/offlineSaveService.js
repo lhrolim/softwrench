@@ -1,11 +1,11 @@
 ﻿(function (mobileServices, _) {
     "use strict";
 
-    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService", function ($log, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService) {
+    mobileServices.factory('offlineSaveService', ["$log", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService", "metadataModelService", function ($log, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService, metadataModelService) {
 
         var entities = offlineEntities;
 
-        const doSave = function (applicationName, item, messageEntry, showConfirmationMessage) {
+        const doSave = function (applicationName, item, title, showConfirmationMessage) {
             const idxArrays = crudContextHolderService.getIndexes();
             const idx = searchIndexService.buildIndexes(idxArrays.textIndexes, idxArrays.numericIndexes, idxArrays.dateIndexes, item.datamap);
 
@@ -37,20 +37,22 @@
                         item.newId = generatedId;
                     }
                     return showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true
-                        ? $ionicPopup.alert({ title: `${messageEntry} Saved Successfully` }).then(() => item)
+                        ? $ionicPopup.alert({ title: `${title} Saved Successfully` }).then(() => item)
                         : item;
                 });
         };
 
         return {
 
-            saveItem: function (applicationName, item, showConfirmationMessage) {
-                return doSave(applicationName, item, applicationName, showConfirmationMessage);
+            saveItem: function (applicationName, item, title, showConfirmationMessage) {
+                return doSave(applicationName, item, title, showConfirmationMessage);
             },
 
             addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata) {
                 const datamap = item.datamap;
                 const associationKey = compositionMetadata.associationKey;
+                const compositionAppMetadata = metadataModelService.getCompositionByName(compositionMetadata.attribute);
+                const title = (compositionAppMetadata && compositionAppMetadata.data && compositionAppMetadata.data.title) || compositionMetadata.label;
                 datamap[associationKey] = datamap[associationKey] || [];
 
                 const isLocalCreate = !compositionItem[constants.localIdKey];
@@ -64,7 +66,7 @@
                         //this will be stored on the Attachement entity instead
                         delete compositionItem["newattachment"];
                         datamap[associationKey].push(compositionItem);
-                        return doSave(applicationName, item, compositionMetadata.label);
+                        return doSave(applicationName, item, title);
                     });
                 }
 
@@ -75,7 +77,7 @@
                     const itemPosition = datamap[associationKey].findIndex(e => e[constants.localIdKey] === compositionItem[constants.localIdKey]);
                     datamap[associationKey][itemPosition] = compositionItem;
                 }
-                return doSave(applicationName, item, compositionMetadata.label);
+                return doSave(applicationName, item, title);
             },
         }
 

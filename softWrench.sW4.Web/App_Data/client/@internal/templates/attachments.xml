@@ -6,7 +6,7 @@
   <applications>
     
     
-    <application name="attachment" title="Attachments" entity="DOCLINKS">
+    <application name="attachment" title="Attachment" entity="DOCLINKS">
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key ="icon.composition.tab" value="fa fa-paperclip"/>

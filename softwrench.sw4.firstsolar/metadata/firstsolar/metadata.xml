@@ -729,7 +729,7 @@
           <composition relationship="matusetrans" label="Materials" >
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
-          <composition relationship="labtrans" label="Labor">
+          <composition relationship="labtrans" label="Labors">
             <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
             <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'" />
@@ -1261,7 +1261,7 @@
       </schemas>
     </application>
 
-    <application name="matusetrans" entity="matusetrans" title="Materials">
+    <application name="matusetrans" entity="matusetrans" title="Material">
       <schemas>
         <!-- #region: mobile -->
         <list stereotype="compositionlist" platform="mobile">

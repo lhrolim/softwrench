@@ -321,7 +321,8 @@
 
                 return $q.when(beforeSave)
                     .then(() => {
-                        return offlineSaveService.saveItem(applicationName, item, showConfirmationMessage);
+                        const title = crudContext.currentApplication.data.title || applicationName;
+                        return offlineSaveService.saveItem(applicationName, item, title, showConfirmationMessage);
                     })
                     .then(saved => {
                         contextService.insertIntoContext("crudcontext", crudContext);

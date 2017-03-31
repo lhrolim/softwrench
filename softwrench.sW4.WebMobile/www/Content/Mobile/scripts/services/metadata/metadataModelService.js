@@ -168,6 +168,11 @@
 
         },
 
+        getCompositionByName: function (applicationName) {
+            const comps = metadataModel.compositionApplications;
+            return !comps ? null : comps.find(a => a.application === applicationName);
+        },
+
         reset:function() {
             metadataModel = angular.copy(initialMetadataModel);
         }
