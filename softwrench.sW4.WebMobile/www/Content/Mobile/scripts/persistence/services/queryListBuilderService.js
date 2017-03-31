@@ -10,11 +10,21 @@
 
         function buildExtraLaborAttribute(childListSchema, childEntityName) {
             //TODO: make more generic...
-            const laborCode = securityService.currentFullUser()["PersonId"];
-            
+            const user = securityService.currentFullUser();
+            let realLabor = user.properties["laborcode"];
+            if (!realLabor) {
+                //keeping here for compatibility backwards
+                const personId = securityService.currentFullUser()["PersonId"];
+                
+                const dotIndex = personId.indexOf(".");
+                if (dotIndex !== -1) {
+                    realLabor = personId.substring(0, 1).toUpperCase() + personId.substring(dotIndex + 1, personId.length).toUpperCase();
+                }    
+            }
+
             const laborIdxName = searchIndexService.getIndexColumn(childListSchema.applicationName, childListSchema, "laborcode" ).replace("`root`", "`" + childEntityName + "`");
 
-            return `${laborIdxName} LIKE '${laborCode}'`;
+            return `${laborIdxName} LIKE '${realLabor}'`;
 
         }
 

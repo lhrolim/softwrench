@@ -264,6 +264,9 @@ namespace softWrench.sW4.Metadata.Security {
                     : allProperties.Where(p => p.Key!=null && p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
                 syncProperties.Add("siteid", SiteId);
                 syncProperties.Add("orgid", OrgId);
+                if (Genericproperties.ContainsKey("laborcode")){
+                    syncProperties.Add("laborcode", Genericproperties["laborcode"]);
+                }
                 return syncProperties;
             }
         }

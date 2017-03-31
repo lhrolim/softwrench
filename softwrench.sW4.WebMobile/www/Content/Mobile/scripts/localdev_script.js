@@ -5,7 +5,7 @@ window.localdevdata = {
     username: "tcottier",
     password: "password",
     serverurl: {
-        ripple: "http://qa.softwrench.net/firstsolar",
+        ripple: "http://localhost:8080/sw4",
         device: "http://localhost:8080/sw4"
     },
     debuglogs:["init"]
