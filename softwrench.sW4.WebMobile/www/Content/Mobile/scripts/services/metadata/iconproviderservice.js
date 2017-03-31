@@ -96,7 +96,7 @@
             return background === "white" || background === "transparent" ? "black" : "white";
         }
 
-        function getIconClass(item) {
+        function getIconClass(item, iscomposition) {
             if (!item) {
                 return null;
             }
@@ -105,7 +105,7 @@
                 return 'hasproblem';
             }
 
-            if (!item.remoteId) {
+            if ((iscomposition === "true" && !item.id) && !item.remoteId) {
                 return "isnew";
             }
 
@@ -166,7 +166,7 @@
             return value.substring(0, 1);
         }
 
-        function getIconIcon(item) {
+        function getIconIcon(item, iscomposition) {
             if (!item) {
                 return null;
             }
@@ -175,7 +175,7 @@
                 return "exclamation-triangle";
             }
 
-            if (!item.remoteId) {
+            if ((iscomposition === "true" && !item.id) && !item.remoteId) {
                 return "plus";
             }
 
@@ -204,14 +204,14 @@
             return null;
         }
 
-        function getIcon(item) {
+        function getIcon(item, iscomposition) {
             const iconService = currentIconProvider();
             return {
                 color: delegateToDeclaredServiceProxy(getIconColor, "getIconColor", iconService)(item),
                 text: delegateToDeclaredServiceProxy(getIconText, "getIconText", iconService)(item),
-                icon: delegateToDeclaredServiceProxy(getIconIcon, "getIconIcon", iconService)(item),
+                icon: delegateToDeclaredServiceProxy(getIconIcon, "getIconIcon", iconService)(item, iscomposition),
                 textColor: delegateToDeclaredServiceProxy(getTextColor, "getTextColor", iconService)(item),
-                clazz: delegateToDeclaredServiceProxy(getIconClass, "getIconClass", iconService)(item)
+                clazz: delegateToDeclaredServiceProxy(getIconClass, "getIconClass", iconService)(item, iscomposition)
             }
         }
 

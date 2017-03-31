@@ -10,11 +10,12 @@
             scope: {
                 item: "=",
                 isdetail: "=",
+                iscomposition: "@",
                 datamap: "=" // used on detail
             },
             controller: ["$scope", "iconProviderService", "crudContextService", function ($scope, iconProviderService, crudContextService) {
                 const createIcon = function (item) {
-                    $scope.icon = iconProviderService.getIcon(item);
+                    $scope.icon = iconProviderService.getIcon(item, $scope.iscomposition);
                 }
 
                 createIcon($scope.isdetail ? crudContextService.currentDetailItem() : $scope.item);

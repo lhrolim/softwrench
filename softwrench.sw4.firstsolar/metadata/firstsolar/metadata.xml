@@ -1293,7 +1293,7 @@
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
           </field>
 
-          <optionfield attribute="linetype" label="Type">
+          <optionfield attribute="linetype" label="Type" default="ITEM">
             <event type="afterchange" service="materialService" method="lineSelected"/>
             <option label="ITEM" value="ITEM"/>
             <option label="MATERIAL" value="MATERIAL"/>
