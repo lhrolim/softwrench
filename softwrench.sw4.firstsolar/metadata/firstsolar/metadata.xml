@@ -788,7 +788,7 @@
       </schemas>
     </application>
 
-    <application name="otherworkorder" title="Group Work Order" entity="workorder" role="workorders">
+    <application name="otherworkorder" title="Work Order" entity="workorder" role="workorders">
       <components>
         <componentdisplayable id="detailhiddensoffline">
           <field attribute="workorderid" hidden="true"/>
