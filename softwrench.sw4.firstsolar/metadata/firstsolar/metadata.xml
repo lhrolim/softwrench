@@ -650,7 +650,7 @@
           </filters>
 
           <field attribute="location" label="Location"/>
-          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wonum" label="Work Order Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
           <field attribute="#assignment_.laborcode" qualifier="subtitle"/>
           <field attribute="#assignment_.scheduledate" label="Scheduled Start Date" hidden="true"/>
@@ -841,7 +841,7 @@
           </filters>
 
           <field attribute="location" hidden="true"/>
-          <field attribute="wonum" label="Workorder Number" qualifier="title"/>
+          <field attribute="wonum" label="Work Order Number" qualifier="title"/>
           <field attribute="wopriority" label="Priority" qualifier="icon"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
           <field attribute="#assignment_.laborcode" qualifier="subtitle"/>
