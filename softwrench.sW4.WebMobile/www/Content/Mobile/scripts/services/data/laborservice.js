@@ -1,7 +1,7 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, offlineSchemaService, offlineSaveService, $rootScope, menuModelService) {
+    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, $log, offlineSchemaService, offlineSaveService, $rootScope, menuModelService) {
         //#region Utils
 
         const constants = {
@@ -44,7 +44,7 @@
         }
 
         const getLabTransDetailSchema = () => crudContextService.currentCompositionSchemaById("labtrans", "detail");
-        
+
         const getLabTransMetadata = () => crudContextService.currentCompositionTabByName("labtrans");
 
         function setInitialLaborAndCraft(datamap, overrideRegularHours) {
@@ -117,7 +117,7 @@
                 });
         }
 
-        function doStopLaborTransaction(parentId) {
+        function doStopLaborTransaction(parent) {
             const labor = getActiveLabor();
             const startdate = new Date(labor["startdate"]);
             const hoursDelta = ((new Date().getTime() - startdate.getTime()) / (1000 * 60 * 60));
@@ -125,18 +125,14 @@
             labor["regularhrs"] = hours;
             labor["linecost"] = calculateLineCost(hours, labor["payrate"]);
 
-            const stopingOnCurrentParent = !parentId;
-            const parentPromise = stopingOnCurrentParent
-                ? $q.when(crudContextService.currentDetailItem())
-                : dao.findById("DataEntry", parentId);
+            const stopingOnCurrentParent = !parent;
+            const realParent = parent || crudContextService.currentDetailItem();
 
-            return parentPromise
-                .then(parent => saveLabor(parent, labor, stopingOnCurrentParent))
-                .then(() => {
-                    clearCachedLabor();
-                    $rootScope.$broadcast("sw.labor.stop");
-                    return labor;
-                });
+            return saveLabor(realParent, labor, stopingOnCurrentParent).then(() => {
+                clearCachedLabor();
+                $rootScope.$broadcast("sw.labor.stop");
+                return labor;
+            });
         }
 
         //#endregion
@@ -159,6 +155,20 @@
             return crudContextService.addCompositionAllowed() && shouldAllowLaborFinish();
         }
 
+        function startLaborTransactionWhenLaborAlreadyStarted(parent) {
+            return $ionicPopup.confirm({
+                title: "Labor Reporting",
+                template: "There's a labor reporting in progress. Would you like to stop it in order to start a new one ?"
+            }).then(res => {
+                if (res) {
+                    // user wants to stop the current: stop it then start a new one
+                    return doStopLaborTransaction(parent).then(() => doStartLaborTransaction());
+                }
+                // user does not wish to stop the previous: do nothing
+                return null;
+            });
+        }
+
         /**
          * Starts a labor reporting/transaction on the current parent entity.
          * If there's a labor already in-progress on another work order it will ask if the user wishes to stop it.
@@ -170,23 +180,22 @@
         function startLaborTransaction(schema, datamap) {
             if (!shouldAllowLaborStart()) throw new Error("IllegalStateError: there's already an active labor transaction for the current item");
 
-            return hasActiveLabor()
-                // another labor already in progress: ask user input
-                ? $ionicPopup.confirm({
-                    title: "Labor Reporting",
-                    template: "There's a labor reporting in progress. Would you like to stop it in order to start a new one ?"
-                })
-                .then(res => {
-                    if (res) {
-                        // user wants to stop the current: stop it then start a new one
-                        const parentOfCurrentActive = getActiveLaborParent();
-                        return doStopLaborTransaction(parentOfCurrentActive).then(() => doStartLaborTransaction());
-                    }
-                    // user does not wish to stop the previous: do nothing
-                    return null;
-                })
-                // no labor in progress: just start a new one
-                : doStartLaborTransaction();
+            if (!hasActiveLabor()) {
+                return doStartLaborTransaction();
+            }
+
+            const parentId = getActiveLaborParent();
+            return dao.findById("DataEntry", parentId).then((parent) => {
+                // This is the case when a labor is started and for some reason the parent of the labor is not on db anymore
+                // (after a sync that forces it not shown anymore or was a created one and deleted)
+                // TODO: Add a alert on all cases that causes this to let user choose between finishing the labor or discard it
+                if (!parent) {
+                    $log.get("laborService#saveLabor").warn("Parent labor not found! This is the case when a labor is started and for some reason the parent of the labor is not on db anymore.");
+                    clearCachedLabor();
+                    return doStartLaborTransaction();
+                }
+                return startLaborTransactionWhenLaborAlreadyStarted(parent);
+            });
         }
 
         /**
@@ -303,7 +312,7 @@
 
             //is labor composition item
             if (!item.application && !!activeLabor) {
-                return activeLabor["#localswdbid"] === item["#localswdbid"];   
+                return activeLabor["#localswdbid"] === item["#localswdbid"];
             }
 
             return getActiveLaborParent() === item.id;
@@ -337,7 +346,7 @@
     //#region Service registration
     angular.module("sw_mobile_services")
         .factory("laborService",
-        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService", laborService]);
+        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "$log", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService", laborService]);
     //#endregion
 
 })(angular, _);
