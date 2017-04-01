@@ -250,8 +250,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             } else {
                 searchRequestDto = new SearchRequestDto();
             }
-
-            var lookupContext = ContextLookuper.LookupContext();
+            
+            var lookupContext = parameter.Ctx;
             var printMode = lookupContext.PrintMode;
             var offLineMode = lookupContext.OfflineMode;
 

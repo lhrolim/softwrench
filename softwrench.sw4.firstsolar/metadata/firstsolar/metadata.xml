@@ -125,6 +125,9 @@
     </entity>
 
     <entity name="matusetrans" idAttribute="matusetransid">
+      <attributes>
+        <attribute name="warranty" type="varchar"/>
+      </attributes>
       <relationships>
         <relationship to="inventory" qualifier="offlineinventory">
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
@@ -165,6 +168,9 @@
     </entity>
 
     <entity name="labtrans" idAttribute="labtransid">
+      <attributes>
+        <attribute name="warranty" type="varchar"/>
+      </attributes>
       <relationships>
         <relationship to="warranty">
           <relationshipAttribute from="warranty" to="value" primary="true"/>
