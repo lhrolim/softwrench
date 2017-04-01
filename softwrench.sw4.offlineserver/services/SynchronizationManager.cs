@@ -326,8 +326,15 @@ namespace softwrench.sw4.offlineserver.services {
 
 
             if (itemsToDownload != null) {
-                //ensure only the specified items are downloaded
-                searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName, BaseQueryUtil.GenerateInString(itemsToDownload));
+                var notEmpty = itemsToDownload.Where(item => !string.IsNullOrEmpty(item)).ToList();
+                if (!notEmpty.Any()) {
+                    // QuickSync of created application - for now it's impossible a created application stay after sync
+                    // TODO: fix the fetch of newly created application
+                    searchDto.AppendWhereClause("1!=1");
+                } else {
+                    //ensure only the specified items are downloaded
+                    searchDto.AppendWhereClauseFormat("{0} in ({1})", appMetadata.IdFieldName, BaseQueryUtil.GenerateInString(notEmpty));
+                }
             }
 
             searchDto.QueryAlias = "sync:" + entityMetadata.Name;

@@ -105,7 +105,7 @@
                 return 'hasproblem';
             }
 
-            if ((iscomposition === "true" && !item.id) && !item.remoteId) {
+            if ((iscomposition === "true" && !item.id) || !item.remoteId) {
                 return "isnew";
             }
 
@@ -175,7 +175,7 @@
                 return "exclamation-triangle";
             }
 
-            if ((iscomposition === "true" && !item.id) && !item.remoteId) {
+            if ((iscomposition === "true" && !item.id) || !item.remoteId) {
                 return "plus";
             }
 

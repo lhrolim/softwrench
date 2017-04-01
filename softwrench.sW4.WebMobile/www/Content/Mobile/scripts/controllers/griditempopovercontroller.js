@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('GridItemPopOverController', ["$log", "$scope", "synchronizationFacade", "crudContextService", "itemActionService", "$ionicPopup",
-        function ($log, $scope, synchronizationFacade, crudContextService, itemActionService, $ionicPopup) {
+    softwrench.controller('GridItemPopOverController', ["$log", "$scope", "synchronizationFacade", "crudContextService", "itemActionService", "$ionicPopup", "menuModelService",
+        function ($log, $scope, synchronizationFacade, crudContextService, itemActionService, $ionicPopup, menuModelService) {
 
 
             $scope.quicksync = function () {
@@ -11,6 +11,7 @@
                     return;
                 }
                 return synchronizationFacade.syncItem(item).then(() => {
+                    menuModelService.updateAppsCount();
                     //updating the item on the list after it has been synced
                     crudContextService.refreshGrid();
                 }).then(r => {
