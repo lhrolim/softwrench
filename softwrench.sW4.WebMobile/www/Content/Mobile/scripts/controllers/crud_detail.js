@@ -152,7 +152,10 @@
         const arrowNavigate = function (navigate) {
             turnOffChangeEvents();
             crudContextService[navigate]()
-                .then(() => $scope.datamap = crudContextService.currentDetailItemDataMap())
+                .then(() => {
+                    $scope.datamap = crudContextService.currentDetailItemDataMap();
+                    $scope.item = crudContextHolderService.currentDetailItem();
+                })
                 .finally(() => {
                     turnOnChangeEvents();
                 });
