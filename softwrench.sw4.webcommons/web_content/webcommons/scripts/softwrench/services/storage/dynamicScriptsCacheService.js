@@ -122,23 +122,26 @@
                     
                 const items = response.data;
                 var hasUpdate = items.length > 0;
-                items.forEach(script => {
-                    if (script.toDelete) {
-                        delete this._loadedServices[script.target];
-                        this.localStorageService.remove("sw:customservice_" + script.target);
-                    } else {
-                        let loadedService = this._loadedServices[script.target];
-                        if (!loadedService) {
-                            this._loadedServices[script.target] = {};
-                            loadedService = this._loadedServices[script.target];
-                        }
-                        loadedService.rowstamp = script.rowstamp;
-                        loadedService.custom = this.$injector.has(script.target);
-                        log.info("updating script cache for (refresh requested)" + script.target);
-                        this.localStorageService.put(customServiceCodeKeyName(script.target),script.code,{compress:true});
-                    }
-                });
+             
                 if (hasUpdate) {
+
+                    items.forEach(script => {
+                        if (script.toDelete) {
+                            delete this._loadedServices[script.target];
+                            this.localStorageService.remove("sw:customservice_" + script.target);
+                        } else {
+                            let loadedService = this._loadedServices[script.target];
+                            if (!loadedService) {
+                                this._loadedServices[script.target] = {};
+                                loadedService = this._loadedServices[script.target];
+                            }
+                            loadedService.rowstamp = script.rowstamp;
+                            loadedService.custom = this.$injector.has(script.target);
+                            log.info("updating script cache for (refresh requested)" + script.target);
+                            this.localStorageService.put(customServiceCodeKeyName(script.target), script.code, { compress: true });
+                        }
+                    });
+
                     this.localStorageService.put("sw:customservicesentries", this._loadedServices);
                     //true updates will only be applied upon next browser refresh, so forcing it, especially for offline scenarios
                     if (!!window.restartApplication) {
