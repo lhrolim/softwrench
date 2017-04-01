@@ -247,7 +247,7 @@
         });
 
         $scope.showDirtyOptions = function ($event) {
-            var item = $scope.item;
+            var item = crudContextService.currentDetailItem();
             if (item.isDirty) {
                 $scope.currentSelectedItem = item;
                 $scope.optionspopover.show($event);

@@ -5,7 +5,8 @@
         function ($log, $scope, synchronizationFacade, crudContextService, itemActionService, $ionicPopup) {
 
 
-            $scope.quicksync = function (item) {
+            $scope.quicksync = function () {
+                const item = crudContextService.currentDetailItem();
                 if (!item.isDirty) {
                     return;
                 }
@@ -23,7 +24,8 @@
             }
 
 
-            $scope.restorestate = function (item) {
+            $scope.restorestate = function () {
+                const item = crudContextService.currentDetailItem();
                 return itemActionService.deleteOrRestoreItem(item)
                     .then(res => res ? crudContextService.refreshGrid() : null)
                     .finally(() => {
