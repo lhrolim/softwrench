@@ -39,13 +39,12 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Collection {
 
             var contextToUse = new ContextHolder();
 
-            lookuperMock.Setup(l => l.LookupContext()).Returns(contextToUse);
-
             var listOfEntities = new List<AttributeHolder> { PocoSr.BasicForRelationship()};
 
             var parameter = new InternalCollectionResolverParameter() {
                 CollectionAssociation = _srMetadata.LocateAssociationByName("worklog"),
-                ExternalParameters = new CollectionResolverParameters(_srAppMetadata, listOfEntities, null)
+                ExternalParameters = new CollectionResolverParameters(_srAppMetadata, listOfEntities, null),
+                Ctx = contextToUse
             };
 
             var matchingResultWrapper = new CollectionResolver.CollectionMatchingResultWrapper();
