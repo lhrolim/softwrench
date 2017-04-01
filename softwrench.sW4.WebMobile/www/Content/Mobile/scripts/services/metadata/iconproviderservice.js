@@ -105,7 +105,7 @@
                 return 'hasproblem';
             }
 
-            if ((iscomposition === "true" && !item.id) || !item.remoteId) {
+            if ((iscomposition === "true" && !item.id) || (iscomposition !== "true" && !item.remoteId)) {
                 return "isnew";
             }
 
@@ -118,7 +118,7 @@
             }
 
             //composition item
-            if (!item.application) {
+            if (iscomposition === "true") {
                 return crudContextService.tabIcon();
             }
 
@@ -175,7 +175,7 @@
                 return "exclamation-triangle";
             }
 
-            if ((iscomposition === "true" && !item.id) || !item.remoteId) {
+            if ((iscomposition === "true" && !item.id) || (iscomposition !== "true" &&!item.remoteId)) {
                 return "plus";
             }
 
