@@ -107,14 +107,6 @@
                         return "true" === params["hasUseWhereClause"];
                     }
 
-                    $scope.useWhereClauseLabel = function (field) {
-                        const params = field.rendererParameters;
-                        if (!params) {
-                            return null;
-                        }
-                        return params["useWhereClauseLabel"];
-                    }
-
                     //#region assosiations and options label init
 
                     /**

@@ -26,7 +26,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 modelToItemMethod: '&',
                 loadingIcon: '@',
                 hasUseWhereClause: '=',
-                useWhereClauseLabel: '@'
+                title: '@'
             },
             link: function (scope, element, attrs, ngModel) {
 
@@ -40,7 +40,6 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 scope.selectedItemsLabel = !scope.selectedItemsLabel ? 'Selected items:' : scope.selectedItemsLabel;
                 scope.templateUrl = !scope.templateUrl ? '' : scope.templateUrl;
                 scope.loadingIcon = !scope.loadingIcon ? '' : scope.loadingIcon;
-                scope.useWhereClauseLabel = scope.useWhereClauseLabel || "Show Less";
                 scope.useWhereClause = true;
 
                 // loading flag if the items-method is a function
@@ -117,7 +116,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                                  '<button class="ion-autocomplete-cancel button-icon"><i class="fa fa-chevron-left"></i>&ensp;Back</button>',     
                               '</span>',
                             '</div>',
-                            '<div class="title title-center header-item" style="left: 86px; right: 86px;">{{useWhereClauseLabel}}</div>',
+                            '<div class="title title-center header-item" style="left: 86px !important; right: 86px !important;">{{title}}</div>',
                             '<div class="buttons buttons-right">',
                               '<span class="right-buttons">',
                                  '<button class="ion-autocomplete-clear button-icon"><i class="fa fa-eraser"></i>&ensp;Clear</button>',
