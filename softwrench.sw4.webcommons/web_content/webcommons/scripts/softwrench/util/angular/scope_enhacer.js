@@ -2,7 +2,8 @@
     "use strict";
 
     modules.webcommons.config(['$provide', function ($provide) {
-    $provide.decorator('$rootScope', function ($delegate, $log) {
+
+        $provide.decorator('$rootScope', ["$delegate", "$log", function ($delegate, $log) {
         const _emit = $delegate.$emit;
         const _broadcast = $delegate.$broadcast;
         const _on = $delegate.$on;
@@ -46,7 +47,7 @@
         };
 
         return $delegate;
-    });
+    }]);
 }]);
 
 })(angular, modules);
