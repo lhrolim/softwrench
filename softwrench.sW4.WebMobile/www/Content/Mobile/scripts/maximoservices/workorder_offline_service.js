@@ -11,8 +11,13 @@
         //#region Public methods
 
         function preSync(datamap,originaldatamap) {
-            datamap['reportdate'] = new Date();
-            originaldatamap['reportdate'] = datamap['reportdate'];
+//            datamap['reportdate'] = new Date();
+            //            originaldatamap['reportdate'] = datamap['reportdate'];
+            if (datamap.status !== originaldatamap.status) {
+                datamap["#hasstatuschange"] = true;
+                datamap["#forcestatuschance"] = true;
+
+            }
         }
 
         //#endregion

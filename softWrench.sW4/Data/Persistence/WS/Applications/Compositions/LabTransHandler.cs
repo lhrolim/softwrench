@@ -30,7 +30,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         [Transactional(DBType.Maximo)]
         public virtual void HandleLabors(CrudOperationData entity, object wo) {
-            
+
 
             // Filter work order materials for any new entries where matusetransid is null
             var labors = (IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans");
@@ -185,10 +185,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var parsedDate = jsonDate as DateTime?;
             if (parsedDate != null) {
                 //if already a date, it was parsed on ConversionUTIL
-                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", parsedDate, true);
+                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", DateUtil.BeginOfDay(parsedDate.Value), true);
+                WsUtil.SetValueIfNull(integrationObject, "STARTTIMEENTERED", parsedDate, true);
             } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
-                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",
-                    DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
+                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
+                WsUtil.SetValueIfNull(integrationObject, "STARTTIMEENTERED", startdateentered.FromServerToRightKind(), true);
             }
             ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             FillLineCostLabor(integrationObject);

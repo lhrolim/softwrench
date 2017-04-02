@@ -54,7 +54,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 WsUtil.SetValue(wo, "STATUSIFACE", true);
                 WsUtil.SetValue(wo, "CHANGEBY", user.Login.ToUpper());
                 var status = WsUtil.GetRealValue(wo, "STATUS") as string;
-                if (!status.EqualsAny("CAN", "CLOSE", "COMP")) {
+                if (!status.EqualsAny("CAN", "CLOSE", "COMP") || crudData.ContainsAttribute("#forcestatuschance")) {
                     //TODO: review these status later, whether it would make sense to abort TX here
                     maximoTemplateData.InvokeProxy();
                 }
@@ -74,8 +74,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                     WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
                 } else if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("COMP")) {
                     // Actual date must be in the past - thus we made it a minute behind the current time.   
-                    WsUtil.SetValue(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                    WsUtil.SetValue(wo, "ACTFINISH", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
+                    WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
                 }
             }
 

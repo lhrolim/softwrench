@@ -428,7 +428,10 @@
         <list title="Labor List" stereotype="compositionlist" platform="mobile">
           <field attribute="laborcode" label="Labor" />
           <field attribute="startdate" label="Start Date" >
-            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+            <renderer type="datetime" params="format=MM/dd/yyyy"/>
+          </field>
+          <field attribute="starttime" label="Start Time" >
+            <renderer type="datetime" params="format=HH:mm"/>
           </field>
           <field attribute="regularhrs" label="Regular Hours">
             <renderer type="default" params="formatter=@laborService.formatRegularHours"/>

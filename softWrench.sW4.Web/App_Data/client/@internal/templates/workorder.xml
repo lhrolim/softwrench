@@ -256,7 +256,7 @@
       
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
-<!--        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>-->
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
         <property key="icon.composition.tab" value="fa fa-wrench"/>
         <property key="list.offline.text.indexlist" value="wonum,description,status,location,asset_.description"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
