@@ -49,7 +49,7 @@
                 }))
                 .catch(error => $ionicPopup.alert({
                     title: "Quick Sync",
-                    template: error.message || "An error happened during quick sync"
+                    template: error.message || "An error happened during sync"
                 }));
         }
 

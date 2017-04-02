@@ -90,7 +90,7 @@
                     const context = crudContextService.getCrudContext();
                     if (!!inCurrentParent) {
                         // update the current detail context
-                        context.originalDetailItemDatamap = savedParent.datamap;
+//                        context.originalDetailItemDatamap = savedParent.datamap;
                     } else {
                         // find the correct parent in the list and update it
                         const parentIndex = context.itemlist.findIndex(i => i.id === savedParent.id);

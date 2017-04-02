@@ -189,6 +189,10 @@
             }
         }
 
+        function updateOriginalItemDatamap(newItemDatamap) {
+            _crudContext.originalDetailItemDatamap = angular.copy(newItemDatamap);
+        }
+
         function itemlist() {
             return _crudContext.itemlist;
         }
@@ -354,6 +358,7 @@
             currentDetailSchema,
             currentDetailItem,
             currentProblems, updateCurrentProblem,
+
             currentSchema,
             itemlist,
             currentDetailItemDataMap,
@@ -375,6 +380,7 @@
             hasDirtyChanges,
             getActiveTab,
             reset,
+            updateOriginalItemDatamap,
             //below method to facilitate migration
             getCrudContext
 

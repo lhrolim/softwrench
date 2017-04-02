@@ -34,12 +34,14 @@
                     : { query: entities.DataEntry.updateLocalPattern, args: [jsonString, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, localId] };
 
             const log = $log.get("offlineSaveService#doSave", ["crud", "detail", "save"]);
-            log.debug(`saving item ${localId} for application ${applicationName}`);
+            log.debug(`saving item ${localId} for application ${applicationName}, storing original: ${shouldIncludeOriginalDatamap}`);
 
             return swdbDAO.executeQuery(queryToExecute)
                 .then(() => {
                     if (!localId) {
                         item.newId = generatedId;
+                    } else {
+                        crudContextHolderService.updateOriginalItemDatamap(item.datamap);    
                     }
                     $rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
                     return showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true

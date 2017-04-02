@@ -289,7 +289,7 @@
 
                     return offlineSaveService.addAndSaveComposition(crudContext.currentApplicationName, crudContext.currentDetailItem, compositionItem, composition.currentTab)
                         .then(() => {
-                            crudContext.originalDetailItemDatamap = angular.copy(datamap);
+//                            crudContext.originalDetailItemDatamap = angular.copy(datamap);
                             composition.originalDetailItemDatamap = composition.currentDetailItem;
                             return this.refreshIfLeftJoinPresent(crudContext, null);
                         })
@@ -310,6 +310,8 @@
                 return this.saveCurrentItem(showConfirmationMessage, true);
             },
 
+
+
             saveCurrentItem: function (showConfirmationMessage, loadSavedItem) {
                 const crudContext = crudContextHolderService.getCrudContext();
                 const applicationName = crudContext.currentApplicationName;
@@ -327,7 +329,7 @@
                     .then(saved => {
                         contextService.insertIntoContext("crudcontext", crudContext);
                         if (!crudContext.newItem) {
-                            crudContext.originalDetailItemDatamap = angular.copy(saved.datamap);
+//                            crudContext.originalDetailItemDatamap = angular.copy(saved.datamap);
                             return this.refreshIfLeftJoinPresent(crudContext, saved);
                         }
 
