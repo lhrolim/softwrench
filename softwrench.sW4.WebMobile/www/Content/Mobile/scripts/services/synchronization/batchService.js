@@ -326,7 +326,7 @@
         /**
          * Creates a batch for all the items marked as a dirty on a given application or for a particular item passed as a parameter
          * @param {} dbapplication 
-         * @param {} dataEntryToSync 
+         * @param {} dataEntryToSync used on quick sync operations
          * @returns {} 
          */
         function createBatch(dbapplication, dataEntryToSync) {
@@ -334,8 +334,13 @@
             const log = $log.getInstance('batchService#createBatch',["sync","batch"]);
             const detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
             const queryToUse = "isDirty=1 and pending=0 and application='{0}'".format(applicationName);
-            const promiseToUse = dataEntryToSync != null ? $q.when([dataEntryToSync]) : swdbDAO.findByQuery('DataEntry', queryToUse);
-
+            const isQuickSync = dataEntryToSync != null;
+            let promiseToUse;
+            if (isQuickSync) {
+                promiseToUse = $q.when([dataEntryToSync]);
+            } else {
+                promiseToUse = swdbDAO.findByQuery('DataEntry', queryToUse);
+            }
             return promiseToUse
                 .then(dataEntries => attachmentDataSynchronizationService.mergeAttachmentData(applicationName,dataEntries))
                 .then(dataEntries => {

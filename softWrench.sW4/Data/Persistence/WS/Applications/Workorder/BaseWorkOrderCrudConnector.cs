@@ -218,6 +218,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 WsUtil.SetValueIfNull(integrationObject, "UNITCOST", 0.0);
                 WsUtil.SetValueIfNull(integrationObject, "DESCRIPTION", "");
                 WsUtil.SetValueIfNull(integrationObject, "CONVERSION", 1.0);
+                WsUtil.SetValueIfNull(integrationObject, "REPORTDATE", DateTime.Now.FromServerToRightKind());
 
                 var now = DateTime.Now.FromServerToRightKind();
                 WsUtil.SetValue(integrationObject, "TRANSDATE", now, true);

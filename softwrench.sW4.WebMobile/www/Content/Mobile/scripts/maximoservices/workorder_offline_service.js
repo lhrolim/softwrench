@@ -10,8 +10,9 @@
 
         //#region Public methods
 
-        function preSync(datamap) {
+        function preSync(datamap,originaldatamap) {
             datamap['reportdate'] = new Date();
+            originaldatamap['reportdate'] = datamap['reportdate'];
         }
 
         //#endregion
