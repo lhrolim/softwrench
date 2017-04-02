@@ -51,7 +51,10 @@
 
                 const schema = crudContextService.currentListSchema();
                 const datamap = crudContextService.itemlist();
-                eventService.onload($scope, schema, datamap, { schemaId: schema.schemaId });
+                if (schema) {
+                    eventService.onload($scope, schema, datamap, { schemaId: schema.schemaId });    
+                }
+                
 
                 $scope.quickSearch = crudContextHolderService.getQuickSearch();
                 if (typeof $scope.quickSearch.value === "undefined") {

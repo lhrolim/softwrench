@@ -13,7 +13,7 @@
         function preSync(datamap,originaldatamap) {
 //            datamap['reportdate'] = new Date();
             //            originaldatamap['reportdate'] = datamap['reportdate'];
-            if (datamap.status !== originaldatamap.status) {
+            if (originaldatamap != null && datamap.status !== originaldatamap.status) {
                 datamap["#hasstatuschange"] = true;
                 datamap["#forcestatuschance"] = true;
 
