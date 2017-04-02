@@ -283,6 +283,17 @@
             return approved ? "Yes" : "No";
         }
 
+        /**
+         * Clears the labor cache if the given item is the current labor parent
+         * @param {} item 
+         * @returns {} 
+         */
+        function clearLaborCacheIfCurrentParent(item) {
+            if (item.id === getActiveLaborParent()) {
+                clearCachedLabor();
+            }
+        }
+
         function confirmPossibleTimer(item, defaultPreDeleteAction) {
             const activeLabor = getActiveLabor();
             return !!activeLabor && item["#localswdbid"] === activeLabor["#localswdbid"]
@@ -337,7 +348,8 @@
             getActiveLabor,
             confirmPossibleTimer,
             cancelPossibleTimer,
-            hasItemActiveLabor
+            hasItemActiveLabor,
+            clearLaborCacheIfCurrentParent
         };
         return service;
         //#endregion

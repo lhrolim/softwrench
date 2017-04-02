@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function itemActionService($q, synchronizationFacade, crudContextService, $ionicPopup) {
+    function itemActionService($q, synchronizationFacade, crudContextService, $ionicPopup, laborService) {
         //#region Utils
         //#endregion
 
@@ -75,6 +75,9 @@
             return $ionicPopup.confirm(confirmConfig).then(res => {
                 if (!res) return false;
 
+                // clears the current labor cache if the item being deleted or restored is the current parent of the labor
+                laborService.clearLaborCacheIfCurrentParent(item);
+
                 const promise = restorable
                     ? crudContextService.restoreItemToOriginalState(item)
                     : crudContextService.deleteLocalItem(item);
@@ -113,7 +116,7 @@
     //#region Service registration
 
     angular.module("sw_mobile_services")
-        .factory("itemActionService", ["$q", "synchronizationFacade", "crudContextService", "$ionicPopup", itemActionService]);
+        .factory("itemActionService", ["$q", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", itemActionService]);
 
     //#endregion
 
