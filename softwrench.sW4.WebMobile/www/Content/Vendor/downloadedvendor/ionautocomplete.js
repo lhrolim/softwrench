@@ -33,6 +33,8 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 // do nothing if the model is not set
                 if (!ngModel) return;
 
+                const contextSelector = "ion-content ion-item.item-text-wrap:first";
+
                 // set the default values of the passed in attributes
                 scope.placeholder = !scope.placeholder ? 'Search for...' : scope.placeholder;
                 scope.cancelLabel = !scope.cancelLabel ? scope.multipleSelect === "true" ? 'Done' : 'Cancel' : scope.cancelLabel;
@@ -41,6 +43,7 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                 scope.templateUrl = !scope.templateUrl ? '' : scope.templateUrl;
                 scope.loadingIcon = !scope.loadingIcon ? '' : scope.loadingIcon;
                 scope.useWhereClause = true;
+                scope.fontCache = null;
 
                 // loading flag if the items-method is a function
                 scope.showLoadingIcon = false;
@@ -144,7 +147,8 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                                 '</ion-item>',
                                 '<ion-item class="item-divider" ng-show="items.length > 0">{{selectItemsLabel}}</ion-item>',
                                 '<ion-item class="item-divider" ng-show="!items || items.length === 0">No results were found.</ion-item>',
-                                '<ion-item collection-repeat="item in items" item-height="getItemHeight(getItemValue(item, itemViewValueKey))" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)" class="item item-text-wrap">',
+                                '<ion-item collection-repeat="item in items" item-height="getItemHeight(getItemValue(item, itemViewValueKey))" item-width="100%" type="item-text-wrap" ng-click="selectItem(item)" class="item item-text-wrap" style="padding-right: 26px;">',
+                                    '<i ng-show="isItemSelected(item)" class="fa fa-check" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);"></i>',
                                     '{{getItemValue(item, itemViewValueKey)}}',
                                 '</ion-item>',
                             '</ion-list>',
@@ -176,9 +180,16 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
                         // get the compiled search field
                         var searchInputElement = angular.element(compiledTemplate.element.find('input'));
 
+                        compiledTemplate.scope.isItemSelected = function (item) {
+                            if (!item) {
+                                return false;
+                            }
+                            return compiledTemplate.scope.getItemValue(item, compiledTemplate.scope.itemValueKey) === compiledTemplate.scope.model;
+                        }
+
                         //calculate the item height based on the text length
                         compiledTemplate.scope.getItemHeight = function (value) {
-                            var width = $(window).width();
+                            const width = $(compiledTemplate.element).find(contextSelector).width();
 
                             //total number of lines
                             const textWidth = compiledTemplate.scope.getTextWidth(value);
@@ -190,9 +201,15 @@ angular.module('ion-autocomplete', []).directive('ionAutocomplete', [
 
                         compiledTemplate.scope.getTextWidth = function (text) {
                             // re-use canvas object for better performance
-                            var canvas = compiledTemplate.scope.getTextWidth.canvas || (compiledTemplate.scope.getTextWidth.canvas = document.createElement("canvas"));
-                            var context = canvas.getContext("2d");
-                            var metrics = context.measureText(text);
+                            const canvas = compiledTemplate.scope.getTextWidth.canvas || (compiledTemplate.scope.getTextWidth.canvas = document.createElement("canvas"));
+                            const context = canvas.getContext("2d");
+
+                            if (!scope.fontCache) {
+                                scope.fontCache = $(compiledTemplate.element).find(contextSelector).css("font");
+                            }
+                            context.font = scope.fontCache;
+
+                            const metrics = context.measureText(text);
                             return metrics.width;
                         }
 

@@ -34,7 +34,7 @@
             return searchIndexService.parseWhereClause(whereClause, parentdatamap);
         }
 
-        function filterPromise(parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable, pageNumber, useWhereClause) {
+        function filterPromise(parentSchema, parentdatamap, associationName, filterText, preCalcDisplayable, pageNumber, useWhereClause, currentValue) {
             const log = $log.get("offlineAssociationService#filterPromise", ["association", "query"]);
 
             const displayable = preCalcDisplayable || fieldService.getDisplayablesByAssociationKey(parentSchema, associationName)[0];
@@ -80,6 +80,10 @@
 
             if (displayable.schema && displayable.schema.dataProvider && displayable.schema.dataProvider.whereClause && useWhereClause) {
                 baseQuery += ` and (${getWhereClause(displayable, parentdatamap)}) `;
+            }
+
+            if (currentValue) {
+                baseQuery += ` order by (datamap like "%${currentValue}%") desc `;
             }
 
             pageNumber = pageNumber || 1;

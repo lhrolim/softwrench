@@ -64,8 +64,8 @@
             controller: ["$scope", "$rootScope", "offlineAssociationService", "crudContextService", "fieldService", "expressionService", "dispatcherService", "$timeout", "$log", "wizardService", "swdbDAO","searchIndexService","offlineSchemaService",
                 function ($scope, $rootScope, offlineAssociationService, crudContextService, fieldService, expressionService, dispatcherService, $timeout, $log, wizardService, dao,searchIndexService, offlineSchemaService) {
 
-                    $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause) {
-                        return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause);
+                    $scope.associationSearch = function (query, componentId, pageNumber, useWhereClause, currentValue) {
+                        return offlineAssociationService.filterPromise($scope.schema, $scope.datamap, componentId, query, null, pageNumber, useWhereClause, currentValue);
                     };
 
                     $scope.itemSelected = function (callback) {

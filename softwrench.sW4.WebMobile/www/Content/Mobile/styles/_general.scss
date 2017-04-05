@@ -252,3 +252,8 @@ input[disabled], input[readonly]:not(.cloned-text-input), select[disabled], sele
         margin-right: auto;
     }
 }
+
+/* ion toggle override */
+.toggle-light  input:checked+.track{
+    background: $cts_green !important;
+}

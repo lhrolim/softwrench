@@ -11,7 +11,7 @@
                 <ion-autocomplete ng-if="!isReadOnly(field)"
                                     ng-model="datamap[field.target]"
                                     component-id="{{field.associationKey}}"
-                                    items-method="associationSearch(query,componentId,pageNumber,useWhereClause)"
+                                    items-method="associationSearch(query,componentId,pageNumber,useWhereClause,datamap[field.target])"
                                     items-clicked-method="itemSelected(callback)"
                                     item-value-key="{{getAssociationValueField(field)}}"
                                     item-view-value-key="{{getAssociationLabelField(field)}}"
