@@ -264,7 +264,7 @@ module.exports = function (grunt) {
                     "tinymce-small.eot": "tinymce-dist/skins/lightgray/fonts/tinymce-small.eot",
                     "tinymce-small.svg": "tinymce-dist/skins/lightgray/fonts/tinymce-small.svg",
                     "tinymce-small.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce-small.ttf",
-                    "tinymce-small.woff": "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff",
+                    "tinymce-small.woff": "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff"
                 }
             },
             fontsrelease: {
@@ -289,7 +289,7 @@ module.exports = function (grunt) {
                     "tinymce-small.eot": "tinymce-dist/skins/lightgray/fonts/tinymce-small.eot",
                     "tinymce-small.svg": "tinymce-dist/skins/lightgray/fonts/tinymce-small.svg",
                     "tinymce-small.ttf": "tinymce-dist/skins/lightgray/fonts/tinymce-small.ttf",
-                    "tinymce-small.woff": "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff",
+                    "tinymce-small.woff": "tinymce-dist/skins/lightgray/fonts/tinymce-small.woff"
                 }
             },
             prod: {
@@ -370,7 +370,7 @@ module.exports = function (grunt) {
                     closeTag: "<!-- end auto template style tags -->"
                 },
                 src: [
-                    "www/css/**/*.css",
+                    "www/css/**/*.css"
                 ],
                 dest: "<%= app.index %>"
             },
@@ -443,9 +443,10 @@ module.exports = function (grunt) {
 
         //#region concat
         concat: {
+
             appScripts: {
                 options: {
-                    separator: ";\n"
+                    separator: ";\n",
                 },
                 src: solutionScripts,
                 dest: "tmp/concat/app.js"
@@ -477,6 +478,8 @@ module.exports = function (grunt) {
             options: {
                 sourceMap: false,
                 presets: ["latest"],
+                plugins: ["syntax-async-functions", "transform-regenerator"]
+//                inputSourceMap: grunt.file.readJSON('app.js.map')
             },
             release: { // transpiles result of concat
                 files: {

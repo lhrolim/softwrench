@@ -25,9 +25,9 @@
                         }
                         return swdbDAO.findByQuery("DataEntry", applicationQuery, { projectionFields: ["remoteId", "rowstamp"] });
                     }).then(function (queryResults) {
-                        var rowstampMap = {};
+                        const rowstampMap = {};
                         if (shouldUseFullStrategy) {
-                            var resultItems = queryResults.map(function(item) {
+                            const resultItems = queryResults.map(function(item) {
                                 return {
                                     id: item.remoteId,
                                     rowstamp: item.rowstamp
@@ -35,7 +35,7 @@
                             });
                             
                             rowstampMap.items = resultItems;
-                            var end = new Date().getTime();
+                            const end = new Date().getTime();
                             log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length, (end - start)));
                             return rowstampMap;
                         } else {
@@ -51,34 +51,39 @@
                 var start = new Date().getTime();
                 swdbDAO.findByQuery('CompositionDataEntry', null, { fullquery: entities.CompositionDataEntry.maxRowstampQueries })
                     .then(function (queryResults) {
-                        var resultItems = {};
-                        for (var i = 0; i < queryResults.length; i++) {
-                            var item = queryResults[i];
+                        const resultItems = {};
+                        for (let i = 0; i < queryResults.length; i++) {
+                            const item = queryResults[i];
                             resultItems[item.application] = item.rowstamp;
                         }
-                        var end = new Date().getTime();
+                        const end = new Date().getTime();
                         log.debug("generated rowstampmap for compositions. Ellapsed {0} ms".format(end - start));
                         deferred.resolve(resultItems);
                     });
                 return deferred.promise;
             },
 
-            generateAssociationRowstampMap: function (app) {
-                var log = $log.get("rowstampService#generateAssociationRowstampMap");
+            generateAssociationRowstampMap: function (apps) {
+                var log = $log.get("rowstampService#generateAssociationRowstampMap", ["sync","association"]);
                 var deferred = $q.defer();
                 var start = new Date().getTime();
                 //either for query for a single app, or for all of them
                 //TODO: use AssociationCache in the future
-                var query = app ? entities.AssociationData.maxRowstampQueries.fmt(app) : entities.AssociationData.maxRowstampQueries;
+                var formattedApps = null;
+                if (!!apps && apps.length>0) {
+                    formattedApps = "'" + apps.join("','") + "'";
+                }
+
+                const query = apps ? entities.AssociationData.maxRowstampQueryByApps.format(formattedApps) : entities.AssociationData.maxRowstampQueries;
                 swdbDAO.findByQuery('AssociationData', null, { fullquery: query })
                     .then(function (queryResults) {
-                        var result = {};
-                        var associationmap = {};
-                        for (var i = 0; i < queryResults.length; i++) {
-                            var item = queryResults[i];
+                        const result = {};
+                        const associationmap = {};
+                        for (let i = 0; i < queryResults.length; i++) {
+                            const item = queryResults[i];
                             associationmap[item.application] = { "maximorowstamp": item.rowstamp }
                         }
-                        var end = new Date().getTime();
+                        const end = new Date().getTime();
                         log.debug("generated rowstampmap for associations. Ellapsed {0} ms".format(end - start));
                         result.associationmap = associationmap;
                         deferred.resolve(result);

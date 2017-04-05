@@ -19,11 +19,26 @@ namespace softwrench.sw4.offlineserver.services.util {
                 PropertyDataType = PropertyDataType.LONG,
             });
 
+            _configFacade.Register(OfflineConstants.MaxDownloadSize, new PropertyDefinition {
+                Description = "maximum number of entries to download at a single operation",
+                StringValue = "50000",
+                DefaultValue = "50000",
+                PropertyDataType = PropertyDataType.LONG,
+            });
+
+
+            _configFacade.Register(OfflineConstants.MaxAssociationThreads, new PropertyDefinition {
+                Description = "maximum level of parallelism to fetch associations on a sync operation",
+                StringValue = "4",
+                DefaultValue = "4",
+                PropertyDataType = PropertyDataType.INT
+            });
+
             _configFacade.Register(OfflineConstants.SupportContactEmail, new PropertyDefinition() {
                 Description = "Support email the offline app should contact",
                 PropertyDataType = PropertyDataType.STRING,
-                StringValue = "support@controltechnologysolutions.com",
-                DefaultValue = "support@controltechnologysolutions.com"
+                StringValue = "lrolim@controltechnologysolutions.com",
+                DefaultValue = "lrolim@controltechnologysolutions.com"
             });
         }
     }

@@ -9,6 +9,7 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.api.classes.application;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Sync;
@@ -24,6 +25,7 @@ using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
@@ -32,30 +34,34 @@ using softWrench.sW4.Util;
 using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.SynchronizationResultDto;
 
 namespace softwrench.sw4.offlineserver.services {
-    public class SynchronizationManager : ISingletonComponent {
+    public class SynchronizationManager : IBaseApplicationFiltereable, ISingletonComponent {
 
         private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
         private readonly IContextLookuper _lookuper;
         private readonly IEventDispatcher _iEventDispatcher;
         private readonly ISWDBHibernateDAO _swdbDAO;
+        private readonly SyncChunkHandler _syncChunkHandler;
+        private readonly IConfigurationFacade _configFacade;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO, SyncChunkHandler syncChunkHandler, IConfigurationFacade configFacade) {
             _resolver = resolver;
             _repository = respository;
             _lookuper = lookuper;
             _iEventDispatcher = iEventDispatcher;
             _swdbDAO = swdbDAO;
+            _syncChunkHandler = syncChunkHandler;
+            _configFacade = configFacade;
             Log.DebugFormat("init sync log");
         }
 
 
-        public async Task<SynchronizationResultDto> GetData(SynchronizationRequestDto request, InMemoryUser user) {
+        public virtual async Task<SynchronizationResultDto> GetData(SynchronizationRequestDto request, InMemoryUser user) {
             _iEventDispatcher.Dispatch(new PreSyncEvent(request));
 
-            var result = new SynchronizationResultDto() { UserProperties = user.GenericSyncProperties };
+            var result = new SynchronizationResultDto { UserProperties = user.GenericSyncProperties };
 
             var rowstampMap = request.RowstampMap;
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
@@ -74,7 +80,8 @@ namespace softwrench.sw4.offlineserver.services {
         private async Task<SynchronizationApplicationResultData> GetOfflineConfigs() {
             var configs = await _swdbDAO.FindByQueryAsync<PropertyDefinition>("from PropertyDefinition where FullKey like '/Offline/%'");
             var datamaps = configs.Select(c => {
-                var fields = new Dictionary<string, object>() {
+                var fields = new Dictionary<string, object>
+                {
                     { "fullKey", c.FullKey },
                     { "stringValue" , c.StringValue},
                     { "defaultValue" , c.DefaultValue}
@@ -87,28 +94,42 @@ namespace softwrench.sw4.offlineserver.services {
             };
         }
 
-        public async Task<AssociationSynchronizationResultDto> GetAssociationData(InMemoryUser currentUser, AssociationSynchronizationRequestDto request, string applicationToFetch = null) {
+        public virtual async Task<AssociationSynchronizationResultDto> GetAssociationData(InMemoryUser currentUser, AssociationSynchronizationRequestDto request) {
             _iEventDispatcher.Dispatch(new PreSyncEvent(request));
 
-            IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch;
-            if (applicationToFetch == null) {
-                //let´s bring all the associations
-                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser, true);
-            } else {
-                var app = MetadataProvider.Application(applicationToFetch);
-                applicationsToFetch = new List<CompleteApplicationMetadataDefinition>() { app };
-            }
+            var applicationsToFetch = BuildAssociationsToFetch(currentUser, request);
             var dict = ClientStateJsonConverter.GetAssociationRowstampDict(request.RowstampMap);
             return await DoGetAssociationData(applicationsToFetch, dict, currentUser);
         }
 
-        private async Task<AssociationSynchronizationResultDto> DoGetAssociationData(IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch, IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user) {
+        protected virtual IEnumerable<CompleteApplicationMetadataDefinition> BuildAssociationsToFetch(InMemoryUser currentUser,
+            AssociationSynchronizationRequestDto request) {
+            IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch;
+            var applicationNamesToFetch = request.ApplicationsToFetch;
+            if (applicationNamesToFetch == null || !applicationNamesToFetch.Any()) {
+                //let´s bring all the associations
+                applicationsToFetch = OffLineMetadataProvider.FetchAssociationApps(currentUser, true);
+                if (request.ApplicationsNotToFetch != null) {
+                    applicationsToFetch =
+                        applicationsToFetch.Where(a => !request.ApplicationsNotToFetch.Contains(a.ApplicationName));
+                }
+            } else {
+                applicationsToFetch = applicationNamesToFetch.Select(d => MetadataProvider.Application(d));
+            }
+            return applicationsToFetch;
+        }
+
+        protected virtual async Task<AssociationSynchronizationResultDto> DoGetAssociationData(IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch,
+            IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user) {
             var completeApplicationMetadataDefinitions = applicationsToFetch as CompleteApplicationMetadataDefinition[] ?? applicationsToFetch.ToArray();
 
-            var tasks = new Task[completeApplicationMetadataDefinitions.Count()];
+            var maxThreads = await _configFacade.LookupAsync<int>(OfflineConstants.MaxAssociationThreads);
+
+            var tasks = new Task[Math.Min(completeApplicationMetadataDefinitions.Count(), maxThreads)];
             var i = 0;
             var results = new AssociationSynchronizationResultDto();
             var watch = Stopwatch.StartNew();
+            
             foreach (var association in completeApplicationMetadataDefinitions) {
                 //this will return sync schema
                 var userAppMetadata = association.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
@@ -118,22 +139,34 @@ namespace softwrench.sw4.offlineserver.services {
                     var currentRowStamp = rowstampMap[association.ApplicationName].MaxRowstamp;
                     rowstamp = new Rowstamps(currentRowStamp, null);
                 }
+                if (i < maxThreads) {
+                    tasks[i++] = InnerGetAssocData(association, userAppMetadata, rowstamp, results);
+                } else {
+                    //marking this association to be downloaded on a next chunk 
+                    results.IncompleteAssociations.Add(association.ApplicationName);
+                    results.HasMoreData = true;
+                }
 
-                tasks[i++] = InnerGetAssocData(association, userAppMetadata, rowstamp, results);
             }
             await Task.WhenAll(tasks);
+            results = await _syncChunkHandler.HandleMaxSize(results);
+
             Log.DebugFormat("SYNC:Finished handling all associations. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             return results;
         }
 
-        private async Task InnerGetAssocData(CompleteApplicationMetadataDefinition association, ApplicationMetadata userAppMetadata, Rowstamps rowstamp, AssociationSynchronizationResultDto results) {
+
+
+        protected virtual async Task InnerGetAssocData(CompleteApplicationMetadataDefinition association, ApplicationMetadata userAppMetadata, Rowstamps rowstamp, AssociationSynchronizationResultDto results) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
             var context = _lookuper.LookupContext();
             context.OfflineMode = true;
             _lookuper.AddContext(context);
+            var isLimited = association.GetProperty("mobile.fetchlimit") != null;
+            results.LimitedAssociations.Add(userAppMetadata.Name, isLimited);
 
-            var datamaps = await FetchData(entityMetadata, userAppMetadata, rowstamp, null);
+            var datamaps = await FetchData(entityMetadata, userAppMetadata, rowstamp, null, isLimited);
             results.AssociationData.Add(association.ApplicationName, datamaps);
 
             var textIndexes = new List<string>();
@@ -148,7 +181,7 @@ namespace softwrench.sw4.offlineserver.services {
             ParseIndexes(textIndexes, numericIndexes, dateIndexes, association);
         }
 
-        private async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
+        protected virtual async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
             var watch = Stopwatch.StartNew();
             //this will return sync schema
             var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
@@ -162,7 +195,9 @@ namespace softwrench.sw4.offlineserver.services {
             }
             var isQuickSync = request.ItemsToDownload != null;
 
-            var topLevelAppData = await FetchData(entityMetadata, userAppMetadata, rowstamps, request.ItemsToDownload);
+            var isLimited = topLevelApp.GetProperty("mobile.fetchlimit") != null;
+
+            var topLevelAppData = await FetchData(entityMetadata, userAppMetadata, rowstamps, request.ItemsToDownload, isLimited);
             var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO, topLevelApp, isQuickSync);
 
             result.AddTopApplicationData(appResultData);
@@ -187,7 +222,7 @@ namespace softwrench.sw4.offlineserver.services {
         /// <param name="appResultData"></param>
         /// <param name="result"></param>
         /// <param name="rowstampMap"></param>
-        private async Task HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap) {
+        protected virtual async Task HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap) {
             var watch = Stopwatch.StartNew();
 
             var compositionMap = ClientStateJsonConverter.GetCompositionRowstampsDict(rowstampMap);
@@ -215,7 +250,7 @@ namespace softwrench.sw4.offlineserver.services {
 
         }
 
-        private IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
+        protected virtual IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
             if (request.ApplicationName == null) {
                 //no application in special was requested, lets return them all.
                 return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
@@ -239,7 +274,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        private SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
+        protected virtual SynchronizationApplicationResultData FilterData(string applicationName, ICollection<DataMap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
             var watch = Stopwatch.StartNew();
 
             var result = new SynchronizationApplicationResultData(applicationName) {
@@ -312,16 +347,19 @@ namespace softwrench.sw4.offlineserver.services {
             indexList.Add(trimmed);
         }
 
-        private async Task<List<DataMap>> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata, Rowstamps rowstamps = null, List<string> itemsToDownload = null) {
+        protected virtual async Task<List<DataMap>> FetchData(SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata, Rowstamps rowstamps = null, List<string> itemsToDownload = null, bool isLimited = false) {
             if (rowstamps == null) {
                 rowstamps = new Rowstamps();
             }
 
-            // no minimum rowstamp for sync -> sort by 'rowstamp' descending
-            var searchDto = string.IsNullOrWhiteSpace(rowstamps.Lowerlimit) ? new SearchRequestDto() { SearchSort = "rowstamp desc" } : new SearchRequestDto();
-            searchDto.Key = new ApplicationMetadataSchemaKey() {
-                ApplicationName = appMetadata.Name
-                
+            // no minimum rowstamp for sync -> sort by 'rowstamp' ascending
+            //            var searchDto = string.IsNullOrWhiteSpace(rowstamps.Lowerlimit) ? new SearchRequestDto { SearchSort = "rowstamp asc" } : new SearchRequestDto();
+
+            var searchDto = new SearchRequestDto {
+                SearchSort = isLimited ? "rowstamp desc" : "rowstamp asc",
+                Key = new ApplicationMetadataSchemaKey {
+                    ApplicationName = appMetadata.Name
+                }
             };
 
 
@@ -351,7 +389,12 @@ namespace softwrench.sw4.offlineserver.services {
             return dataMaps;
         }
 
+        public string ApplicationName() {
+            return null;
+        }
 
-
+        public string ClientFilter() {
+            return null;
+        }
     }
 }

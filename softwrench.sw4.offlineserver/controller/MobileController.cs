@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json;
@@ -50,7 +51,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly IContextLookuper _contextLookuper;
 
-        private readonly SynchronizationManager _syncManager;
+        private readonly SynchronizationManagerProvider _syncManagerProvider;
 
         private readonly AppConfigurationProvider _appConfigurationProvider;
 
@@ -60,19 +61,22 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly JavascriptDynamicService _jsService;
 
+        private readonly IApplicationConfiguration _applicationConfiguration;
+
         private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
-            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService) {
-            _syncManager = syncManager;
+        public MobileController(SynchronizationManagerProvider syncManagerProvider, AppConfigurationProvider appConfigurationProvider,
+            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService, IApplicationConfiguration applicationConfiguration) {
+            _syncManagerProvider = syncManagerProvider;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
             _menuManager = menuManager;
             _contextLookuper = contextLookuper;
             _jsService = jsService;
-            }
+            _applicationConfiguration = applicationConfiguration;
+        }
 
 
         private static string BuildOfflineMenuTitle(IDictionary<string, object> parameters) {
@@ -143,12 +147,14 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpPost]
         public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
-            return await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
+            var synchronizationManager = _syncManagerProvider.LookupItem(null, null, _applicationConfiguration.GetClientKey());
+            return await synchronizationManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
         }
 
         [HttpPost]
         public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
-            return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
+            var synchronizationManager = _syncManagerProvider.LookupItem(null, null, _applicationConfiguration.GetClientKey());
+            return await synchronizationManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
         }
 
         [HttpPost]
@@ -161,10 +167,7 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
 
-        [HttpPost]
-        public async Task<AssociationSynchronizationResultDto> PullSingleAssociationData([FromUri] string applicationToFetch, [FromBody] AssociationSynchronizationRequestDto request) {
-            return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request, applicationToFetch);
-        }
+
 
         /// <summary>
         /// 
@@ -201,12 +204,13 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper.AddContext(context);
 
             var watch = Stopwatch.StartNew();
-            var appData = await _syncManager.GetData(req, user);
+            var synchronizationManager = _syncManagerProvider.LookupItem(null, null, _applicationConfiguration.GetClientKey());
+            var appData = await synchronizationManager.GetData(req, user);
             watch.Stop();
             var appEllapsed = watch.ElapsedMilliseconds;
 
             watch.Restart();
-            var associationResult = await _syncManager.GetAssociationData(user, null);
+            var associationResult = await synchronizationManager.GetAssociationData(user, null);
             watch.Stop();
             var associationEllapsed = watch.ElapsedMilliseconds;
 

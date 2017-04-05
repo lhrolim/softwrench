@@ -7,7 +7,7 @@ namespace softwrench.sw4.api.classes.application {
         readonly string _client;
 
         public ApplicationFiltereableKey(string application, string client, string extraKey) {
-            _application = application.ToLower();
+            _application = application == null ? null : application.ToLower();
             _client = client;
             _extraKey = extraKey;
         }
