@@ -127,7 +127,7 @@ namespace softWrench.sW4.Scheduler {
                 var jobs = GetJobs();
 
                 foreach (var job in jobs) {
-                    if (job.Name() != name) continue;
+                    if (!job.Name().EqualsIc(name)) continue;
 
                     _sf = new StdSchedulerFactory();
                     _scheduler = _sf.GetScheduler();

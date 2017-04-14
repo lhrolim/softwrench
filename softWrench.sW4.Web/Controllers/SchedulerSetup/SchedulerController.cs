@@ -36,14 +36,14 @@ namespace softWrench.sW4.Web.Controllers.SchedulerSetup {
         }
 
         public async Task<GenericResponseResult<List<SchedulerSetupModel>>> Get(string name, string jobCommand) {
-            var jobCommandEnum = (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand);
+            var jobCommandEnum = (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand, true);
             await _jobManager.ManageJobByCommand(name, jobCommandEnum);
             return GetResponse(jobCommandEnum);
         }
 
         public async Task<GenericResponseResult<List<SchedulerSetupModel>>> Get(string name, string jobCommand, string cron) {
-            var jobCommandEnum = (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand);
-            await _jobManager.ManageJobByCommand(name, (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand), cron);
+            var jobCommandEnum = (JobCommandEnum)Enum.Parse(typeof(JobCommandEnum), jobCommand, true);
+            await _jobManager.ManageJobByCommand(name, jobCommandEnum, cron);
             return GetResponse(jobCommandEnum);
         }
 
