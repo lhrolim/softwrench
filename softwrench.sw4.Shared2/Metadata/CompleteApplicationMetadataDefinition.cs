@@ -111,7 +111,7 @@ namespace softwrench.sW4.Shared2.Metadata {
             //            _mobileSchema = BuildMobileSchema();
         }
 
-        private void MergeSchemaPropertiesWithApplicationProperties(ApplicationSchemaDefinition schema, IDictionary<string, string> parameters) {
+        public void MergeSchemaPropertiesWithApplicationProperties(ApplicationSchemaDefinition schema, IDictionary<string, string> parameters) {
             if (parameters == null || !parameters.Any()) {
                 return;
             }

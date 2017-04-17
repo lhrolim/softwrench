@@ -48,11 +48,7 @@ namespace softWrench.sW4.Data.Configuration {
             });
 
 
-            facade.Register(ctes.ClientSideLogLevel, new PropertyDefinition {
-                Description = "Level of client side logs",
-                StringValue = "warn",
-                PropertyDataType = PropertyDataType.STRING,
-            });
+        
 
             facade.Register(ctes.InvbalancesListScanOrder, new PropertyDefinition {
                 Description = "Inventory grid filter field scan order",
@@ -369,6 +365,15 @@ namespace softWrench.sW4.Data.Configuration {
                 PropertyDataType = PropertyDataType.LONG,
                 DefaultValue = "5",
                 CachedOnClient = true
+            });
+            #endregion
+
+
+            #region cache
+            facade.Register(ConfigurationConstants.Cache.RedisURL, new PropertyDefinition {
+                Description = "url for redis setup (ex: localhost:6379)",
+                StringValue = "",
+                PropertyDataType = PropertyDataType.STRING,
             });
             #endregion
         }

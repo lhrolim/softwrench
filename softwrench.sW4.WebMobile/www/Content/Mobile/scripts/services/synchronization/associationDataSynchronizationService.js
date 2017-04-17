@@ -15,17 +15,24 @@
                             const app = appArray[i];
 
                             const associationData = result.data.associationData;
-                            const dataToInsert = associationData[app];
                             const textIndexes = result.data.textIndexes[app];
                             const numericIndexes = result.data.numericIndexes[app];
                             const dateIndexes = result.data.dateIndexes[app];
 
+                            const associationDatadto = associationData[app];
+
+                            let dataToInsert = associationDatadto.individualItems;
+                            
 
                             for (let j = 0; j < dataToInsert.length; j++) {
-                                const datamap = dataToInsert[j];
+                                const data = dataToInsert[j];
                                 const id = persistence.createUUID();
+
+                                const json = data.jsonFields || JSON.stringify(data);//keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
+                                const datamap = data.jsonFields ? JSON.parse(data.jsonFields) : data; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
+
                                 const idx = searchIndexService.buildIndexes(textIndexes, numericIndexes, dateIndexes, datamap);
-                                const query = { query: queryToUse, args: [datamap.application, JSON.stringify(datamap), String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
+                                const query = { query: queryToUse, args: [data.application, json, String(data.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                                 queryArray.push(query);
                             }
                         }
@@ -61,15 +68,13 @@
                     /// </summary>
                     /// <param name="applicationToFetch">a single application to fetch. If not provided, all the applications would be fetched</param>
                     /// <returns type=""></returns>
-                    syncData: function (applicationsToFetch =[], chunkRound =1, totalCount =0) {
+                    syncData: function (firstTime,applicationsToFetch =[], chunkRound =1, totalCount =0, completeCacheEntries =[]) {
                         const log = $log.get("associationDataSynchronizationService#syncData", ["association", "sync"]);
 
                         log.info("bringing server side data to apply based on rowstampmap");
 
                         const syncDataFn = this.syncData.bind(this);
-
-                        const currentApps = metadataModelService.getApplicationNames();
-                        const firstTime = currentApps.length === 0;
+                        
                         const doInsertFn = this.doInsertRecursively.bind(this);
 
                         const params = {};
@@ -81,13 +86,14 @@
                                 payload.userData = current;
                             }
                             payload.applicationsToFetch = applicationsToFetch;
+                            payload.initialLoad = firstTime;
+                            payload.completeCacheEntries = completeCacheEntries;
                             return restService.post("Mobile", "PullAssociationData", params, payload);
                         }).then(result => {
                             const associationData = result.data.associationData;
+
                             if (result.data.isEmpty) {
-                                log.info("no new data returned from the server");
-                                //interrupting async calls
-                                return $q.reject();
+                                return totalCount;
                             }
 
                             //for first time, let´s not use the replace keyword in order to make the query faster (we know for sure they are all insertions)
@@ -100,7 +106,7 @@
                                 if (result.data.hasMoreData) {
                                     var appsforLog = result.data.incompleteAssociations.join(",");
                                     log.info(`bringing next round of chunked data (${++chunkRound}) for applications ${appsforLog}`);
-                                    return syncDataFn(result.data.incompleteAssociations, chunkRound, totalCount);
+                                    return syncDataFn(firstTime,result.data.incompleteAssociations, chunkRound, totalCount, result.data.completeCacheEntries);
                                 }
                                 return totalCount;
                             });
@@ -109,6 +115,7 @@
                                 ? $q.when(0) // normal interruption 
                                 : $q.reject(err)
                             );
+
 
                     }
                 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
-    internal class FirstSolarConstants
+    public class FirstSolarConstants
     {
 
         public const string FacilitiesProp = "sync.facilities";

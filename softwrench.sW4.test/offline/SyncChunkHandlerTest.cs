@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -26,9 +27,9 @@ namespace softwrench.sW4.test.offline {
 
         [TestMethod]
         public async Task TestSyncLimit() {
-            var results = new AssociationSynchronizationResultDto();
+            var results = new AssociationSynchronizationResultDto(10);
             results.AssociationData["asset"] = BlankInstances("asset", 5);
-            results.AssociationData["location"] = BlankInstances("location",10);
+            results.AssociationData["location"] = BlankInstances("location", 10);
             results.AssociationData["syndomain"] = BlankInstances("syndomain", 20);
 
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
@@ -40,9 +41,10 @@ namespace softwrench.sW4.test.offline {
             Assert.AreEqual(5, newResult.AssociationData["asset"].Count);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("location"));
             Assert.AreEqual(5, newResult.AssociationData["location"].Count);
-            Assert.IsFalse(newResult.AssociationData.ContainsKey("syndomain"));
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("syndomain"));
+            Assert.AreEqual(0, newResult.AssociationData["syndomain"].Count);
 
-            Assert.AreEqual(2, newResult.IncompleteAssociations.Count);
+            Assert.AreEqual(2, newResult.AssociationData.Values.Where(a => a.Incomplete).ToList().Count);
             Assert.IsTrue(newResult.IncompleteAssociations.Contains("location"));
             Assert.IsTrue(newResult.IncompleteAssociations.Contains("syndomain"));
 
@@ -53,7 +55,7 @@ namespace softwrench.sW4.test.offline {
 
         [TestMethod]
         public async Task TestSyncLimit2() {
-            var results = new AssociationSynchronizationResultDto();
+            var results = new AssociationSynchronizationResultDto(10);
             results.AssociationData["asset"] = BlankInstances("asset", 0);
             results.AssociationData["yyy"] = BlankInstances("yyy", 0);
             results.AssociationData["location"] = BlankInstances("location", 10);
@@ -70,9 +72,9 @@ namespace softwrench.sW4.test.offline {
 
             Assert.AreEqual(1, newResult.IncompleteAssociations.Count);
             Assert.IsTrue(newResult.IncompleteAssociations.Contains("syndomain"));
-            
+
             Assert.AreEqual(10, newResult.AssociationData["location"].Count);
-            Assert.IsFalse(newResult.AssociationData.ContainsKey("syndomain"));
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("syndomain"));
             TestUtil.VerifyMocks(_configMock);
 
         }
@@ -80,7 +82,7 @@ namespace softwrench.sW4.test.offline {
 
         [TestMethod]
         public async Task TestSyncLimitFirstBigger() {
-            var results = new AssociationSynchronizationResultDto();
+            var results = new AssociationSynchronizationResultDto(10);
             results.AssociationData["asset"] = BlankInstances("asset", 15);
             results.AssociationData["location"] = BlankInstances("location", 10);
             results.AssociationData["syndomain"] = BlankInstances("syndomain", 20);
@@ -92,8 +94,10 @@ namespace softwrench.sW4.test.offline {
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(10, newResult.AssociationData["asset"].Count);
-            Assert.IsFalse(newResult.AssociationData.ContainsKey("location"));
-            Assert.IsFalse(newResult.AssociationData.ContainsKey("syndomain"));
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("location"));
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("syndomain"));
+            Assert.AreEqual(0, newResult.AssociationData["location"].Count);
+            Assert.AreEqual(0, newResult.AssociationData["syndomain"].Count);
 
             Assert.AreEqual(3, newResult.IncompleteAssociations.Count);
 
@@ -107,14 +111,16 @@ namespace softwrench.sW4.test.offline {
         }
 
 
-        private static List<DataMap> BlankInstances(string applicationName,int limit)
-        {
+        private static AssociationDataDto BlankInstances(string applicationName, int limit) {
+            var dto = new AssociationDataDto();
+
             var results = new List<DataMap>();
             for (var i = 0; i < limit; i++) {
                 results.Add(DataMap.BlankInstance(applicationName));
             }
+            dto.IndividualItems = results;
+            return dto;
 
-            return results;;
         }
     }
 }

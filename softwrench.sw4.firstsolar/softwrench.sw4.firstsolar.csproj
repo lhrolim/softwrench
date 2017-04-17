@@ -85,7 +85,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate, Version=4.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
@@ -203,6 +202,7 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -211,10 +211,13 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
+    <Content Include="offline_content\firstsolar\scripts\fslocationdrilldown.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsrouteconfig.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsuserprofile.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsuserprofileservice.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsWorkorderService.mobile.js" />
+    <Content Include="offline_content\firstsolar\templates\fslocationdrilldown.html" />
+    <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
@@ -230,7 +233,9 @@
     <Content Include="web_content\firstsolar\scripts\location_filter.js" />
     <Content Include="web_content\problem\templates\problemsection.html" />
     <EmbeddedResource Include="metadata\firstsolar\deploy.xml" />
-    <EmbeddedResource Include="metadata\firstsolar\properties.xml" />
+    <EmbeddedResource Include="metadata\firstsolar\properties.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="metadata\firstsolar\menu.web.xml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

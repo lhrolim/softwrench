@@ -3,11 +3,11 @@
     constants = constants || {};
 
     mobileServices.factory('crudContextService', [
-    "$q", "$log", "$rootScope", "swdbDAO", "searchIndexService", "problemService", 
+    "$q", "$log", "$rootScope", "$ionicHistory", "swdbDAO", "searchIndexService", "problemService",
     "metadataModelService", "offlineSchemaService", "offlineCompositionService", "expressionService",
     "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
     "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService", "swAlertPopup", "eventService",
-    function ($q, $log, $rootScope, dao, searchIndexService, problemService, 
+    function ($q, $log, $rootScope, $ionicHistory, dao, searchIndexService, problemService,
     metadataModelService, offlineSchemaService, offlineCompositionService, expressionService,
     offlineSaveService, schemaService, contextService, routeService, tabsService,
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities, queryListBuilderService, swAlertPopup, eventService) {
@@ -585,41 +585,40 @@
            
 
             loadDetail: function (item) {
-                const log = $log.get("crudContextService#loadDetail", ["crud", "detail"]);
-                log.debug("load detail init");
-                loadingService.showDefault();
-                const crudContext = crudContextHolderService.getCrudContext(); /// <summary>
-                ///  Loads a detail represented by the parameter item.
-                /// </summary>
-                /// <param name="item"></param>
-                /// <returns type=""></returns>
-                if (!crudContext.currentDetailSchema) {
-                    crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication, item);
-                }
-                const fields = this.mainDisplayables();
-                datamapSanitizationService.enforceNumericType(item.datamap, fields);
+                return $ionicHistory.clearCache().then(() => {
+                    const log = $log.get("crudContextService#loadDetail", ["crud", "detail"]);
+                    log.debug("load detail init");
+                    loadingService.showDefault();
+                    const crudContext = crudContextHolderService.getCrudContext(); /// <summary>
+                    ///  Loads a detail represented by the parameter item.
+                    /// </summary>
+                    /// <param name="item"></param>
+                    /// <returns type=""></returns>
+                    if (!crudContext.currentDetailSchema) {
+                        crudContext.currentDetailSchema = offlineSchemaService.loadDetailSchema(crudContext.currentListSchema, crudContext.currentApplication, item);
+                    }
+                    const fields = this.mainDisplayables();
+                    datamapSanitizationService.enforceNumericType(item.datamap, fields);
 
-                crudContext.currentDetailItem = item;
-                eventService.onload({}, crudContext.currentDetailSchema, crudContext.currentDetailItem.datamap, {});
-                crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
-                crudContextHolderService.setPreviousAndNextItems(item);
-                if (isRippleEmulator()) {
-                    contextService.insertIntoContext("crudcontext", crudContext);
-                }
-                log.debug("loading problems");
-                return problemService.getProblems(item.id).then(problems => {
-                    log.debug("problems loaded done");
-                    crudContext.currentProblems = problems;
-                    return routeService.go("main.cruddetail.maininput");
-                }).then(() => {
-                    log.debug("crud detail finished loading");
-                    $rootScope.$broadcast("sw_cruddetailrefreshed");
-                    loadingService.hide();
+                    crudContext.currentDetailItem = item;
+                    eventService.onload({}, crudContext.currentDetailSchema, crudContext.currentDetailItem.datamap, {});
+                    crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
+                    crudContextHolderService.setPreviousAndNextItems(item);
+                    if (isRippleEmulator()) {
+                        contextService.insertIntoContext("crudcontext", crudContext);
+                    }
+                    log.debug("loading problems");
+                    return problemService.getProblems(item.id).then(problems => {
+                        log.debug("problems loaded done");
+                        crudContext.currentProblems = problems;
+                        return routeService.go("main.cruddetail.maininput");
+                    }).then(() => {
+                        log.debug("crud detail finished loading");
+                        $rootScope.$broadcast("sw_cruddetailrefreshed");
+                        loadingService.hide();
+                    });
                 });
             }
-
-
-
             //#endregion
         }
 

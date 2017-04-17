@@ -137,7 +137,7 @@ namespace softWrench.sW4.Metadata.Security {
 
         public string Email { get; }
 
-        public string OrgId { get; }
+        public string OrgId { get; set; }
 
         public ISet<PersonGroupAssociation> PersonGroups { get; }
 

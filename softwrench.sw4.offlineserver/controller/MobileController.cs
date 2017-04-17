@@ -51,7 +51,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly IContextLookuper _contextLookuper;
 
-        private readonly SynchronizationManagerProvider _syncManagerProvider;
+        private readonly SynchronizationManager _syncManager;
 
         private readonly AppConfigurationProvider _appConfigurationProvider;
 
@@ -67,9 +67,9 @@ namespace softwrench.sw4.offlineserver.controller {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
-        public MobileController(SynchronizationManagerProvider syncManagerProvider, AppConfigurationProvider appConfigurationProvider,
+        public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
             OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService, IApplicationConfiguration applicationConfiguration) {
-            _syncManagerProvider = syncManagerProvider;
+            _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
             _menuManager = menuManager;
@@ -147,14 +147,12 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpPost]
         public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
-            var synchronizationManager = _syncManagerProvider.LookupItem(null, null, _applicationConfiguration.GetClientKey());
-            return await synchronizationManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
+            return await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
         }
 
         [HttpPost]
         public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
-            var synchronizationManager = _syncManagerProvider.LookupItem(null, null, _applicationConfiguration.GetClientKey());
-            return await synchronizationManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
+            return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
         }
 
         [HttpPost]
@@ -204,13 +202,13 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper.AddContext(context);
 
             var watch = Stopwatch.StartNew();
-            var synchronizationManager = _syncManagerProvider.LookupItem(null, null, _applicationConfiguration.GetClientKey());
-            var appData = await synchronizationManager.GetData(req, user);
+            
+            var appData = await _syncManager.GetData(req, user);
             watch.Stop();
             var appEllapsed = watch.ElapsedMilliseconds;
 
             watch.Restart();
-            var associationResult = await synchronizationManager.GetAssociationData(user, null);
+            var associationResult = await _syncManager.GetAssociationData(user, null);
             watch.Stop();
             var associationEllapsed = watch.ElapsedMilliseconds;
 

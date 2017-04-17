@@ -22,31 +22,19 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.Collection {
     public class CollectionResolver : ISingletonComponent {
-
-        private readonly EntityRepository.EntityRepository _repository;
-        private readonly IContextLookuper _contextLookuper;
-
         public CollectionResolver(EntityRepository.EntityRepository repository, IContextLookuper contextLookuper) {
-            _repository = repository;
-            _contextLookuper = contextLookuper;
+            EntityRepository = repository;
+            ContextLookuper = contextLookuper;
         }
 
 
-        private EntityRepository.EntityRepository EntityRepository {
-            get {
-                return _repository;
-            }
-        }
+        private EntityRepository.EntityRepository EntityRepository { get; }
 
         protected readonly ILog Log = LogManager.GetLogger(typeof(CollectionResolver));
 
 
 
-        protected IContextLookuper ContextLookuper {
-            get {
-                return _contextLookuper;
-            }
-        }
+        protected IContextLookuper ContextLookuper { get; }
 
 
         public async Task<IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult>> ResolveCollections(SlicedEntityMetadata entityMetadata, IDictionary<string, ApplicationCompositionSchema>

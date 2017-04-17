@@ -16,6 +16,25 @@
         const quickSearchValue = "_quicksearch";
         const defaultSortValue = "default";
 
+        const initialDrillDown = {
+            // location
+            selectedLocation: null,
+            locationHistory: [],
+            locations: [],
+            locationQuery: undefined,
+            locationsCount: 0,
+            // asset
+            childAssetsView: false,
+            assets: [],
+            assetSearchQuery: undefined,
+            // both
+            clean: true,
+            assetView: false,
+            assetsCount: 0,
+            page: 1,
+            moreItemsAvailable: false
+        }
+
         var initialContext = {
             currentApplicationName: null,
             currentApplication: null,
@@ -64,7 +83,10 @@
 
             previousItem: null,
             nextItem: null,
-            wizardStateIndex: 0
+            wizardStateIndex: 0,
+
+            // drill down
+            drillDown: angular.copy(initialDrillDown)
         };
 
         // inits the search and sort data with defaults
@@ -218,6 +240,10 @@
             return _crudContext.composition.currentTab == null;
         };
 
+        function isOnDrillDown() {
+            return $state.current.name === "main.cruddetail.locationdrilldown";
+        };
+
         function resetTab() {
             _crudContext.composition.currentTab = null;
         };
@@ -347,6 +373,13 @@
         //#endregion
 
         //#region Service Instance
+        function drillDownClear() {
+            _crudContext.drillDown = angular.copy(initialDrillDown);
+        }
+        //#endregion
+
+
+        //#region Service Instance
 
         const service = {
             setPreviousAndNextItems,
@@ -364,6 +397,7 @@
             currentDetailItemDataMap,
             leavingDetail,
             isOnMainTab,
+            isOnDrillDown,
             resetTab,
             tabTitle,
             tabIcon,
@@ -381,6 +415,7 @@
             getActiveTab,
             reset,
             updateOriginalItemDatamap,
+            drillDownClear,
             //below method to facilitate migration
             getCrudContext
 

@@ -51,7 +51,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 value.RedirectURL = url;
             }
             if (value.CrudSubTemplate == null && redirectAttribute != null && redirectAttribute.CrudSubTemplate != null) {
-                if (!redirectAttribute.CrudSubTemplate.StartsWith("/Content")) {
+                if (!redirectAttribute.CrudSubTemplate.StartsWith("/Content", StringComparison.CurrentCultureIgnoreCase)) {
                     redirectAttribute.CrudSubTemplate = "/Content" + redirectAttribute.CrudSubTemplate;
                 }
                 value.CrudSubTemplate = redirectAttribute.CrudSubTemplate;

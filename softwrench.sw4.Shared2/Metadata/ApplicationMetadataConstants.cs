@@ -11,6 +11,7 @@
         public const string FetchLimitProperty = "mobile.fetchlimit";
         public const string MobileDisabled = "mobile.disabled";
         
+        
         public const string PreviewTitle = "title";
         public const string PreviewSubTitle = "subtitle";
         public const string PreviewExcerpt = "excerpt";
@@ -18,10 +19,5 @@
 
         public const string MaximoDocLinksPath="maximodoclinkspath";
         public const string MaximoDocLinksURLPath="maximourldoclinkspath";
-
-
-
-
-        
     }
 }

@@ -38,13 +38,21 @@ namespace softwrench.sW4.Shared2.Data {
             }
         }
 
+//        public string IdFieldName {
+//            get; set;
+//        }
 
-        public DataMapDefinition() { }
+
+
+        public DataMapDefinition() {
+        }
 
         public DataMapDefinition(string application, IDictionary<string, object> fields)
             : base(fields) {
-            if (application == null) throw new ArgumentNullException("application");
-            if (fields == null) throw new ArgumentNullException("fields");
+            if (application == null)
+                throw new ArgumentNullException("application");
+            if (fields == null)
+                throw new ArgumentNullException("fields");
 
             Application = application;
             //            HandleRowStamps(fields);
@@ -70,37 +78,40 @@ namespace softwrench.sW4.Shared2.Data {
         //            }
         //        }
 
-        public IDictionary<string, object> Fields {
-            get { return this; }
-        }
+        public virtual IDictionary<string, object> Fields => this;
 
 
         public string Value(string name) {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null)
+                throw new ArgumentNullException("name");
 
             return this[name].ToString();
         }
 
         public string Value(ApplicationFieldDefinition field) {
-            if (field == null) throw new ArgumentNullException("field");
+            if (field == null)
+                throw new ArgumentNullException("field");
 
             return this[field.Attribute].ToString();
         }
 
         public T Value<T>(string name) {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null)
+                throw new ArgumentNullException("name");
 
             return (T)Convert.ChangeType(this[name], typeof(T), null);
         }
 
         public void Value(string name, string value) {
-            if (name == null) throw new ArgumentNullException("name");
+            if (name == null)
+                throw new ArgumentNullException("name");
 
             this[name] = value;
         }
 
         public void Value(ApplicationFieldDefinition field, string value) {
-            if (field == null) throw new ArgumentNullException("field");
+            if (field == null)
+                throw new ArgumentNullException("field");
 
             this[field.Attribute] = value;
         }

@@ -1,0 +1,30 @@
+﻿.drilldown {
+    .search input {
+        width: 100%; 
+        height: initial; 
+        background: none;
+    }
+
+    .dd-list-header {
+        text-align: center; 
+        padding-top: 2px; 
+        border-bottom: 1px; 
+        border-style: solid; 
+        border-color: #ddd;
+
+        h5, p {
+            margin: 0px;
+        }
+    }
+
+    ion-item {
+        border: 0px;        
+        padding-left: 6px;
+        padding-right: 6px;
+
+        button {
+            overflow: hidden;
+            font-size: 14px;
+        }
+    }
+}

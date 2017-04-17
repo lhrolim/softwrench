@@ -334,6 +334,16 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                         }
                     }
                 })
+                .state('main.cruddetail.locationdrilldown', {
+                    url: "/locationdrilldown",
+                    cache: false,
+                    views: {
+                        'body': {
+                            templateUrl: "Content/Customers/firstsolar_offline/templates/fslocationdrilldown.html",
+                            controller: 'FsLocationDrillDownController'
+                        }
+                    }
+                })
                 // audit
                 .state("main.audit", {
                     'abstract': true,

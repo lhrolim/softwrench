@@ -10,8 +10,12 @@ namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
 
         [NotNull]
-        public static DataMap BlankInstance(String application) {
+        public static DataMap BlankInstance(string application) {
             return new DataMap(application, new Dictionary<string, object>(), null, true);
+        }
+
+        public DataMap() {
+
         }
 
         public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType = null, bool rowstampsHandled = false)
@@ -35,6 +39,7 @@ namespace softWrench.sW4.Data {
                 Approwstamp = (long)rowstampObject;
             }
             Id = this[idFieldName].ToString();
+
         }
 
         private void HandleRowStamps(IDictionary<string, object> fields) {
@@ -83,15 +88,12 @@ namespace softWrench.sW4.Data {
             return new DataMap(application, fields.ToDictionary(f => f.Key, f => (object)f.Value));
         }
 
-        public static DataMap GetInstanceFromDictionary(string application, IDictionary<string, object> fields) {
-            return new DataMap(application, fields.ToDictionary(f => f.Key, f => f.Value));
+        public static DataMap GetInstanceFromDictionary(string application, IDictionary<string, object> fields, bool rowstampHandled = false) {
+            return new DataMap(application, fields.ToDictionary(f => f.Key, f => f.Value), null, rowstampHandled);
         }
 
-        public string Type {
-            get {
-                return GetType().Name;
-            }
-        }
+        public string Type => GetType().Name;
+
         /// <summary>
         /// 
         /// </summary>

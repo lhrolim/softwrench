@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 namespace softwrench.sw4.offlineserver.dto.association {
     public class ClientAssociationCacheEntry {
 
-        public String MaxRowstamp { get; set; }
-        public String WhereClauseHash { get; set; }
-        public String SyncSchemaHash { get; set; }
+        public string MaxRowstamp { get; set; }
+        public string WhereClauseHash { get; set; }
+        public string SyncSchemaHash { get; set; }
 
     }
 }

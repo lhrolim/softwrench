@@ -20,6 +20,10 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpGet]
         public async Task<FileResult> DownloadBase64(string id) {
+            if (id == null || id == "undefined") {
+                return null;
+            }
+
             Log.InfoFormat("Downloading offline attachment {0}", id);
             var fileTuple = await _attachmentHandler.DownloadViaHttpByIdReturningMime(id);
             if (fileTuple == null) {

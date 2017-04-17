@@ -79,8 +79,12 @@
                                     datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
                 </single-file-input>
                 <single-file-input ng-switch-when="upload"
-                                    datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
+                                   datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
                 </single-file-input>
+
+                <div ng-switch-when="custom">
+                    <div ng-include="field.rendererParameters.resourcepath" href="#" style="width: 100%"></div>
+                </div>
 
                 <textarea ng-switch-default
                             ng-model="datamap[field.attribute]"

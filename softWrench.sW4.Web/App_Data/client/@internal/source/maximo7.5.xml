@@ -246,7 +246,7 @@
       </connectorParameters>
     </entity>
 
-    <entity name="ALNDOMAIN" idAttribute="domainid">
+    <entity name="ALNDOMAIN" idAttribute="alndomainid" useridAttribute="domainid">
       <attributes>
         <attribute name="domainid" type="varchar" required="true" />
         <attribute name="value" type="varchar" required="true" />

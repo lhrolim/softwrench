@@ -1,0 +1,29 @@
+﻿<div class="drilldown">
+    <ion-header-bar class="bar-dark bar bar-header" align-title="center">
+        <label class="item-input-wrapper search">
+            <i class="placeholder-icon fa fa-search"></i>
+            <input type="search" ng-show="!drillDown.assetView" ng-model="drillDown.locationQuery" ng-model-options="{ debounce: 500 }" placeholder="Search for Sublocations..."/>
+            <input type="search" ng-show="drillDown.assetView" ng-model="drillDown.assetQuery" ng-model-options="{ debounce: 500 }" placeholder="Search for Assets..."/>
+        </label>
+    </ion-header-bar>
+
+    <ion-content has-bouncing="false">
+        <div class="dd-list-header">
+            <!--<h5 ng-if="!drillDown.selectedLocation">First navigate to a location with assets then click on toolbar "Assets" button.</h5>-->
+            <h5 ng-if="drillDown.selectedLocation">{{locationTitle()}}</h5>
+            <p ng-show="!drillDown.assetView">{{locationSubTitle()}}</p>
+            <p ng-if="drillDown.assetView">{{assetsSubTitle()}}</p>
+        </div>
+        <ion-list>
+            <ion-item collection-repeat="item in (drillDown.assetView ? drillDown.assets : drillDown.locations)" item-height="75" item-width="100%">
+                <button ng-if="!drillDown.assetView" class="button button-calm button-block" ng-click="locationClick(item)">{{buildLocationTitle(item)}}</button>
+                <button ng-if="drillDown.assetView" class="button button-balanced button-block" ng-click="assetClick(item)">{{buildAssetTitle(item)}}</button>
+            </ion-item>
+            <ion-infinite-scroll ng-if="drillDown.moreItemsAvailable" on-infinite="loadMore()" distance="10%"></ion-infinite-scroll>
+        </ion-list>
+        <div style="text-align: center;">
+            <h5 ng-if="!drillDown.assetView && noChildLocations()">No sublocations were found.</h5>
+            <h5 ng-if="drillDown.assetView && noAssets()">{{noAssetsTitle()}}</h5>
+        </div>
+    </ion-content>
+</div>

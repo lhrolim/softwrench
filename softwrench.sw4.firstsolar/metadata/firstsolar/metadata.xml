@@ -12,6 +12,7 @@
     <template path="@materials.xml"/>
     <template path="@item.xml"/>
   </templates>
+  
 
 
 
@@ -120,7 +121,7 @@
       </relationships>
     </entity>
 
-    <entity name="offlineitem" parententity="item" idAttribute="itemnum"
+    <entity name="offlineitem" parententity="item" useridAttribute="itemnum" idAttribute="itemid"
         whereclause="((select count(invx.inventoryid) from inventory invx where invx.itemnum = !@itemnum and invx.siteid=@siteid) > 0)">
     </entity>
 
@@ -152,7 +153,7 @@
       </relationships>
     </entity>
 
-    <entity name="warranty" parententity="alndomain" idAttribute="domainid" whereclause="!@domainid='WARRANTY'">
+    <entity name="warranty" parententity="alndomain" idAttribute="alndomainid" useridAttribute="domainid" whereclause="!@domainid='WARRANTY'">
     </entity>
 
     <entity name="locancestor" idAttribute="locancestorid">
@@ -177,6 +178,13 @@
           <relationshipAttribute to="domainid" literal="WARRANTY" quoteLiteral="true" />
         </relationship>
       </relationships>
+    </entity>
+
+    <entity name="location" idAttribute="locationsid">
+      <attributes>
+        <attribute name="parent" query=" (SELECT parent FROM lochierarchy WHERE location = !@location AND siteid = !@siteid AND orgid = !@orgid) " type="varchar"/>
+        <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
+      </attributes>
     </entity>
   </entities>
 
@@ -250,6 +258,8 @@
         <property key="list.offline.text.indexlist" value="wonum,laborcode"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime,scheduledate"/>
         <property key="offline.force.assoc.sync" value="true"/>
+        <property key="offline.sync.avoidcaching" value="true"/>
+        <property key="offline.sync.smalldataset" value="true"/>
       </properties>
 
     </application>
@@ -679,15 +689,13 @@
           <field attribute="problemlist" hidden="true"></field>
           <field attribute="fr1list" hidden="true"></field>
 
-          <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
-            <renderer type="lookup" params="hasUseWhereClause=true"/>
-            <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
-            <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
-          </association>
-          <association label="Asset" target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location,failurecode" requiredexpression="true">
-            <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
-            <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
-          </association>
+          <field attribute="assetnum" label="Asset" requiredexpression="true">
+            <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
+          </field>
+          <field attribute="location" label="Location" requiredexpression="true" hidden="true"/>
+
+          <!-- do not remove - added to force the sync of assets -->
+          <association label="Asset" target="assetnum" labelfield="offlineasset.description" showexpression="false"/>
 
           <!-- do not remove - added to force the sync of numeric domains for priorities -->
           <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
@@ -781,6 +789,7 @@
         <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
       </properties>
     </application>
 
@@ -865,15 +874,11 @@
         <detail platform="mobile" title="Work Order" stereotype="detail">
           <reference id="detailhiddensoffline"/>
 
-          <association label="Location" target="location" labelfield="offlinelocation.description" requiredexpression="true">
-            <renderer type="lookup" params="hasUseWhereClause=true"/>
-            <event type="afterchange" service="fsWorkorderOfflineService" method="clearAsset" />
-            <dataprovider whereClause="@fsWorkorderOfflineService.getLocationsWhereClause"/>
-          </association>
-          <association label="Asset" target="assetnum" labelfield="offlineasset.description" extraprojectionvalues="location,failurecode" requiredexpression="true">
-            <event type="afterchange" service="fsWorkorderOfflineService" method="updateLocation" />
-            <dataprovider whereClause="@fsWorkorderOfflineService.getAssetWhereClause"/>
-          </association>
+
+          <field attribute="assetnum" label="Asset" requiredexpression="true">
+            <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
+          </field>
+          <field attribute="location" label="Location" requiredexpression="true" hidden="true"/>
 
           <!-- do not remove - added to force the sync of numeric domains for priorities -->
           <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
@@ -980,7 +985,6 @@
     <application name="locancestor" title="Location Ancestry" entity="locancestor">
       <properties>
         <property key="list.offline.text.indexlist" value="location,ancestor"/>
-        <property key="offline.force.assoc.sync" value="true"/>
         <property key="mobile.fetchlimit" value="1000"/>
       </properties>
 
@@ -1450,11 +1454,13 @@
           <field attribute="description" label="Description"/>
           <field attribute="type" label="Type" />
           <field attribute="status" label="Status" />
+          <field attribute="parent" hidden="true" />
+          <field attribute="hierarchy" hidden="true" />
         </list>
       </schemas>
 
       <properties>
-        <property key="list.offline.text.indexlist" value="location,type,status"/>
+        <property key="list.offline.text.indexlist" value="location,type,status,hierarchy"/>
       </properties>
     </application>
 

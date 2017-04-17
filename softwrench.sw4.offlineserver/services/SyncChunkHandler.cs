@@ -52,19 +52,19 @@ namespace softwrench.sw4.offlineserver.services {
             //avoid copying huge datasets by excluding the ones that should not be downloaded instead
             foreach (var associationDataKey in associationDatasKeys) {
                 if (!toKeepDict.ContainsKey(associationDataKey)) {
-                    results.AssociationData.Remove(associationDataKey);
-                    results.IncompleteAssociations.Add(associationDataKey);
+                    //this entry will be discarded completely
+                    results.AssociationData[associationDataKey].Clear();
+                    results.AssociationData[associationDataKey].Incomplete = true;
                 } else if (toKeepDict[associationDataKey] != null) {
-                    var collection = results.AssociationData[associationDataKey];
-                    results.IncompleteAssociations.Add(associationDataKey);
+                    var associationResult = results.AssociationData[associationDataKey];
+                    results.AssociationData[associationDataKey].Incomplete = true;
                     if (results.LimitedAssociations.ContainsKey(associationDataKey) && results.LimitedAssociations[associationDataKey]) {
-                        results.AssociationData[associationDataKey] = results.AssociationData[associationDataKey].Skip(Math.Max(0, collection.Count() - toKeepDict[associationDataKey].Value)).ToList();
+                        var toSkip = Math.Max(0, associationResult.Count - toKeepDict[associationDataKey].Value);
+                        associationResult.Skip(toSkip);
                     } else {
-                        results.AssociationData[associationDataKey] = collection.Take(toKeepDict[associationDataKey].Value).ToList();
+                        associationResult.Take(toKeepDict[associationDataKey].Value);
                     }
-
-
-                }
+                } 
             }
 
             return results;

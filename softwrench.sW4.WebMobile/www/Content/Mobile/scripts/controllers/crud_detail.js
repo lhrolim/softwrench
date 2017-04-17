@@ -2,9 +2,9 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", 
+    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", "drillDownService", 
     'crudContextService', 'fieldService',  '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup","loadingService",
-    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform,
+    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform, drillDownService, 
     crudContextService, fieldService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService, offlineSchemaService, commandBarDelegate, swAlertPopup, loadingService) {
         
         function turnOffChangeEvents() {
@@ -127,6 +127,24 @@
             return crudContextService.isOnMainTab();
         };
 
+        $scope.isOnDrillDown = function () {
+            return drillDownService.isOnDrillDown();
+        };
+
+        $scope.drillDownBack = function() {
+            if (!drillDownService.drillDownBack()) {
+                $scope.navigateBack();
+            }
+        }
+
+        $scope.isDrillDownAssetView = function() {
+            return drillDownService.getDrillDown().assetView;
+        }
+
+        $scope.drillDownAssetView = function () {
+            return drillDownService.assetView();
+        }
+
         $scope.detailSubTitle = function () {
             return crudContextService.isCreation()
                 ? null
@@ -170,13 +188,13 @@
         };
 
         $scope.onSwipeLeft = function() {
-            if ($scope.showNavigation()) {
+            if ($scope.showNavigation() && !$scope.isOnDrillDown()) {
                 $scope.navigateNext();
             }
         };
 
         $scope.onSwipeRight = function() {
-            if ($scope.showNavigation()) {
+            if ($scope.showNavigation() && !$scope.isOnDrillDown()) {
                 $scope.navigatePrevious();
             }
         };
@@ -268,7 +286,7 @@
                       crudContextService.leavingCompositionDetail();
                   }
 
-                  if (toState.name.startsWith("main.cruddetail")) {
+                  if (toState.name.startsWith("main.cruddetail") && toState.name !== "main.cruddetail.locationdrilldown") {
                       //needs to refresh the displayables and datamap everytime the detail page is loaded.
                       init();
                       loadingService.hide();

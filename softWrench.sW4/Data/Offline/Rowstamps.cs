@@ -15,13 +15,9 @@ namespace softWrench.sW4.Data.Sync {
 
         }
 
-        public string Lowerlimit {
-            get { return _lowerlimit; }
-        }
+        public string Lowerlimit => _lowerlimit;
 
-        public string Upperlimit {
-            get { return _upperlimit; }
-        }
+        public string Upperlimit => _upperlimit;
 
         public bool BothLimits() {
             return _lowerlimit != null && _upperlimit != null;
@@ -58,5 +54,7 @@ namespace softWrench.sW4.Data.Sync {
             }
             return dictionary;
         }
+
+     
     }
 }

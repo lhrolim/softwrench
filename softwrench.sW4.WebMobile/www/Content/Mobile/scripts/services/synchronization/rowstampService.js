@@ -70,11 +70,13 @@
                 //either for query for a single app, or for all of them
                 //TODO: use AssociationCache in the future
                 var formattedApps = null;
-                if (!!apps && apps.length>0) {
+                var hasApps = !!apps && apps.length > 0;
+
+                if (hasApps) {
                     formattedApps = "'" + apps.join("','") + "'";
                 }
 
-                const query = apps ? entities.AssociationData.maxRowstampQueryByApps.format(formattedApps) : entities.AssociationData.maxRowstampQueries;
+                const query = hasApps ? entities.AssociationData.maxRowstampQueryByApps.format(formattedApps) : entities.AssociationData.maxRowstampQueries;
                 swdbDAO.findByQuery('AssociationData', null, { fullquery: query })
                     .then(function (queryResults) {
                         const result = {};

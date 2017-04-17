@@ -6,6 +6,7 @@ using cts.commons.portable.Util;
 namespace softwrench.sW4.Shared2.Data {
 
 
+    [Serializable]
     public abstract class AttributeHolder : Dictionary<string, object> {
         private const string NotFound = "attribute {0} not found in {1}. Please review your metadata configuration";
 
@@ -54,6 +55,19 @@ namespace softwrench.sW4.Shared2.Data {
             var attribute = GetStringAttribute(attributeName, remove, throwException);
             int result;
             var success = int.TryParse(attribute, out result);
+            if (!success) {
+                if (throwException) {
+                    throw new InvalidCastException("cannot cast attribute {0} valued as {1} to int".Fmt(attributeName, attribute));
+                }
+                return null;
+            }
+            return result;
+        }
+
+        public virtual long? GetLongAttribute(string attributeName, bool remove = false, bool throwException = false) {
+            var attribute = GetStringAttribute(attributeName, remove, throwException);
+            long result;
+            var success = long.TryParse(attribute, out result);
             if (!success) {
                 if (throwException) {
                     throw new InvalidCastException("cannot cast attribute {0} valued as {1} to int".Fmt(attributeName, attribute));

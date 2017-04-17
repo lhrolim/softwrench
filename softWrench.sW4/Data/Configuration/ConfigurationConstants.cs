@@ -48,7 +48,15 @@
         public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
         public const string TransactionStatsReportDuration = "/Global/Transactions/Report/Period";
 
+        #region caching
 
+        public class Cache
+        {
+            public const string RedisURL = "/Global/Cache/RedisURL";
+        }
+        
+
+        #endregion
 
         #region SW diaplayable formats
 

@@ -89,7 +89,7 @@ namespace softWrench.sW4.Metadata {
         public static bool FinishedParsing {
             get; set;
         }
-        
+
         //before the application is fully merged
         public static IDictionary<string, HashSet<DisplayableComponent>> ComponentsDictionary = new Dictionary<string, HashSet<DisplayableComponent>>();
 
@@ -105,11 +105,11 @@ namespace softWrench.sW4.Metadata {
             //            DataSetProvider.GetInstance();
             var msDelta = LoggingUtil.MsDelta(before);
             Log.Info(String.Format("Finished metadata registry in {0}", msDelta));
-//            if (ApplicationConfiguration.IgnoreWsCertErrors) {
-//                ServicePointManager.ServerCertificateValidationCallback = delegate {
-//                    return true;
-//                };
-//            }
+            //            if (ApplicationConfiguration.IgnoreWsCertErrors) {
+            //                ServicePointManager.ServerCertificateValidationCallback = delegate {
+            //                    return true;
+            //                };
+            //            }
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -203,9 +203,10 @@ namespace softWrench.sW4.Metadata {
                 var entityName = app.Entity;
                 var entityMetadata = Entity(entityName);
                 if (isMobileEnabled() && app.IsMobileSupported()) {
-                    app.AddSchema(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        ApplicationSchemaFactory.GetSyncInstance(entityName, app.ApplicationName, app.IdFieldName,
-                            app.UserIdFieldName));
+                    var syncSchema = ApplicationSchemaFactory.GetSyncInstance(entityName, app.ApplicationName, app.IdFieldName,
+                        app.UserIdFieldName);
+                    app.AddSchema(ApplicationMetadataSchemaKey.GetSyncInstance(), syncSchema);
+                    app.MergeSchemaPropertiesWithApplicationProperties(syncSchema, app.Parameters);
                 }
                 foreach (var webSchema in app.Schemas()) {
                     var schema = webSchema.Value;

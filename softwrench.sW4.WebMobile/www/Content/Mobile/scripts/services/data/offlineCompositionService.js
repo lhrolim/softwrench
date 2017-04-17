@@ -33,13 +33,15 @@
                     for (let j = 0; j < newDataMaps.length; j++) {
                         const datamap = newDataMaps[j];
                         const id = persistence.createUUID();
+                        const json = datamap.jsonFields || JSON.stringify(datamap);
+                        const parsedDM = datamap.jsonFields ? JSON.parse(datamap.jsonFields) : datamap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
-                        const query = { query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, JSON.stringify(datamap), datamap.id, String(datamap.approwstamp), id] };
+                        const query = { query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, json, datamap.id, String(datamap.approwstamp), id] };
 
                         idsToDelete.push("'" + datamap.id + "'");
                         queryArray.push(query);
                         if (application.applicationName === "attachment_") {
-                            doclinksArray.push({ compositionRemoteId: datamap.doclinksid, hash: datamap["docinfo_.urlparam1"], ownerTable: datamap.ownertable, ownerId: datamap.ownerid, docinfoid: datamap.docinfoid });
+                            doclinksArray.push({ compositionRemoteId: parsedDM.doclinksid, hash: parsedDM["docinfo_.urlparam1"], ownerTable: parsedDM.ownertable, ownerId: parsedDM.ownerid, docinfoid: parsedDM.docinfoid });
                         }
                     }
                     if (idsToDelete.length !== 0) {

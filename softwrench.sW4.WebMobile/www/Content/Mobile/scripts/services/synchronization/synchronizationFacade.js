@@ -126,10 +126,13 @@
             log.info("Executing full download");
             const start = new Date().getTime();
 
+            const currentApps = metadataModelService.getApplicationNames();
+            const firstTime = currentApps.length === 0;
+
             const httpPromises = [
                 metadataSynchronizationService.syncData("1.0"),
                 scriptsSynchronizationService.syncData(),
-                associationDataSynchronizationService.syncData()
+                associationDataSynchronizationService.syncData(firstTime)
             ].concat(dataSynchronizationService.syncData());
 
             return $q.all(httpPromises)
