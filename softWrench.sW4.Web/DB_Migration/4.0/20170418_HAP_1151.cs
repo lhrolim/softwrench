@@ -8,12 +8,12 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
     public class Migration20170418HAP1151 : FluentMigrator.Migration {
         public override void Up() {
             if (ApplicationConfiguration.ClientName == "hapag") {
-                Alter.Table("SEC_PERSONGROUP").AddColumn("rowstamp").AsInt64();
+                Alter.Table("SEC_PERSONGROUP").AddColumn("rowstamp").AsInt64().Nullable();
             }
         }
 
         public override void Down() {
-           
+
         }
     }
 }
