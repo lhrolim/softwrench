@@ -280,6 +280,7 @@
     <Compile Include="DB_Migration\4.0\20140516_SWWEB118_2.cs" />
     <Compile Include="DB_Migration\4.0\20140519Hap209.cs" />
     <Compile Include="DB_Migration\4.0\20140519_SWWEB_115_2.cs" />
+    <Compile Include="DB_Migration\4.0\20170418_HAP_1151.cs" />
     <Compile Include="DB_Migration\4.0\20140724_HAP_331.cs" />
     <Compile Include="Formatting\ResponseJsonFormatter.cs" />
     <Compile Include="Models\MyProfile\LocationCostCenterRestriction.cs" />

@@ -22,6 +22,9 @@ namespace softWrench.sW4.Security.Entities {
         public virtual string Description { get; set; }
 
         [Property]
+        public virtual long Rowstamp { get; set; }
+
+        [Property]
         public virtual Boolean SuperGroup { get; set; }
 
 

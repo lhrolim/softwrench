@@ -10,7 +10,9 @@ using softWrench.sW4.Security.Interfaces;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace softWrench.sW4.Data.Persistence.SWDB {
 
@@ -21,16 +23,22 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
         public T Save<T>(T ob) where T : class {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (var transaction = session.BeginTransaction()) {
-                    var b = ob as IBaseEntity;
-                    if (b != null && (b.Id == 0 || b.Id == null)) {
-                        b.Id = (int)session.Save(ob);
-                    } else {
-                        ob = session.Merge(ob);
-                    }
+                    ob =DoSave(ob, session);
                     transaction.Commit();
                     return ob;
                 }
             }
+        }
+
+        private static T DoSave<T>(T ob, ISession session) where T : class {
+            var b = ob as IBaseEntity;
+            if (b != null && (b.Id == 0 || b.Id == null)) {
+                b.Id = (int)session.Save(ob);
+            } else {
+                ob = session.Merge(ob);
+            }
+            
+            return ob;
         }
 
         public void DeleteCollection(IEnumerable<object> collection) {
@@ -74,6 +82,24 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 using (session.BeginTransaction()) {
                     var query = BuildQuery(queryst, parameters, session);
                     return (T)query.UniqueResult();
+                }
+            }
+        }
+
+        public ICollection<T> BulkSave<T>(IEnumerable<T> items) where T : class {
+            if (items == null || !items.Any()) {
+                return items.ToList<T>();
+            }
+            var result = new List<T>(items.Count<T>());
+
+
+            using (var session = SessionManager.Instance.OpenSession()) {
+                using (var transaction = session.BeginTransaction()) {
+                    foreach (var item in items) {
+                        result.Add(DoSave(item,session));
+                    }
+                    transaction.Commit();
+                    return result;
                 }
             }
         }

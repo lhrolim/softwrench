@@ -20,6 +20,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
         private readonly HlagLocationManager _hlagLocationManager;
 
+
         public PersonGroupSyncManager(SWDBHibernateDAO dao, IConfigurationFacade facade,EntityRepository repository, HlagLocationManager hlagLocationManager)
             : base(dao, facade, repository) {
             _hlagLocationManager = hlagLocationManager;
@@ -30,14 +31,16 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var dto = new SearchRequestDto();
             //let´s search just for persongroups that begin with the prefix
             dto.AppendSearchEntry(PersonGroupColumn, HapagPersonGroupConstants.BaseHapagPrefix);
-            var personGroup = FetchNew(rowstamp, EntityName,dto);
+            //ignoring rowstamp cache due to the fact that Maximo rowstamps got wrong
+            //fetch all
+            var personGroup = FetchNew(0L, EntityName,dto);
             var attributeHolders = personGroup as AttributeHolder[] ?? personGroup.ToArray();
             if (!attributeHolders.Any()) {
                 //nothing to update
                 return;
             }
             var personGroupToSave = ConvertMaximoPersonGroupToPersonGroupEntity(attributeHolders);
-            var resultList = SaveOrUpdatePersonGroup(personGroupToSave);
+            var resultList = _hlagLocationManager.UpdateCacheOnSync(personGroupToSave);
             _hlagLocationManager.UpdateCache(resultList);
             SetRowstampIfBigger(ConfigurationConstants.PersonGroupRowstampKey, GetLastRowstamp(attributeHolders),rowstamp);
         }
@@ -58,29 +61,30 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             var pg = new PersonGroup {
                 Name = (string)personGroup.GetAttribute(PersonGroupColumn),
                 Description = description,
+                Rowstamp = (long)personGroup.GetAttribute("rowstamp")
             };
             pg.SuperGroup = HlagLocationUtil.IsSuperGroup(pg);
             return pg;
         }
 
-        private IEnumerable<PersonGroup> SaveOrUpdatePersonGroup(IEnumerable<PersonGroup> personGroupsToIntegrate) {
-            var resultList = new List<PersonGroup>();
-            try {
-                foreach (var personGroupToIntegrate in personGroupsToIntegrate) {
-                    var personGroup = DAO.FindSingleByQuery<PersonGroup>(PersonGroup.PersonGroupByName, personGroupToIntegrate.Name);
-                    if (personGroup != null) {
-                        personGroup.Description = personGroupToIntegrate.Description;
-                        resultList.Add(DAO.Save(personGroup));
-                    } else {
-                        resultList.Add(DAO.Save(personGroupToIntegrate));
-                    }
-                }
-                return resultList;
-            } catch (Exception e) {
-                Log.Error("error integrating maximo person group", e);
-                throw;
-            }
-        }
+//        private IEnumerable<PersonGroup> SaveOrUpdatePersonGroup(IEnumerable<PersonGroup> personGroupsToIntegrate) {
+//            var resultList = new List<PersonGroup>();
+//            try {
+//                foreach (var personGroupToIntegrate in personGroupsToIntegrate) {
+//                    var personGroup = DAO.FindSingleByQuery<PersonGroup>(PersonGroup.PersonGroupByName, personGroupToIntegrate.Name);
+//                    if (personGroup != null) {
+//                        personGroup.Description = personGroupToIntegrate.Description;
+//                        resultList.Add(DAO.Save(personGroup));
+//                    } else {
+//                        resultList.Add(DAO.Save(personGroupToIntegrate));
+//                    }
+//                }
+//                return resultList;
+//            } catch (Exception e) {
+//                Log.Error("error integrating maximo person group", e);
+//                throw;
+//            }
+//        }
 
         public int Order { get { return 2; } }
     }

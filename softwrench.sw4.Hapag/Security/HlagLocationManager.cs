@@ -21,6 +21,7 @@ using softWrench.sW4.SimpleInjector.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NHibernate;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.Hapag.Security {
@@ -32,6 +33,8 @@ namespace softwrench.sw4.Hapag.Security {
         /// Just the child ones, to have a list of all LC locations
         /// </summary>
         internal ConcurrentBag<HlagGroupedLocation> HlagGroupedLocationsCache = new ConcurrentBag<HlagGroupedLocation>();
+
+        internal readonly IDictionary<string, PersonGroup> AllGroupsCached = new Dictionary<string, PersonGroup>();
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(HlagLocationManager));
 
@@ -221,11 +224,50 @@ namespace softwrench.sw4.Hapag.Security {
             internal Boolean FromSuperGroup;
         }
 
+        public List<PersonGroup> UpdateCacheOnSync(IEnumerable<PersonGroup> personGroupsToIntegrate) {
 
+            var toInsert = new List<PersonGroup>();
+            var toUpdate = new List<PersonGroup>();
+
+            foreach (var group in personGroupsToIntegrate) {
+                if (!AllGroupsCached.ContainsKey(group.Name)) {
+                    AllGroupsCached.Add(group.Name, group);
+                    toInsert.Add(group);
+                } else if (AllGroupsCached[group.Name].Rowstamp != group.Rowstamp) {
+                    group.Id = AllGroupsCached[group.Name].Id;
+                    AllGroupsCached[group.Name] = group;
+                    toUpdate.Add(group);
+                }
+            }
+
+            _dao.BulkSave(toInsert);
+
+
+
+            using (var session = SWDBHibernateDAO.CurrentSession()) {
+                using (var transaction = session.BeginTransaction()) {
+                    foreach (var personGrop in toUpdate) {
+                        var dbGroup = _dao.FindByPK<PersonGroup>(typeof(PersonGroup), personGrop.Id);
+                        dbGroup.Description = personGrop.Description;
+                        dbGroup.Rowstamp = personGrop.Rowstamp;
+                        _dao.Save(dbGroup);
+                    }
+                    transaction.Commit();
+                }
+            }
+
+            toInsert.AddRange(toUpdate);
+            return toInsert;
+
+        }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             _starting = true;
             var allGroups = _dao.FindAll<PersonGroup>(typeof(PersonGroup));
+            foreach (var group in allGroups) {
+                AllGroupsCached.Add(group.Name, group);
+            }
+
             var locations = PopulateChildGroups(allGroups);
             //            foreach (var hlagLocation in locations) {
             //                AddGroupedLocation(hlagLocation);
@@ -389,7 +431,7 @@ namespace softwrench.sw4.Hapag.Security {
             if (costCentersToUse.Equals("1!=1")) {
                 if (inMemoryUser == null) {
                     var user = _dao.FindSingleByQuery<User>(User.UserByMaximoPersonId, personId);
-                    inMemoryUser=new InMemoryUser(user, new List<UserProfile>(), null);
+                    inMemoryUser = new InMemoryUser(user, new List<UserProfile>(), null);
                 }
                 //we´re interested in the current user, so we can assume its groups are synced fine.
                 //pick the groups from SWDB
