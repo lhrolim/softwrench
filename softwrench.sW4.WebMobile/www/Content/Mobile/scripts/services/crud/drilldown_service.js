@@ -7,7 +7,18 @@
 
         const getCurrentLocation = function() {
             const drillDown = crudContextHolderService.getCrudContext().drillDown;
-            return drillDown.selectedLocation ? drillDown.selectedLocation.datamap.location : securityService.currentFullUser().SiteId;
+            return drillDown.selectedLocation ? drillDown.selectedLocation.datamap.location : null;
+        }
+
+        const buildLocationClause = function (start, end) {
+            const currentLocation = getCurrentLocation();
+            if (currentLocation) {
+                return ` (${start}${currentLocation}${end}) `;
+            }
+
+            const siteid = securityService.currentFullUser().SiteId;
+            const pm = `PM${siteid}`;
+            return ` (${start}${siteid}${end} OR ${start}${pm}${end} OR ${start}140${end} OR ${start}180${end}) `;
         }
 
         const updatePaginationOptions = function (drillDown) {
@@ -24,20 +35,22 @@
 
         const locationsQuery = function () {
             const drillDown = dd();
-            const currentLocation = getCurrentLocation();
             if (drillDown.locationQuery) {
-                return ` \`root\`.application = 'offlinelocation' and \`root\`.textindex04 like '%/${currentLocation}/%' ${locationSearchWc(drillDown, "root")} order by \`root\`.textindex01`;
+                const locationClause = buildLocationClause("`root`.textindex04 like '%/", "/%'");
+                return ` \`root\`.application = 'offlinelocation' and ${locationClause} ${locationSearchWc(drillDown, "root")} order by \`root\`.textindex01`;
             }
-            return ` \`root\`.application = 'offlinelocation' and \`root\`.datamap like '%"parent":"${currentLocation}"%' order by \`root\`.textindex01`;
+            const locationClause = buildLocationClause("`root`.datamap like '%\"parent\":\"", "\"%'");
+            return ` \`root\`.application = 'offlinelocation' and ${locationClause} order by \`root\`.textindex01`;
         }
 
         const assetSearchWc = (drillDown) => drillDown.assetQuery ? ` and \`root\`.datamap like '%${drillDown.assetQuery}%'` : "";
 
         const assetQuery = function (order) {
             const drillDown = dd();
-            const currentLocation = getCurrentLocation();
             const orderClause = order ? " order by `root`.textindex02 " : "";
-            return ` \`root\`.application = 'offlineasset' ${assetSearchWc(drillDown)} and (\`root\`.textindex01 = '${currentLocation}' or \`root\`.textindex01 in (select textindex01 from AssociationData where application = 'offlinelocation' and textindex04 like '%/${currentLocation}/%')) ${orderClause} `;
+            const locationClause1 = buildLocationClause("`root`.textindex01 = '", "'");
+            const locationClause2 = buildLocationClause("textindex04 like '%/", "/%'");
+            return ` \`root\`.application = 'offlineasset' ${assetSearchWc(drillDown)} and (${locationClause1} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = 'offlinelocation' and ${locationClause2})) ${orderClause} `;
         }
         //#endregion
 
@@ -56,12 +69,16 @@
         const updateDrillDownLocations = function () {
             const drillDown = dd();
             drillDown.page = 0;
-            const currentLocation = getCurrentLocation();
 
             const promises = [];
             promises.push(swdbDAO.findByQuery("AssociationData", locationsQuery(), updatePaginationOptions(drillDown)));
-            promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = 'offlinelocation' and \`root\`.textindex04 like '%/${currentLocation}/%' ${locationSearchWc(drillDown, "root")}`));
-            promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = 'offlineasset' and (\`root\`.textindex01 = '${currentLocation}' or \`root\`.textindex01 in (select textindex01 from AssociationData where application = 'offlinelocation' and textindex04 like '%/${currentLocation}/%'))`));
+
+            const locationClause1 = buildLocationClause("`root`.textindex04 like '%/", "/%'");
+            promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = 'offlinelocation' and ${locationClause1} ${locationSearchWc(drillDown, "root")}`));
+
+            const locationClause2 = buildLocationClause("`root`.textindex01 = '", "'");
+            const locationClause3 = buildLocationClause("textindex04 like '%/", "/%'");
+            promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = 'offlineasset' and (${locationClause2} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = 'offlinelocation' and ${locationClause3}))`));
 
             return $q.all(promises).then((results) => {
                 setMoreItemsAvailable(drillDown, results[0]);

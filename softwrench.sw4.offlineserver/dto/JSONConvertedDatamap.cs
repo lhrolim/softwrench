@@ -32,7 +32,7 @@ namespace softwrench.sw4.offlineserver.dto {
         [JsonIgnore]
         public DataMap OriginalDatamap { get; set; }
 
-        public JSONConvertedDatamap(DataMap datamap) : base(datamap.Application, datamap.Fields) {
+        public JSONConvertedDatamap(DataMap datamap, bool rowstampsHandled = false) : base(datamap.Application, datamap.Fields, null, rowstampsHandled) {
             var st = JsonConvert.SerializeObject(this, Formatting.None,
              new JsonSerializerSettings {
                  ContractResolver = new CamelCasePropertyNamesContractResolver()

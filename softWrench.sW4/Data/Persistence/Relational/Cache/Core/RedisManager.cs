@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using log4net;
-using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
@@ -68,6 +66,30 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             return ServiceAvailable;
         }
 
+        public async Task<List<RedisChunkMetadataDescriptor>> GetDescriptors(RedisLookupDTO lookupDTO) {
+            var descriptors = new List<RedisChunkMetadataDescriptor>();
+
+            if (CacheClient == null) {
+                _log.WarnFormat("cache is disabled. Skipping get descriptors operation");
+                return descriptors;
+            }
+
+            //multiple keys, one for each facility for instance
+            var keys = lookupDTO.BuildKeys();
+            foreach (var key in keys) {
+                var metadataDescriptor = await CacheClient.GetAsync<RedisChunkMetadataDescriptor>(key);
+                if (metadataDescriptor == null) {
+                    //especially the first descriptor is the linear combination for multiple keys scenario (ex a user with more than one facility)
+                    //therefore it might be null quite often.
+                    // other keys will be the linear combination for these scenarios.
+                    _log.DebugFormat("descriptor for entry {0} not found", key);
+                    continue;
+                }
+                descriptors.Add(metadataDescriptor);
+            }
+            return descriptors;
+        }
+
         public async Task<RedisLookupResult<T>> Lookup<T>(RedisLookupDTO lookupDTO) where T : DataMap {
             if (CacheClient == null) {
                 _log.WarnFormat("cache is disabled. Skipping lookup operation");
@@ -84,8 +106,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                 Schema = lookupDTO.Schema,
                 ChunksAlreadyChecked = lookupDTO.CacheEntriesToAvoid,
             };
-
-
 
             var cacheLimit = 0;
 
@@ -120,7 +140,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
 
                 foreach (var entry in resultChunksDescriptors) {
-
                     if (cacheLimit >= lookupDTO.GlobalLimit) {
                         result.HasMoreChunks = true;
                         _log.DebugFormat("global limit {0} of the chunk has been reached. ignoring chunk {1} ", lookupDTO.GlobalLimit, entry.RealKey);
@@ -143,14 +162,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                         entry.RealKey, cacheResult
                     ));
                     cacheLimit += entry.Count;
-
-
-
-
                 }
-
             }
-
 
             return result;
         }
@@ -175,11 +188,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
             var resultChunksDescriptors = await CacheClient.GetAsync<RedisChunkMetadataDescriptor>(firstKey);
             if (resultChunksDescriptors == null) {
-                var results = await FirstTimeInsert(redisInput, firstKey, lookupDTO.Schema.IdFieldName, lookupDTO.GlobalLimit);
+                var results = await FirstTimeInsert(redisInput, firstKey, lookupDTO.GlobalLimit);
                 return results.MaxRowstamp;
             }
 
-            var collectionsByChunkResult = GroupDatamapsByChunk(resultChunksDescriptors, redisInput, lookupDTO.GlobalLimit, lookupDTO.Schema.IdFieldName);
+            var collectionsByChunkResult = GroupDatamapsByChunk(resultChunksDescriptors, redisInput, lookupDTO.GlobalLimit);
 
             var collectionByChunk = collectionsByChunkResult.Results;
 
@@ -188,7 +201,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
             var i = 0;
             foreach (var entry in collectionByChunk) {
-                tasks[i++] = DoUpdateChunk(lookupDTO.Schema, entry);
+                tasks[i++] = DoUpdateChunk(entry);
             }
 
             await UpdateMetadataDescriptor(resultChunksDescriptors, firstKey, collectionsByChunkResult.MaxRowstamp);
@@ -204,7 +217,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             await CacheClient.ReplaceAsync(firstKey, resultChunksDescriptors);
         }
 
-        private async Task DoUpdateChunk<T>(ApplicationSchemaDefinition schema, GrouppedDatamaps<T> grouppedDatamaps) where T : DataMap {
+        private async Task DoUpdateChunk<T>(GrouppedDatamaps<T> grouppedDatamaps) where T : DataMap {
             var toUpdate = grouppedDatamaps.ToUpdate;
             var toInsert = grouppedDatamaps.ToInsert;
 
@@ -214,10 +227,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             var toInsertOverflown = new List<T>();
 
             var descriptor = grouppedDatamaps.Metadata;
-
-
-            var idPropertyName = schema.IdFieldName;
-
 
             var watch = Stopwatch.StartNew();
 
@@ -229,7 +238,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
 
             foreach (var newDatamap in toUpdate) {
-                var idx = items.FindIndex(a => a.GetLongAttribute(idPropertyName) == newDatamap.GetLongAttribute(idPropertyName));
+                var idx = items.FindIndex(a => GetId(a) == GetId(newDatamap));
                 if (idx != -1) {
                     //TODO: improve algorithm to check for secondary rowstamps, such in projection values 
                     //(ex: an asset didn´t change but one of the relationships where a projection fetchs data did, meaning that, therefore the result is different)
@@ -247,14 +256,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             }
 
             //TODO: double check sort order.
-            var maxUId = items[items.Count - 1].GetLongAttribute(idPropertyName);
+            var maxUId = GetId(items[items.Count - 1]);
 
             //eventual items that were not present on the original chunk, although were within the chunk ranges
             items.AddRange(toInsertOverflown);
 
             await CacheClient.ReplaceAsync(grouppedDatamaps.Metadata.RealKey, items);
 
-            descriptor.MaxUid = maxUId.Value;
+            descriptor.MaxUid = maxUId;
 
             descriptor.Count = items.Count;
 
@@ -282,7 +291,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             }
         }
 
-        internal virtual GroupDatamapsResult<T> GroupDatamapsByChunk<T>(RedisChunkMetadataDescriptor resultChunksDescriptors, RedisInputDTO<T> redisInput, int globalLimit, string idAttribute) where T : DataMap {
+        internal virtual GroupDatamapsResult<T> GroupDatamapsByChunk<T>(RedisChunkMetadataDescriptor resultChunksDescriptors, RedisInputDTO<T> redisInput, int globalLimit) where T : DataMap {
 
             var results = new Dictionary<RedisLookupRowstampChunkHash, GrouppedDatamaps<T>>();
 
@@ -301,7 +310,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             long maxRowstamp = 0L;
 
             foreach (var datamap in redisInput.Datamaps) {
-                var uid = datamap.GetLongAttribute(idAttribute);
+                var uid = GetId(datamap);
                 maxRowstamp = Math.Max(datamap.Approwstamp.Value, maxRowstamp);
 
                 if (uid <= bigggestUid) {
@@ -327,7 +336,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
                 _log.DebugFormat("adding new item for insertion at last possible chunk");
                 if (lastChunkSpace <= 0) {
-                    DoUpdateLastChunkDescriptor(idAttribute, results, lastChunk);
+                    DoUpdateLastChunkDescriptor(results, lastChunk);
 
                     //negative space accounts for an anomalous scenario whereas the chunk limit got updated and the caches haven´t been updated 
                     _log.DebugFormat("generating a new chunk of data to store new items");
@@ -347,25 +356,28 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                 lastChunkSpace--;
 
             }
-            DoUpdateLastChunkDescriptor(idAttribute, results, lastChunk);
+            DoUpdateLastChunkDescriptor(results, lastChunk);
 
 
 
             return new GroupDatamapsResult<T>(maxRowstamp, results.Values.ToList());
         }
 
-        private static void DoUpdateLastChunkDescriptor<T>(string idAttribute, IReadOnlyDictionary<RedisLookupRowstampChunkHash, GrouppedDatamaps<T>> results,
+        private static void DoUpdateLastChunkDescriptor<T>(IReadOnlyDictionary<RedisLookupRowstampChunkHash, GrouppedDatamaps<T>> results,
             RedisLookupRowstampChunkHash lastChunk) where T : DataMap {
             var toInsertList = results[lastChunk].ToInsert;
             if (toInsertList.Any()) {
                 lastChunk.Count += toInsertList.Count;
                 if (lastChunk.MinUid == 0) {
-                    lastChunk.MinUid = toInsertList.First().GetLongAttribute(idAttribute).Value;
+                    lastChunk.MinUid = GetId(toInsertList.First());
                 }
-                lastChunk.MaxUid = toInsertList.Last().GetLongAttribute(idAttribute).Value;
+                lastChunk.MaxUid = GetId(toInsertList.Last());
             }
         }
 
+        private static long GetId<T>(T entry) where T : DataMap {
+            return entry.GetLongAttribute("Id").Value;
+        }
 
         internal class FirstTimeInsertResult {
 
@@ -381,7 +393,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
         }
 
 
-        internal async Task<FirstTimeInsertResult> FirstTimeInsert<T>(RedisInputDTO<T> redisInput, string firstKey, string idFieldName, int globalLimit) where T : DataMap {
+        internal async Task<FirstTimeInsertResult> FirstTimeInsert<T>(RedisInputDTO<T> redisInput, string firstKey, int globalLimit) where T : DataMap {
             _log.InfoFormat("Creating cache entries for {0}", firstKey);
 
             IList<RedisLookupRowstampChunkHash> resultChunksDescriptors = new List<RedisLookupRowstampChunkHash>();

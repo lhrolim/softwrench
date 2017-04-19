@@ -29,7 +29,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
-using softWrench.sW4.Data.Persistence.Relational.Cache.Core;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;

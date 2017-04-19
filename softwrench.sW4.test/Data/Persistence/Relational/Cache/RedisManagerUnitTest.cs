@@ -48,8 +48,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
                 Chunks = chunks
             };
             var datamaps = GenerateListOfDataMaps(15, 10);
-            var input = new RedisInputDTO<DataMap>(datamaps);
-            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10, "locationuid").Results;
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
+            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10).Results;
             Assert.AreEqual(3, results.Count);
 
             var firstItem = results[0];
@@ -93,8 +93,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
                 Chunks = chunks
             };
             var datamaps = GenerateListOfDataMaps(5, 15);
-            var input = new RedisInputDTO<DataMap>(datamaps);
-            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10, "locationuid").Results;
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
+            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10).Results;
             Assert.AreEqual(2, results.Count);
 
             var firstItem = results[0];
@@ -132,8 +132,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
                 Chunks = chunks
             };
             var datamaps = GenerateListOfDataMaps(15, 8);
-            var input = new RedisInputDTO<DataMap>(datamaps);
-            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10, "locationuid").Results;
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
+            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10).Results;
             Assert.AreEqual(3, results.Count);
 
             var firstItem = results[0];
@@ -175,8 +175,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
                 Chunks = chunks
             };
             var datamaps = GenerateListOfDataMaps(15, 0);
-            var input = new RedisInputDTO<DataMap>(datamaps);
-            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10, "locationuid").Results;
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
+            var results = _redisManager.GroupDatamapsByChunk(descriptor, input, 10).Results;
             Assert.AreEqual(2, results.Count);
 
             var firstItem = results[0];
@@ -221,8 +221,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
                 Chunks = chunks
             };
             var datamaps = GenerateListOfDataMaps(30, 0);
-            var input = new RedisInputDTO<DataMap>(datamaps);
-            var groupDatamapsResult = _redisManager.GroupDatamapsByChunk(descriptor, input, 10, "locationuid");
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
+            var groupDatamapsResult = _redisManager.GroupDatamapsByChunk(descriptor, input, 10);
             Assert.AreEqual(1L, groupDatamapsResult.MaxRowstamp);
             var results = groupDatamapsResult.Results;
             Assert.AreEqual(3, results.Count);
@@ -261,7 +261,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
 
         }
 
-        private static void BaseAssertions(IList<RedisManager.GrouppedDatamaps<DataMap>> items) {
+        private static void BaseAssertions(IList<RedisManager.GrouppedDatamaps<JSONConvertedDatamap>> items) {
             for (var i = 0; i < items.Count; i++) {
                 var item = items[i];
                 Assert.IsNotNull(item.Metadata);
@@ -269,15 +269,15 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             }
         }
 
-        private List<DataMap> GenerateListOfDataMaps(int count, int offSet = 0) {
-            var results = new List<DataMap>();
+        private List<JSONConvertedDatamap> GenerateListOfDataMaps(int count, int offSet = 0) {
+            var results = new List<JSONConvertedDatamap>();
             for (var i = 1; i < count + 1; i++) {
                 var dict = new Dictionary<string, object>();
                 dict["locationuid"] = i + offSet;
                 dict["rowstamp"] = 1L;
                 var dm = DataMap.GetInstanceFromDictionary("location", dict, true);
                 dm.Id = (i + offSet).ToString();
-                results.Add(dm);
+                results.Add(new JSONConvertedDatamap(dm, true));
             }
             return results;
         }
@@ -287,7 +287,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
         public async Task TestFirstTimeInsert() {
 
             var datamaps = GenerateListOfDataMaps(15);
-            var input = new RedisInputDTO<DataMap>(datamaps);
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
 
 
             var descriptor = new RedisChunkMetadataDescriptor {
@@ -299,10 +299,10 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             };
 
             _cacheClient.Setup(c => c.AddAsync("xxx", descriptor)).ReturnsAsync(true);
-            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:1", It.IsAny<List<DataMap>>())).ReturnsAsync(true);
-            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:2", It.IsAny<List<DataMap>>())).ReturnsAsync(true);
+            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:1", It.IsAny<List<JSONConvertedDatamap>>())).ReturnsAsync(true);
+            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:2", It.IsAny<List<JSONConvertedDatamap>>())).ReturnsAsync(true);
 
-            var firstTimeInsertResult = await _redisManager.FirstTimeInsert(input, "xxx", "locationuid", 10);
+            var firstTimeInsertResult = await _redisManager.FirstTimeInsert(input, "xxx", 10);
             Assert.AreEqual(1L, firstTimeInsertResult.MaxRowstamp);
             var results = firstTimeInsertResult.Results;
 
@@ -330,7 +330,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
 
             var datamaps = GenerateListOfDataMaps(15);
             datamaps.Reverse();
-            var input = new RedisInputDTO<DataMap>(datamaps);
+            var input = new RedisInputDTO<JSONConvertedDatamap>(datamaps);
 
 
             var descriptor = new RedisChunkMetadataDescriptor {
@@ -342,10 +342,10 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             };
 
             _cacheClient.Setup(c => c.AddAsync("xxx", descriptor)).ReturnsAsync(true);
-            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:1", It.IsAny<List<DataMap>>())).ReturnsAsync(true);
-            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:2", It.IsAny<List<DataMap>>())).ReturnsAsync(true);
+            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:1", It.IsAny<List<JSONConvertedDatamap>>())).ReturnsAsync(true);
+            _cacheClient.Setup(c => c.AddAsync("xxx;chunk:2", It.IsAny<List<JSONConvertedDatamap>>())).ReturnsAsync(true);
 
-            var firstTimeInsertResult = await _redisManager.FirstTimeInsert(input, "xxx", "locationuid", 10);
+            var firstTimeInsertResult = await _redisManager.FirstTimeInsert(input, "xxx", 10);
             Assert.AreEqual(1L, firstTimeInsertResult.MaxRowstamp);
             var results = firstTimeInsertResult.Results;
 
@@ -395,10 +395,10 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             descriptor.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;schemaid=list;chunk:4", Count = 8 });
 
             _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;schemaid=list")).ReturnsAsync(descriptor);
-            _cacheClient.Setup(c => c.GetAsync<IList<DataMap>>("application=location;schemaid=list;chunk:3")).ReturnsAsync(list);
+            _cacheClient.Setup(c => c.GetAsync<IList<JSONConvertedDatamap>>("application=location;schemaid=list;chunk:3")).ReturnsAsync(list);
 //            _cacheClient.Setup(c => c.GetAsync<IList<DataMap>>("application=location;schemaid=list;chunk:4")).ReturnsAsync(list);
 
-            var results = await _redisManager.Lookup<DataMap>(lookupDTO);
+            var results = await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
             Assert.AreEqual(1, results.Chunks.Count);
             Assert.AreEqual(2, results.ChunksAlreadyChecked.Count);
             Assert.AreEqual(1, results.ChunksIgnored.Count);
@@ -438,9 +438,9 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             descriptor.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;schemaid=list;chunk:4", Count = 8 });
 
             _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;schemaid=list")).ReturnsAsync(descriptor);
-            _cacheClient.Setup(c => c.GetAsync<IList<DataMap>>("application=location;schemaid=list;chunk:1")).ReturnsAsync(list);
+            _cacheClient.Setup(c => c.GetAsync<IList<JSONConvertedDatamap>>("application=location;schemaid=list;chunk:1")).ReturnsAsync(list);
 
-            var results = await _redisManager.Lookup<DataMap>(lookupDTO);
+            var results = await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
             Assert.AreEqual(1, results.Chunks.Count);
             Assert.AreEqual(0, results.ChunksAlreadyChecked.Count);
             Assert.AreEqual(3, results.ChunksIgnored.Count);
