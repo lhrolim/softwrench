@@ -219,25 +219,17 @@ namespace softwrench.sw4.offlineserver.services {
 
                     while (i < cacheTasks.Length && j < applicationMetadataDefinitions.Count) {
                         var association = applicationMetadataDefinitions[j++];
-                        var userAppMetadata = association.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                            user, ClientPlatform.Mobile);
+                        var schemaKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List, SchemaMode.None, ClientPlatform.Mobile);
+                        var userAppMetadata = association.ApplyPolicies(schemaKey, user, ClientPlatform.Mobile);
                         var rowstamp = BuildRowstamp(rowstampMap, results, association);
-
                         tasks[i++] = InnerGetAssocData(association, userAppMetadata, rowstamp, results);
                     }
 
                     await Task.WhenAll(tasks);
-
-
-
-
                 }
             } else {
                 Log.DebugFormat("sync: Ingnoring association database queries, since the cache already fullfilled the chunk");
             }
-
-
-
         }
 
         //either all the incomplete applications, or, if the chunk limit was reached, only those where the cache lookup has exhausted
@@ -317,8 +309,8 @@ namespace softwrench.sw4.offlineserver.services {
 
                 while (i < cacheTasks.Length && j < completeApplicationMetadataDefinitions.Count) {
                     var association = completeApplicationMetadataDefinitions[j++];
-                    var userAppMetadata = association.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(),
-                        user, ClientPlatform.Mobile);
+                    var schemaKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List, SchemaMode.None, ClientPlatform.Mobile);
+                    var userAppMetadata = association.ApplyPolicies(schemaKey, user, ClientPlatform.Mobile);
                     var lookupDTO = await BuildRedisDTO(userAppMetadata, completeCacheEntries);
                     cacheTasks[i++] = _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
                 }
