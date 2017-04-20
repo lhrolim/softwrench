@@ -47,8 +47,11 @@ namespace softWrench.sW4.Data.Configuration {
                 PropertyDataType = PropertyDataType.BOOLEAN,
             });
 
-
-        
+            facade.Register(ctes.ClientSideLogLevel, new PropertyDefinition {
+                Description = "Level of client side logs",
+                StringValue = "warn",
+                PropertyDataType = PropertyDataType.STRING,
+            });
 
             facade.Register(ctes.InvbalancesListScanOrder, new PropertyDefinition {
                 Description = "Inventory grid filter field scan order",
