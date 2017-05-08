@@ -237,6 +237,39 @@
           <field attribute="wonum" hidden="true" />
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
+          
+          <field attribute="estdur"            hidden="true"/>
+          <field attribute="estlabhrs"         hidden="true"/>
+          <field attribute="estmatcost"        hidden="true"/>
+          <field attribute="estintlabhrs"      hidden="true"/>
+          <field attribute="estintlabcost"     hidden="true"/>
+          <field attribute="estatapprlabhrs"   hidden="true"/>
+          
+          <field attribute="estatapprmatcost"  hidden="true"/>
+          <field attribute="estatapprlabcost"  hidden="true"/>
+          <field attribute="estatapprtoolcost" hidden="true"/>
+          <field attribute="estatapprservcost" hidden="true"/>
+          
+          <field attribute="estapprlabhrs"     hidden="true"/>
+          <field attribute="estapprmatcost"    hidden="true"/>
+          <field attribute="estapprlabcost"    hidden="true"/>
+          
+          <field attribute="estlabcost"        hidden="true"/>
+          <field attribute="esttoolcost"       hidden="true"/>
+          <field attribute="estservcost"       hidden="true"/>
+          
+          <field attribute="actlabhrs"         hidden="true"/>
+          <field attribute="actlabcost"        hidden="true"/>
+          <field attribute="actservcost"       hidden="true"/>
+          <field attribute="actmatcost"        hidden="true"/>
+          <field attribute="acttoolcost"       hidden="true"/>
+          
+          <field attribute="outlabcost"        hidden="true"/>
+          <field attribute="outmatcost"        hidden="true"/>
+          <field attribute="outtoolcost"       hidden="true"/>
+          <field attribute="outservcost"       hidden="true"/>
+          
+          
         </componentdisplayable>
 
         <componentdisplayable id="statuslookup">
