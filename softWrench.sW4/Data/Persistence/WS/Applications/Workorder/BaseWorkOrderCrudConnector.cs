@@ -15,7 +15,7 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
-    class BaseWorkOrderCrudConnector : CrudConnectorDecorator {
+    public class BaseWorkOrderCrudConnector : CrudConnectorDecorator {
         //        private const string _dbwostatusKey = "dbwostatus";
         //        private const string _oldlongdescriptionKey = "oldlongdescriptionKey";
         //        private const string _newlongdescriptionKey = "newlongdescriptionKey";

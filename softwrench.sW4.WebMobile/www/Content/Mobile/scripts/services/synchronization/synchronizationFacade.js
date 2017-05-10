@@ -198,10 +198,13 @@
                         // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
                         return handleDeletableDataEntries(batchResults)
                             .then(() => problemService.updateHasProblemToDataEntries(batchResults))
-                            .then(() => dataSynchronizationService.syncData())
+                            .then(() =>{
+                                var httpPromises = [associationDataSynchronizationService.syncData(), dataSynchronizationService.syncData()];
+                                return $q.all(httpPromises);
+                            })
                             .then(downloadResults => {
                                 log.debug("Batch returned synchronously --> performing download");
-                                var dataCount = getDownloadDataCount(downloadResults);
+                                var dataCount = getDownloadDataCount(downloadResults[1]);
                                 return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                             });
                     });
@@ -226,9 +229,20 @@
                     .then(batchResults => {
                         return handleDeletableDataEntries(batchResults)
                             .then(() => problemService.updateHasProblemToDataEntries(batchResults, item))
-                            .then(() => dataSynchronizationService.syncSingleItem(item))
+                            .then(() => {
+                                var httpPromises = [];
+                                httpPromises.push(associationDataSynchronizationService.syncData());
+                                if (!!item.remoteId) {
+                                    httpPromises.push(dataSynchronizationService.syncSingleItem(item));
+                                } else {
+                                    //TODO: return the remoteid on the operation
+                                    //for creations since we don´t have the remote id yet
+                                    httpPromises.push(dataSynchronizationService.syncData());
+                                }
+                                return $q.all(httpPromises);
+                            })
                             .then(downloadResults => {
-                                var dataCount = getDownloadDataCount(downloadResults);
+                                var dataCount = getDownloadDataCount(downloadResults[1]);
                                 return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
                             }).then(r => {
                                 $rootScope.$broadcast("sw.sync.quicksyncfinished");
@@ -305,7 +319,7 @@
     }
 
     //#region Service registration
-    mobileServices.factory("synchronizationFacade", ["$log", "$q","$rootScope","$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
+    mobileServices.factory("synchronizationFacade", ["$log", "$q", "$rootScope", "$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
         "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", synchronizationFacade]);
     //#endregion
 

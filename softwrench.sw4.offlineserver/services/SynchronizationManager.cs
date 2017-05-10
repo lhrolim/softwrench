@@ -236,13 +236,13 @@ namespace softwrench.sw4.offlineserver.services {
         internal virtual ISet<CompleteApplicationMetadataDefinition> DatabaseApplicationsToCollect(bool initialLoad, AssociationSynchronizationResultDto resultDTO, IEnumerable<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, bool hasOverFlownOnCacheOperation) {
 
             var results = new HashSet<CompleteApplicationMetadataDefinition>();
-            if (!initialLoad) {
-                return new LinkedHashSet<CompleteApplicationMetadataDefinition>(results);
-            }
 
             var definitions = completeApplicationMetadataDefinitions as IList<CompleteApplicationMetadataDefinition> ?? completeApplicationMetadataDefinitions.ToList();
+            var nonCacheable = definitions.Where(c => "true".Equals(c.GetProperty(OfflineConstants.AvoidCaching))).ToList();
 
-            var nonCacheable = definitions.Where(c => "true".Equals(c.GetProperty(OfflineConstants.AvoidCaching)));
+            if (!initialLoad) {
+                return new LinkedHashSet<CompleteApplicationMetadataDefinition>(nonCacheable);
+            }
 
             if (hasOverFlownOnCacheOperation && resultDTO.HasMoreCacheData) {
                 Log.DebugFormat("database operations will be ignored since there are still more cached entries to be collected");

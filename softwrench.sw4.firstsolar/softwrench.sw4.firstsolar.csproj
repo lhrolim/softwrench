@@ -188,6 +188,7 @@
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarOfflineSiteIdBuilder.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarUserFacilityBuilder.cs" />
+    <Compile Include="classes\com\cts\firstsolar\connector\FirstSolarWorkorderCrudConnector.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\customizations\CustomizationContainer.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarAdvancedSearchDtoUtils.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\advancedsearch\FirstSolarBaseLocationFinder.cs" />
@@ -267,7 +268,6 @@
     <None Include="web_content\firstsolar\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\firstsolar\connector\" />
     <Folder Include="classes\com\cts\firstsolar\migration\" />
   </ItemGroup>
   <ItemGroup>

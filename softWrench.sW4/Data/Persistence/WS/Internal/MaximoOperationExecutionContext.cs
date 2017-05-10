@@ -27,18 +27,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         protected static readonly ILog Log = LogManager.GetLogger(WsInputLog);
 
         protected MaximoOperationExecutionContext(IOperationData operationData) {
-            _operationData = operationData;
-            _applicationMetadata = operationData.ApplicationMetadata;
-            _metadata = operationData.EntityMetadata;
+            OperationData = operationData;
+            ApplicationMetadata = operationData.ApplicationMetadata;
+            Metadata = operationData.EntityMetadata;
         }
 
-        private readonly IOperationData _operationData;
-        private readonly ApplicationMetadata _applicationMetadata;
-        private readonly EntityMetadata _metadata;
+        public IOperationData OperationData { get; }
 
-        public IOperationData OperationData => _operationData;
-        public ApplicationMetadata ApplicationMetadata => _applicationMetadata;
-        public EntityMetadata Metadata => _metadata;
+        public ApplicationMetadata ApplicationMetadata { get; }
+
+        public EntityMetadata Metadata { get; }
 
         public object IntegrationObject {
             get; set;
@@ -56,17 +54,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public DynamicObject Proxy {
             get; set;
         }
-        private IDictionary<String, object> _properties = new Dictionary<string, object>();
 
 
-        public IDictionary<string, object> Properties {
-            get {
-                return _properties;
-            }
-            set {
-                _properties = value;
-            }
-        }
+        public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
         public virtual object InvokeProxy() {
             var before = Stopwatch.StartNew();
