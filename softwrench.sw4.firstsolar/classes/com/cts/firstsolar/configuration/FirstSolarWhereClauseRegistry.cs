@@ -23,15 +23,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         /// no server side filtering based on labor code should take place since these would happen at client side
         /// </summary>
         private const string AssignedWhereClause =
-            @"assignment.scheduledate >= @past(1week) and assignment.scheduledate <= @future(1week) and exists (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
-                workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and {0} )";
+            @"exists 
+            (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
+                workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and historyflag = 0 and istask = 0 and {0} )";
 
 
         private const string WOAssignedWhereClause =
-        @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid 
+        @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
             and 
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
-                and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))
+                and a.laborcode = '@user.properties['laborcode']')
           ";
 
         /// <summary>
@@ -39,12 +40,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         ///  Facility filters will be applied on top of this to narrow the list
         /// </summary>
         private const string WOGroupByBaseWhereClause =
-          @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid
+          @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
             and not
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
-                and a.laborcode = '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))
+                and a.laborcode = '@user.properties['laborcode']')
             and exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
-                and a.laborcode != '@user.properties['laborcode']' and a.scheduledate >= @past(1week) and a.scheduledate <= @future(1week))";
+                and (a.laborcode != '@user.properties['laborcode']' or a.laborcode is null))";
 
 
         private const string UserLaborWhereClause = "labor.laborcode='@user.properties['laborcode']' and labor.orgid=@orgid";
