@@ -140,6 +140,16 @@ const ClearAutoCompleteCache = "sw.crud.association.clearautocompletecache";
 const COMPOSITION_RESOLVED = "sw.crud.composition.dataresolved";
 const COMPOSITION_EDIT = "sw.crud.composition.edit";
 
+
+//#endregion
+
+
+//#region layout
+
+const FORCE_RESIZE = "sw.layout.forceresize";
+
+
+
 //#endregion
 
 class JavascriptEventConstants {
@@ -352,6 +362,14 @@ class JavascriptEventConstants {
 
     static get CompositionEdit() {
         return COMPOSITION_EDIT;
+    }
+
+    //#endregion
+
+    //#region layoyut
+
+    static get ForceResize() {
+        return FORCE_RESIZE;
     }
 
     //#endregion

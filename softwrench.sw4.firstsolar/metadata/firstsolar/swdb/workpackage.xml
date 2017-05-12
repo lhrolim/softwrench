@@ -1,0 +1,592 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="WorkPackage" idAttribute="id">
+      <relationships>
+
+        <relationship to="workorder">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute query="worktype in ('CM','PM') and historyflag=0"/>
+        </relationship>
+        <relationship to="_CallOut_" qualifier="callOuts" collection="true">
+          <relationshipAttribute from="id" to="workpackageid" primary="true"/>
+        </relationship>
+        <relationship to="_MaintenanceEngineering_" qualifier="maintenanceEngineerings" collection="true">
+          <relationshipAttribute from="id" to="workpackageid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="CallOut" idAttribute="id">
+      <relationships>
+        <relationship to="_WorkPackage_" qualifier="workpackage">
+          <relationshipAttribute from="workpackageid" to="id" primary="true"/>
+        </relationship>
+        <relationship to="_SubContractor_" qualifier="subcontractor">
+          <relationshipAttribute from="subcontractorid" to="id" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+    <entity name="SubContractor" idAttribute="id"></entity>
+
+    <entity name="MaintenanceEngineering" idAttribute="id">
+      <relationships>
+        <relationship to="_WorkPackage_" qualifier="workpackage">
+          <relationshipAttribute from="workpackageid" to="id" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+  <applications>
+    <application entity="SubContractor" name="SubContractor" title="Sub Contractor">
+      <schemas>
+        <list title="Sub Contractors">
+          <field attribute="name" label="Name"/>
+          <field attribute="description" label="Description"/>
+        </list>
+      </schemas>
+    </application>
+
+    <application entity="CallOut" name="CallOut" title="Sub-Contractor Call Out">
+      <schemas>
+        <schema id="calloutline" stereotype="compositionlist" platform="web">
+          <field attribute="subcontractor_.name" label="Sub-Contractor" readonly="true"/>
+          <field attribute="subcontractor_.id" hidden="true"/>
+
+          <field attribute="sendtime" label="Send Request" readonly="true">
+            <renderer type="datetime" />
+          </field>
+
+          <field attribute="status" label="Status" readonly="true"/>
+
+          <field attribute="company" hidden="true"/>
+          <field attribute="expirationdate" hidden="true"/>
+          <field attribute="ponumber" hidden="true"/>
+          <field attribute="tonumber" hidden="true"/>
+          <field attribute="email" hidden="true"/>
+          <field attribute="sitename" hidden="true"/>
+          <field attribute="billingentity" hidden="true"/>
+          <field attribute="nottoexceedamount" hidden="true"/>
+          <field attribute="remainingfunds" hidden="true"/>
+          <field attribute="serviceprovider" hidden="true"/>
+          <field attribute="scopeofwork" hidden="true"/>
+          <field attribute="plantcontacts" hidden="true"/>
+          <field attribute="otherinfo" hidden="true"/>
+        </schema>
+
+        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          <association label="Sub-Contractor" target="subcontractor" labelfield="subcontractor_.name" extraprojectionvalues="name" requiredexpression="true">
+            <renderer type="lookup"/>
+          </association>
+          <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" enableexpression="@status !== 'Submit on Save'">
+            <renderer type="datetime" params="editable=true;allowpast=false;"/>
+          </field>
+          <field attribute="status" hidden="true"/>
+          <field attribute="addcallout" label="Add Call Out" default="false" defaultexpression="false">
+            <renderer type="checkbox" params="layout=left"/>
+          </field>
+
+          <section showexpression="@addcallout == true">
+            <header label="Call Out" />
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=large"/>
+              <field attribute="expirationdate" label="Expiration Date" requiredexpression="@addcallout == true">
+                <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;"/>
+              </field>
+              <field label="PO#" attribute="ponumber"/>
+            </section>
+
+            <section>
+              <field attribute="tonumber" label="TO#" requiredexpression="@addcallout == true"/>
+              <field attribute="email" label="Send to (Email)" requiredexpression="@addcallout == true"/>
+              <field attribute="sitename" label="Site Name" requiredexpression="@addcallout == true"/>
+              <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="@addcallout == true"/>
+              <field attribute="nottoexceedamount" label="Not to Exceed Amount" requiredexpression="@addcallout == true"/>
+              <field attribute="remainingfunds" label="Remaining Funds" default="N/A" requiredexpression="@addcallout == true"/>
+              <field attribute="text1" label="">
+                <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutnottoexceedamounttext.html"/>
+              </field>
+            </section>
+
+            <section>
+              <field attribute="serviceprovider" label="Service Provider" requiredexpression="@addcallout == true"/>
+              <field attribute="scopeofwork" label="Scope of Work" requiredexpression="@addcallout == true">
+                <renderer type="textarea"/>
+              </field>
+              <field attribute="text2" label="Invoicing">
+                <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutinvoicetext.html"/>
+              </field>
+              <field attribute="plantcontacts" label="First Solar Plant Contacts" requiredexpression="@addcallout == true"/>
+              <field attribute="otherinfo" label="Other Info" requiredexpression="@addcallout == true">
+                <renderer type="textarea"/>
+              </field>
+            </section>
+
+          </section>
+
+          
+          
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="add" icon="fa-check" service="fscalloutService" method="saveCallOut" label="Save" primary="true" position="+save"/>
+              <command id="addsubmit" icon="fa-envelope-o" service="fscalloutService" method="saveAndSubmitCallOut" label="Save &amp; Submit" primary="true" position="+save" enableexpression="@addcallout == true"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Sub-Contractor Call Out"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="detail" parentschema="adetail" title="Sub-Contractor Call Out"  platform="web" stereotype="detail">
+        </schema>
+
+        <schema id="detailview" title="Sub-Contractor"  platform="web" stereotype="detail">
+          <section showexpression="@status == 'Open'">
+            <section resourcepath="/Content/Customers/firstsolar/htmls/fsnocallouttext.html"/>
+          </section>
+          <section showexpression="@status != 'Open'">
+            <header label="Call Out" />
+            <section orientation="horizontal">
+              <renderer type="default" params="childinputsize=large"/>
+              <field attribute="expirationdate" label="Expiration Date">
+                <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;"/>
+              </field>
+              <field label="PO#" attribute="ponumber"/>
+              <field attribute="email" label="Send to (Email)"/>
+              <field attribute="tonumber" label="TO#"/>
+              <field attribute="sitename" label="Site Name"/>
+              <field attribute="billingentity" label="Billing Entity"/>
+              <field attribute="nottoexceedamount" label="Not to Exceed Amount"/>
+              <field attribute="remainingfunds" label="Remaining Funds"/>
+              <field attribute="serviceprovider" label="Service Provider"/>
+              <field attribute="plantcontacts" label="First Solar Plant Contacts"/>
+            </section>
+
+            <section>
+              <field attribute="scopeofwork" label="Scope of Work" requiredexpression="true">
+                <renderer type="textarea"/>
+              </field>
+              <field attribute="otherinfo" label="Other Info" requiredexpression="true">
+                <renderer type="textarea"/>
+              </field>
+            </section>
+          </section>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="MaintenanceEngineering" name="MaintenanceEngineering" title="Maintenance Engineering Request">
+      <schemas>
+        <schema id="maintenanceengline" stereotype="compositionlist" platform="web">
+          <field attribute="engineer" hidden="true"/>
+          <field attribute="#engineername" label="Engineer" readonly="true"/>
+          <field attribute="sendtime" label="Send Request" readonly="true">
+            <renderer type="datetime" />
+          </field>
+          <field attribute="status" label="Status" readonly="true"/>
+          <field attribute="reason" hidden="true"/>
+        </schema>
+
+        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          <association label="Engineer" labelfield="#workorder_.fakelabor_.displayname" target="engineer" requiredexpression="true"></association>
+          <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" enableexpression="@status !== 'Submit on Save'">
+            <renderer type="datetime" params="editable=true;allowpast=false;"/>
+          </field>
+          <field attribute="status" hidden="true"/>
+          <field attribute="reason" label="Reason for Request" requiredexpression="true">
+            <renderer type="textarea"/>
+          </field>
+
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="add" icon="fa-check" service="fsmaintananceengService" method="saveMaintananceEng" label="Save" primary="true" position="+save"/>
+              <command id="addsubmitme" icon="fa-envelope-o" service="fsmaintananceengService" method="saveAndSubmitMaintananceEng" label="Save &amp; Submit" primary="true" position="+save" enableexpression="!!@reason"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Maintenance Engineering Request"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="detail" parentschema="adetail" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
+        </schema>
+
+        <schema id="detailview" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
+            <field attribute="reason" label="Reason for Request">
+              <renderer type="textarea"/>
+            </field>
+        </schema>
+      </schemas>
+    </application>
+
+    <application entity="WorkPackage" name="WorkPackage" title="Work Package">
+
+      <schemas>
+        <list stereotype="list" title="Work Packages">
+          <filters>
+            <optionfilter attribute="#status" provider="#workorder_.synstatus_.description" displaycode="true" style="width:300px" whereclause="status in (!@#value)" />
+            <optionfilter attribute="#worktype" provider="#workorder_.worktype_.wtypedesc" displaycode="true" style="width:300px" whereclause="worktype in (!@#value)" />
+            <filter attribute="#description" style="width:300px" whereclause="description like !@#value" />
+            <booleanfilter attribute="#outreq" whereclause="outreq = !@#value" />
+          </filters>
+
+
+          <field attribute="id" hidden="true"/>
+          <field attribute="wonum" label="WP #" >
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="workorderid" hidden="true" />
+          <field attribute="#description" label="Description">
+            <renderer type="default" params="width=30%"/>
+          </field>
+          <field attribute="#outreq" label="Outage Requested" />
+          <field attribute="#worktype" label="Work Type" />
+          <field attribute="#status" label="Status" />
+          <field attribute="createddate" label="Created Date" >
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="#schedstart" label="Scheduled Start">
+            <renderer type="datetime"/>
+          </field>
+        </list>
+
+
+        <schema id="adetail" stereotype="detail">
+
+          <event type="onschemafullyloaded" service="fsworkpackageService" method="onSchemaLoad"/>
+          
+          <field attribute="id" hidden="true" label="Work Package "/>
+
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="#workorder_.orgid" hidden="true"/>
+          
+          
+
+
+          <association label="Work Order" labelfield="workorder_.description" target="wonum" extraprojectionvalues="workorderid" enableexpression="@id== null">
+            <event type="afterchange" service="fsworkpackageService" method="onWorkorderSelected"/>
+          </association>
+          
+          <section showexpression="@wonum != null">
+            <header displacement="ontop" label="Work Order Details" params="fieldset=true" />
+            <section orientation="horizontal">
+              <section>
+                <field label="Number" attribute="#workorder_.wonum" readonly="true"/>
+                <association label="Work Type" target="#workorder_.worktype" labelfield="#workorder_.worktype_.wtypedesc" orderbyfield="worktype asc">
+                  <renderer type="lookup" />
+                </association>
+                <field label="Created" attribute="#workorder_.reportdate">
+                  <renderer type="datetime"/>
+                </field>
+                <field label="Created By" attribute="#workorder_.reportedby" readonly="true"/>
+              </section>
+              <section>
+                <association label="Status" target="#workorder_.status" labelfield="#workorder_.synstatus.description">
+                  <!--                  <dataprovider prefilterfunction="FilterStatusCodes"/>-->
+                  <renderer type="lookup" params="avoidautofocus=true"/>
+                </association>
+
+                <association label="Site Name" target="#workorder_.siteid" labelfield="#workorder_.site_.description"
+                             requiredexpression="true" defaultexpression="@user.site">
+                  <renderer type="lookup" />
+                </association>
+
+                <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location" >
+                  <renderer type="lookup" params="application=asset;schemaId=assetLookupList;hidecode=true"/>
+                  <!--                  <dataprovider prefilterfunction="FilterAssets"/>-->
+                  <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
+                </association>
+                
+              </section>
+              <section>
+                <association label="Job Plan #" target="#workorder_.jpnum" labelfield="#workorder_.jobplan_.description" >
+                  <renderer type="lookup" />
+                </association>
+
+                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description" >
+                  <renderer type="lookup" />
+                </association>
+
+                <field attribute="#workorder_.schedstart" label="Scheduled Start">
+                  <renderer type="datetime"/>
+                </field>
+
+              </section>
+            </section>
+            <field label="Summary" attribute="#workorder_.description"/>
+            <field label="Description" attribute="#workorder_.ld_.ldtext">
+              <renderer type="textarea"/>
+            </field>
+          </section>
+
+
+          <section orientation="horizontal" showexpression="@wonum != null" >
+            <section orientation="horizontal" >
+              <header displacement="ontop" label="Tier Level" params="fieldset=true;"/>
+
+              
+              <field label="Outage Required" attribute="wooutreq" defaultexpression="false" default="false">
+                <renderer type="checkbox"  params="layout=left"/>
+<!--                <option label="Yes" value="true"/>-->
+<!--                <option label="No" value="false"/>-->
+              </field>
+              
+              <optionfield attribute="tier" enableexpression="@wooutreq == true">
+                <renderer type="radio" params="vertical=true"/>
+                <option label="Tier 1" value="tier1" help="Outages that affect production on a block level for a large site or the whole site for a smaller site with no clear path for resolution. &lt;br&gt;&lt;br&gt; This Tier of outage requires the full High Impact Team (HIT) implementation.&lt;br&gt;&lt;br&gt; The intent of a Tier 1 outage response is to escalate an event to ensure the proper level of response for a set of circumstances. "/>
+                <option label="Tier 2" value="tier2" help="Outages affect production or telemetry on a lower level than a Tier 1 priority outage;&lt;br&gt;&lt;br&gt;this outage can be a long-term outage of a single inverter or a loss of site telemetry with an entity like the Balancing Authority or other regulating entity such as California Independent System Operator (CAISO) and has no clear path to resolution.&lt;br&gt;&lt;br&gt; A Tier 2 outage may require assistance of Subject Matter Experts (SMEs), which could include, but not be limited to, Management Information Systems (MIS) and Engineering Information Systems (EIS). &lt;br&gt;&lt;br&gt;Tier 2 outages do NOT require use of formal meetings and the daily update sheet. "/>
+                <option label="Tier 3" value="tier3" help="Outages that affect a short-term loss of a small amount of generation.&lt;br&gt;&lt;br&gt; This type of outage resolution is the lowest level of priority and typically only requires Site Technician involvement.&lt;br&gt;&lt;br&gt; Resolution of a Tier 3 outage is typically short-term (less than a production day).&lt;br&gt;&lt;br&gt; Recovery from this outage is governed within the Operations and Maintenance (O&amp;M) procedures and alarm response. "/>
+              </optionfield>
+            </section>
+
+
+            <section enableexpression="@wooutreq == true">
+              <header displacement="ontop" label="Outage Type" params="fieldset=true"/>
+              <optionfield attribute="outages" enableexpression="@wooutreq == true">
+                <renderer type="checkbox" params="maxrows=4"/>
+                <option label="1. Intercompany Outage" value="1" 
+                        help="Will this outage remove MW’s from Production during the day?&lt;br/&gt;Will this outage require an inter-company clearance?&lt;br/&gt;Will this outage require more than 14 days notification to the SC? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
+                <option label="2. Curtailment/Grid Control Outage" value="2" help="Will this outage remove MW’s from Production during the day?&lt;br/&gt;Will this outage require more than 14 days notification to the SC? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
+                <option label="3. Change Control Outage" value="3" help="Is this outage to make changes covered under a Change control request (ePCR)?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
+                <option label="4. Production/Relay Outage" value="4" help="Is this outage to make changes to any relay protection system? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
+                <option label="5. Telemetry Outage" value="5" help="Is this a telemetry outage?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
+                <option label="6. Met-Station Outage" value="6" help="Is this outage to a Met station that is sending data to an outside entity?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier2')"/>
+                <option label="7. Non-Coordinated Outage" value="7" help="All others" enableexpression="@tier != null &amp;&amp;@tier.equalsAny('tier3')"/>
+              </optionfield>
+            </section>
+          </section>
+
+
+          <section orientation="horizontal" showexpression="@wonum != null">
+            <section>
+              <header displacement="ontop" label="Interconnect Documents" params="fieldset=true"/>
+              <optionfield attribute="interconnectdocs" default="na" defaultexpression="na">
+                <renderer type="radio" params="vertical=true"/>
+                <option label="N/A" value="na"/>
+                <option label="Switching Order (ONLY)" value="switching"/>
+                <option label="Source of Power Clearance" value="source"/>
+              </optionfield>
+            </section>
+
+
+            <section orientation="horizontal">
+              <header displacement="ontop" label="Operation Procedures" params="fieldset=true"/>
+              <section>
+                <optionfield attribute="outagetype" >
+                  <renderer type="checkbox" params="maxrows=1"/>
+                  <option label="NOP" value="NOP"/>
+                  <option label="MOP" value="MOP"/>
+                </optionfield>
+              </section>
+              <section>
+                <association label="Site Technician" labelfield="#workorder_.technician_.displayname" target="#workorder_.owner" enableexpression="@outagetype != 'NOP'"/>
+                <association label="Site Supervisor" labelfield="#workorder_.supervisor_.displayname" target="#workorder_.supervisor" enableexpression="@outagetype != 'NOP'"/>
+                <association label="Regional Plant Manager" labelfield="#workorder_.plantmanager_.displayname" target="#workorder_.supervisor2" enableexpression="@outagetype != 'NOP'"/>
+              </section>
+            </section>
+          </section>
+
+
+          <section showexpression="@wonum != null">
+            <header displacement="ontop" label="MANPOWER Configuration" params="fieldset=true;style={&quot;background&quot;:&quot;cadetblue&quot;}"/>
+
+            <section orientation="horizontal" attribute="subcontractorenabled">
+              <header label="Sub-Contractor" params="fieldset=true;enablecontrol=true"/>
+              <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="">
+                <collectionproperties listschema="calloutline" autocommit="false" allowremoval="true"/>
+                <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Call Out"/>
+              </composition>
+            </section>
+
+            <section orientation="horizontal" attribute="maintenanceenabled">
+              <header label="Maintenance Engineering" params="fieldset=true;enablecontrol=true"/>
+              <composition inline="true" relationship="maintenanceEngineerings" label="" detailschema="detailview" printschema="">
+                <collectionproperties listschema="maintenanceengline" autocommit="false" allowremoval="true"/>
+                <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsmaintananceengService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fsmaintananceengService.openModalEdit;composition.inline.deletefunction=fsmaintananceengService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
+              </composition>
+            </section>
+
+          </section>
+
+          <section showexpression="@wonum != null">
+            <section attribute="testresultreviewenabled" >
+              <header label="Test Results Review" params="fieldset=true;enablecontrol=true"/>
+              <section orientation="horizontal">
+                <field label="Results for Review" attribute="resultsforreview"></field>
+                <field label="Days Upon Closure" attribute="daysuponclosure">
+                  <renderer type="numericinput"/>
+                </field>
+              </section>
+              <field label="Request Explanation" attribute="requestexplanation">
+                <renderer type="textarea"/>
+              </field>
+            </section>
+          </section>
+
+          <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" 
+               id="engineering" enableexpression="@#workorder_.worktype == 'CM' &amp;&amp; @wooutreq == true &amp;&amp; @tier == 'tier1' &amp;&amp; @id!=null" countrelationship="">
+               
+            
+                 <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files" detailschema="">
+                   <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+                 </composition>
+
+                 <composition inline="true" relationship="#relayeventevaluations_" label="Engineering Evaluation - Event File" detailschema="worklog.workpackageview" printschema="">
+                   <collectionproperties listschema="worklog.workpackagelist" autocommit="true" allowremoval="false" allowupdate="true" allowcreation="true"/>
+                   <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.editfunction=fsengineeringevaluationService.openModalEdit;composition.inline.forcehideremove=true;composition.inline.addTitle=Evaluation"/>
+                 </composition>
+
+                <section>
+                  <header label="Extra Tests" params="fieldset=true"/>
+         
+                  <section orientation="horizontal">
+                    <optionfield label="Components" attribute="engcomponents">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option label="GSU" value="GSU"/>
+                      <option label="SF6 Breaker" value="SF6"/>
+                      <option label="Vacuum Breaker" value="VACUUM"/>
+                      <option label="Air Switches" value="AIRS"/>
+                      <option label="Cap Bank" value="CAPB"/>
+                      <option label="Battery Bank/Charger" value="BATTERY"/>
+                      <option label="Feeder" value="FEEDER"/>
+                      <option label="Relay" value="RELAY"/>
+                      <!--                    <option label="Telemetry" value="TELEMETRY"/>-->
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                    <section showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('GSU')!= -1 ">
+                      <optionfield attribute="gsuimmediatetests" label="GSU Testing - Immediate Response" qualifier="gsu">
+                        <renderer type="checkbox" params="layout=left"/>
+                        <option  label="Capture Oil Sampling" value="captureoil"/>
+                        <option  label="Capture Bushing Monitoring Data" value="capturemon"/>
+                        <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="oilsampleanddissolved"/>
+                        <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                        <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                      </optionfield>
+
+                      <optionfield attribute="gsutests" label="GSU Testing" qualifier="gsu">
+                        <renderer type="checkbox" params="layout=left"/>
+                        <option  label="Transformer Turns Ratio (TTR) Test" value="transformer"/>
+                        <option  label="Megger Test" value="megger"/>
+                        <option  label="Overall Power Factor Test" value="overall"/>
+
+                        <option  label="(C1/C2) Bushing Power Factor Test" value="c1c2"/>
+                        <option  label="Leakage Reactance Test" value="leakage"/>
+                        <option  label="Test Results to Doble Engineers" value="testresultstodoble"/>
+                        <option  label="Recommend Repair" value="repair"/>
+                        <option  label="Recommend Replace" value="replace"/>
+                        <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                        <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                      </optionfield>
+
+                    </section>
+
+                    <optionfield label="SF6 Breaker Testing" attribute="sf6tests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('SF6')!= -1 " qualifier="sf6">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Megger Test" value="megger"/>
+                      <option  label="Ductor Test" value="ductor"/>
+                      <option  label="HI-Pot Test" value="hipot"/>
+                      <option  label="Test SF6 for Purity &amp; Moisture" value="testsf6"/>
+                      <option  label="Overall Power Factor Test" value="overallpower"/>
+                      <option  label="Bushing Power Factor Test" value="bushingpower"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+
+                    <optionfield label="Vaccuum Breaker Testing" attribute="vacuumtests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('VACUUM')!= -1 " qualifier="vacuum">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Megger Test" value="megger"/>
+                      <option  label="Ductor Test" value="ductor"/>
+                      <option  label="HI-Pot Test" value="hipot"/>
+                      <option  label="Contact Erosion Test" value="contacterosion"/>
+                      <option  label="Bushing Power Factor Test" value="bushingpower"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+
+                    <optionfield label="Air Switch Testing" attribute="airswitchertests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('AIRS')!= -1 " qualifier="airs">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Megger Test" value="megger"/>
+                      <option  label="Ductor Test" value="ductor"/>
+                      <option  label="HI-Pot Test" value="hipot"/>
+                      <option  label="Functionality Test (open-close-open)" value="ftoco"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                    <optionfield attribute="capbanktests" label="Cap Bank Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('CAPB')!= -1 " qualifier="capb">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Measure Capacitance" value="measurecap"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                    <optionfield attribute="batterytests" label="Battery Bank/Charger Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('BATTERY')!= -1 " qualifier="battery">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                    <optionfield attribute="relaytests" label="Relay Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('RELAY')!= -1 " qualifier="relay">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                    <optionfield attribute="feedertests" label="Feeder Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('FEEDER')!= -1 " qualifier="feeder">
+                      <renderer type="checkbox" params="layout=left"/>
+                      <option  label="Megger Test" value="megger"/>
+                      <option  label="Ductor Test" value="ductor"/>
+                      <option  label="HI-Pot Test" value="hipot"/>
+                      <option  label="Transformer Turns Ratio (TTR) Test" value="ttr"/>
+                      <option  label="Recommend Repair" value="repair"/>
+                      <option  label="Recommend Replace" value="replace"/>
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                  </section>
+
+                </section>
+
+                <section id="components">
+                  <!--Placeholder section to display the components on the screen-->
+                </section>
+          
+            
+          </tab>
+
+          <event service="fsworkpackageService" method="componentsLoad" type="onload"/>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Work Package"  platform="web" stereotype="detailnew">
+
+        </schema>
+      </schemas>
+    </application>
+
+
+  </applications>
+
+</metadata>

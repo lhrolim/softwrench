@@ -1,0 +1,36 @@
+<div file-dropzone="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }} "
+     class="dropzone form-control" data-file-name="fileName" data-file="fileData"
+     data-dropzone-hover-class="file-over"
+     data-field="fieldMetadata" style="padding: 10px; text-align: left">
+
+
+    <div style="padding-left: 10px">
+        <i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
+
+        <input id="uploadInput" class="upload-input" type="file"
+               fileread="fileData" data-file-read-field="fieldMetadata" path="fileNames"
+               data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}"/>
+
+        <a href="" id="uploadInputLink" ng-click="browseFile($event)">browse</a>
+        <br />
+    </div>
+
+
+    <div class="iconset">
+        <div ng-repeat="file in files" class="fileicon">
+            <!--<a style="position: absolute; padding: 5px;"><i class="fa fa-times" ng-if="file.persisted" /></a>-->
+            <a class="thumbnail thumbnailiconset text-center" ng-click="fileClick(file)">
+                <div class="item-icon">
+                    <i class="fa fa-file item-extension" data-ext="{{file.extension}}" style="position: relative; top: 1px"/>
+                    <i class="fa fa-refresh item-refresh" ng-if="!file.persisted"/>
+                </div>
+                {{file.label}}
+            </a>
+
+        </div>
+    </div>
+
+
+
+
+</div>

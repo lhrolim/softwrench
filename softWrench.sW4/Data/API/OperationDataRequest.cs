@@ -57,6 +57,10 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
+        public string SuccessMessage {
+            get; set;
+        }
+
         public CompositionOperationDTO CompositionData { get; set; }
 
         public bool Batch {

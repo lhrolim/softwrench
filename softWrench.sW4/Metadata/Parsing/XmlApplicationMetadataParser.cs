@@ -243,12 +243,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             var id = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableIdAttribute).ValueOrDefault((string)null);
             var label = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableLabelAttribute).ValueOrDefault((string)null);
             var showExpression = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
+            var enableExpression = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableEnableExpressionAttribute).ValueOrDefault("true");
             var toolTip = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
             var icon = tabElement.Attribute(XmlBaseSchemaConstants.IconAttribute).ValueOrDefault((string)null);
             var role = tabElement.Attribute(XmlBaseSchemaConstants.RoleAttribute).ValueOrDefault((string)null);
             var countRelationship = tabElement.Attribute(XmlBaseSchemaConstants.CountRelationshipAttribute).ValueOrDefault((string)null);
             var displayables = ParseDisplayables(applicationName, schemaId, tabElement, entityName);
-            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression, icon, role, countRelationship);
+            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression, enableExpression,icon, role, countRelationship);
         }
 
         private static ApplicationSection ParseSection(string applicationName, string schemaId, XElement sectionElement, EntityMetadata entityMetadata) {
@@ -268,7 +269,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 throw new InvalidOperationException("A section with secondarycontent=\"true\" cannot have a child section with secondarycontent=\"true\"");
             }
 
-            var header = ParseHeader(sectionElement);
+            var header = ParseHeader(applicationName, schemaId,entityMetadata.Name,sectionElement);
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((string)null);
             var renderer = ParseRendererNew(sectionElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
                 attribute, FieldRendererType.SECTION, entityMetadata);
@@ -297,7 +298,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             return new ApplicationSchemaCustomization(position, displayables);
         }
 
-        private static ApplicationHeader ParseHeader(XContainer schema) {
+        private static ApplicationHeader ParseHeader(string applicationName, string schemaId, string entityName, XContainer schema) {
             foreach (var xElement in schema.Elements()) {
                 var xName = xElement.Name.LocalName;
                 if (xName == XmlMetadataSchema.ApplicationHeaderElement) {
@@ -307,7 +308,8 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
                     var toolTip = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
                     var helpIcon = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableHelpIconAttribute).ValueOrDefault((string)null);
-                    return new ApplicationHeader(label, parameters, displacement, showExpression, helpIcon, toolTip);
+                    var displayables =ParseDisplayables(applicationName, schemaId, xElement, entityName);
+                    return new ApplicationHeader(label, parameters, displacement, showExpression, helpIcon, toolTip, displayables);
                 }
             }
             return null;
@@ -358,14 +360,16 @@ namespace softWrench.sW4.Metadata.Parsing {
         private static IAssociationOption ParseOption(XElement xElement) {
             var label = xElement.Attribute(XmlMetadataSchema.OptionElementLabelAttribute).Value;
             var value = xElement.Attribute(XmlMetadataSchema.OptionElementValueAttribute).Value;
+            var help = xElement.Attribute(XmlMetadataSchema.OptionElementHelp).ValueOrDefault((string)null);
+            var enableExpression = xElement.AttributeValue(XmlMetadataSchema.BaseDisplayableEnableExpressionAttribute);
 
             var extraProjection = xElement.Attribute(XmlMetadataSchema.OptionElementExtraProjection).ValueOrDefault((string)null);
             if (extraProjection != null) {
                 var dict = PropertyUtil.ConvertToDictionary(extraProjection);
-                return new MultiValueAssociationOption(value, label, dict);
+                return new MultiValueAssociationOption(value, label, dict, true, help, enableExpression);
             }
 
-            return new AssociationOption(value, label);
+            return new AssociationOption(value, label, help, enableExpression);
         }
 
 
@@ -460,7 +464,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var requiredRelationshipExpression = composition.Attribute(XmlMetadataSchema.ApplicationCompositionRequiredRelationshipAttribute).ValueOrDefault((string)null);
             var schema = ParseCompositionSchema(entityName, applicationName, sourceSchemaId, relationship, composition);
             schema.RequiredRelationshipExpression = requiredRelationshipExpression;
-            return ApplicationCompositionFactory.GetInstance(applicationName, relationship, label, schema, showExpression, toolTip, hidden, printEnabled, ParseHeader(composition));
+            return ApplicationCompositionFactory.GetInstance(applicationName, relationship, label, schema, showExpression, toolTip, hidden, printEnabled, ParseHeader(applicationName,sourceSchemaId, entityName, composition));
         }
 
         private static ApplicationCompositionSchema ParseCompositionSchema(string entityName, string applicationName, string sourceSchemaId, string relationship, XElement composition) {

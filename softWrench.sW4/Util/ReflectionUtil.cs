@@ -86,8 +86,11 @@ namespace softWrench.sW4.Util {
         /// <returns></returns>
         public static Boolean SetProperty(object baseObject, String propertyName, object value) {
             //search for the property name as is, fallbacking to the upper propertyname==> Some fields have "Value" as property while some have "VALUE"
-            var prop = TypeDescriptor.GetProperties(baseObject)[propertyName] ??
-                                      TypeDescriptor.GetProperties(baseObject)[propertyName.ToUpper()];
+            var allProperties = TypeDescriptor.GetProperties(baseObject);
+
+            var prop = allProperties.Find(propertyName, true);
+
+
             if (prop == null) {
                 return false;
             }
@@ -97,18 +100,13 @@ namespace softWrench.sW4.Util {
                     return true;
                 }
                 var stvalue = value.ToString();
-                if (prop.PropertyType.IsEnum) {
-                    value = Enum.Parse(prop.PropertyType, stvalue);
+                var propPropertyType = prop.PropertyType;
+
+                if (propPropertyType.IsEnum) {
+                    value = Enum.Parse(propPropertyType, stvalue);
                 }
                 //Add an other case for boolean
-                if ("boolean".EqualsIc(prop.PropertyType.Name) && (!value.ToString().EqualsAny("true", "false"))) {
-                    if (stvalue == "0") {
-                        value = false;
-                    }
-                    if (stvalue == "1") {
-                        value = true;
-                    }
-                }
+
                 var castedValue = HandleCasting(prop, value);
 
                 prop.SetValue(baseObject, castedValue);
@@ -131,11 +129,38 @@ namespace softWrench.sW4.Util {
         }
 
         private static object HandleCasting(PropertyDescriptor prop, object value) {
-            if ("DateTime".EqualsIc(prop.PropertyType.Name) && !(value is DateTime)) {
-                return ConversionUtil.HandleDateConversion(value as string);
+            var propertyType = prop.PropertyType;
+
+
+            if (propertyType.IsGenericType &&
+                propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+                propertyType = propertyType.GetGenericArguments()[0];
             }
 
-            return "Int64".EqualsIc(prop.PropertyType.Name) ? Convert.ToInt64(value) : value;
+            var stvalue = value.ToString();
+
+            if ("boolean".EqualsIc(propertyType.Name)) {
+                if (stvalue == "0") {
+                    value = false;
+                }
+                if (stvalue == "1") {
+                    value = true;
+                } else {
+                    value = Convert.ToBoolean(stvalue.ToLower());
+                }
+            }
+
+            if ("DateTime".EqualsIc(propertyType.Name) && !(value is DateTime)) {
+                return ConversionUtil.HandleDateConversion(value as string);
+            }
+            if ("Int64".EqualsIc(propertyType.Name)) {
+                return Convert.ToInt64(value);
+            }
+            if ("Int32".EqualsIc(propertyType.Name)) {
+                return Convert.ToInt32(value);
+            }
+
+            return value;
         }
 
         public static void SetProperty(object baseObject, dynamic innerPropertyValues) {

@@ -145,17 +145,18 @@
             return valueConsideringSchemas(value, schema);
         },
 
-        getI18nInputLabel: function (fieldMetadata, schema) {
+        getI18nInputLabel: function (fieldMetadata, schema, avoidColon=false) {
             var label = this.getI18nLabel(fieldMetadata, schema);
             if (label === "") {
                 return "";
             }
             const lastChar = label.charAt(label.length - 1);
-            if (lastChar === ":" || lastChar === "?" || lastChar === "#" || fieldMetadata.type === 'ApplicationSection') {
+            if (lastChar === ":" || lastChar === "?" || fieldMetadata.type === 'ApplicationSection') {
                 return label;
             }
-
-            label = label + ':';
+            if (!avoidColon) {
+                label = label + ':';    
+            }
             return label;
         },
 

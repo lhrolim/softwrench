@@ -57,6 +57,7 @@ namespace softWrench.sW4.Metadata.Merger {
             original.MergeProperties(overridenSchema);
 
             ApplicationSchemaFactory.AddHiddenRequiredFields(original);
+            ApplicationSchemaFactory.AddHiddenSectionControlFields(original);
         }
 
 

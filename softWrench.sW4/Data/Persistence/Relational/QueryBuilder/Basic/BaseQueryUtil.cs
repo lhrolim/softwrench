@@ -6,6 +6,8 @@ using System.Text;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
+using JetBrains.Annotations;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
@@ -72,6 +74,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         }
 
         public static string GenerateInString(IEnumerable<DataMap> items, string columnName = null) {
+
             var dataMaps = items as DataMap[] ?? items.ToArray();
             if (items == null || !dataMaps.Any()) {
                 return null;
@@ -80,6 +83,24 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             var sb = new StringBuilder();
             foreach (var item in dataMaps) {
                 var id = columnName == null ? item.Id : item.GetAttribute(columnName);
+                if (!usedItems.Contains(id)) {
+                    sb.Append("'").Append(id).Append("'");
+                    sb.Append(",");
+                }
+                usedItems.Add(id);
+            }
+            return sb.ToString(0, sb.Length - 1);
+        }
+
+        public static string GenerateInString(IEnumerable<AttributeHolder> items, [NotNull]string columnName) {
+            var dataMaps = items as DataMap[] ?? items.ToArray();
+            if (items == null || !dataMaps.Any()) {
+                return null;
+            }
+            var usedItems = new HashSet<object>();
+            var sb = new StringBuilder();
+            foreach (var item in dataMaps) {
+                var id = item.GetAttribute(columnName);
                 if (!usedItems.Contains(id)) {
                     sb.Append("'").Append(id).Append("'");
                     sb.Append(",");

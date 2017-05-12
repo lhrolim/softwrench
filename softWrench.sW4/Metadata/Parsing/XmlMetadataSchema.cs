@@ -286,6 +286,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string OptionElementValueAttribute = "value";
         public const string OptionElementLabelAttribute = "label";
         public const string OptionElementExtraProjection = "extraprojections";
+        public const string OptionElementHelp = "help";
 
         public const string ReferenceElement = "reference";
 

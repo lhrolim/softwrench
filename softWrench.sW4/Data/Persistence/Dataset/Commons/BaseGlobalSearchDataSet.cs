@@ -72,8 +72,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchDto.SearchSort = propertyValue;
             }
 
-            FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
-            QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
+            FilterDTOHandlerComposite.HandleDTO(application.Schema, searchDto);
 
             var paginationData = PaginationData.GetInstance(searchDto, entityMetadata);
             // Build the applicable where clause

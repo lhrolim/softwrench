@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data {
 
         }
 
-        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType = null, bool rowstampsHandled = false)
+        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, Type mappingType = null, bool rowstampsHandled = false, string idFieldName = null)
             : base(application, fields) {
             //TODO: apply mapping type properly
             if (!rowstampsHandled) {
@@ -27,6 +27,9 @@ namespace softWrench.sW4.Data {
             object rowstampObject;
             if (this.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
                 Approwstamp = (long)rowstampObject;
+            }
+            if (idFieldName != null && ContainsKey(idFieldName)) {
+                Id = this[idFieldName].ToString();
             }
         }
 

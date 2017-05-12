@@ -45,12 +45,12 @@ namespace softWrench.sW4.Data.Entities {
         }
 
 
-        public object GetRelationship(string attributeName) {
+        public object GetRelationship(string attributeName, bool isSingleAssociation =false) {
             object relationship;
             attributeName = attributeName.EndsWith("_") ? attributeName : attributeName + "_";
             AssociationAttributes.TryGetValue(attributeName, out relationship);
             if (relationship == null) {
-                if (Metadata.ListAssociations().Any(l => l.Qualifier.EqualsAny(attributeName))) {
+                if (!isSingleAssociation) {
                     return BlankList();
                 }
             }
@@ -81,7 +81,7 @@ namespace softWrench.sW4.Data.Entities {
             return new List<Entity>();
         }
 
-        public IDictionary<string, string> UnmappedAttributes { get; } = new Dictionary<string, string>();
+        public IDictionary<string, string> UnmappedAttributes { get; } = new Dictionary<string, string>(StringComparer.CurrentCultureIgnoreCase);
 
         public override string GetStringAttribute(string attributeName, bool remove = false, bool throwException = false) {
             var value = GetAttribute(attributeName, remove, throwException);

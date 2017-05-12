@@ -19,6 +19,9 @@ namespace softwrench.sW4.Shared2.Data {
 
         public virtual void AddAllAttribtes(IDictionary<string, object> fields) {
             foreach (KeyValuePair<string, object> entry in fields) {
+                if (ContainsKey(entry.Key)) {
+                    Remove(entry.Key);
+                }
                 Add(entry.Key, entry.Value);
             }
         }

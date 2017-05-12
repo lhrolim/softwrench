@@ -7,14 +7,14 @@ namespace softwrench.sw4.Shared2.Data.Association {
         public MultiValueAssociationOption() {
         }
 
-        public MultiValueAssociationOption(string value, string label, DataMapDefinition extrafields, bool forceDistinctOptions = true)
-            : base(value, label) {
+        public MultiValueAssociationOption(string value, string label, DataMapDefinition extrafields, bool forceDistinctOptions = true, string help = null, string enableExpression = null)
+            : base(value, label, help, enableExpression) {
             Extrafields = extrafields.Fields;
             ForceDistinctOptions = forceDistinctOptions;
         }
 
-        public MultiValueAssociationOption(string value, string label, [CanBeNull]IDictionary<string, object> fields, bool forceDistinctOptions = true)
-            : base(value, label) {
+        public MultiValueAssociationOption(string value, string label, [CanBeNull]IDictionary<string, object> fields, bool forceDistinctOptions = true, string help = null, string enableExpression = null)
+            : base(value, label, help, enableExpression) {
             Extrafields = fields;
             ForceDistinctOptions = forceDistinctOptions;
         }

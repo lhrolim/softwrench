@@ -462,7 +462,11 @@ function url(path) {
     if (path == null) {
         return null;
     }
-    path = path.toLowerCase();
+    if (path.endsWith("html")) {
+        //replacing all the strings to lower was causing some issues with some http parameters which relied on case (ex: filter)
+        // for the html templates, however, due to the template cache, we decided to have them all case-insensitive, thus this if
+        path = path.toLowerCase();    
+    }
     var root = location.protocol + '//' + location.hostname +
         (location.port ? ":" + location.port : "");
 

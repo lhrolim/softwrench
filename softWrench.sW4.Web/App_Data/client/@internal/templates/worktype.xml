@@ -9,7 +9,9 @@
       <schemas>
         <list>
           <field attribute="worktype" label="Work Type" qualifier="title"/>
-          <field attribute="wtypedesc" label="Description" qualifier="excerpt"/>
+          <field attribute="wtypedesc" label="Description" qualifier="excerpt">
+            <renderer type="textarea"/>
+          </field>
         </list>
         <detail>
           <field attribute="worktypeid" label="ID"  requiredexpression="true" />

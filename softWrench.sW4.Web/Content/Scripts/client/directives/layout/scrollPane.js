@@ -1,14 +1,17 @@
 ﻿(function (angular, app) {
     "use strict";
 
-    app.directive('scrollPane', function (contextService, $log, $timeout, $window) {
+    app.directive('scrollPane', function (contextService, $log, $timeout, $rootScope, $window) {
+        "ngInject";
+
         return {
             restrict: 'E',
             replace: false,
             scope: {
                 availableFn: '&',
                 preventWindowScroll: '=',
-                useAvailableHeight: '='
+                useAvailableHeight: '=',
+                panelid: '@'
             },
 
             link: function (scope, element, attrs) {
@@ -20,38 +23,52 @@
                 var scrollPaneData = null;
                 var scrollElement = $('.scroll', element);
 
+                
+
+                var lazyLayout = window.debounce(setScrollHeight, 100);
+
                 $(window).resize(window.debounce(setScrollHeight, 100));
 
-                //TODO: performance: improve
-//                scope.$watch(
-//                    function () {
-//                        log.trace('checking scroll pane');
-//                        const t0 = performance.now();
-//                        const scrollParent = $(element[0].offsetParent).is(':visible');
-//
-//                        //if scroll pane exists and parent is visible
-//                        if (!scrollPaneData && !scrollParent) {
-//                            log.trace('no scroll pane to adjust, took:(ms) ' + (performance.now() - t0));
-//                            return;
-//                        }
-//                        const length = element[0].innerHTML.length;
-//
-//                        log.debug('checking scroll pane finish, took:(ms) ' + (performance.now() - t0));
-//                        return length;
-//                    },
-//                    function (newValue, oldValue) {
-//                        if (newValue !== oldValue) {
-//                            log.trace('content changed, resize scroll pane');
-//
-//                            //allow the parent to update before resize
-//                            lazyLayout();
-//                        }
-//                    }
-//                );
+                $rootScope.$on(JavascriptEventConstants.ForceResize, (event, forceavailableSize) => {
+                    //TODO: come up with a better solution
+                    scope.forcedAvailableSize = forceavailableSize;
+                    setScrollHeight(forceavailableSize);
+                });
 
-                function getContentHeight(scrollElement, available) {
+                if (scope.panelid === "#modal") {
+                    //TODO: performance: improve
+                    scope.$watch(
+                        function () {
+                            log.trace('checking scroll pane');
+                            const t0 = performance.now();
+                            const scrollParent = $(element[0].offsetParent).is(':visible');
+
+                            //if scroll pane exists and parent is visible
+                            if (!scrollPaneData && !scrollParent) {
+                                log.trace('no scroll pane to adjust, took:(ms) ' + (performance.now() - t0));
+                                return;
+                            }
+                            const length = element[0].innerHTML.length;
+
+                            log.debug('checking scroll pane finish, took:(ms) ' + (performance.now() - t0));
+                            return length;
+                        },
+                        function (newValue, oldValue) {
+                            if (newValue !== oldValue) {
+                                log.trace('content changed, resize scroll pane');
+
+                                //allow the parent to update before resize
+                                lazyLayout();
+                            }
+                        }
+                    );
+                }
+
+             
+
+                function getContentHeight(scrollElement, available, forceavailableSize = false) {
                     //if set use the avaialbe height as the pane size
-                    if (scope.useAvailableHeight) {
+                    if (scope.useAvailableHeight || scope.forcedAvailableSize) {
                         return available;
                     }
 
@@ -88,8 +105,8 @@
                     return pane;
                 }
 
-                function setScrollHeight() {
-                    const contentHeight = getContentHeight(scrollElement, scope.availableFn()());
+                function setScrollHeight(forceavailableSize=false) {
+                    const contentHeight = getContentHeight(scrollElement, scope.availableFn()(), forceavailableSize);
                     if (contentHeight != null) {
                         scrollElement.height(contentHeight);
                         scrollPaneData = initScrollPane(scrollPaneData, scrollElement);

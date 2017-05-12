@@ -112,6 +112,8 @@
                         return;
                     }
 
+                    var tabs = tabsService.tabsDisplayables($scope.schema);
+
                     tabSpinners.forEach(s => {
                         //just in case, enforcing spinners have been stopped.
                         s.stop();
@@ -119,7 +121,9 @@
 
                     tabSpinners.splice(0, tabSpinners.length);
                     $(".tabRecordspin:not(.spinstop)").each((idx, e) => {
-                        tabSpinners.push(spinService.startSpinner(e, { extraSmall: true }));
+                        if (tabsService.hasCount(tabs[idx])) {
+                            tabSpinners.push(spinService.startSpinner(e, { extraSmall: true }));    
+                        }
                     });
 
                     $scope.allTabsLoaded(event, firstTabId);
@@ -141,6 +145,8 @@
                     if (tab != null && !tabsService.hasTab($scope.schema, tab)) {
                         // active tab not found
                         redirectService.redirectToTab($scope.getMainTabId());
+                    } else {
+                        redirectService.redirectToTab(tab);
                     }
 
                     $timeout(function () {
@@ -156,6 +162,13 @@
                         small: true
                     };
                     spinService.startSpinner(element,spinneroptions);
+                }
+
+                $scope.isTabDisabled = function(datamap,tab) {
+                    if (tab.enableExpression === undefined || tab.enableExpression === "true") {
+                        return false;
+                    }
+                    return !expressionService.evaluate(tab.enableExpression, datamap, $scope, tab);
                 }
 
                 $scope.setForm = function (form) {

@@ -44,7 +44,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
 
 
-        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false, bool allowsNull = false, bool includeOnSync=false) {
+        public EntityAssociationAttribute(string to, string @from, string query, bool primary = false, bool allowsNull = false, bool includeOnSync = false) {
 
             From = @from;
             To = to;
@@ -78,6 +78,13 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
 
         public override string ToString() {
             return string.Format("From: {0}, To: {1}, Literal: {2}, QuoteLiteral: {3}, Primary: {4}", From, To, Literal, QuoteLiteral, Primary);
+        }
+
+        public EntityAssociationAttribute Clone() {
+            if (Literal == null) {
+                return new EntityAssociationAttribute(To, From, Query, Primary, AllowsNull, IncludeOnSync);
+            }
+            return new EntityAssociationAttribute(QuoteLiteral, To, From, Literal);
         }
     }
 }

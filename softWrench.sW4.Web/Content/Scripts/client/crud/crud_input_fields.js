@@ -31,6 +31,7 @@
             replace: true,
             scope: {
                 schema: '=',
+                fieldMetadata:'=',
                 datamap: '=',
                 isDirty: '=',
                 displayables: '=',
@@ -43,12 +44,35 @@
                 lookupAssociationsCode: '=',
                 lookupAssociationsDescription: '=',
                 rendererParameters: '=',
+                headerSection: '@',
                 tabsection: "@",
                 cancelfn: "&"
             },
             template: "<div></div>",
             link: function (scope, element, attrs) {
+
+
                 if (angular.isArray(scope.displayables)) {
+
+                    scope.sectionParameters = scope.rendererParameters || {};
+
+                    if (scope.fieldMetadata && scope.fieldMetadata.header) {
+                        if (scope.fieldMetadata.header.parameters) {
+                            Object.keys(scope.fieldMetadata.header.parameters).forEach(k => {
+                                scope.sectionParameters[k] = scope.fieldMetadata.header.parameters[k];    
+                            })
+
+                            
+                        }
+                    }
+
+//                    scope.rendererParameters = [];
+                    
+                    if (scope.headerSection === "true") {
+                        //check crud_layoutservice.js getfieldclass
+                        scope.sectionParameters["headerSection"] = true;
+                    }
+
                     element.append(
                     "<crud-input-fields displayables='displayables'" +
                     "schema='schema'" +
@@ -57,7 +81,7 @@
                     "ismodal = '{{ismodal}}'" +
                     "displayables='displayables'" +
                     "blockedassociations='blockedassociations'" +
-                    "section-parameters='rendererParameters'" +
+                    "section-parameters='sectionParameters'" +
                     "elementid='{{elementid}}'" +
                     "orientation='{{orientation}}' insidelabellesssection='{{islabelless}}'" +
                     "outerassociationcode='lookupAssociationsCode' " +
@@ -92,6 +116,7 @@
                 blockedassociations: '=',
                 elementid: '@',
                 orientation: '@',
+                headerSection:'@',
                 insidelabellesssection: '@',
                 previousdata: '=',
                 previousschema: '=',
@@ -142,12 +167,12 @@
                 }
             },
 
-            controller: ["$scope", "$http", "$element", "$injector", "$timeout", "$log", "alertService",
+            controller: ["$q","$scope", "$http", "$element", "$injector", "$timeout", "$log", "alertService",
                 "printService", "compositionService", "commandService", "fieldService", "i18NService",
                 "associationService", "expressionService", "styleService", "tabsService",
                 "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService",
                 "layoutservice", "attachmentService", "richTextService",
-                function ($scope, $http, $element, $injector, $timeout, $log, alertService,
+                function ($q,$scope, $http, $element, $injector, $timeout, $log, alertService,
                 printService, compositionService, commandService, fieldService, i18NService,
                 associationService, expressionService, styleService, tabsService,
                 cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
@@ -173,6 +198,41 @@
 
                     $scope.getPanelId = function () {
                         return $scope.panelid || ($scope.ismodal === "true" ? "#modal" : null);
+                    }
+
+                    $scope.getGroupedCheckboxOptions = function (fieldMetadata) {
+                        if (fieldMetadata.jscache == null) {
+                            fieldMetadata.jscache = {};
+                        }
+                        if (fieldMetadata.jscache.grouppedcheckboxes) {
+                            return fieldMetadata.jscache.grouppedcheckboxes;
+                        }
+
+                        const maxrows = parseInt(fieldMetadata.rendererParameters["maxrows"] || 1000);
+                        const options = $scope.getCheckboxOptions(fieldMetadata);
+
+                        const numberofColumns = Math.ceil(options.length / maxrows);
+                        const numberOfRows = Math.min(options.length, maxrows);
+
+                        const result = [];
+                        
+
+                        let j;
+                        let currentIndex;
+
+                        for (let i = 0; i < numberOfRows; i++) {
+                            result[i] = [];
+                            j = 0;
+                            while (j < numberofColumns) {
+                                currentIndex = (j * maxrows) + i;
+                                if (options.length > currentIndex) {
+                                    result[i].push(options[currentIndex]);
+                                }
+                                j++;
+                            }
+                        }
+                        fieldMetadata.jscache.grouppedcheckboxes = result;
+                        return result;
                     }
 
                     $scope.getCheckboxOptions = function (fieldMetadata) {
@@ -207,7 +267,7 @@
 
                     //this will get called when the input form is done rendering
                     $scope.$on(JavascriptEventConstants.BodyRendered, function (ngRepeatFinishedEvent, parentElementId) {
-                        eventService.onload($scope.schema, $scope.datamap);
+                        eventService.onload($scope, $scope.schema, $scope.datamap, { tabid: crudContextHolderService.getActiveTab() });
                         const bodyElement = $('#' + parentElementId + "[schemaid=" + $scope.schema.schemaId + "]");
                         if (bodyElement.length <= 0) {
                             return;
@@ -324,9 +384,14 @@
                         const datamap = crudContextHolderService.rootDataMap($scope.panelId);
                         if (fieldMetadata.rendererType === "datetime") {
                             //check datetime.js
-                            const originalUnformatted = `#${fieldMetadata.attribute}_unformatted`;
-                            if (!!datamap[originalUnformatted]) {
-                                return originalDatamap[fieldMetadata.attribute] !== datamap[originalUnformatted];
+
+                            let originalUnformatted = `${fieldMetadata.attribute}_formatted`;
+                            if (originalUnformatted[0] !== "#") {
+                                originalUnformatted = "#" + originalUnformatted;
+                            }
+
+                            if (!!originalDatamap[originalUnformatted]) {
+                                return !originalDatamap[originalUnformatted].equalIc(datamap[fieldMetadata.attribute]);
                             }
                         }
                         if (fieldMetadata.rendererType === "checkbox") {
@@ -336,7 +401,8 @@
                         return originalDatamap[fieldMetadata.attribute] !== datamap[fieldMetadata.attribute];
                     }
 
-                    $scope.toggleCheckboxSelection = function (option, datamapKey) {
+                    $scope.doToggleCheckBox= function(fieldMetadata, option, datamapKey){
+
                         var model = $scope.datamap[datamapKey];
                         if (model == undefined) {
                             model = [];
@@ -354,13 +420,36 @@
                             model.push(option.value);
                         }
                         $scope.datamap[datamapKey] = model;
+                        eventService.afterchange(fieldMetadata,{option});
+                    }
+
+                    $scope.toggleCheckboxSelection = function ($event, fieldMetadata, option, datamapKey) {
+                        var beforeChain = eventService.beforechange(fieldMetadata, { fieldMetadata, option });
+                        
+                        if (beforeChain && beforeChain.then) {
+                            return beforeChain.then(() => {
+                                return $scope.doToggleCheckBox(fieldMetadata, option, datamapKey);
+                            }).catch(r => {
+                                $event.preventDefault();
+                            });
+                        } else {
+                            return $scope.doToggleCheckBox(fieldMetadata, option, datamapKey);
+                        }
                     };
 
                     $scope.initCheckbox = function (fieldMetadata) {
+                        if (fieldMetadata.type === "OptionField") {
+                            //TODO: implement later
+                            return;
+                        }
+
                         const content = $scope.datamap[fieldMetadata.attribute];
                         const formattedValue = formatService.isChecked(content);
                         $scope.datamap[fieldMetadata.attribute] = formattedValue;
-                        crudContextHolderService.originalDatamap($scope.panelid)[fieldMetadata.attribute] = formattedValue;
+                        const originalDatamap = crudContextHolderService.originalDatamap($scope.panelid);
+                        if (originalDatamap) {
+                            originalDatamap[fieldMetadata.attribute] = formattedValue;
+                        }
                     }
 
                     $scope.isChecked = function (fieldMetadata) {
@@ -374,6 +463,13 @@
 
                     $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                         return i18NService.getLookUpDescriptionLabel(fieldMetadata);
+                    };
+
+                    $scope.getOptionFieldLabelOrNull = function (fieldMetadata) {
+                        if (fieldMetadata.type !== "OptionField") {
+                            return null;
+                        } 
+                        return fieldMetadata.label;
                     };
 
                     $scope.configureNumericInput = function () {
@@ -540,6 +636,40 @@
                     $scope.isSectionWithoutLabel = function (fieldMetadata) {
                         return fieldMetadata.type === 'ApplicationSection' && fieldMetadata.resourcepath == null && fieldMetadata.header == null;
                     };
+
+                    $scope.isSectionControlEnabled = function (fieldMetadata) {
+                        return fieldMetadata.type === 'ApplicationSection' && fieldMetadata.header !== null && fieldMetadata.attribute !== null && fieldMetadata.header.parameters["enablecontrol"] === "true";
+                    }
+
+                    $scope.hasPersistedFieldInsideSection = function (fieldMetadata) {
+                        const originalDatamap = crudContextHolderService.originalDatamap();
+                        const displayables = fieldService.getLinearDisplayables(fieldMetadata);
+                        fieldMetadata.jscache = fieldMetadata.jscache || {};
+                        if (fieldMetadata.jscache.hasPersistedFieldInsideSection ===true) {
+                            return true;
+                        }
+
+                        for (var i = 0; i < displayables.length; i++) {
+                            const displayable = displayables[i];
+                            if (!!displayable.associationKey && !!originalDatamap[displayable.associationKey]) {
+                                if (Array.isArray(originalDatamap[displayable.associationKey])) {
+                                    return originalDatamap[displayable.associationKey].length > 0;    
+                                }
+                                return true;
+                            }
+
+                            if (!!originalDatamap[displayable.attribute]) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+
+                    }
+
+                    $scope.toggleSectionSelection = function (fieldMetadata) {
+                        $scope.datamap[fieldMetadata.attribute] = !$scope.datamap[fieldMetadata.attribute];
+                    }
 
                     $scope.isExpansionAvailable = function (fieldMetadata) {
                         if (!fieldService.isAssociation(fieldMetadata) || !fieldMetadata.detailSection) {

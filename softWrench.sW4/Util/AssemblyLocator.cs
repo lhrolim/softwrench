@@ -25,7 +25,7 @@ namespace softWrench.sW4.Util {
         }
 
         private static ICollection GetListOfAssemblies() {
-            return ApplicationConfiguration.IsUnitTest 
+            return ApplicationConfiguration.IsUnitTest
                 ? Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
                     .Where(file => Path.GetExtension(file) == ".dll")
                     .Select(Assembly.LoadFrom).ToList()
@@ -42,6 +42,9 @@ namespace softWrench.sW4.Util {
         }
 
         public static bool IsCurrentCustomerAssembly(Assembly assembly) {
+            if (ApplicationConfiguration.IsUnitTest) {
+                return true;
+            }
             return assembly.FullName.StartsWith("softwrench.sw4.{0}".Fmt(ApplicationConfiguration.ClientName), StringComparison.CurrentCultureIgnoreCase);
         }
 

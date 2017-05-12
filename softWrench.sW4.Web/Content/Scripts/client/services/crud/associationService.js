@@ -26,7 +26,7 @@
         }
 
         doUpdateExtraFields (associationFieldMetadata, underlyingValue, datamap) {
-            const log = this.$log.getInstance('sw4.associationservice#doUpdateExtraFields');
+            const log = this.$log.getInstance('sw4.associationservice#doUpdateExtraFields',["association"]);
             const key = associationFieldMetadata.associationKey;
             const isOptionField = associationFieldMetadata.type === "OptionField";
 
@@ -66,7 +66,9 @@
 
                     FillRelationship(datamap.extrafields, fullKey, valueToSet);
                     datamap.extrafields[GetRelationshipName(fullKey)] = valueToSet;
-                    datamap.extrafields[key][extrafield] = valueToSet;
+                    if (!!datamap.extrafields[key]) {
+                        datamap.extrafields[key][extrafield] = valueToSet;    
+                    }
 
                 }
             };
@@ -317,6 +319,11 @@
                 triggerparams
             };
             this.$log.get("sw4.associationservice#postAssociationHook", ["association", "detail"]).debug(`Post hook from association ${associationMetadata.target}|${associationMetadata.associationKey}`);
+            if (associationMetadata.type === "OptionField" && associationMetadata.rendererType === "checkbox") {
+                //lets not deal with this type here, rather on the crud_input_fields.js, because we need the current option being selected as well
+                return this.$q.when(true);
+            }
+
             return this.$q.when(this.eventService.afterchange(associationMetadata, parameters));
         }
 
@@ -619,6 +626,12 @@
 
             if (fieldMetadata.events == undefined || !event.dispatchedbytheuser) {
                 //no sense to dispatch a before change event which was not dispatched by the user
+                event.continue();
+                return true;
+            }
+            event.fieldMetadata = fieldMetadata;
+            if (fieldMetadata.type === "OptionField" && fieldMetadata.rendererType === "checkbox") {
+                //lets not deal with this type here, rather on the crud_input_fields.js, because we need the current option being selected as well
                 event.continue();
                 return true;
             }

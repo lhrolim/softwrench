@@ -99,7 +99,7 @@ namespace softWrench.sW4.Metadata.Entities {
         }
 
         public virtual ISet<EntityAssociation> NonListAssociations(bool innerCall = false) {
-            return new HashSet<EntityAssociation>(Associations.Where(entityAssociation => (!entityAssociation.Collection && !entityAssociation.Reverse)));
+            return new HashSet<EntityAssociation>(Associations.Where(entityAssociation => (!entityAssociation.Collection && !entityAssociation.Reverse && !entityAssociation.IsTransient)));
         }
 
         public virtual AttributeHolder GetAttributeHolder(IEnumerable<KeyValuePair<string, object>> keyValuePairs) {
@@ -237,10 +237,39 @@ namespace softWrench.sW4.Metadata.Entities {
             return LocateAssociationByLabelField(name + "." + "fake").Item1;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="labelField"></param>
+        /// <param name="validate"></param>
+        /// <returns>A tuple consisting of:
+        /// 1) The EntityAssociation Itself
+        /// 2) The EntityAttribute of the description field
+        /// </returns>
         public Tuple<EntityAssociation, EntityAttribute> LocateAssociationByLabelField(string labelField, bool validate = false) {
             var indexOf = labelField.IndexOf(".", StringComparison.Ordinal);
             var firstPart = labelField.Substring(0, indexOf);
+
+            if (firstPart.StartsWith("#")) {
+
+                var transientLookupString = firstPart.EndsWith("_") ? firstPart.Substring(1, firstPart.Length - 2) : firstPart.Substring(1);
+
+                var transientEntity = MetadataProvider.Entity(transientLookupString);
+                if (transientEntity == null) {
+                    throw new MetadataException("transient entity {0} cannot be located".Fmt(firstPart));
+                }
+                var innerresult = transientEntity.LocateAssociationByLabelField(labelField.Substring(indexOf + 1), validate);
+                var innerAssociation = innerresult.Item1.CloneWithContext(null, true);
+                foreach (var transientAttribute in innerAssociation.Attributes) {
+                    if (transientAttribute.From != null) {
+                        transientAttribute.From = firstPart + "." + transientAttribute.From;
+                    }
+                }
+
+                return new Tuple<EntityAssociation, EntityAttribute>(innerAssociation, innerresult.Item2);
+
+            }
+
             var lookupString = firstPart.EndsWith("_") ? firstPart : firstPart + "_";
             if (char.IsNumber(lookupString[0])) {
                 //deprecated, in flavor of using it on the final of the string to avoid angular errors

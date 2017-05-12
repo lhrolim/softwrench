@@ -23,7 +23,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 usedAssociations = entityMetadata.Associations;
                 usedAssociations = FilterByProjectionAndRestrictions(usedAssociations, fieldsToIncludeInRelationship);
             } else {
-                usedAssociations = entityMetadata.NonListAssociations();
+                usedAssociations = entityMetadata.NonListAssociations().Where(a=> !a.IsTransient);
             }
 
             foreach (var association in usedAssociations) {

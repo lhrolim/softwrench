@@ -10,8 +10,8 @@
                 field: "=fileReadField"
             },
 
-        link: function (scope, element, attrs) {
-            scope.jselement = element;
+            link: function (scope, element, attrs) {
+                scope.jselement = element;
                 var validExtensions = !attrs.acceptedExtensions
                                     ? null
                                     : attrs.acceptedExtensions.split(",").map(function (e) {
@@ -39,25 +39,25 @@
                 };
 
                 scope.$on(JavascriptEventConstants.HideModal, function (event) {
-                //making sure to clean up the file 
-                scope.fileread = undefined;
-                scope.path = undefined;
-                // took from here http://stackoverflow.com/a/13351234
-                const e = scope.jselement;
-                e.wrap('<form>').closest('form').get(0).reset();
-                e.unwrap();
-            });
+                    //making sure to clean up the file 
+                    scope.fileread = undefined;
+                    scope.path = undefined;
+                    // took from here http://stackoverflow.com/a/13351234
+                    const e = scope.jselement;
+                    e.wrap('<form>').closest('form').get(0).reset();
+                    e.unwrap();
+                });
 
                 element.bind("change", function (changeEvent) {
 
                     var log = $log.getInstance('fileread#change');
                     log.debug('file change detected');
-                    if (!attachmentService.isValid(this.value, validExtensions)) {
-                        alert("Invalid file. Please choose another one.");
-                        return;
-                    }
 
-                    if (isIe9() || changeEvent.target.files.length == 0) {
+                    if (isIe9() || changeEvent.target.files.length === 0) {
+                        if (!attachmentService.isValid(this.value, validExtensions)) {
+                            alert("Invalid file. Please choose another one.");
+                            return;
+                        }
                         // if we´re on ie9 we need to submit the files using a form since it doesnt have the FileReader object present (HTML5+)
                         scope.fileread = "xxx";
                         scope.$digest();
@@ -72,7 +72,7 @@
                         var temp = changeEvent.target.files[i].name.split(".").pop().toLowerCase();
                         if (!attachmentService.isValid(temp, validExtensions)) {
                             changeEvent.currentTarget.value = "";
-                            alertService.alert("Invalid file type. Allowed file types are:" + validExtensions.join(", "));
+                            alertService.alert("Invalid file type. Allowed file types are: " + validExtensions.join(", "));
                             //Updating the model
                             scope.$apply(function () {
                                 scope.fileread = undefined;

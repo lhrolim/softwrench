@@ -82,10 +82,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.6234.35949, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.6234.35949\lib\net46\cts.commons.persistence.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.2.6156.25003\lib\net46\cts.commons.simpleinjector.dll</HintPath>
       <Private>True</Private>
@@ -799,6 +795,7 @@
     <Content Include="Content\Scripts\client\components\combodropdown.js" />
     <Content Include="Content\Scripts\client\components\componentsfacade.js" />
     <Content Include="Content\Scripts\client\components\datetime.js" />
+    <Content Include="Content\Scripts\client\directives\detail\file\fileexplorer.js" />
     <Content Include="Content\Scripts\client\components\samelinepickers.js" />
     <Content Include="Content\Scripts\client\constants\DatamapConstants.js" />
     <Content Include="Content\Scripts\client\constants\CompositionConstants.js" />
@@ -960,6 +957,7 @@
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
     <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
     <Content Include="Content\templates\crud\pdf.html" />
+    <Content Include="Content\templates\directives\file\fileexplorer.html" />
     <Content Include="Content\templates\swlabel.html" />
     <Content Include="favicon.ico" />
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
@@ -1062,6 +1060,7 @@
     <Content Include="Content\styles\default\_dynamic.scss" />
     <Content Include="Content\styles\default\_routepage.scss" />
     <Content Include="Content\styles\default\_multi-sort.scss" />
+    <Content Include="Content\styles\default\_fileexplorer.scss" />
     <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />
@@ -1269,6 +1268,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
       <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
       <Name>softwrench.sw4.apachegold</Name>

@@ -7,8 +7,9 @@ namespace softwrench.sw4.Shared2.Data.Association {
     /// </summary>
     public class AssociationOption : GenericAssociationOption {
 
-        public AssociationOption(String value, string label)
-            : base(value, label) {
+        public AssociationOption(String value, string label, string help = null, string enableExpression= null)
+            : base(value, label, help, enableExpression) {
+
         }
 
         protected bool Equals(GenericAssociationOption other) {

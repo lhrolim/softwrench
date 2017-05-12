@@ -1,9 +1,12 @@
-﻿<form>
+<form>
     
     <div ng-if="iscollection">
         <ng-switch on="metadata.schema.renderer.rendererType">
             <div ng-switch-when="custom">
                 <div ng-include="contextPath(metadata.schema.rendererParameters.resourcepath)" href="#" />
+            </div>
+            <div ng-switch-when="fileexplorer">
+                <fileexplorer field-metadata="metadata" datamap="parentdata"/>
             </div>
             <div ng-switch-default>
                 <composition-list-wrapper metadata="metadata" parentdata="parentdata" parentschema="parentschema" ismodal="{{ismodal}}"/>

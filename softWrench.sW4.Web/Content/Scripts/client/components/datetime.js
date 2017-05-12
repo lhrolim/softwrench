@@ -2,30 +2,36 @@
     "use strict";
 
 angular.module('sw_components')
-    .directive('dateTime', function ($timeout, formatService, expressionService) {
+    .directive('dateTime', function ($timeout, formatService, expressionService, crudContextHolderService) {
     "ngInject";
 
     function parseBooleanValue(attrValue) {
-        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() === "true";
+        return attrValue == undefined || attrValue === "" ? true : attrValue.toLowerCase() === "true";
     }
 
     function parseBooleanValueDefaultFalse(attrValue) {
-        return attrValue == undefined || attrValue == "" ? true : attrValue.toLowerCase() === "true";
+        return attrValue == undefined || attrValue === "" ? true : attrValue.toLowerCase() === "true";
     }
 
     function updateView(ngModel, scope, element, datamap, angularDateFormat) {
         if (scope.fieldMetadata != undefined) {
             const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
-            ngModel.$setViewValue(value);
-            element.val(value);
+         
             if (datamap != undefined && scope.fieldMetadata != undefined) {
-                const originalUnformattedAttribute = `#${scope.fieldMetadata.attribute}_unformatted`;
-                if (datamap[originalUnformattedAttribute]===undefined) {
-                    //setting the original value for the first time
-                    datamap[originalUnformattedAttribute] = datamap[scope.fieldMetadata.attribute];
+                let originalUnformattedAttribute = `${scope.fieldMetadata.attribute}_formatted`;
+                if (originalUnformattedAttribute[0] !== "#") {
+                    originalUnformattedAttribute = "#" + originalUnformattedAttribute;
+                }
+                const originalDM = crudContextHolderService.originalDatamap();
+                if (originalDM[originalUnformattedAttribute] === undefined) {
+                    originalDM[originalUnformattedAttribute] = value;
+//                    //setting the original value for the first time
+//                    datamap[originalUnformattedAttribute] = datamap[scope.fieldMetadata.attribute];
                 }
                 datamap[scope.fieldMetadata.attribute] = value;
             }
+            ngModel.$setViewValue(value);
+            element.val(value);
             ngModel.$render();
         }
     }
@@ -71,9 +77,19 @@ angular.module('sw_components')
             if (dateFormat !== '' && dateFormat != undefined) {
                 const allowfuture = parseBooleanValue(attrs.allowFuture);
                 const allowpast = parseBooleanValue(attrs.allowPast);
-                const position = !!attrs.position ? attrs.position: "bottom";
-                var startDate = allowpast ? false : new Date();
-                var endDate = allowfuture ? false : new Date();
+                const position = !!attrs.position ? attrs.position : "bottom";
+                var startDate = false;
+                if (!allowpast) {
+                    startDate = new Date();
+                    startDate.setHours(0, 0, 0, 0);
+                }
+                var endDate = false;
+                if (!allowfuture) {
+                    endDate = new Date();
+                    endDate.setHours(23, 59, 59, 999);
+                }
+
+                
                 var minStartDateExpression = attrs.minDateexpression;
 
                 if (minStartDateExpression != null && minStartDateExpression !== '') {
@@ -111,8 +127,21 @@ angular.module('sw_components')
                         widgetPositioning: {
                             vertical: position
                         }
-                        //debug: true
+//                        debug: true
                     });
+
+                    datetimepicker.on("dp.show", function (e) {
+                        $timeout(() => {
+                                scope.$emit(JavascriptEventConstants.ForceResize,true);
+                            },0,false);
+                    });
+
+                    datetimepicker.on("dp.hide", function (e) {
+                        $timeout(() => {
+                            scope.$emit(JavascriptEventConstants.ForceResize, false);
+                        }, 0, false);
+                    });
+
                     if (isIE()) {
                         //https://controltechnologysolutions.atlassian.net/browse/SWWEB-2198
                         datetimepicker.on("dp.change", function (e) {

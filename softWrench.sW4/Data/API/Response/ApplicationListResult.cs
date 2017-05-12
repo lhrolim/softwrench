@@ -34,7 +34,7 @@ namespace softWrench.sW4.Data.API.Response {
         }
 
         public static ApplicationListResult FixedListResult(IEnumerable<AttributeHolder> dataMap, ApplicationSchemaDefinition schema) {
-            var attributeHolders = dataMap as AttributeHolder[] ?? dataMap.ToArray();
+            var attributeHolders = dataMap as DataMap[] ?? dataMap.ToArray();
             return new ApplicationListResult(attributeHolders.Count(), null, attributeHolders, schema, null);
         }
 

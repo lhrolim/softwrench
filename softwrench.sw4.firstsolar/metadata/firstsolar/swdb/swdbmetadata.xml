@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@userprofile.xml"/>
+    <template path="@dashboard.xml"/>
+    <template path="@audit.xml"/>
+    <template path="@batch.xml"/>
+    <template path="@swerror.xml"/>
+    <template path="@configuration.xml"/>
+    <template path="@dynamic.xml"/>
+    <template path="@mappingtool.xml"/>
+    <template path="@whereclause.xml"/>
+    <template path="swdb/workpackage.xml"/>
+  </templates>
+  
+</metadata>

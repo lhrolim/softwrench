@@ -36,14 +36,29 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             return ApplicationConfiguration.DBConnectionString(DBType.Maximo);
         }
 
-        public async Task<IReadOnlyList<DataMap>> Get([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
+        public async Task<IReadOnlyList<DataMap>> Get(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException(nameof(entityMetadata));
             if (searchDto == null) throw new ArgumentNullException(nameof(searchDto));
             var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
             var rows = await Query(entityMetadata, query, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => BuildDataMap(entityMetadata, r))
+               .Select(r => BuildDataMap(entityMetadata, r, entityMetadata.IdFieldName))
                .ToList();
+
+        }
+
+        public async Task<IDictionary<string, DataMap>> GetGrouppingById([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
+            if (entityMetadata == null) throw new ArgumentNullException(nameof(entityMetadata));
+            if (searchDto == null) throw new ArgumentNullException(nameof(searchDto));
+            var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
+            var rows = await Query(entityMetadata, query, searchDto);
+            var castedRows = rows.Cast<IEnumerable<KeyValuePair<string, object>>>();
+            var results = new Dictionary<string, DataMap>();
+            foreach (var row in castedRows) {
+                var dm = BuildDataMap(entityMetadata, row, entityMetadata.IdFieldName);
+                results.Add(dm.Id, dm);
+            }
+            return results;
 
         }
 
@@ -64,17 +79,17 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var query = _entityQueryBuilder.AllRows(entityMetadata, searchDto);
             var rows = QuerySync(entityMetadata, query, searchDto);
             return rows.Cast<IEnumerable<KeyValuePair<string, object>>>()
-               .Select(r => BuildDataMap(entityMetadata, r))
+               .Select(r => BuildDataMap(entityMetadata, r, entityMetadata.IdFieldName))
                .ToList();
 
         }
 
 
 
-        public DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
+        public DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r, string idFieldName = null) {
 
 
-            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => HandleValue(pair.Key, entityMetadata, pair.Value), StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType);
+            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => HandleValue(pair.Key, entityMetadata, pair.Value), StringComparer.OrdinalIgnoreCase), entityMetadata.Schema.MappingType, false, idFieldName);
         }
 
         private object HandleValue(string key, EntityMetadata entityMetadata, object value) {
@@ -116,7 +131,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
         }
 
-      
+
 
         public virtual async Task<IReadOnlyList<DataMap>> GetIdAndSiteIdByUserId([NotNull] EntityMetadata entityMetadata, string userId) {
             if (entityMetadata == null) {
@@ -202,7 +217,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                 return Enumerable.Empty<dynamic>();
             }
             var sqlAux = query.Sql.Replace("1=1", RowStampUtil.RowstampWhereCondition(entityMetadata, rowstamp, searchDto));
-            var rows =await GetDao(entityMetadata).FindByNativeQueryAsync(sqlAux, query.Parameters, null, searchDto.QueryAlias);
+            var rows = await GetDao(entityMetadata).FindByNativeQueryAsync(sqlAux, query.Parameters, null, searchDto.QueryAlias);
             return rows;
         }
 
@@ -239,8 +254,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
 
 
 
-        [CanBeNull]
-        public async Task<DataMap> Get([NotNull] EntityMetadata entityMetadata, [NotNull] string id) {
+        public async Task<DataMap> Get(EntityMetadata entityMetadata, string id) {
             //TODO: we're always handling the entity ID as a string.
             //Maybe we should leverage the entity attribute type.
             if (entityMetadata == null) throw new ArgumentNullException(nameof(entityMetadata));
@@ -255,8 +269,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
               .ToList().FirstOrDefault();
         }
 
-        [CanBeNull]
-        public async Task<AttributeHolder> ByUserIdSite([NotNull] EntityMetadata entityMetadata, [NotNull]Tuple<string, string> userIdSiteTuple) {
+        public async Task<AttributeHolder> ByUserIdSite(EntityMetadata entityMetadata, Tuple<string, string> userIdSiteTuple) {
             //TODO: we're always handling the entity ID as a string.
             //Maybe we should leverage the entity attribute type.
             if (entityMetadata == null) throw new ArgumentNullException(nameof(entityMetadata));
@@ -275,7 +288,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps, searchDto);
             //TODO: hack to avoid garbage data and limit size of list queries.
             var sql = query.Sql;
-            var queryResult = await GetDao(entityMetadata).FindByNativeQueryAsync(sql, query.Parameters,null,searchDto.QueryAlias);
+            var queryResult = await GetDao(entityMetadata).FindByNativeQueryAsync(sql, query.Parameters, null, searchDto.QueryAlias);
             var rows = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>();
             return rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
 
@@ -286,7 +299,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
         [NotNull]
 
 
-        public async Task<int> Count([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {
+        public async Task<int> Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
             if (entityMetadata == null) throw new ArgumentNullException(nameof(entityMetadata));
             if (searchDto == null) throw new ArgumentNullException(nameof(searchDto));
             if (searchDto.ForceEmptyResult) {

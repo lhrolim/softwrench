@@ -117,6 +117,7 @@
          * @returns {Boolean}
          */
         function isValid(value, types) {
+            if (types === "sw_all_types" || (types && types[0] === "sw_all_types")) return true;
             if (!value) return false;
             // var fileName = value.match(/[^\/\\]+$/);
             if (!types || ((types instanceof Array) && types.length === 0)) {

@@ -236,7 +236,7 @@ namespace softWrench.sW4.Web.Controllers {
             var routerParameters = new RouterParameters(applicationMetadata, platform, operationDataRequest.RouteParametersDTOHandled, operation, mockMaximo, maximoResult, user, resolvedNextSchema);
 
             var response = await _nextSchemaRouter.RedirectToNextSchema(routerParameters);
-            response.SuccessMessage = _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult, operation);
+            response.SuccessMessage = operationDataRequest.SuccessMessage ?? _successMessageHandler.FillSuccessMessage(applicationMetadata, maximoResult, operation);
             response.WarningDto = maximoResult.WarningDto;
 
             // TODO: Implement some sort of interception

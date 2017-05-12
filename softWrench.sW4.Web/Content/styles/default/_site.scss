@@ -132,6 +132,11 @@ body > .container {
     height: 20px;
 }
 
+.checkboxcolumn {
+    padding-right: 20px;
+    padding-left: 10px;
+}
+
 .serviceItLoginWarning {
     color: black;
     width: 600px;
@@ -297,4 +302,70 @@ fieldset {
 
 .multiselect-container {
     max-width: 275px !important;
+}
+
+
+.extra-height-modal{
+    min-height: 600px !important;
+    height: 600px !important;
+}
+
+.tabdisabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    color: grey;
+}
+
+.fileicon {
+    width: 100px;
+    max-height: 100px;
+    float: left;
+    margin-bottom: 9px;
+    margin-right: 9px;
+    cursor:pointer;
+}
+
+.iconset{
+    padding: 10px;
+}
+
+.thumbnailiconset {
+    border-radius: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 10px 0;
+    border: none;
+    background: 0 0;
+     text-decoration: none !important;
+}
+
+.item-icon{
+    font-size: 32px;
+}
+
+.item-extension::after {
+    font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    content: attr(data-ext);
+    left: 4px;
+    position: absolute;
+    color: #fff;
+    font-size: 9px;
+    text-transform: uppercase;
+    top: 20px;
+}
+
+.item-refresh{
+    position: relative;
+    top: 10px;
+    font-size: 10px;
+    color: gray;
+}
+
+.optionfieldheader{
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+.borderedsection {
+    border: 3px groove rgb(204, 204, 204);
 }

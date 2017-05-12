@@ -140,11 +140,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             WsUtil.SetValueIfNull(wo, "ESTDUR", 0);
             WsUtil.SetValueIfNull(wo, "ESTLABHRS", 0);
             WsUtil.SetValueIfNull(wo, "ESTMATCOST", 0);
-
             WsUtil.SetValueIfNull(wo, "ESTINTLABHRS", 0);
             WsUtil.SetValueIfNull(wo, "ESTINTLABCOST", 0);
-
             WsUtil.SetValueIfNull(wo, "ESTATAPPRLABHRS", 0);
+
             WsUtil.SetValueIfNull(wo, "ESTATAPPRMATCOST", 0);
             WsUtil.SetValueIfNull(wo, "ESTATAPPRLABCOST", 0);
             WsUtil.SetValueIfNull(wo, "ESTATAPPRTOOLCOST", 0);
@@ -153,16 +152,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             WsUtil.SetValueIfNull(wo, "ESTAPPRLABHRS", 0);
             WsUtil.SetValueIfNull(wo, "ESTAPPRMATCOST", 0);
             WsUtil.SetValueIfNull(wo, "ESTAPPRLABCOST", 0);
+
             WsUtil.SetValueIfNull(wo, "WOCLASS", "WORKORDER");
             WsUtil.SetValueIfNull(wo, "ESTLABCOST", 0);
             WsUtil.SetValueIfNull(wo, "ESTTOOLCOST", 0);
             WsUtil.SetValueIfNull(wo, "ESTSERVCOST", 0);
+
             WsUtil.SetValueIfNull(wo, "ACTLABHRS", 0);
-            WsUtil.SetValueIfNull(wo, "ACTLABCOST", 0);
             WsUtil.SetValueIfNull(wo, "ACTLABCOST", 0);
             WsUtil.SetValueIfNull(wo, "ACTSERVCOST", 0);
             WsUtil.SetValueIfNull(wo, "ACTMATCOST", 0);
             WsUtil.SetValueIfNull(wo, "ACTTOOLCOST", 0);
+
             WsUtil.SetValueIfNull(wo, "OUTLABCOST", 0);
             WsUtil.SetValueIfNull(wo, "OUTMATCOST", 0);
             WsUtil.SetValueIfNull(wo, "OUTTOOLCOST", 0);

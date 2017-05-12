@@ -95,7 +95,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
         }
 
         public class FakeSRApplicationDataSet : BaseServiceRequestDataSet {
-            public override TargetResult DoExecute(OperationWrapper operationWrapper) {
+            public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
                 var data = operationWrapper.OperationData() as CrudOperationData;
                 data.ReloadMode = ReloadMode.MainDetail;
                 return new TargetResult("100", "100", null);

@@ -41,11 +41,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             get; set;
         }
 
-        private string _applicationTo;
-        private ISet<string> _extraProjectionFields = new HashSet<string>();
-
-        private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
-
         [DefaultValue("false")]
         public string RequiredExpression {
             get; set;
@@ -62,14 +57,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             set { }
         }
 
-        private ApplicationAssociationSchemaDefinition _applicationAssociationSchema;
-
-        private IList<String> _labelFields = new List<string>();
         private LabelData _labelData;
-        private bool _forceDistinctOptions;
         private ISet<ApplicationEvent> _eventsSet;
         private string _valueField;
-        private Boolean _valueFieldSet = false;
+        private bool _valueFieldSet = false;
 
         //used to resolve renderer parameters that needs access to a scope outside of the shared dll project
         protected Lazy<IDictionary<string, object>> LazyRendererParametersResolver;
@@ -101,9 +92,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
                 if (labelPattern != null) {
                     string[] fields = LabelField.Split(',');
                     try {
-                        var a = String.Format(LabelPattern, fields);
+                        var a = string.Format(LabelPattern, fields);
                     } catch (Exception) {
-                        throw new InvalidOperationException(String.Format("incompatible labelPattern and Label Fields at application {0}", applicationName));
+                        throw new InvalidOperationException(
+                            $"incompatible labelPattern and Label Fields at application {applicationName}");
                     }
                 }
             }
@@ -123,12 +115,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             // LabelField = labelData.LabelField;
             LabelPattern = labelData.LabelPattern;
             Target = target;
-            _applicationAssociationSchema = applicationAssociationSchema;
+            Schema = applicationAssociationSchema;
             DefaultValue = defaultValue;
             EnableExpression = enableExpression;
             RequiredExpression = requiredExpression;
             _eventsSet = events;
-            _forceDistinctOptions = forceDistinctOptions;
+            ForceDistinctOptions = forceDistinctOptions;
             Qualifier = qualifier;
             HideDescription = hideDescription;
             OrderByField = orderbyfield;
@@ -137,7 +129,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             DetailSection = detailSection;
 
             if (events != null) {
-                _events = events.ToDictionary(f => f.Type, f => f);
+                Events = events.ToDictionary(f => f.Type, f => f);
             }
 
         }
@@ -168,23 +160,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
 
         public IEnumerable<EntityAssociationAttribute> LookupAttributes() {
-            if (EntityAssociation == null) {
-                return null;
-            }
-            var entityAssociationAttributes = EntityAssociation.Attributes;
-            return entityAssociationAttributes.Where(attribute => !attribute.Primary).ToList();
+            var entityAssociationAttributes = EntityAssociation?.Attributes;
+            return entityAssociationAttributes?.Where(attribute => !attribute.Primary).ToList();
         }
 
-        public ApplicationAssociationSchemaDefinition Schema {
-            get {
-                return _applicationAssociationSchema;
-            }
-            set {
-                _applicationAssociationSchema = value;
-            }
-        }
-
-
+        public ApplicationAssociationSchemaDefinition Schema { get; set; }
 
 
         public override string Attribute {
@@ -196,43 +176,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             }
         }
 
-        public IList<string> LabelFields {
-            get {
-                return _labelFields;
-            }
-            set {
-                _labelFields = value;
-            }
-        }
+        public IList<string> LabelFields { get; set; } = new List<string>();
 
-        public string ApplicationTo {
-            get {
-                return _applicationTo;
-            }
-            set {
-                _applicationTo = value;
-            }
-        }
+        public string ApplicationTo { get; set; }
 
-        public IDictionary<string, ApplicationEvent> Events {
-            get {
-                return _events;
-            }
-            set {
-                _events = value;
-            }
-        }
+        public IDictionary<string, ApplicationEvent> Events { get; set; } = new Dictionary<string, ApplicationEvent>();
 
-        public Boolean Reverse {
-            get {
-                return EntityAssociation.Reverse;
-            }
-        }
-        public bool ForceDistinctOptions {
-            get {
-                return _forceDistinctOptions;
-            }
-        }
+        public bool Reverse => EntityAssociation.Reverse;
+        public bool ForceDistinctOptions { get; }
 
         public string ValueField {
             get {
@@ -251,43 +202,31 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
             }
         }
 
-        public string ApplicationPath {
-            get {
-                return From + "." + _applicationTo;
-            }
-        }
+        public string ApplicationPath => From + "." + ApplicationTo;
 
-        public Boolean MultiValued {
-            get {
-                return ExtraProjectionFields.Count > 0;
-            }
-        }
+        public bool MultiValued => ExtraProjectionFields.Count > 0;
 
         public override string ToString() {
-            return string.Format("From: {0}, To: {1} , Target: {2}", From, EntityAssociation, Target);
+            return $"From: {From}, To: {EntityAssociation} , Target: {Target}";
         }
 
-        public override string RendererType {
-            get {
-                return base.RendererType ?? _applicationAssociationSchema.Renderer.RendererType.ToLower();
-            }
-        }
+        public override string RendererType => base.RendererType ?? Schema.Renderer.RendererType.ToLower();
 
         public ComponentStereotype RendererStereotype {
             get {
-                if (_applicationAssociationSchema == null || _applicationAssociationSchema.Renderer == null) {
+                if (Schema == null || Schema.Renderer == null) {
                     return ComponentStereotype.None;
                 }
 
                 ComponentStereotype rendererStereotype;
-                Enum.TryParse(_applicationAssociationSchema.Renderer.Stereotype, true, out rendererStereotype);
+                Enum.TryParse(Schema.Renderer.Stereotype, true, out rendererStereotype);
                 return rendererStereotype;
             }
         }
 
         public IDictionary<string, object> RendererParameters {
             get {
-                var metadataParameters = _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary();
+                var metadataParameters = Schema.Renderer == null ? new Dictionary<string, object>() : Schema.Renderer.ParametersAsDictionary();
                 var resultParameters = LazyRendererParametersResolver.Value;
                 foreach (var metadataParamter in metadataParameters) {
                     if (!resultParameters.ContainsKey(metadataParamter.Key)) {
@@ -299,20 +238,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
         [JsonIgnore]
-        public IDictionary<string, object> InnerRendererParameters {
-            get {
-                return _applicationAssociationSchema.Renderer == null ? new Dictionary<string, object>() : _applicationAssociationSchema.Renderer.ParametersAsDictionary();
-            }
-        }
+        public IDictionary<string, object> InnerRendererParameters => Schema.Renderer == null ? new Dictionary<string, object>() : Schema.Renderer.ParametersAsDictionary();
 
-        public ISet<string> ExtraProjectionFields {
-            get {
-                return _extraProjectionFields;
-            }
-            set {
-                _extraProjectionFields = value;
-            }
-        }
+        public ISet<string> ExtraProjectionFields { get; set; } = new HashSet<string>();
 
         /// <summary>
         /// Return whether this association should be resolved on a lazy fashion, meaning that the data will only be fetched on a later phasis.
@@ -320,7 +248,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         /// Those components data will only be fetched when the user makes some kind of interaction with it.
         /// </summary>
         public bool IsLazyLoaded() {
-            return _applicationAssociationSchema.IsLazyLoaded;
+            return Schema.IsLazyLoaded;
         }
 
         public bool IsEagerLoaded() {
@@ -328,27 +256,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
         }
 
 
-        public Boolean IsPaginated() {
-            return _applicationAssociationSchema.IsPaginated;
+        public bool IsPaginated() {
+            return Schema.IsPaginated;
         }
 
-        public ISet<string> DependantFields {
-            get {
-                return _applicationAssociationSchema.DependantFields;
-            }
-        }
+        public ISet<string> DependantFields => Schema.DependantFields;
 
-        public string AssociationKey {
-            get {
-                return _applicationTo;
-            }
-        }
+        public string AssociationKey => ApplicationTo;
 
-        public override string Role {
-            get {
-                return Target;
-            }
-        }
+        public override string Role => Target;
 
         //exacttly as it comes from metadata parsing
         public string OriginalLabelField {
@@ -361,7 +277,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Association
 
         public object Clone() {
             var cloned = new ApplicationAssociationDefinition(From, _labelData, Target, Qualifier, Schema, ShowExpression, HelpIcon, ToolTip, RequiredExpression,
-                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, _forceDistinctOptions, _valueField, DetailSection) {
+                DefaultValue, HideDescription, OrderByField, DefaultExpression, EnableExpression, _eventsSet, ForceDistinctOptions, _valueField, DetailSection) {
                 ExtraProjectionFields = ExtraProjectionFields,
                 LabelFields = LabelFields,
                 ApplicationTo = ApplicationTo,

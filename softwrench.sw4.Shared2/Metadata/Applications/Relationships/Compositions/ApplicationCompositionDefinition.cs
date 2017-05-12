@@ -34,7 +34,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         /// The list and detail schemas shall point to the same application in that case.
         /// 
         /// </summary>
-        public Boolean IsSelfRelationship => Relationship.StartsWith("#");
+        public bool IsSelfRelationship => Relationship.StartsWith("#");
 
         public ApplicationCompositionDefinition() {
 
@@ -88,10 +88,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
-        public Boolean Inline => _schema.INLINE;
+        public bool Inline => _schema.INLINE;
 
         public override string ToString() {
-            return string.Format("From: {0}, To: {1} , Collection: {2}", From, EntityAssociation, Collection);
+            return $"From: {From}, To: {EntityAssociation} , Collection: {Collection}";
         }
 
         public string TabId => Relationship;

@@ -6,7 +6,7 @@
       
 
         function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
-            var log = $log.getInstance("layoutservice#getDefaultColumnClassesForFieldSet", ["layout"]);
+            const log = $log.getInstance("layoutservice#getDefaultColumnClassesForFieldSet", ["layout"]);
             var maxColumns = CalculateMaxNumberOfColumns(datamap, schema, displayables, params);
 
             //if the field has a defined inputsize, override the section setting
@@ -52,7 +52,7 @@
             var columnCount = null;
 
             if (fieldMetadata.rendererParameters != null) {
-                var inputSize = '';
+                let inputSize = '';
 
                 if (fieldMetadata.rendererParameters['inputsize'] != null) {
                     inputSize = fieldMetadata.rendererParameters['inputsize'];
@@ -86,6 +86,9 @@
             var columnCount = null;
 
             switch (inputSize) {
+                case 'xxsmall':
+                    columnCount = 12;
+                    break;
                 case 'xsmall':
                     columnCount = 6;
                     break;
@@ -107,8 +110,12 @@
             return columnCount;
         };
 
-        function getFieldClass (fieldMetadata, datamap, schema, displayables, params) {
+        function getFieldClass(fieldMetadata, datamap, schema, displayables, params = {}) {
+
             var cssclass = "";
+            if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["class"]) {
+                cssclass =  fieldMetadata.rendererParameters["class"] + " ";
+            }
 
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
                 cssclass += fieldMetadata.rendererParameters['fieldclass'];
@@ -121,7 +128,7 @@
             }
 
             //if section has inputsize render parameter
-            if (fieldMetadata.type == "ApplicationSection") {
+            if (fieldMetadata.type === "ApplicationSection") {
                 if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.inputsize != null) {
                     cssclass += ' sidebyside';
                 }                
@@ -153,9 +160,15 @@
             cssclass += ' row';
 
             //if the field is a checkbox with a layout
-            if (fieldMetadata.rendererType == 'checkbox') {
-                if (fieldMetadata.rendererParameters.layout == 'left' || fieldMetadata.rendererParameters.layout == 'right') {
-                    cssclass += ' inline-checkbox';
+            if (fieldMetadata.rendererType === 'checkbox') {
+                if (fieldMetadata.rendererParameters.layout === 'left' || fieldMetadata.rendererParameters.layout === 'right') {
+                    if (params.sectionparameters && params.sectionparameters.headerSection) {
+                        cssclass += ' inline-checkbox-header';
+                    } else {
+                        cssclass += ' inline-checkbox';
+                    }
+
+                    
                 }
             }
 
@@ -228,13 +241,13 @@
         };
 
         function getCheckboxLabelLeftClass(fieldMetadata) {
-            if (fieldMetadata.rendererParameters.layout != 'right') {
+            if (fieldMetadata.rendererParameters.layout !== 'right') {
                 return 'ng-hide';
             }
         }
 
         function getCheckboxLabelRightClass(fieldMetadata) {
-            if (fieldMetadata.rendererParameters.layout != 'left') {
+            if (fieldMetadata.rendererParameters.layout !== 'left') {
                 return 'ng-hide';
             }
         }
@@ -247,13 +260,13 @@
         };
 
 
-        var service = {
-            getFieldClass: getFieldClass,
-            getInputClass:getInputClass,
-            getLabelClass:getLabelClass,
-            hasSameLineLabel: hasSameLineLabel,
-            getCheckboxLabelLeftClass: getCheckboxLabelLeftClass,
-            getCheckboxLabelRightClass: getCheckboxLabelRightClass
+        const service = {
+            getFieldClass,
+            getInputClass,
+            getLabelClass,
+            hasSameLineLabel,
+            getCheckboxLabelLeftClass,
+            getCheckboxLabelRightClass
         };
 
         return service;

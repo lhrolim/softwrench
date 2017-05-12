@@ -242,6 +242,7 @@ namespace softWrench.sW4.Metadata {
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");
             ICollection<EntityMetadata> entityMetadata;
+            name = UnSwdbFy(name);
             if (name.EndsWith("_")) {
                 entityMetadata = _swdbmetadataXmlInitializer != null ? _swdbmetadataXmlInitializer.Entities : _swdbentityMetadata;
             } else {
@@ -306,11 +307,11 @@ namespace softWrench.sW4.Metadata {
                 apps = TransientApplicationMetadataDefinitions;
             }
 
-            var application = apps.FirstOrDefault(
-                        a => String.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase));
+            var application = apps.FirstOrDefault(a => string.Equals(a.ApplicationName, name, StringComparison.CurrentCultureIgnoreCase));
 
             if (tryToLocateByEntity && application == null) {
-                application = apps.FirstOrDefault(a => a.Entity.EqualsIc(name));
+                var entityName = name.StartsWith("_") ? name.Substring(1) : name;
+                application = apps.FirstOrDefault(a => a.Entity.EqualsIc(entityName));
             }
 
             if (throwException && application == null) {
@@ -708,7 +709,11 @@ namespace softWrench.sW4.Metadata {
             var entity = Entity(entityName);
             var association = entity.Associations.FirstWithException(f => f.Qualifier == relationship, "could not locate relationship with qualifier {0}", relationship);
             var realName = association.To;
-            return Application(realName);
+            return Application(realName, true, true);
+        }
+
+        private static string UnSwdbFy(string name) {
+            return !name.StartsWith("_") ? name : name.Substring(1);
         }
 
         public static System.Collections.Generic.ISet<string> FetchAvailableAppsAndEntities(bool includeSWDB = true) {
@@ -794,6 +799,8 @@ namespace softWrench.sW4.Metadata {
 
             return entityMetaDatas;
         }
+
+       
 
         [CanBeNull]
         public static ApplicationSchemaDefinition Schema(string application, string schema, ClientPlatform platform) {

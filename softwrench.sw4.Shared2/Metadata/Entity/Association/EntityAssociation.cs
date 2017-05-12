@@ -27,8 +27,6 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
         public bool Reverse => ReverseLookupAttribute != null;
 
-        private IEnumerable<EntityAssociationAttribute> _attributes;
-
         public EntityAssociation() {
 
         }
@@ -43,7 +41,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
                 throw new ArgumentNullException("attributes");
             Qualifier = BuildQualifier(qualifier, to);
             To = to;
-            _attributes = attributes;
+            Attributes = attributes;
             Cacheable = cacheable;
             Lazy = lazy;
             InnnerJoin = innerJoin;
@@ -65,44 +63,50 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
 
         public string To { get; set; }
 
-        public IEnumerable<EntityAssociationAttribute> Attributes {
-            get {
-                return _attributes;
-            }
-            set {
-                _attributes = value;
-            }
-        }
+        public IEnumerable<EntityAssociationAttribute> Attributes { get; set; }
 
         public bool IgnorePrimaryAttribute {
             get; set;
         }
 
         public IEnumerable<EntityAssociationAttribute> NonPrimaryAttributes() {
-            return _attributes.Where(r => r.Primary == false);
+            return Attributes.Where(r => r.Primary == false);
         }
 
         public EntityAssociationAttribute PrimaryAttribute() {
-            if (_attributes.Count() == 1) {
-                return _attributes.First();
+            if (Attributes.Count() == 1) {
+                return Attributes.First();
             }
 
-            return _attributes.FirstOrDefault(r => r.Primary);
+            return Attributes.FirstOrDefault(r => r.Primary);
         }
 
-
+        public bool IsTransient {
+            get { return Attributes.Any(a => a.From!= null && a.From.StartsWith("#")); }
+        }
 
 
         public override string ToString() {
             return $"Qualifier: {Qualifier}, To: {To}";
         }
 
-        public EntityAssociation CloneWithContext(string contextAlias) {
-            var cloned = new EntityAssociation(contextAlias + Qualifier, To, Attributes, Collection, Cacheable, Lazy, ReverseLookupAttribute, IgnorePrimaryAttribute, InnnerJoin);
+        public EntityAssociation CloneWithContext(string contextAlias, bool cloneAttributes = false) {
+            IList<EntityAssociationAttribute> attributes;
+            if (cloneAttributes) {
+                attributes = new List<EntityAssociationAttribute>();
+                foreach (var attribute in Attributes) {
+                    attributes.Add(attribute.Clone());
+                }
+            } else {
+                attributes = Attributes.ToList();
+            }
+            var qualifier = contextAlias == null ? Qualifier : contextAlias + Qualifier;
+
+            var cloned = new EntityAssociation(qualifier, To, attributes, Collection, Cacheable, Lazy, ReverseLookupAttribute, IgnorePrimaryAttribute, InnnerJoin);
             if (EntityName == null) {
                 cloned.EntityName = contextAlias;
             } else {
-                cloned.EntityName = contextAlias + EntityName;
+                cloned.EntityName = contextAlias == null ? EntityName : contextAlias + EntityName;
             }
             return cloned;
         }

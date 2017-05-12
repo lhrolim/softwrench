@@ -6,10 +6,10 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
     public class ApplicationTabDefinition : IApplicationIndentifiedDisplayable, IApplicationIdentifier, IApplicationDisplayableContainer {
 
-        public String Id {
+        public string Id {
             get; set;
         }
-        public String ApplicationName {
+        public string ApplicationName {
             get; set;
         }
         public string Label {
@@ -23,12 +23,13 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         private string _role;
 
         public ApplicationTabDefinition(string id, string applicationName, string label, List<IApplicationDisplayable> displayables, string toolTip,
-            string showExpression, string icon, string role, string countRelathionship) {
+            string showExpression,string enableExpression, string icon, string role, string countRelathionship) {
             Id = id;
             ApplicationName = applicationName;
             Label = label;
             ToolTip = toolTip;
             ShowExpression = showExpression;
+            EnableExpression = enableExpression;
             _displayables = displayables;
             Icon = icon;
             _role = role;
@@ -62,6 +63,11 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         public string ShowExpression {
             get; set;
         }
+
+        public string EnableExpression {
+            get; set;
+        }
+
         public string ToolTip {
             get; set;
         }

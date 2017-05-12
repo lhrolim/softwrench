@@ -1,4 +1,4 @@
-<div>
+<div ng-show="isShowingComposition()">
 
     <div style="background: none; border-bottom: none" ng-show="!inline && ismodal=='false'">
 
@@ -16,8 +16,9 @@
     </div>
 
     <!--build responsive css rules based on metadata-->
-    <style column-widths schema="compositionlistschema"></style>
-    <table class="table" ng-class="showTableHover() ? 'table-hover' : 'no-hover'" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
+    <style column-widths schema="compositionlistschema" inline="inline"></style>
+    <table class="table"
+           ng-class="showTableHover() ? 'table-hover' : 'no-hover'; inline? 'table-inline' : ''" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead>
             <tr class="hapag-table-header">
                 <th ng-if="hasDetailSchema()">
@@ -35,7 +36,7 @@
                     ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,null)"
                     ng-init="columnFilter = filterForColumn(column)">
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
-                    
+
                     <span ng-if="!!columnFilter && !hideFilter()" ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
                         {{i18NLabel(column)}}
                     </span>
@@ -59,7 +60,7 @@
                 <th ng-if="showEditButton()">
                     <!-- edit button -->
                 </th>
-                <th ng-if="showDeleteButton() || isBatch()">
+                <th ng-if="showDeleteButton()">
                     <!-- delete button -->
                 </th>
             </tr>
@@ -223,11 +224,11 @@
                     </ng-switch>
                 </td>
                 <td class="rowedit" ng-if="showEditButton()" data-title="Edit">
-                    <button class="btn btn-primary" ng-click="toggleDetails(compositionitem, column, 'edit', $event, rowindex)">
+                    <button class="btn btn-primary" ng-click="editClick(compositionitem, column, $event, rowindex)">
                         <i class="fa fa-edit"></i>
                     </button>
                 </td>
-                <td class="rowedit" ng-if="showDeleteButton() || isBatch()" data-title="Delete">
+                <td class="rowedit" ng-if="showDeleteButton()" data-title="Delete">
                     <button class="btn btn-primary" ng-click="delete(compositionitem, column, $event, rowindex)" ng-show="!isBatch() && showDeleteButton()">
                         <i class="fa fa-trash"></i>
                     </button>
@@ -261,19 +262,19 @@
             </tr>
             <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
                 <td colspan="100%">
-                    <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;Add Item</button>
+                    <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
                 </td>
             </tr>
         </tbody>
-    <tbody ng-show="isNoRecords()">
-        <tr>
-            <td colspan="100%">
-                <p class="no-results">
-                    <i class="fa fa-info-circle"></i>&ensp;{{i18N('general.norecords','No records to display.')}} <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;Add Item</button>
-                </p>
-            </td>
-        </tr>
-    </tbody>
+        <tbody ng-show="isNoRecords()">
+            <tr>
+                <td colspan="100%">
+                    <p class="no-results">
+                        <i class="fa fa-info-circle"></i>&ensp;{{i18N('general.norecords','No records to display.')}} <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+                    </p>
+                </td>
+            </tr>
+        </tbody>
 
     </table>
     <div class="context clearfix" ng-if="showPagination()">
@@ -305,4 +306,6 @@
                             parentschema="parentschema" />
         </form>
     </div>
+
+
 </div>

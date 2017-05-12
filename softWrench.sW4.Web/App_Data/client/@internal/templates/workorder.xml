@@ -62,7 +62,7 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
-        <relationship to="worktype" >
+        <relationship to="worktype"  >
           <relationshipAttribute from="worktype" to="worktype" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
@@ -105,6 +105,29 @@
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
         </relationship>
+
+        <relationship to="person" qualifier="technician">
+          <relationshipAttribute from="owner" to="personid" primary="true"/>
+          <relationshipAttribute from="siteid" to="locationsite"/>
+        </relationship>
+
+        <relationship to="person" qualifier="fakelabor">
+          <relationshipAttribute from="owner" to="personid" primary="true"/>
+          <relationshipAttribute from="siteid" to="locationsite"/>
+        </relationship>
+
+        <relationship to="person" qualifier="supervisor">
+          <relationshipAttribute from="supervisor" to="personid" primary="true"/>
+          <relationshipAttribute from="siteid" to="locationsite"/>
+        </relationship>
+
+        <relationship to="person" qualifier="plantmanager">
+          <relationshipAttribute from="plantmanager" to="personid" primary="true"/>
+          <relationshipAttribute from="siteid" to="locationsite"/>
+        </relationship>
+        
+        
+
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
         </relationship>
@@ -177,6 +200,11 @@
           <relationshipAttribute from="jpnum" to="jpnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+
+        <relationship to="pm">
+          <relationshipAttribute from="pmnum" to="pmnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         
         

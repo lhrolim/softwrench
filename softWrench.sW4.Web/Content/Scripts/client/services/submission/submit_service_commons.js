@@ -93,7 +93,7 @@
             });
         }
 
-        function createSubmissionParameters(datamap, schema, nextSchemaObj, id, compositionData) {
+        function createSubmissionParameters(datamap, schema, nextSchemaObj, id, compositionData, successMessage) {
 
             var parameters = {
                 id,
@@ -101,7 +101,8 @@
                 applicationName: schema.applicationName,
                 batch: isBatch(datamap, schema),
                 platform: platform(),
-                compositionData
+                compositionData,
+                successMessage
             };
 
             if (compositionData != null) {

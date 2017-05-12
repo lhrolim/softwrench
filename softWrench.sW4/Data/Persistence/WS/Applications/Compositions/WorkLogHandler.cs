@@ -12,28 +12,29 @@ using WsUtil = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
-    public class WorkLogHandler :ISingletonComponent{
+    public class WorkLogHandler : ISingletonComponent {
 
         private readonly AttachmentHandler _attachmentHandler;
 
-        public WorkLogHandler(AttachmentHandler handler)
-        {
+        public WorkLogHandler(AttachmentHandler handler) {
             _attachmentHandler = handler;
         }
 
 
-        public  void HandleWorkLogs(CrudOperationData entity, object rootObject) {
+        public void HandleWorkLogs(CrudOperationData entity, object rootObject) {
             // Use to obtain security information from current user
             var user = SecurityFacade.CurrentUser();
 
             // Workorder id used for data association
             var recordKey = entity.UserId;
 
+          
+
             // SWWEB-2365: send only edited or new worklogs
             var worklogs = ((IEnumerable<CrudOperationData>)entity.GetRelationship("worklog"))
                             .Where(w => w.UnmappedAttributes.ContainsKey("#isDirty"))
                             .ToArray();
-            
+
             WsUtil.CloneArray(worklogs, rootObject, "WORKLOG", delegate (object integrationObject, CrudOperationData crudData) {
                 WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                 WsUtil.SetValue(integrationObject, "recordkey", recordKey);
@@ -43,7 +44,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "orgid", user.OrgId);
-                    
+
                 WsUtil.SetValue(integrationObject, "modifydate", DateTime.Now.FromServerToRightKind(), true);
                 ReflectionUtil.SetProperty(integrationObject, "action", ProcessingActionType.AddChange.ToString());
                 LongDescriptionHandler.HandleLongDescription(integrationObject, crudData);
@@ -51,7 +52,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 // create
                 if (crudData.Id == null) {
                     WsUtil.CopyFromRootEntity(rootObject, integrationObject, "createdate", DateTime.Now.FromServerToRightKind(), "CHANGEDATE");
-                    
+
                     // handle Attachments: only for new worklogs
                     var worklogContent = crudData.GetUnMappedAttribute("newattachment");
                     var worklogPath = crudData.GetUnMappedAttribute("newattachment_path");

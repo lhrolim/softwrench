@@ -14,6 +14,10 @@
                 menu: '=',
                 title: '='
             },
+            link: function(scope, element, attr) {
+                scope.processBreadcrumb();
+            },
+
             controller: function ($scope) {
                 //TODO: improve for dual menus
 
@@ -36,9 +40,21 @@
                     $('.hamburger').toggleClass('open');
                 };
 
-                $scope.$watch("title", function (newValue, oldValue) {
+
+                $scope.$on(JavascriptEventConstants.TitleChanged, function(titlechangedevent, title) {
+                    const record = i18NService.getI18nRecordLabel(crudContextHolderService.currentSchema(),
+                        crudContextHolderService.rootDataMap());
+                    if (record) {
+                        title = record + ' | ' + title;
+                    }
+
+                    $scope.title = title;
                     $scope.processBreadcrumb();
                 });
+
+//                $scope.$watch("title", function (newValue, oldValue) {
+//                    $scope.processBreadcrumb();
+//                });
 
                 $scope.$on("sw.breadcrumb.history.redirect.sametitle", function () {
                     $scope.processBreadcrumb();

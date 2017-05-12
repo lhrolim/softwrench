@@ -203,6 +203,13 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkPackageDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\MaintenanceEngineering.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\CallOut.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\WorkOrderDetailComponent.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\SubContractor.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\WorkPackage.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarLocationCacheJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
@@ -211,6 +218,13 @@
   <ItemGroup>
     <Content Include="metadata\firstsolar\menu.mobile.xml">
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="metadata\firstsolar\swdb\workpackage.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="metadata\firstsolar\swdb\swdbmetadata.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="offline_content\firstsolar\scripts\fslocationdrilldown.mobile.js" />
@@ -223,14 +237,22 @@
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
+    <Content Include="web_content\firstsolar\htmls\fscalloutinvoicetext.html" />
+    <Content Include="web_content\firstsolar\htmls\fsnocallouttext.html" />
+    <Content Include="web_content\firstsolar\htmls\fscalloutnottoexceedamounttext.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchService.js" />
+    <Content Include="web_content\firstsolar\scripts\fsmaintananceengService.js" />
+    <Content Include="web_content\firstsolar\scripts\fsworkpackagefilesService.js" />
+    <Content Include="web_content\firstsolar\scripts\fsengineeringevaluationService.js" />
+    <Content Include="web_content\firstsolar\scripts\fscalloutService.js" />
     <Content Include="web_content\firstsolar\scripts\fspersonService.js" />
     <Content Include="web_content\firstsolar\scripts\assetService.js" />
     <Content Include="web_content\firstsolar\scripts\batchWorkorderService.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchPcsButtons.js" />
+    <Content Include="web_content\firstsolar\scripts\fsworkpackageService.js" />
     <Content Include="web_content\firstsolar\scripts\locationService.js" />
     <Content Include="web_content\firstsolar\scripts\location_filter.js" />
     <Content Include="web_content\problem\templates\problemsection.html" />
@@ -268,7 +290,6 @@
     <None Include="web_content\firstsolar\styles\branding.scss" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\com\cts\firstsolar\migration\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">

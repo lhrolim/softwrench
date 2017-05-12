@@ -238,6 +238,7 @@
     <Compile Include="Configuration\Service\WhereClauseRegisterServiceTest.cs" />
     <Compile Include="Data\Commons\Ticket\SlaHolderServiceTest.cs" />
     <Compile Include="Data\CompositeDatamapTest.cs" />
+    <Compile Include="Data\Entities\EntityBuilderTestFS.cs" />
     <Compile Include="Data\Entities\EntityBuilderTest2.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestGric.cs" />
     <Compile Include="Data\Entities\EntityBuilderTestHapag.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Metadata\Applications\Command\ApplicationCommandUtilsTest.cs" />
     <Compile Include="Metadata\Association\DependencyBuilderTest.cs" />
     <Compile Include="Metadata\Association\AssociationHelperTest.cs" />
+    <Compile Include="Metadata\Entities\FsEntityMetadataTest.cs" />
     <Compile Include="Metadata\Entities\SwSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\OtbSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\Entities\HapagSlicedEntityMetadataBuilderTest.cs" />
@@ -313,6 +315,7 @@
     <Compile Include="Util\LoggingUtilTest.cs" />
     <Compile Include="Util\DateExtensionUtilTest.cs" />
     <Compile Include="Util\EntityUtilTest.cs" />
+    <Compile Include="Util\ReflectionUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -448,6 +451,7 @@
     <Content Include="App_data\jsons\person\update1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="App_data\jsons\workpackage\schemaloading.json" />
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>

@@ -23,8 +23,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly List<IAssociationOption> _options;
         private readonly OptionFieldRenderer _renderer;
         private readonly FieldFilter _filter;
-        private readonly String _providerAttribute;
-        private readonly String _extraParameter;
+        private readonly string _providerAttribute;
+        private readonly string _extraParameter;
         private readonly ISet<string> _dependantFields = new HashSet<string>();
         private readonly bool _sort;
         private readonly ISet<ApplicationEvent> _eventsSet;

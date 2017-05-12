@@ -4,7 +4,7 @@
     modules.webcommons.service('tabsService', ["fieldService", "i18NService", function (fieldService, i18NService) {
 
     var buildTabObjectForPrint = function (datamap, tabSchema, schema) {
-        var result = {};        
+        const result = {};        
 
         result.items = [];
         result.items.push(datamap);
@@ -20,9 +20,18 @@
 
     return {
 
+        hasCount: function (tab) {
+            if (!tab) {
+                return false;
+            }
+
+            return tab.type === "ApplicationCompositionDefinition" ||
+                (tab.type === "ApplicationTabDefinition" && !!tab.countRelathionship);
+        },
+
         getCompositionSchema: function (baseSchema, compositionKey, schemaId) {
             var schemas = this.nonInlineCompositionsDict(baseSchema);
-            var thisSchema = schemas[compositionKey];
+            const thisSchema = schemas[compositionKey];
             schemas = thisSchema.schema.schemas;
             return schemaId === "print" ? schemas.print : schemas.list;
         },
@@ -36,7 +45,7 @@
                 //cache
                 return schema.hasTabs;
             }
-            var length = this.tabsDisplayables(schema).length;
+            const length = this.tabsDisplayables(schema).length;
             schema.hasTabs = length > 0;
             return length;
         },
@@ -47,9 +56,9 @@
                 return schema.tabsDisplayablesForPrinting;
             }
             var resultList = [];
-            var displayables = this.tabsDisplayables(schema);
+            const displayables = this.tabsDisplayables(schema);
             $.each(displayables, function (key, displayable) {
-                var value = datamap[displayable.relationship];
+                const value = datamap[displayable.relationship];
                 if (value != undefined && value.length > 0) {
                     resultList.push(displayable);
                 }
@@ -114,7 +123,7 @@
             var resultDict = {};
 
             // all tabs, including subtabs
-            var allTabs = this.tabsDisplayables(schema, true);
+            const allTabs = this.tabsDisplayables(schema, true);
             allTabs.forEach(function(tab) {
                 resultDict[tab.relationship] = tab;
             });
@@ -141,14 +150,14 @@
                     return;
                 }
 
-                var displayable = fieldService.getDisplayableByKey(schema, key);
+                const displayable = fieldService.getDisplayableByKey(schema, key);
 
                 if (fieldService.isTab(displayable)) {
                     notExpansible.push({ key: key, tabObject: buildTabObjectForPrint(datamap, displayable, schema) });
                     return;
                 }
 
-                var compositionData = datamap[key];
+                const compositionData = datamap[key];
 
                 if (compositionData == undefined) {
                     //this happens when the composition data has not been fetch yet,due to a lazy strategy
@@ -157,7 +166,7 @@
                 }
 
                 //now, we are retrieving data for printing
-                var currentSchema = self.getCompositionSchema(schema, key, obj.schema);
+                const currentSchema = self.getCompositionSchema(schema, key, obj.schema);
                 if (currentSchema.properties.expansible != undefined && currentSchema.properties.expansible == "false") {
                     if (notExpansible != undefined && compositionData.length > 0) {
                         //only adding if there´s actual at least one element of this nonExpansible composition
@@ -166,11 +175,11 @@
                     return;
                 }
 
-                var compositionIdField = self.getCompositionIdName(schema, key, schemaId);
-                var compositionIdArray = [];
+                const compositionIdField = self.getCompositionIdName(schema, key, schemaId);
+                const compositionIdArray = [];
 
-                for (var i = 0; i < compositionData.length; i++) {
-                    var composition = compositionData[i];
+                for (let i = 0; i < compositionData.length; i++) {
+                    const composition = compositionData[i];
                     compositionIdArray.push(composition[compositionIdField]);
                 }
                 if (compositionIdArray.length > 0) {
@@ -184,19 +193,19 @@
         },
 
         locatePrintSchema: function (baseSchema, compositionKey) {
-            var schemas = nonInlineCompositionsDict(baseSchema);
-            var thisSchema = schemas[compositionKey];
+            const schemas = nonInlineCompositionsDict(baseSchema);
+            const thisSchema = schemas[compositionKey];
             return thisSchema.schema.schemas.print;
         },
 
         getTitle: function (baseSchema, compositionKey) {
-            var schemas = nonInlineCompositionsDict(baseSchema);
-            var thisSchema = schemas[compositionKey];
+            const schemas = nonInlineCompositionsDict(baseSchema);
+            const thisSchema = schemas[compositionKey];
             return thisSchema.label;
         },
 
         hasTab: function(baseSchema, tabid) {
-            var displayable = fieldService.getDisplayableByKey(baseSchema, tabid);
+            const displayable = fieldService.getDisplayableByKey(baseSchema, tabid);
             if (!displayable) {
                 return false;
             }

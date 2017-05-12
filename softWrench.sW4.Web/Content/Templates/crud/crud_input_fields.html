@@ -25,17 +25,54 @@
                 <legend ng-if="isLabelVisible(fieldMetadata,true)"
                         rel="tooltip"
                         data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                        class="legend-label">
+                        class="legend-label" ng-style="{{headerStyle(fieldMetadata)}}">
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
-                    {{i18NInputLabel(fieldMetadata)}}
+                    <div ng-if="isSectionControlEnabled(fieldMetadata)">
+                        <input type="checkbox"
+                               name="datamap[fieldMetadata.attribute]"
+                               value="{{option.value}}"
+                               style="top: 2px; position:relative"
+                               ng-checked="isChecked(fieldMetadata)"
+                               ng-click="toggleSectionSelection(fieldMetadata)"
+                               ng-show="!hasPersistedFieldInsideSection(fieldMetadata)"
+                               >
+                        {{i18NInputLabel(fieldMetadata)}}
+
+
+                        <section-element-input extraparameters="extraparameters"
+                                               schema="schema"
+                                               datamap="datamap"
+                                               is-dirty="isDirty"
+                                               header-section="true"
+                                               displayables="fieldMetadata.header.headerDisplayables"
+                                               elementid="{{elementid + 'SectionHeader' + fieldMetadata.id}}">
+                        </section-element-input>
+
+
+                    </div>
+                    <div ng-if="!isSectionControlEnabled(fieldMetadata)">
+                        {{i18NInputLabel(fieldMetadata)}}
+                        <section-element-input extraparameters="extraparameters"
+                                               field-metadata="fieldMetadata"
+                                               schema="schema"
+                                               datamap="datamap"
+                                               is-dirty="isDirty"
+                                               header-section="true"
+                                               orientation="horizontal"
+                                               displayables="fieldMetadata.header.headerDisplayables"
+                                               elementid="{{elementid + 'SectionHeader' + fieldMetadata.id}}">
+                        </section-element-input>
+                    </div>
+
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                 </legend>
 
                 <!--#region Read only section-->
 
                 <div ng-class="getInputClass(fieldMetadata)"
-                     ng-if="isReadOnlyField(fieldMetadata,datamap)"
+                     ng-if="isStaticReadOnlyField(fieldMetadata,datamap)"
                      ng-switch on="fieldMetadata.rendererType">
+
                     <input type="datetime" ng-switch-when="datetime"
                            ng-model="datamap[fieldMetadata.attribute]"
                            data-date-time
@@ -62,50 +99,7 @@
                               ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
 
                     <code-editor ng-switch-when="code" readonly="true" mode="{{codeEditorMode(this)}}" value="datamap[fieldMetadata.attribute]"></code-editor>
-                    <!--#region checkbox-->
-                    <div ng-switch-when="checkbox">
-                        <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
-                            <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
-                                <td ng-if="isPositionLeft(fieldMetadata)">
-                                    {{i18NOptionField(option,fieldMetadata,schema)}}
-                                </td>
-                                <td>
-                                    <input type="checkbox"
-                                           name="datamap[fieldMetadata.attribute]"
-                                           value="{{option.value}}"
-                                           ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                                           ng-click="toggleCheckboxSelection(option,fieldMetadata.associationKey)">
-                                </td>
-                                <td ng-if="!isPositionLeft(fieldMetadata)">
-                                    {{i18NOptionField(option,fieldMetadata,schema)}}
-                                </td>
-                            </tr>
-                        </table>
-                        <div ng-if="fieldMetadata.type !== 'OptionField'" style="min-width: 200px;">
-                            <label class="control-label"
-                                   rel="{{showLabelTooltip(fieldMetadata)}}"
-                                   data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                                   ng-class="getCheckboxLabelLeftClass(fieldMetadata)">
-                                <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
-                                {{i18NInputLabel(fieldMetadata)}}
-                            </label>
-                            <input type="checkbox"
-                                   id="checkbox"
-                                   ng-model="datamap[fieldMetadata.attribute]"
-                                   ng-init="initCheckbox(fieldMetadata)"
-                                   ng-checked="isChecked(fieldMetadata)"
-                                   ng-enabled="isModifiableEnabled(fieldMetadata)"
-                                   ng-true-value="true" ng-false-value="false" />
-                            <label class="control-label"
-                                   rel="{{showLabelTooltip(fieldMetadata)}}"
-                                   data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                                   ng-class="getCheckboxLabelRightClass(fieldMetadata)">
-                                <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
-                                {{i18NInputLabel(fieldMetadata)}}
-                            </label>
-                        </div>
-                    </div>
-                    <!-- #endregion-->
+
                     <div ng-switch-when="imagepreview" class="imagepreview">
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
@@ -115,6 +109,9 @@
                                         data-readonly="true">
                         </richtext-field>
                     </div>
+
+
+
 
                     <input type="text"
                            class="form-control"
@@ -127,7 +124,7 @@
 
                 <!--#endregion -->
 
-                <div ng-if="!isReadOnlyField(fieldMetadata,datamap)"
+                <div ng-if="!isStaticReadOnlyField(fieldMetadata,datamap)"
                      ng-show="fieldMetadata.attribute!=schema.idFieldName"
                      ng-switch on="fieldMetadata.rendererType"
                      ng-class="getInputClass(fieldMetadata)">
@@ -168,19 +165,27 @@
                     <!--#region checkbox-->
                     <div ng-switch-when="checkbox">
                         <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
-                            <tr ng-repeat="option in getCheckboxOptions(fieldMetadata)">
-                                <td ng-if="isPositionLeft(fieldMetadata)">
-                                    {{i18NOptionField(option,fieldMetadata,schema)}}
-                                </td>
-                                <td>
-                                    <input type="checkbox"
-                                           name="datamap[fieldMetadata.attribute]"
-                                           value="{{option.value}}"
-                                           ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
-                                           ng-click="toggleCheckboxSelection(option,fieldMetadata.associationKey)">
-                                </td>
-                                <td ng-if="!isPositionLeft(fieldMetadata)">
-                                    {{i18NOptionField(option,fieldMetadata,schema)}}
+                            <thead ng-if="fieldMetadata.label!=null">
+                                <tr><td class="optionfieldheader">{{fieldMetadata.label}}</td></tr>
+                            </thead>
+                            <tr ng-repeat="optionArrays in getGroupedCheckboxOptions(fieldMetadata)">
+                                <td ng-repeat="option in optionArrays" class="checkboxcolumn">
+                                    <span>
+                                        <span ng-if="isPositionLeft(fieldMetadata)">
+                                            <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                            {{i18NOptionField(option,fieldMetadata,schema)}}
+                                        </span>
+                                        <input type="checkbox"
+                                               name="datamap[fieldMetadata.attribute]"
+                                               value="{{option.value}}"
+                                               ng-disabled="isCheckboxItemReadOnlyField(fieldMetadata,option,datamap)  "
+                                               ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)"
+                                               ng-click="toggleCheckboxSelection($event,fieldMetadata,option,fieldMetadata.associationKey)">
+                                        <span ng-if="!isPositionLeft(fieldMetadata)">
+                                            {{i18NOptionField(option,fieldMetadata,schema)}}
+                                            <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                        </span>
+                                    </span>
                                 </td>
                             </tr>
                         </table>
@@ -204,7 +209,7 @@
                                    data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                                    ng-class="getCheckboxLabelRightClass(fieldMetadata)">
                                 <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
-                                {{i18NInputLabel(fieldMetadata)}}
+                                {{i18NInputLabel(fieldMetadata,true)}}
                             </label>
                         </div>
                     </div>
@@ -270,16 +275,24 @@
                             <input type="radio"
                                    name="{{fieldMetadata.attribute}}"
                                    value="{{option.value}}"
+                                   ng-disabled="isReadOnlyField(fieldMetadata,datamap)"
                                    ng-model="datamap[fieldMetadata.attribute]">
-                            {{i18NOptionField(option,fieldMetadata,schema)}}
+                            <span>
+                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                            </span>
                         </label>
                         <div ng-if="fieldMetadata.rendererParameters['vertical']!=null" class="radio" ng-repeat="option in GetAssociationOptions(fieldMetadata)">
                             <label>
                                 <input type="radio"
                                        name="{{fieldMetadata.attribute}}"
+                                       ng-disabled="isReadOnlyField(fieldMetadata,datamap)"
                                        value="{{option.value}}"
                                        ng-model="datamap[fieldMetadata.attribute]">
-                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                <span>
+                                    {{i18NOptionField(option,fieldMetadata,schema)}}
+                                    <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                </span>
                             </label>
                         </div>
                     </fieldset>

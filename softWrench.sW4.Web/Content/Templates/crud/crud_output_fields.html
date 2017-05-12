@@ -142,6 +142,16 @@
                                     </ul>
                                 </div>
 
+                                <textarea ng-switch-when="textarea"
+                                          ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120"
+                                          rows="10" wrap="hard"
+                                          data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                          maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
+                                          ng-readonly="true"
+                                          ng-enabled="true"
+                                          data-id="{{fieldMetadata.attribute}}"
+                                          ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
+
                                 <div ng-switch-default>
                                     <label class="form-control"
                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap) | linebreak"

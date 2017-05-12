@@ -151,10 +151,10 @@ app.directive('crudOutputFields', function (contextService) {
             }
 
             $scope.showField = function (application, fieldMetadata) {
-                //always show sections
-                if (fieldMetadata.type === 'ApplicationSection') {
-                    return false;
-                }
+                ////always show sections
+                //if (fieldMetadata.type === 'ApplicationSection') {
+                //    return false;
+                //}
 
                 //always hide hidden fields
                 var hidden = $scope.isFieldHidden(application, fieldMetadata);

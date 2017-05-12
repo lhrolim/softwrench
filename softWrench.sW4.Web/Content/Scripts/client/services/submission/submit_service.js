@@ -204,7 +204,7 @@ class SubmitResult {
         }
 
       
-        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,compositionData}) {
+        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,compositionData,successMessage}) {
                 
             const log = this.$log.get("submitService#doSubmitToServer",["submit","save"]);
             log.debug("doSubmit to server start... applying datamap transformations");
@@ -218,7 +218,7 @@ class SubmitResult {
             const applicationName = schemaToSave.applicationName;
             const id = transformedFields[schemaToSave.idFieldName];
 
-            const submissionParameters = this.submitServiceCommons.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, compositionData);
+            const submissionParameters = this.submitServiceCommons.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, compositionData, successMessage);
             
             const jsonWrapper = {
                 json: transformedFields,

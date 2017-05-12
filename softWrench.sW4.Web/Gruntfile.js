@@ -8,7 +8,8 @@ module.exports = function (grunt) {
             webcommons: "Content/Shared/webcommons",
             vendor: "Content/vendor",
             customers: "Content/Customers",
-            tests: "../softwrench.sw4.jstest"
+            tests: "../softwrench.sw4.jstest",
+            fsscripts: "../softwrench.sw4.firstsolar/web_content/firstsolar/scripts",
         },
         //#endregion
 
@@ -205,7 +206,9 @@ module.exports = function (grunt) {
                     // customers shared
                     "<%= app.content %>/Scripts/customers/shared/*.js",
                     // customers: outer build process guarantees there's only the selected customer in the path
-                    "<%= app.customers %>/**/scripts/**/*.js",
+//                    "<%= app.customers %>/**/scripts/**/*.js",
+                    "<%= app.fsscripts %>/*.js",
+
                     // templates
                     "<%= app.content %>/Templates/**/*.html",
 

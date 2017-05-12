@@ -44,6 +44,19 @@ namespace softWrench.sW4.Data.Entities {
             return (T)entity;
         }
 
+
+        public static TYped PopulateTypedEntity<T, TYped>(T entity, TYped objectToPopulate) where T : Entity {
+            foreach (var entry in entity) {
+                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value);
+            }
+            foreach (var entry in entity.UnmappedAttributes){
+                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value);
+            }
+
+            return objectToPopulate;
+        }
+
+
         private static void PopulateEntity<T>(EntityMetadata metadata, ApplicationMetadata applicationMetadata,
             JProperty property, Entity entity, Type entityType, OperationType operationType)
             where T : Entity {
@@ -77,7 +90,7 @@ namespace softWrench.sW4.Data.Entities {
                         attributes.Add(property.Name, valueFromJson);
                     } catch (Exception e) {
                         Log.Error("error casting object", e);
-                        throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value),e);
+                        throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value), e);
                     }
 
                 } else if (property.Value.Type == JTokenType.Array) {
@@ -142,7 +155,7 @@ namespace softWrench.sW4.Data.Entities {
             string attributeName;
             var relationshipName = EntityUtil.GetRelationshipName(property.Name, out attributeName);
 
-            var association = metadata.Associations.FirstOrDefault(r => r.Qualifier == relationshipName);
+            var association = metadata.Associations.FirstOrDefault(r => r.Qualifier.EqualsIc(relationshipName) || ("#" + r.Qualifier).EqualsIc(relationshipName));
             var relationship = association != null ? MetadataProvider.Entity(association.To) : null;
             if (relationship == null || association.Collection) {
                 return;

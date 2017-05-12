@@ -90,14 +90,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         protected IContextLookuper ContextLookuper => SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
 
         [Import]
+        public FilterDTOHandlerComposite FilterDTOHandlerComposite { get; set; }
+
+        [Import]
         public CollectionResolver CollectionResolver {
             get; set;
         }
 
-        [Import]
-        public FilterWhereClauseHandler FilterWhereClauseHandler {
-            get; set;
-        }
+   
 
         //TODO: fix BatchReportEmailService which breaks on unit tests, in case of [Import] usage
         public IBatchSubmissionService BatchSubmissionService => SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>();
@@ -107,15 +107,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             get; set;
         }
 
-        [Import]
-        public QuickSearchWhereClauseHandler QuickSearchWhereClauseHandler {
-            get; set;
-        }
-
-        [Import]
-        public SortHandler SortHandler {
-            get; set;
-        }
 
         public AttachmentHandler AttachmentHandler => SimpleInjectorGenericFactory.Instance.GetObject<AttachmentHandler>();
 
@@ -309,10 +300,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             } else {
                 searchDto.QueryAlias = application.Name + "." + schema.SchemaId;
             }
-
-            FilterWhereClauseHandler.HandleDTO(application.Schema, searchDto);
-            QuickSearchWhereClauseHandler.HandleDTO(application.Schema, searchDto);
-            SortHandler.HandleSearchDTO(application.Schema, searchDto);
+            FilterDTOHandlerComposite.HandleDTO(application.Schema, searchDto);
 
             var ctx = ContextLookuper.LookupContext();
 
@@ -619,7 +607,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
             }
 
-            var result = DoExecute(operationWrapper);
+            var result = await DoExecute(operationWrapper);
             var operationData = operationWrapper.OperationData();
             var crudOperationData = operationData as CrudOperationData;
             if (crudOperationData == null || crudOperationData.ReloadMode.Equals(ReloadMode.None)) {
@@ -651,7 +639,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return new OperationWrapper(application, entityMetadata, operation, json, id);
         }
 
-        public virtual TargetResult DoExecute(OperationWrapper operationWrapper) {
+        public virtual async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             return Engine().Execute(operationWrapper);
         }
 

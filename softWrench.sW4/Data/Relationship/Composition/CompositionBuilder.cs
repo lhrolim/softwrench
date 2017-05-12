@@ -1,4 +1,5 @@
-﻿using NHibernate.Util;
+﻿using System;
+using NHibernate.Util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -126,8 +127,26 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             return false;
         }
 
+        private static ApplicationSchemaDefinition GetCompositeSchema(string schemaId, ClientPlatform platform) {
+            if (!schemaId.Contains(".")) {
+                return null;
+            }
+
+            var index = schemaId.IndexOf(".", StringComparison.Ordinal);
+            var application = schemaId.Substring(0, index);
+            var realSchemaId = schemaId.Substring(index + 1);
+            return MetadataProvider.Schema(application, realSchemaId, platform);
+        }
+
         private static ApplicationSchemaDefinition GetListSchema(ApplicationCompositionSchema applicationCompositionSchema, CompleteApplicationMetadataDefinition compositionApplication, ClientPlatform platform) {
             var collectionSchema = (ApplicationCompositionCollectionSchema)applicationCompositionSchema;
+
+            var listSchemaId = collectionSchema.CollectionProperties.ListSchema;
+            var compositeSchema = GetCompositeSchema(listSchemaId, platform);
+            if (compositeSchema != null) {
+                return compositeSchema;
+            }
+
             var listKey = new ApplicationMetadataSchemaKey(collectionSchema.CollectionProperties.ListSchema, applicationCompositionSchema.RenderMode, platform);
             return compositionApplication.Schemas()[listKey];
         }
@@ -137,7 +156,14 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 //This means that the composition is only needed for list visualization
                 return null;
             }
-            var detailKey = new ApplicationMetadataSchemaKey(compositionSchema.DetailSchema, compositionSchema.RenderMode, clientPlatform);
+
+            var detailSchemaId = compositionSchema.DetailSchema;
+            var compositeSchema = GetCompositeSchema(detailSchemaId, clientPlatform);
+            if (compositeSchema != null) {
+                return compositeSchema;
+            }
+
+            var detailKey = new ApplicationMetadataSchemaKey(detailSchemaId, compositionSchema.RenderMode, clientPlatform);
             var applicationSchemaDefinitions = compositionApplication.Schemas();
             if (!applicationSchemaDefinitions.ContainsKey(detailKey)) {
                 throw ExceptionUtil.MetadataException(

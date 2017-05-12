@@ -22,8 +22,8 @@
             return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
         };
 
-        $scope.i18NInputLabel = $scope.i18NInputLabel || function (fieldMetadata) {
-            return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema);
+        $scope.i18NInputLabel = $scope.i18NInputLabel || function (fieldMetadata, avoidColon=false) {
+            return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, avoidColon);
         };
 
         $scope.getBooleanClass = function (item, attribute) {
@@ -213,9 +213,7 @@
 
 
         $scope.getFieldClass = function (fieldMetadata) {
-            if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["class"]) {
-                return fieldMetadata.rendererParameters["class"];
-            }
+           
 
             return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
@@ -228,8 +226,8 @@
             return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
 
-        $scope.isReadOnlyField = function (fieldMetadata,datamap) {
-            const isDefaultReadOnly = fieldService.isFieldReadOnly(datamap, null, fieldMetadata, $scope);
+        $scope.isReadOnlyField = function (fieldMetadata,datamap, staticCheck=false) {
+            const isDefaultReadOnly = fieldService.isFieldReadOnly(datamap, null, fieldMetadata, $scope, staticCheck);
             if (isDefaultReadOnly) {
                 return true;
             }
@@ -240,6 +238,24 @@
             }
             return false;
         }
+
+        $scope.isCheckboxItemReadOnlyField = function (fieldMetadata, option, datamap) {
+            return $scope.isReadOnlyField(fieldMetadata, datamap) || $scope.isReadOnlyField(option, datamap);
+        }
+
+        $scope.isStaticReadOnlyField = function (fieldMetadata, datamap) {
+            //on the html we have some components who are rendered completely differently if they are readonly (ex: richtext and textarea), thus,
+            //we have a top section for first checking whether the fields are readonly or not
+            //others are implemented in a way that they have some sort of ng-readonly/ng-enabled flag. These do not have a corresponding match on the readonly section, and if we do not exclude 
+            //them for the check, they would render a wrong default type
+            if (fieldMetadata.rendererType != null && fieldMetadata.rendererType.equalsAny("radio", "checkbox")) {
+                //TODO: migrate other renderer types for a completely dinamic evaluation
+                return false;
+            }
+
+            return $scope.isReadOnlyField(fieldMetadata, datamap);
+        }
+
 
         $scope.getCheckboxLabelLeftClass = function (fieldMetadata) {
             return layoutservice.getCheckboxLabelLeftClass(fieldMetadata);
@@ -264,6 +280,40 @@
             var isFieldSet = header.parameters != null && "true" === header.parameters['fieldset'];
             //if header is declared as fieldset return true only for the legendEvaluation
             return isVisible && (isFieldSet === legendEvaluationMode);
+        }
+
+        $scope.headerStyle = function (fieldMetadata) {
+            const header = fieldMetadata.header;
+            if (!header.parameters) {
+                return null;
+            }
+            if (!header.jscache) {
+                header.jscache = {};
+            }
+            if (header.jscache && header.jscache.headerStyle) {
+                return header.jscache.headerStyle;
+            }
+
+            if (fieldMetadata.type === "ApplicationCompositionDefinition") {
+                return {
+                    margin: '0px',
+                    width: '100%'
+                };
+            }
+
+            if (header.parameters["style"]) {
+                const style = JSON.parse(header.parameters["style"]);
+                header.jscache.headerStyle = style;
+                return style;
+            }
+
+            const style = {};
+            const bgcolor = header.parameters['backgroundcolor'];
+            if (bgcolor) {
+                style["background"] = bgcolor;
+            }
+            return style;
+
         }
 
         $scope.formatId = function (id) {

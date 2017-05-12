@@ -15,12 +15,16 @@
                 fieldMetadata.jscache.isHidden = true;
                 return true;
             } else if (fieldMetadata.type === "ApplicationSection" && fieldMetadata.resourcepath == null &&
-                (fieldMetadata.displayables.length === 0 || $.grep(fieldMetadata.displayables, function (e) {
-                      return !isFieldHidden(datamap, schema, e);
-            }).length == 0)) {
+                (fieldMetadata.displayables.length === 0
+                    || $.grep(fieldMetadata.displayables, function (e) {
+                        return !isFieldHidden(datamap, schema, e);
+                    }).length === 0)) {
 
-                //            fieldMetadata.jscache.isHidden = true;
-                return true;
+                var enableControlFlag = fieldMetadata.header != null &&
+                    fieldMetadata.attribute !== null &&
+                    fieldMetadata.header.parameters["enablecontrol"] === "true";
+
+                return !enableControlFlag;
             }
             //the opposite of the expression: showexpression --> hidden
             const result = !expressionService.evaluate(fieldMetadata.showExpression, datamap);
@@ -56,7 +60,7 @@
                 return isFieldHidden(datamap, application, fieldMetadata);
             },
 
-            getParameter : function(fieldMetadata, key) {
+            getParameter: function (fieldMetadata, key) {
                 return fieldMetadata.rendererParameters[key];
             },
 
@@ -71,7 +75,16 @@
                 return requiredExpression;
             },
 
-            isFieldReadOnly: function (datamap, application, fieldMetadata, scope) {
+            /**
+             * 
+             * @param {} datamap 
+             * @param {} application 
+             * @param {} fieldMetadata 
+             * @param {} scope 
+             * @param {} staticcheck if true, we should only consider this field readonly if it comes from the server as redaonly, i.e, leaving no chance for a dynamic expressionService evaluation
+             * @returns {} 
+             */
+            isFieldReadOnly: function (datamap, application, fieldMetadata, scope, staticcheck = false) {
                 //test the metadata read-only property
                 const isReadOnly = fieldMetadata.isReadOnly;
 
@@ -82,7 +95,11 @@
                 if (fieldMetadata.enableExpression == null) {
                     return false;
                 }
-                return !expressionService.evaluate(fieldMetadata.enableExpression, datamap, scope);
+
+                return staticcheck ? false : !expressionService.evaluate(fieldMetadata.enableExpression, datamap, scope);
+
+
+
             },
 
             fieldHasValue: function (datamap, fieldMetadata) {
@@ -174,7 +191,7 @@
                 return type === "ApplicationCompositionDefinition" && !displayable.inline;
             },
 
-            isSection:function(displayable) {
+            isSection: function (displayable) {
                 const type = displayable.type;
                 return type === "ApplicationSection";
             },
@@ -210,13 +227,14 @@
                 const displayables = schema.displayables;
                 for (let i = 0; i < displayables.length; i++) {
                     const displayable = displayables[i];
-                    if ((displayable.attribute && displayable.attribute == key) || (displayable.tabId && displayable.tabId == key)) {
+                    if ((displayable.attribute && displayable.attribute === key) || (displayable.tabId && displayable.tabId === key) || (displayable.id && displayable.id === key)) {
                         schema.jscache.fieldsByKey[key] = displayable;
                         return displayable;
                     }
                     if (displayable.displayables != undefined) {
                         const innerDisplayables = this.getDisplayableByKey(displayable, key);
-                        if (innerDisplayables != undefined && ((innerDisplayables.attribute && innerDisplayables.attribute == key) || (innerDisplayables.tabId && innerDisplayables.tabId == key))) {
+                        if (innerDisplayables != undefined
+                            && ((innerDisplayables.attribute && innerDisplayables.attribute === key) || (innerDisplayables.tabId && innerDisplayables.tabId === key) || (innerDisplayables.id && innerDisplayables.id === key))) {
                             schema.jscache.fieldsByKey[key] = innerDisplayables;
                             return innerDisplayables;
                         }
@@ -226,7 +244,7 @@
             },
 
             getDisplayablesByAssociationKey: function (schema, associationKey) {
-                schema.jscache = schema.jscache ||{};
+                schema.jscache = schema.jscache || {};
                 const cacheEntry = schema.jscache.displayablesByAssociation = schema.jscache.displayablesByAssociation || {};
                 if (cacheEntry[associationKey] != undefined) {
                     return cacheEntry[associationKey];
@@ -274,14 +292,14 @@
                 for (let i = 0; i < displayables.length; i++) {
                     //is this the current field?
                     const fieldMetadata = displayables[i];
-                    if (fieldMetadata.attribute && fieldMetadata.attribute == key) {
+                    if (fieldMetadata.attribute && fieldMetadata.attribute === key) {
                         return i;
                     }
                 }
                 return -1;
             },
 
-            getVisiableDisplayableIdxByKey: function (schema, attribute) {
+            getVisibleDisplayableIdxByKey: function (schema, attribute, ignoreCache = false, includeSections = false) {
                 /// <summary>
                 /// Get the index for the supplied attribute key, skipping hidden fields.
                 /// </summary>
@@ -289,7 +307,7 @@
                     return -1;
                 }
                 schema.jscache = schema.jscache || {};
-                const results = this.getLinearDisplayables(schema);
+                const results = this.getLinearDisplayables(schema, ignoreCache, includeSections);
                 for (let i = 0; i < results.length; i++) {
                     const result = results[i];
                     if (result.associationKey === attribute || result.target === attribute || result.attribute === attribute && !result.isHidden) {
@@ -299,14 +317,14 @@
                 return -1;
             },
 
-            getLinearDisplayables: function (container) {
+            getLinearDisplayables: function (container, ignoreCache = false, includeSections = false) {
                 /// <summary>
                 /// gets a list of all the displayables of the current schema/section in a linear mode, excluding any sections/tabs themselves.
                 /// </summary>
                 /// <param name="container">either a schema or a section</param>
                 /// <returns type=""></returns>
                 container.jscache = container.jscache || {};
-                if (container.jscache.alldisplayables) {
+                if (container.jscache.alldisplayables && !ignoreCache) {
                     return container.jscache.alldisplayables;
                 }
                 const displayables = container.displayables;
@@ -314,8 +332,12 @@
                 for (let i = 0; i < displayables.length; i++) {
                     const displayable = displayables[i];
                     if (displayable.displayables) {
+                        if (includeSections) {
+                            result.push(displayable);
+                        }
                         //at this point displayable is a section, calling recursively
-                        result = result.concat(this.getLinearDisplayables(displayable));
+                        result = result.concat(this.getLinearDisplayables(displayable, ignoreCache, includeSections));
+
                     } else {
                         result.push(displayable);
                     }
@@ -327,7 +349,7 @@
             getNextVisibleDisplayableIdx: function (datamap, schema, key) {
                 //all fields, regardless of sections
                 const displayables = this.getLinearDisplayables(schema);
-                const fieldIdx = this.getVisiableDisplayableIdxByKey(schema, key);
+                const fieldIdx = this.getVisibleDisplayableIdxByKey(schema, key);
                 if (fieldIdx == -1 || fieldIdx == displayables.length) {
                     //no such field, or last field
                     return -1;
@@ -460,7 +482,7 @@
                 return new Date();
             },
 
-            getQualifier: function(field, datamap) {
+            getQualifier: function (field, datamap) {
                 const qualifier = field.qualifier;
                 if (!qualifier || !qualifier.startsWith("expression=")) return qualifier;
 

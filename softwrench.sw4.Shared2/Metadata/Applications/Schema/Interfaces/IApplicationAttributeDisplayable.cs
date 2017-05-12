@@ -13,5 +13,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces
 
         string RequiredExpression {get; set;}
 
+        string EnableExpression { get; set; }
+
     }
 }

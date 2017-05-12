@@ -29,6 +29,7 @@
                 ///     title: the title to display on the modal
                 ///     cssclass: an extra class to add to the modal, making it possible to customize it via css later
                 ///     onloadfn: a function to be called when the modal loads, which would receive the modal scope as a parameter (function onload(modalscope))
+                ///     useavailableheight: if true will force the scroll to pre-dimension with all available data
                 ///     savefn: a save fn to be called
                 ///     listResult: 
                 /// 
@@ -59,6 +60,8 @@
 
                     if (!properties.cssclass) {
                         properties.cssclass = "crud-lookup-modal";
+                    } else {
+                        properties.cssclass += " crud-lookup-modal";
                     }
 
                     if (!properties.title) {
@@ -86,11 +89,13 @@
                         cssclass: properties.cssclass,
                         onloadfn: properties.onloadfn,
                         closeAfterSave: properties.closeAfterSave,
-                        cancelOnClickOutside: properties.cancelOnClickOutside
+                        cancelOnClickOutside: properties.cancelOnClickOutside,
+                        useavailableheight: properties.useavailableheight
                     };
 
                     
                     $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modaldata);
+                    
                 },
 
 

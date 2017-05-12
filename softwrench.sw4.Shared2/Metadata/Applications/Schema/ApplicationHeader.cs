@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
     public class ApplicationHeader : IPCLCloneable {
@@ -24,12 +25,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         [DefaultValue("true")]
         public string ShowExpression { get; set; }
 
+        public IEnumerable<IApplicationDisplayable> HeaderDisplayables { get; set; } = new List<IApplicationDisplayable>();
+
 
         public ApplicationHeader() {
 
         }
 
-        public ApplicationHeader(string label, string parameters, string displacement, string showExpression, string helpIcon, string toolTip) {
+        public ApplicationHeader(string label, string parameters, string displacement, string showExpression, string helpIcon, string toolTip, IEnumerable<IApplicationDisplayable> displayables) {
             Label = label;
             Parameters = PropertyUtil.ConvertToDictionary(parameters);
             ValidateDisplacementType(displacement);
@@ -37,13 +40,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
             ShowExpression = showExpression;
             HelpIcon = helpIcon;
             ToolTip = toolTip;
+            HeaderDisplayables = displayables;
         }
 
-        protected void ValidateDisplacementType(String displacement) {
-            DisplacementType result;
-            if (!String.IsNullOrWhiteSpace(displacement)) {
+        protected void ValidateDisplacementType(string displacement) {
+            if (!string.IsNullOrWhiteSpace(displacement)) {
+                DisplacementType result;
                 if (!Enum.TryParse(displacement, true, out result)) {
-                    throw new InvalidOperationException(String.Format(WrongRenderer, displacement));
+                    throw new InvalidOperationException(string.Format(WrongRenderer, displacement));
                 }
                 DisplacementEnum = result;
             } else {
@@ -59,7 +63,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         }
 
         public object Clone() {
-            return new ApplicationHeader(Label, _parametersString, Displacement,ShowExpression, HelpIcon, ToolTip);
+            return new ApplicationHeader(Label, _parametersString, Displacement, ShowExpression, HelpIcon, ToolTip, HeaderDisplayables);
         }
     }
 }

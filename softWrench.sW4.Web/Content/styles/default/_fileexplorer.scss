@@ -1,0 +1,44 @@
+.fileicon {
+    width: 100px;
+    max-height: 100px;
+    float: left;
+    margin-bottom: 9px;
+    margin-right: 9px;
+    cursor:pointer;
+}
+
+.iconset{
+    padding: 10px;
+}
+
+.thumbnailiconset {
+    border-radius: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 10px 0;
+    border: none;
+    background: 0 0;
+     text-decoration: none !important;
+}
+
+.item-icon{
+    font-size: 32px;
+}
+
+.item-extension::after {
+    font-family: Roboto,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    content: attr(data-ext);
+    left: -30px;
+    position: relative;
+    color: #fff;
+    font-size: 9px;
+    text-transform: uppercase;
+    top: 2px;
+}
+
+.item-refresh{
+    position: relative;
+    top: 10px;
+    font-size: 10px;
+    color: darkseagreen;
+}

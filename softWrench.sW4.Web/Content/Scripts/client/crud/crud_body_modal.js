@@ -82,7 +82,7 @@
             $timeout(function () {
                 $(window).trigger("resize");
                 $('#crudmodal').keypress(e=> {
-                    if (e.which === 13 && !$(e.target).is("input")) {
+                    if (e.which === 13 && !$(e.target).is("input") && !$(e.target).is("textarea")) {
                         const command = crudContextHolderService.getPrimaryCommand();
                         if (!!command) {
                             $timeout(() => {
@@ -110,6 +110,7 @@
             //by default modals, should render as detail stereotype mode
             $scope.isDetail = schemaService.isDetail(schema, true);
             $scope.isList = schemaService.isList(schema);
+            $scope.useavailableheight = modaldata.useavailableheight || false;
 
             $scope.datamap = datamap;
             const datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;

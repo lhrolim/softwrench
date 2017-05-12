@@ -255,6 +255,15 @@
     }
 }
 
+.table-inline {
+    margin-bottom: 0px !important;
+
+    .no-results {
+    margin: 20px 0 0 0 !important;
+    }
+
+}
+
 #listgrid, #compositionlistgrid {
     tbody tr {
         &.odd {
@@ -266,6 +275,7 @@
         padding: 11px 15px 9px;
         cursor: pointer;
         word-break: break-word;
+
 
         &.active {
             background: transparent;
@@ -309,7 +319,6 @@
     }
 
     tr.batchadd {
-        border-bottom: 2px solid #ddd;
 
         td {
             padding-bottom: 10px;

@@ -24,7 +24,7 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
             return "pesco";
         }
 
-        public override TargetResult DoExecute(OperationWrapper operationWrapper) {
+        public override Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var data = operationWrapper.GetOperationData;
             if (!true.Equals(data.Holder.GetAttribute("lostenergy"))) {
                 data.Holder.SetAttribute("lostenergyamount", "");

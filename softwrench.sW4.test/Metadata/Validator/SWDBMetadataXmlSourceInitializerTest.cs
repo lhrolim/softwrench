@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Dynamic.Model;
@@ -71,6 +72,15 @@ namespace softwrench.sW4.test.Metadata.Validator {
             var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
             Assert.IsTrue(attributes.Any(a=> a.Name.EqualsIc("offlinedevice")));
             Assert.IsTrue(attributes.Any(a=> a.Name.EqualsIc("platform")));
+
+        }
+
+        [TestMethod]
+        public void TestBools() {
+            var service = new SWDBMetadataXmlSourceInitializer();
+            var entityMetadata = service.Convert(typeof(WorkPackage));
+            var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            Assert.IsTrue(attributes.Any(a => a.Name.EqualsIc("subContractorEnabled")));
 
         }
     }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.WS.Internal;
@@ -9,6 +11,10 @@ namespace softWrench.sW4.Util {
     public class ConversionUtil {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(ConversionUtil));
+        private static readonly List<string> DateFormats = new List<string>() {
+            "MM/dd/yyyy", "dd/MM/yyyy HH:mm", "dd/MM/yyyy HH:mm:ss", "MM/dd/yyyy", "MM/dd/yyyy HH:mm", "MM/dd/yyyy HH:mm:ss"
+        };
+
 
         public static object ConvertFromMetadataType(string type, string stValue) {
             //TODO: review.
@@ -73,24 +79,13 @@ namespace softWrench.sW4.Util {
                 var fromUserToRightKind = date.FromUserToRightKind(user);
                 return fromUserToRightKind;
             } catch (Exception) {
-                DateTime dtAux;
-                if (DateTime.TryParseExact(stValue, "MM/dd/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out dtAux)) {
-                    var date = DateTime.SpecifyKind(dtAux, kind);
-                    return date.FromUserToRightKind(user);
-                }
-                if (DateTime.TryParseExact(stValue, "dd/MM/yyyy HH:mm", null, System.Globalization.DateTimeStyles.None, out dtAux)) {
-                    var date = DateTime.SpecifyKind(dtAux, kind);
-                    return date.FromUserToRightKind(user);
-                }
-                if (DateTime.TryParseExact(stValue, "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dtAux)) {
+                foreach (var dateFormat in DateFormats) {
+                    DateTime dtAux;
+                    if (!DateTime.TryParseExact(stValue, dateFormat, null, System.Globalization.DateTimeStyles.None, out dtAux)) continue;
                     var date = DateTime.SpecifyKind(dtAux, kind);
                     return date.FromUserToRightKind(user);
                 }
 
-                if (DateTime.TryParseExact(stValue, "MM/dd/yyyy", null, System.Globalization.DateTimeStyles.None, out dtAux)) {
-                    var date = DateTime.SpecifyKind(dtAux, kind);
-                    return date.FromUserToRightKind(user);
-                }
                 Log.WarnFormat("could not convert date for {0}", stValue);
                 return null;
             }

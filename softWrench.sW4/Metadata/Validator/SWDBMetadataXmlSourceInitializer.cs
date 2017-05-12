@@ -121,6 +121,7 @@ namespace softWrench.sW4.Metadata.Validator {
                    && memberInfo.PropertyType != typeof (DateTime)
                    && memberInfo.PropertyType != typeof (DateTime?)
                    && memberInfo.PropertyType != typeof (Int32)
+                   && memberInfo.PropertyType != typeof(bool?)
                    && memberInfo.PropertyType != typeof (Int64)
                    && memberInfo.PropertyType != typeof (int?)
                    && memberInfo.PropertyType != typeof (long?)

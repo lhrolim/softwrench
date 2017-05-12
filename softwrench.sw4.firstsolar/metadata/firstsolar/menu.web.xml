@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="WO">
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="breadcrumb" indexitem="WP">
 
  
   <reference id="asset"/>
   <reference id="location"/>
   <reference id="workorder"/>
+  <container id="workpackage" title="Work Packages" icon="fa fa-wrench">
+    <application id="WP" icon="fa fa-table" title="Work Package Grid" ref="_workpackage" schema="list" tooltip="Click to view your Work Packages"/>
+    <application id="NWP" icon="fa fa-plus" title="New Work Package" ref="_workpackage" schema="newdetail" tooltip="Click to Create a New Work Package"/>
+  </container>
  
 
 </Menu>

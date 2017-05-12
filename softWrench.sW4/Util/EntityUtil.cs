@@ -19,8 +19,14 @@ namespace softWrench.sW4.Util {
         }
 
         public static string GetRelationshipName(string attribute) {
+
+
             if (attribute == null) {
                 return null;
+            }
+
+            if (attribute.StartsWith("#")) {
+                return attribute;
             }
 
             var idx = attribute.IndexOf(".", System.StringComparison.Ordinal);

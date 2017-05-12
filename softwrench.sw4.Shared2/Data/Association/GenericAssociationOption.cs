@@ -9,12 +9,18 @@ namespace softwrench.sw4.Shared2.Data.Association {
 
         public string Label { get; set; }
 
+        public string Help { get; set; }
+
+        public string EnableExpression { get; set; }
+
         public GenericAssociationOption() {
         }
 
-        public GenericAssociationOption(string value, string label) {
+        public GenericAssociationOption(string value, string label, string help = null, string enableExpression = null) {
             Value = value;
             Label = label;
+            Help = help;
+            EnableExpression = enableExpression;
         }
 
         public virtual int CompareTo(GenericAssociationOption other) {

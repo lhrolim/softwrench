@@ -127,11 +127,12 @@
                 }
                 return execute(event, { providerLoadedParameters });
             },
-            afterchange: function (displayable, parameters) {
+            afterchange: function (displayable, parameters = {}) {
                 const event = loadEvent(displayable, "afterchange");
                 if (!event) {
                     return null;
                 }
+                parameters.fieldMetadata = displayable;
                 return execute(event, { parameters });
             },
             beforechange: function (displayable, event) {

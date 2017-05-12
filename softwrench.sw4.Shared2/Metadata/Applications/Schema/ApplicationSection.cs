@@ -41,6 +41,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string RequiredExpression {
             get; set;
         }
+
+        public string EnableExpression { get; set; }
+
         [DefaultValue("true")]
         public string ShowExpression {
             get; set;
@@ -67,30 +70,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [JsonIgnore]
         public ApplicationSchemaDefinition.LazyComponentDisplayableResolver ComponentDisplayableResolver;
 
-        private Boolean AreComponentsResolved = false;
+        private bool AreComponentsResolved = false;
         private string _parametersString;
-        private FieldRenderer _renderer;
         private string _role;
-        public string RendererType {
-            get {
-                return _renderer == null ? null : _renderer.RendererType;
-            }
-        }
+        public string RendererType => Renderer?.RendererType;
 
-        public IDictionary<string, object> RendererParameters {
-            get {
-                return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary();
-            }
-        }
+        public IDictionary<string, object> RendererParameters => Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary();
 
-        public FieldRenderer Renderer {
-            get {
-                return _renderer;
-            }
-            set {
-                _renderer = value;
-            }
-        }
+        public FieldRenderer Renderer { get; set; }
+
         public string Qualifier {
             get; set;
         }
@@ -101,6 +89,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public bool IsHidden {
             get; set;
+        }
+
+        public bool HasEnableControlCheck {
+            get;
+            set;
         }
 
         public ApplicationSection() {
@@ -125,16 +118,27 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ToolTip = toolTip;
             ValidateOrientation(orientation);
             Header = header;
-            _renderer = renderer;
+            Renderer = renderer;
             Role = role;
+            HasEnableControlCheck = Attribute != null && Header != null &&
+                                    Header.Parameters.ContainsKey("enablecontrol");
+            if (HasEnableControlCheck) {
+                var children = DisplayableUtil.GetDisplayable<IApplicationIndentifiedDisplayable>(typeof(IApplicationIndentifiedDisplayable), Displayables);
+                foreach (var displayable in children) {
+                    displayable.ShowExpression = displayable.ShowExpression == null
+                        ? "@" + Attribute
+                        : displayable.ShowExpression + "&& @" + Attribute;
+                }
+            }
+
         }
         protected virtual void ValidateOrientation(string orientation) {
 
             ApplicationSectionOrientation result;
 
-            if (!String.IsNullOrWhiteSpace(orientation)) {
+            if (!string.IsNullOrWhiteSpace(orientation)) {
                 if (!Enum.TryParse(orientation, true, out result)) {
-                    throw new InvalidOperationException(String.Format(WrongRenderer, orientation));
+                    throw new InvalidOperationException(string.Format(WrongRenderer, orientation));
                 }
                 OrientationEnum = result;
             } else {
@@ -142,16 +146,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public string Type {
-            get {
-                return GetType().Name;
-            }
-        }
-        public string Orientation {
-            get {
-                return OrientationEnum.ToString().ToLower();
-            }
-        }
+        public string Type => GetType().Name;
+
+        public string Orientation => OrientationEnum.ToString().ToLower();
 
         public string Role {
             get {
@@ -163,7 +160,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public override string ToString() {
-            return string.Format("Id: {0}, Displayables({1}): {2}, Abstract: {3}", Id,Displayables.Count, string.Join(",",Displayables.Select(d => d.Label)), Abstract);
+            return
+                $"Id: {Id}, Displayables({Displayables.Count}): {string.Join(",", Displayables.Select(d => d.Label))}, Abstract: {Abstract}";
         }
 
         public object Clone() {
@@ -178,8 +176,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
             return new ApplicationSection(Id, ApplicationName, Abstract, Label, Attribute, Resourcepath, _parametersString,
-            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, _renderer, Role) {
-                SecondaryContent = SecondaryContent
+            resultDisplayables, ShowExpression, ToolTip, Orientation, Header, Renderer, Role) {
+                SecondaryContent = SecondaryContent,
             };
         }
 

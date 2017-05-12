@@ -31,6 +31,116 @@
       </connectorParameters>
     </entity>
 
+    <entity name="pm" idAttribute="pmuid" useridAttribute="pmnum">
+      <attributes>
+        <attribute name="pmnum" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="assetnum" type="varchar" required="false" />
+        <attribute name="firstdate" type="datetime" required="false" />
+        <attribute name="lastcompdate" type="datetime" required="false" />
+        <attribute name="laststartdate" type="datetime" required="false" />
+        <attribute name="usetargetdate" type="smallint" required="true" />
+        <attribute name="frequency" type="int" required="true" />
+        <attribute name="pmcounter" type="int" required="true" />
+        <attribute name="priority" type="int" required="false" />
+        <attribute name="worktype" type="varchar" required="false" />
+        <attribute name="jpnum" type="varchar" required="false" />
+        <attribute name="jpseqinuse" type="smallint" required="true" />
+        <attribute name="nextdate" type="datetime" required="false" />
+        <attribute name="changedate" type="datetime" required="true" />
+        <attribute name="changeby" type="varchar" required="true" />
+        <attribute name="pmeq1" type="varchar" required="false" />
+        <attribute name="supervisor" type="varchar" required="false" />
+        <attribute name="calendar" type="varchar" required="false" />
+        <attribute name="crewid" type="varchar" required="false" />
+        <attribute name="downtime" type="smallint" required="true" />
+        <attribute name="pmeq2" type="datetime" required="false" />
+        <attribute name="pmeq3" type="decimal" required="false" />
+        <attribute name="glaccount" type="varchar" required="false" />
+        <attribute name="location" type="varchar" required="false" />
+        <attribute name="storeloc" type="varchar" required="false" />
+        <attribute name="parent" type="varchar" required="false" />
+        <attribute name="haschildren" type="smallint" required="true" />
+        <attribute name="wosequence" type="int" required="false" />
+        <attribute name="usefrequency" type="smallint" required="true" />
+        <attribute name="route" type="varchar" required="false" />
+        <attribute name="frequnit" type="varchar" required="true" />
+        <attribute name="leadtime" type="int" required="false" />
+        <attribute name="extdate" type="datetime" required="false" />
+        <attribute name="adjnextdue" type="smallint" required="true" />
+        <attribute name="masterpm" type="varchar" required="false" />
+        <attribute name="overridemasterupd" type="smallint" required="true" />
+        <attribute name="wostatus" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="true" />
+        <attribute name="pmactmeter" type="smallint" required="true" />
+        <attribute name="pmassetwogen" type="smallint" required="true" />
+        <attribute name="owner" type="varchar" required="false" />
+        <attribute name="lead" type="varchar" required="false" />
+        <attribute name="parentchgsstatus" type="smallint" required="true" />
+        <attribute name="status" type="varchar" required="false" />
+        <attribute name="pmuid" type="bigint" required="true" />
+        <attribute name="sunday" type="smallint" required="true" />
+        <attribute name="monday" type="smallint" required="true" />
+        <attribute name="tuesday" type="smallint" required="true" />
+        <attribute name="wednesday" type="smallint" required="true" />
+        <attribute name="thursday" type="smallint" required="true" />
+        <attribute name="friday" type="smallint" required="true" />
+        <attribute name="saturday" type="smallint" required="true" />
+        <attribute name="alertlead" type="int" required="false" />
+        <attribute name="persongroup" type="varchar" required="false" />
+        <attribute name="storelocsite" type="varchar" required="false" />
+        <attribute name="ownergroup" type="varchar" required="false" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="interruptible" type="smallint" required="true" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="startassetfeatureid" type="bigint" required="false" />
+        <attribute name="endassetfeatureid" type="bigint" required="false" />
+        <attribute name="endmeasure" type="decimal" required="false" />
+        <attribute name="endoffset" type="decimal" required="false" />
+        <attribute name="endyoffset" type="decimal" required="false" />
+        <attribute name="endzoffset" type="decimal" required="false" />
+        <attribute name="startmeasure" type="decimal" required="false" />
+        <attribute name="startoffset" type="decimal" required="false" />
+        <attribute name="startyoffset" type="decimal" required="false" />
+        <attribute name="startzoffset" type="decimal" required="false" />
+        <attribute name="assetfeatureid" type="bigint" required="false" />
+        <attribute name="startyoffsetref" type="varchar" required="false" />
+        <attribute name="endyoffsetref" type="varchar" required="false" />
+        <attribute name="startzoffsetref" type="varchar" required="false" />
+        <attribute name="endzoffsetref" type="varchar" required="false" />
+        <attribute name="basemeasureunituid" type="varchar" required="false" />
+        <attribute name="endbasemeasure" type="decimal" required="false" />
+        <attribute name="endmeasureunituid" type="varchar" required="false" />
+        <attribute name="endoffsetunituid" type="varchar" required="false" />
+        <attribute name="startbasemeasure" type="decimal" required="false" />
+        <attribute name="startmeasureunituid" type="varchar" required="false" />
+        <attribute name="startoffsetunituid" type="varchar" required="false" />
+        <attribute name="basemeasureunitid" type="varchar" required="false" />
+        <attribute name="endmeasureunitid" type="varchar" required="false" />
+        <attribute name="startmeasureunitid" type="varchar" required="false" />
+        <attribute name="endoffsetunitid" type="varchar" required="false" />
+        <attribute name="startoffsetunitid" type="varchar" required="false" />
+        <attribute name="schedearly" type="smallint" required="true" />
+        <attribute name="targstarttime" type="datetime" required="false" />
+        <attribute name="assignedownergroup" type="varchar" required="false" />
+        <attribute name="pluscduedate" type="smallint" required="true" />
+        <attribute name="inclforecast" type="smallint" required="true" />
+        <attribute name="ltdpmcounter" type="int" required="false" />
+        <attribute name="reforecast" type="smallint" required="true" />
+        <attribute name="lockforecast" type="smallint" required="true" />
+        <attribute name="stconoffset" type="float" required="false" />
+        <attribute name="fnconoffset" type="float" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="crewworkgroup" type="varchar" required="false" />
+        <attribute name="amcrew" type="varchar" required="false" />
+        <attribute name="reqasstdwntime" type="smallint" required="true" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="pm" />
+      </connectorParameters>
+    </entity>
+
     <entity name="DOCLINKS" idAttribute="doclinksid">
       <attributes>
         <attribute name="changeby" type="varchar" required="false" />

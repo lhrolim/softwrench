@@ -458,6 +458,20 @@ input[type="date"], input[type="time"] {
     }
 }
 
+.inline-checkbox-header {
+    min-height: 0px !important;
+    margin-bottom: 0px !important;
+    padding-left: 0px !important;
+
+    [ng-switch-when="checkbox"] {
+        .control-label {
+            top: -2px;
+            position: relative;
+            color:white
+        }
+    }
+}
+
 .typeahead.dropdown-menu {
     z-index: 1010;
 }

@@ -72,11 +72,13 @@
     <Content Include="tests\controllers\crud_list_test.js" />
     <Content Include="tests\controllers\commlogaction_test.js" />
     <Content Include="tests\controllers\grid_filter_test.js" />
+    <Content Include="tests\customers\firstsolar\services\fsworkpackageService_test.js" />
     <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
     <Content Include="tests\directives\crud_body_modal_test.js" />
     <Content Include="tests\directives\composition_list_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
     <Content Include="tests\pojos\DatamapPojo.js" />
+    <Content Include="tests\pojos\SectionPojo.js" />
     <Content Include="tests\pojos\WorklogPojo.js" />
     <Content Include="tests\pojos\ResponsePojo.js" />
     <Content Include="tests\pojos\FieldMetadataPojo.js" />

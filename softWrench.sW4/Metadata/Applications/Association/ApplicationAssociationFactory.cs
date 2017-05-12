@@ -57,6 +57,11 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private static string ParseApplicationTo(string labelField) {
             var indexOf = labelField.IndexOf(".", System.StringComparison.InvariantCulture);
+            if (labelField.StartsWith("#")) {
+                indexOf = labelField.GetNthIndex('.', 2);
+                return labelField.Substring(0, indexOf);
+            }
+
             var firstAttribute = labelField.Substring(0, indexOf);
             return EntityUtil.GetRelationshipName(firstAttribute);
         }
@@ -66,7 +71,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             IList<string> resultingLabels = new List<string>();
             var labelFields = labelField.Split(',');
             foreach (var field in labelFields) {
-                var idx = field.IndexOf(".", System.StringComparison.Ordinal);
+                var idx = field.LastIndexOf(".", System.StringComparison.Ordinal);
                 if (idx == -1) continue;
                 resultingLabels.Add(field.Substring(idx + 1));
             }

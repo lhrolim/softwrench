@@ -812,6 +812,7 @@
     <attribute name="defaultexpression" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
     <attribute name="evalexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
     <attribute name="helpicon" type="tns:HelpIcon" use="optional" default="right"></attribute>
 
@@ -884,7 +885,9 @@
   <complexType name="OptionType">
     <attribute name="label" type="string" use="required"></attribute>
     <attribute name="value" type="string" use="required"></attribute>
+    <attribute name="enableexpression" type="string" use="optional"/>
     <attribute name="extraprojections" type="string" ></attribute>
+    <attribute name="help" type="string"></attribute>
   </complexType>
 
 
@@ -1112,6 +1115,7 @@
     </choice>
     <attribute name="id" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="tooltip" type="string"></attribute>
     <attribute name="label" type="string"></attribute>
     <attribute name="icon" type="string"></attribute>
@@ -1165,6 +1169,7 @@
 
     <attribute name="attribute" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
+    <attribute name="enableexpression" type="string"></attribute>
     <attribute name="orientation" default="vertical">
       <annotation>
         <documentation>
@@ -1282,6 +1287,10 @@
   </complexType>
 
   <complexType name="headerType">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="field" type="tns:Field" maxOccurs="unbounded" minOccurs="0"/>
+      <element name="optionfield" type="tns:OptionField" maxOccurs="unbounded" minOccurs="0"/>
+    </choice>
     <attribute name="label" type="string" use="required"></attribute>
     <attribute name="params" type="string"></attribute>
     <attribute name="showexpression" type="string"></attribute>
@@ -1295,6 +1304,7 @@
     </attribute>
     <attribute name="tooltip" type="string"></attribute>
     <attribute name="helpicon" type="tns:HelpIcon" use="optional" default="right"></attribute>
+    
   </complexType>
 
   <complexType name="baseEvent">

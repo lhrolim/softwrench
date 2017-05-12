@@ -1,10 +1,11 @@
 ﻿(function (angular) {
     "use strict";
 
-    function schemaCacheService($log, contextService, localStorageService) {
+    function schemaCacheService($log, $q, $injector, contextService, localStorageService) {
         //#region Utils
         // schema's first-level cache
         var schemaCache = {};
+        var restService = null;
 
         var keyRoot = url("") + ":schemaCache:";
         var systemInitTimeKey = keyRoot + "systeminitMillis";
@@ -33,6 +34,13 @@
         function schemaStorageKey(applicationName, schemaId) {
             const username = contextService.getUserData().login;
             return keyRoot + username + ":" + applicationName + "." + schemaId;
+        }
+
+        function getRestService() {
+            if (!restService) {
+                restService = $injector.get("restService");
+            }
+            return restService;
         }
         //#endregion
 
@@ -113,6 +121,23 @@
             }
 
         }
+
+        function fetchSchema(applicationName, schemaId) {
+            const schema = getCachedSchema(applicationName, schemaId);
+            if (schema) {
+                return $q.when(schema);
+            }
+
+            const parameters = {
+                applicationName: applicationName,
+                targetSchemaId: schemaId
+            };
+            const promise = getRestService().getPromise("Metadata", "GetSchemaDefinition", parameters);
+            return promise.then((result) => {
+                this.addSchemaToCache(result.data);
+                return result.data;
+            });
+        }
         //#endregion
 
         //#region Service Instance
@@ -122,14 +147,15 @@
             addSchemaToCache,
             getCachedSchema,
             getSchemaFromResult,
-            wipeSchemaCacheIfNeeded
+            wipeSchemaCacheIfNeeded,
+            fetchSchema
         };
         return service;
         //#endregion
     }
 
     //#region Service registration
-    angular.module("webcommons_services").service("schemaCacheService", ["$log", "contextService", "localStorageService", schemaCacheService]);
+    angular.module("webcommons_services").service("schemaCacheService", ["$log", "$q", "$injector", "contextService", "localStorageService", schemaCacheService]);
     //#endregion
 
 })(angular);

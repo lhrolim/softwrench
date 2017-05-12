@@ -11,6 +11,8 @@
     <template path="@relatedrecords.xml"/>
     <template path="@materials.xml"/>
     <template path="@item.xml"/>
+    <template path="@worklogs.xml"/>
+    <template path="@attachments.xml"/>
   </templates>
   
 
@@ -71,6 +73,7 @@
 <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
         <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
+        <attribute name="outreq" type="boolean"/>
       </attributes>
       <relationships>
 
@@ -117,7 +120,17 @@
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
 
-
+        <relationship to="worklog" collection="true" qualifier="wkpgworklogs">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true" />
+          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true" />
+          <relationshipAttribute query="(worklog.description like 'swwpkg:%')"/>
+        </relationship>
+        <relationship to="DOCLINKS" collection="true" qualifier="wkpgattachments">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+          <relationshipAttribute query="(DOCLINKS.document like 'swwpkg:%')"/>
+        </relationship>
       </relationships>
     </entity>
 
@@ -290,6 +303,42 @@
 
 
         <!--#region online-->
+
+        <schema id="workpackageschema" redeclaring="false" stereotype="detail" platform="web">
+          <field attribute="wonum"/>
+          <field attribute="workorderid"/>
+          <field attribute="worktype"/>
+          <field attribute="reportedby"/>
+          <field attribute="reportdate"/>
+          <field attribute="status"/>
+          <field attribute="siteid"/>
+          <field attribute="orgid"/>
+          <field attribute="assetnum"/>
+          <field attribute="jpnum"/>
+          <field attribute="pmnum"/>
+          <field attribute="owner"/>
+          <field attribute="outreq"/>
+          <field attribute="supervisor"/>
+          <field attribute="schedstart"/>
+          <field attribute="description"/>
+          <field attribute="ld_.ldtext"/>
+          <composition relationship="wkpgworklogs" label="">
+            <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate desc" listschema="workpackagelist"/>
+          </composition>
+          <composition relationship="wkpgattachments" label="">
+            <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate asc" listschema="workpackagelist"/>
+          </composition>
+        </schema>
+
+        <schema id="workpackagelistschema" redeclaring="false" stereotype="list" platform="web">
+          <field attribute="wonum"/>
+          <field attribute="workorderid"/>
+          <field attribute="worktype"/>
+          <field attribute="status"/>
+          <field attribute="description"/>
+          <field attribute="outreq"/>
+          <field attribute="schedstart"/>
+        </schema>
 
 
         <list redeclaring="false" platform="web">
@@ -1337,6 +1386,63 @@
 
         </detail>
         <!-- #endregion -->
+      </schemas>
+    </application>
+
+    <application name="worklog" title="Work Logs" entity="worklog">
+      <schemas>
+        <schema id="workpackagelist"  stereotype="compositionlist" platform="web">
+          <field attribute="worklogid" hidden="true" />
+          <field attribute="modifydate" hidden="true"/>
+          <field attribute="description" hidden="true"/>
+          <field attribute="wld_.ldtext" hidden="true"/>
+          <field attribute="createby" label="Engineer" />
+          <field attribute="createdate" label="Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
+        </schema>
+
+        <schema id="workpackageview"  stereotype="compositiondetail" platform="web">
+          <field attribute="modifydate" label="Last Changed Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
+          </field>
+          <field attribute="wld_.ldtext" label="Evaluation">
+            <renderer type="richtext"/>
+          </field>
+        </schema>
+
+        <schema id="workpackageadetail"  stereotype="detail" abstract="true" platform="web">
+          <field attribute="worklogid" hidden="true" />
+          <field attribute="modifydate" hidden="true"/>
+          <field attribute="createby" hidden="true"/>
+          <field attribute="createdate" hidden="true"/>
+          <field attribute="wld_.ldtext" label="Evaluation" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+        </schema>
+
+        <schema id="workpackagenewdetail" parentschema="workpackageadetail" title="New Engineering Evaluation"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="workpackagedetail" parentschema="workpackageadetail" title="Engineering Evaluation"  platform="web" stereotype="detail">
+        </schema>
+      </schemas>
+    </application>
+
+    <application name="attachment" title="Attachment" entity="DOCLINKS">
+      <schemas>
+        <schema id="workpackagelist" stereotype="compositionlist" platform="web">
+          <field hidden="true" attribute="ownerid"/>
+          <field attribute="docinfoid" hidden="true" />
+          <field attribute="doclinksid" hidden="true" />
+          <field attribute="docinfo_.urlname" hidden="true"/>
+          <field attribute="docinfo_.urltype" hidden="true"/>
+          <field attribute="docinfo_.description" hidden="true"/>
+          <field attribute="document" hidden="true"/>
+          <field attribute="doctype" hidden="true"/>
+          <field attribute="createdate" label="Created Date"/>
+          <field attribute="createby" label="Created By"/>
+        </schema>
       </schemas>
     </application>
 

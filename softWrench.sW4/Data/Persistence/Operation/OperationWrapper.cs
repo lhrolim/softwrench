@@ -10,7 +10,6 @@ using softWrench.sW4.Metadata.Entities;
 namespace softWrench.sW4.Data.Persistence.Operation {
     public class OperationWrapper : IOperationWrapper {
         private const string CrudFieldNotFound = "crud field expected on json of operation {0} of entity {1}";
-        private string _operationName;
 
         private readonly EntityMetadata _entityMetadata;
 
@@ -45,7 +44,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
 
         public OperationWrapper(ApplicationMetadata applicationMetadata, EntityMetadata entityMetadata, string operationName, JObject json, string id) {
-            _operationName = operationName;
+            OperationName = operationName;
             JSON = json;
             _entityMetadata = entityMetadata;
             Id = id;
@@ -56,18 +55,11 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             _entityMetadata = operationData.EntityMetadata;
             Id = operationData.Id;
             UserId = operationData.UserId;
-            _operationName = operationName;
+            OperationName = operationName;
             _operationData = operationData;
         }
 
-        public string OperationName {
-            get {
-                return _operationName;
-            }
-            set {
-                _operationName = value;
-            }
-        }
+        public string OperationName { get; set; }
 
         public EntityMetadata EntityMetadata => _entityMetadata;
          
@@ -81,7 +73,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
                 return _operationData;
             }
 
-            var isCrud = OperationConstants.IsCrud(_operationName) || typeof(CrudOperationData) == type;
+            var isCrud = OperationConstants.IsCrud(OperationName) || typeof(CrudOperationData) == type;
             if (isCrud) {
                 var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
                 if (UserId != null && crudOperationData.UserId == null) {

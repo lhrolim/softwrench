@@ -31,7 +31,7 @@ namespace softwrench.sw4.pesco.classes.com.cts.pesco.dataset {
             return originalDTO;
         }
 
-        public override TargetResult DoExecute(OperationWrapper operationWrapper) {
+        public override Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             if (!operationWrapper.OperationName.StartsWith("crud")) {
                 return base.DoExecute(operationWrapper);
             }

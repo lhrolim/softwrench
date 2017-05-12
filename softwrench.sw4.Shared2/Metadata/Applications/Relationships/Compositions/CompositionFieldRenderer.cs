@@ -7,7 +7,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
     
     public class CompositionFieldRenderer :FieldRenderer  {
 
-        private const string WrongRenderer = "renderer {0} not found. Possible options are DEFAULT, TABLE, TABS and CUSTOM";
+        private const string WrongRenderer = "renderer {0} not found. Possible options are DEFAULT, TABLE,FILEEXPLORER, TABS and CUSTOM";
 
         private CompositionRendererType EnumRendererType { get; set; }
 
@@ -32,7 +32,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public enum CompositionRendererType {
-            DEFAULT, TABLE, TABS, CUSTOM
+            DEFAULT, TABLE, TABS, FILEEXPLORER, CUSTOM
         }
     
     }

@@ -48,6 +48,7 @@
                 function fetchCompositions(requestDTO, datamap, showLoading) {
                     var log = $log.getInstance('compositionservice#fetchCompositions', ['composition']);
                     const urlToUse = url("/api/generic/Composition/GetCompositionData");
+                    const originalDm =crudContextHolderService.originalDatamap();
                     return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                         .then(response => {
                             var data = response.data;
@@ -70,6 +71,7 @@
                                 log.info('composition {0} returned with {1} entries'.format(composition, resultList.length));
                                 //this datamap entry is bound to the whole screen, so we need to set it here as well
                                 datamap[composition] = resultList;
+                                originalDm[composition] = resultList;
 
                                 var paginationData = compositionValue.paginationData;
                                 // enforce composition pagination options

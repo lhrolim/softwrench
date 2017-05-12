@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -17,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
 
-        public override TargetResult DoExecute(OperationWrapper wrapper) {
+        public override Task<TargetResult> DoExecute(OperationWrapper wrapper) {
             if (!wrapper.OperationName.EqualsIc(OperationConstants.CRUD_DELETE)) {
                 return base.DoExecute(wrapper);
             }

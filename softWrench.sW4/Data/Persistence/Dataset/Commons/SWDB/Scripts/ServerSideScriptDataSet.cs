@@ -38,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.Scripts {
         }
 
         [Transactional(DBType.Swdb)]
-        public override TargetResult DoExecute(OperationWrapper operationWrapper) {
+        public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var id = string.IsNullOrEmpty(operationWrapper.Id) ? (int?)null : int.Parse(operationWrapper.Id);
             var entry = (ScriptEntry)null;
             var origEntry = id != null ? SWDAO.FindByPK<ScriptEntry>(typeof(ScriptEntry), id) : null;
