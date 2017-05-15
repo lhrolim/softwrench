@@ -23,7 +23,7 @@
   
     whereClauseService.$inject = ['alertService', 'crudContextHolderService', 'applicationService'];
 
-    angular.module("sw_layout").factory("whereClauseService", whereClauseService);
+    angular.module("sw_layout").service("whereClauseService", whereClauseService);
 
     //#endregion
 
