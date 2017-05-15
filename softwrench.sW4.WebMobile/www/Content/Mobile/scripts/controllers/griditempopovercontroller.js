@@ -6,7 +6,7 @@
 
 
             $scope.quicksync = function () {
-                const item = crudContextService.currentDetailItem();
+                const item = crudContextService.getCrudContext().currentPopOverItem;
                 if (!item.isDirty) {
                     return;
                 }
@@ -26,7 +26,7 @@
 
 
             $scope.restorestate = function () {
-                const item = crudContextService.currentDetailItem();
+                const item = crudContextService.getCrudContext().currentPopOverItem;
                 return itemActionService.deleteOrRestoreItem(item)
                     .then(res => res ? crudContextService.refreshGrid() : null)
                     .finally(() => {

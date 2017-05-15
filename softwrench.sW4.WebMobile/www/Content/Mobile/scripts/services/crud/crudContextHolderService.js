@@ -48,6 +48,7 @@
             currentProblems: null,
             currentDetailSchema: null,
             currentNewDetailSchema: null,
+            currentPopOverItem: null,
             newItem: false,
 
             // grid search

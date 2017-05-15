@@ -179,14 +179,14 @@
 
             $scope.showGridItemOptions = function ($event, item) {
                 if (item.isDirty) {
-                    $scope.currentSelectedItem = item;
+                    crudContextHolderService.getCrudContext().currentPopOverItem = item;
                     $scope.optionspopover.show($event);
                 }
             }
 
             $scope.$on("sw_griditemoperationperformed", () => {
                 $scope.optionspopover.hide();
-                $scope.currentSelectedItem = null;
+                crudContextHolderService.getCrudContext().currentPopOverItem = null;
             });
 
             $scope.$on("$stateChangeSuccess",
