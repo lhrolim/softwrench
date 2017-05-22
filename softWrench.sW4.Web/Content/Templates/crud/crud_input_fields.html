@@ -247,9 +247,11 @@
                     <!--#endregion-->
 
                     <div ng-switch-when="multiselectautocompleteclient">
-                        <selectize config="{valueField:'value', labelField:'label',hideSelected:true, searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation']), }"
+                        <selectize config="{valueField:'value', labelField:'label',hideSelected:true, searchField: ['label'], createOnBlur:'true', beforeItemAdd:getDispatchFn(fieldMetadata.rendererParameters['newItemValidation'])}"
                                    options="GetAssociationOptions(fieldMetadata)"
                                    creationallowed="{{fieldMetadata.rendererParameters['creationallowed']}}"
+                                   single="{{fieldMetadata.rendererParameters['multiselectautocomplete.single']}}"
+                                   validationpattern="{{getValidationPatterString(fieldMetadata.rendererParameters['valtype'])}}"
                                    ng-model="datamap[fieldMetadata.target]">
                         </selectize>
                     </div>

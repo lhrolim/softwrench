@@ -12,6 +12,7 @@ namespace softWrench.sW4.Web.Common {
         private const string DefaultPattern = "~/Views";
         private const string DefaultLayout = "~/Views/Shared/_Layout.cshtml";
         private const string NoMenuLayout = "~/Views/Shared/_NoMenuLayout.cshtml";
+        private const string RawLayout = "~/Views/Shared/Raw.cshtml";
         private const string ClientLayoutPattern = "~/Content/Customers/{0}/htmls/Shared/_Layout.cshtml";
 
         public ClientAwareRazorViewEngine() {
@@ -52,6 +53,11 @@ namespace softWrench.sW4.Web.Common {
             var noMenuAttribute = Attribute.GetCustomAttribute(controllerContext.Controller.GetType(), typeof(NoMenuController));
             if (noMenuAttribute != null) {
                 return NoMenuLayout;
+            }
+
+            var rawAttribute = Attribute.GetCustomAttribute(controllerContext.Controller.GetType(), typeof(RawController));
+            if (rawAttribute != null) {
+                return RawLayout;
             }
             if (!controllerContext.HttpContext.User.Identity.IsAuthenticated ||
                 controllerContext.Controller is softWrench.sW4.Web.Controllers.ReportController) {

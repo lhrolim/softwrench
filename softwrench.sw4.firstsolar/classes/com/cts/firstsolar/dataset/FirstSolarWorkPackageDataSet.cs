@@ -10,6 +10,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -54,6 +55,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         [Import]
         public IMaximoHibernateDAO MaxDao { get; set; }
+
+        [Import]
+        public FirstSolarCallOutEmailService CallOutEmailService { get; set; }
 
 
         #region list
@@ -180,33 +184,48 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
 
             var result = await base.GetApplicationDetail(application, user, request);
+
+            //either for edition, or for a creation out of an existing workorder
+            if (result.ResultObject.GetLongAttribute("workorderid") != null) {
+                await AddWorkorderRelatedData(user, result);
+            }
+
             if (!request.IsEditionRequest) {
+                //for a creation, regardless of a blank wp or from an existing workorder, no need to check SWDB further
                 return result;
             }
 
-            var workorderid = result.ResultObject.GetLongAttribute("workorderid");
-            var parentEntityId = result.Id;
-
-            var groupDictionary = await MapRelatedData(int.Parse(parentEntityId));
+            var groupDictionary = await MapRelatedData(int.Parse(result.Id));
 
             foreach (var relatedDataKey in groupDictionary.Keys) {
                 result.ResultObject.SetAttribute(relatedDataKey, groupDictionary[relatedDataKey]);
             }
 
+
+
+            AddEngineerAssociations(result);
+
+            return result;
+
+        }
+
+        private async Task AddWorkorderRelatedData(InMemoryUser user, ApplicationDetailResult result) {
+            var workorderid = result.ResultObject.GetLongAttribute("workorderid");
+
+            if (workorderid == null) {
+                return;
+            }
+
             var key = new ApplicationMetadataSchemaKey("workpackageschema");
             var applicationMetadata = MetadataProvider.Application("workorder").ApplyPolicies(key, user, ClientPlatform.Web);
-            var response = await DataSetProvider.LookupDataSet("workorder", applicationMetadata.Schema.SchemaId).GetApplicationDetail(applicationMetadata, user, new DetailRequest(workorderid.ToString(), key));
+            var response = await DataSetProvider.LookupDataSet("workorder", applicationMetadata.Schema.SchemaId)
+                .GetApplicationDetail(applicationMetadata, user, new DetailRequest(workorderid.ToString(), key));
             var workorderDM = response.ResultObject;
             foreach (var field in workorderDM) {
                 result.ResultObject.SetAttribute("#workorder_." + field.Key, field.Value);
             }
 
             result.ResultObject.SetAttribute("wooutreq", workorderDM.GetIntAttribute("outreq"));
-
-            AddEngineerAssociations(result);
-
-            return result;
-
         }
 
         private async Task<Dictionary<string, ISet<string>>> MapRelatedData(int parentEntityId) {
@@ -221,8 +240,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return groupDictionary;
         }
 
-        [Transactional(DBType.Swdb)]
+        
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
+            var package = await SavePackage(operationWrapper);
+            HandleEmails(package);
+            return new TargetResult(package.Id.ToString(), null, package);
+        }
+
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<WorkPackage> SavePackage(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var package = GetOrCreatePackage(operationWrapper);
 
@@ -232,14 +258,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 package.CreatedDate = DateTime.Now;
             }
 
-            var nullableWonum = crudoperationData.GetLongAttribute("wonum");
-            if (nullableWonum == null) {
+            var wonum = crudoperationData.GetStringAttribute("wonum");
+            if (string.IsNullOrEmpty(wonum)) {
                 throw new Exception("Missing wonum.");
             }
 
             SaveMaximoWorkorder(operationWrapper);
 
-            package.Wonum = nullableWonum.Value;
+            package.Wonum = wonum;
 
             var nullableWorkorderId = crudoperationData.GetLongAttribute("workorderid");
             if (nullableWorkorderId == null) {
@@ -253,13 +279,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             package.Tier = crudoperationData.GetStringAttribute("tier");
             package.InterConnectDocs = crudoperationData.GetStringAttribute("interconnectdocs");
 
+            package = Dao.Save(package);
             HandleGenericLists(crudoperationData, package);
             HandleCallOuts(crudoperationData, package);
             HandleMaintenanceEngs(crudoperationData, package);
             package = Dao.Save(package);
-
-            crudoperationData.ReloadMode = ReloadMode.MainDetail;
-            return new TargetResult(package.Id.ToString(), null, package);
+            crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+            return package;
         }
 
         private void SaveMaximoWorkorder(OperationWrapper operationWrapper) {
@@ -284,8 +310,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var wrapper = new OperationWrapper(operationData, OperationConstants.CRUD_UPDATE);
             MaximoEngine.Execute(wrapper);
         }
-
-
 
         private void HandleGenericLists(CrudOperationData crudoperationData, WorkPackage package) {
             var originalList = package.OutagesList;
@@ -461,15 +485,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                     throw new Exception("Incorrect format of sub-contractors call out list.");
                 }
                 callOutsData.ForEach((data) => {
-                    package.CallOuts.Add(HandleCallout(data, GetOurCreateCallOut(data, existingCallOuts)));
+                    package.CallOuts.Add(HandleCallout(data, GetOurCreateCallOut(data, existingCallOuts), package.Id ?? 0));
                 });
             }
             existingCallOuts?.ForEach(callout => {
+                if (FSWPackageConstants.CallOutStatus.Submited.Equals(callout.Status)) {
+                    throw new Exception("Is not possible delete a submited sub-contractor callout. Reload the page to get the updated version of this work package.");
+                }
                 Dao.Delete(callout);
             });
         }
 
-        private CallOut HandleCallout(CrudOperationData crudoperationData, CallOut callOut) {
+        private CallOut HandleCallout(CrudOperationData crudoperationData, CallOut callOut, long packageId) {
+            var status = crudoperationData.GetStringAttribute("status");
+            var submited = FSWPackageConstants.CallOutStatus.Submited;
+            if (submited.Equals(callOut.Status)) {
+                if (!submited.Equals(status)) {
+                    throw new Exception("Is not possible edit a submited sub-contractor callout. Reload the page to get the updated version of this work package.");
+                }
+                // submited callouts are not editable so just return the existing one
+                return callOut;
+            }
+
             var subcontractor = crudoperationData.AssociationAttributes["subcontractor_"] as CrudOperationData;
             if (subcontractor == null) {
                 throw new Exception("Missing sub-contractor.");
@@ -480,14 +517,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
             callOut.SubContractor = Dao.FindByPK<SubContractor>(typeof(SubContractor), nullableSubcontractorId.Value);
 
-            callOut.SendTime = ConversionUtil.HandleDateConversion(crudoperationData.GetStringAttribute("sendTime"));
-            callOut.Status = crudoperationData.GetStringAttribute("status");
+            if (FSWPackageConstants.CallOutStatus.SubmitAfterSave.Equals(status)) {
+                callOut.SendTime = DateTime.Now;
+            } else {
+                callOut.SendTime = ConversionUtil.HandleDateConversion(crudoperationData.GetStringAttribute("sendTime")) ?? DateTime.Now;
+            }
+            callOut.Status = status;
 
             callOut.ExpirationDate = ConversionUtil.HandleDateConversion(crudoperationData.GetStringAttribute("expirationdate"));
             callOut.PoNumber = crudoperationData.GetStringAttribute("ponumber");
             callOut.ToNumber = crudoperationData.GetStringAttribute("tonumber");
-            callOut.SiteName = crudoperationData.GetStringAttribute("email");
-            callOut.Email = crudoperationData.GetStringAttribute("sitename");
+            callOut.SiteName = crudoperationData.GetStringAttribute("sitename");
+            callOut.Email = crudoperationData.GetStringAttribute("email");
             callOut.BillingEntity = crudoperationData.GetStringAttribute("billingentity");
             callOut.NotToExceedAmount = crudoperationData.GetStringAttribute("nottoexceedamount");
             callOut.RemainingFunds = crudoperationData.GetStringAttribute("remainingfunds");
@@ -495,8 +536,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             callOut.ScopeOfWork = crudoperationData.GetStringAttribute("scopeofwork");
             callOut.PlantContacts = crudoperationData.GetStringAttribute("plantcontacts");
             callOut.OtherInfo = crudoperationData.GetStringAttribute("otherinfo");
+            callOut.WorkPackageId = packageId;
+
             return callOut;
         }
+
         private CallOut GetOurCreateCallOut(CrudOperationData crudoperationData, IList<CallOut> existingCallOuts) {
             var id = crudoperationData.GetIntAttribute("id");
             if (id == null || existingCallOuts == null) {
@@ -510,6 +554,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return found;
         }
 
+        private static bool IsSubmitedStatus(string meStatus) {
+            return FSWPackageConstants.MaintenanceEngStatus.SubmitedStatus.Any(status => status.Equals(meStatus));
+        }
+
         private void HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package) {
             var existingMaintenanceEng = package.MaintenanceEngineerings;
             package.MaintenanceEngineerings = new List<MaintenanceEngineering>();
@@ -519,19 +567,33 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                     throw new Exception("Incorrect format of maintenance engineering list.");
                 }
                 maintenanceEngsData.ForEach((data) => {
-                    package.MaintenanceEngineerings.Add(HandleMaintenanceEng(data, GetOurCreateMaintenanceEng(data, existingMaintenanceEng)));
+                    package.MaintenanceEngineerings.Add(HandleMaintenanceEng(data, GetOurCreateMaintenanceEng(data, existingMaintenanceEng), package.Id ?? 0));
                 });
             }
-            existingMaintenanceEng?.ForEach(callout => {
-                Dao.Delete(callout);
+            existingMaintenanceEng?.ForEach(me => {
+                if (IsSubmitedStatus(me.Status)) {
+                    throw new Exception($"Is not possible delete a maintenance engineering request with status '{me.Status}'. Reload the page to get the updated version of this work package.");
+                }
+                Dao.Delete(me);
             });
         }
 
-        private static MaintenanceEngineering HandleMaintenanceEng(CrudOperationData crudoperationData, MaintenanceEngineering me) {
+        private static MaintenanceEngineering HandleMaintenanceEng(CrudOperationData crudoperationData, MaintenanceEngineering me, long packageId) {
+            var status = crudoperationData.GetStringAttribute("status");
+            if (IsSubmitedStatus(me.Status)) {
+                if (!IsSubmitedStatus(status)) {
+                    throw new Exception($"Is not possible edit a maintenance engineering request with status '{me.Status}'. Reload the page to get the updated version of this work package.");
+                }
+                // submited requests are not editable so just return the existing one
+                return me;
+            }
+
             me.Engineer = crudoperationData.GetStringAttribute("engineer");
             me.SendTime = ConversionUtil.HandleDateConversion(crudoperationData.GetStringAttribute("sendTime"));
-            me.Status = crudoperationData.GetStringAttribute("status");
+            me.Status = status;
             me.Reason = crudoperationData.GetStringAttribute("reason");
+            me.Email = crudoperationData.GetStringAttribute("email");
+            me.WorkPackageId = packageId;
             return me;
         }
 
@@ -548,7 +610,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return found;
         }
 
-        private Dictionary<string, IAssociationOption> SetEngineerNames(List<Dictionary<string, object>> maintenanceEngineerings, string woSite){
+        private Dictionary<string, IAssociationOption> SetEngineerNames(List<Dictionary<string, object>> maintenanceEngineerings, string woSite) {
             var options = new Dictionary<string, IAssociationOption>();
             if (maintenanceEngineerings == null || !maintenanceEngineerings.Any()) {
                 return options;
@@ -605,6 +667,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var mesList = compList.ResultObject["maintenanceEngineerings_"].ResultList;
             if (mesList != null) {
                 SetEngineerNames(mesList.ToList(), woSite);
+            }
+        }
+
+        private void HandleEmails(WorkPackage package) {
+            var needUpdate = false;
+            if (package.CallOuts != null && package.CallOuts.Any()) {
+                package.CallOuts.Where(callOut => FSWPackageConstants.CallOutStatus.SubmitAfterSave.Equals(callOut.Status)).ForEach(callOut => {
+                    needUpdate = true;
+                    callOut.Status = FSWPackageConstants.CallOutStatus.Submited;
+                    callOut.SendTime = DateTime.Now;
+                    CallOutEmailService.SendCallout(callOut, callOut.Email);
+                });
+            }
+
+            if (needUpdate) {
+                Dao.Save(package);
             }
         }
 

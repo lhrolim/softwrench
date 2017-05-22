@@ -42,6 +42,7 @@ namespace softWrench.sW4.Metadata.Merger {
             original.Stereotype = overridenSchema.Stereotype == SchemaStereotype.None
                 ? original.Stereotype
                 : overridenSchema.Stereotype;
+
             original.CommandSchema.Merge(overridenSchema.CommandSchema);
 
             XmlApplicationMetadataParser.AddNoResultsNewSchema(overridenSchema);

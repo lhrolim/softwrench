@@ -52,6 +52,19 @@
             return regexPattern;
         }
 
+        function getValidationPatterString(validationType) {
+            switch (validationType) {
+                case "number":
+                    return "^\\d+$";
+                case "phonenumber":
+                    return "^\\d+$";
+
+                case "email":
+                    return "^(([^<>()\\[\\]\\.,;:\\s@\\\"]+(\\.[^<>()\\[\\]\\.,;:\\s@\\\"]+)*)|(\\\".+\\\"))@(([^<>()[\\]\\.,;:\\s@\\\"]+\\.)+[^<>()[\\]\\.,;:\\s@\\\"]{2,})$";
+            }
+            return "";
+        }
+
         function validateInlineComposition(compositionDisplayable, mainDatamap) {
             const listSchema = compositionDisplayable.schema.schemas.list;
             const rows = mainDatamap[compositionDisplayable.relationship];
@@ -202,7 +215,8 @@
             validateCurrent,
             validatePromise,
             validateInlineComposition,
-            getValidationPattern
+            getValidationPattern,
+            getValidationPatterString
         };
 
         return service;

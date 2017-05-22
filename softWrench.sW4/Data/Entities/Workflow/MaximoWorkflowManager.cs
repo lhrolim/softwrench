@@ -6,6 +6,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.web.Util;
 using JetBrains.Annotations;
+using log4net;
 using Microsoft.Ajax.Utilities;
 using Quartz.Util;
 using softwrench.sw4.Shared2.Data.Association;
@@ -31,6 +32,8 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         private readonly ApplicationSchemaDefinition _cachedActionModalSchema;
         private readonly IDictionary<string, ApplicationMetadata> _cachedWorkorderSchemas = new Dictionary<string, ApplicationMetadata>();
+
+        private ILog Log = LogManager.GetLogger(typeof(MaximoWorkflowManager));
 
 
         public MaximoWorkflowManager(IMaximoHibernateDAO maximoHibernateDAO, MaximoConnectorEngine maximoConnectorEngine) {
@@ -217,8 +220,11 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             attributes.Add("orgid", routeWorkflowDTO.OrgId);
             attributes.Add("workflowinfo", BuildWorkflowInfo(routeWorkflowDTO));
 
+            Log.DebugFormat("routing workflow for workorder  {0}", routeWorkflowDTO.AppUserId);
+
             _maximoConnectorEngine.Update(new CrudOperationData(routeWorkflowDTO.OwnerId, attributes, new Dictionary<string, object>(), entityMetadata,
                 appMetadata));
+
 
 
             return new BlankApplicationResponse() {

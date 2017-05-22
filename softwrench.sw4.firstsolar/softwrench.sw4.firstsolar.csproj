@@ -80,6 +80,7 @@
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
       <Private>True</Private>
@@ -179,6 +180,7 @@
     <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchData.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchType.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchTypeExtensions.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\EmailTestController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarAdvancedSearchController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarWorkorderBatchAction.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\BatchRedirectionHelper.cs" />
@@ -204,6 +206,9 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkPackageDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
+    <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
+    <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\MaintenanceEngineering.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\CallOut.cs" />
@@ -212,6 +217,9 @@
     <Compile Include="classes\com\cts\firstsolar\model\WorkPackage.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarLocationCacheJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\email\BaseTemplateEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -236,6 +244,8 @@
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolar\htmls\templates\maintenanceemail.html" />
+    <Content Include="web_content\firstsolar\htmls\templates\calloutemail.html" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\htmls\fscalloutinvoicetext.html" />
     <Content Include="web_content\firstsolar\htmls\fsnocallouttext.html" />
@@ -303,6 +313,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
+      <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
+      <Name>softwrench.sw4.webcommons</Name>
     </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
       <Project>{CE228C26-938D-4D6F-95FA-12CC5241AFB5}</Project>

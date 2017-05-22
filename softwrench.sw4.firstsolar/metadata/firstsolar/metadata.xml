@@ -421,6 +421,14 @@
             <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord,assetnum"/>
             <property key="search.schemaid" value="search"/>
           </properties>
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="createworkpackage" position="+createrelated" icon="fa-arrow-circle-down" label="Create Work Package"
+                       parameters="schema,datamap"
+                       service="workorderService" method="createWorkPackage" cssclasses="large-button" enableexpression="$scope:enableSave" showexpression="@worktype!=null &amp;&amp; @worktype.equalsIc('PM','CM')"/>
+            </commandgroup>
+          </commandbars>
+          
         </schema>
 
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly" platform="web">

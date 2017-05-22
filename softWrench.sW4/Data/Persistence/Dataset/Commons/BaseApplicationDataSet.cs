@@ -138,10 +138,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         public async Task<IApplicationResponse> Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request) {
             var adapter = request as DataRequestAdapter;
             if (adapter != null) {
-                if (adapter.SearchDTO != null) {
-                    request = adapter.SearchDTO;
-                } else if (adapter.Id != null) {
+                if (adapter.Id != null) {
                     request = DetailRequest.GetInstance(application, adapter);
+                } else if (adapter.SearchDTO != null) {
+                    request = adapter.SearchDTO;
                 }
             }
 

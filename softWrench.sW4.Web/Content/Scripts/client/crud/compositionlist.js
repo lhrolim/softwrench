@@ -54,6 +54,15 @@
             return !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;
         };
 
+
+        $scope.showInlineHeader = function () {
+            if (!$scope.inline || !$scope.isNoRecords()) {
+                //not inline, or having at least one entry --> show header
+                return true;
+            }
+            return !$scope.compositionschemadefinition.rendererParameters["composition.inline.avoidheader"];
+        };
+
         $scope.sort = function (column) {
             const columnName = column.attribute;
             const sorting = $scope.searchSort;

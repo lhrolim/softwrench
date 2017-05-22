@@ -137,4 +137,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
         }
     }
+
+    /// <summary>
+    /// Migration for email column of maintenance engineering
+    /// </summary>
+    [Migration(201705171800)]
+    public class SWWEB_29305Migration : Migration {
+
+        public override void Up() {
+            Create.Column("email").OnTable("OPT_MAINTENANCE_ENG").AsString(MigrationUtil.StringMedium).Nullable();
+        }
+
+        public override void Down() {
+
+        }
+    }
 }

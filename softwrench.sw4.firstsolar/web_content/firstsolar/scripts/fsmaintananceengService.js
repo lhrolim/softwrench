@@ -21,7 +21,7 @@
         function verifyEdit(item) {
             const status = item["status"];
             if ([Status.Submited, Status.Accepted, Status.Rejected].some((invalidStatus) => invalidStatus === status)) {
-                alertService.alert(`Is not possible edit maintenance engineering request with status "${status}".`);
+                alertService.alert(`Is not possible edit a maintenance engineering request with status "${status}".`);
                 return false;
             }
             return true;
@@ -30,7 +30,7 @@
         function verifyDelete(item) {
             const status = item["status"];
             if ([Status.Submited, Status.Accepted, Status.Rejected].some((invalidStatus) => invalidStatus === status)) {
-                alertService.alert(`Is not possible delete maintenance engineering request with status "${status}".`);
+                alertService.alert(`Is not possible delete a maintenance engineering request with status "${status}".`);
                 return false;
             }
             return true;
@@ -55,6 +55,7 @@
                 var date = new Date();
                 date.setHours(23, 59, 59, 999);
                 mergedItem["sendtime"] = date;
+                mergedItem["email"] = "";
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     postSave(saveDatamap);
                     callback(saveDatamap);
@@ -68,6 +69,7 @@
                 return;
             }
             schemaCacheService.fetchSchema("_MaintenanceEngineering", "detail").then((schema) => {
+                item["email"] = item["email"] || "";
                 modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     postSave(saveDatamap);
                     callback(saveDatamap);

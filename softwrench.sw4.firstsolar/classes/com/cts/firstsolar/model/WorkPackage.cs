@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using cts.commons.persistence;
-using NHibernate.Mapping;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Data.Persistence.SWDB.Entities;
 
@@ -24,7 +20,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public long WorkorderId { get; set; }
 
         [Property]
-        public long Wonum { get; set; }
+        public string Wonum { get; set; }
 
         [Property]
         public DateTime? CreatedDate { get; set; }

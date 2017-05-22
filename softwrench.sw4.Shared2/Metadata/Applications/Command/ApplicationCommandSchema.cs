@@ -5,56 +5,35 @@ using softwrench.sw4.Shared2.Metadata.Applications.Command;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandSchema {
-
-        private readonly ISet<string> _toExclude = new HashSet<string>();
-        private readonly ISet<string> _toInclude = new HashSet<string>();
-
-        private IDictionary<string, CommandBarDefinition> _applicationCommands =
-            new Dictionary<string, CommandBarDefinition>();
-
         public ApplicationCommandSchema(IDictionary<string, CommandBarDefinition> applicationCommands,
-            IDictionary<string, CommandBarDefinition> commandBars) {
+            IDictionary<string, CommandBarDefinition> commandBars, bool isTemplateParsing) {
             if (!applicationCommands.Any()) {
                 return;
             }
-            _applicationCommands = ApplicationCommandMerger.MergeCommands(applicationCommands, commandBars);
+            OriginalApplicationCommands = applicationCommands;
+            ApplicationCommands = ApplicationCommandMerger.MergeCommands(applicationCommands, commandBars);
         }
 
 
-        public ISet<string> ToExclude {
-            get {
-                return _toExclude;
-            }
-        }
+        public ISet<string> ToExclude { get; } = new HashSet<string>();
 
-        public ISet<string> ToInclude {
-            get {
-                return _toInclude;
-            }
-        }
+        public ISet<string> ToInclude { get; } = new HashSet<string>();
 
         [JsonIgnore]
-        public IDictionary<string, CommandBarDefinition> ApplicationCommands {
-            get {
-                return _applicationCommands;
-            }
-            set {
-                _applicationCommands = value;
-            }
-        }
+        public IDictionary<string, CommandBarDefinition> ApplicationCommands { get; set; } = new Dictionary<string, CommandBarDefinition>();
 
-        public bool HasDeclaration {
-            get {
-                return ApplicationCommands.Any();
-            }
-        }
+        [JsonIgnore]
+        public IDictionary<string, CommandBarDefinition> OriginalApplicationCommands { get; set; } = new Dictionary<string, CommandBarDefinition>();
+
+
+        public bool HasDeclaration => ApplicationCommands.Any();
 
         public override string ToString() {
-            return string.Format("Commands: {0}", _applicationCommands.Values);
+            return $"Commands: {ApplicationCommands.Values}";
         }
 
         public void Merge(ApplicationCommandSchema commandSchema) {
-            _applicationCommands = ApplicationCommandMerger.MergeCommandsWithCustomizedSchema(commandSchema.ApplicationCommands,_applicationCommands);
+            ApplicationCommands = ApplicationCommandMerger.MergeCommandsWithCustomizedSchema(commandSchema.OriginalApplicationCommands, ApplicationCommands);
         }
     }
 }

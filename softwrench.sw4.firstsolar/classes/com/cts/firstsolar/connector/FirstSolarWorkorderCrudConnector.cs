@@ -4,8 +4,14 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using cts.commons.portable.Util;
+using log4net;
+using softWrench.sW4.Data.Entities.Workflow;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Applications.Workorder;
 using softWrench.sW4.Data.Persistence.WS.Internal;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -15,6 +21,33 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
 
         [Import]
         public IContextLookuper ContextLookuper { get; set; }
+
+        [Import]
+        public MaximoHibernateDAO MaxDAO { get; set; }
+
+        [Import]
+        public MaximoWorkflowManager WorkflowManager { get; set; }
+
+        private ILog Log = LogManager.GetLogger(typeof(MaximoWorkflowManager));
+
+        public FirstSolarWorkorderCrudConnector()
+        {
+            Log.Debug("init..");
+        }
+
+        private string BaseAssignmentWorkflowQuery =
+
+        @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
+        inner join wfaction wfa
+        on (wf.nodeid = wfa.ownernodeid and wfa.processname = wf.processname and wf.processrev = wfa.processrev)
+        inner join wfcallstack c on (wf.nodeid = c.nodeid and wf.wfid = c.wfid)         
+        where wf.assignid = (select wf.assignid from wfassignment wf
+        where ownertable = 'workorder' and ownerid = '{0}' and processname = 'EPC-WOP'
+        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
+        and (wf.assigncode = '{1}'))
+        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
+        and (wf.assigncode = '{1}' )
+        and wfa.actionid = '759'";
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeCreation(maximoTemplateData);
@@ -34,6 +67,52 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
 
             }
         }
+
+
+        protected override bool WorkorderStatusChange(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData, object wo,
+            InMemoryUser user) {
+
+            var selectedStatus = crudData.GetAttribute("status");
+
+            if (!ContextLookuper.LookupContext().OfflineMode || !selectedStatus.Equals("COMP")) {
+                return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
+            }
+
+            var currentUser = SecurityFacade.CurrentUser();
+
+            var workorderId = crudData.Id;
+            var siteid = crudData.GetStringAttribute("siteid");
+            var orgid = crudData.GetStringAttribute("orgid");
+            var wonum = crudData.GetStringAttribute("wonum");
+
+            var results = MaxDAO.FindByNativeQuery(BaseAssignmentWorkflowQuery.Fmt(workorderId, currentUser.MaximoPersonId));
+
+            if (!results.Any()) {
+                return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
+            }
+
+
+
+            var data = results.First();
+
+            var workflowDTO = new softWrench.sW4.Data.Entities.Workflow.DTO.RouteWorkflowDTO {
+                ActionId = "759",
+                AssignmentId = data["assignid"],
+                ProcessName = "EPC-WOP",
+                SiteId = siteid,
+                OrgId = orgid,
+                AppUserId = wonum,
+                OwnerTable = "workorder",
+                OwnerId = workorderId,
+                WfId = data["wfid"]
+            };
+
+            Log.InfoFormat("routing workflow for workorder {0}", wonum);
+
+            WorkflowManager.DoRouteWorkFlow(workflowDTO);
+            return true;
+        }
+
 
         public override string ClientFilter() {
             return "firstsolar";

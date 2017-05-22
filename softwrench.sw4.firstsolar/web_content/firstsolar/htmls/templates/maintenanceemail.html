@@ -1,0 +1,151 @@
+﻿<html>
+<head>
+    <title>New Service Call Out</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        .emaillabel { color: black; width:100%}
+      
+        .emailsection {
+            background-image: -webkit-gradient(linear, left 0, left 100%, from(#f7f7f7), to(#ebebeb));
+            color: #3a87ad;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body style="width:640px;margin:0 auto;padding:20px;font: normal 14px/24px Arial, Helvetica, sans-serif;">
+    <!-- TODO replace hard coded img url with client specific header -->
+    <img width="600" height="150" src="{{headerurl}}">
+
+    <p style="margin-top:20px;">
+        A new Service Call Out has been addressed to you
+    <p />
+
+    <div class="field  col-xs-12 emailsection">
+        <div schema="schema" datamap="datamap" displayables="fieldMetadata.displayables" orientation="vertical" data-id="" renderer-parameters="fieldMetadata.rendererParameters" hideempty="hideempty" forprint="forprint" class="ng-isolate-scope">
+
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Sub-Contractor:</label>
+                <div class="field col-xs-8">
+                    <label class="emaillabel">{{subcontractor}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Expiration Date:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{expirationdate}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">PO#:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{ponumber}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">TO#:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{tonumber}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Site Name:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{site}}</label>
+                </div>
+            </fieldset>
+
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Billing Entity:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{billing}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Not To Exceed Amount:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{nottoexceed}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Remaining Funds:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{remaining}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="color:black">
+                <div style="font-weight: bold; padding:20px">
+                    <p>
+                        Subcontractor shall immediately notify First Solar when it reaches a billable of 70% of the Original Not to Exceed amount of the executed Task Order.
+                    </p>
+
+                    <p>
+                        All costs incurred or labor expended in excess of the Original Not to Exceed funds amount of the Task Order shall be borne solely by the Subcontractor without reimbursement.
+                    </p>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Service Provider:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{serviceprovider}}</label>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Scope of Work:</label>
+                <div class="field col-xs-8">
+                    <textarea class="form-control" readonly="readonly" rows="10" cols="120">{{scopeofwork}}</textarea>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="color:black">
+                <div style="font-weight: bold; padding:20px">
+                    <p>
+                        When billing please send all invoice correspondence to <a>fseinvoices@firstsolar.com</a> and ensure to indicate the PO # and "Bill To Name" on the invoice, which is referenced above.
+                    </p>
+
+                    <p>
+                        Not adhering to these requirements may result in payment delay or invoice rejection. Any invoice related questions should be emailed to <a>APInquiriesPBG@firstsolar.com</a>.
+                    </p>
+                </div>
+            </fieldset>
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">First Solar Plant Contacts:</label>
+                <div class="field col-xs-8">
+                    <label class="form-control">{{fsplant}}</label>
+                </div>
+            </fieldset>
+
+
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
+                <label class="control-label col-xs-4">Other Info:</label>
+                <div class="field col-xs-8">
+                    <textarea class="form-control" readonly="readonly" rows="10" cols="120">{{otherinfo}}</textarea>
+                </div>
+            </fieldset>
+
+
+
+
+        </div>
+    </div>
+    <p>
+
+    </p>
+
+</body>
+</html>

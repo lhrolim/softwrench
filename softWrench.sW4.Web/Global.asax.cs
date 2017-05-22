@@ -23,6 +23,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using cts.commons.simpleinjector;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
 using softWrench.sW4.Web.Models;
 using softWrench.sW4.Web.Security;
 
@@ -42,7 +44,10 @@ namespace softWrench.sW4.Web {
             Console.SetOut(new System.IO.StreamWriter(System.IO.Stream.Null));
             Console.SetError(new System.IO.StreamWriter(System.IO.Stream.Null));
             DoStartApplication(false);
+
         }
+
+      
 
         private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
@@ -95,7 +100,7 @@ namespace softWrench.sW4.Web {
             }
 
             SecurityFacade.InitSecurity();
-            Log.Info(String.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
+            Log.Info(string.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
 
         }
@@ -234,7 +239,7 @@ namespace softWrench.sW4.Web {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        protected void Application_PostAuthenticateRequest(Object sender, EventArgs e) {
+        protected void Application_PostAuthenticateRequest(object sender, EventArgs e) {
             HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
             if (authCookie != null) {
                 var inMemoryUser = SecurityFacade.CurrentUser();

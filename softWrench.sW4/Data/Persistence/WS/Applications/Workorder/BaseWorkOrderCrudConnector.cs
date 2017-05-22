@@ -10,6 +10,7 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -50,35 +51,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
             CommonTransaction(maximoTemplateData);
             if (crudData.ContainsAttribute("#hasstatuschange")) {
-                //first let´s 'simply change the status --> this is needed to create a WOSTATUS TX entry
-                WsUtil.SetValue(wo, "STATUSIFACE", true);
-                WsUtil.SetValue(wo, "CHANGEBY", user.Login.ToUpper());
-                var status = WsUtil.GetRealValue(wo, "STATUS") as string;
-                if (!status.EqualsAny("CAN", "CLOSE", "COMP") || crudData.ContainsAttribute("#forcestatuschance")) {
-                    //TODO: review these status later, whether it would make sense to abort TX here
-                    maximoTemplateData.InvokeProxy();
-                }
-                WsUtil.SetValue(wo, "STATUSIFACE", false);
-            }
-
-            // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
-            // TODO: Caching the status field to prevent multiple SQL update.  
-            if (crudData.ContainsAttribute("#hasstatuschange")) {
-                // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
-                var maxStatusValues = MaximoHibernateDAO.GetInstance().FindByNativeQuery(String.Format("SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC", WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"), WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
-                var maxStatusValue = maxStatusValues.First();
-                if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("INPRG")) {
-                    // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
-                    // Actual date must be in the past - thus we made it a minute behind the current time.   
-                    // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
-                    WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
-                } else if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("COMP")) {
-                    // Actual date must be in the past - thus we made it a minute behind the current time.   
-                    WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
-                    WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
+                var shouldInterrupt = WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
+                if (shouldInterrupt) {
+                    return;
                 }
             }
-
 
 
             // This will prevent multiple action on these items
@@ -95,6 +72,42 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, wo);
 
             base.BeforeUpdate(maximoTemplateData);
+        }
+
+        protected virtual bool WorkorderStatusChange(MaximoOperationExecutionContext maximoTemplateData,
+            CrudOperationData crudData, object wo, InMemoryUser user) {
+            //first let´s 'simply change the status --> this is needed to create a WOSTATUS TX entry
+            WsUtil.SetValue(wo, "STATUSIFACE", true);
+            WsUtil.SetValue(wo, "CHANGEBY", user.Login.ToUpper());
+            var status = WsUtil.GetRealValue(wo, "STATUS") as string;
+            if (!status.EqualsAny("CAN", "CLOSE", "COMP") || crudData.ContainsAttribute("#forcestatuschance")) {
+                //TODO: review these status later, whether it would make sense to abort TX here
+                maximoTemplateData.InvokeProxy();
+            }
+            WsUtil.SetValue(wo, "STATUSIFACE", false);
+
+            // COMSW-52 Auto-populate the actual start and end time for a workorder depending on status change
+            // TODO: Caching the status field to prevent multiple SQL update.  
+            // Correct combinations of orgid/siteid are null/null, orgid/null, orgid/siteid. You cannot have a siteid paired with a null orgid.
+            var maxStatusValues = MaximoHibernateDAO.GetInstance()
+                .FindByNativeQuery(
+                    String.Format(
+                        "SELECT MAXVALUE FROM SYNONYMDOMAIN WHERE DOMAINID = 'WOSTATUS' AND VALUE = '{0}' AND (SITEID = '{1}' OR SITEID IS null) AND (ORGID = '{2}' OR ORGID IS null) ORDER BY (CASE WHEN ORGID IS NULL THEN 0 ELSE 1 END) DESC, (CASE WHEN SITEID IS NULL THEN 0 ELSE 1 END) DESC",
+                        WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "STATUS"),
+                        WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "SITEID"),
+                        WsUtil.GetRealValue(maximoTemplateData.IntegrationObject, "ORGID")), null);
+            var maxStatusValue = maxStatusValues.First();
+            if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("INPRG")) {
+                // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
+                // Actual date must be in the past - thus we made it a minute behind the current time.   
+                // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
+                WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+            } else if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("COMP")) {
+                // Actual date must be in the past - thus we made it a minute behind the current time.   
+                WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
+                WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
+            }
+            return false;
         }
 
         public override void AfterUpdate(MaximoOperationExecutionContext maximoTemplateData) {

@@ -102,7 +102,9 @@
 
             <section>
               <field attribute="tonumber" label="TO#" requiredexpression="@addcallout == true"/>
-              <field attribute="email" label="Send to (Email)" requiredexpression="@addcallout == true"/>
+              <field attribute="email" label="Send to (Email)" requiredexpression="@addcallout == true">
+                <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
+              </field>
               <field attribute="sitename" label="Site Name" requiredexpression="@addcallout == true"/>
               <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="@addcallout == true"/>
               <field attribute="nottoexceedamount" label="Not to Exceed Amount" requiredexpression="@addcallout == true"/>
@@ -190,6 +192,7 @@
           </field>
           <field attribute="status" label="Status" readonly="true"/>
           <field attribute="reason" hidden="true"/>
+          <field attribute="email" hidden="true"/>
         </schema>
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
@@ -198,6 +201,22 @@
             <renderer type="datetime" params="editable=true;allowpast=false;"/>
           </field>
           <field attribute="status" hidden="true"/>
+
+          <optionfield label="To" attribute="email" requiredexpression="true">
+            <renderer type="multiselectautocompleteclient" stereotype="email" params="multiselectautocomplete.single=true;valtype=email;"/>
+            <option label="FSOC Lead Operators (FSOCLeadOperators@firstsolar.com)" value="FSOCLeadOperators@firstsolar.com"/>
+            <option label="FSOC Leadership (FSOCLeadership@firstsolar.com)" value="FSOCLeadership@firstsolar.com"/>
+            <option label="FSOC The Looking Glass (FSOCTheLookingGlass@firstsolar.com)" value="FSOCTheLookingGlass@firstsolar.com"/>
+            <option label="FSOC Operators (FSOCOperators@firstsolar.com)" value="FSOCOperators@firstsolar.com"/>
+            <option label="OM RPM Team (OMRPMTeam@firstsolar.com)" value="OMRPMTeam@firstsolar.com"/>
+            <option label="OM Engineering (OMEngineering@firstsolar.com)" value="OMEngineering@firstsolar.com"/>
+            <option label="OM Scheduling Team (O&amp;MSchedulingTeam@firstsolar.com)" value="O&amp;MSchedulingTeam@firstsolar.com"/>
+            <option label="OM Site Supervisors (O&amp;MSiteSupervisors@firstsolar.com)" value="O&amp;MSiteSupervisors@firstsolar.com"/>
+            <option label="O&amp;MJHATeam (OMJHATeam@firstsolar.com)" value="OMJHATeam@firstsolar.com"/>
+            <option label="OM Document Management (O&amp;MDocumentManagement@firstsolar.com)" value="O&amp;MDocumentManagement@firstsolar.com"/>
+            <option label="OM Site Field Technicians (O&amp;MSiteFieldTechnicians@firstsolar.com)" value="O&amp;MSiteFieldTechnicians@firstsolar.com"/>
+          </optionfield>
+          
           <field attribute="reason" label="Reason for Request" requiredexpression="true">
             <renderer type="textarea"/>
           </field>
@@ -218,6 +237,7 @@
         </schema>
 
         <schema id="detailview" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
+            <field attribute="email" label="To"/>
             <field attribute="reason" label="Reason for Request">
               <renderer type="textarea"/>
             </field>
@@ -443,7 +463,7 @@
                  </composition>
 
                 <section>
-                  <header label="Extra Tests" params="fieldset=true"/>
+                  <header label="Component Tests" params="fieldset=true"/>
          
                   <section orientation="horizontal">
                     <optionfield label="Components" attribute="engcomponents">

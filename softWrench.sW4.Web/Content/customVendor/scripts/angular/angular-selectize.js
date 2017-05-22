@@ -7,7 +7,7 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
     return {
         restrict: 'EA',
         require: '^ngModel',
-        scope: { ngModel: '=', config: '=?', options: '=?', ngDisabled: '=', ngRequired: '&', creationallowed: '@' },
+        scope: { ngModel: '=', config: '=?', options: '=?', ngDisabled: '=', ngRequired: '&', creationallowed: '@', single: '@', validationpattern: '@' },
         link: function (scope, element, attrs, modelCtrl) {
 
             Selectize.defaults.maxItems = null; //default to tag editor
@@ -15,8 +15,35 @@ angular.module('selectize', []).value('selectizeConfig', {}).directive("selectiz
             var selectize,
                 config = angular.extend({}, Selectize.defaults, selectizeConfig, scope.config);
 
-            config.create = scope.creationallowed !== "false";
+            //cts:emesquita --> validation of new items
+            const validationPattern = scope.validationpattern ? new RegExp(scope.validationpattern, "i") : null;
+            const defaultCreate = (value) => {
+                const data = {};
+                data[config.labelField] = value;
+                data[config.valueField] = value;
+                return data;
+            }
+            if (scope.creationallowed === "false") {
+                config.create = false;
+            } else if (validationPattern) {
+                config.create = function (input) {
+                    const value = input.toLowerCase().trim();
+                    if (validationPattern.test(value)) {
+                        return defaultCreate(value);
+                    }
+                    return false;
+                };
+            } else {
+                config.create = defaultCreate;
+            }
+
+
             config.hideSelected = true;
+
+            //cts:emesquita --> single case
+            if (scope.single === "true") {
+                config.maxItems = 1;
+            }
 
             modelCtrl.$isEmpty = function (val) {
                 return val === undefined || val === null || !val.length; //override to support checking empty arrays

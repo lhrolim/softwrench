@@ -644,7 +644,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         private ApplicationCommandSchema ParseCommandSchema(XElement xElement) {
             var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.IsNamed(XmlCommandSchema.CommandToolBarElements));
-            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars);
+            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars, _isTemplateParsing);
         }
 
         private static IList<ICommandDisplayable> ParseCommands(XElement commandsSchemaEl) {

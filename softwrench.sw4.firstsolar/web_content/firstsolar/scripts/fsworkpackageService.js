@@ -5,7 +5,7 @@
     let worklogCompositionSchema, fileExplorerCompositionSchema, redimensionIntermediateSectionsInternalAdding, redimensionIntermediateSectionsInternalRemoving;
     let worklogKey, attachmentKey, testWithWorklogs, testWithAttachments, testsMap;
 
-    const maxColumns = 4;
+    const maxColumns = 1;
 
     class workPackageService {
 
@@ -25,8 +25,8 @@
                 "AIRS" : ["airswitchertests"],
                 "CAPB" : ["capbanktests"],
                 "BATTERY" : ["batterytests"],
-                "FEEDER" : ["relaytests"],
-                "RELAY" : ["feedertests"]
+                "FEEDER" : ["feedertests"],
+                "RELAY" : ["relaytests"]
             }
 
             //#region private functions
@@ -109,6 +109,7 @@
                     }
                 }
 
+
                 //each intermediate section should hold only a maximum of 4 tests
                 const intermediateSection = {
                     type: "ApplicationSection",
@@ -130,7 +131,7 @@
                     attribute: componentName + "section",
                     orientation: "vertical",
                     rendererParameters: {
-                        class: "borderedsection"
+//                        class: "borderedsection"
                     },
                     displayables: [
                         intermediateSection
@@ -138,32 +139,39 @@
                     showExpression: 'true',
                     type: "ApplicationSection",
                     preferredIdx: preferredIdx,
-                    header: {
-                        label,
-                        displacement: "sameline",
-                        showExpression: "true",
-                        parameters: {
-                            fieldset: "true"
-                        }
-                    }
+//                    header: {
+//                        label,
+//                        displacement: "sameline",
+//                        showExpression: "true",
+//                        parameters: {
+//                            fieldset: "true"
+//                        }
+//                    }
                 };
 
                 return resultSection;
             }
 
             generateTestSection = function (outerSectionName,selectedTest,preferredIdx) {
+
                 const resultSection = {
                     id: outerSectionName +selectedTest.value + "section",
                     attribute: outerSectionName+selectedTest.value + "section",
-                    rendererParameters: {},
+                    rendererParameters: {
+                        class: "borderedsection"
+                    },
                     displayables: [],
                     type: "ApplicationSection",
                     showExpression: 'true',
                     orientation: "vertical",
                     preferredIdx: preferredIdx,
                     header: {
-                        label: selectedTest.label,
-                        parameters: {}
+                        label: outerSectionName.toUpperCase() + " - " + selectedTest.label,
+                        displacement: "sameline",
+                        showExpression: "true",
+                        parameters: {
+                            fieldset: "true"
+                        }
                     }
                 };
 
@@ -181,12 +189,11 @@
                 //                    <!--<renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.editfunction=fsengineeringevaluationService.openModalEdit;composition.inline.forcehideremove=true" />-->
                 //                    <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.forcehideremove=true" />
                 //                    </composition>
-
-                return {
+                const worklogComposition = {
                     type: "ApplicationCompositionDefinition",
                     inline: true,
                     relationship: worklogKey(selectedTest.value),
-                    label: "Engineering Evaluation " + selectedTest.label,
+//                    label: "Engineering Evaluation " + selectedTest.label,
                     detailschema: 'worklog.workpackageview',
                     printschema: '',
                     showExpression: 'true',
@@ -198,7 +205,8 @@
                             mode: "batch",
                             "composition.inline.expandreadonly": true,
                             "composition.inline.addfunction": "fsengineeringevaluationService.openModalNew",
-                            "composition.inline.forcehideremove": true
+                            "composition.inline.forcehideremove": true,
+                            "composition.inline.avoidheader": true
                         }
                     },
                     collectionproperties: {
@@ -210,6 +218,8 @@
                     },
                     rendererType: 'TABLE'
                 }
+                worklogComposition.schema.rendererParameters["composition.inline.avoidheader"] = "true";
+                return worklogComposition;
             }
 
             generateInlineFileComposition = function (selectedTest) {
@@ -222,7 +232,7 @@
                     type: "ApplicationCompositionDefinition",
                     inline: true,
                     relationship: attachmentKey(selectedTest.value),
-                    label: selectedTest.label,
+//                    label: selectedTest.label,
                     schema: fileExplorerCompositionSchema,
                     showExpression: 'true',
                     collection: true,
@@ -346,6 +356,11 @@
             }
             return this.applicationService.getApplicationDataPromise("workorder", "workpackageschema", { id: workorderid }).then(result => {
                 var resultWo = result.data.resultObject;
+                Object.keys(currentDatamap).forEach(k => {
+                    if (k.startsWith("#workorder_.")) {
+                        currentDatamap[k] = null;
+                    }
+                });
                 Object.keys(resultWo).forEach(k => {
                     currentDatamap["#workorder_." + k] = resultWo[k];
                 });
@@ -420,30 +435,62 @@
             this.innerReevaluateSections(eventParameters.fieldMetadata, eventParameters.option);
         }
 
-        componentLoad(schema, datamap, component) {
-            const values = datamap[component];
-            if (!values || values.length === 0) {
-                return;
-            }
-            const fieldMetadata = this.fieldService.getDisplayableByKey(schema, component);
-            angular.forEach(values, (value) => {
-                angular.forEach(fieldMetadata.options, (option) => {
+        testLoad(schema, datamap, test, component) {
+            const values = datamap[test] || [];
+            const fieldMetadata = this.fieldService.getDisplayableByKey(schema, test);
+            angular.forEach(fieldMetadata.options, (option) => {
+                let onDatamap = false;
+                angular.forEach(values, (value) => {
                     if (option.value === value) {
-                        this.innerReevaluateSections(fieldMetadata, option);
+                        onDatamap = true;
                     }
                 });
+
+                // already on datamap just load the section
+                if (onDatamap) {
+                    this.innerReevaluateSections(fieldMetadata, option);
+                    return;
+                }
+
+                const hasWorklogs = testWithWorklogs(datamap, option.value);
+                const hasAttachs = testWithAttachments(datamap, option.value);
+                if (!hasWorklogs && !hasAttachs) {
+                    return;
+                }
+
+                // not on datamap but with evaluations or files
+                // pobably the user added compositions to the wo but did not save the package
+                // add the test to datamap and the component if needed
+                if (!datamap[test]) {
+                    datamap[test] = [];
+                }
+                datamap[test].push(option.value);
+
+                if (!datamap["engcomponents"]) {
+                    datamap["engcomponents"] = [];
+                }
+                let componentOnDm = false;
+                angular.forEach(datamap["engcomponents"], (dmComponent) => {
+                    if (dmComponent === component) {
+                        componentOnDm = true;
+                    }
+                });
+                if (!componentOnDm) {
+                    datamap["engcomponents"].push(component);
+                }
+
+                this.innerReevaluateSections(fieldMetadata, option);
             });
         }
 
-        // providerloaded
+        // onload
         componentsLoad(scope, schema, datamap, parameters) {
             if (datamap["#testComponentsLoaded"] || !parameters || !parameters.tabid || parameters.tabid !== "engineering") {
                 return;
             }
             datamap["#testComponentsLoaded"] = true;
-            const components = ["gsuimmediatetests", "gsutests", "sf6tests", "vacuumtests", "airswitchertests", "capbanktests", "batterytests", "relaytests", "feedertests"];
-            angular.forEach(components, (component) => {
-                this.componentLoad(schema, datamap, component);
+            angular.forEach(testsMap, (tests, component) => {
+                angular.forEach(tests, (test) => this.testLoad(schema, datamap, test, component));
             });
         }
 

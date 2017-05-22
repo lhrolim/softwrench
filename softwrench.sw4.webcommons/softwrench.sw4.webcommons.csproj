@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="classes\api\IBaseLayoutModel.cs" />
+    <Compile Include="classes\api\RawController.cs" />
     <Compile Include="classes\api\NoMenuController.cs" />
     <Compile Include="classes\bundles\BundleHelper.cs" />
     <Compile Include="classes\bundles\BundleInitializer.cs" />

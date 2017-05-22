@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -142,8 +142,7 @@ namespace softWrench.sW4.Util {
             if ("boolean".EqualsIc(propertyType.Name)) {
                 if (stvalue == "0") {
                     value = false;
-                }
-                if (stvalue == "1") {
+                } else if (stvalue == "1") {
                     value = true;
                 } else {
                     value = Convert.ToBoolean(stvalue.ToLower());

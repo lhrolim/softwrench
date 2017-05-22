@@ -30,8 +30,7 @@ namespace softWrench.sW4.Data.Filter {
         public PaginatedSearchRequestDto HandleDTO(ApplicationSchemaDefinition schema, PaginatedSearchRequestDto searchDto) {
             //force cache here
             var parameters = searchDto.GetParameters();
-            var schemaFilters = schema.SchemaFilters;
-
+            var schemaFilters = schema.SchemaFilters ?? schema.SchemaFilterResolver(schema);
 
             var entity = MetadataProvider.EntityByApplication(schema.ApplicationName);
 
