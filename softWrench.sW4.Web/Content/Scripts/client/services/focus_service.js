@@ -42,6 +42,9 @@ angular.module('sw_layout')
         },
 
         resetFocusToCurrent: function (schema, attribute) {
+            if (!schema) {
+                return;
+            }
             const log = $log.get("focusService#resetFocusToCurrent",["detail", "focus"]);
             log.debug("resetting focus to {0}".format(attribute));
             const idx = fieldService.getVisibleDisplayableIdxByKey(schema, attribute);

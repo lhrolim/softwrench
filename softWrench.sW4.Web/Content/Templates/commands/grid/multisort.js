@@ -131,6 +131,10 @@
                 }
 
                 let displayables = $scope.displayables;
+                if (displayables instanceof Array) {
+                    
+                }
+
                 if (!displayables && $scope.schema) {
                     displayables = $scope.schema.sortableFields;
                 }

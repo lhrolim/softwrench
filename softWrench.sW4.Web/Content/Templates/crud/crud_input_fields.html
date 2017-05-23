@@ -43,6 +43,7 @@
                                                schema="schema"
                                                datamap="datamap"
                                                is-dirty="isDirty"
+                                               panelid="{{panelid}}"
                                                header-section="true"
                                                displayables="fieldMetadata.header.headerDisplayables"
                                                elementid="{{elementid + 'SectionHeader' + fieldMetadata.id}}">
@@ -56,6 +57,7 @@
                                                field-metadata="fieldMetadata"
                                                schema="schema"
                                                datamap="datamap"
+                                               panelid="{{panelid}}"
                                                is-dirty="isDirty"
                                                header-section="true"
                                                orientation="horizontal"
@@ -545,6 +547,7 @@
                                                                elementid="{{elementid + 'Section' + fieldMetadata.id}}"
                                                                orientation="{{fieldMetadata.orientation}}"
                                                                islabelless="{{isSectionWithoutLabel(fieldMetadata)}}"
+                                                               panelid="{{panelid}}"
                                                                ismodal="{{ismodal}}"
                                                                tabsection="{{isTabSection(fieldMetadata)}}"
                                                                cancelfn="cancelfn(data,schema)">

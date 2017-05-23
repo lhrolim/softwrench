@@ -18,7 +18,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
 
         WhereClauseResult Lookup([NotNull]string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null);
 
-        Task RegisterAsync([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null,bool validate=false);
+        Task RegisterAsync([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null,bool validate=false, bool systemValueRegister = true);
 
 
         void Register([NotNull]string applicationName, [NotNull]string query, WhereClauseRegisterCondition condition = null, bool validate = false);

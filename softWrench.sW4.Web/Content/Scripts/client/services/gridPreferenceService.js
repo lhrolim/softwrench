@@ -23,7 +23,7 @@
                 var user = contextService.getUserData();
                 const gridpreferences = user.gridPreferences;
                 var result = [];
-
+                
                 const declaredQuickFilters = schema.schemaFilters.quickSearchFilters;
                 if (declaredQuickFilters) {
                     declaredQuickFilters.forEach(d => {

@@ -8,6 +8,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using log4net;
+using softwrench.sw4.api.classes.audit;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
@@ -31,6 +32,8 @@ namespace softWrench.sW4.Configuration.Services {
         private readonly UserProfileManager _userProfileManager;
         private readonly EntityRepository _entityRepository;
         private readonly ConfigurationCache _configurationCache;
+        private readonly IAuditManagerCommons _auditManager;
+
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(WhereClauseRegisterService));
 
@@ -49,15 +52,16 @@ namespace softWrench.sW4.Configuration.Services {
 
 
 
-        public WhereClauseRegisterService(ISWDBHibernateDAO dao, UserProfileManager userProfileManager, EntityRepository entityRepository, ConfigurationCache configurationCache) {
+        public WhereClauseRegisterService(ISWDBHibernateDAO dao, UserProfileManager userProfileManager, EntityRepository entityRepository, ConfigurationCache configurationCache, IAuditManagerCommons auditManager) {
             _dao = dao;
             _userProfileManager = userProfileManager;
             _entityRepository = entityRepository;
             _configurationCache = configurationCache;
+            _auditManager = auditManager;
         }
 
         public virtual void ValidateWhereClause([NotNull]string applicationName, [NotNull]string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
-            if (string.IsNullOrEmpty(whereClause) || whereClause.EqualsAny("1=1", "1!=1")){
+            if (string.IsNullOrEmpty(whereClause) || whereClause.EqualsAny("1=1", "1!=1")) {
                 //common whereclauses which validation can be skipped
                 return;
             }
@@ -125,16 +129,16 @@ namespace softWrench.sW4.Configuration.Services {
         public virtual async Task<PropertyValue> Create(string application, string query, WhereClauseRegisterCondition condition) {
             var configKey = $"/_whereclauses/{application}/whereclause";
 
-            var result = await DoRegister(configKey, query, condition, false,true);
+            var result = await DoRegister(configKey, query, condition, false, true);
             return result.PropertyValue;
         }
 
 
         // [Transactional(DBType.Swdb)]
         //TODO: asyncHelper wont work here with tx
-        public virtual async Task<WhereClauseRegisterResult> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition, bool systemValueRegister = true, bool wcCreation =false)
-        {
-            if (condition != null && condition.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
+        public virtual async Task<WhereClauseRegisterResult> DoRegister(string configKey, string query, WhereClauseRegisterCondition condition,
+            bool systemValueRegister = true, bool wcCreation = false) {
+            if (condition?.Environment != null && condition.Environment != ApplicationConfiguration.Profile) {
                 //we don´t need to register this property here.
                 return new WhereClauseRegisterResult {
                     Operation = WCRegisterOperation.Skip
@@ -152,9 +156,9 @@ namespace softWrench.sW4.Configuration.Services {
                 condition.Alias = condition.AppContext.MetadataId;
             }
 
-           
+
             var storedCondition = await GetStoredCondition(condition, configKey, wcCreation);
-          
+
 
             var profile = new UserProfile();
             if (condition?.UserProfile != null) {
@@ -173,7 +177,7 @@ namespace softWrench.sW4.Configuration.Services {
 
             PropertyValue storedValue;
 
-            if (condition != null && id!=null) {
+            if (condition != null && id != null) {
                 storedValue = await _dao.FindSingleByQueryAsync<PropertyValue>(
                   PropertyValue.ByDefinitionConditionIdModuleProfile,
                   configKey, id, condition.Module, profile.Id);
@@ -192,6 +196,7 @@ namespace softWrench.sW4.Configuration.Services {
                     ClientName = ApplicationConfiguration.ClientName,
                 };
                 if (systemValueRegister) {
+                    //registering a system value will make this whereclaue undeletable
                     newValue.SystemStringValue = query;
                 } else {
                     newValue.Value = query;
@@ -203,15 +208,21 @@ namespace softWrench.sW4.Configuration.Services {
                     PropertyValue = newValue
                 };
             }
+
             Log.DebugFormat("updating existing PropertyValue for {0}", configKey);
             if (systemValueRegister) {
                 storedValue.SystemStringValue = query;
             } else {
+                //TODO: improve audit solution
+                _auditManager.CreateAuditEntry("update", "whereclause", storedValue.Id.ToString(), storedValue.Id.ToString(), $"<old>{0}</old>" + "<new>{1}</new>".Fmt(storedValue.Value, query));
                 storedValue.Value = query;
             }
+
             storedValue = await _dao.SaveAsync(storedValue);
             //TODO: investigate a way to populate cache immediately
             _configurationCache.ClearCache(configKey);
+
+
             return new WhereClauseRegisterResult {
                 Operation = WCRegisterOperation.ValueUpdate,
                 PropertyValue = storedValue
@@ -232,7 +243,7 @@ namespace softWrench.sW4.Configuration.Services {
             return definition;
         }
 
-        private async Task<Condition> GetStoredCondition(WhereClauseRegisterCondition condition,string configKey, bool wcCreation) {
+        private async Task<Condition> GetStoredCondition(WhereClauseRegisterCondition condition, string configKey, bool wcCreation) {
 
             if (condition == null) {
                 return null;

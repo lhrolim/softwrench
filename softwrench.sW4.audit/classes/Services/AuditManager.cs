@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using softwrench.sw4.api.classes.audit;
 using softwrench.sW4.audit.classes.Model;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -30,6 +31,10 @@ namespace softwrench.sW4.audit.classes.Services {
 
         public ICollection<AuditEntry> SaveAuditEntries(ICollection<AuditEntry> entries) {
             return DAO.BulkSave(entries);
+        }
+
+        void IAuditManagerCommons.CreateAuditEntry(string action, string refApplication, string refId, string refUserId, string data) {
+            CreateAuditEntry(action, refApplication, refId, refUserId, data, DateTime.Now);
         }
     }
 }

@@ -40,6 +40,7 @@
                     elementid: '@',
                     orientation: '@',
                     islabelless: '@',
+                    panelid: '@',
                     ismodal: '@',
                     lookupAssociationsCode: '=',
                     lookupAssociationsDescription: '=',
@@ -60,9 +61,7 @@
                             if (scope.fieldMetadata.header.parameters) {
                                 Object.keys(scope.fieldMetadata.header.parameters).forEach(k => {
                                     scope.sectionParameters[k] = scope.fieldMetadata.header.parameters[k];
-                                })
-
-
+                                });
                             }
                         }
 
@@ -73,12 +72,15 @@
                             scope.sectionParameters["headerSection"] = true;
                         }
 
+
+
                         element.append(
                             "<crud-input-fields displayables='displayables'" +
                             "schema='schema'" +
                             "datamap='datamap'" +
                             "is-dirty='isDirty'" +
                             "ismodal = '{{ismodal}}'" +
+                            "panelid = 'panelid'" +
                             "displayables='displayables'" +
                             "blockedassociations='blockedassociations'" +
                             "section-parameters='sectionParameters'" +
@@ -91,11 +93,11 @@
                             "></crud-input-fields>"
                         );
                         $timeout(function () {
-                            // mark data as not resolved since the template has not yet been compiled: can still trigger formatters and default values
-                            // avoiding bugs on the dirty checker this way
-                            crudContextHolderService.clearDetailDataResolved();
-                            $compile(element.contents())(scope);
-                        }, 0, false)
+                                // mark data as not resolved since the template has not yet been compiled: can still trigger formatters and default values
+                                // avoiding bugs on the dirty checker this way
+                                crudContextHolderService.clearDetailDataResolved();
+                                $compile(element.contents())(scope);
+                            }, 0, false)
                             .finally(() => // section already compiled, formatters and default values already triggered: mark data as resolved
                                 crudContextHolderService.setDetailDataResolved());
                     }
@@ -200,6 +202,8 @@
                             return $scope.panelid || ($scope.ismodal === "true" ? "#modal" : null);
                         }
 
+
+
                         $scope.getGroupedCheckboxOptions = function (fieldMetadata) {
                             if (fieldMetadata.jscache == null) {
                                 fieldMetadata.jscache = {};
@@ -209,7 +213,7 @@
                             }
 
                             const maxrows = parseInt(fieldMetadata.rendererParameters["maxrows"] || 1000);
-                            const options = $scope.getCheckboxOptions(fieldMetadata);
+                            const options = $scope.getCheckboxOptions(fieldMetadata) || [];
 
                             const numberofColumns = Math.ceil(options.length / maxrows);
                             const numberOfRows = Math.min(options.length, maxrows);

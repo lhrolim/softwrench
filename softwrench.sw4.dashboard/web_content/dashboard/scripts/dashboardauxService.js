@@ -1,7 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    function dashboardAuxService($rootScope, $timeout, $q, $log, validationService, contextService, restService, graphicPanelServiceProvider, crudContextHolderService) {
+    function dashboardAuxService($rootScope, $timeout, $q, $log, validationService,
+        contextService, restService, graphicPanelServiceProvider, crudContextHolderService, fieldService) {
         //#region Utils
         function panelCreated(panel) {
             return function (response) {
@@ -15,7 +16,7 @@
         //#endregion
 
         //#region Public methods
-        function lookupFields(event) {
+        function lookupFields(event, keepDatamapValue) {
             const datamap = event.fields;
 
             const application = datamap.application;
@@ -26,16 +27,23 @@
             return restService.getPromise("Dashboard", "LoadFields", { applicationName: application }).then(function (response) {
                 const data = response.data;
                 crudContextHolderService.updateEagerAssociationOptions("appFields", data.resultObject);
-                datamap["appFields"] = "";
-                $.each(data.resultObject, function (key, value) {
-                    datamap["appFields"] += value.value + ",";
-                });
-                const selectedFields = datamap["appFields"];
-                if (selectedFields) {
-                    datamap["appFields"] = selectedFields.substring(0, selectedFields.length - 1);
+                const schema = crudContextHolderService.currentSchema("#modal");
+
+                if (!keepDatamapValue) {
+                    datamap["appFields"] = [];
+                    $.each(data.resultObject, function(key, value) {
+                        datamap["appFields"].push(value.value);
+                    });
+                } else {
+                    if (typeof datamap["appFields"] === "string") {
+                        datamap["appFields"] = datamap["appFields"].split(",");
+                    }
                 }
                 crudContextHolderService.rootDataMap("#modal")["appFields"] = datamap["appFields"];
                 $rootScope.$broadcast(DashboardEventConstants.AppFieldsLoaded);
+                //clearing jscache of checkbox fieldmetadata
+                const field = fieldService.getDisplayableByKey(schema,"fields");
+                field.jscache = null;
 
                 //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
             });
@@ -65,6 +73,13 @@
                     return i.columnName + (i.isAscending ? " asc" : " desc");
                 }).join(',');
             }
+            if (datamap["appFields"] instanceof Array) {
+                local["appFields"] = datamap["appFields"].join(",");
+            } else {
+                local["appFields"] = datamap["appFields"];
+            }
+
+            
             const schema = crudContextHolderService.currentSchema("#modal");
             validationService.validatePromise(schema, datamap)
             .then(() => {
@@ -241,7 +256,7 @@
 
     //#region Service registration
     angular.module("sw_layout").service("dashboardAuxService",
-        ["$rootScope", "$timeout", "$q", "$log", "validationService", "contextService", "restService", "graphicPanelServiceProvider", "crudContextHolderService", dashboardAuxService]);
+        ["$rootScope", "$timeout", "$q", "$log", "validationService", "contextService", "restService", "graphicPanelServiceProvider", "crudContextHolderService", "fieldService", dashboardAuxService]);
     //#endregion
 
 })(angular);

@@ -12,9 +12,22 @@
             const sortingField = datamap.defaultSortField;
             datamap["multiSort"] = searchService.parseMultiSort(sortingField);
 
-            const appFields = datamap.appFields ? datamap.appFields.split(",").map(i => {
-                return { attribute: i };
-            }) : [];
+            var appFields = [];
+
+            if (datamap.appFields) {
+                if (datamap.appFields instanceof Array) {
+                    appFields = datamap.appFields.map(i => {
+                        return { attribute: i };
+                    });
+                }
+                else if (typeof datamap.appFields === "object") {
+                    appFields = datamap.appFields;
+                } else {
+                    appFields = datamap.appFields.split(",").map(i => {
+                        return { attribute: i };
+                    });
+                }
+            }
 
             $scope.vm = {
                 appFields

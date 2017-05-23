@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.simpleinjector;
+using softwrench.sw4.api.classes.audit;
 using softwrench.sW4.audit.classes.Model;
 
 namespace softwrench.sW4.audit.Interfaces {
-    public interface IAuditManager : ISingletonComponent
+    public interface IAuditManager : IAuditManagerCommons
     {
         /// <summary>
         /// Creates a new AuditEntry and saves it to the SWDB

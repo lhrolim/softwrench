@@ -250,7 +250,7 @@
                         const dashid = $(this).data("tabid");
                         $scope.currentdashboardid = dashid;
                         $scope.dashboard = $scope.getCurrentDashboardById(dashid);
-                        const log = $log.getInstance("dashboardrendered");
+                        const log = $log.getInstance("dashboardrendered", ["dashboard"]);
                         log.trace("lazy loading dashboard {0}".format(dashid));
                     });
                 });
@@ -320,7 +320,7 @@
         };
 
         $scope.finishCreatingDashboard = function () {
-            const log = $log.getInstance("dashboardController#saveDashboard");
+            const log = $log.getInstance("dashboardController#saveDashboard",["dashboard"]);
             if (!$scope.canCreateBoth) {
                 //this is personal only
                 log.debug("saving personal dashboard");
@@ -405,10 +405,14 @@
             const title = "Edit " + panelTypeLabel($scope.paneltype) + " Widget";
             var datamap = panelDatamap(panel);
 
+            const log = $log.get("dashboardcontroller#editpanel", ["dashboard"]);
+
+
             modalService.show(schema, datamap, {
                 title: title, cssclass: "dashboardmodal", onloadfn: function (scope) {
+                    log.debug("updating applications for dashboard");
                     crudContextHolderService.updateEagerAssociationOptions("applications", $scope.applications);
-                    const p1 = dashboardAuxService.lookupFields({ fields: datamap, scope: $scope });
+                    const p1 = dashboardAuxService.lookupFields({ fields: datamap, scope: $scope }, true);
                     const p2 = dashboardAuxService.lookupWhereClause({ fields: datamap });
                     return $q.all([p1, p2]);
                 }

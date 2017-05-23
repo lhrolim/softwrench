@@ -496,10 +496,11 @@
                 //case for dependant associations
                 return;
             }
-            const context = this.getContext(panelid);
-            if (context.showingModal) {
+            let context = this.getContext(panelid);
+            if (context.showingModal && !panelid) {
                 contextData = contextData || {};
                 contextData.schemaId = "#modal";
+                context = this.getContext("#modal");
             }
             const log = this.$log.getInstance("crudContext#updateEagerAssociationOptions", ["association"]);
             if (contextData == null) {

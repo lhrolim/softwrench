@@ -102,6 +102,7 @@
             <renderer type="autocompleteclient"/>
             <event type="afterchange" method="lookupFields" service="dashboardAuxService"/>
           </optionfield>
+          <field label="Schema" attribute="schemaref" hidden="true"/>
           <section showexpression="@application!=null">
 
             <optionfield label="Fields" attribute="fields" providerattribute="appFields" skipvalidation="true">

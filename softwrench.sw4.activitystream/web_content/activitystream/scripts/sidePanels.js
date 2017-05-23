@@ -59,6 +59,7 @@
                     const configs = values[0];
                     if (!csEnabled) {
                         init(configs);
+                        return;
                     }
 
                     const applicationName = values[1].applicationName;

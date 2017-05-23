@@ -18,7 +18,9 @@
     beforeEach(inject(function ($injector, $rootScope, $compile, $q, contextService, searchService, checkpointService) {
         $httpBackend = $injector.get('$httpBackend');
         mockScope = $rootScope.$new();
-        mockScope.schema = {};
+        mockScope.schema = {
+            schemaFilters : {}
+        };
         mockScope.schema.commandSchema = {};
         mockScope.schema.properties = {};
         

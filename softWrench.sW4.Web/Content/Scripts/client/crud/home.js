@@ -96,7 +96,7 @@
 
         function handleRedirect(redirectUrl, localHomeModel) {
             const sessionRedirectUrl = contextService.fetchFromContext("swGlobalRedirectURL", false, false);
-            if (sessionRedirectUrl != null && redirectUrl && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.indexOf("makeswadmin") < 0)) && !homeModel.FromRoute) {
+            if (sessionRedirectUrl != null && redirectUrl && ((redirectUrl.indexOf("popupmode=browser") < 0) && (redirectUrl.toLowerCase().indexOf("makeswadmin") < 0)) && !homeModel.FromRoute) {
                 redirectUrl = sessionRedirectUrl;
             }
             const locationUrl = historyService.getLocationUrl();

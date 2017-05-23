@@ -117,7 +117,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         [Transactional(DBType.Swdb)]
-        public virtual async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false) {
+        public virtual async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false, bool systemValueRegister = true) {
             var result = Validate(applicationName,query, validate, condition);
             if (!result) {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
@@ -127,7 +127,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (!_appStarted) {
                 _toRegister.Add(Tuple.Create(configKey, query, condition));
             } else {
-                await _whereClauseRegisterService.DoRegister(configKey, query, condition);
+                await _whereClauseRegisterService.DoRegister(configKey, query, condition, systemValueRegister);
             }
         }
 

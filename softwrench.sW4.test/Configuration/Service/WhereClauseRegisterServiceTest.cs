@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using softwrench.sw4.api.classes.audit;
 using softwrench.sW4.test.Util;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
@@ -21,6 +22,7 @@ namespace softwrench.sW4.test.Configuration.Service {
         private Mock<ISWDBHibernateDAO> _swdbDAO;
         private Mock<EntityRepository> _entityRepository;
         private Mock<ConfigurationCache> _configurationCache;
+        private Mock<IAuditManagerCommons> _auditManagerCommons;
 
 
         [TestInitialize]
@@ -28,8 +30,9 @@ namespace softwrench.sW4.test.Configuration.Service {
             _swdbDAO = TestUtil.CreateMock<ISWDBHibernateDAO>();
             _entityRepository = TestUtil.CreateMock<EntityRepository>();
             _configurationCache = TestUtil.CreateMock<ConfigurationCache>();
+            _auditManagerCommons = TestUtil.CreateMock<IAuditManagerCommons>();
             TestUtil.ResetMocks(_swdbDAO, _entityRepository, _configurationCache);
-            _service = new WhereClauseRegisterService(_swdbDAO.Object, null, _entityRepository.Object, _configurationCache.Object);
+            _service = new WhereClauseRegisterService(_swdbDAO.Object, null, _entityRepository.Object, _configurationCache.Object,_auditManagerCommons.Object);
         }
 
 

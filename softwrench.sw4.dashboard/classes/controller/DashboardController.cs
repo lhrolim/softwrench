@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
 using Iesi.Collections.Generic;
+using softwrench.sw4.api.classes.audit;
 using softwrench.sw4.dashboard.classes.model;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.dashboard.classes.service.graphic;
@@ -33,16 +36,18 @@ namespace softwrench.sw4.dashboard.classes.controller {
         private readonly UserDashboardManager _userDashboardManager;
         private readonly IEventDispatcher _dispatcher;
         private readonly GraphicStorageSystemFacadeProvider _graphicServiceProvider;
+        private readonly IAuditManagerCommons _auditManager;
 
         private readonly IWhereClauseFacade _whereClauseFacade;
 
         public DashBoardController(SWDBHibernateDAO dao, UserDashboardManager userDashboardManager, IEventDispatcher dispatcher, GraphicStorageSystemFacadeProvider graphicServiceProvider,
-            IWhereClauseFacade whereClauseFacade) {
+            IWhereClauseFacade whereClauseFacade, IAuditManagerCommons auditManager) {
             _dao = dao;
             _userDashboardManager = userDashboardManager;
             _dispatcher = dispatcher;
             _graphicServiceProvider = graphicServiceProvider;
             _whereClauseFacade = whereClauseFacade;
+            _auditManager = auditManager;
         }
 
         [HttpPost]
@@ -218,23 +223,27 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpPost]
-        public async Task<IGenericResponseResult> SaveGridPanel(DashboardGridPanel panel) {
+        [Transactional(DBType.Swdb)]
+        public virtual async Task<IGenericResponseResult> SaveGridPanel(DashboardGridPanel panel) {
             var app = MetadataProvider.Application(panel.Application);
-            var schema = app.GetListSchema();
+            
             //TODO make it transactional
 
-            await _whereClauseFacade.RegisterAsync(app.ApplicationName, panel.WhereClause, new WhereClauseRegisterCondition() {
+            await _whereClauseFacade.RegisterAsync(app.ApplicationName, panel.WhereClause, new WhereClauseRegisterCondition {
                 AppContext = new ApplicationLookupContext() {
                     MetadataId = "dashboard:" + panel.Alias
                 }
-            }, true);
+            }, true,false);
 
-
-            panel.SchemaRef = schema.SchemaId;
+            if (panel.SchemaRef == null) {
+                var schema = app.GetListSchema();
+                panel.SchemaRef = schema.SchemaId;
+            }
+            
             panel.Filter = new DashboardFilter();
             var gridPanel = await _dao.SaveAsync(panel);
             gridPanel.WhereClause = panel.WhereClause;
-
+            _auditManager.CreateAuditEntry("update",typeof(DashboardGridPanel).Name,panel.Id.ToString(), panel.Id.ToString(), "");
             return new GenericResponseResult<DashboardBasePanel>(gridPanel);
         }
 
