@@ -129,7 +129,7 @@
         <relationship to="DOCLINKS" collection="true" qualifier="wkpgattachments">
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
-          <relationshipAttribute query="(DOCLINKS.document like 'swwpkg:%')"/>
+          <relationshipAttribute query="(docinfo_.urlparam1 like 'swwpkg:%')"/>
         </relationship>
       </relationships>
     </entity>
@@ -425,7 +425,7 @@
             <commandgroup position="actions">
               <command id="createworkpackage" position="+createrelated" icon="fa-arrow-circle-down" label="Create Work Package"
                        parameters="schema,datamap"
-                       service="workorderService" method="createWorkPackage" cssclasses="large-button" enableexpression="$scope:enableSave" showexpression="@worktype!=null &amp;&amp; @worktype.equalsIc('PM','CM')"/>
+                       service="workorderService" method="createWorkPackage" cssclasses="large-button" enableexpression="$scope:enableSave" showexpression="@worktype!=null &amp;&amp; @worktype.equalsIc('PM','CM','WO')"/>
             </commandgroup>
           </commandbars>
           
@@ -1445,6 +1445,7 @@
           <field attribute="doclinksid" hidden="true" />
           <field attribute="docinfo_.urlname" hidden="true"/>
           <field attribute="docinfo_.urltype" hidden="true"/>
+          <field attribute="docinfo_.urlparam1" hidden="true"/>
           <field attribute="docinfo_.description" hidden="true"/>
           <field attribute="document" hidden="true"/>
           <field attribute="doctype" hidden="true"/>

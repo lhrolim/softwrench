@@ -29,5 +29,10 @@
         /// if it has been created out of that particular device
         /// </summary>
         public string OffLineHash { get; set; }
+
+        /// <summary>
+        /// This is a label used on first solar work packages to filter the attachments to the specific tests
+        /// </summary>
+        public string FsWPackageTestFilter { get; set; }
     }
 }

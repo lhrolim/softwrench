@@ -20,13 +20,9 @@
 
         function postSave(saveDatamap) {
             saveDatamap["subcontractor_.id"] = saveDatamap["subcontractor"];
-            if (saveDatamap["addcallout"] === true || saveDatamap["addcallout"] === "true") {
-                if (saveDatamap["submitaftersave"]) {
-                    saveDatamap["status"] = Status.SubmitAfterSave;
-                    saveDatamap["sendtime"] = null;
-                } else {
-                    saveDatamap["status"] = Status.Completed;
-                }
+            if (saveDatamap["submitaftersave"]) {
+                saveDatamap["status"] = Status.SubmitAfterSave;
+                saveDatamap["sendtime"] = null;
             } else {
                 saveDatamap["status"] = Status.Open;
             }
@@ -54,7 +50,6 @@
             if (item["subcontractor_.id"]) {
                 item["subcontractor"] = item["subcontractor_.id"] + "";
             }
-            item["addcallout"] = item["status"] !== Status.Open;
             if (!item["sendtime"]) {
                 const date = new Date();
                 date.setHours(23, 59, 59, 999);
@@ -112,9 +107,6 @@
     class Status {
         static get Open() {
             return "Open";
-        }
-        static get Completed() {
-            return "Completed";
         }
         static get SubmitAfterSave() {
             return "Submit After Save";

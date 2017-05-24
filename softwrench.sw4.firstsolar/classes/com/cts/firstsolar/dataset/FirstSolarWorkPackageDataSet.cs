@@ -449,8 +449,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var attachsMap = new Dictionary<string, IList<Dictionary<string, object>>>();
             wkpkgAttachs.ResultList.ForEach(attach => {
-                var document = attach["document"].ToString().ToLower();
-                var realRelationship = "#" + document.Substring(7) + "_";
+                var filter = attach["docinfo_.urlparam1"].ToString().ToLower();
+                var realRelationship = "#" + filter.Substring(7) + "fileexplorer_";
                 if (!attachsMap.ContainsKey(realRelationship)) {
                     attachsMap.Add(realRelationship, new List<Dictionary<string, object>>());
                 }

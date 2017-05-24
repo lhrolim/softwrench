@@ -9,7 +9,7 @@
           <relationshipAttribute from="wonum" to="wonum" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
           <relationshipAttribute from="siteid" to="siteid"/>
-          <relationshipAttribute query="worktype in ('CM','PM') and historyflag=0"/>
+          <relationshipAttribute query="worktype in ('CM','PM','WO') and historyflag=0"/>
         </relationship>
         <relationship to="_CallOut_" qualifier="callOuts" collection="true">
           <relationshipAttribute from="id" to="workpackageid" primary="true"/>
@@ -86,57 +86,48 @@
             <renderer type="datetime" params="editable=true;allowpast=false;"/>
           </field>
           <field attribute="status" hidden="true"/>
-          <field attribute="addcallout" label="Add Call Out" default="false" defaultexpression="false">
-            <renderer type="checkbox" params="layout=left"/>
-          </field>
 
-          <section showexpression="@addcallout == true">
-            <header label="Call Out" />
-            <section orientation="horizontal">
-              <renderer type="default" params="childinputsize=large"/>
-              <field attribute="expirationdate" label="Expiration Date" requiredexpression="@addcallout == true">
-                <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;"/>
-              </field>
-              <field label="PO#" attribute="ponumber"/>
-            </section>
-
-            <section>
-              <field attribute="tonumber" label="TO#" requiredexpression="@addcallout == true"/>
-              <field attribute="email" label="Send to (Email)" requiredexpression="@addcallout == true">
-                <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
-              </field>
-              <field attribute="sitename" label="Site Name" requiredexpression="@addcallout == true"/>
-              <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="@addcallout == true"/>
-              <field attribute="nottoexceedamount" label="Not to Exceed Amount" requiredexpression="@addcallout == true"/>
-              <field attribute="remainingfunds" label="Remaining Funds" default="N/A" requiredexpression="@addcallout == true"/>
-              <field attribute="text1" label="">
-                <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutnottoexceedamounttext.html"/>
-              </field>
-            </section>
-
-            <section>
-              <field attribute="serviceprovider" label="Service Provider" requiredexpression="@addcallout == true"/>
-              <field attribute="scopeofwork" label="Scope of Work" requiredexpression="@addcallout == true">
-                <renderer type="textarea"/>
-              </field>
-              <field attribute="text2" label="Invoicing">
-                <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutinvoicetext.html"/>
-              </field>
-              <field attribute="plantcontacts" label="First Solar Plant Contacts" requiredexpression="@addcallout == true"/>
-              <field attribute="otherinfo" label="Other Info" requiredexpression="@addcallout == true">
-                <renderer type="textarea"/>
-              </field>
-            </section>
-
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=large"/>
+            <field attribute="expirationdate" label="Expiration Date" requiredexpression="true">
+              <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;"/>
+            </field>
+            <field label="PO#" attribute="ponumber"/>
           </section>
 
-          
+          <section>
+            <field attribute="tonumber" label="TO#" requiredexpression="true"/>
+            <field attribute="email" label="Send to (Email)" requiredexpression="true">
+              <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
+            </field>
+            <field attribute="sitename" label="Site Name" requiredexpression="true"/>
+            <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="true"/>
+            <field attribute="nottoexceedamount" label="Not to Exceed Amount" requiredexpression="true"/>
+            <field attribute="remainingfunds" label="Remaining Funds" default="N/A" requiredexpression="true"/>
+            <field attribute="text1" label="">
+              <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutnottoexceedamounttext.html"/>
+            </field>
+          </section>
+
+          <section>
+            <field attribute="serviceprovider" label="Service Provider" requiredexpression="true"/>
+            <field attribute="scopeofwork" label="Scope of Work" requiredexpression="true">
+              <renderer type="textarea"/>
+            </field>
+            <field attribute="text2" label="Invoicing">
+              <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutinvoicetext.html"/>
+            </field>
+            <field attribute="plantcontacts" label="First Solar Plant Contacts" requiredexpression="true"/>
+            <field attribute="otherinfo" label="Other Info" requiredexpression="true">
+              <renderer type="textarea"/>
+            </field>
+          </section>
           
           <commandbars>
             <commandgroup position="modal.detail.primary">
               <removecommand id="save"/>
               <command id="add" icon="fa-check" service="fscalloutService" method="saveCallOut" label="Save" primary="true" position="+save"/>
-              <command id="addsubmit" icon="fa-envelope-o" service="fscalloutService" method="saveAndSubmitCallOut" label="Save &amp; Submit" primary="true" position="+save" enableexpression="@addcallout == true"/>
+              <command id="addsubmit" icon="fa-envelope-o" service="fscalloutService" method="saveAndSubmitCallOut" label="Save &amp; Submit" primary="true" position="+save"/>
             </commandgroup>
           </commandbars>
         </schema>
@@ -449,8 +440,7 @@
             </section>
           </section>
 
-          <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" 
-               id="engineering" enableexpression="@#workorder_.worktype == 'CM' &amp;&amp; @wooutreq == true &amp;&amp; @tier == 'tier1' &amp;&amp; @id!=null" countrelationship="">
+          <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
                
             
                  <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files" detailschema="">
@@ -484,24 +474,27 @@
                     <section showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('GSU')!= -1 ">
                       <optionfield attribute="gsuimmediatetests" label="GSU Testing - Immediate Response" qualifier="gsu">
                         <renderer type="checkbox" params="layout=left"/>
-                        <option  label="Capture Oil Sampling" value="captureoil"/>
-                        <option  label="Capture Bushing Monitoring Data" value="capturemon"/>
-                        <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="oilsampleanddissolved"/>
+                        
+                        <option  label="Capture Oil Sampling" value="gsucaptureoil"/>
+                        <option  label="Capture Bushing Monitoring Data" value="gsucapturemon"/>
+                        <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="gsuoilsampleanddissolved"/>
+                        
                         <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                         <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                       </optionfield>
 
                       <optionfield attribute="gsutests" label="GSU Testing" qualifier="gsu">
                         <renderer type="checkbox" params="layout=left"/>
-                        <option  label="Transformer Turns Ratio (TTR) Test" value="transformer"/>
-                        <option  label="Megger Test" value="megger"/>
-                        <option  label="Overall Power Factor Test" value="overall"/>
-
-                        <option  label="(C1/C2) Bushing Power Factor Test" value="c1c2"/>
-                        <option  label="Leakage Reactance Test" value="leakage"/>
-                        <option  label="Test Results to Doble Engineers" value="testresultstodoble"/>
-                        <option  label="Recommend Repair" value="repair"/>
-                        <option  label="Recommend Replace" value="replace"/>
+                        
+                        <option  label="Transformer Turns Ratio (TTR) Test" value="gsutransformer"/>
+                        <option  label="Megger Test" value="gsumegger"/>
+                        <option  label="Overall Power Factor Test" value="gsuoverall"/>
+                        <option  label="(C1/C2) Bushing Power Factor Test" value="gsuc1c2"/>
+                        <option  label="Leakage Reactance Test" value="gsuleakage"/>
+                        <option  label="Test Results to Doble Engineers" value="gsutestresultstodoble"/>
+                        <option  label="Recommend Repair" value="gsurepair"/>
+                        <option  label="Recommend Replace" value="gsureplace"/>
+                        
                         <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                         <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                       </optionfield>
@@ -510,14 +503,16 @@
 
                     <optionfield label="SF6 Breaker Testing" attribute="sf6tests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('SF6')!= -1 " qualifier="sf6">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Megger Test" value="megger"/>
-                      <option  label="Ductor Test" value="ductor"/>
-                      <option  label="HI-Pot Test" value="hipot"/>
-                      <option  label="Test SF6 for Purity &amp; Moisture" value="testsf6"/>
-                      <option  label="Overall Power Factor Test" value="overallpower"/>
-                      <option  label="Bushing Power Factor Test" value="bushingpower"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Megger Test" value="sf6megger"/>
+                      <option  label="Ductor Test" value="sf6ductor"/>
+                      <option  label="HI-Pot Test" value="sf6hipot"/>
+                      <option  label="Test SF6 for Purity &amp; Moisture" value="sf6testsf6"/>
+                      <option  label="Overall Power Factor Test" value="sf6overallpower"/>
+                      <option  label="Bushing Power Factor Test" value="sf6bushingpower"/>
+                      <option  label="Recommend Repair" value="sf6repair"/>
+                      <option  label="Recommend Replace" value="sf6replace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
@@ -525,13 +520,15 @@
 
                     <optionfield label="Vaccuum Breaker Testing" attribute="vacuumtests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('VACUUM')!= -1 " qualifier="vacuum">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Megger Test" value="megger"/>
-                      <option  label="Ductor Test" value="ductor"/>
-                      <option  label="HI-Pot Test" value="hipot"/>
-                      <option  label="Contact Erosion Test" value="contacterosion"/>
-                      <option  label="Bushing Power Factor Test" value="bushingpower"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Megger Test" value="vacmegger"/>
+                      <option  label="Ductor Test" value="vacductor"/>
+                      <option  label="HI-Pot Test" value="vachipot"/>
+                      <option  label="Contact Erosion Test" value="vaccontacterosion"/>
+                      <option  label="Bushing Power Factor Test" value="vacbushingpower"/>
+                      <option  label="Recommend Repair" value="vacrepair"/>
+                      <option  label="Recommend Replace" value="vacreplace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
@@ -539,49 +536,59 @@
 
                     <optionfield label="Air Switch Testing" attribute="airswitchertests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('AIRS')!= -1 " qualifier="airs">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Megger Test" value="megger"/>
-                      <option  label="Ductor Test" value="ductor"/>
-                      <option  label="HI-Pot Test" value="hipot"/>
-                      <option  label="Functionality Test (open-close-open)" value="ftoco"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Megger Test" value="airmegger"/>
+                      <option  label="Ductor Test" value="airductor"/>
+                      <option  label="HI-Pot Test" value="airhipot"/>
+                      <option  label="Functionality Test (open-close-open)" value="airftoco"/>
+                      <option  label="Recommend Repair" value="airrepair"/>
+                      <option  label="Recommend Replace" value="airreplace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
 
                     <optionfield attribute="capbanktests" label="Cap Bank Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('CAPB')!= -1 " qualifier="capb">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Measure Capacitance" value="measurecap"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Measure Capacitance" value="capmeasurecap"/>
+                      <option  label="Recommend Repair" value="caprepair"/>
+                      <option  label="Recommend Replace" value="capreplace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
 
                     <optionfield attribute="batterytests" label="Battery Bank/Charger Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('BATTERY')!= -1 " qualifier="battery">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Recommend Repair" value="batrepair"/>
+                      <option  label="Recommend Replace" value="batreplace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
 
                     <optionfield attribute="relaytests" label="Relay Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('RELAY')!= -1 " qualifier="relay">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Recommend Repair" value="relrepair"/>
+                      <option  label="Recommend Replace" value="relreplace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
 
                     <optionfield attribute="feedertests" label="Feeder Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('FEEDER')!= -1 " qualifier="feeder">
                       <renderer type="checkbox" params="layout=left"/>
-                      <option  label="Megger Test" value="megger"/>
-                      <option  label="Ductor Test" value="ductor"/>
-                      <option  label="HI-Pot Test" value="hipot"/>
-                      <option  label="Transformer Turns Ratio (TTR) Test" value="ttr"/>
-                      <option  label="Recommend Repair" value="repair"/>
-                      <option  label="Recommend Replace" value="replace"/>
+                      
+                      <option  label="Megger Test" value="feedmegger"/>
+                      <option  label="Ductor Test" value="feedductor"/>
+                      <option  label="HI-Pot Test" value="feedhipot"/>
+                      <option  label="Transformer Turns Ratio (TTR) Test" value="feedttr"/>
+                      <option  label="Recommend Repair" value="feedrepair"/>
+                      <option  label="Recommend Replace" value="feedreplace"/>
+                      
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>

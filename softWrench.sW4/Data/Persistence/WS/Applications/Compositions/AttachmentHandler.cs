@@ -116,7 +116,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     data = attachment.GetUnMappedAttribute("newattachment");
                     path = attachment.GetUnMappedAttribute("newattachment_path");
                     var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
+                    var fswptestfilter = attachment.GetUnMappedAttribute("#fspackagetestfilter");
                     var mainattachments = BuildAttachments(path, data, title, desc, offlinehash);
+                    if (!string.IsNullOrEmpty(fswptestfilter)) {
+                        mainattachments.ForEach(attch => attch.FsWPackageTestFilter = fswptestfilter);
+                    }
                     try {
                         mainattachments.ForEach(attch => AddAttachment(maximoObj, attch));
                     } catch (MaximoException e) {
@@ -187,6 +191,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (attachment.OffLineHash != null) {
                 //for offline solution
                 w.SetValue(docLink, "URLPARAM1", attachment.OffLineHash);
+            }else if (attachment.FsWPackageTestFilter != null) {
+                //for fs workpackage solution
+                w.SetValue(docLink, "URLPARAM1", attachment.FsWPackageTestFilter);
             }
             w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
