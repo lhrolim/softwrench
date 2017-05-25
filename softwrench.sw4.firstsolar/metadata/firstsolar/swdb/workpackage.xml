@@ -408,7 +408,7 @@
               <header label="Sub-Contractor" params="fieldset=true;enablecontrol=true"/>
               <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="">
                 <collectionproperties listschema="calloutline" autocommit="false" allowremoval="true"/>
-                <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Call Out"/>
+                <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
               </composition>
             </section>
 
