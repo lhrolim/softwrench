@@ -115,7 +115,7 @@
             <field attribute="text2" label="Invoicing">
               <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutinvoicetext.html"/>
             </field>
-            <field attribute="plantcontacts" label="First Solar Plant Contacts" requiredexpression="true"/>
+            <field attribute="plantcontacts" label="First Solar Site Contacts" requiredexpression="true"/>
             <field attribute="otherinfo" label="Other Info" requiredexpression="true">
               <renderer type="textarea"/>
             </field>
@@ -154,7 +154,7 @@
               <field attribute="billingentity" label="Billing Entity"/>
               <field attribute="nottoexceedamount" label="Not to Exceed Amount"/>
               <field attribute="remainingfunds" label="Remaining Funds"/>
-              <field attribute="plantcontacts" label="First Solar Plant Contacts"/>
+              <field attribute="plantcontacts" label="First Solar Site Contacts"/>
             </section>
 
             <section>
