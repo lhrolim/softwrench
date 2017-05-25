@@ -532,7 +532,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             callOut.BillingEntity = crudoperationData.GetStringAttribute("billingentity");
             callOut.NotToExceedAmount = crudoperationData.GetStringAttribute("nottoexceedamount");
             callOut.RemainingFunds = crudoperationData.GetStringAttribute("remainingfunds");
-            callOut.ServiceProvider = crudoperationData.GetStringAttribute("serviceprovider");
             callOut.ScopeOfWork = crudoperationData.GetStringAttribute("scopeofwork");
             callOut.PlantContacts = crudoperationData.GetStringAttribute("plantcontacts");
             callOut.OtherInfo = crudoperationData.GetStringAttribute("otherinfo");

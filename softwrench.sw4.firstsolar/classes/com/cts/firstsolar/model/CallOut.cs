@@ -52,9 +52,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public string RemainingFunds { get; set; }
 
         [Property]
-        public string ServiceProvider { get; set; }
-
-        [Property]
         public string ScopeOfWork { get; set; }
 
         [Property]

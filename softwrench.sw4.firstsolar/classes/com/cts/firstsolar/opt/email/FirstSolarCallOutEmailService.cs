@@ -45,7 +45,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     billing = callout.BillingEntity,
                     nottoexceed = callout.NotToExceedAmount,
                     remaining = callout.RemainingFunds,
-                    serviceprovider = callout.ServiceProvider,
                     scopeofwork = callout.ScopeOfWork,
                     fsplant = callout.PlantContacts,
                     otherinfo = callout.OtherInfo
