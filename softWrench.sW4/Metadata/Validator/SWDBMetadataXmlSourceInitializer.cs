@@ -38,17 +38,19 @@ namespace softWrench.sW4.Metadata.Validator {
             Log.DebugFormat("adding swdb internal entity {0}", name);
             var properties = ParseProperties(name, type);
             var idAttribute = properties.Item3 ?? "id";
-            var entitySchema = new EntitySchema(name, properties.Item1, idAttribute, idAttribute, true, true, null, null, type, false);
+            var userIdAttribute = properties.Item4 ?? idAttribute;
+            var entitySchema = new EntitySchema(name, properties.Item1, idAttribute, userIdAttribute, true, true, null, null, type, false);
             return new EntityMetadata(name, entitySchema, properties.Item2, ConnectorParameters(type), type);
         }
 
-        private static Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string> ParseProperties(string entityName, Type type) {
+        private static Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string, string> ParseProperties(string entityName, Type type) {
 
             var resultAttributes = new List<EntityAttribute>();
             var resultAssociations = new List<EntityAssociation>();
             PropertyInfo idAttribute = null;
             var idAttributeName = "id";
             var isJoinedSubclass = type.ReadAttribute<JoinedSubclassAttribute>() != null;
+            var userIdAttributeName = (string) null;
 
 
             var connectorParameters = new ConnectorParameters(new Dictionary<string, string>(), true);
@@ -83,6 +85,10 @@ namespace softWrench.sW4.Metadata.Validator {
                     continue;
                 }
 
+                if (memberInfo.GetAttribute<UserIdProperty>() != null) {
+                    userIdAttributeName = memberInfo.Name;
+                }
+
                 if (!isId && !isColumn && !isJoinedSubClassId) {
                     //these are transient fields --> fields which are not mapped to columns, but can be used in applications
                     attribute = "#" + attribute;
@@ -100,7 +106,7 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
                 resultAttributes.Add(entityAttribute);
             }
-            return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string>(resultAttributes, resultAssociations, idAttributeName);
+            return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string, string>(resultAttributes, resultAssociations, idAttributeName, userIdAttributeName);
         }
 
         private static EntityAttribute HandleManyToOneHiddenAttribute(PropertyInfo memberInfo, ManyToOneAttribute manyToOne) {

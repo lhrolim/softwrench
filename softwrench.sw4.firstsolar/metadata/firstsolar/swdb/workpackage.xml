@@ -270,6 +270,7 @@
           <event type="onschemafullyloaded" service="fsworkpackageService" method="onSchemaLoad"/>
           
           <field attribute="id" hidden="true" label="Work Package "/>
+          <field attribute="wonum" hidden="true" label="Work Package "/> <!-- used to show wonum as workpackage# -->
 
           <field attribute="workorderid" hidden="true"/>
           <field attribute="#workorder_.orgid" hidden="true"/>

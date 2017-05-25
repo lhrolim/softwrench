@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using cts.commons.persistence;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Data.Persistence.SWDB.Entities;
+using softWrench.sW4.Metadata.Validator;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
@@ -20,6 +21,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public long WorkorderId { get; set; }
 
         [Property]
+        [UserIdProperty]
         public string Wonum { get; set; }
 
         [Property]

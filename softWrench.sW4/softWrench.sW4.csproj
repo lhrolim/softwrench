@@ -640,6 +640,7 @@
     <Compile Include="Metadata\Merger\SchemaMerger.cs" />
     <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
+    <Compile Include="Metadata\Validator\UserIdProperty.cs" />
     <Compile Include="Metadata\Validator\XmlStereotypeMetadataParser.cs" />
     <Compile Include="Preferences\GlobalUserPreferencesRegistry.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
