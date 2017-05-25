@@ -85,7 +85,7 @@
                 return;
             }
 
-            alertService.confirm("Are you sure you want to delete this sub-contractor call out?").then(() => {
+            alertService.confirm("Are you sure you want to delete this subcontractor call out?").then(() => {
                 callback();
             });
         }

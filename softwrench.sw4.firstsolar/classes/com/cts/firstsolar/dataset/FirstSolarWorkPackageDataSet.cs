@@ -482,7 +482,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("callOuts_")) {
                 var callOutsData = crudoperationData.AssociationAttributes["callOuts_"] as List<CrudOperationData>;
                 if (callOutsData == null) {
-                    throw new Exception("Incorrect format of sub-contractors call out list.");
+                    throw new Exception("Incorrect format of subcontractors call out list.");
                 }
                 callOutsData.ForEach((data) => {
                     package.CallOuts.Add(HandleCallout(data, GetOurCreateCallOut(data, existingCallOuts), package.Id ?? 0));
@@ -490,7 +490,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
             existingCallOuts?.ForEach(callout => {
                 if (FSWPackageConstants.CallOutStatus.Submited.Equals(callout.Status)) {
-                    throw new Exception("Is not possible delete a submited sub-contractor callout. Reload the page to get the updated version of this work package.");
+                    throw new Exception("Is not possible delete a submited subcontractor callout. Reload the page to get the updated version of this work package.");
                 }
                 Dao.Delete(callout);
             });
@@ -501,7 +501,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var submited = FSWPackageConstants.CallOutStatus.Submited;
             if (submited.Equals(callOut.Status)) {
                 if (!submited.Equals(status)) {
-                    throw new Exception("Is not possible edit a submited sub-contractor callout. Reload the page to get the updated version of this work package.");
+                    throw new Exception("Is not possible edit a submited subcontractor callout. Reload the page to get the updated version of this work package.");
                 }
                 // submited callouts are not editable so just return the existing one
                 return callOut;
@@ -509,11 +509,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var subcontractor = crudoperationData.AssociationAttributes["subcontractor_"] as CrudOperationData;
             if (subcontractor == null) {
-                throw new Exception("Missing sub-contractor.");
+                throw new Exception("Missing subcontractor.");
             }
             var nullableSubcontractorId = subcontractor.GetIntAttribute("id");
             if (nullableSubcontractorId == null) {
-                throw new Exception("Missing sub-contractor id.");
+                throw new Exception("Missing subcontractor id.");
             }
             callOut.SubContractor = Dao.FindByPK<SubContractor>(typeof(SubContractor), nullableSubcontractorId.Value);
 

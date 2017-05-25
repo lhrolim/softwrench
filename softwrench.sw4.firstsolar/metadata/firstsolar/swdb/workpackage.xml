@@ -51,10 +51,10 @@
       </schemas>
     </application>
 
-    <application entity="CallOut" name="CallOut" title="Sub-Contractor Call Out">
+    <application entity="CallOut" name="CallOut" title="Subcontractor Call Out">
       <schemas>
         <schema id="calloutline" stereotype="compositionlist" platform="web">
-          <field attribute="subcontractor_.name" label="Sub-Contractor" readonly="true"/>
+          <field attribute="subcontractor_.name" label="Subcontractor" readonly="true"/>
           <field attribute="subcontractor_.id" hidden="true"/>
 
           <field attribute="sendtime" label="Send Request" readonly="true">
@@ -78,7 +78,7 @@
         </schema>
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
-          <association label="Sub-Contractor" target="subcontractor" labelfield="subcontractor_.name" extraprojectionvalues="name" requiredexpression="true">
+          <association label="Subcontractor" target="subcontractor" labelfield="subcontractor_.name" extraprojectionvalues="name" requiredexpression="true">
             <renderer type="lookup"/>
           </association>
           <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" enableexpression="@status !== 'Submit on Save'">
@@ -130,13 +130,13 @@
           </commandbars>
         </schema>
 
-        <schema id="newdetail" parentschema="adetail" title="New Sub-Contractor Call Out"  platform="web" stereotype="detailnew">
+        <schema id="newdetail" parentschema="adetail" title="New Subcontractor Call Out"  platform="web" stereotype="detailnew">
         </schema>
 
-        <schema id="detail" parentschema="adetail" title="Sub-Contractor Call Out"  platform="web" stereotype="detail">
+        <schema id="detail" parentschema="adetail" title="Subcontractor Call Out"  platform="web" stereotype="detail">
         </schema>
 
-        <schema id="detailview" title="Sub-Contractor"  platform="web" stereotype="detail">
+        <schema id="detailview" title="Subcontractor"  platform="web" stereotype="detail">
           <section showexpression="@status == 'Open'">
             <section resourcepath="/Content/Customers/firstsolar/htmls/fsnocallouttext.html"/>
           </section>
@@ -405,7 +405,7 @@
             <header displacement="ontop" label="MANPOWER Configuration" params="fieldset=true;style={&quot;background&quot;:&quot;cadetblue&quot;}"/>
 
             <section orientation="horizontal" attribute="subcontractorenabled">
-              <header label="Sub-Contractor" params="fieldset=true;enablecontrol=true"/>
+              <header label="Subcontractor" params="fieldset=true;enablecontrol=true"/>
               <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="">
                 <collectionproperties listschema="calloutline" autocommit="false" allowremoval="true"/>
                 <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
