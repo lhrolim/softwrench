@@ -68,11 +68,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> OutagesList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False,
-            Where = "ParentColumn = 'outagetypes' and ParentEntity = 'WorkPackage'")]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> OutagesTypeList { get; set; } = new List<GenericListRelationship>();
+        [Property]
+        public string OutageType { get; set; }
 
         [Property]
         public string InterConnectDocs { get; set; }

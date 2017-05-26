@@ -388,7 +388,7 @@
               <header displacement="ontop" label="Operation Procedures" params="fieldset=true"/>
               <section>
                 <optionfield attribute="outagetype" >
-                  <renderer type="checkbox" params="maxrows=1"/>
+                  <renderer type="radio" params="maxrows=1"/>
                   <option label="NOP" value="NOP"/>
                   <option label="MOP" value="MOP"/>
                 </optionfield>

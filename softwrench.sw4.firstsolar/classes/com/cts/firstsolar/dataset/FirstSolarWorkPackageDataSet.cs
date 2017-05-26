@@ -278,6 +278,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             package.Tier = crudoperationData.GetStringAttribute("tier");
             package.InterConnectDocs = crudoperationData.GetStringAttribute("interconnectdocs");
+            package.OutageType = crudoperationData.GetStringAttribute("outagetype");
 
             package = Dao.Save(package);
             HandleGenericLists(crudoperationData, package);
@@ -315,10 +316,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var originalList = package.OutagesList;
             package.OutagesList = new List<GenericListRelationship>();
             HandleGenericList(crudoperationData, originalList, package.OutagesList, "outages");
-
-            originalList = package.OutagesTypeList;
-            package.OutagesTypeList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.OutagesTypeList, "outagetype");
 
             originalList = package.EngComponentsList;
             package.EngComponentsList = new List<GenericListRelationship>();

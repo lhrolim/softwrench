@@ -152,4 +152,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
         }
     }
+
+    /// <summary>
+    /// Migration for outagetype column of work package
+    /// </summary>
+    [Migration(201705252300)]
+    public class SWWEB_29306Migration : Migration {
+
+        public override void Up() {
+            Execute.Sql("delete from GEN_LISTRELATIONSHIP where parententity = 'WorkPackage' and parentcolumn = 'outagetype'");
+            Create.Column("outagetype").OnTable("OPT_WORKPACKAGE").AsString(MigrationUtil.StringSmall).Nullable();
+        }
+
+        public override void Down() {
+
+        }
+    }
 }
