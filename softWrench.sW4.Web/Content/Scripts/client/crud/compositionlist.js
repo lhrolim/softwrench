@@ -926,7 +926,7 @@
             return $q.reject(data);
         };
 
-        $scope.onAfterSave = function (data, alwaysrefresh) {
+        $scope.onAfterSave = function (data, alwaysrefresh, forceReloadFirstPage) {
             if (alwaysrefresh) {
                 window.location.href = window.location.href;
             }
@@ -934,6 +934,14 @@
             $scope.newDetail = false;
             $scope.selecteditem = null;
             $scope.collapseAll();
+
+            if (forceReloadFirstPage && !$scope.paginationData) {
+                $scope.paginationData = {
+                    pageCount: 1,
+                    pageNumber: 1,
+                    pageSize: 10
+                }
+            }
 
             if (!$scope.paginationData) {
                 $scope.clearNewCompositionDataForBatches();

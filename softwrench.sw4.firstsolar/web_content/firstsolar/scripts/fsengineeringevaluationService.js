@@ -70,7 +70,7 @@
                     saveDatamap["worklogid"] = undefined;
                     submit(saveDatamap, "Evaluation successfully created.").then(data => {
                         modalService.hide();
-                        callbackSave(data, false);
+                        callbackSave(data, false, true);
                     });
                 });
             });
@@ -82,7 +82,7 @@
                 modalService.show(schema, datamap, {}, (saveDatamap) => {
                     submit(saveDatamap, "Evaluation successfully updated.").then(data => {
                         modalService.hide();
-                        callbackSave(data, false);
+                        callbackSave(data, false, true);
                     });
                 });
             });
