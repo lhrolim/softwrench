@@ -352,7 +352,7 @@
                   <renderer type="lookup" />
                 </association>
 
-                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description" >
+                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description" enableexpression="@worktype === 'PM'" >
                   <renderer type="lookup" />
                 </association>
 
@@ -475,7 +475,7 @@
           <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
 
 
-            <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files" detailschema="">
+            <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files and Walk Down Photos" detailschema="">
               <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
             </composition>
 
