@@ -87,7 +87,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             });
         }
 
-        public async Task<bool> HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend){
+        public async Task<bool> HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend) {
             var callOuts = calloutsToSend as IList<CallOut> ?? calloutsToSend.ToList();
 
             if (!callOuts.Any()) {
@@ -161,15 +161,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 return callOut;
             }
 
+
+
+            var nullableSubcontractorId = crudoperationData.GetStringAttribute("subcontractorid");
+            var subContractorName = crudoperationData.GetStringAttribute("subcontractorname");
+
             var subcontractor = crudoperationData.AssociationAttributes["subcontractor_"] as CrudOperationData;
-            if (subcontractor == null) {
-                throw new Exception("Missing subcontractor.");
+            if (subcontractor != null) {
+                subContractorName = subcontractor.GetStringAttribute("name");
+            } else if (subContractorName == null) {
+                throw new Exception("missing subcontractor");
             }
-            var nullableSubcontractorId = subcontractor.GetIntAttribute("id");
-            if (nullableSubcontractorId == null) {
-                throw new Exception("Missing subcontractor id.");
-            }
-            callOut.SubContractor = Dao.FindByPK<SubContractor>(typeof(SubContractor), nullableSubcontractorId.Value);
+
+
+            callOut = EntityBuilder.PopulateTypedEntity(crudoperationData, callOut);
+
+            callOut.SubContractorId = nullableSubcontractorId;
+            callOut.SubContractorName = subContractorName;
 
             callOut.Status = newStatus;
 
@@ -182,17 +190,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 callOut.SendTime = dateFromJson.FromUserToMaximo(SecurityFacade.CurrentUser());
             }
 
-            callOut.ExpirationDate = ConversionUtil.HandleDateConversion(crudoperationData.GetStringAttribute("expirationdate"));
-            callOut.PoNumber = crudoperationData.GetStringAttribute("ponumber");
-            callOut.ToNumber = crudoperationData.GetStringAttribute("tonumber");
-            callOut.SiteName = crudoperationData.GetStringAttribute("sitename");
-            callOut.Email = crudoperationData.GetStringAttribute("email");
-            callOut.BillingEntity = crudoperationData.GetStringAttribute("billingentity");
-            callOut.NotToExceedAmount = crudoperationData.GetStringAttribute("nottoexceedamount");
-            callOut.RemainingFunds = crudoperationData.GetStringAttribute("remainingfunds");
-            callOut.ScopeOfWork = crudoperationData.GetStringAttribute("scopeofwork");
-            callOut.PlantContacts = crudoperationData.GetStringAttribute("plantcontacts");
-            callOut.OtherInfo = crudoperationData.GetStringAttribute("otherinfo");
+
             callOut.WorkPackageId = workpackage.Id ?? 0;
             callOut.GenerateToken();
 

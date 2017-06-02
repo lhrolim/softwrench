@@ -12,6 +12,8 @@
     <template path="@mappingtool.xml"/>
     <template path="@whereclause.xml"/>
     <template path="swdb/workpackage.xml"/>
+    <template path="swdb/callout.xml"/>
+    <template path="swdb/maintenanceengineer.xml"/>
   </templates>
   
 </metadata>

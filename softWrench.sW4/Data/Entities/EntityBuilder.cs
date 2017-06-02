@@ -47,10 +47,10 @@ namespace softWrench.sW4.Data.Entities {
 
         public static TYped PopulateTypedEntity<T, TYped>(T entity, TYped objectToPopulate) where T : Entity {
             foreach (var entry in entity) {
-                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value);
+                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value,true);
             }
             foreach (var entry in entity.UnmappedAttributes){
-                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value);
+                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value, true);
             }
 
             return objectToPopulate;

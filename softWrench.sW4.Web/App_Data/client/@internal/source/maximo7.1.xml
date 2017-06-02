@@ -267,7 +267,7 @@
         <attribute name="sysuser" type="smallint" required="true" />
         <attribute name="inactivesites" type="smallint" required="true" />
         <attribute name="screenreader" type="smallint" required="true" />
-        <attribute name="rowstamp" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="active" type="boolean"
                   query="cast(case 
                    when !@status='ACTIVE' then 1 
@@ -378,7 +378,7 @@
         <attribute name="ownergroup" type="varchar" required="false" />
         <attribute name="im_id" type="varchar" required="false" />
         <attribute name="caltype" type="varchar" required="false" />
-        <attribute name="rowstamp" type="bigint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
         <attribute name="dfltapp" type="varchar" required="false" />
         <attribute name="deviceclass" type="smallint" required="false" />
 

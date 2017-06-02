@@ -83,8 +83,9 @@ namespace softWrench.sW4.Util {
         /// <param name="baseObject"></param>
         /// <param name="propertyName"></param>
         /// <param name="value"></param>
+        /// <param name="failSilently"></param>
         /// <returns></returns>
-        public static Boolean SetProperty(object baseObject, String propertyName, object value) {
+        public static Boolean SetProperty(object baseObject, String propertyName, object value, bool failSilently = false) {
             //search for the property name as is, fallbacking to the upper propertyname==> Some fields have "Value" as property while some have "VALUE"
             var allProperties = TypeDescriptor.GetProperties(baseObject);
 
@@ -111,6 +112,9 @@ namespace softWrench.sW4.Util {
 
                 prop.SetValue(baseObject, castedValue);
             } catch (Exception e) {
+                if (failSilently) {
+                    return false;
+                }
                 throw new InvalidOperationException(String.Format("Error setting property {0} of object {1}. {2}", propertyName, baseObject, e.Message), e);
             }
             return true;

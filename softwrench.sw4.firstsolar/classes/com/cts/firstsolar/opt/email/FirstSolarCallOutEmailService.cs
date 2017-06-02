@@ -39,7 +39,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             }
 
             Log.InfoFormat("sending callout email for {0} to {1}", callout.Id, email);
-            var emailData = new EmailData(NoReplySendFrom, email, "[First Solar] Callout Request ({0}, {1})".Fmt(callout.SendTime, callout.SiteName), msg, attachs);
+            var emailData = new EmailData(NoReplySendFrom, email, "[First Solar] Callout Request ({0}, {1})".Fmt(callout.ContractorStartDate, callout.SiteName), msg, attachs);
             EmailService.SendEmail(emailData);
 
             callout.Status = RequestStatus.Sent;
@@ -62,7 +62,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     acceptUrl,
                     rejectUrl,
                     pendingUrl,
-                    subcontractor = callout.SubContractor == null ? "" : callout.SubContractor.Name,
+                    subcontractor = callout.SubContractorName == null ? "" : callout.SubContractorName,
                     expirationdate = callout.ExpirationDate?.ToString("yyyy'-'MM'-'dd HH':'mm':'ss") ?? "",
                     contractorstartdate= callout.ContractorStartDate?.ToString("yyyy'-'MM'-'dd HH':'mm':'ss") ?? "",
                     ponumber = callout.PoNumber,

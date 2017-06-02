@@ -441,6 +441,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             HandleWorkLogs(woCompList, compList);
             HandleAttachments(woCompList, compList);
             CallOutHandler.HandleCalloutAttachments(woCompList, compList);
+            
             LoadMaintenanceEngineerings(compList, woSite);
             return compList;
         }

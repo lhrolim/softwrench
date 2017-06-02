@@ -1,6 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <templates>
+    <template path="swdb/callout.xml"/>
+    <template path="swdb/maintenanceengineer.xml"/>
+  </templates>
+  
   <entities>
     <entity name="WorkPackage" idAttribute="id">
       <relationships>
@@ -20,245 +25,9 @@
       </relationships>
     </entity>
 
-    <entity name="CallOut" idAttribute="id">
-      <relationships>
-        <relationship to="_WorkPackage_" qualifier="workpackage">
-          <relationshipAttribute from="workpackageid" to="id" primary="true"/>
-        </relationship>
-        <relationship to="_SubContractor_" qualifier="subcontractor">
-          <relationshipAttribute from="subcontractorid" to="id" primary="true"/>
-        </relationship>
-      </relationships>
-    </entity>
-
-    <entity name="SubContractor" idAttribute="id"></entity>
-
-    <entity name="MaintenanceEngineering" idAttribute="id">
-      <relationships>
-        <relationship to="_WorkPackage_" qualifier="workpackage">
-          <relationshipAttribute from="workpackageid" to="id" primary="true"/>
-        </relationship>
-      </relationships>
-    </entity>
   </entities>
+  
   <applications>
-    <application entity="SubContractor" name="SubContractor" title="Sub Contractor">
-      <schemas>
-        <list title="Sub Contractors">
-          <field attribute="name" label="Name"/>
-          <field attribute="description" label="Description"/>
-        </list>
-      </schemas>
-    </application>
-
-    <application entity="CallOut" name="CallOut" title="Subcontractor CallOut">
-      <schemas>
-        <schema id="calloutline" stereotype="compositionlist" platform="web">
-          <field attribute="subcontractor_.name" label="Subcontractor" readonly="true"/>
-          <field attribute="subcontractor_.id" hidden="true"/>
-
-          <field attribute="sendtime" label="Send Request" readonly="true">
-            <renderer type="datetime" />
-          </field>
-
-          <field attribute="status" label="Status" readonly="true"/>
-
-          <field attribute="company" hidden="true"/>
-          <field attribute="expirationdate" hidden="true"/>
-          <field attribute="ponumber" hidden="true"/>
-          <field attribute="tonumber" hidden="true"/>
-          <field attribute="email" hidden="true"/>
-          <field attribute="sitename" hidden="true"/>
-          <field attribute="billingentity" hidden="true"/>
-          <field attribute="nottoexceedamount" hidden="true"/>
-          <field attribute="remainingfunds" hidden="true"/>
-          <field attribute="scopeofwork" hidden="true"/>
-          <field attribute="plantcontacts" hidden="true"/>
-          <field attribute="otherinfo" hidden="true"/>
-        </schema>
-
-        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
-          <association label="Subcontractor" target="subcontractor" labelfield="subcontractor_.name" extraprojectionvalues="name" requiredexpression="true">
-            <renderer type="lookup"/>
-          </association>
-          <section orientation="horizontal">
-            <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" showexpression="@sendnow === false" helpicon="right" tooltip="Default schedule time is 5pm US Mountain Standard timezone (-7 utc) "> 
-              <renderer type="datetime" params="editable=true;allowpast=false;showminutes=false;inputsize=9"/>
-            </field>
-            <field attribute="sendnow" label="Send Now">
-              <renderer type="checkbox" params="inputsize=3;layout=left"/>
-            </field>
-          </section>
-
-          <field attribute="status" hidden="true"/>
-
-          <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=large"/>
-            <field attribute="expirationdate" label="Expiration Date" requiredexpression="true">
-              <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;"/>
-            </field>
-            <field label="PO#" attribute="ponumber"/>
-          </section>
-
-          <section>
-            <field attribute="tonumber" label="T.O.#" requiredexpression="true"/>
-            <field attribute="email" label="Send to (Email)" requiredexpression="true">
-              <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
-            </field>
-            <field attribute="sitename" label="Site Name" requiredexpression="true"/>
-            <section orientation="horizontal">
-              <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="true"/>
-              <field attribute="nottoexceedamount" label="Not to Exceed Amount" requiredexpression="true">
-                <renderer type="numericinput" params="min=0"/>
-              </field>
-            </section>
-            <field attribute="remainingfunds" label="Remaining Funds" default="N/A" requiredexpression="true"/>
-            <field attribute="text1" label="">
-              <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutnottoexceedamounttext.html"/>
-            </field>
-          </section>
-          <section>
-            <field attribute="scopeofwork" label="Scope of Work" requiredexpression="true">
-              <renderer type="textarea"/>
-            </field>
-
-            <field attribute="contractorstartdate" label="Contractor Start Date">
-              <renderer type="datetime" params="editable=true;allowpast=false;inputsize=9"/>
-            </field>
-            
-            <field attribute="text2" label="Invoicing">
-              <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fscalloutinvoicetext.html"/>
-            </field>
-            <field attribute="plantcontacts" label="First Solar Site Contacts" requiredexpression="true"/>
-            <field attribute="otherinfo" label="Other Info" requiredexpression="true">
-              <renderer type="textarea"/>
-            </field>
-
-            <composition inline="true" relationship="#calloutfileexplorer_" label="Attachments">
-              <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types"/>
-            </composition>
-          </section>
-          
-          <commandbars>
-            <commandgroup position="modal.detail.primary">
-              <removecommand id="save"/>
-              <command id="add" icon="fa-check" service="fscalloutService" method="saveCallOut" label="Save" primary="true" position="+save"/>
-<!--              <command id="addsubmit" icon="fa-envelope-o" service="fscalloutService" method="saveAndSubmitCallOut" label="Save &amp; Submit" primary="true" position="+save"/>-->
-            </commandgroup>
-          </commandbars>
-        </schema>
-
-        <schema id="newdetail" parentschema="adetail" title="New Subcontractor Callout"  platform="web" stereotype="detailnew">
-        </schema>
-
-        <schema id="detail" parentschema="adetail" title="Subcontractor Callout"  platform="web" stereotype="detail">
-        </schema>
-
-        <schema id="detailview" title="Subcontractor"  platform="web" stereotype="detail">
-          <section>
-            <header label="CallOut" />
-            <section orientation="horizontal">
-              <renderer type="default" params="childinputsize=large"/>
-              <field attribute="expirationdate" label="Expiration Date">
-                <renderer type="datetime" params="editable=true;format=MM/dd/yyyy;"/>
-              </field>
-              <field label="PO#" attribute="ponumber"/>
-              <field attribute="email" label="Send to (Email)"/>
-              <field attribute="tonumber" label="T.O.#"/>
-              <field attribute="sitename" label="Site Name"/>
-              <field attribute="billingentity" label="Billing Entity"/>
-              <field attribute="nottoexceedamount" label="Not to Exceed Amount"/>
-              <field attribute="remainingfunds" label="Remaining Funds"/>
-              <field attribute="plantcontacts" label="First Solar Site Contacts"/>
-            </section>
-
-            <section>
-              <field attribute="scopeofwork" label="Scope of Work" requiredexpression="true">
-                <renderer type="textarea"/>
-              </field>
-
-              <field attribute="contractorstartdate" label="Contractor Start Date">
-                <renderer type="datetime"/>
-              </field>
-              
-              
-              <field attribute="otherinfo" label="Other Info" requiredexpression="true">
-                <renderer type="textarea"/>
-              </field>
-            </section>
-          </section>
-        </schema>
-      </schemas>
-    </application>
-
-    <application entity="MaintenanceEngineering" name="MaintenanceEngineering" title="Maintenance Engineering Request">
-      <schemas>
-        <schema id="maintenanceengline" stereotype="compositionlist" platform="web">
-          <field attribute="engineer" hidden="true"/>
-          <field attribute="#engineername" label="Engineer" readonly="true"/>
-          <field attribute="sendtime" label="Send Request" readonly="true">
-            <renderer type="datetime" />
-          </field>
-          <field attribute="status" label="Status" readonly="true"/>
-          <field attribute="reason" hidden="true"/>
-          <field attribute="email" hidden="true"/>
-        </schema>
-
-        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
-          <association label="Engineer" labelfield="#workorder_.fakelabor_.displayname" target="engineer" requiredexpression="true"></association>
-          
-          <section orientation="horizontal">
-            <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" showexpression="@sendnow === false" helpicon="right" tooltip="Default schedule time is 5pm US Mountain Standard timezone (-7 utc) "> 
-              <renderer type="datetime" params="editable=true;allowpast=false;showminutes=false;inputsize=9"/>
-            </field>
-            <field attribute="sendnow" label="Send Now">
-              <renderer type="checkbox" params="inputsize=3;layout=left"/>
-            </field>
-          </section>
-       
-          <field attribute="status" hidden="true"/>
-
-          <optionfield label="To" attribute="email" requiredexpression="true">
-            <renderer type="multiselectautocompleteclient" stereotype="email" params="multiselectautocomplete.single=true;valtype=email;"/>
-            <option label="FSOC Lead Operators (FSOCLeadOperators@firstsolar.com)" value="FSOCLeadOperators@firstsolar.com"/>
-            <option label="FSOC Leadership (FSOCLeadership@firstsolar.com)" value="FSOCLeadership@firstsolar.com"/>
-            <option label="FSOC The Looking Glass (FSOCTheLookingGlass@firstsolar.com)" value="FSOCTheLookingGlass@firstsolar.com"/>
-            <option label="FSOC Operators (FSOCOperators@firstsolar.com)" value="FSOCOperators@firstsolar.com"/>
-            <option label="OM RPM Team (OMRPMTeam@firstsolar.com)" value="OMRPMTeam@firstsolar.com"/>
-            <option label="OM Engineering (OMEngineering@firstsolar.com)" value="OMEngineering@firstsolar.com"/>
-            <option label="OM Scheduling Team (O&amp;MSchedulingTeam@firstsolar.com)" value="O&amp;MSchedulingTeam@firstsolar.com"/>
-            <option label="OM Site Supervisors (O&amp;MSiteSupervisors@firstsolar.com)" value="O&amp;MSiteSupervisors@firstsolar.com"/>
-            <option label="O&amp;MJHATeam (OMJHATeam@firstsolar.com)" value="OMJHATeam@firstsolar.com"/>
-            <option label="OM Document Management (O&amp;MDocumentManagement@firstsolar.com)" value="O&amp;MDocumentManagement@firstsolar.com"/>
-            <option label="OM Site Field Technicians (O&amp;MSiteFieldTechnicians@firstsolar.com)" value="O&amp;MSiteFieldTechnicians@firstsolar.com"/>
-          </optionfield>
-
-          <field attribute="reason" label="Reason for Request" requiredexpression="true">
-            <renderer type="textarea"/>
-          </field>
-
-          <commandbars>
-            <commandgroup position="modal.detail.primary">
-              <removecommand id="save"/>
-              <command id="add" icon="fa-check" service="fsmaintananceengService" method="saveMaintananceEng" label="Save" primary="true" position="+save"/>
-            </commandgroup>
-          </commandbars>
-        </schema>
-
-        <schema id="newdetail" parentschema="adetail" title="New Maintenance Engineering Request"  platform="web" stereotype="detailnew">
-        </schema>
-
-        <schema id="detail" parentschema="adetail" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
-        </schema>
-
-        <schema id="detailview" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
-          <field attribute="email" label="To"/>
-          <field attribute="reason" label="Reason for Request">
-            <renderer type="textarea"/>
-          </field>
-        </schema>
-      </schemas>
-    </application>
 
     <application entity="WorkPackage" name="WorkPackage" title="Work Package">
 
@@ -352,7 +121,8 @@
                   <renderer type="lookup" />
                 </association>
 
-                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description" enableexpression="@worktype === 'PM'" >
+
+                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description"  enableexpression="@#workorder_.worktype &amp;&amp; @#workorder_.worktype.equalsIc('PM')">
                   <renderer type="lookup" />
                 </association>
 

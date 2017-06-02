@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+
+
+    <entity name="MaintenanceEngineering" idAttribute="id">
+      <relationships>
+        <relationship to="_WorkPackage_" qualifier="workpackage">
+          <relationshipAttribute from="workpackageid" to="id" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+
+  <applications>
+
+
+    <application entity="MaintenanceEngineering" name="MaintenanceEngineering" title="Maintenance Engineering Request">
+      <schemas>
+        <schema id="maintenanceengline" stereotype="compositionlist" platform="web">
+          <field attribute="engineer" hidden="true"/>
+          <field attribute="#engineername" label="Engineer" readonly="true"/>
+          <field attribute="sendtime" label="Send Request" readonly="true">
+            <renderer type="datetime" />
+          </field>
+          <field attribute="status" label="Status" readonly="true"/>
+          <field attribute="reason" hidden="true"/>
+          <field attribute="email" hidden="true"/>
+        </schema>
+
+        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          <association label="Engineer" labelfield="#workorder_.fakelabor_.displayname" target="engineer" requiredexpression="true"></association>
+
+          <section orientation="horizontal">
+            <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" showexpression="@sendnow === false" helpicon="right" tooltip="Default schedule time is 5pm US Mountain Standard timezone (-7 utc) ">
+              <renderer type="datetime" params="editable=true;allowpast=false;showminutes=false;inputsize=9"/>
+            </field>
+            <field attribute="sendnow" label="Send Now">
+              <renderer type="checkbox" params="inputsize=3;layout=left"/>
+            </field>
+          </section>
+
+          <field attribute="status" hidden="true"/>
+
+          <optionfield label="To" attribute="email" requiredexpression="true">
+            <renderer type="multiselectautocompleteclient" stereotype="email" params="multiselectautocomplete.single=true;valtype=email;"/>
+            <option label="FSOC Lead Operators (FSOCLeadOperators@firstsolar.com)" value="FSOCLeadOperators@firstsolar.com"/>
+            <option label="FSOC Leadership (FSOCLeadership@firstsolar.com)" value="FSOCLeadership@firstsolar.com"/>
+            <option label="FSOC The Looking Glass (FSOCTheLookingGlass@firstsolar.com)" value="FSOCTheLookingGlass@firstsolar.com"/>
+            <option label="FSOC Operators (FSOCOperators@firstsolar.com)" value="FSOCOperators@firstsolar.com"/>
+            <option label="OM RPM Team (OMRPMTeam@firstsolar.com)" value="OMRPMTeam@firstsolar.com"/>
+            <option label="OM Engineering (OMEngineering@firstsolar.com)" value="OMEngineering@firstsolar.com"/>
+            <option label="OM Scheduling Team (O&amp;MSchedulingTeam@firstsolar.com)" value="O&amp;MSchedulingTeam@firstsolar.com"/>
+            <option label="OM Site Supervisors (O&amp;MSiteSupervisors@firstsolar.com)" value="O&amp;MSiteSupervisors@firstsolar.com"/>
+            <option label="O&amp;MJHATeam (OMJHATeam@firstsolar.com)" value="OMJHATeam@firstsolar.com"/>
+            <option label="OM Document Management (O&amp;MDocumentManagement@firstsolar.com)" value="O&amp;MDocumentManagement@firstsolar.com"/>
+            <option label="OM Site Field Technicians (O&amp;MSiteFieldTechnicians@firstsolar.com)" value="O&amp;MSiteFieldTechnicians@firstsolar.com"/>
+          </optionfield>
+
+          <field attribute="reason" label="Reason for Request" requiredexpression="true">
+            <renderer type="textarea"/>
+          </field>
+
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="add" icon="fa-check" service="fsmaintananceengService" method="saveMaintananceEng" label="Save" primary="true" position="+save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Maintenance Engineering Request"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="detail" parentschema="adetail" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
+        </schema>
+
+        <schema id="detailview" title="Maintenance Engineering Request"  platform="web" stereotype="detail">
+          <field attribute="email" label="To"/>
+          <field attribute="reason" label="Reason for Request">
+            <renderer type="textarea"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+
+
+
+  </applications>
+
+</metadata>

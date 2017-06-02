@@ -208,6 +208,7 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2974Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\IFsEmailRequest.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\RequestStatus.cs" />
@@ -228,6 +229,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\firstsolar\menu.mobile.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="metadata\firstsolar\swdb\maintenanceengineer.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="metadata\firstsolar\swdb\callout.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="metadata\firstsolar\swdb\workpackage.xml">

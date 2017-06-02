@@ -59,7 +59,7 @@
         }
 
 
-        function openModalNew(item, callbackAdd, callbackSave, relationship) {
+        function openModalNew(item, callbackAdd, rollbackAdd, callbackSave, relationship) {
             schemaCacheService.fetchSchema("worklog", "workpackagenewdetail").then((schema) => {
                 const datamap = buildDatamap(schema);
                 modalService.show(schema, datamap, {}, (saveDatamap) => {
@@ -76,7 +76,7 @@
             });
         }
 
-        function openModalEdit(item, callbackAdd, callbackSave, relationship) {
+        function openModalEdit(item, callbackAdd, rollbackAdd, callbackSave, relationship) {
             schemaCacheService.fetchSchema("worklog", "workpackagedetail").then((schema) => {
                 const datamap = angular.copy(item);
                 modalService.show(schema, datamap, {}, (saveDatamap) => {

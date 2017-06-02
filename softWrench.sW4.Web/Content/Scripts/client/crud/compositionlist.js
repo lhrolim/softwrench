@@ -572,12 +572,24 @@
                 return;
             }
 
-            dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), (editedItem) => {
+            const originalItem = $scope.compositionData()[rowIndex];
+            const originalData = $scope.detailData[originalItem.id] ? $scope.detailData[originalItem.id] : null;
+
+            const editCallback = (editedItem) => {
                 $scope.compositionData()[rowIndex] = editedItem;
                 if ($scope.detailData[editedItem.id]) {
                     $scope.detailData[editedItem.id].data = formatService.doContentStringConversion(jQuery.extend(true, {}, editedItem));
                 }
-            }, $scope.onAfterSave, $scope.relationship]);
+            }
+            
+            const editRollback = () => {
+                $scope.compositionData()[rowIndex] = originalItem;
+                if ($scope.detailData[originalItem.id]) {
+                    $scope.detailData[originalItem.id].data = originalData;
+                }
+            }
+
+            dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
         }
 
         $scope.executeCompositionCustomClickService = (fullServiceName, column, compositionlistschema, item, clonedItem) => {
@@ -753,9 +765,16 @@
 
             if ($scope.compositionschemadefinition.rendererParameters && $scope.compositionschemadefinition.rendererParameters["composition.inline.addfunction"]) {
                 const addFunction = $scope.compositionschemadefinition.rendererParameters["composition.inline.addfunction"];
-                dispatcherService.invokeServiceByString(addFunction, [newItem, (customNewtem) => {
+
+                const addCallback = (customNewtem) => {
                     addBatchItemContinue(idx, customNewtem, listSchema);
-                }, $scope.onAfterSave, $scope.relationship]);
+                }
+
+                const addRollback = () => {
+                    doRemoveBatchItem(idx);
+                }
+
+                dispatcherService.invokeServiceByString(addFunction, [newItem, addCallback, addRollback, $scope.onAfterSave, $scope.relationship]);
                 return;
             }
 
@@ -826,9 +845,16 @@
 
             const compositionData = $scope.compositionData();
             const item = compositionData[rowindex];
-            dispatcherService.invokeServiceByString(removeFunction, [item, () => {
+
+            const removeCallback = () => {
                 doRemoveBatchItem(rowindex);
-            }]);
+            };
+
+            const removeRollback = () => {
+                addBatchItemContinue($scope.compositionData().length, item, $scope.compositionlistschema);
+            }
+
+            dispatcherService.invokeServiceByString(removeFunction, [item, removeCallback, removeRollback]);
         }
 
         //#endregion ***************END Batch functions **************************************/

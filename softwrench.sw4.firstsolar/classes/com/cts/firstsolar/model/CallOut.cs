@@ -29,8 +29,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
 
         //actually ONETOONE, but who cares, since NHIB doesnt seem to work fine with it
-        [ManyToOne(Column = "subcontractorid", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
-        public SubContractor SubContractor { get; set; }
+        //        [ManyToOne(Column = "subcontractorid", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+        //        public SubContractor SubContractor { get; set; }
+
+        [Property]
+        public string SubContractorId { get; set; }
+
+        
+        [Property]
+        public string SubContractorName { get; set; }
 
         [Property]
         public string Token { get; set; }

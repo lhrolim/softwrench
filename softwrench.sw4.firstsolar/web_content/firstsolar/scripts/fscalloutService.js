@@ -18,7 +18,7 @@
             return datamap;
         }
 
-        function postSave(saveDatamap, callback) {
+        function postSave(saveDatamap, callback, rollback) {
             saveDatamap["subcontractor_.id"] = saveDatamap["subcontractor"];
             saveDatamap["status"] = Status.Scheduled;
             if (saveDatamap["submitaftersave"]) {
@@ -26,9 +26,13 @@
                 saveDatamap["sendtime"] = null;
             }
             callback(saveDatamap);
-            modalService.hide();
+            
             return applicationService.save({
                 dispatchedByModal: false
+            }).then(() => {
+                modalService.hide();
+            }).catch(() => {
+                rollback();
             });
         }
 
@@ -36,12 +40,15 @@
             return validationService.validateCurrent().length <= 0;
         }
 
-        function openModalNew(item, callback) {
+        function openModalNew(item, callback, rollback) {
             if (!validatePackage()) {
                 return;
             }
+            const wpDatamap = crudContextHolderService.rootDataMap();
+
             schemaCacheService.fetchSchema("_CallOut", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(buildDatamap(schema), item);
+                mergedItem["orgid"] = wpDatamap ["#workorder_.orgid"];
                 var date = new Date();
 
                 var toNextDay = (date.getUTCHours() <= 7);
@@ -56,16 +63,18 @@
                 }
 
                 mergedItem["sendtime"] = date;
+                mergedItem["#editing"] = true;
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
-                    postSave(saveDatamap, callback);
+                    postSave(saveDatamap, callback, rollback);
                 });
             });
         }
 
-        function openModalEdit(item, callback) {
+        function openModalEdit(item, callback, rollback) {
             if (!validatePackage()) {
                 return;
             }
+            const wpDatamap = crudContextHolderService.rootDataMap();
             if (item["status"] !== Status.Scheduled) {
                 alertService.alert("Is not possible edit a sent callout.");
                 return;
@@ -78,6 +87,8 @@
                 date.setHours(23, 59, 59, 999);
                 item["sendtime"] = date;
             }
+            item["orgid"] = wpDatamap["#workorder_.orgid"];
+            item["#editing"] = true;
 
             const parentDataMap = crudContextHolderService.rootDataMap();
             const attachs = parentDataMap["#calloutfileexplorer_"];
@@ -93,7 +104,7 @@
 
             schemaCacheService.fetchSchema("_CallOut", "detail").then((schema) => {
                 modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
-                    postSave(saveDatamap, callback);
+                    postSave(saveDatamap, callback, rollback);
                 });
             });
         }
@@ -105,7 +116,7 @@
 
     
 
-        function deleteRow(item, callback) {
+        function deleteRow(item, callback, rollback) {
             if (item["status"] !== Status.Scheduled) {
                 alertService.alert("Is not possible delete a sent callout.");
                 return;
@@ -115,6 +126,8 @@
                 callback();
                 return applicationService.save({
                     dispatchedByModal: false
+                }).catch(() => {
+                    rollback();
                 });
             });
         }
