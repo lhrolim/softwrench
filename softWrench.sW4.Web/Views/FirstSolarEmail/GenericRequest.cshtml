@@ -1,0 +1,46 @@
+﻿<head>
+    <base href="/">
+</head>
+<body>
+    @using Newtonsoft.Json    
+@using softWrench.sW4.Metadata.Security
+@model softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.EmailRequestModel
+<article>
+    
+    <div class="container" ng-controller="fsEmailRequestController">
+        <form id="definepasswordform" class="form-horizontal col-sm-offset-3 col-sm-6 col-md-offset-4 col-md-4 clearfix" name="passwordform">
+            <input type="hidden" id="hddn_fstoken" value="@Model.Token"/>
+            <input type="hidden" id="hddn_fstype" value="@Model.Type"/>
+
+
+            <div class="row message">
+                Thank you, your @Model.EntityName <span class="name">@Model.Action</span> for First Solar Work Package <span class="name">@Model.WoNum</span> has been confirmed.
+                <p/><p/>
+                <span ng-if="vm.initial">
+                    Please enter any additional notes below and call your point of contact.
+                </span>
+                
+                <span ng-if="!vm.initial">
+                   
+                    Additional notes have been successfully submitted
+                </span>
+
+            </div>
+            
+            <div ng-if="vm.initial">
+
+            <div class="row" >
+                <textarea class="form-control" ng-model="additionalNotes" rows="10" cols="120"></textarea>
+            </div>
+
+            <div class="row pull-right">
+                <button class="btn btn-primary" type="submit" id="btnLogin" ng-click="addNotes()">
+                    <span class="fa fa-check"></span>&emsp;Confirm
+                </button>
+            </div>
+                
+            </div>
+        </form>
+    </div>
+</article>
+</body>

@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     'use strict';
     
-    function fscalloutService($rootScope,$timeout,modalService, schemaCacheService, alertService, crudContextHolderService, applicationService, compositionService) {
+    function fscalloutService($rootScope, $timeout, modalService, schemaCacheService, alertService, crudContextHolderService, applicationService, compositionService, validationService) {
 
         function buildDatamap(schema) {
             const datamap = {};
@@ -18,33 +18,56 @@
             return datamap;
         }
 
-        function postSave(saveDatamap) {
+        function postSave(saveDatamap, callback) {
             saveDatamap["subcontractor_.id"] = saveDatamap["subcontractor"];
+            saveDatamap["status"] = Status.Scheduled;
             if (saveDatamap["submitaftersave"]) {
-                saveDatamap["status"] = Status.SubmitAfterSave;
+                saveDatamap["sendnow"] = true;
                 saveDatamap["sendtime"] = null;
-            } else {
-                saveDatamap["status"] = Status.Open;
             }
+            callback(saveDatamap);
+            modalService.hide();
+            return applicationService.save({
+                dispatchedByModal: false
+            });
+        }
+
+        function validatePackage() {
+            return validationService.validateCurrent().length <= 0;
         }
 
         function openModalNew(item, callback) {
+            if (!validatePackage()) {
+                return;
+            }
             schemaCacheService.fetchSchema("_CallOut", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(buildDatamap(schema), item);
                 var date = new Date();
-                date.setHours(23, 59, 59, 999);
+
+                var toNextDay = (date.getUTCHours() <= 7);
+
+                var currentOffSet = date.getTimezoneOffset();
+                var diff = (420 - currentOffSet) / 60; // AZ timezone = -7
+                date.setHours(17, 0, 0, 0);
+                date.addHours(diff);
+                
+                if (toNextDay) {
+                    date.setDate(date.getDate() + 1);
+                }
+
                 mergedItem["sendtime"] = date;
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
-                    postSave(saveDatamap);
-                    callback(saveDatamap);
-                    modalService.hide();
+                    postSave(saveDatamap, callback);
                 });
             });
         }
 
         function openModalEdit(item, callback) {
-            if (item["status"] === Status.Submited) {
-                alertService.alert("Is not possible edit a submited callout.");
+            if (!validatePackage()) {
+                return;
+            }
+            if (item["status"] !== Status.Scheduled) {
+                alertService.alert("Is not possible edit a sent callout.");
                 return;
             }
             if (item["subcontractor_.id"]) {
@@ -56,37 +79,43 @@
                 item["sendtime"] = date;
             }
 
+            const parentDataMap = crudContextHolderService.rootDataMap();
+            const attachs = parentDataMap["#calloutfileexplorer_"];
+            if (attachs && !item["#calloutfileexplorer_"]) {
+                item["#calloutfileexplorer_"] = [];
+                angular.forEach(attachs, (attach) => {
+                    const id = attach["docinfo_.urlparam1"].substr(9);
+                    if (id === item["id"] + "") {
+                        item["#calloutfileexplorer_"].push(attach);
+                    }
+                });
+            }
+
             schemaCacheService.fetchSchema("_CallOut", "detail").then((schema) => {
                 modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
-                    postSave(saveDatamap);
-                    callback(saveDatamap);
-                    modalService.hide();
+                    postSave(saveDatamap, callback);
                 });
             });
         }
 
-        function baseSaveCallOut(submit) {
-            const item = crudContextHolderService.rootDataMap("#modal");
-            item["submitaftersave"] = !!submit;
+
+        function saveCallOut() {
             applicationService.save();
         }
 
-        function saveCallOut() {
-            baseSaveCallOut(false);
-        }
-
-        function saveAndSubmitCallOut() {
-            baseSaveCallOut(true);
-        }
+    
 
         function deleteRow(item, callback) {
-            if (item["status"] === "Submited") {
-                alertService.alert("Is not possible delete a submited callout.");
+            if (item["status"] !== Status.Scheduled) {
+                alertService.alert("Is not possible delete a sent callout.");
                 return;
             }
 
             alertService.confirm("Are you sure you want to delete this subcontractor call out?").then(() => {
                 callback();
+                return applicationService.save({
+                    dispatchedByModal: false
+                });
             });
         }
 
@@ -94,25 +123,27 @@
             openModalNew,
             openModalEdit,
             deleteRow,
-            saveCallOut,
-            saveAndSubmitCallOut
+            saveCallOut
         };
         return service;
     }
 
     angular
     .module("firstsolar")
-        .clientfactory("fscalloutService", ["$rootScope", "$timeout","modalService", "schemaCacheService", "alertService", "crudContextHolderService", "applicationService", "compositionService", fscalloutService]);
+        .clientfactory("fscalloutService", ["$rootScope", "$timeout", "modalService", "schemaCacheService", "alertService", "crudContextHolderService", "applicationService", "compositionService", "validationService", fscalloutService]);
     
     class Status {
+
         static get Open() {
             return "Open";
         }
-        static get SubmitAfterSave() {
-            return "Submit After Save";
+
+        static get Scheduled() {
+            return "Scheduled";
         }
+
         static get Submited() {
-            return "Submited";
+            return "Sent";
         }
     }
 })(angular);

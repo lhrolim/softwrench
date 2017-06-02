@@ -171,7 +171,7 @@
         };
 
 
-        function adjustDateFormatForPicker(dateFormat, showTime) {
+        function adjustDateFormatForPicker(dateFormat, showTime, showMinutes=true) {
             /// <summary>
             ///  Bootstrap picker uses mm for month, and ii for minutes.
             ///  Angular, however, uses MM for month and hh mm for minutes.
@@ -189,6 +189,9 @@
                     dateFormat = dateFormat.replace('HH:mm', '');
                     dateFormat =dateFormat.replace('hh:mm', '');
                 }
+                if (!showMinutes) {
+                    dateFormat = dateFormat.replace(':mm', ':00');
+                }
                 return dateFormat;
             } else {
                 dateFormat = dateFormat.replace('dd', 'DD');
@@ -197,6 +200,9 @@
                     //the format and the showtime flag are somehow conflitant, let´s adjust the format
                     dateFormat = dateFormat.replace('HH:mm', '');
                     dateFormat = dateFormat.replace('hh:mm', '');
+                }
+                if (!showMinutes) {
+                    dateFormat = dateFormat.replace(':mm', ':00');
                 }
                 return dateFormat.trim();
             }

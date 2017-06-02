@@ -66,6 +66,9 @@
         }
 
         function validateInlineComposition(compositionDisplayable, mainDatamap) {
+            if (!compositionDisplayable.schema.schemas) {
+                return [];
+            }
             const listSchema = compositionDisplayable.schema.schemas.list;
             const rows = mainDatamap[compositionDisplayable.relationship];
             var result = [];

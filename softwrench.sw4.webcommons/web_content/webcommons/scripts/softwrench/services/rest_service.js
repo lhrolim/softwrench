@@ -7,8 +7,8 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
 
         getActionUrl: function (controller, action, parameters) {
             action = (action === undefined || action == null) ? 'get' : action;
-            var params = parameters == null ? {} : parameters;
-            var serverUrl = contextService.getFromContext("serverurl");
+            const params = parameters == null ? {} : parameters;
+            const serverUrl = contextService.getFromContext("serverurl");
             if (serverUrl) {
                 return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params, false);
             }
@@ -36,10 +36,10 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
          * @deprecated
          */
         invokeGet: function (controller, action, queryParameters, successCbk, failureCbk) {
-            var url = this.getActionUrl(controller, action, queryParameters);
-            var log = $log.getInstance("restService#invokeGet");
+            const url = this.getActionUrl(controller, action, queryParameters);
+            const log = $log.getInstance("restService#invokeGet");
             log.info("invoking get on url {0}".format(url));
-            var getPromise = this.getPromise(controller, action, queryParameters);
+            const getPromise = this.getPromise(controller, action, queryParameters);
             getPromise
                 .then(function (response) {
                     if (successCbk != null) {
@@ -65,14 +65,25 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
          * @returns HttpPromise
          */
         postPromise: function (controller, action, queryParameters, json, config) {
-            var url = this.getActionUrl(controller, action, queryParameters);
-            var log = $log.getInstance("restService#invokePost",["post","network"]);
+            const url = this.getActionUrl(controller, action, queryParameters);
+            const log = $log.getInstance("restService#invokePost",["post","network"]);
             log.info("invoking post on url {0}".format(url));
             return $http.post(url, json, config);
         },
 
         post: function () {
             return this.postPromise.apply(this, arguments);
+        },
+
+        putPromise: function (controller, action, queryParameters, json, config) {
+            const url = this.getActionUrl(controller, action, queryParameters);
+            const log = $log.getInstance("restService#invokePut", ["put", "network"]);
+            log.info("invoking put on url {0}".format(url));
+            return $http.put(url, json, config);
+        },
+
+        put: function () {
+            return this.putPromise.apply(this, arguments);
         },
 
         /**
@@ -85,15 +96,15 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
          * @returns HttpPromise
          */
         getPromise: function (controller, action, queryParameters, config) {
-            var url = this.getActionUrl(controller, action, queryParameters);
-            var log = $log.getInstance("restService#invokeGet");
+            const url = this.getActionUrl(controller, action, queryParameters);
+            const log = $log.getInstance("restService#invokeGet");
             log.info("invoking get on url {0}".format(url));
             return $http.get(url, config);
         },
 
         getPromiseNoDigest: function (controller, action, queryParameters, config = {}) {
-             var url = this.getActionUrl(controller, action, queryParameters);
-             var log = $log.getInstance("restService#invokeGet");
+             const url = this.getActionUrl(controller, action, queryParameters);
+             const log = $log.getInstance("restService#invokeGet");
              log.info("invoking get on url {0}".format(url));
              return $http.get("nodigest:"+url, config);
         },

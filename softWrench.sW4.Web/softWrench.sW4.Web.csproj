@@ -1247,6 +1247,7 @@
     <Content Include="Views\ChicagoForms\Index.cshtml" />
     <Content Include="Views\EmailTest\Index.cshtml" />
     <Content Include="Views\Shared\Raw.cshtml" />
+    <Content Include="Views\FirstSolarEmail\GenericRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Client\shared\" />

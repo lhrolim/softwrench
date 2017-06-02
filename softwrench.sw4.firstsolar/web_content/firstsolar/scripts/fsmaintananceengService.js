@@ -41,19 +41,28 @@
                 const option = crudContextHolderService.fetchLazyAssociationOption("#workorder_.fakelabor_", saveDatamap["engineer"].toLocaleLowerCase(), "#modal");
                 saveDatamap["#engineername"] = option ? option.label : saveDatamap["engineer"];
             }
+            saveDatamap["status"] = Status.Scheduled;
             if (saveDatamap["submitaftersave"]) {
-                saveDatamap["status"] = Status.SubmitAfterSave;
+                saveDatamap["sendnow"] = true;
                 saveDatamap["sendtime"] = null;
-            } else {
-                saveDatamap["status"] = Status.Pending;
-            }
+            } 
         }
 
         function openModalNew(item, callback) {
             schemaCacheService.fetchSchema("_MaintenanceEngineering", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(buildDatamap(schema), item);
                 var date = new Date();
-                date.setHours(23, 59, 59, 999);
+
+                var toNextDay = (date.getUTCHours() <= 7);
+                var currentOffSet = date.getTimezoneOffset();
+                var diff = (420 - currentOffSet) / 60; // AZ timezone = -7
+                date.setHours(17, 0, 0, 0);
+                date.addHours(diff);
+
+                if (toNextDay) {
+                    date.setDate(date.getDate() + 1);
+                }
+              
                 mergedItem["sendtime"] = date;
                 mergedItem["email"] = "";
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
@@ -88,9 +97,6 @@
             baseSaveMaintananceEng(false);
         }
 
-        function saveAndSubmitMaintananceEng() {
-            baseSaveMaintananceEng(true);
-        }
 
         function deleteRow(item, callback) {
             if (!verifyDelete(item)) {
@@ -106,7 +112,6 @@
             openModalEdit,
             deleteRow,
             saveMaintananceEng,
-            saveAndSubmitMaintananceEng
         };
         return service;
     }
@@ -119,11 +124,11 @@
         static get Pending() {
             return "Pending";
         }
-        static get SubmitAfterSave() {
-            return "Submit After Save";
+        static get Scheduled() {
+            return "Scheduled";
         }
         static get Submited() {
-            return "Submited";
+            return "Sent";
         }
         static get Accepted() {
             return "Accepted";

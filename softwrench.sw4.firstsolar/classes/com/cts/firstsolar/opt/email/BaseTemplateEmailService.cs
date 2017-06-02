@@ -16,7 +16,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         protected readonly IEmailService EmailService;
 
         protected Template Template;
-        private readonly RedirectService _redirectService;
+        protected readonly RedirectService RedirectService;
 
         protected static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarCallOutEmailService));
 
@@ -27,7 +27,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         protected BaseTemplateEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
             Log.Debug("init Log");
             EmailService = emailService;
-            _redirectService = redirectService;
+            RedirectService = redirectService;
             AppConfig = appConfig;
             _templatePath = AppDomain.CurrentDomain.BaseDirectory + GetTemplatePath();
             _headerImageUrl = HandleHeaderImage();
@@ -58,7 +58,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         protected string GetHeaderURL() {
-            return _redirectService.GetRootUrl() + _headerImageUrl;
+            return RedirectService.GetRootUrl() + _headerImageUrl;
         }
 
 

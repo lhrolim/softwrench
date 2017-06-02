@@ -33,6 +33,6 @@
         /// <summary>
         /// This is a label used on first solar work packages to filter the attachments to the specific tests
         /// </summary>
-        public string FsWPackageTestFilter { get; set; }
+        public string Filter { get; set; }
     }
 }

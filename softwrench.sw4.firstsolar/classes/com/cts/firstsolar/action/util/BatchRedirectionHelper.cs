@@ -6,7 +6,6 @@ using softwrench.sw4.batch.api.entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
-using softWrench.sW4.Data.Search;
 using softWrench.sW4.Security.Context;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.util {

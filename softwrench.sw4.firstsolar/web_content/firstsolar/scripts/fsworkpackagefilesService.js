@@ -36,7 +36,7 @@
                     createdate: null,
                     "docinfo_.description": file.label,
                     document: file.label,
-                    "#fspackagetestfilter": `swwpkg:${relationship.substr(1, relationship.length - 14)}`,
+                    "#filter": `swwpkg:${relationship.substr(1, relationship.length - 14)}`,
                     newattachment: file.value,
                     newattachment_path: file.label,
                     _iscreation: true

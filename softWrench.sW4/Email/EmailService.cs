@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net;
@@ -15,6 +16,8 @@ using softwrench.sw4.api.classes.email;
 using softWrench.sW4.Util;
 using LogManager = log4net.LogManager;
 using Polly;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
@@ -24,30 +27,36 @@ namespace softWrench.sW4.Email {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(EmailService));
 
+        [Import]
+        private IConfigurationFacade ConfigFacade { get; set; }
+
+
         public EmailService() {
             Log.DebugFormat("init log...");
         }
 
+        // ReSharper disable once AssignNullToNotNullAttribute
         private SmtpClient ConfiguredSmtpClient() {
             var objsmtpClient = new SmtpClient();
 
-            objsmtpClient.Host = MetadataProvider.GlobalProperty("email.smtp.host", true);
+            
+            objsmtpClient.Host = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.Host);
 
-            var overriddenPort = MetadataProvider.GlobalProperty("email.smtp.port");
+            var overriddenPort = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.Port);
             if (overriddenPort != null) {
                 objsmtpClient.Port = Int32.Parse(overriddenPort);
             }
 
-            objsmtpClient.EnableSsl = "true".EqualsIc(MetadataProvider.GlobalProperty("email.smtp.enableSSL"));
+            objsmtpClient.EnableSsl = ConfigFacade.Lookup<bool>(ConfigurationConstants.Email.EnableSSL);
 
             // Increase timeout value if needed - depended on site 
-            var timeout = MetadataProvider.GlobalProperty("email.smtp.timeout");
+            var timeout = ConfigFacade.Lookup<int?>(ConfigurationConstants.Email.Timeout);
             if (timeout != null) {
-                objsmtpClient.Timeout = Int32.Parse(timeout);
+                objsmtpClient.Timeout = timeout.Value;
             }
 
-            var username = MetadataProvider.GlobalProperty("email.smtp.username");
-            var password = MetadataProvider.GlobalProperty("email.smtp.password");
+            var username = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.UserName);
+            var password = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.Password);
             if (username != null && password != null) {
                 objsmtpClient.UseDefaultCredentials = false;
                 objsmtpClient.Credentials = new NetworkCredential(username, password);

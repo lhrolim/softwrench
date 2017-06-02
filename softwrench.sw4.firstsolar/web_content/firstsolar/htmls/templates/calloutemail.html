@@ -1,134 +1,234 @@
-﻿<html>
-<head>
-    <title>New Service Call Out</title>
+﻿<html style="box-sizing:border-box;" >
+<head style="box-sizing:border-box;" >
+    <title style="box-sizing:border-box;" >New Service Call Out</title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <style>
-        .emaillabel { color: black; width:100%}
-      
+
+
+    <style style="box-sizing:border-box;" >
+        fieldset {
+            min-width: 0;
+            padding: 0;
+            margin: 0;
+            border: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        label {
+            display: inline-block;
+            max-width: 100%;
+            margin-bottom: 5px;
+            
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .row {
+            margin-right: -15px;
+            margin-left: -15px;
+        }
+
+        .col-xs-12 {
+            width: 100%;
+            float: left;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .col-xs-4 {
+            width: 33.33333%;
+            float: left;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .col-xs-8 {
+            width: 66.66666667%;
+            float: left;
+            font-weight: bold;
+            color: black;
+            
+            
+        }
+
+        .emaillabel {
+            color: black;
+            width: 100%;
+            font-weight: bold;
+        }
+
         .emailsection {
-            background-image: -webkit-gradient(linear, left 0, left 100%, from(#f7f7f7), to(#ebebeb));
-            color: #3a87ad;
+            
+            
             border: 1px solid #e0e0e0;
             border-radius: 4px;
             padding: 15px;
         }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .alert-warning {
+            color: #8a6d3b;
+            background-color: #fcf8e3;
+            border-color: #faebcc;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            margin-bottom: 0;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .btn-success {
+            color: #fff;
+            background-color: #5cb85c;
+            border-color: #4cae4c;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: #ac2925;
+            border-color: #761c19;
+        }
+
+        .btn-warning {
+            color: #fff;
+            background-color: #d58512;
+            border-color: #985f0d;
+        }
     </style>
 </head>
 
-<body style="width:640px;margin:0 auto;padding:20px;font: normal 14px/24px Arial, Helvetica, sans-serif;">
+<body style="box-sizing:border-box;margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:20px;padding-bottom:20px;padding-right:20px;padding-left:20px;font-style:normal;font-variant:normal;font-weight:normal;font-size:14px;font-family:Arial, Helvetica, sans-serif;line-height:24px;" >
     <!-- TODO replace hard coded img url with client specific header -->
-    <img width="600" height="150" src="{{headerurl}}">
+<!--    <img width="600" height="150" src="{{headerurl}}" style="box-sizing:border-box;" >-->
 
-    <p style="margin-top:20px;">
-        A new Service Call Out has been addressed to you
-    <p />
+    <p style="box-sizing:border-box;margin-top:20px;" >
+        A New Service Callout Has Been Addressed To You 
+    <p style="box-sizing:border-box;" />
 
-    <div class="field  col-xs-12 emailsection">
-        <div schema="schema" datamap="datamap" displayables="fieldMetadata.displayables" orientation="vertical" data-id="" renderer-parameters="fieldMetadata.rendererParameters" hideempty="hideempty" forprint="forprint" class="ng-isolate-scope">
+    <p  class="alert alert-warning" style="box-sizing:border-box;margin-top:20px;padding-top:15px;padding-bottom:15px;padding-right:15px;padding-left:15px;margin-bottom:20px;border-width:1px;border-style:solid;border-radius:4px;color:#8a6d3b;background-color:#fcf8e3;border-color:#faebcc;" >
+        Do not reply directly to this email, instead use the following actions
+    <p style="box-sizing:border-box;" />
 
 
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Subcontractor:</label>
-                <div class="field col-xs-8">
-                    <label class="emaillabel">{{subcontractor}}</label>
-                </div>
+
+    <p style="box-sizing:border-box;" >
+        <a class="btn btn-success" href="{{acceptUrl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;color:#fff;background-color:#5cb85c; border: none; font-size:20px" >Accept Callout</a>
+        <a class="btn btn-danger" href="{{rejectUrl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;color:#fff;background-color:#ac2925; border: none;font-size:20px" >Reject Callout</a>
+        <a class="btn btn-warning" href="{{pendingUrl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;color:#fff;background-color:#d58512; border: none;font-size:20px" >Mark Callout as Pending</a>
+    </p>
+
+    <p style="box-sizing:border-box;margin-top:20px;" >
+        Follows the callout details
+    <p style="box-sizing:border-box;" />
+
+
+    <div class="field  col-xs-12 emailsection" style="box-sizing:border-box;width:100%;float:left;border-width:1px;border-style:solid;border-color:#e0e0e0;border-radius:4px;padding-top:15px;padding-bottom:15px;padding-right:15px;padding-left:15px;" >
+        <div schema="schema" datamap="datamap" displayables="fieldMetadata.displayables" orientation="vertical" data-id="" renderer-parameters="fieldMetadata.rendererParameters" hideempty="hideempty" forprint="forprint" class="ng-isolate-scope" style="box-sizing:border-box;" >
+
+
+            <fieldset class="form-group  col-xs-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Subcontractor:  <span style="box-sizing:border-box;font-weight:bold;" >{{subcontractor}}</span>
             </fieldset>
+            <p style="box-sizing:border-box;" ></p>
 
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Expiration Date:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{expirationdate}}</label>
-                </div>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Expiration Date:  <span style="box-sizing:border-box;font-weight:bold;" >{{expirationdate}}</span>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">PO#:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{ponumber}}</label>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                PO#:  <span style="box-sizing:border-box;font-weight:bold;" >{{ponumber}}</span>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">T.O.#:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{tonumber}}</label>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                TO#:  <span style="box-sizing:border-box;font-weight:bold;" >{{tonumber}}</span>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Site Name:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{site}}</label>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Site Name:  <span style="box-sizing:border-box;font-weight:bold;" >{{site}}</span>
             </fieldset>
+            <p style="box-sizing:border-box;" ></p>
 
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Billing Entity:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{billing}}</label>
-                </div>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Billing Entity:  <span style="box-sizing:border-box;font-weight:bold;" >{{billing}}</span>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Not To Exceed Amount:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{nottoexceed}}</label>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Not To Exceed Amount:  <span style="box-sizing:border-box;font-weight:bold;" >{{nottoexceed}}</span>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Remaining Funds:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{remaining}}</label>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Remaining Funds:  <span style="box-sizing:border-box;font-weight:bold;" >{{remaining}}</span>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="color:black">
-                <div style="font-weight: bold; padding:20px">
-                    <p>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;color:black;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                <div style="box-sizing:border-box;font-weight:bold;" >
+                    <p style="box-sizing:border-box;" >
                         Subcontractor shall immediately notify First Solar when it reaches a billable of 70% of the Original Not to Exceed amount of the executed Task Order.
                     </p>
 
-                    <p>
+                    <p style="box-sizing:border-box;" >
                         All costs incurred or labor expended in excess of the Original Not to Exceed funds amount of the Task Order shall be borne solely by the Subcontractor without reimbursement.
                     </p>
                 </div>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Scope of Work:</label>
-                <div class="field col-xs-8">
-                    <textarea class="form-control" readonly="readonly" rows="10" cols="120">{{scopeofwork}}</textarea>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Scope of Work: <span style="box-sizing:border-box;font-weight:bold;" >{{scopeofwork}}</span>
+            </fieldset>
+            
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Contractor Start Date: <span style="box-sizing:border-box;font-weight:bold;">{{contractorstartdate}}</span>
             </fieldset>
 
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="color:black">
-                <div style="font-weight: bold; padding:20px">
-                    <p>
-                        When billing please send all invoice correspondence to <a>fseinvoices@firstsolar.com</a> and ensure to indicate the PO # and "Bill To Name" on the invoice, which is referenced above.
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;color:black;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                <div style="box-sizing:border-box;font-weight:bold;" >
+                    <p style="box-sizing:border-box;" >
+                        When billing please send all invoice correspondence to <a style="box-sizing:border-box;" >fseinvoices@firstsolar.com</a> and ensure to indicate the PO # and "Bill To Name" on the invoice, which is referenced above.
                     </p>
 
-                    <p>
-                        Not adhering to these requirements may result in payment delay or invoice rejection. Any invoice related questions should be emailed to <a>APInquiriesPBG@firstsolar.com</a>.
+                    <p style="box-sizing:border-box;" >
+                        Not adhering to these requirements may result in payment delay or invoice rejection. Any invoice related questions should be emailed to <a style="box-sizing:border-box;" >APInquiriesPBG@firstsolar.com</a>.
                     </p>
                 </div>
             </fieldset>
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">First Solar Site Contacts:</label>
-                <div class="field col-xs-8">
-                    <label class="form-control">{{fsplant}}</label>
-                </div>
+            <p style="box-sizing:border-box;" ></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                First Solar Site Contacts:  <span style="box-sizing:border-box;font-weight:bold;" >{{fsplant}}</span>
             </fieldset>
+            <p style="box-sizing:border-box;" ></p>
 
-
-            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row">
-                <label class="control-label col-xs-4">Other Info:</label>
-                <div class="field col-xs-8">
-                    <textarea class="form-control" readonly="readonly" rows="10" cols="120">{{otherinfo}}</textarea>
-                </div>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                Other Info: <span style="box-sizing:border-box;font-weight:bold;" >{{otherinfo}}</span>
             </fieldset>
 
 
@@ -136,7 +236,7 @@
 
         </div>
     </div>
-    <p>
+    <p style="box-sizing:border-box;" >
 
     </p>
 

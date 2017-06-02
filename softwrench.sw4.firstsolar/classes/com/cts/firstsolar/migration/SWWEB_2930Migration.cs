@@ -168,4 +168,95 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
         }
     }
+
+    /// <summary>
+    /// Adding a few more columns
+    /// </summary>
+    [Migration(201705311130)]
+    public class SWWEB_2930_7Migration : Migration {
+
+        public override void Up() {
+            Create.Column("token").OnTable("OPT_CALLOUT").AsString(MigrationUtil.StringMedium).Nullable();
+            Create.Column("notes").OnTable("OPT_CALLOUT").AsString(MigrationUtil.StringMax).Nullable();
+
+
+            Execute.Sql("update opt_callout set status = 'Scheduled' where status like 'submited'");
+            Execute.Sql("update opt_callout set status = 'Sent' where status like 'completed'");
+
+            Execute.Sql("update OPT_MAINTENANCE_ENG set status = 'Scheduled' where status like 'submited'");
+            Execute.Sql("update OPT_MAINTENANCE_ENG set status = 'Sent' where status like 'completed'");
+
+        }
+
+        public override void Down() {
+
+        }
+
+        /// <summary>
+        /// Adding a few more columns
+        /// </summary>
+        [Migration(201705312330)]
+        public class SWWEB_2930_8Migration : Migration {
+
+            public override void Up() {
+                Create.Column("actualsendtime").OnTable("OPT_CALLOUT").AsDateTime().Nullable();
+                Create.Column("actualsendtime").OnTable("OPT_MAINTENANCE_ENG").AsDateTime().Nullable();
+            }
+
+            public override void Down() {
+
+            }
+        }
+
+        /// <summary>
+        /// Adding send now column
+        /// </summary>
+        [Migration(201706012020)]
+        public class SWWEB_2930_9Migration : Migration {
+
+            public override void Up() {
+                Create.Column("sendnow").OnTable("OPT_CALLOUT").AsBoolean().WithDefaultValue(false);
+                Create.Column("sendnow").OnTable("OPT_MAINTENANCE_ENG").AsBoolean().WithDefaultValue(false);
+            }
+
+            public override void Down() {
+
+            }
+        }
+
+        /// <summary>
+        /// Adding send now column
+        /// </summary>
+        [Migration(201706020020)]
+        public class SWWEB_2930_10Migration : Migration {
+
+            public override void Up() {
+
+                Create.Column("token").OnTable("OPT_MAINTENANCE_ENG").AsString(MigrationUtil.StringMedium).Nullable();
+                Create.Column("notes").OnTable("OPT_MAINTENANCE_ENG").AsString(MigrationUtil.StringMax).Nullable();
+            }
+
+            public override void Down() {
+
+            }
+        }
+
+
+        /// <summary>
+        /// Adding send now column
+        /// </summary>
+        [Migration(201706021120)]
+        public class SWWEB_2930_2985Migration : Migration {
+
+            public override void Up() {
+                Create.Column("contractorstartdate").OnTable("OPT_CALLOUT").AsDateTime().Nullable();
+            }
+
+            public override void Down() {
+
+            }
+        }
+    }
+
+
 }

@@ -7,7 +7,6 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
-using softWrench.sW4.Data;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;

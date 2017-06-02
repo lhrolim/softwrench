@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
@@ -13,51 +14,46 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
     public class FirstSolarMaintenanceEmailService : BaseTemplateEmailService {
 
-    
+
 
         public FirstSolarMaintenanceEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) : base(emailService, redirectService, appConfig) {
             Log.Debug("init Log");
         }
 
 
-        public virtual void SendCallout(CallOut callout, string email) {
+        public virtual void SendCallout(MaintenanceEngineering engRequest, string email) {
             Validate.NotNull(email, "email");
-            Validate.NotNull(callout, "callout");
+            Validate.NotNull(engRequest, "engRequest");
 
-            var msg = GenerateEmailBody(callout);
+            var msg = GenerateEmailBody(engRequest);
 
-            var emailData = new EmailData(NoReplySendFrom, email, "[softWrench] Call Out Addressed", msg);
+            var emailData = new EmailData(NoReplySendFrom, email, "[First Solar] Maintenance Engineering Request", msg);
             //TODO: Async??
             EmailService.SendEmailAsync(emailData);
         }
 
 
-        public string GenerateEmailBody(CallOut callout) {
+        public string GenerateEmailBody(MaintenanceEngineering engRequest) {
             BuildTemplate();
 
+            var acceptUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=approved".Fmt(engRequest.Token));
+            var rejectUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=rejected".Fmt(engRequest.Token));
+            var pendingUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=pending".Fmt(engRequest.Token));
 
             var msg = Template.Render(
                 Hash.FromAnonymousObject(new {
+                    acceptUrl,
+                    rejectUrl,
+                    pendingUrl,
                     headerurl = GetHeaderURL(),
-                    subcontractor = callout.SubContractor == null ? "": callout.SubContractor.Name,
-                    expirationdate = callout.ExpirationDate?.ToString("yyyy'-'MM'-'dd HH':'mm':'ss") ?? "",
-                    ponumber = callout.PoNumber,
-                    tonumber = callout.ToNumber,
-                    site = callout.SiteName,
-                    billing = callout.BillingEntity,
-                    nottoexceed = callout.NotToExceedAmount,
-                    remaining = callout.RemainingFunds,
-                    scopeofwork = callout.ScopeOfWork,
-                    fsplant = callout.PlantContacts,
-                    otherinfo = callout.OtherInfo
-                    //                    displayables
-                    //password won´t be used for automatic template, but let´s put it here anyway
+                    engineer = engRequest.Engineer,
+                    reason = engRequest.Reason
                 }));
             return msg;
         }
 
         protected override string GetTemplatePath() {
-            return "//Content//Customers//firstsolar//htmls//templates//maintenanceengineer.html";
+            return "//Content//Customers//firstsolar//htmls//templates//maintenanceengineeremail.html";
         }
 
 

@@ -21,6 +21,8 @@
             link: function (scope, element, attrs) {
                 const addFunction = scope.fieldMetadata.rendererParameters && scope.fieldMetadata.rendererParameters["fileexplorer.addfunction"];
 
+                scope.files = [];
+
                 scope.browseFile = function ($event) {
                     $event.preventDefault();
                     element.find(".upload-input").trigger("click");
@@ -40,6 +42,7 @@
                     }
 
                     const newFile = {
+                        "#newFile": true,
                         persisted: false,
                         value: value,
                         label: fileName,
@@ -47,16 +50,24 @@
                     }
 
                     scope.files.push(newFile);
-                    if (addFunction) {
-                        dispatcherService.invokeServiceByString(addFunction, [newFile, scope.fieldMetadata.relationship]).catch(() => {
-                            const index = scope.files.indexOf(newFile);
-                            if (index !== -1) {
-                                scope.files.splice(index, 1);
-                            }
-                            scope.fileData = null;
-                            element.find(".upload-input").val(null);
-                        });
+
+                    const rel = scope.fieldMetadata.relationship;
+
+                    if (!addFunction) {
+                        scope.datamap[rel] = scope.datamap[rel] || [];
+                        scope.datamap[rel].push(newFile);
+                        scope.ignoreWatch = true;
+                        return;
                     }
+
+                    dispatcherService.invokeServiceByString(addFunction, [newFile, rel, scope.datamap]).catch(() => {
+                        const index = scope.files.indexOf(newFile);
+                        if (index !== -1) {
+                            scope.files.splice(index, 1);
+                        }
+                        scope.fileData = null;
+                        element.find(".upload-input").val(null);
+                    });
                 }
 
                 scope.fileClick = function (file) {
@@ -82,11 +93,16 @@
                 });
 
                 scope.$watch("datamap[fieldMetadata.relationship]", (newValue) => {
-                    scope.files = [];
-                    if (!newValue) {
+                    if (!newValue || scope.ignoreWatch) {
+                        scope.ignoreWatch = false;
                         return;
                     }
+                    scope.files = [];
                     angular.forEach(newValue, (currentFile) => {
+                        if (currentFile["#newFile"]) {
+                            scope.files.push(currentFile);
+                            return;
+                        }
                         scope.files.push({
                             persisted: true,
                             label: currentFile["docinfo_.description"],

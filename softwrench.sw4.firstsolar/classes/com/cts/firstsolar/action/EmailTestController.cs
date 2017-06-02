@@ -2,15 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 using cts.commons.simpleinjector;
-using cts.commons.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sw4.webcommons.classes.api;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -18,22 +14,23 @@ using softWrench.sW4.Data.Persistence.SWDB;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
     [RawController]
-    public class EmailTestController : Controller
-    {
+    public class EmailTestController : Controller {
 
 
         [Import]
-        public SWDBHibernateDAO Dao { get; set; }  
+        public SWDBHibernateDAO Dao { get; set; }
 
         [System.Web.Http.HttpGet]
         public ActionResult Callout() {
 
             var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCallOutEmailService>();
-            var callOut = Dao.EagerFindByPK<CallOut>(typeof(CallOut),1);
+            var callOut = Dao.FindAll<CallOut>(typeof(CallOut)).First();
 
             var html = service.GenerateEmailBody(callOut);
 
-            System.IO.StreamWriter file = new System.IO.StreamWriter("C:\\Users\\Maxx\\Desktop\\callout.html");
+
+
+            var file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Desktop\\callout.html");
             file.WriteLine(html);
             file.Close();
 
@@ -48,12 +45,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [System.Web.Http.HttpGet]
         public ActionResult Maintenance() {
 
-            var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCallOutEmailService>();
-            var callOut = Dao.EagerFindByPK<CallOut>(typeof(CallOut), 1);
+            var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarMaintenanceEmailService>();
+            var callOut = Dao.FindAll<MaintenanceEngineering>(typeof(MaintenanceEngineering)).First();
 
             var html = service.GenerateEmailBody(callOut);
 
-            System.IO.StreamWriter file = new System.IO.StreamWriter("C:\\Users\\Maxx\\Desktop\\callout.html");
+            var file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Desktop\\maintenance.html");
             file.WriteLine(html);
             file.Close();
 

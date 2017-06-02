@@ -45,7 +45,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public bool? MaintenanceEnabled { get; set; }
 
-        
+
 
 
         #region resultsForReview
@@ -135,5 +135,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> FeederTestsList { get; set; } = new List<GenericListRelationship>();
+
+        
+
+
+        public override string ToString() {
+            return $"{nameof(Id)}: {Id}, {nameof(Wonum)}: {Wonum}";
+        }
     }
 }

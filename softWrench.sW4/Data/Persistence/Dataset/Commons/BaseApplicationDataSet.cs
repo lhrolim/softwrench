@@ -495,6 +495,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 var mode = request.IsShowMoreMode
                     ? SchemaFetchMode.SecondaryContent
                     : SchemaFetchMode.MainContent;
+
+                if (composition.Schema.Schemas == null) {
+                    continue;
+                }
+
                 var listCompositionSchema = composition.Schema.Schemas.List;
                 var compositionAssociations = listCompositionSchema.Associations(mode);
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using softwrench.sw4.Shared2.Data.Association;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {

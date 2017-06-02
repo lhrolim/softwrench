@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
+﻿namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action.dto {
     public static class FirstSolarBatchTypeExtensions {
 
         public static string GetSpreadhSheetSchema(this FirstSolarBatchType batchType) {

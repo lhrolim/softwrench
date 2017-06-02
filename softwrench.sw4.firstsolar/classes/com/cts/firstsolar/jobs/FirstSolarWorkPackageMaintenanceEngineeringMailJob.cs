@@ -6,6 +6,7 @@ using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Scheduler;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
     public class FirstSolarWorkPackageMaintenanceEngineeringMailJob : ASwJob {
@@ -26,6 +27,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         }
 
         public override string Cron() {
+            if (ApplicationConfiguration.IsLocal()) {
+                return "30 * * * * ?";
+            }
             return "0 2 * * * ?";
         }
 
@@ -36,14 +40,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         public override async Task ExecuteJob() {
             var mes = _dao.FindByQuery<MaintenanceEngineering>(MaintenanceEngQuery, FSWPackageConstants.MaintenanceEngStatus.Pending, DateTime.Now);
             if (mes != null && mes.Any()) {
-                mes.ForEach(HandleMaintenanceEngineering);
+                foreach (var me in mes) {
+                    await HandleMaintenanceEngineering(me);
+                }
             }
         }
 
-        private void HandleMaintenanceEngineering(MaintenanceEngineering me) {
+        private async Task HandleMaintenanceEngineering(MaintenanceEngineering me) {
             // TODO send the email
-            me.Status = FSWPackageConstants.CallOutStatus.Submited;
-            _dao.Save(me);
+            me.Status = RequestStatus.Sent;
+            await _dao.SaveAsync(me);
         }
     }
 }

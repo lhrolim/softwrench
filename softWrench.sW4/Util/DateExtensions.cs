@@ -83,6 +83,10 @@ namespace softWrench.sW4.Util {
             return UserMaximoConversion(date, user, ConversionKind.UserToMaximo);
         }
 
+        public static DateTime FromUserToServer(this DateTime date, InMemoryUser user) {
+            return UserMaximoConversion(date, user, ConversionKind.UserToMaximo,0);
+        }
+
         public static DateTime FromUserToRightKind(this DateTime date, InMemoryUser user) {
             var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
             if (WsUtil.Is75OrNewer()) {
@@ -113,6 +117,13 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromUTCToUser(this DateTime date, InMemoryUser user) {
+            if (!user.TimezoneOffset.HasValue) {
+                return date;
+            }
+            return MaximoConversion(date, user.TimezoneOffset.Value, ConversionKind.MaximoToUser, 0);
+        }
+
+        public static DateTime FromServerToUser(this DateTime date, InMemoryUser user) {
             if (!user.TimezoneOffset.HasValue) {
                 return date;
             }
@@ -246,7 +257,7 @@ namespace softWrench.sW4.Util {
         }
 
         internal enum ConversionKind {
-            MaximoToUser, UserToMaximo, ServerToMaximo, MaximoToServer
+            MaximoToUser, UserToServer, UserToMaximo, ServerToMaximo, MaximoToServer
         }
 
         public class DateComparisonExpression {

@@ -56,7 +56,8 @@ angular.module('sw_components')
             }
             const showTime = parseBooleanValue(attrs.showTime);
             const showDate = parseBooleanValue(attrs.showDate);
-            var dateFormat = formatService.adjustDateFormatForPicker(attrs.formatString, showTime);
+            const showMinutes = parseBooleanValue(attrs.showMinutes);
+            var dateFormat = formatService.adjustDateFormatForPicker(attrs.formatString, showTime, showMinutes);
             var angularDateFormat = formatService.adjustDateFormatForAngular(attrs.formatString, showTime);
             attrs.language = (userLanguage !== '') ? userLanguage : 'en';
             const istimeOnly = showTime && !showDate;
@@ -80,8 +81,12 @@ angular.module('sw_components')
                 const position = !!attrs.position ? attrs.position : "bottom";
                 var startDate = false;
                 if (!allowpast) {
-                    startDate = new Date();
-                    startDate.setHours(0, 0, 0, 0);
+                    if (!showTime) {
+                        startDate = new Date();
+                        startDate.setHours(0, 0, 0, 0);
+                    } else {
+                        startDate = new Date();
+                    }
                 }
                 var endDate = false;
                 if (!allowfuture) {

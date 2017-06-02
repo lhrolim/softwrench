@@ -104,6 +104,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                 var date = (DateTime)value;
                 date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
                 return date;
+            } if (entityMetadata.SWEntity()) {
+                var date = (DateTime)value;
+                date = DateTime.SpecifyKind(date, DateTimeKind.Local);
+                return date;
             }
             return value;
         }

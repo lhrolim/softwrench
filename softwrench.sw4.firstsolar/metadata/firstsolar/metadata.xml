@@ -131,6 +131,11 @@
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
           <relationshipAttribute query="(docinfo_.urlparam1 like 'swwpkg:%')"/>
         </relationship>
+        <relationship to="DOCLINKS" collection="true" qualifier="wkpgcoattachments">
+          <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
+          <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
+          <relationshipAttribute query="(docinfo_.urlparam1 like 'swwpkgco:%')"/>
+        </relationship>
       </relationships>
     </entity>
 
@@ -326,6 +331,9 @@
             <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate desc" listschema="workpackagelist"/>
           </composition>
           <composition relationship="wkpgattachments" label="">
+            <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate asc" listschema="workpackagelist"/>
+          </composition>
+          <composition relationship="wkpgcoattachments" label="">
             <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate asc" listschema="workpackagelist"/>
           </composition>
         </schema>

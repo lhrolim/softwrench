@@ -179,6 +179,7 @@
     <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchType.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\dto\FirstSolarBatchTypeExtensions.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\EmailTestController.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\FirstSolarEmailController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarAdvancedSearchController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarWorkorderBatchAction.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\BatchRedirectionHelper.cs" />
@@ -208,6 +209,8 @@
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\IFsEmailRequest.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\RequestStatus.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\MaintenanceEngineering.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\CallOut.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\WorkOrderDetailComponent.cs" />
@@ -215,9 +218,11 @@
     <Compile Include="classes\com\cts\firstsolar\model\WorkPackage.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarLocationCacheJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\callout\exception\IFSEmailWorkflowException.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\BaseTemplateEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCallOutHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -242,14 +247,14 @@
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
-    <Content Include="web_content\firstsolar\htmls\templates\maintenanceemail.html" />
+    <Content Include="web_content\firstsolar\htmls\templates\maintenanceengineeremail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\calloutemail.html" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\htmls\fscalloutinvoicetext.html" />
-    <Content Include="web_content\firstsolar\htmls\fsnocallouttext.html" />
     <Content Include="web_content\firstsolar\htmls\fscalloutnottoexceedamounttext.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
+    <Content Include="web_content\firstsolar\scripts\fsemailrequestcontroller.js" />
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchService.js" />
     <Content Include="web_content\firstsolar\scripts\fsmaintananceengService.js" />
