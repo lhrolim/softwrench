@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
+using cts.commons.Util;
 using Common.Logging;
 using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
-    public abstract class BaseTemplateEmailService : ISingletonComponent {
+    public abstract class FirstSolarBaseEmailService : ISingletonComponent {
 
         protected const string NoReplySendFrom = "noreply@controltechnologysolutions.com";
 
@@ -24,7 +29,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         private readonly string _headerImageUrl;
         protected readonly IApplicationConfiguration AppConfig;
 
-        protected BaseTemplateEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
+        public virtual async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, List<EmailAttachment> attachs = null) {
+            Validate.NotNull(request, "toSend");
+
+            var dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>();
+
+            var msg = GenerateEmailBody(request);
+
+            Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
+            var emailData = new EmailData(NoReplySendFrom, request.Email, GetEmailSubjectMsg(request), msg, attachs);
+            EmailService.SendEmail(emailData);
+
+            request.Status = RequestStatus.Sent;
+            request.ActualSendTime = DateTime.Now;
+
+            return await dao.SaveAsync(request);
+        }
+
+        protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
             Log.Debug("init Log");
             EmailService = emailService;
             RedirectService = redirectService;
@@ -61,9 +83,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return RedirectService.GetRootUrl() + _headerImageUrl;
         }
 
-
-   
-
-        
+        public abstract string GenerateEmailBody(IFsEmailRequest request);
+        protected abstract string GetEmailSubjectMsg(IFsEmailRequest request);
+        public abstract string RequestI18N();
     }
 }

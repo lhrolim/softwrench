@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
@@ -15,7 +14,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
-    public class FirstSolarCallOutEmailService : BaseTemplateEmailService {
+    public class FirstSolarCallOutEmailService : FirstSolarBaseEmailService {
 
 
         private new static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarCallOutEmailService));
@@ -27,29 +26,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             Log.Debug("init Log");
         }
 
+        public override string GenerateEmailBody(IFsEmailRequest request) {
+            var callout = request as CallOut;
 
-        public virtual async Task<CallOut> SendCallout(CallOut callout, string email, List<EmailAttachment> attachs = null) {
-            Validate.NotNull(email, "email");
-            Validate.NotNull(callout, "callout");
-
-
-            var msg = GenerateEmailBody(callout);
-            if (callout.GenerateToken()) {
-                callout = await DAO.SaveAsync(callout);
-            }
-
-            Log.InfoFormat("sending callout email for {0} to {1}", callout.Id, email);
-            var emailData = new EmailData(NoReplySendFrom, email, "[First Solar] Callout Request ({0}, {1})".Fmt(callout.ContractorStartDate, callout.SiteName), msg, attachs);
-            EmailService.SendEmail(emailData);
-
-            callout.Status = RequestStatus.Sent;
-            callout.ActualSendTime = DateTime.Now;
-
-            return await DAO.SaveAsync(callout);
-        }
-
-
-        public string GenerateEmailBody(CallOut callout) {
             BuildTemplate();
 
             var acceptUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionCallOut", "token={0}&status=approved".Fmt(callout.Token));
@@ -76,6 +55,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     otherinfo = callout.OtherInfo
                 }));
             return msg;
+        }
+
+        protected override string GetEmailSubjectMsg(IFsEmailRequest request) {
+            var callout = request as CallOut;
+            return callout == null ? "" : "[First Solar] Callout Request ({0}, {1})".Fmt(callout.ContractorStartDate, callout.SiteName);
+        }
+
+        public override string RequestI18N() {
+            return "Callout";
         }
 
         protected override string GetTemplatePath() {

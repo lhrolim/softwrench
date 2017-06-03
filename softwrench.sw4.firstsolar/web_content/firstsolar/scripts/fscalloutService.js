@@ -1,69 +1,29 @@
 ﻿(function (angular) {
     'use strict';
     
-    function fscalloutService($rootScope, $timeout, modalService, schemaCacheService, alertService, crudContextHolderService, applicationService, compositionService, validationService) {
-
-        function buildDatamap(schema) {
-            const datamap = {};
-            schema.displayables.forEach(d => {
-                if (d.isHidden) {
-                    return;
-                }
-                if (d.target) {
-                    datamap[d.target] = null;
-                } else {
-                    datamap[d.attribute] = null;
-                }
-            });
-            return datamap;
-        }
+    function fscalloutService(modalService, schemaCacheService, alertService, crudContextHolderService, applicationService, compositionService, fsrequestService) {
 
         function postSave(saveDatamap, callback, rollback) {
             saveDatamap["subcontractor_.id"] = saveDatamap["subcontractor"];
             saveDatamap["status"] = Status.Scheduled;
-            if (saveDatamap["submitaftersave"]) {
-                saveDatamap["sendnow"] = true;
+            if (saveDatamap["sendnow"]) {
                 saveDatamap["sendtime"] = null;
             }
-            callback(saveDatamap);
-            
-            return applicationService.save({
-                dispatchedByModal: false
-            }).then(() => {
-                modalService.hide();
-            }).catch(() => {
-                rollback();
-            });
-        }
-
-        function validatePackage() {
-            return validationService.validateCurrent().length <= 0;
+            return fsrequestService.postSave(saveDatamap, callback, rollback);
         }
 
         function openModalNew(item, callback, rollback) {
-            if (!validatePackage()) {
+            if (!fsrequestService.validatePackage()) {
                 return;
             }
             const wpDatamap = crudContextHolderService.rootDataMap();
 
             schemaCacheService.fetchSchema("_CallOut", "newdetail").then((schema) => {
-                const mergedItem = compositionService.buildMergedDatamap(buildDatamap(schema), item);
+                const mergedItem = compositionService.buildMergedDatamap(fsrequestService.buildDatamap(schema), item);
                 mergedItem["orgid"] = wpDatamap ["#workorder_.orgid"];
-                var date = new Date();
-
-                var toNextDay = (date.getUTCHours() <= 7);
-
-                var currentOffSet = date.getTimezoneOffset();
-                var diff = (420 - currentOffSet) / 60; // AZ timezone = -7
-                date.setHours(17, 0, 0, 0);
-                date.addHours(diff);
-                
-                if (toNextDay) {
-                    date.setDate(date.getDate() + 1);
-                }
-
-                mergedItem["sendtime"] = date;
+                mergedItem["sendtime"] = fsrequestService.defaultSendTime();
                 mergedItem["#editing"] = true;
+                mergedItem["#calloutfileexplorer_"] = [];
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);
                 });
@@ -71,36 +31,22 @@
         }
 
         function openModalEdit(item, callback, rollback) {
-            if (!validatePackage()) {
-                return;
-            }
             const wpDatamap = crudContextHolderService.rootDataMap();
             if (item["status"] !== Status.Scheduled) {
                 alertService.alert("Is not possible edit a sent callout.");
                 return;
             }
+            if (!fsrequestService.validatePackage()) {
+                return;
+            }
+
             if (item["subcontractor_.id"]) {
                 item["subcontractor"] = item["subcontractor_.id"] + "";
-            }
-            if (!item["sendtime"]) {
-                const date = new Date();
-                date.setHours(23, 59, 59, 999);
-                item["sendtime"] = date;
             }
             item["orgid"] = wpDatamap["#workorder_.orgid"];
             item["#editing"] = true;
 
-            const parentDataMap = crudContextHolderService.rootDataMap();
-            const attachs = parentDataMap["#calloutfileexplorer_"];
-            if (attachs && !item["#calloutfileexplorer_"]) {
-                item["#calloutfileexplorer_"] = [];
-                angular.forEach(attachs, (attach) => {
-                    const id = attach["docinfo_.urlparam1"].substr(9);
-                    if (id === item["id"] + "") {
-                        item["#calloutfileexplorer_"].push(attach);
-                    }
-                });
-            }
+            fsrequestService.addAttachments(item, "#calloutfileexplorer_");
 
             schemaCacheService.fetchSchema("_CallOut", "detail").then((schema) => {
                 modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
@@ -114,8 +60,6 @@
             applicationService.save();
         }
 
-    
-
         function deleteRow(item, callback, rollback) {
             if (item["status"] !== Status.Scheduled) {
                 alertService.alert("Is not possible delete a sent callout.");
@@ -123,12 +67,7 @@
             }
 
             alertService.confirm("Are you sure you want to delete this subcontractor call out?").then(() => {
-                callback();
-                return applicationService.save({
-                    dispatchedByModal: false
-                }).catch(() => {
-                    rollback();
-                });
+                return fsrequestService.postDelete(callback, rollback);
             });
         }
 
@@ -143,7 +82,7 @@
 
     angular
     .module("firstsolar")
-        .clientfactory("fscalloutService", ["$rootScope", "$timeout", "modalService", "schemaCacheService", "alertService", "crudContextHolderService", "applicationService", "compositionService", "validationService", fscalloutService]);
+        .clientfactory("fscalloutService", ["modalService", "schemaCacheService", "alertService", "crudContextHolderService", "applicationService", "compositionService", "firstsolar.fsrequestService", fscalloutService]);
     
     class Status {
 

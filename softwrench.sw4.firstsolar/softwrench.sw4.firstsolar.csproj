@@ -224,6 +224,8 @@
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCallOutHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarMaintenanceEngineeringHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageAttachmentsHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -261,6 +263,7 @@
     <Content Include="web_content\firstsolar\htmls\fscalloutnottoexceedamounttext.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
+    <Content Include="web_content\firstsolar\scripts\fsrequestService.js" />
     <Content Include="web_content\firstsolar\scripts\fsemailrequestcontroller.js" />
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchService.js" />

@@ -2,7 +2,6 @@
 using System.Globalization;
 using cts.commons.portable.Util;
 using cts.commons.Util;
-using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {

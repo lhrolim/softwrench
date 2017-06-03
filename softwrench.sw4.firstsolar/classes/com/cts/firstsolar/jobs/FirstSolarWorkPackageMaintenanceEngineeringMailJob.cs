@@ -1,21 +1,24 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
-using log4net;
-using NHibernate.Util;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
+using cts.commons.portable.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Util;
+using WebGrease.Css.Extensions;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
     public class FirstSolarWorkPackageMaintenanceEngineeringMailJob : ASwJob {
-        private const string MaintenanceEngQuery = "from MaintenanceEngineering where status = ? and sendTime <= ?";
         private readonly ISWDBHibernateDAO _dao;
-        private readonly ILog _log = LogManager.GetLogger(typeof(FirstSolarWorkPackageMaintenanceEngineeringMailJob));
+        private readonly IMaximoHibernateDAO _maximoDao;
+        private readonly FirstSolarMaintenanceEngineeringHandler _meHandler;
 
-        public FirstSolarWorkPackageMaintenanceEngineeringMailJob(ISWDBHibernateDAO dao) {
+        public FirstSolarWorkPackageMaintenanceEngineeringMailJob(ISWDBHibernateDAO dao, IMaximoHibernateDAO maximoDao, FirstSolarMaintenanceEngineeringHandler meHandler) {
             _dao = dao;
+            _maximoDao = maximoDao;
+            _meHandler = meHandler;
         }
 
         public override string Name() {
@@ -38,18 +41,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         }
 
         public override async Task ExecuteJob() {
-            var mes = _dao.FindByQuery<MaintenanceEngineering>(MaintenanceEngQuery, FSWPackageConstants.MaintenanceEngStatus.Pending, DateTime.Now);
+            var mes = await _dao.FindByQueryAsync<MaintenanceEngineering>(MaintenanceEngineering.ByStatusAndTime, DateTime.Now.FromServerToMaximo());
             if (mes != null && mes.Any()) {
-                foreach (var me in mes) {
-                    await HandleMaintenanceEngineering(me);
-                }
+                mes.ForEach(HandleMaintenanceEngineering);
+                Log.InfoFormat("done sending {0} maintenance engineerings", mes.Count);
+            } else {
+                Log.InfoFormat("no maintenance engineering sent");
             }
         }
 
-        private async Task HandleMaintenanceEngineering(MaintenanceEngineering me) {
-            // TODO send the email
-            me.Status = RequestStatus.Sent;
-            await _dao.SaveAsync(me);
+        private void HandleMaintenanceEngineering(MaintenanceEngineering me) {
+            var packages = _dao.FindByNativeQuery("select workorderid, wonum from OPT_WORKPACKAGE where id = '{0}'".Fmt(me.WorkPackageId));
+            var package = packages.First();
+            var woId = package["workorderid"];
+            var woNum = package["wonum"];
+            var wos = _maximoDao.FindByNativeQuery("select siteid from workorder where workorderid = '{0}'".Fmt(woId));
+            var siteid = wos.First()["siteid"];
+            _meHandler.HandleEmail(me, woId, woNum, siteid);
         }
     }
 }

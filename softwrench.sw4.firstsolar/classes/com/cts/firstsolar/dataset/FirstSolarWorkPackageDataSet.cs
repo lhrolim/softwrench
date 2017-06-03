@@ -58,6 +58,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         [Import]
         public FirstSolarCallOutHandler CallOutHandler { get; set; }
 
+        [Import]
+        public FirstSolarMaintenanceEngineeringHandler MaintenanceEngineeringHandler { get; set; }
+
 
         #region list
 
@@ -200,7 +203,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 result.ResultObject.SetAttribute(relatedDataKey, groupDictionary[relatedDataKey]);
             }
 
-            AddEngineerAssociations(result);
+            MaintenanceEngineeringHandler.AddEngineerAssociations(result);
 
             return result;
 
@@ -291,7 +294,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             CallOutHandler.HandleCallOuts(crudoperationData, package, woData);
 
-            HandleMaintenanceEngs(crudoperationData, package);
+            MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData);
 
             package = await Dao.SaveAsync(package);
             crudoperationData.ReloadMode = ReloadMode.FullRefresh;
@@ -299,8 +302,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             SaveMaximoWorkorder(woData);
 
             var toSendCallouts = package.CallOuts.Where(c => c.SendNow && (RequestStatus.Scheduled.Equals(c.Status) || RequestStatus.Error.Equals(c.Status)));
+            var toSendMes = package.MaintenanceEngineerings.Where(m => m.SendNow && (RequestStatus.Scheduled.Equals(m.Status) || RequestStatus.Error.Equals(m.Status)));
 
-            return new Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>(package, toSendCallouts, package.MaintenanceEngineerings.Where(c => c.SendNow));
+            return new Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>(package, toSendCallouts, toSendMes);
         }
 
         private static CrudOperationData BuildWoData(OperationWrapper operationWrapper) {
@@ -434,15 +438,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var relList = new List<string> {
                 FSWPackageConstants.WorklogsRelationship,
                 FSWPackageConstants.AttachsRelationship,
-                FSWPackageConstants.CallOutAttachsRelationship
+                FSWPackageConstants.CallOutAttachsRelationship,
+                FSWPackageConstants.MaintenanceEngAttachsRelationship
             };
 
             var woCompList = await GetWoCompositions(woId, woNum, woSite, relList);
             HandleWorkLogs(woCompList, compList);
             HandleAttachments(woCompList, compList);
-            CallOutHandler.HandleCalloutAttachments(woCompList, compList);
-            
-            LoadMaintenanceEngineerings(compList, woSite);
+            CallOutHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
+            MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
+
+            MaintenanceEngineeringHandler.LoadEngineerNames(compList, woSite);
             return compList;
         }
 
@@ -501,144 +507,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return Dao.FindByPK<WorkPackage>(typeof(WorkPackage), id);
         }
 
-        private static bool IsSubmitedStatus(string meStatus) {
-            return FSWPackageConstants.MaintenanceEngStatus.SubmitedStatus.Any(status => status.Equals(meStatus));
-        }
-
-        private void HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package) {
-            var existingMaintenanceEng = package.MaintenanceEngineerings;
-            package.MaintenanceEngineerings = new List<MaintenanceEngineering>();
-            if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("maintenanceEngineerings_")) {
-                var maintenanceEngsData = crudoperationData.AssociationAttributes["maintenanceEngineerings_"] as List<CrudOperationData>;
-                if (maintenanceEngsData == null) {
-                    throw new Exception("Incorrect format of maintenance engineering list.");
-                }
-                maintenanceEngsData.ForEach((data) => {
-                    package.MaintenanceEngineerings.Add(HandleMaintenanceEng(data, GetOurCreateMaintenanceEng(data, existingMaintenanceEng), package.Id ?? 0));
-                });
-            }
-            existingMaintenanceEng?.ForEach(me => {
-                if (me.Status.IsSubmitted()) {
-                    throw new Exception($"Is not possible delete a maintenance engineering request with status '{me.Status}'. Reload the page to get the updated version of this work package.");
-                }
-                Dao.Delete(me);
-            });
-        }
-
-        private static MaintenanceEngineering HandleMaintenanceEng(CrudOperationData crudoperationData, MaintenanceEngineering me, int packageId) {
-            var status = crudoperationData.GetStringAttribute("status");
-
-            RequestStatus newStatus;
-            Enum.TryParse(status, true, out newStatus);
-
-
-            if (me.Status.IsSubmitted()) {
-                if (!IsSubmitedStatus(status)) {
-                    throw new Exception($"Is not possible edit a maintenance engineering request with status '{me.Status}'. Reload the page to get the updated version of this work package.");
-                }
-                // submited requests are not editable so just return the existing one
-                return me;
-            }
-
-            me.Engineer = crudoperationData.GetStringAttribute("engineer");
-            me.SendTime = ConversionUtil.HandleDateConversion(crudoperationData.GetStringAttribute("sendTime"));
-            me.Status = newStatus;
-            me.Reason = crudoperationData.GetStringAttribute("reason");
-            me.Email = crudoperationData.GetStringAttribute("email");
-            me.WorkPackageId = packageId;
-            return me;
-        }
-
-        private static MaintenanceEngineering GetOurCreateMaintenanceEng(CrudOperationData crudoperationData, IList<MaintenanceEngineering> existingMes) {
-            var id = crudoperationData.GetIntAttribute("id");
-            if (id == null || existingMes == null) {
-                return new MaintenanceEngineering();
-            }
-            var found = existingMes.FirstOrDefault(me => me.Id == id);
-            if (found == null) {
-                return new MaintenanceEngineering() { Id = id };
-            }
-            existingMes.Remove(found);
-            return found;
-        }
-
-        private Dictionary<string, IAssociationOption> SetEngineerNames(List<Dictionary<string, object>> maintenanceEngineerings, string woSite) {
-            var options = new Dictionary<string, IAssociationOption>();
-            if (maintenanceEngineerings == null || !maintenanceEngineerings.Any()) {
-                return options;
-            }
-
-            var engineers = maintenanceEngineerings.Select(me => (string)me["engineer"]).ToList();
-
-            var dbOptions = MaxDao.FindByNativeQuery("select personid, displayname, locationsite from person where personid in (:p0)", engineers);
-            dbOptions.ForEach(dbOption => {
-                var value = dbOption["personid"];
-                var label = (string)null;
-                dbOption.TryGetValue("displayname", out label);
-                var option = new AssociationOption(value, label);
-
-                if (!options.ContainsKey(value)) {
-                    options.Add(value, option);
-                    return;
-                }
-
-                var site = (string)null;
-                dbOption.TryGetValue("locationsite", out site);
-                if (!string.IsNullOrEmpty(woSite) && woSite.Equals(site)) {
-                    options[value] = option;
-                }
-            });
-
-            maintenanceEngineerings.ForEach(me => {
-                var engineer = (string)me["engineer"];
-                var option = (IAssociationOption)null;
-                options.TryGetValue(engineer, out option);
-                if (!string.IsNullOrEmpty(option?.Label)) {
-                    me["#engineername"] = option.Label;
-                } else {
-                    me["#engineername"] = engineer;
-                }
-            });
-            return options;
-        }
-
-        private void AddEngineerAssociations(ApplicationDetailResult result) {
-            if (!result.ResultObject.ContainsKey("maintenanceEngineerings_")) {
-                return;
-            }
-            var mes = result.ResultObject["maintenanceEngineerings_"] as List<Dictionary<string, object>>;
-            var woSiteObj = (object)null;
-            result.ResultObject.TryGetValue("#workorder_.siteid", out woSiteObj);
-            result.AssociationOptions.PreFetchLazyOptions.Add("#workorder_.fakelabor_", SetEngineerNames(mes, woSiteObj as string));
-        }
-
-        private void LoadMaintenanceEngineerings(CompositionFetchResult compList, string woSite) {
-            if (!compList.ResultObject.ContainsKey("maintenanceEngineerings_")) {
-                return;
-            }
-            var mesList = compList.ResultObject["maintenanceEngineerings_"].ResultList;
-            if (mesList != null) {
-                SetEngineerNames(mesList.ToList(), woSite);
-            }
-        }
-
         private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend) {
-            var needUpdate = await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
-
-            var engineersToSend = maintenanceEngineersToSend as IList<MaintenanceEngineering> ?? maintenanceEngineersToSend.ToList();
-
-            if (engineersToSend.Any()) {
-                engineersToSend.ForEach(maintenanceEngineer => {
-                    needUpdate = true;
-                    maintenanceEngineer.Status = RequestStatus.Sent;
-                    maintenanceEngineer.SendTime = DateTime.Now;
-                    //                    CallOutEmailService.SendCallout(callOut, callOut.Email);
-                });
-            }
-
-            if (needUpdate) {
-                Dao.Save(package);
-            }
+            await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
+            await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
         }
 
         public override string ApplicationName() {

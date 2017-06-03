@@ -33,7 +33,7 @@
           <association label="Engineer" labelfield="#workorder_.fakelabor_.displayname" target="engineer" requiredexpression="true"></association>
 
           <section orientation="horizontal">
-            <field attribute="sendtime" label="Send Request" requiredexpression="@submitaftersave != true" showexpression="@sendnow === false" helpicon="right" tooltip="Default schedule time is 5pm US Mountain Standard timezone (-7 utc) ">
+            <field attribute="sendtime" label="Send Request" requiredexpression="true" showexpression="@sendnow === false" helpicon="right" tooltip="Default schedule time is 5pm US Mountain Standard timezone (-7 utc) ">
               <renderer type="datetime" params="editable=true;allowpast=false;showminutes=false;inputsize=9"/>
             </field>
             <field attribute="sendnow" label="Send Now">
@@ -61,6 +61,10 @@
           <field attribute="reason" label="Reason for Request" requiredexpression="true">
             <renderer type="textarea"/>
           </field>
+
+          <composition inline="true" relationship="#maintenanceengineeringfileexplorer_" label="Attachments">
+            <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types"/>
+          </composition>
 
           <commandbars>
             <commandgroup position="modal.detail.primary">
