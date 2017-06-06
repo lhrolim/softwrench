@@ -87,9 +87,10 @@
 
           <section>
             <field attribute="tonumber" label="T.O.#" requiredexpression="true"/>
-            <field attribute="email" label="Send to (Email)" requiredexpression="true">
-              <renderer type="email" params="valtype=email;valmessage=invalid email format;"/>
-            </field>
+
+            <optionfield label="Send to (Email)" attribute="email" requiredexpression="true">
+              <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
+            </optionfield>
             <field attribute="sitename" label="Site Name" requiredexpression="true"/>
             <section orientation="horizontal">
               <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="true"/>

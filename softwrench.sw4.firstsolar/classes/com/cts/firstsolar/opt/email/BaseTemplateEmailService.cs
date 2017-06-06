@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
@@ -11,6 +13,7 @@ using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sW4.Shared2.Data;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
@@ -37,13 +40,29 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var msg = GenerateEmailBody(request);
 
             Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
-            var emailData = new EmailData(NoReplySendFrom, request.Email, GetEmailSubjectMsg(request), msg, attachs);
+            var emailData = new EmailData(NoReplySendFrom, GetSendTo(request), GetEmailSubjectMsg(request), msg, attachs);
             EmailService.SendEmail(emailData);
 
             request.Status = RequestStatus.Sent;
             request.ActualSendTime = DateTime.Now;
 
             return await dao.SaveAsync(request);
+        }
+
+        public virtual string HandleSendTo(AttributeHolder data) {
+            var stringOrArray = data.GetAttribute("email");
+            if (stringOrArray == null) {
+                return null;
+            }
+
+            if (stringOrArray is string) {
+                return stringOrArray as string;
+            }
+            if (!(stringOrArray is Array) || ((Array)stringOrArray).Length == 0) {
+                return null;
+            }
+            var sendToArray = ((IEnumerable)stringOrArray).Cast<object>().Select(x => x.ToString()).ToArray();
+            return string.Join(", ", sendToArray);
         }
 
         protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
@@ -86,5 +105,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         public abstract string GenerateEmailBody(IFsEmailRequest request);
         protected abstract string GetEmailSubjectMsg(IFsEmailRequest request);
         public abstract string RequestI18N();
+        protected abstract string GetSendTo(IFsEmailRequest request);
     }
 }

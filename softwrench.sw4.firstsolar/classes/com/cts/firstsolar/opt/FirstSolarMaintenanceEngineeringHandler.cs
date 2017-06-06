@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
@@ -117,7 +116,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
             
             me.Reason = crudoperationData.GetStringAttribute("reason");
-            me.Email = crudoperationData.GetStringAttribute("email");
+            me.Email = MaintenanceEmailService.HandleSendTo(crudoperationData);
             me.WorkPackageId = workpackage.Id ?? 0;
             me.GenerateToken();
 

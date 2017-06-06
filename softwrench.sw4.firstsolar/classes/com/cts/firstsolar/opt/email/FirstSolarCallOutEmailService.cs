@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.Composition;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
-using cts.commons.Util;
 using Common.Logging;
 using DotLiquid;
 using softwrench.sw4.api.classes.email;
@@ -64,6 +60,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         public override string RequestI18N() {
             return "Callout";
+        }
+
+        protected override string GetSendTo(IFsEmailRequest request) {
+            return request.Email;
         }
 
         protected override string GetTemplatePath() {

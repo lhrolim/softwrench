@@ -3,23 +3,7 @@
     
     function fsmaintananceengService(modalService, schemaCacheService, alertService, crudContextHolderService, applicationService, compositionService, fsrequestService) {
 
-        function verifyEdit(item) {
-            const status = item["status"];
-            if ([Status.Submited, Status.Accepted, Status.Rejected].some((invalidStatus) => invalidStatus === status)) {
-                alertService.alert(`Is not possible edit a maintenance engineering request with status "${status}".`);
-                return false;
-            }
-            return true;
-        }
-
-        function verifyDelete(item) {
-            const status = item["status"];
-            if ([Status.Submited, Status.Accepted, Status.Rejected].some((invalidStatus) => invalidStatus === status)) {
-                alertService.alert(`Is not possible delete a maintenance engineering request with status "${status}".`);
-                return false;
-            }
-            return true;
-        }
+        const i18N = "maintenance engineering";
 
         function postSave(saveDatamap, callback, rollback) {
             if (saveDatamap["engineer"]) {
@@ -49,7 +33,7 @@
         }
 
         function openModalEdit(item, callback, rollback) {
-            if (!verifyEdit(item)) {
+            if (!fsrequestService.verifyEdit(item, i18N)) {
                 return;
             }
             if (!fsrequestService.validatePackage()) {
@@ -57,6 +41,7 @@
             }
             
             fsrequestService.addAttachments(item, "#maintenanceengineeringfileexplorer_");
+            item["email"] = item["email"].split(",");
 
             schemaCacheService.fetchSchema("_MaintenanceEngineering", "detail").then((schema) => {
                 item["email"] = item["email"] || "";
@@ -72,7 +57,7 @@
 
 
         function deleteRow(item, callback, rollback) {
-            if (!verifyDelete(item)) {
+            if (!fsrequestService.verifyDelete(item, i18N)) {
                 return;
             }
             alertService.confirm("Are you sure you want to delete this maintenance engineering?").then(() => {

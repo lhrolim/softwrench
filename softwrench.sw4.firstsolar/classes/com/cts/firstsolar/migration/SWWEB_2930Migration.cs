@@ -256,6 +256,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
             }
         }
+
+        /// <summary>
+        ///Changing email column size on callouts and maintenance engineerings
+        /// </summary>
+        [Migration(201706051800)]
+        public class SWWEB_2930_2955Migration : Migration {
+
+            public override void Up() {
+                Alter.Column("email").OnTable("OPT_CALLOUT").AsString(MigrationUtil.StringLarge).Nullable();
+                Alter.Column("email").OnTable("OPT_MAINTENANCE_ENG").AsString(MigrationUtil.StringLarge).Nullable();
+            }
+
+            public override void Down() {
+
+            }
+        }
     }
 
 

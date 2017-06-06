@@ -44,7 +44,7 @@
           <field attribute="status" hidden="true"/>
 
           <optionfield label="To" attribute="email" requiredexpression="true">
-            <renderer type="multiselectautocompleteclient" stereotype="email" params="multiselectautocomplete.single=true;valtype=email;"/>
+            <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
             <option label="FSOC Lead Operators (FSOCLeadOperators@firstsolar.com)" value="FSOCLeadOperators@firstsolar.com"/>
             <option label="FSOC Leadership (FSOCLeadership@firstsolar.com)" value="FSOCLeadership@firstsolar.com"/>
             <option label="FSOC The Looking Glass (FSOCTheLookingGlass@firstsolar.com)" value="FSOCTheLookingGlass@firstsolar.com"/>
@@ -57,6 +57,7 @@
             <option label="OM Document Management (O&amp;MDocumentManagement@firstsolar.com)" value="O&amp;MDocumentManagement@firstsolar.com"/>
             <option label="OM Site Field Technicians (O&amp;MSiteFieldTechnicians@firstsolar.com)" value="O&amp;MSiteFieldTechnicians@firstsolar.com"/>
           </optionfield>
+          <field label="" attribute="todummy" readonly="true" default="omengineering@firstsolar.com"/>
 
           <field attribute="reason" label="Reason for Request" requiredexpression="true">
             <renderer type="textarea"/>

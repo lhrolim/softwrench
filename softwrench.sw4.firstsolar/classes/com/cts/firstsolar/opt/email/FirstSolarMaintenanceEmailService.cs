@@ -4,6 +4,7 @@ using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
@@ -46,6 +47,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         public override string RequestI18N() {
             return "Maintenance Engineering";
+        }
+
+        protected override string GetSendTo(IFsEmailRequest request) {
+            var isProdOrUat = ApplicationConfiguration.Profile.Contains("uat") || ApplicationConfiguration.Profile.Contains("prod");
+            return isProdOrUat ? request.Email + ",omengineering@firstsolar.com" : request.Email;
         }
     }
 }

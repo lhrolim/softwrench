@@ -1,7 +1,27 @@
 ﻿(function (angular) {
     'use strict';
     
-    function fsrequestService(modalService, crudContextHolderService, applicationService, validationService) {
+    function fsrequestService(modalService, crudContextHolderService, applicationService, validationService, alertService) {
+
+        const scheduledStatus = "Scheduled";
+
+        function verifyEdit(item, i18N) {
+            const status = item["status"];
+            if (scheduledStatus !== status) {
+                alertService.alert(`Is not possible edit a ${i18N} request with status "${status}".`);
+                return false;
+            }
+            return true;
+        }
+
+        function verifyDelete(item, i18N) {
+            const status = item["status"];
+            if (scheduledStatus !== status) {
+                alertService.alert(`Is not possible delete a ${i18N} request with status "${status}".`);
+                return false;
+            }
+            return true;
+        }
 
         function buildDatamap(schema) {
             const datamap = {};
@@ -70,6 +90,8 @@
         }
 
         const service = {
+            verifyEdit,
+            verifyDelete,
             buildDatamap,
             postSave,
             postDelete,
@@ -80,5 +102,5 @@
         return service;
     }
 
-    angular.module("firstsolar").clientfactory("fsrequestService", ["modalService", "crudContextHolderService", "applicationService", "validationService", fsrequestService]);
+    angular.module("firstsolar").clientfactory("fsrequestService", ["modalService", "crudContextHolderService", "applicationService", "validationService", "alertService", fsrequestService]);
 })(angular);

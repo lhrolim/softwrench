@@ -3,6 +3,8 @@
     
     function fscalloutService(modalService, schemaCacheService, alertService, crudContextHolderService, applicationService, compositionService, fsrequestService) {
 
+        const i18N = "callout";
+
         function postSave(saveDatamap, callback, rollback) {
             saveDatamap["subcontractor_.id"] = saveDatamap["subcontractor"];
             saveDatamap["status"] = Status.Scheduled;
@@ -31,20 +33,20 @@
         }
 
         function openModalEdit(item, callback, rollback) {
-            const wpDatamap = crudContextHolderService.rootDataMap();
-            if (item["status"] !== Status.Scheduled) {
-                alertService.alert("Is not possible edit a sent callout.");
+            if (!fsrequestService.verifyEdit(item, i18N)) {
                 return;
             }
             if (!fsrequestService.validatePackage()) {
                 return;
             }
 
+            const wpDatamap = crudContextHolderService.rootDataMap();
             if (item["subcontractor_.id"]) {
                 item["subcontractor"] = item["subcontractor_.id"] + "";
             }
             item["orgid"] = wpDatamap["#workorder_.orgid"];
             item["#editing"] = true;
+            item["email"] = item["email"].split(",");
 
             fsrequestService.addAttachments(item, "#calloutfileexplorer_");
 
@@ -61,12 +63,10 @@
         }
 
         function deleteRow(item, callback, rollback) {
-            if (item["status"] !== Status.Scheduled) {
-                alertService.alert("Is not possible delete a sent callout.");
+            if (!fsrequestService.verifyDelete(item, i18N)) {
                 return;
             }
-
-            alertService.confirm("Are you sure you want to delete this subcontractor call out?").then(() => {
+            alertService.confirm("Are you sure you want to delete this subcontractor callout?").then(() => {
                 return fsrequestService.postDelete(callback, rollback);
             });
         }

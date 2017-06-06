@@ -102,6 +102,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             callOut.SubContractorName = subContractorName;
 
             callOut.Status = newStatus;
+            callOut.Email = CallOutEmailService.HandleSendTo(crudoperationData);
 
             if (sendNow.HasValue && sendNow.Value) {
                 callOut.SendTime = DateTime.Now.FromServerToMaximo();
