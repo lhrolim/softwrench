@@ -37,7 +37,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            _context.LookupContext().ApplicationLookupContext.MetadataId = "changedetail";
+            var ctx = _context.LookupContext();
+            if (ctx.ApplicationLookupContext == null) {
+                ctx.ApplicationLookupContext = new ApplicationLookupContext {
+                    MetadataId = "changedetail"
+                };
+            }
             return base.GetApplicationDetail(application, user, request);
         }
 

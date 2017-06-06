@@ -39,7 +39,7 @@ namespace softWrench.sW4.Web.Common {
             }
 
             var mockerror = json.Property(MockingErrorKey);
-            if (mockerror == null) {
+            if (mockerror == null || mockerror.Value.ToString().EqualsIc("false")) {
                 return;
             }
             try {
