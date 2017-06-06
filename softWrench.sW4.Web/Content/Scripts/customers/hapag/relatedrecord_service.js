@@ -23,7 +23,11 @@ app.factory('relatedrecordservice', function ($http, redirectService, alertServi
 
             if (application != null) {
                 var parameters = { id: id, popupmode: 'browser' };
-                contextService.insertIntoContext("currentmodulenewwindow", contextService.retrieveFromContext('currentmodule'));
+                var module = contextService.retrieveFromContext('currentmodule');
+                if (module && module.equalsAny("tom", "itom")) {
+                    contextService.insertIntoContext("currentmodulenewwindow", module);    
+                }
+                
                 redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
             } else {
                 alertService.alert('This Application {0} is not supported'.format(entity));
