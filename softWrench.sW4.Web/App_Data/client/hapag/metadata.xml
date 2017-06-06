@@ -325,7 +325,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       <relationships>
         <relationship to="longdescription" >
           <relationshipAttribute from="ticketuid" to="ldkey" primary="true"/>
-          <relationshipAttribute to="ldownertable" literal="PROBLEM" quoteLiteral="true" />
+          <relationshipAttribute to="ldownertable" literal="TICKET" quoteLiteral="true" />
           <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
         </relationship>
         <relationship to="location">
