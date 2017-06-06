@@ -3,21 +3,21 @@
     "ngInject";
 
     var imacOptions = [
-                { label: 'Select One', value: 'Select One' },
-                { label: 'Completed', value: 'COMP' },
+        { label: 'Select One', value: 'Select One' },
+        { label: 'Completed', value: 'COMP' },
     ];
 
     var woactivityOptions = [
-                { label: '-- Select One --', value: 'Select One' },
-                { label: 'Completed', value: 'COMP' },
-                { label: 'Not Required', value: 'NOTREQ' },
-                { label: 'Failed', value: 'FAIL' }
+        { label: '-- Select One --', value: 'Select One' },
+        { label: 'Completed', value: 'COMP' },
+        { label: 'Not Required', value: 'NOTREQ' },
+        { label: 'Failed', value: 'FAIL' }
     ];
 
     var approvalsOptions = [
-                { label: '-- Select One --', value: 'Select One' },
-                { label: 'Approved', value: 'Approved' },
-                { label: 'Rejected', value: 'Rejected' }
+        { label: '-- Select One --', value: 'Select One' },
+        { label: 'Approved', value: 'Approved' },
+        { label: 'Rejected', value: 'Rejected' }
     ];
 
     function isMemberOfOwnerGroup(ownerGroup) {
@@ -90,15 +90,22 @@
         var urlToUse = url("api/data/operation/{0}/{1}?platform=web&id=".format(applicationName, actionname) + schemaService.getId(datamap, $scope.parentschema));
         parameters = addCurrentSchemaDataToJson(parameters, schema);
         var json = angular.toJson(parameters);
-        $http.post(urlToUse, json).success(function (result) {
-            var relName = isJobPlan ? "woactivity_" : "approvals_";
-            var eventData = {};
-            eventData[relName] = {
-                list: result.resultObject.fields[relName],
-                relationship: relName
-            };
-            $scope.$emit("sw_compositiondataresolved", eventData);
-        });
+
+        contextService.insertIntoContext("skipmetadataonbrowser", true);
+
+        $http.post(urlToUse, json)
+            .success(function (result) {
+                var relName = isJobPlan ? "woactivity_" : "approvals_";
+                var eventData = {};
+                eventData[relName] = {
+                    list: result.resultObject.fields[relName],
+                    relationship: relName
+                };
+                $scope.$emit("sw_compositiondataresolved", eventData);
+                contextService.deleteFromContext("skipmetadataonbrowser");
+            }).error(function (result) {
+                contextService.deleteFromContext("skipmetadataonbrowser");
+            });
     };
 
     $scope.submitEnabled = function () {

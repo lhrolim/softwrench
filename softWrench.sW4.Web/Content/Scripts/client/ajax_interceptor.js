@@ -9,7 +9,10 @@ angular.module('sw_layout').config(['$httpProvider', function ($httpProvider) {
             lockCommandBars();
             lockTabs();
             config.headers['currentmodule'] = contextService.retrieveFromContext('currentmodule');
-            config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');
+            var metadataPreventedByContext = contextService.getFromContext("skipmetadataonbrowser");
+            if (metadataPreventedByContext !== "true") {
+                config.headers['currentmetadata'] = contextService.retrieveFromContext('currentmetadata');    
+            }
             config.headers['mockerror'] = sessionStorage['mockerror'];
             config.headers['requesttime'] = new Date().getTime();
             config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();
