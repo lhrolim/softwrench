@@ -198,9 +198,9 @@
                 </optionfield>
               </section>
               <section>
-                <association label="Site Technician" labelfield="#workorder_.technician_.displayname" target="#workorder_.owner" enableexpression="@outagetype != 'NOP'"/>
-                <association label="Site Supervisor" labelfield="#workorder_.supervisor_.displayname" target="#workorder_.supervisor" enableexpression="@outagetype != 'NOP'"/>
-                <association label="Regional Plant Manager" labelfield="#workorder_.plantmanager_.displayname" target="#workorder_.supervisor2" enableexpression="@outagetype != 'NOP'"/>
+                <field label="Site Technician" attribute="#technician" readonly="true"/>
+                <field label="Site Supervisor" attribute="#supervisor" readonly="true"/>
+                <field label="Regional Plant Manager" attribute="#manager" readonly="true"/>
               </section>
             </section>
           </section>

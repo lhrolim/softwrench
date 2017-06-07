@@ -204,9 +204,41 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
 
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
+            await LoadTechSupManager(result);
 
             return result;
+        }
 
+        private async Task LoadTechSupManager(ApplicationDetailResult result) {
+            var row = (Dictionary<string, string>)null;
+
+            if (ApplicationConfiguration.IsProd()) {
+                var workorderid = result.ResultObject.GetLongAttribute("workorderid");
+                var qryResult =
+                    await MaxDao.FindByNativeQueryAsync(FSWPackageConstants.TechSupManagerQuery, workorderid);
+                if (qryResult == null || !qryResult.Any()) {
+                    return;
+                }
+                row = qryResult.First();
+            } else {
+                row = new Dictionary<string, string>()
+                {
+                    {FSWPackageConstants.TechColumn, "Test Technician"},
+                    {FSWPackageConstants.SupervisorColumn, "Test Supervisor"},
+                    {FSWPackageConstants.RegionalManagerColumn, "Test Manager"}
+                };
+            }
+
+
+            if (row.ContainsKey(FSWPackageConstants.TechColumn)) {
+                result.ResultObject.SetAttribute("#technician", row[FSWPackageConstants.TechColumn]);
+            }
+            if (row.ContainsKey(FSWPackageConstants.SupervisorColumn)) {
+                result.ResultObject.SetAttribute("#supervisor", row[FSWPackageConstants.SupervisorColumn]);
+            }
+            if (row.ContainsKey(FSWPackageConstants.RegionalManagerColumn)) {
+                result.ResultObject.SetAttribute("#manager", row[FSWPackageConstants.RegionalManagerColumn]);
+            }
         }
 
         private async Task AddWorkorderRelatedData(InMemoryUser user, ApplicationDetailResult result) {
