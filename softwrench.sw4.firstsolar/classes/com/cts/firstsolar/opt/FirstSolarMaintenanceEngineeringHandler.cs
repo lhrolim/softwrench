@@ -63,8 +63,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             await AttachmentsHandler.HandleEmails(package, siteId, FSWPackageConstants.MaintenanceEngAttachsRelationship, FilterPrefix, mesToSend, MaintenanceEmailService);
         }
 
-        public void HandleEmail(MaintenanceEngineering me, string woId, string woNum, string siteId) {
-            AttachmentsHandler.HandleEmail(me, woId, woNum, siteId, FilterPrefix, FSWPackageConstants.MaintenanceEngAttachsRelationship, MaintenanceEmailService);
+        public void HandleEmail(MaintenanceEngineering me, WorkPackage package, string siteId) {
+            AttachmentsHandler.HandleEmail(me, package, siteId, FilterPrefix, FSWPackageConstants.MaintenanceEngAttachsRelationship, MaintenanceEmailService);
         }
 
         public void AddEngineerAssociations(ApplicationDetailResult result) {

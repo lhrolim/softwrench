@@ -25,8 +25,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
             var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCallOutEmailService>();
             var callOut = Dao.FindAll<CallOut>(typeof(CallOut)).First();
+            var package = Dao.FindAll<WorkPackage>(typeof(WorkPackage)).First();
 
-            var html = service.GenerateEmailBody(callOut);
+            var html = service.GenerateEmailBody(callOut, package, "1803");
 
 
 
@@ -47,8 +48,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
             var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarMaintenanceEmailService>();
             var callOut = Dao.FindAll<MaintenanceEngineering>(typeof(MaintenanceEngineering)).First();
+            var package = Dao.FindAll<WorkPackage>(typeof(WorkPackage)).First();
 
-            var html = service.GenerateEmailBody(callOut);
+            var html = service.GenerateEmailBody(callOut, package, "1803");
 
             var file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Desktop\\maintenance.html");
             file.WriteLine(html);

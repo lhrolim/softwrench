@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,15 +33,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         private readonly string _headerImageUrl;
         protected readonly IApplicationConfiguration AppConfig;
 
-        public virtual async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, List<EmailAttachment> attachs = null) {
+        public virtual async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             Validate.NotNull(request, "toSend");
 
             var dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>();
 
-            var msg = GenerateEmailBody(request);
+            var msg = GenerateEmailBody(request, package, siteId);
 
             Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
-            var emailData = new EmailData(NoReplySendFrom, GetSendTo(request), GetEmailSubjectMsg(request), msg, attachs);
+            var emailData = new EmailData(NoReplySendFrom, GetSendTo(request, package, siteId), GetEmailSubjectMsg(request, package, siteId), msg, attachs);
             EmailService.SendEmail(emailData);
 
             request.Status = RequestStatus.Sent;
@@ -102,9 +103,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return RedirectService.GetRootUrl() + _headerImageUrl;
         }
 
-        public abstract string GenerateEmailBody(IFsEmailRequest request);
-        protected abstract string GetEmailSubjectMsg(IFsEmailRequest request);
+        public abstract string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId);
+        protected abstract string GetEmailSubjectMsg(IFsEmailRequest request, WorkPackage package, string siteId);
         public abstract string RequestI18N();
-        protected abstract string GetSendTo(IFsEmailRequest request);
+        protected abstract string GetSendTo(IFsEmailRequest request, WorkPackage package, string siteId);
+
+        public string FmtDate(DateTime? date) {
+            if (date == null) {
+                return "";
+            }
+            var culture = new CultureInfo("en-US");
+            return date.Value.ToString("G", culture);
+        }
     }
 }

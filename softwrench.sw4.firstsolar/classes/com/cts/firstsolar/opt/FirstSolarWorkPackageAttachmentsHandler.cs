@@ -138,21 +138,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var woCompositions = await dataset.GetWoCompositions(package.WorkorderId.ToString(), wonum, siteId, relList);
             var attachs = woCompositions.ResultObject.First(pair => attachsRelationship.Equals(pair.Key)).Value;
             requestsList.ForEach(request => {
-                AsyncHelper.RunSync(() => InnerHandleEmail(request, wonum, siteId, filterPrefix, attachs, emailService));
+                AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId, filterPrefix, attachs, emailService));
             });
         }
 
-        public void HandleEmail(IFsEmailRequest request, string woId, string woNum, string siteId, string filterPrefix, string relationship, FirstSolarBaseEmailService emailService) {
+        public void HandleEmail(IFsEmailRequest request, WorkPackage package, string siteId, string filterPrefix, string relationship, FirstSolarBaseEmailService emailService) {
             // to avoid cicle
             var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
 
             var relList = new List<string> { relationship };
-            var woCompositions = AsyncHelper.RunSync(() => dataset.GetWoCompositions(woId, woNum, siteId, relList));
+            var woCompositions = AsyncHelper.RunSync(() => dataset.GetWoCompositions(package.WorkorderId + "", package.Wonum, siteId, relList));
             var attachs = woCompositions.ResultObject.First(pair => relationship.Equals(pair.Key)).Value;
-            AsyncHelper.RunSync(() => InnerHandleEmail(request, woNum, siteId, filterPrefix, attachs, emailService));
+            AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId, filterPrefix, attachs, emailService));
         }
 
-        private async Task InnerHandleEmail(IFsEmailRequest request, string wonum, string siteId, string filterPrefix, EntityRepository.SearchEntityResult attachs, FirstSolarBaseEmailService emailService) {
+        private async Task InnerHandleEmail(IFsEmailRequest request, WorkPackage package, string siteId, string filterPrefix, EntityRepository.SearchEntityResult attachs, FirstSolarBaseEmailService emailService) {
             var emailAttachs = new List<EmailAttachment>();
             var attachTasks = new List<Task>();
 
@@ -166,10 +166,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
                 await Task.WhenAll(attachTasks);
 
-                await emailService.SendEmail(request, emailAttachs);
+                await emailService.SendEmail(request, package, siteId, emailAttachs);
             } catch (Exception ex) {
                 request.Status = RequestStatus.Error;
-                Log.ErrorFormat("Failed to send email for {0} {1} from workorder with wonum {2} from site {3}: {4}", emailService.RequestI18N(), request.Id, wonum, siteId, ex.Message);
+                Log.ErrorFormat("Failed to send email for {0} {1} from workorder with wonum {2} from site {3}: {4}", emailService.RequestI18N(), request.Id, package.Wonum, siteId, ex.Message);
                 await Dao.SaveAsync(request);
             }
         }

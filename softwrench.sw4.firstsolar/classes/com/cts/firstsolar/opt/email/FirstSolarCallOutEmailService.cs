@@ -22,7 +22,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             Log.Debug("init Log");
         }
 
-        public override string GenerateEmailBody(IFsEmailRequest request) {
+        public override string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId) {
             var callout = request as CallOut;
 
             BuildTemplate();
@@ -38,8 +38,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     rejectUrl,
                     pendingUrl,
                     subcontractor = callout.SubContractorName == null ? "" : callout.SubContractorName,
-                    expirationdate = callout.ExpirationDate?.ToString("yyyy'-'MM'-'dd HH':'mm':'ss") ?? "",
-                    contractorstartdate= callout.ContractorStartDate?.ToString("yyyy'-'MM'-'dd HH':'mm':'ss") ?? "",
+                    expirationdate = FmtDate(callout.ExpirationDate),
+                    contractorstartdate= FmtDate(callout.ContractorStartDate),
                     ponumber = callout.PoNumber,
                     tonumber = callout.ToNumber,
                     site = callout.SiteName,
@@ -53,16 +53,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return msg;
         }
 
-        protected override string GetEmailSubjectMsg(IFsEmailRequest request) {
+        protected override string GetEmailSubjectMsg(IFsEmailRequest request, WorkPackage package, string siteId) {
             var callout = request as CallOut;
-            return callout == null ? "" : "[First Solar] Callout Request ({0}, {1})".Fmt(callout.ContractorStartDate, callout.SiteName);
+            return callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDate(callout.ContractorStartDate), callout.SiteName);
         }
 
         public override string RequestI18N() {
             return "Callout";
         }
 
-        protected override string GetSendTo(IFsEmailRequest request) {
+        protected override string GetSendTo(IFsEmailRequest request, WorkPackage package, string siteId) {
             return request.Email;
         }
 

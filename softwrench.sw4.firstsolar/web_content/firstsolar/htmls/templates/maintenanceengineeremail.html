@@ -142,25 +142,64 @@
     </p>
 
     <p style="box-sizing:border-box;margin-top:20px;">
-        Follows the request details
+        Follows the request details <a class="btn btn-info" href="{{packageUrl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:10px;margin-bottom:0;font-size:12px;font-weight:400;line-height:1.0;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;color:#fff;background-color:#5bc0de; border: none;">View Full Details</a>
     <p style="box-sizing:border-box;" />
 
 
     <div class="field  col-xs-12 emailsection" style="box-sizing:border-box;width:100%;float:left;border-width:1px;border-style:solid;border-color:#e0e0e0;border-radius:4px;padding-top:15px;padding-bottom:15px;padding-right:15px;padding-left:15px;">
         <div schema="schema" datamap="datamap" displayables="fieldMetadata.displayables" orientation="vertical" data-id="" renderer-parameters="fieldMetadata.rendererParameters" hideempty="hideempty" forprint="forprint" class="ng-isolate-scope" style="box-sizing:border-box;">
-
-
+            <fieldset class="form-group  col-xs-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                <span style="box-sizing:border-box;font-weight:bold;">Work Package {{wonum}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
             <fieldset class="form-group  col-xs-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
                 Engineer:  <span style="box-sizing:border-box;font-weight:bold;">{{engineer}}</span>
             </fieldset>
             <p style="box-sizing:border-box;"></p>
-
             <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
                 Reason for Request:  <span style="box-sizing:border-box;font-weight:bold;">{{reason}}</span>
             </fieldset>
             <p style="box-sizing:border-box;"></p>
-
-
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Summary:  <span style="box-sizing:border-box;font-weight:bold;">{{summary}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Description:  <span style="box-sizing:border-box;font-weight:bold;">{{description}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Work Type:  <span style="box-sizing:border-box;font-weight:bold;">{{worktype}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Site Name:  <span style="box-sizing:border-box;font-weight:bold;">{{siteid}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Scheduled Start:  <span style="box-sizing:border-box;font-weight:bold;">{{schedstart}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Outage Required:  <span style="box-sizing:border-box;font-weight:bold;">{{outagereq}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Tier Level:  <span style="box-sizing:border-box;font-weight:bold;">{{tier}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Outage Type:  <span style="box-sizing:border-box;font-weight:bold;">{{outagetype}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Interconnect Documents:  <span style="box-sizing:border-box;font-weight:bold;">{{interdocs}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
+            <fieldset class="form-group  col-xs-12 col-sm-12 col-md-12 row" style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;">
+                Operation Procedures:  <span style="box-sizing:border-box;font-weight:bold;">{{operationprocedured}}</span>
+            </fieldset>
+            <p style="box-sizing:border-box;"></p>
         </div>
     </div>
     <p style="box-sizing:border-box;">

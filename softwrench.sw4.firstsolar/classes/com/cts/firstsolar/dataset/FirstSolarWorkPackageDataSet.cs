@@ -241,22 +241,27 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
         }
 
-        private async Task AddWorkorderRelatedData(InMemoryUser user, ApplicationDetailResult result) {
-            var workorderid = result.ResultObject.GetLongAttribute("workorderid");
-
-            if (workorderid == null) {
-                return;
+        public async Task<DataMap> GetWorkorderRelatedData(InMemoryUser user, long? workorderId) {
+            if (workorderId == null) {
+                return null;
             }
 
             var key = new ApplicationMetadataSchemaKey("workpackageschema");
             var applicationMetadata = MetadataProvider.Application("workorder").ApplyPolicies(key, user, ClientPlatform.Web);
             var response = await DataSetProvider.LookupDataSet("workorder", applicationMetadata.Schema.SchemaId)
-                .GetApplicationDetail(applicationMetadata, user, new DetailRequest(workorderid.ToString(), key));
-            var workorderDM = response.ResultObject;
+                .GetApplicationDetail(applicationMetadata, user, new DetailRequest(workorderId.ToString(), key));
+            return response.ResultObject;
+        }
+
+        private async Task AddWorkorderRelatedData(InMemoryUser user, ApplicationDetailResult result) {
+            var workorderid = result.ResultObject.GetLongAttribute("workorderid");
+            var workorderDM = await GetWorkorderRelatedData(user, workorderid);
+            if (workorderDM == null) {
+                return;
+            }
             foreach (var field in workorderDM) {
                 result.ResultObject.SetAttribute("#workorder_." + field.Key, field.Value);
             }
-
             result.ResultObject.SetAttribute("wooutreq", workorderDM.GetIntAttribute("outreq"));
         }
 
