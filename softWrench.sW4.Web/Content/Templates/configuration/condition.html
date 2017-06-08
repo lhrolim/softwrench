@@ -1,0 +1,20 @@
+﻿<div ng-controller="ConfigController">
+    
+    <conditionmodal profile="currentprofile" module="currentmodule" type="type" condition="modalcondition" applications="applications"
+                    fullkey="fullkey"></conditionmodal>
+
+    <div class="input-group">
+        
+        <button style="margin-left: 10px" ng-click="createCondition()" rel="tooltip" data-original-title="Create a new Condition" class="btn">
+            <i class="fa fa-plus"></i>
+        </button>
+        <button style="margin-left: 10px" ng-click="editCondition(currentcondition)" rel="tooltip" data-original-title="Edit a existing condition" class="btn">
+            <i class="fa fa-edit"></i>
+        </button>
+<!--        <button style="margin-left: 10px" ng-click="removeCondition(currentcondition)" rel="tooltip" data-original-title="Remove the existing condition" class="btn">-->
+<!--            <i class="fa fa-trash"></i>-->
+<!--        </button>-->
+
+    </div>
+
+</div>

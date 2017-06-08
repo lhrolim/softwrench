@@ -953,6 +953,7 @@
     <Compile Include="SimpleInjector\WebApi\IAPIControllerFactory.cs" />
     <Compile Include="SimpleInjector\WebApi\SimpleInjectorWebAPIUtil.cs" />
     <Compile Include="SPF\Filters\RedirectUrlFilter.cs" />
+    <Content Include="Content\templates\configuration\condition.html" />
     <Content Include="Content\templates\crud\pdf.html" />
     <Content Include="Content\templates\directives\file\fileexplorer.html" />
     <Content Include="Content\templates\swlabel.html" />

@@ -21,7 +21,9 @@ using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
 using softwrench.sw4.user.classes.entities;
+using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Data.Configuration;
+using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Web.Controllers.Configuration {
     public class ConfigurationController : ApiController {
@@ -109,15 +111,51 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
         }
 
 
+        //
+        //        [HttpPut]
+        //        public IGenericResponseResult CreateCondition(WhereClauseRegisterCondition condition) {
+        //            var realCondition = condition.RealCondition;
+        //            if (realCondition == null) {
+        //                throw new InvalidOperationException("error creating condition");
+        //            }
+        //            var storedCondition = _dao.Save(realCondition);
+        //            _facade.ConditionAltered(storedCondition.FullKey + "whereclause");
+        //            return new GenericResponseResult<Condition> {
+        //                ResultObject = storedCondition,
+        //                SuccessMessage = "Condition successfully created"
+        //            };
+        //        }
 
         [HttpPut]
-        public IGenericResponseResult CreateCondition(WhereClauseRegisterCondition condition) {
-            var realCondition = condition.RealCondition;
-            if (realCondition == null) {
-                throw new InvalidOperationException("error creating condition");
-            }
+        public IGenericResponseResult CreateGlobalCondition(string metadataid, string alias, bool offlineOnly) {
+            var realCondition = new WhereClauseCondition {
+                AppContext = new sW4.Security.Context.ApplicationLookupContext {
+                    MetadataId = metadataid
+                },
+                Alias = alias,
+                OfflineOnly = offlineOnly,
+                Global = true
+            };
             var storedCondition = _dao.Save(realCondition);
-            _facade.ConditionAltered(storedCondition.FullKey + "whereclause");
+            //            _facade.ConditionAltered(storedCondition.FullKey + "whereclause");
+            return new GenericResponseResult<Condition> {
+                ResultObject = storedCondition,
+                SuccessMessage = "Condition successfully created"
+            };
+        }
+
+
+        [HttpPost]
+        public async Task<IGenericResponseResult> EditGlobalCondition(int id, string metadataid, string alias, bool offlineOnly) {
+
+            var wcCondition = await _dao.FindByPKAsync<WhereClauseCondition>(id);
+            wcCondition.Alias = alias;
+            wcCondition.AppContext = new sW4.Security.Context.ApplicationLookupContext {
+                MetadataId = metadataid
+            };
+            wcCondition.OfflineOnly = true;
+            var storedCondition = _dao.Save(wcCondition);
+            //            _facade.ConditionAltered(storedCondition.FullKey + "whereclause");
             return new GenericResponseResult<Condition> {
                 ResultObject = storedCondition,
                 SuccessMessage = "Condition successfully created"

@@ -13,6 +13,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
     /// This is a dto class to allow registering a whereclause while keeping all relevant information on a single class (mostly are Condition properties, but Module and Profile would be stored directly on the PropertyValue class)
     /// </summary>
     public class WhereClauseRegisterCondition : WhereClauseCondition {
+
         public string Module {
             get; set;
         }
@@ -29,10 +30,10 @@ namespace softWrench.sW4.Configuration.Services.Api {
                 return Alias;
             }
 
-//            if (AppContext?.MetadataId != null) {
-//                //generating an alias based on the metadataid
-//                return AppContext.MetadataId;
-//            }
+            //            if (AppContext?.MetadataId != null) {
+            //                //generating an alias based on the metadataid
+            //                return AppContext.MetadataId;
+            //            }
             IDictionary<string, object> sortedDict = new SortedDictionary<string, object>();
             sortedDict.Add("profileid", ProfileId);
             sortedDict.Add("userprofile", UserProfile);
@@ -72,7 +73,14 @@ namespace softWrench.sW4.Configuration.Services.Api {
             }
         }
 
-        public static WhereClauseRegisterCondition FromDataOrNull(string metadataId, int? profileId, bool? offline, string schema = null) {
+        public static WhereClauseRegisterCondition FromDataOrNull(int? globalSelectedCondition, string metadataId, int? profileId, bool? offline, string schema = null) {
+            if (globalSelectedCondition != null) {
+                return new WhereClauseRegisterCondition {
+                    Id = globalSelectedCondition,
+                    Global = true
+                };
+            }
+
 
             if (!string.IsNullOrEmpty(metadataId) || profileId.HasValue || offline.HasValue) {
                 return new WhereClauseRegisterCondition {

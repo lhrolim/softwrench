@@ -9,8 +9,9 @@ namespace softWrench.sW4.Configuration.Definitions {
     [Class(Table = "CONF_CONDITION", Lazy = false)]
     public class Condition : IBaseEntity {
 
-        public const string ByAlias = "from Condition where Alias =? and FullKey = ?";
-        public const string GlobalConditions = "from Condition where Global = 1";
+        public const string ByAlias = "from Condition where Alias =?";
+        public const string ByAliasAndKey = "from Condition where Alias =? and FullKey = ?";
+        public const string GlobalConditions = "from Condition where Global = 1 and FullKey = null";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]

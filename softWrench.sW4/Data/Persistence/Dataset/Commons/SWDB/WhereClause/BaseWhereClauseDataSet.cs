@@ -4,10 +4,12 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Configuration.Definitions;
+using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API;
@@ -58,6 +60,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             }
             var datamap = result.ResultObject;
             datamap.SetAttribute("#application", datamap.GetStringAttribute("definition_id").Split('/')[2]);
+            datamap.SetAttribute("#globalcondition", datamap.GetStringAttribute("condition_.global2"));
+            datamap.SetAttribute("#selectedGlobalCondition", datamap.GetStringAttribute("condition_.wcwcid"));
             if (datamap.GetStringAttribute("value") == null) {
                 datamap.SetAttribute("#value", datamap.GetStringAttribute("systemvalue"));
             } else {
@@ -81,12 +85,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             var profileId = crudoperationData.GetIntAttribute("userprofile");
             var offline = crudoperationData.GetBooleanAttribute("#offline");
             var schema = crudoperationData.GetStringAttribute("#schema");
+            var globalSelectedCondition = crudoperationData.GetIntAttribute("#selectedGlobalCondition");
 
             ValidateSchema(schema, offline, applicationName);
 
-            var registerCondition = WhereClauseRegisterCondition.FromDataOrNull(metadataId, profileId, offline, schema);
+            
+            var registerCondition = WhereClauseRegisterCondition.FromDataOrNull(globalSelectedCondition,metadataId, profileId, offline, schema);
 
-            WhereClauseRegisterService.ValidateWhereClause(applicationName, query, registerCondition);
+            await WhereClauseRegisterService.ValidateWhereClause(applicationName, query, registerCondition);
 
             if (operationData.Operation.Equals(OperationConstants.CRUD_UPDATE)) {
                 await WhereClauseRegisterService.UpdateExisting(int.Parse(crudoperationData.Id), query);
@@ -98,14 +104,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             return new TargetResult(propertyValue.Id.ToString(), null, null);
         }
 
-        private static void ValidateSchema(string schema, bool? offline, string applicationName)
-        {
-            if (schema != null)
-            {
+        private static void ValidateSchema(string schema, bool? offline, string applicationName) {
+            if (schema != null) {
                 var platform = (offline.HasValue && offline.Value) ? ClientPlatform.Mobile : ClientPlatform.Web;
                 var resultSchema = MetadataProvider.Schema(applicationName, schema, platform);
-                if (resultSchema == null)
-                {
+                if (resultSchema == null) {
                     throw new InvalidOperationException($"Schema {schema} not found for application {applicationName}");
                 }
             }
@@ -115,6 +118,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             var names = MetadataProvider.FetchAvailableAppsAndEntities(false);
             var applications = names.Select(name => new GenericAssociationOption(name, name)).Cast<IAssociationOption>().ToList().OrderBy(a => a.Label);
             return applications;
+        }
+
+        public IEnumerable<IAssociationOption> GetGlobalConditions(OptionFieldProviderParameters parameter)
+        {
+            var entity = parameter.OriginalEntity;
+            var applicationName = entity.GetAttribute("#application");
+
+
+            var conditions = SWDAO.FindByQuery<Condition>(Condition.GlobalConditions);
+            var conds = conditions.Select(cond => new GenericAssociationOption(cond.Id.ToString(), cond.Alias)).Cast<IAssociationOption>().ToList().OrderBy(a => a.Label);
+            return conds;
         }
 
         public IEnumerable<IAssociationOption> GetProfiles(OptionFieldProviderParameters parameter) {

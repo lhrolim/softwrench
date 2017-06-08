@@ -60,10 +60,13 @@ namespace softWrench.sW4.Configuration.Services {
             _auditManager = auditManager;
         }
 
-        public virtual void ValidateWhereClause([NotNull]string applicationName, [NotNull]string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
+        public virtual async Task ValidateWhereClause([NotNull]string applicationName, [NotNull]string whereClause, WhereClauseCondition conditionToValidateAgainst = null) {
             if (string.IsNullOrEmpty(whereClause) || whereClause.EqualsAny("1=1", "1!=1")) {
                 //common whereclauses which validation can be skipped
                 return;
+            }
+            if (conditionToValidateAgainst != null && conditionToValidateAgainst.Global && conditionToValidateAgainst.Id != null) {
+                conditionToValidateAgainst = await _dao.FindByPKAsync<WhereClauseCondition>(conditionToValidateAgainst.Id);
             }
 
             var validators = CustomValidators();
@@ -248,10 +251,24 @@ namespace softWrench.sW4.Configuration.Services {
             if (condition == null) {
                 return null;
             }
+
+            if (condition.Id != null && condition.Global) {
+                return await _dao.FindByPKAsync<Condition>(condition.Id);
+            }
+
             condition.GenerateAlias();
 
+            Condition storedCondition;
+
             //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
-            var storedCondition = await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAlias, condition.Alias, configKey);
+            if (condition.Global) {
+                storedCondition =
+                    await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAlias, condition.Alias);
+            } else {
+                storedCondition =
+                    await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAliasAndKey, condition.Alias, configKey);
+            }
+
             if (storedCondition != null) {
                 if (wcCreation) {
                     throw new InvalidOperationException("The exact same condition is already setup for this application, cannot override it");
@@ -260,7 +277,10 @@ namespace softWrench.sW4.Configuration.Services {
             }
 
             var realValue = condition.RealCondition;
-            realValue.FullKey = configKey;
+            if (!condition.Global) {
+                realValue.FullKey = configKey;
+            }
+
 
             if (realValue.Equals(storedCondition)) {
                 Log.DebugFormat("No change on condition, returning existing condition");

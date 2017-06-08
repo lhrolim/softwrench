@@ -314,7 +314,7 @@
             isSameSchema: isSameSchema,
             allDisplayables: allDisplayables,
             flattenDisplayables: flattenDisplayables,
-            getSchema: getSchema
+            getSchema
         };
 
     }]);
