@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.callout.exception;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sw4.webcommons.classes.api;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
@@ -15,21 +16,27 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [Import]
         public SWDBHibernateDAO DAO { get; set; }
 
+        [Import]
+        public FirstSolarCallOutEmailService FirstSolarCallOutEmailService { get; set; }
+        
+
+        [Import]
+        public FirstSolarMaintenanceEmailService FirstSolarMaintenanceEmailService { get; set; }
 
 
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> TransitionCallout(string token, string status) {
-            return await DoTransition<CallOut>(token, status);
+            return await DoTransition<CallOut>(token, status, FirstSolarCallOutEmailService);
         }
 
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> TransitionMaintenanceEngineering(string token, string status) {
-            return await DoTransition<MaintenanceEngineering>(token, status);
+            return await DoTransition<MaintenanceEngineering>(token, status, FirstSolarMaintenanceEmailService);
         }
 
 
         [System.Web.Http.HttpGet]
-        private async Task<ActionResult> DoTransition<T>(string token, string status) where T : class, IFsEmailRequest, new() {
+        private async Task<ActionResult> DoTransition<T>(string token, string status, FirstSolarBaseEmailService emailService) where T : class, IFsEmailRequest, new() {
             var entity = await DAO.FindSingleByQueryAsync<T>(new T().ByToken, token);
             if (entity == null) {
                 throw IFSEmailWorkflowException.NotFound<T>();
@@ -46,6 +53,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
             await DAO.SaveAsync(entity);
             var wp = await DAO.FindByPKAsync<WorkPackage>(entity.WorkPackageId);
+
+            if (RequestStatus.Rejected.Equals(newStatus)) {
+                emailService.HandleReject(entity, wp);
+            }
 
             return View("GenericRequest", new EmailRequestModel { WoNum = wp.Wonum, Token = token, Type = entity.GetType().Name, Action = newStatus.LabelName(), EntityName = entity.EntityDescription });
         }

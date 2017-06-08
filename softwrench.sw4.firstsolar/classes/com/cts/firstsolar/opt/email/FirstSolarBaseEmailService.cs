@@ -35,13 +35,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         public virtual async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             Validate.NotNull(request, "toSend");
+            Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
 
             var dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>();
-
-            var msg = GenerateEmailBody(request, package, siteId);
-
-            Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
-            var emailData = new EmailData(NoReplySendFrom, GetSendTo(request, package, siteId), GetEmailSubjectMsg(request, package, siteId), msg, attachs);
+            var emailData = BuildEmailData(request, package, siteId, attachs);
             EmailService.SendEmail(emailData);
 
             request.Status = RequestStatus.Sent;
@@ -65,6 +62,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var sendToArray = ((IEnumerable)stringOrArray).Cast<object>().Select(x => x.ToString()).ToArray();
             return string.Join(", ", sendToArray);
         }
+
+        public abstract void HandleReject(IFsEmailRequest request, WorkPackage package);
 
         protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
             Log.Debug("init Log");
@@ -103,10 +102,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return RedirectService.GetRootUrl() + _headerImageUrl;
         }
 
-        public abstract string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId);
-        protected abstract string GetEmailSubjectMsg(IFsEmailRequest request, WorkPackage package, string siteId);
         public abstract string RequestI18N();
-        protected abstract string GetSendTo(IFsEmailRequest request, WorkPackage package, string siteId);
+        protected abstract EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null);
 
         public string FmtDate(DateTime? date) {
             if (date == null) {

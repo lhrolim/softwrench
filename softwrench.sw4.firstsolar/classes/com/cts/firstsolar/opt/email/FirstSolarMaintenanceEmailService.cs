@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.IO;
 using System.Linq;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
@@ -11,6 +14,8 @@ using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -18,28 +23,80 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
     public class FirstSolarMaintenanceEmailService : FirstSolarBaseEmailService {
 
+        [Import]
+        public IMaximoHibernateDAO MaxDao { get; set; }
+
+        private const string SupervisorEmailQuery = "select emailaddress from email where personid = ?";
+
+        private Template _rejectTemplate;
+
         public FirstSolarMaintenanceEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) : base(emailService, redirectService, appConfig) {
             Log.Debug("init Log");
         }
 
-        public override string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId) {
-            var engRequest = request as MaintenanceEngineering;
+        protected override EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
+            var isProdOrUat = ApplicationConfiguration.Profile.Contains("uat") || ApplicationConfiguration.Profile.Contains("prod");
+            var to = isProdOrUat ? request.Email + ",omengineering@firstsolar.com" : request.Email;
 
-            BuildTemplate();
+            var me = request as MaintenanceEngineering;
+            var subject = me == null ? "[First Solar] Maintenance Engineering Request" :
+                "[First Solar] Maintenance Engineering Request ({0}, {1})".Fmt(FmtDate(package.CreatedDate), siteId);
 
-            var user = SecurityFacade.CurrentUser();
-            var woId = package.WorkorderId;
-            var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
-            var woData = AsyncHelper.RunSync(() => dataset.GetWorkorderRelatedData(user, woId));
+            var woData = GetWoData(package);
+            var msg = GenerateEmailBody(request, package, siteId, woData);
+            var emailData = new EmailData(NoReplySendFrom, to, subject, msg, attachs);
+            return emailData;
+        }
 
-            var acceptUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=approved".Fmt(engRequest.Token));
-            var rejectUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=rejected".Fmt(engRequest.Token));
-            var pendingUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=pending".Fmt(engRequest.Token));
+        public string GenerateRejectEmailBody(MaintenanceEngineering me, WorkPackage package, string siteId = null, AttributeHolder woData = null) {
+            if (_rejectTemplate == null || AppConfig.IsLocal()) {
+                var path = AppDomain.CurrentDomain.BaseDirectory + "//Content//Customers//firstsolar//htmls//templates//maintenanceengrejectemail.html";
+                var templateContent = File.ReadAllText(path);
+                _rejectTemplate = Template.Parse(templateContent);
+            }
+            return _rejectTemplate.Render(GenerateEmailHash(me, package, siteId, woData));
+        }
+
+        public override void HandleReject(IFsEmailRequest request, WorkPackage package) {
+            var me = request as MaintenanceEngineering;
+            var woData = GetWoData(package);
+            var to = GetSupervisorEmail(woData);
+
+            if (string.IsNullOrEmpty(to)) {
+                return;
+            }
+
+            var siteId = woData.GetStringAttribute("siteid");
+            var subject = "[First Solar] Maintenance Engineering Request Rejected ({0}, {1})".Fmt(FmtDate(package.CreatedDate), siteId);
+            var msg = GenerateRejectEmailBody(me, package, siteId, woData);
+            var emailData = new EmailData(NoReplySendFrom, to, subject, msg);
+            EmailService.SendEmail(emailData);
+        }
+
+        protected override string GetTemplatePath() {
+            return "//Content//Customers//firstsolar//htmls//templates//maintenanceengineeremail.html";
+        }
+
+        public override string RequestI18N() {
+            return "Maintenance Engineering";
+        }
+
+        private Hash GenerateEmailHash(MaintenanceEngineering me, WorkPackage package, string siteId = null, AttributeHolder woData = null) {
+            var acceptUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=approved".Fmt(me.Token));
+            var rejectUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=rejected".Fmt(me.Token));
+            var pendingUrl = RedirectService.GetActionUrl("FirstSolarEmail", "TransitionMaintenanceEngineering", "token={0}&status=pending".Fmt(me.Token));
             var packageUrl = RedirectService.GetApplicationUrl("_WorkPackage", "adetail", "input", package.Id + "");
 
             var tier = "";
             if (!string.IsNullOrEmpty(package.Tier)) {
                 tier = "Tier " + package.Tier.Substring(package.Tier.Length - 1);
+            }
+
+            if (woData == null) {
+                woData = GetWoData(package);
+            }
+            if (siteId == null) {
+                siteId = woData.GetStringAttribute("siteid");
             }
 
             var woOutReq = woData.GetIntAttribute("outreq");
@@ -86,47 +143,54 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     break;
             }
 
-            var msg = Template.Render(
-                Hash.FromAnonymousObject(new {
-                    acceptUrl,
-                    rejectUrl,
-                    pendingUrl,
-                    packageUrl,
-                    wonum = package.Wonum,
-                    summary = woData.GetAttribute("description"),
-                    description = woData.GetAttribute("ld_.ldtext"),
-                    worktype = woData.GetAttribute("worktype"),
-                    siteid = siteId,
-                    schedstart = FmtDate(woData.GetAttribute("schedstart") as DateTime?),
-                    tier,
-                    outagereq,
-                    outagetype,
-                    interdocs,
-                    operationprocedured = package.OutageType,
-                    headerurl = GetHeaderURL(),
-                    engineer = engRequest.Engineer,
-                    reason = engRequest.Reason
-                }));
-            return msg;
+            return Hash.FromAnonymousObject(new
+            {
+                acceptUrl,
+                rejectUrl,
+                pendingUrl,
+                packageUrl,
+                wonum = package.Wonum,
+                summary = woData.GetAttribute("description"),
+                description = woData.GetAttribute("ld_.ldtext"),
+                worktype = woData.GetAttribute("worktype"),
+                siteid = siteId,
+                schedstart = FmtDate(woData.GetAttribute("schedstart") as DateTime?),
+                tier,
+                outagereq,
+                outagetype,
+                interdocs,
+                operationprocedured = package.OutageType,
+                headerurl = GetHeaderURL(),
+                engineer = me.Engineer,
+                reason = me.Reason
+            });
         }
 
-        protected override string GetTemplatePath() {
-            return "//Content//Customers//firstsolar//htmls//templates//maintenanceengineeremail.html";
+        public string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId, AttributeHolder woData = null) {
+            var engRequest = request as MaintenanceEngineering;
+            BuildTemplate();
+            return Template.Render(GenerateEmailHash(engRequest, package, siteId, woData));
         }
 
-        protected override string GetEmailSubjectMsg(IFsEmailRequest request, WorkPackage package, string siteId) {
-            var me = request as MaintenanceEngineering;
-            return me == null ? "[First Solar] Maintenance Engineering Request" : 
-                "[First Solar] Maintenance Engineering Request ({0}, {1})".Fmt(FmtDate(package.CreatedDate), siteId);
+        private static DataMap GetWoData(WorkPackage package) {
+            var user = SecurityFacade.CurrentUser();
+            var woId = package.WorkorderId;
+            var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
+            return AsyncHelper.RunSync(() => dataset.GetWorkorderRelatedData(user, woId));
         }
 
-        public override string RequestI18N() {
-            return "Maintenance Engineering";
-        }
+        private string GetSupervisorEmail(AttributeHolder woData) {
+            var supervisor = woData.GetStringAttribute("supervisor");
+            if (string.IsNullOrEmpty(supervisor)) {
+                return null;
+            }
+            var emails = MaxDao.FindByNativeQuery(SupervisorEmailQuery, supervisor);
+            if (emails == null || !emails.Any()) {
+                return null;
+            }
 
-        protected override string GetSendTo(IFsEmailRequest request, WorkPackage package, string siteId) {
-            var isProdOrUat = ApplicationConfiguration.Profile.Contains("uat") || ApplicationConfiguration.Profile.Contains("prod");
-            return isProdOrUat ? request.Email + ",omengineering@firstsolar.com" : request.Email;
+            var emailRow = emails.First();
+            return emailRow["emailaddress"];
         }
     }
 }
