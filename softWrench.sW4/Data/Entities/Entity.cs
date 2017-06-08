@@ -49,8 +49,10 @@ namespace softWrench.sW4.Data.Entities {
             object relationship;
             attributeName = attributeName.EndsWith("_") ? attributeName : attributeName + "_";
             AssociationAttributes.TryGetValue(attributeName, out relationship);
-            if (relationship == null) {
-                if (!isSingleAssociation) {
+            if (relationship == null)
+            {
+                var listRelationshipFound = Metadata.ListAssociations().Any(l => l.Qualifier.EqualsAny(attributeName));
+                if (listRelationshipFound || !isSingleAssociation) {
                     return BlankList();
                 }
             }
