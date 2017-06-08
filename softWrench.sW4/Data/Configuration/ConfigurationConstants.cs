@@ -16,6 +16,7 @@
             public const string DefaultOrgId = "/Global/Maximo/DefaultOrgId";
             public const string DefaultSiteId = "/Global/Maximo/DefaultSiteId";
             public const string DefaultStoreLoc = "/Global/Maximo/DefaultStoreLoc";
+            public const string MaximoTimeZone = "/Global/Maximo/MaximoTimeZone";
         }
 
 

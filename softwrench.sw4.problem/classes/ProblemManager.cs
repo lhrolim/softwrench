@@ -26,7 +26,7 @@ namespace softwrench.sw4.problem.classes {
             if (handler != null) {
                 handler.OnProblemRegister(resultProblem);
             }
-            _log.WarnFormat("registering new problem {0} for entry {1}:{2}",handlerName,recordType, recordId);
+            _log.WarnFormat("registering new problem {0} for entry {1}:{2}, stack: {3}",handlerName,recordType, recordId, stackTrace);
             return resultProblem;
         }
 

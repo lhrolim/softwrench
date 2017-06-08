@@ -505,6 +505,11 @@
         </list>
         <!-- #endregion -->
       </schemas>
+
+      <properties>
+        <property key="offline.sync.avoidcaching" value="true"/>
+      </properties>
+      
     </application>
   </applications>
 

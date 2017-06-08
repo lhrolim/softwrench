@@ -4,7 +4,11 @@ using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
+using cts.commons.simpleinjector;
 using log4net;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
+using softWrench.sW4.Metadata.Properties;
 
 namespace softWrench.sW4.Util {
     public static class DateExtensions {
@@ -15,6 +19,16 @@ namespace softWrench.sW4.Util {
             return time.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
         }
 
+        private static IConfigurationFacade Facade() {
+            if (SimpleInjectorGenericFactory.Instance == null) {
+                return null;
+            }
+            return SimpleInjectorGenericFactory.Instance
+                .GetObject<IConfigurationFacade>();
+        }
+
+
+
         /// <summary>
         /// Gets the Unix Time Stamp for the DateTime 
         /// (number of seconds passed since Unix Epoch = midnight 1/1/1970).
@@ -24,7 +38,7 @@ namespace softWrench.sW4.Util {
         public static long ToUnixTimeStamp(this DateTime dateTime) {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var unixDateTime = (dateTime.ToUniversalTime() - epoch).TotalMilliseconds;
-            return (long) Math.Truncate(unixDateTime);
+            return (long)Math.Truncate(unixDateTime);
         }
 
         /// <summary>
@@ -84,7 +98,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromUserToServer(this DateTime date, InMemoryUser user) {
-            return UserMaximoConversion(date, user, ConversionKind.UserToMaximo,0);
+            return UserMaximoConversion(date, user, ConversionKind.UserToMaximo, 0);
         }
 
         public static DateTime FromUserToRightKind(this DateTime date, InMemoryUser user) {
@@ -156,7 +170,14 @@ namespace softWrench.sW4.Util {
             var maximoOffset = 0.0;
 
             if (overridenMaximoOffSet == null) {
-                var maximoTimezone = MetadataProvider.GlobalProperties.MaximoTimeZone();
+                var facade = Facade();
+                string maximoTimezone;
+                if (facade == null || ApplicationConfiguration.IsUnitTest) {
+                    maximoTimezone = MetadataProvider.GlobalProperties.MaximoTimeZone();
+                } else {
+                    maximoTimezone = facade.Lookup<string>(ConfigurationConstants.Maximo.MaximoTimeZone, "maximoutc");
+                }
+
                 if (maximoTimezone != null) {
                     try {
                         var maximoTimezoneinfo = TimeZoneInfo.FindSystemTimeZoneById(maximoTimezone);

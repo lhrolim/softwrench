@@ -32,7 +32,7 @@ namespace softWrench.sW4.Web.Controllers {
 
 
 
-        private const string ActiveInstanceQuery = "select wfid,processname from wfinstance where ownertable = ? and ownerid = ? and active = 1";
+        
 
         private const string WorkFlowById = "select wfid,processname from wfinstance where wfid = ? ";
 
@@ -86,7 +86,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
 
-            var workflows = _maximoDao.FindByNativeQuery(ActiveInstanceQuery, entityName, id);
+            var workflows = _workflowManager.GetListOfActiveWorkflows(entityName, id);
             // If there are no work flows
             if (!workflows.Any()) {
                 // Returning null will pop a warning message on the client side
@@ -106,6 +106,8 @@ namespace softWrench.sW4.Web.Controllers {
 
             return _workflowManager.DoStopWorkFlow(entityName, id, userId, siteid, orgid, workflow);
         }
+
+      
 
         public IGenericResponseResult InitRouteWorkflow(string entityName, string id, string appuserId, string siteid) {
             var user = SecurityFacade.CurrentUser();

@@ -1545,6 +1545,15 @@
       </properties>
     </application>
 
+    <application name="labor" title="Labor" entity="labor" >
+      <schemas></schemas>
+      <properties>
+        <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="mobile.fetchlimit" value="300"/>
+        <property key="offline.sync.avoidcaching" value="true"/>
+      </properties>
+    </application>
+
     <application name="causelist" title="Cause List" entity="causelist">
       <schemas>
         <list platform="mobile">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
@@ -115,9 +116,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
         private static object GetPayRate(CrudOperationData crudData) {
-            var entity = ((Entity)crudData.GetRelationship("laborcraftrate_"));
+            //TODO: review mapping
+            var craftrates = (IEnumerable<Entity>)crudData.GetRelationship("laborcraftrate_");
             object rate = null;
-            if (entity != null) {
+            if (craftrates.Any()) {
+                var entity = craftrates.First();
                 rate = entity.GetAttribute("rate");
             } else {
                 rate = SecurityFacade.CurrentUser().GetProperty("defaultcraftrate");
@@ -188,7 +191,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", DateUtil.BeginOfDay(parsedDate.Value), true);
                 WsUtil.SetValueIfNull(integrationObject, "STARTTIMEENTERED", parsedDate, true);
             } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
-                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED",DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
+                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
                 WsUtil.SetValueIfNull(integrationObject, "STARTTIMEENTERED", startdateentered.FromServerToRightKind(), true);
             }
             ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());

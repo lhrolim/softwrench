@@ -30,8 +30,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
 
         private ILog Log = LogManager.GetLogger(typeof(MaximoWorkflowManager));
 
-        public FirstSolarWorkorderCrudConnector()
-        {
+        public FirstSolarWorkorderCrudConnector() {
             Log.Debug("init..");
         }
 
@@ -71,7 +70,39 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
         }
 
 
-       
+        protected override bool WorkorderStatusChange(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData, object wo,
+            InMemoryUser user) {
+
+            var selectedStatus = crudData.GetAttribute("status");
+
+            if (!ContextLookuper.LookupContext().OfflineMode || !selectedStatus.Equals("COMP")) {
+                return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
+            }
+
+            var currentUser = SecurityFacade.CurrentUser();
+
+            var workorderId = crudData.Id;
+            var siteid = crudData.GetStringAttribute("siteid");
+            var orgid = crudData.GetStringAttribute("orgid");
+            var wonum = crudData.GetStringAttribute("wonum");
+
+            var data = WorkflowManager.GetActiveWorkflow("workorder", workorderId, "EPC-WOP");
+
+
+            if (data == null) {
+                return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
+            }
+
+          
+
+            Log.InfoFormat("routing workflow for workorder {0}", wonum);
+
+            WorkflowManager.DoStopWorkFlow("workorder", workorderId, wonum, siteid, orgid, data);
+            return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
+        }
+
+
+
 
 
         public override string ClientFilter() {

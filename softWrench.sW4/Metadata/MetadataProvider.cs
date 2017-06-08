@@ -274,11 +274,7 @@ namespace softWrench.sW4.Metadata {
             return Menu(platform).Modules;
         }
 
-        public static MetadataProperties GlobalProperties {
-            get {
-                return _globalProperties;
-            }
-        }
+        public static MetadataProperties GlobalProperties => _globalProperties;
 
         /// <summary>
         ///     Returns metadata related to all applications in the catalog

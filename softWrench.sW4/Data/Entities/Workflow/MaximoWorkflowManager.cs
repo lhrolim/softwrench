@@ -64,20 +64,24 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         private const string WfQueryString = "select wfprocessid, processname from wfprocess p where active = 1 and enabled = 1 and {0} = '{1}' and not exists(select 1 from wfinstance i where i.processname = p.processname and i.active = 1 and i.ownertable = '{2}' and i.ownerid = '{3}')";
 
-//        private const string WfAssignmentsQuery =
-//
-//        @"select wf.assignid, wf.processname from wfassignment wf
-//        where ownertable = ? and ownerid = ?
-//        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
-//        and (wf.origperson = ?  or exists (
-//        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
-//        union all
-//        select 1 from maxrole m2 
-//        inner join persongroupview pv
-//        on m2.value = pv.persongroup
-//        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
-//        and pv.personid = ?
-//        ))";
+        private const string ActiveInstancesQuery = "select wfid,processname from wfinstance where ownertable = ? and ownerid = ? and active = 1";
+
+        private const string ActiveInstanceQuery = "select wfid,processname from wfinstance where ownertable = ? and ownerid = ? and processname = ? and active = 1";
+
+        //        private const string WfAssignmentsQuery =
+        //
+        //        @"select wf.assignid, wf.processname from wfassignment wf
+        //        where ownertable = ? and ownerid = ?
+        //        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
+        //        and (wf.origperson = ?  or exists (
+        //        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
+        //        union all
+        //        select 1 from maxrole m2 
+        //        inner join persongroupview pv
+        //        on m2.value = pv.persongroup
+        //        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
+        //        and pv.personid = ?
+        //        ))";
 
         private const string WfAssignmentsQuery =
 
@@ -88,22 +92,22 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
 
 
-//        private const string WfActionsQuery =
-//        @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
-//        inner join wfaction wfa
-//        on (wf.nodeid = wfa.ownernodeid and wfa.processname = wf.processname and wf.processrev = wfa.processrev)
-//        inner join wfcallstack c on (wf.nodeid = c.nodeid and wf.wfid = c.wfid)
-//        where wf.assignid = ?
-//        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
-//        and (wf.origperson = ? or exists (
-//        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
-//        union all
-//        select 1 from maxrole m2 
-//        inner join persongroupview pv
-//        on m2.value = pv.persongroup
-//        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
-//        and pv.personid = ?
-//        ))";
+        //        private const string WfActionsQuery =
+        //        @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
+        //        inner join wfaction wfa
+        //        on (wf.nodeid = wfa.ownernodeid and wfa.processname = wf.processname and wf.processrev = wfa.processrev)
+        //        inner join wfcallstack c on (wf.nodeid = c.nodeid and wf.wfid = c.wfid)
+        //        where wf.assignid = ?
+        //        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
+        //        and (wf.origperson = ? or exists (
+        //        select 1 from maxrole m where wf.roleid = m.maxrole and type = 'PERSON' and value = ?
+        //        union all
+        //        select 1 from maxrole m2 
+        //        inner join persongroupview pv
+        //        on m2.value = pv.persongroup
+        //        where wf.roleid = m2.maxrole and m2.type = 'PERSONGROUP' 
+        //        and pv.personid = ?
+        //        ))";
 
         private const string WfActionsQuery =
         @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
@@ -122,17 +126,33 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             var results = _maxDAO.FindByNativeQuery(WfAssignmentsQuery, entityName, entityId, user.MaximoPersonId);
             return results.Select(r => new AssociationOption(r["assignid"], r["processname"])).ToList();
         }
-
+        /// <summary>
+        ///  Retrieves a list of workflows which are not yet active
+        /// </summary>
+        /// <param name="appName"></param>
+        /// <param name="workflowName"></param>
+        /// <param name="appId">the id of the entity such as workorderid, ticketuid, etc</param>
+        /// <returns>a dict with wfid,processname</returns>
         public List<Dictionary<string, string>> GetAvailableWorkflows(string appName, string workflowName, string appId) {
 
             var entityName = _cachedWorkorderSchemas[appName].Schema.EntityName;
-            
+
 
             var queryString = workflowName != null
                 ? Quartz.Util.StringExtensions.FormatInvariant(WfQueryString, workflowName, entityName, appId)
-                : Quartz.Util.StringExtensions.FormatInvariant(WfQueryString,"objectname", entityName, entityName, appId);
+                : Quartz.Util.StringExtensions.FormatInvariant(WfQueryString, "objectname", entityName, entityName, appId);
 
             return _maxDAO.FindByNativeQuery(queryString);
+        }
+
+        public List<Dictionary<string, string>> GetListOfActiveWorkflows(string entityName, string id) {
+            var workflows = _maxDAO.FindByNativeQuery(ActiveInstancesQuery, entityName, id);
+            return workflows;
+        }
+
+        public Dictionary<string, string> GetActiveWorkflow(string entityName, string id, string processName) {
+            var workflows = _maxDAO.FindByNativeQuery(ActiveInstanceQuery, entityName, id, processName);
+            return workflows.FirstOrDefault();
         }
 
         [NotNull]
@@ -159,7 +179,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
 
         }
 
-        public IGenericResponseResult DoInitWorkflow(string appId, string appName, string appUserId, string siteid,string orgId, List<Dictionary<string, string>> workflows) {
+        public IGenericResponseResult DoInitWorkflow(string appId, string appName, string appUserId, string siteid, string orgId, List<Dictionary<string, string>> workflows) {
             var appMetadata = _cachedWorkorderSchemas[appName];
             var entityName = appMetadata.Schema.EntityName;
 
@@ -200,7 +220,7 @@ namespace softWrench.sW4.Data.Entities.Workflow {
             var results = _maxDAO.FindByNativeQuery(ClosedStatusQuery.Fmt(entityName, appMetadata.Schema.IdFieldName, appid));
             if (results.Any()) {
                 return new BlankApplicationResponse() {
-                    ErrorMessage = "Cannot {2} a workflow for a {0} of status {1}".Fmt(appMetadata.Title, results[0]["description"], initingWorkflow? "Initialize" : "Route")
+                    ErrorMessage = "Cannot {2} a workflow for a {0} of status {1}".Fmt(appMetadata.Title, results[0]["description"], initingWorkflow ? "Initialize" : "Route")
                 };
             }
             return null;
@@ -240,11 +260,21 @@ namespace softWrench.sW4.Data.Entities.Workflow {
         private string BuildKeyAttributeString(string entityName, string applicationItemId) {
             string keyTemplate = "<{0}>{1}</{0}>";
             EntityMetadata entity = MetadataProvider.Entity(entityName);
-            var formattedKey = Quartz.Util.StringExtensions.FormatInvariant(keyTemplate,entity.UserIdFieldName.ToUpper(), applicationItemId);
+            var formattedKey = Quartz.Util.StringExtensions.FormatInvariant(keyTemplate, entity.UserIdFieldName.ToUpper(), applicationItemId);
             return formattedKey;
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <param name="id">id of the entity, such as workorderid, ticketuid</param>
+        /// <param name="userId">userid of the entity, such as wonum, ticketid</param>
+        /// <param name="siteid"></param>
+        /// <param name="orgid"></param>
+        /// <param name="workflow"> a dictionary with wfid and processname</param>
+        /// <returns></returns>
         public IGenericResponseResult DoStopWorkFlow(string entityName, string id, string userId, string siteid, string orgid, Dictionary<string, string> workflow) {
             var appMetadata = _cachedWorkorderSchemas[entityName];
 

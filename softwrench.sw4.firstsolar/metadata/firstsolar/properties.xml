@@ -103,15 +103,17 @@
     <property key="defaultOrgId" value="ORG6"/>
     <property key="defaultSiteId" value="1803"/>
     <property key="defaultStoreloc" value="0010"/>
-    <property key="basewsURL" value="http://pbg1cmm03s112.dev.fs:9081/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=PBG1SQL03S514.DEV.FS\MAXIMO_120_S514;Initial Catalog=MaxQA;User Id=zSvc_Softwrench_Q;password=jiduer845;" />
-    <property key="swdb_url" value="Data Source=10.1.17.109;Initial Catalog=SWDB_MaxQA;User Id=zSvc_Softwrench_Q;password=Koijder5;" />  
+    <property key="basewsURL" value="http://10.1.16.236/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=PBG1SQL03S514.DEV.FS\MAXIMO_120_S514;Initial Catalog=MaxDev;User Id=zSvc_Softwrench_D;password=tapes-hEmWKx8;" />
+    <property key="swdb_url" value="Data Source=10.1.17.109;Initial Catalog=SWDB_MaxDev;User Id=zSvc_Softwrench_D;password=tapes-hEmWKx8;" />
     <property key="ldapServer" value="10.1.20.101"/>
     <property key="ldapPortNumber" value="389"/>
-    <property key="ldapBaseDn" value="DC=FS,DC=LOCAL"/>
-    <property key="mifcredentials.user" value="mxintadm"/>
-    <property key="mifcredentials.password" value="mxintadm"/>
-    <property key="iiscontextpath " value="http://10.1.13.150/softwrench"/>
+    <property key="ldapBaseDn" value="OU=Users,OU=NorthAmerica,DC=FS,DC=LOCAL"/>
+    <property key="mifcredentials.user" value="FS117185"/>
+    <property key="mifcredentials.password" value="C0ntr0l12!"/>
+    <property key="email.smtp.host" value="client.firstsolar.com"/>
+    <!--    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>  -->
   </environment>
 
   

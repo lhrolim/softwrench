@@ -10,6 +10,7 @@ using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
+using log4net;
 using softwrench.sw4.batch.api;
 using softwrench.sw4.batch.api.entities;
 using softwrench.sw4.batch.api.services;
@@ -30,6 +31,8 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         private readonly IContextLookuper _contextLookuper;
         private readonly ProblemManager _problemManager;
         private readonly AuditPostBatchHandlerProvider _auditPostBatchHandlerProvider;
+
+        private ILog Log = LogManager.GetLogger(typeof(BatchItemSubmissionService));
 
 
         public BatchItemSubmissionService(ISWDBHibernateDAO dao, MaximoConnectorEngine maximoEngine, IContextLookuper contextLookuper, ProblemManager problemManager, AuditPostBatchHandlerProvider auditPostBatchHandlerProvider) {
@@ -77,6 +80,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
                     } catch (Exception e) {
                         if (options.GenerateProblems) {
+                            Log.Error("error on batch submission", e);
                             var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
                             var problem = _problemManager.Register(originalItem.Application, originalItem.ItemId, itemToSubmit.CrudData.UserId,
                                 problemDataMap, user.DBId, e.StackTrace, e.Message, typeof(BatchItem).Name);

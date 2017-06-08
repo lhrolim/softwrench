@@ -238,9 +238,13 @@ namespace softwrench.sw4.offlineserver.services {
             var results = new HashSet<CompleteApplicationMetadataDefinition>();
 
             var definitions = completeApplicationMetadataDefinitions as IList<CompleteApplicationMetadataDefinition> ?? completeApplicationMetadataDefinitions.ToList();
-            var nonCacheable = definitions.Where(c => "true".Equals(c.GetProperty(OfflineConstants.AvoidCaching))).ToList();
+            var nonCacheable = definitions.Where(c => "true".Equals(c.GetProperty(OfflineConstants.AvoidCaching))).OrderBy(s => s.ApplicationName).ToList();
 
             if (!initialLoad) {
+                if (!_redisManager.IsAvailable()) {
+                    return new LinkedHashSet<CompleteApplicationMetadataDefinition>(definitions);
+                }
+
                 return new LinkedHashSet<CompleteApplicationMetadataDefinition>(nonCacheable);
             }
 

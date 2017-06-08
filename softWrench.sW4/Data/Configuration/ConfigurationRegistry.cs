@@ -346,6 +346,14 @@ namespace softWrench.sW4.Data.Configuration {
             });
 
 
+            facade.Register(ConfigurationConstants.Maximo.MaximoTimeZone, new PropertyDefinition {
+                Description = "The timezone where the maximo server is located (either the name of the zone or a number indicating the amount of hours)",
+                PropertyDataType = PropertyDataType.STRING,
+                StringValue = "false",
+                DefaultValue = MetadataProvider.GlobalProperty("maximoutc")
+            });
+
+
 
 
             #endregion

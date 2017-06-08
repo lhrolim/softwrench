@@ -450,7 +450,9 @@
     <Content Include="App_data\jsons\person\update1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="App_data\jsons\workpackage\schemaloading.json" />
+    <None Include="App_data\jsons\workpackage\schemaloading.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
