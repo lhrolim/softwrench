@@ -219,7 +219,7 @@
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarLocationCacheJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\callout\exception\IFSEmailWorkflowException.cs" />
-    <Compile Include="classes\com\cts\firstsolar\opt\email\BaseTemplateEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarBaseEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCallOutHandler.cs" />
@@ -256,6 +256,7 @@
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengineeremail.html" />
+    <Content Include="web_content\firstsolar\htmls\templates\maintenanceengrejectemail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\calloutemail.html" />
     <Content Include="web_content\firstsolar\htmls\advancedSearchPcsButtons.html" />
     <Content Include="web_content\firstsolar\htmls\fscalloutinvoicetext.html" />

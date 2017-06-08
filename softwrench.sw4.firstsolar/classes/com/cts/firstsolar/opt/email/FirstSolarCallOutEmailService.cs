@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using Common.Logging;
@@ -22,7 +23,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             Log.Debug("init Log");
         }
 
-        public override string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId) {
+        protected override EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
+            var callout = request as CallOut;
+            var subject = callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDate(callout.ContractorStartDate), callout.SiteName);
+
+            var msg = GenerateEmailBody(request, package, siteId);
+            var emailData = new EmailData(NoReplySendFrom, request.Email, subject, msg, attachs);
+            return emailData;
+        }
+
+        public override void HandleReject(IFsEmailRequest request, WorkPackage package) {
+            // nothing done on callout reject
+        }
+
+        public override string RequestI18N() {
+            return "Callout";
+        }
+
+        protected override string GetTemplatePath() {
+            return "//Content//Customers//firstsolar//htmls//templates//calloutemail.html";
+        }
+
+        public string GenerateEmailBody(IFsEmailRequest request, WorkPackage package, string siteId) {
             var callout = request as CallOut;
 
             BuildTemplate();
@@ -52,24 +74,5 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 }));
             return msg;
         }
-
-        protected override string GetEmailSubjectMsg(IFsEmailRequest request, WorkPackage package, string siteId) {
-            var callout = request as CallOut;
-            return callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDate(callout.ContractorStartDate), callout.SiteName);
-        }
-
-        public override string RequestI18N() {
-            return "Callout";
-        }
-
-        protected override string GetSendTo(IFsEmailRequest request, WorkPackage package, string siteId) {
-            return request.Email;
-        }
-
-        protected override string GetTemplatePath() {
-            return "//Content//Customers//firstsolar//htmls//templates//calloutemail.html";
-        }
-
-
     }
 }
