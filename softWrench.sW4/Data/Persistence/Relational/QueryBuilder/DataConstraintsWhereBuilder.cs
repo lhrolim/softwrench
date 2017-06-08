@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
 
         private string GetNameToLookup(string entityName, SearchRequestDto searchDto) {
-            var applications = MetadataProvider.Applications().ToList().Where(a => a.Entity == entityName).ToList();
+            var applications = MetadataProvider.Applications().ToList().Where(a => a.Entity.EqualsIc(entityName)).ToList();
             if (!applications.Any()) {
                 return MetadataProvider.Entity(entityName).Name;
             }
