@@ -82,6 +82,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
     </Reference>
+    <Reference Include="cts.commons.persistence, Version=1.2.6368.42727, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.2.6368.42727\lib\net46\cts.commons.persistence.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.3.6352.31885, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.3.6352.31885\lib\net46\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
@@ -1266,10 +1270,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
-      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
-      <Name>cts.commons.persistence</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
       <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
       <Name>softwrench.sw4.apachegold</Name>
