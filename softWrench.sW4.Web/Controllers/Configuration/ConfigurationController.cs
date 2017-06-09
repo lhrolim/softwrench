@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using System.Web.Http;
+using cts.commons.portable.Util;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
 using softWrench.sW4.Data.Configuration;
@@ -153,12 +154,12 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
             wcCondition.AppContext = new sW4.Security.Context.ApplicationLookupContext {
                 MetadataId = metadataid
             };
-            wcCondition.OfflineOnly = true;
+            wcCondition.OfflineOnly = offlineOnly;
             var storedCondition = _dao.Save(wcCondition);
             //            _facade.ConditionAltered(storedCondition.FullKey + "whereclause");
             return new GenericResponseResult<Condition> {
                 ResultObject = storedCondition,
-                SuccessMessage = "Condition successfully created"
+                SuccessMessage = "Condition {0} successfully updated".Fmt(alias)
             };
         }
 
