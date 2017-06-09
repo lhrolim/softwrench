@@ -36,7 +36,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         protected override EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
-            var to = IsProdOrUat() ? request.Email + ",omengineering@firstsolar.com" : request.Email;
+            var to = ApplicationConfiguration.IsProd() ? request.Email + ",omengineering@firstsolar.com" : request.Email;
 
             var me = request as MaintenanceEngineering;
             var subject = me == null ? "[First Solar] Maintenance Engineering Request" :
@@ -46,7 +46,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var msg = GenerateEmailBody(request, package, siteId, woData);
             var emailData = new EmailData(GetFrom(), to, subject, msg, attachs);
 
-            if (!string.IsNullOrEmpty(package.InterConnectDocs) && !"na".Equals(package.InterConnectDocs) && IsProdOrUat()) {
+            if (!string.IsNullOrEmpty(package.InterConnectDocs) && !"na".Equals(package.InterConnectDocs) && ApplicationConfiguration.IsProd()) {
                 emailData.Cc = "fsocoperator@firstsolar.com";
             }
 
@@ -63,6 +63,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         public override void HandleReject(IFsEmailRequest request, WorkPackage package) {
+            if (!ApplicationConfiguration.IsProd()) {
+                return;
+            }
+
             var me = request as MaintenanceEngineering;
             var woData = GetWoData(package);
             var to = GetSupervisorEmail(woData);
@@ -196,10 +200,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             var emailRow = emails.First();
             return emailRow["emailaddress"];
-        }
-
-        private static bool IsProdOrUat() {
-            return ApplicationConfiguration.Profile.Contains("uat") || ApplicationConfiguration.Profile.Contains("prod");
         }
     }
 }
