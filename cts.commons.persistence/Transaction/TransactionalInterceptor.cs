@@ -103,9 +103,15 @@ namespace cts.commons.persistence.Transaction {
 
         protected virtual void AfterInvocation(List<TransactionContext> contexts) {
             contexts.ForEach(context => {
-                CommitTx(context);
-                Clear(context);
-                context.TransactionCounter--;
+                try {
+                    CommitTx(context);
+                    Clear(context);
+                    context.TransactionCounter--;
+                } catch (Exception) {
+                    InnerRollbackTx(context, true);
+                    Clear(context, true);
+                    throw;
+                }
             });
         }
 
@@ -116,13 +122,15 @@ namespace cts.commons.persistence.Transaction {
             }
         }
 
+        protected virtual void InnerRollbackTx(TransactionContext context, bool force = false) {
+            var tx = context.Transaction;
+            if (tx != null && tx.IsActive && (context.TransactionCounter == 1 || force)) {
+                tx.Rollback();
+            }
+        }
+
         protected virtual void RollbackTx(List<TransactionContext> contexts) {
-            contexts.ForEach(context => {
-                var tx = context.Transaction;
-                if (tx != null && tx.IsActive && context.TransactionCounter == 1) {
-                    tx.Rollback();
-                }
-            });
+            contexts.ForEach(context => InnerRollbackTx(context));
         }
 
         protected virtual void Clear(TransactionContext context, bool force = false) {
