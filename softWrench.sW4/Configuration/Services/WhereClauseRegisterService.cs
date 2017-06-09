@@ -125,6 +125,11 @@ namespace softWrench.sW4.Configuration.Services {
         [Transactional(DBType.Swdb)]
         public virtual async Task DeleteExisting(int propertyValueId) {
             var propertyValue = await _dao.FindByPKAsync<PropertyValue>(propertyValueId);
+            if (propertyValue.Condition != null && propertyValue.Condition.Global) {
+                //due to an eventual bug on cascade-deletion of nhibernate
+                //TODO: investigate
+                propertyValue.Condition = null;
+            }
             await _dao.DeleteAsync(propertyValue);
         }
 

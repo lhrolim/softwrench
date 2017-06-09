@@ -98,11 +98,7 @@ namespace softWrench.sW4.Configuration.Definitions {
             }
         }
 
-        public virtual int? ConditionId {
-            get {
-                return Condition == null ? null : Condition.Id;
-            }
-        }
+        public virtual int? ConditionId => Condition?.Id;
 
         public virtual string StringValue {
             get {
