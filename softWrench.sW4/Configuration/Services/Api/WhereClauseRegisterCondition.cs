@@ -77,7 +77,8 @@ namespace softWrench.sW4.Configuration.Services.Api {
             if (globalSelectedCondition != null) {
                 return new WhereClauseRegisterCondition {
                     Id = globalSelectedCondition,
-                    Global = true
+                    Global = true,
+                    ProfileId = profileId
                 };
             }
 
