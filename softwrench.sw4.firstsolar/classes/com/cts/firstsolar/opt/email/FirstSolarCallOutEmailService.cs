@@ -7,6 +7,7 @@ using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
@@ -19,7 +20,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         [Import]
         public SWDBHibernateDAO DAO { get; set; }
 
-        public FirstSolarCallOutEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) : base(emailService, redirectService, appConfig) {
+        public FirstSolarCallOutEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) : base(emailService, redirectService, appConfig, configurationFacade) {
             Log.Debug("init Log");
         }
 
@@ -28,7 +29,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var subject = callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDate(callout.ContractorStartDate), callout.SiteName);
 
             var msg = GenerateEmailBody(request, package, siteId);
-            var emailData = new EmailData(NoReplySendFrom, request.Email, subject, msg, attachs);
+            var emailData = new EmailData(GetFrom(), request.Email, subject, msg, attachs);
             return emailData;
         }
 

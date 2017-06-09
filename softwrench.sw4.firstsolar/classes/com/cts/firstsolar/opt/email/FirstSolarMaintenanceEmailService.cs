@@ -15,6 +15,7 @@ using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -30,13 +31,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         private Template _rejectTemplate;
 
-        public FirstSolarMaintenanceEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) : base(emailService, redirectService, appConfig) {
+        public FirstSolarMaintenanceEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) : base(emailService, redirectService, appConfig, configurationFacade) {
             Log.Debug("init Log");
         }
 
         protected override EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
-            var isProdOrUat = ApplicationConfiguration.Profile.Contains("uat") || ApplicationConfiguration.Profile.Contains("prod");
-            var to = isProdOrUat ? request.Email + ",omengineering@firstsolar.com" : request.Email;
+            var to = IsProdOrUat() ? request.Email + ",omengineering@firstsolar.com" : request.Email;
 
             var me = request as MaintenanceEngineering;
             var subject = me == null ? "[First Solar] Maintenance Engineering Request" :
@@ -44,7 +44,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             var woData = GetWoData(package);
             var msg = GenerateEmailBody(request, package, siteId, woData);
-            var emailData = new EmailData(NoReplySendFrom, to, subject, msg, attachs);
+            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs);
+
+            if (!string.IsNullOrEmpty(package.InterConnectDocs) && !"na".Equals(package.InterConnectDocs) && IsProdOrUat()) {
+                emailData.Cc = "fsocoperator@firstsolar.com";
+            }
+
             return emailData;
         }
 
@@ -69,7 +74,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var siteId = woData.GetStringAttribute("siteid");
             var subject = "[First Solar] Maintenance Engineering Request Rejected ({0}, {1})".Fmt(FmtDate(package.CreatedDate), siteId);
             var msg = GenerateRejectEmailBody(me, package, siteId, woData);
-            var emailData = new EmailData(NoReplySendFrom, to, subject, msg);
+            var emailData = new EmailData(GetFrom(), to, subject, msg);
             EmailService.SendEmail(emailData);
         }
 
@@ -191,6 +196,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             var emailRow = emails.First();
             return emailRow["emailaddress"];
+        }
+
+        private static bool IsProdOrUat() {
+            return ApplicationConfiguration.Profile.Contains("uat") || ApplicationConfiguration.Profile.Contains("prod");
         }
     }
 }

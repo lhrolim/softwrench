@@ -15,23 +15,32 @@ using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Configuration.Services.Api;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
     public abstract class FirstSolarBaseEmailService : ISingletonComponent {
 
-        protected const string NoReplySendFrom = "noreply@controltechnologysolutions.com";
-
         protected readonly IEmailService EmailService;
-
         protected Template Template;
         protected readonly RedirectService RedirectService;
+        protected readonly IConfigurationFacade ConfigurationFacade;
 
         protected static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarCallOutEmailService));
 
         private readonly string _templatePath;
         private readonly string _headerImageUrl;
         protected readonly IApplicationConfiguration AppConfig;
+
+        protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) {
+            Log.Debug("init Log");
+            EmailService = emailService;
+            RedirectService = redirectService;
+            ConfigurationFacade = configurationFacade;
+            AppConfig = appConfig;
+            _templatePath = AppDomain.CurrentDomain.BaseDirectory + GetTemplatePath();
+            _headerImageUrl = HandleHeaderImage();
+        }
 
         public virtual async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             Validate.NotNull(request, "toSend");
@@ -64,15 +73,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         public abstract void HandleReject(IFsEmailRequest request, WorkPackage package);
-
-        protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig) {
-            Log.Debug("init Log");
-            EmailService = emailService;
-            RedirectService = redirectService;
-            AppConfig = appConfig;
-            _templatePath = AppDomain.CurrentDomain.BaseDirectory + GetTemplatePath();
-            _headerImageUrl = HandleHeaderImage();
-        }
 
         protected Template BuildTemplate() {
             var templateContent = File.ReadAllText(_templatePath);
@@ -111,6 +111,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             }
             var culture = new CultureInfo("en-US");
             return date.Value.ToString("G", culture);
+        }
+
+        protected string GetFrom() {
+            return ConfigurationFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultFromEmailKey);
         }
     }
 }
