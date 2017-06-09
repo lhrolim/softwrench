@@ -279,8 +279,10 @@
                 intermediateSection.displayables.splice(indexToConsider, 1);
 
                 if (intermediateSection.displayables.length === 0) {
-                    //removing the intermediate section itself
-                    componentSection.displayables.splice(intermediateSectionIdx, 1);
+                    //removing the intermediate section itself if is not the last one
+                    if (componentSection.displayables.length > 1) {
+                        componentSection.displayables.splice(intermediateSectionIdx, 1);
+                    }
                     return null;
                 }
 
@@ -432,12 +434,42 @@
 
         //afterchange
         reevaluateSections(eventParameters) {
-            this.innerReevaluateSections(eventParameters.fieldMetadata, eventParameters.option);
+            const field = eventParameters.fieldMetadata;
+            const option = eventParameters.option;
+
+            this.innerReevaluateSections(field, option);
+            if (field.attribute !== "gsuimmediatetests") {
+                return;
+            }
+
+            let pairOption = null;
+            if (option.value === "gsucaptureoil") {
+                pairOption = field.options.find((testOption) => testOption.value === "gsucapturemon");
+            }
+            if (option.value === "gsucapturemon") {
+                pairOption = field.options.find((testOption) => testOption.value === "gsucaptureoil");
+            }
+            if (pairOption) {
+                this.innerReevaluateSections(field, pairOption);
+            }
         }
 
         testLoad(schema, datamap, test, component) {
             const values = datamap[test] || [];
             const fieldMetadata = this.fieldService.getDisplayableByKey(schema, test);
+            let gsucaptureoilLoaded = false;
+            let gsucapturemonLoaded = false;
+
+            const load = (option) => {
+                if (option.value === "gsucaptureoil") {
+                    gsucaptureoilLoaded = true;
+                }
+                if (option.value === "gsucapturemon") {
+                    gsucapturemonLoaded = true;
+                }
+                this.innerReevaluateSections(fieldMetadata, option);
+            }
+
             angular.forEach(fieldMetadata.options, (option) => {
                 let onDatamap = false;
                 angular.forEach(values, (value) => {
@@ -448,7 +480,7 @@
 
                 // already on datamap just load the section
                 if (onDatamap) {
-                    this.innerReevaluateSections(fieldMetadata, option);
+                    load(option);
                     return;
                 }
 
@@ -479,8 +511,16 @@
                     datamap["engcomponents"].push(component);
                 }
 
-                this.innerReevaluateSections(fieldMetadata, option);
+                load(option);
             });
+
+            if (gsucaptureoilLoaded && !gsucapturemonLoaded) {
+                datamap[test].push("gsucapturemon");
+                this.innerReevaluateSections(fieldMetadata, fieldMetadata.options.find((testOption) => testOption.value === "gsucapturemon"));
+            }else if (gsucapturemonLoaded && !gsucaptureoilLoaded) {
+                datamap[test].push("gsucaptureoil");
+                this.innerReevaluateSections(fieldMetadata, fieldMetadata.options.find((testOption) => testOption.value === "gsucaptureoil"));
+            }
         }
 
         // onload
@@ -500,23 +540,56 @@
             const option = event.option;
             
             const dm = this.crudContextHolderService.rootDataMap();
-            const selectedValue = dm[field.attribute];
+            let selectedValue = dm[field.attribute];
             const selecting = selectedValue == undefined || (!!selectedValue && selectedValue.indexOf(option.value) === -1);
             
             
             if (selecting) {
+                if (field.attribute !== "gsuimmediatetests") {
+                    return this.$q.when();
+                }
+                if (!selectedValue) {
+                    dm[field.attribute] = [];
+                    selectedValue = dm[field.attribute];
+                }
+                if (option.value === "gsucaptureoil" && selectedValue.indexOf("gsucapturemon") === -1) {
+                    selectedValue.push("gsucapturemon");
+                }
+                if (option.value === "gsucapturemon" && selectedValue.indexOf("gsucaptureoil") === -1) {
+                    selectedValue.push("gsucaptureoil");
+                }
                 return this.$q.when();
             }
 
-            if ("engcomponents" !== field.attribute) {
-                const hasWorklogs = testWithWorklogs(dm, option.value);
-                const hasAttachs = testWithAttachments(dm, option.value);
+            const unselectTest = (testOption) => {
+                const hasWorklogs = testWithWorklogs(dm, testOption.value);
+                const hasAttachs = testWithAttachments(dm, testOption.label);
                 if (!hasWorklogs && !hasAttachs) {
                     return this.$q.when();
                 }
-                const msg = `The test ${option.label} has ${hasWorklogs && hasAttachs ? "evaluations and related files" : (hasWorklogs ? "evaluations" : "related files")} and cannot be removed.`;
+                const msg = `The test ${testOption.label} has ${hasWorklogs && hasAttachs ? "evaluations and related files" : (hasWorklogs ? "evaluations" : "related files")} and cannot be removed.`;
                 this.alertService.alert(msg);
                 return this.$q.reject();
+            }
+
+            if ("engcomponents" !== field.attribute) {
+                return unselectTest(option).then(() => {
+                    let pairOption = null;
+                    if (option.value === "gsucaptureoil") {
+                        pairOption = field.options.find((testOption) => testOption.value === "gsucapturemon");
+                    }
+                    if (option.value === "gsucapturemon") {
+                        pairOption = field.options.find((testOption) => testOption.value === "gsucaptureoil");
+                    }
+                    if (pairOption) {
+                        return unselectTest(pairOption).then(() => {
+                            const idx = selectedValue.indexOf(pairOption.value);
+                            if (idx >= 0) {
+                                selectedValue.splice(selectedValue.indexOf(pairOption.value), 1);
+                            }
+                        });
+                    }
+                });
             }
 
             const invalid = testsMap[option.value].some((test) => {
