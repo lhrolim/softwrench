@@ -210,7 +210,7 @@
             <header displacement="ontop" label="MANPOWER Configuration" params="fieldset=true;style={&quot;background&quot;:&quot;cadetblue&quot;}"/>
 
             <section orientation="horizontal" attribute="subcontractorenabled">
-              <header label="Subcontractor Callout" params="fieldset=true;enablecontrol=true"/>
+              <header label="Subcontractor" params="fieldset=true;enablecontrol=true"/>
               <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="" fetchtype="eager">
                 <collectionproperties listschema="calloutline" autocommit="false" allowremoval="true"/>
                 <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
