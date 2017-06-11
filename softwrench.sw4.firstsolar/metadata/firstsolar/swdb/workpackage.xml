@@ -206,9 +206,7 @@
           </section>
 
 
-          <section showexpression="@wonum != null">
-            <header displacement="ontop" label="MANPOWER Configuration" params="fieldset=true;style={&quot;background&quot;:&quot;cadetblue&quot;}"/>
-
+          <tab label="Planning/Scheduling" icon="fa-calendar" id="planningsched" enableexpression="@wonum!=null" countrelationship="">
             <section orientation="horizontal" attribute="subcontractorenabled">
               <header label="Subcontractor" params="fieldset=true;enablecontrol=true"/>
               <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="" fetchtype="eager">
@@ -225,9 +223,6 @@
               </composition>
             </section>
 
-          </section>
-
-          <section showexpression="@wonum != null">
             <section attribute="testresultreviewenabled" >
               <header label="Test Results Review" params="fieldset=true;enablecontrol=true"/>
               <section orientation="horizontal">
@@ -240,7 +235,7 @@
                 <renderer type="textarea"/>
               </field>
             </section>
-          </section>
+          </tab>
 
           <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
 
