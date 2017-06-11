@@ -87,9 +87,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
             var nullableSubcontractorId = crudoperationData.GetStringAttribute("subcontractorid");
             var subContractorName = crudoperationData.GetStringAttribute("subcontractorname");
-
-            var subcontractor = crudoperationData.AssociationAttributes["subcontractor_"] as CrudOperationData;
-            if (subcontractor != null) {
+            
+            if (crudoperationData.AssociationAttributes.ContainsKey("subcontractor_")) {
+                var subcontractor = (CrudOperationData)crudoperationData.AssociationAttributes["subcontractor_"];
                 subContractorName = subcontractor.GetStringAttribute("name");
             } else if (subContractorName == null) {
                 throw new Exception("missing subcontractor");
