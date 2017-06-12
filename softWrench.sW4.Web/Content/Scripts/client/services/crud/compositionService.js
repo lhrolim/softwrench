@@ -91,10 +91,30 @@
 
                 function doPopulateWithCompositionData(requestDTO, datamap) {
 
+                    const minCompositionArrayAsked = requestDTO.request.compositionList;
+
                     return fetchCompositions(requestDTO, datamap)
                         .then(result => {
                             $timeout(() => {
-                                $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, result);
+
+                                if (!!minCompositionArrayAsked) {
+                                    minCompositionArrayAsked.forEach(compositionName => {
+
+                                        if (!result[compositionName]) {
+                                            //to prevent SWWEB-3012 --> otherwise the listener on the compositionlist.js (onAfterCompositionResolved) won´t consider these compositions
+                                            //TODO: investigate the need of the listener check
+                                            result[compositionName] = {
+                                                list: [],
+                                                paginationData: {
+                                                    totalCount :0
+                                                },
+                                                relationship: compositionName
+                                            };
+                                        }
+                                    });    
+                                }
+
+                                $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, result, minCompositionArrayAsked);
                                 crudContextHolderService.compositionsLoaded(result);
                             });
                             return result;

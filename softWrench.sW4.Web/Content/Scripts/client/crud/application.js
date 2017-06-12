@@ -36,12 +36,14 @@
         $scope.$on(JavascriptEventConstants.NavigateRequestCrawl, function (event, applicationName, schemaId, mode, title, parameters) {
             const skipDirtyMessage = parameters.customParameters ? parameters.customParameters.skipDirtyMessage : false;
             if (!crudContextHolderService.getDirty() || skipDirtyMessage) {
+                $rootScope.$broadcast(JavascriptEventConstants.NavigateRequestCrawlOcurred);
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
                 return;
             }
 
             const msg = "Are you sure you want to leave the page?";
             alertService.confirmCancel(msg).then(function () {
+                $rootScope.$broadcast(JavascriptEventConstants.NavigateRequestCrawlOcurred);
                 $scope.renderView(applicationName, schemaId, mode, title, parameters);
                 crudContextHolderService.clearDirty();
                 crudContextHolderService.clearDetailDataResolved();

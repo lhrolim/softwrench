@@ -92,6 +92,17 @@
                     }
                 });
 
+
+                scope.clearFileExplorer = function (compositiondata) {
+                    scope.files = [];
+                }
+
+                scope.$on(JavascriptEventConstants.NavigateRequestCrawlOcurred, scope.clearFileExplorer);
+
+
+             
+
+
                 scope.$watch("datamap[fieldMetadata.relationship]", (newValue) => {
                     if (!newValue || scope.ignoreWatch) {
                         scope.ignoreWatch = false;

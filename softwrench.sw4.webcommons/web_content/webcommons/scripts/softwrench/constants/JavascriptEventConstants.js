@@ -15,6 +15,8 @@ const ResetFocusToCurrent = "sw.crud.input.resetfocustocurrent";
 //used to navigate back of forward towards next/previous entries on the form
 const NavigateRequestCrawl = "sw.crud.body.crawl";
 
+const NavigateRequestCrawlOcurred = "sw.crud.body.crawlocurred";
+
 const AjaxError = "sw.ajax.error";
 
 const AjaxFinished = "sw.ajax.finished";
@@ -217,6 +219,10 @@ class JavascriptEventConstants {
 
     static get NavigateRequestCrawl() {
         return NavigateRequestCrawl;
+    }
+
+    static get NavigateRequestCrawlOcurred() {
+        return NavigateRequestCrawlOcurred;
     }
 
     static get MoveFocus() {

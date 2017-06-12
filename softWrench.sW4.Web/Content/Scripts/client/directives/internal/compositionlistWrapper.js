@@ -3,130 +3,136 @@
 
     const app = angular.module('sw_layout');
 
-    app.directive('compositionListWrapper', function ($compile, i18NService, $log, compositionService, spinService) {
-          "ngInject";
+    app.directive('compositionListWrapper', function ($compile, i18NService, $log, $timeout, compositionService, spinService, crudContextHolderService) {
+        "ngInject";
 
-          return {
-              restrict: 'E',
-              replace: true,
-              template: "<div></div>",
-              scope: {
-                  metadata: '=',
-                  parentschema: '=',
-                  parentdata: '=',
-                  cancelfn: '&',
-                  previousschema: '=',
-                  previousdata: '=',
-                  mode: '@',
-                  inline: '@',
-                  ismodal: '@',
-                  tabid: '@',
-                  startlazyloading: "@"
-              },
-              link: function (scope, element, attrs) {
+        return {
+            restrict: 'E',
+            replace: true,
+            template: "<div></div>",
+            scope: {
+                metadata: '=',
+                parentschema: '=',
+                parentdata: '=',
+                cancelfn: '&',
+                previousschema: '=',
+                previousdata: '=',
+                mode: '@',
+                inline: '@',
+                ismodal: '@',
+                tabid: '@',
+                startlazyloading: "@"
+            },
+            link: function (scope, element, attrs) {
 
-                  scope.$name = 'compositionlistwrapper';
+                scope.$name = 'compositionlistwrapper';
 
-                  var doLoad = function () {
-                      $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
-                      const metadata = scope.metadata;
-                      scope.tabLabel = i18NService.get18nValue(metadata.schema.schemas.list.applicationName + '._title', metadata.label);
+                var doLoad = function () {
+                    $log.getInstance('compositionlistwrapper#doLoad').debug('loading composition {0}'.format(scope.tabid));
+                    const metadata = scope.metadata;
+                    scope.tabLabel = i18NService.get18nValue(metadata.schema.schemas.list.applicationName + '._title', metadata.label);
 
-                      scope.compositiondata = scope.parentdata[scope.metadata.relationship];
-                    
-                      if (!scope.compositiondata) {
-                          const arr = [];
-                          scope.parentdata[scope.metadata.relationship] = arr;
+                    scope.compositiondata = scope.parentdata[scope.metadata.relationship];
 
-                          //a blank array if nothing exists, scenario for selfcompositions
-                          scope.compositiondata = arr;
+                    if (!scope.compositiondata) {
+                        const arr = [];
+                        //this modifies the original datamap causing a dirty checking issue
+                        //SWWEB-2992
+                        crudContextHolderService.clearDetailDataResolved();
+                        scope.parentdata[scope.metadata.relationship] = arr;
 
-                      }
+                        //a blank array if nothing exists, scenario for selfcompositions
+                        scope.compositiondata = arr;
 
-                      scope.compositionschemadefinition = metadata.schema;
-                      scope.compositionlistschema = scope.compositionschemadefinition.schemas.list;
-                      scope.compositiondetailschema = scope.compositionschemadefinition.schemas.detail;
-                      scope.relationship = metadata.relationship;
+                    }
 
-                      //display the list composition by default
-                      if (scope.compositionschemadefinition.schemas.list.properties.masterdetail === "true") {
-                          element.append(
-                              "<composition-master-details data-cancelfn='cancel(data,schema)' " +
-                              "data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' " +
-                              "data-parentdata='parentdata' parentschema='parentschema' " +
-                              "mode='{{mode}}' " +
-                              "data-relationship='{{relationship}}' data-title='{{tabLabel}}' />");
-                      } else {
-                          element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
-                              "compositionschemadefinition='compositionschemadefinition' " +
-                              "relationship='{{relationship}}' " +
-                              "compositiondata='compositiondata' " +
-                              "metadatadeclaration='metadata' " +
-                              "parentschema='parentschema' " +
-                              "mode='{{mode}}' " +
-                              "parentdata='parentdata' " +
-                              "cancelfn='cancel(data,schema)' " +
-                              "previousschema='previousschema' " +
-                              "previousdata='previousdata' />");
-                      }
+                    scope.compositionschemadefinition = metadata.schema;
+                    scope.compositionlistschema = scope.compositionschemadefinition.schemas.list;
+                    scope.compositiondetailschema = scope.compositionschemadefinition.schemas.detail;
+                    scope.relationship = metadata.relationship;
 
-                      $compile(element.contents())(scope);
+                    //display the list composition by default
+                    if (scope.compositionschemadefinition.schemas.list.properties.masterdetail === "true") {
+                        element.append(
+                            "<composition-master-details data-cancelfn='cancel(data,schema)' " +
+                            "data-compositiondata='compositiondata' data-compositionschemadefinition='compositionschemadefinition' " +
+                            "data-parentdata='parentdata' parentschema='parentschema' " +
+                            "mode='{{mode}}' " +
+                            "data-relationship='{{relationship}}' data-title='{{tabLabel}}' />");
+                    } else {
+                        element.append("<composition-list data-title='{{tabLabel}}' ismodal='{{ismodal}}'" +
+                            "compositionschemadefinition='compositionschemadefinition' " +
+                            "relationship='{{relationship}}' " +
+                            "compositiondata='compositiondata' " +
+                            "metadatadeclaration='metadata' " +
+                            "parentschema='parentschema' " +
+                            "mode='{{mode}}' " +
+                            "parentdata='parentdata' " +
+                            "cancelfn='cancel(data,schema)' " +
+                            "previousschema='previousschema' " +
+                            "previousdata='previousdata' />");
+                    }
 
-                      //controls tab lazy loading
-                      scope.loaded = true;
-                  }
-                  const custom = scope.metadata.schema.renderer.rendererType == 'custom';
-                  const isInline = scope.metadata.inline;
-                  if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
-                      //inline compositions should load automatically
-                      doLoad();
-                 
-                  }
+                    $compile(element.contents())(scope);
 
-                  scope.cancel = function (data, schema) {
-                      scope.cancelfn({ data: data, schema: schema });
-                  }
+                    $timeout(() => {
+                        crudContextHolderService.setDetailDataResolved();
+                    },0,false);
+                    //controls tab lazy loading
+                    scope.loaded = true;
+                }
+                const custom = scope.metadata.schema.renderer.rendererType == 'custom';
+                const isInline = scope.metadata.inline;
+                if (scope.metadata.type == "ApplicationCompositionDefinition" && isInline && !custom) {
+                    //inline compositions should load automatically
+                    doLoad();
+
+                }
+
+                scope.cancel = function (data, schema) {
+                    scope.cancelfn({ data: data, schema: schema });
+                }
 
 
-                  scope.$on(JavascriptEventConstants.ModalShown, function (event, modalData) {
-                      if (scope.ismodal === "true") {
-                          //inline compositions inside of the modal need to be refreshed (relinked)
-                          const datamap = modalData.datamap;
-                          scope.parentdata = datamap;
-                          doLoad();
-                      }
-                  });
+                scope.$on(JavascriptEventConstants.ModalShown, function (event, modalData) {
+                    if (scope.ismodal === "true") {
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        const datamap = modalData.datamap;
+                        scope.parentdata = datamap;
+                        doLoad();
+                    }
+                });
 
-                  scope.$on(JavascriptEventConstants.HideModal, function (event) {
-                      if (scope.ismodal === "true") {
-                          $log.get('compositionlistwrapper#doLoad', ["composition", "inline"]).debug('wiping <composition-list> directive due to modal disposal');
-                          //inline compositions inside of the modal need to be refreshed (relinked)
-                          element.empty();
-                      }
-                  });
+                scope.$on(JavascriptEventConstants.HideModal, function (event) {
+                    if (scope.ismodal === "true") {
+                        $log.get('compositionlistwrapper#doLoad', ["composition", "inline"]).debug('wiping <composition-list> directive due to modal disposal');
+                        //inline compositions inside of the modal need to be refreshed (relinked)
+                        element.empty();
+                    }
+                });
 
-                  const lazyLoad = function() {
-                      if (!compositionService.isCompositionLodaded(scope.tabid)) {
-                          spinService.start({ compositionSpin: true });
-                      }
-                      if (!scope.loaded) {
-                          doLoad();
-                      }
-                  }
+                const lazyLoad = function () {
+                    if (!compositionService.isCompositionLodaded(scope.tabid)) {
+                        spinService.start({ compositionSpin: true });
+                    }
+                    if (!scope.loaded) {
+                        doLoad();
+                    }
+                }
 
-                  scope.$on("sw_lazyloadtab", function (event, tabid) {
-                      if (scope.tabid == tabid) {
-                          lazyLoad();
-                      }
-                  });
+                scope.$on("sw_lazyloadtab", function (event, tabid) {
+                    if (scope.tabid == tabid) {
+                        lazyLoad();
+                    }
+                });
 
-                  if (scope.startlazyloading === "true") {
-                      lazyLoad();
-                  }
-              }
-          }
+                if (scope.startlazyloading === "true") {
+                    lazyLoad();
+                }
+            }
+        }
     });
-  
+
 
     //#region legacy directives
 

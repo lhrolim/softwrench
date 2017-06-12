@@ -257,13 +257,13 @@
         }
 
         setDetailDataResolved(panelid) {
-            this.$log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("marking details as resolved");
+            this.$log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("marking details as resolved (even if temporarily)");
             this.getContext(panelid).detailDataResolved = true;
         }
 
 
         clearDetailDataResolved(panelid, relationshipData) {
-            this.$log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("cleaning detailresolved flag");
+            this.$log.get("crudContextService#setDetailDataResolved", ["dirty", "detail", "datamap"]).debug("cleaning detailresolved flag (even if temporarily)");
             this.getContext(panelid).detailDataResolved = false;
         }
 

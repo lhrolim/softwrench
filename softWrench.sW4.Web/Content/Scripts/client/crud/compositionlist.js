@@ -286,6 +286,7 @@
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
 
+            //TODO: investigate the need of the listener check, was resulting on SWWEB-3012
             if (!compositiondata || !compositiondata.hasOwnProperty($scope.relationship)) {
                 //this is not the data this tab is interested
                 return;
@@ -321,6 +322,13 @@
         $scope.$on(JavascriptEventConstants.CrudSaved, () => {
             $scope.clearNewCompositionDataForBatches();
         });
+
+        $scope.clearCompositionData = function() {
+            $scope.compositiondata = [];
+        }
+
+        $scope.$on(JavascriptEventConstants.NavigateRequestCrawlOcurred, $scope.clearCompositionData);
+
 
         $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, $scope.onAfterCompositionResolved);
 
@@ -1163,6 +1171,8 @@
 
 
 //        if (shouldEagerInit()) {
+            
+
             $scope.init();
 //        }
 

@@ -142,7 +142,11 @@ app.directive('crudInput', ["contextService", "associationService", function (co
                 var dirtyWatcherDeregister;
 
                 function dirtyWatcher(newDatamap, oldDatamap) {
-                    if (newDatamap === oldDatamap || !crudContextHolderService.getDetailDataResolved()) return;
+                    if (newDatamap === oldDatamap || !crudContextHolderService.getDetailDataResolved()) {
+                         return;
+                    }
+
+                    log.debug("diff spotted, marking item as dirty");
 
                     if (log.isLevelEnabled("trace")) {
                         Object.keys(newDatamap)

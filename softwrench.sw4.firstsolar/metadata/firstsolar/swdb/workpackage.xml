@@ -66,6 +66,7 @@
         <schema id="adetail" stereotype="detail">
 
           <event type="onschemafullyloaded" service="fsworkpackageService" method="onSchemaLoad"/>
+<!--          <event service="fsworkpackageService" method="componentsLoad" type="onschemafullyloaded"/>-->
 
           <field attribute="id" hidden="true" label="Work Package "/>
           <field attribute="wonum" hidden="true" label="Work Package "/>
@@ -401,7 +402,7 @@
 
           </tab>
 
-          <event service="fsworkpackageService" method="componentsLoad" type="onload"/>
+          
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Package"  platform="web" stereotype="detailnew">

@@ -523,17 +523,6 @@
             }
         }
 
-        // onload
-        componentsLoad(scope, schema, datamap, parameters) {
-            if (datamap["#testComponentsLoaded"] || !parameters || !parameters.tabid || parameters.tabid !== "engineering") {
-                return;
-            }
-            datamap["#testComponentsLoaded"] = true;
-            angular.forEach(testsMap, (tests, component) => {
-                angular.forEach(tests, (test) => this.testLoad(schema, datamap, test, component));
-            });
-        }
-
         //beforechange
         checkSectionRefresh(event) {
             const field = event.fieldMetadata;
@@ -604,15 +593,29 @@
             return this.$q.reject();
         }
 
+        wipeDynamicSections(schema) {
+            const componentsTopSection = this.fieldService.getDisplayableByKey(schema, "components");
+            componentsTopSection.displayables = [];
+        }
+
+        // onload
         onSchemaLoad(parameters) {
             const log = this.$log.get("workpackageservice#onSchemaLoad", ["workpackage"]);
             const rootSchema = this.crudContextHolderService.currentSchema();
+            const datamap = this.crudContextHolderService.rootDataMap();
             const fileExplorerComp = this.fieldService.getDisplayableByKey(rootSchema, "#relayeventfileexplorer_");
             const worklogComp = this.fieldService.getDisplayableByKey(rootSchema, "#relayeventevaluations_");
 
             worklogCompositionSchema = worklogComp.schema;
             fileExplorerCompositionSchema = fileExplorerComp.schema;
             log.debug("caching composition schemas");
+
+            //to correct SWWEB-3012
+            this.wipeDynamicSections(rootSchema);
+
+            angular.forEach(testsMap, (tests, component) => {
+                angular.forEach(tests, (test) => this.testLoad(rootSchema, datamap, test, component));
+            });
 
         }
 
