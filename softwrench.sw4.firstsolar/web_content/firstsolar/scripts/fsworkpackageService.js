@@ -3,13 +3,14 @@
 
     let handleEngComponentSection, locatePreferredSectionIdx, generateOuterSection, generateTestSection, generateInlineFileComposition, generateInlineWorklogComposition;
     let worklogCompositionSchema, fileExplorerCompositionSchema, redimensionIntermediateSectionsInternalAdding, redimensionIntermediateSectionsInternalRemoving;
-    let worklogKey, attachmentKey, testWithWorklogs, testWithAttachments, testsMap;
+    let worklogKey, attachmentKey, testWithWorklogs, testWithAttachments, testsMap, wipeDynamicSections;
 
     const maxColumns = 1;
 
     class workPackageService {
 
-        constructor($q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService) {
+        constructor($rootScope,$q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService) {
+            this.$rootScope = $rootScope;
             this.$q = $q;
             this.$log = $log;
             this.alertService = alertService;
@@ -17,6 +18,11 @@
             this.crudContextHolderService = crudContextHolderService;
             this.redirectService = redirectService;
             this.fieldService = fieldService;
+
+            this.$rootScope.$on("sw.crud.body.crawlocurred", () => {
+                wipeDynamicSections();
+            });
+
 
             testsMap = {
                 "GSU" : ["gsuimmediatetests", "gsutests"],
@@ -44,6 +50,12 @@
                     componentsTopSection.displayables.splice(sectionIdx, 1);
                 }	
             }
+
+            wipeDynamicSections = function () {
+                const componentsTopSection = fieldService.getDisplayableByKey(crudContextHolderService.currentSchema(), "components");
+                componentsTopSection.displayables = [];
+            }
+
 
             locatePreferredSectionIdx = function (schema, componentsTopSection, selectedValue, optionField = null) {
                 const engComponentsField = optionField ? optionField : fieldService.getDisplayableByKey(schema, "engcomponents");
@@ -593,11 +605,7 @@
             return this.$q.reject();
         }
 
-        wipeDynamicSections(schema) {
-            const componentsTopSection = this.fieldService.getDisplayableByKey(schema, "components");
-            componentsTopSection.displayables = [];
-        }
-
+      
         // onload
         onSchemaLoad(parameters) {
             const log = this.$log.get("workpackageservice#onSchemaLoad", ["workpackage"]);
@@ -611,7 +619,7 @@
             log.debug("caching composition schemas");
 
             //to correct SWWEB-3012
-            this.wipeDynamicSections(rootSchema);
+            wipeDynamicSections();
 
             angular.forEach(testsMap, (tests, component) => {
                 angular.forEach(tests, (test) => this.testLoad(rootSchema, datamap, test, component));
@@ -619,6 +627,7 @@
 
         }
 
+        
 
 
         //#region Public methods
@@ -626,9 +635,12 @@
             this.redirectService.goToApplication("_WorkPackage", "newdetail");
         }
 
+
+
+
     }
 
-    workPackageService.$inject = ['$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService'];
+    workPackageService.$inject = ['$rootScope','$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService'];
 
     angular.module('sw_layout').service('fsworkpackageService', workPackageService);
 
