@@ -33,7 +33,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             } else {
                 //where clauses should always be rebuild independent of cache, due to context variation, like modules, profiles, etc...
                 var whereBuilder = SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(typeof(DataConstraintsWhereBuilder));
-                var whereConstraint = whereBuilder.BuildWhereClause(entityMetadata.Name, queryParameter.SearchDTO);
+                var whereConstraint = whereBuilder.BuildWhereClause(entityMetadata.Name, queryMode,queryParameter.SearchDTO);
                 queryString = String.Format(queryString, whereConstraint);
             }
             if (entityMetadata.HasUnion()) {
@@ -74,7 +74,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             projectionBuilder.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, queryMode, queryParameter.SearchDTO));
             projectionBuilder.Append(QueryFromBuilder.Build(entityMetadata, queryParameter.SearchDTO));
             buffer.Append(projectionBuilder);
-            buffer.Append(compositeWhereBuilder.BuildWhereClause(entityMetadata.Name, queryParameter.SearchDTO));
+            buffer.Append(compositeWhereBuilder.BuildWhereClause(entityMetadata.Name,queryMode, queryParameter.SearchDTO));
 
             var hasUnionWhereClauses = queryParameter.SearchDTO != null && queryParameter.SearchDTO.UnionWhereClauses != null;
             var isUnion = entityMetadata.HasUnion() || queryMode == QueryCacheKey.QueryMode.Union || hasUnionWhereClauses;

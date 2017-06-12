@@ -7,7 +7,7 @@ using softWrench.sW4.Data.Search;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
     class FixedSearchWhereClauseBuilder : IWhereBuilder {
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             if (searchDto != null && searchDto.FilterFixedWhereClause != null) {
                 return searchDto.FilterFixedWhereClause;
             }

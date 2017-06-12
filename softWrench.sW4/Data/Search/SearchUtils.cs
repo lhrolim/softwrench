@@ -58,7 +58,7 @@ namespace softWrench.sW4.Data.Search {
             }
         }
 
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             return BuildWhereClause(entityName);
         }
 

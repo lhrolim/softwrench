@@ -15,7 +15,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
             _rowstamps = rowstamps;
         }
         
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             if (_rowstamps.CurrentMode() == Rowstamps.RowstampMode.None) {
                 return null;
             }

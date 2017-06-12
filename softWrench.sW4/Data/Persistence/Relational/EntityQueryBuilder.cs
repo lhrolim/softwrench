@@ -40,7 +40,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 new MultiTenantCustomerWhereBuilder()
             };
             var whereBuilder = new CompositeWhereBuilder(list);
-            buffer.Append(whereBuilder.BuildWhereClause(entityMetadata.Name));
+            buffer.Append(whereBuilder.BuildWhereClause(entityMetadata.Name,QueryCacheKey.QueryMode.Count));
             return new BindedEntityQuery(buffer.ToString(), whereBuilder.GetParameters());
         }
 

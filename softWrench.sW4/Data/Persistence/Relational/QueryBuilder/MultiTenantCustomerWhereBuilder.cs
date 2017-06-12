@@ -8,7 +8,7 @@ using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
     class MultiTenantCustomerWhereBuilder : IWhereBuilder {
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             var entity = MetadataProvider.Entity(entityName);
             if (!entity.Schema.Attributes.Any(a => a.Name.Equals("pluspcustomer"))) {
                 return null;

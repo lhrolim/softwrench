@@ -15,11 +15,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
             this._whereBuilders = whereBuilders;
         }
 
-        public String BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             var sb = new StringBuilder();
             var firstMatch = true;
             foreach (var whereBuilder in _whereBuilders) {
-                var result = whereBuilder.BuildWhereClause(entityName, searchDto);
+                var result = whereBuilder.BuildWhereClause(entityName, queryMode, searchDto);
                 if (String.IsNullOrWhiteSpace(result)) {
                     continue;
                 }

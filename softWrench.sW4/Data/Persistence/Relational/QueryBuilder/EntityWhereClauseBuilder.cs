@@ -10,7 +10,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
     class EntityWhereClauseBuilder : IWhereBuilder {
 
 
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             var entityMetadata = MetadataProvider.Entity(entityName);
             //double check
             return entityMetadata.HasWhereClause ? entityMetadata.Schema.WhereClause : null;

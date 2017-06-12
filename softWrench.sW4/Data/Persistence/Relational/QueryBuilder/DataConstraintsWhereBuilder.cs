@@ -23,7 +23,32 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
         }
 
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
+            var baseWhereClause = DoBuildBaseWhereClause(entityName, searchDto);
+            if (queryMode.Equals(QueryCacheKey.QueryMode.Detail)) {
+                return ApplySpecificDetailClauses(entityName, baseWhereClause);
+            }
+            return baseWhereClause;
+        }
+
+        private string ApplySpecificDetailClauses(string entity, string baseWhereClause) {
+            var user = SecurityFacade.CurrentUser();
+            if (user.IsInRole("tom") || user.IsInRole("itom") && entity.EqualsAny("servicerequest", "asset", "incident")) {
+                return Default;
+            }
+            if (IsWWUser(user)) {
+                return Default;
+            }
+
+            return baseWhereClause;
+        }
+
+
+        public static bool IsWWUser(InMemoryUser user) {
+            return user.PersonGroups.Any(p => p.PersonGroup.Name.Equals("C-HLC-WW-AR-WW"));
+        }
+
+        private string DoBuildBaseWhereClause(string entityName, SearchRequestDto searchDto) {
             if (searchDto != null && searchDto.IgnoreWhereClause) {
                 return Default;
             }
@@ -35,6 +60,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
 
             var whereClauseResult = _whereClauseFacade.Lookup(nameToLookup, context);
+
+
             if (whereClauseResult == null || whereClauseResult.IsEmpty()) {
                 return Default;
             }

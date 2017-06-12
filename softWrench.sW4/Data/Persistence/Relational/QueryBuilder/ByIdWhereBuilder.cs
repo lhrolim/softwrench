@@ -17,7 +17,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
             _id = id;
         }
 
-        public string BuildWhereClause(string entityName, SearchRequestDto searchDto = null) {
+        public string BuildWhereClause(string entityName, QueryCacheKey.QueryMode queryMode, SearchRequestDto searchDto = null) {
             return String.Format("{0} = {1}{2}", BaseQueryUtil.QualifyAttribute(_entityMetadata, _entityMetadata.Schema.IdAttribute),HibernateUtil.ParameterPrefix,ByIdQueryParameter);
         }
 
