@@ -32,7 +32,7 @@ namespace softwrench.sW4.test.Configuration.Service {
             _configurationCache = TestUtil.CreateMock<ConfigurationCache>();
             _auditManagerCommons = TestUtil.CreateMock<IAuditManagerCommons>();
             TestUtil.ResetMocks(_swdbDAO, _entityRepository, _configurationCache);
-            _service = new WhereClauseRegisterService(_swdbDAO.Object, null, _entityRepository.Object, _configurationCache.Object,_auditManagerCommons.Object);
+            _service = new WhereClauseRegisterService(_swdbDAO.Object, null, _entityRepository.Object, _configurationCache.Object, _auditManagerCommons.Object);
         }
 
 
@@ -55,7 +55,10 @@ namespace softwrench.sW4.test.Configuration.Service {
             var conditionToRegister = new WhereClauseRegisterCondition {
                 OfflineOnly = true,
                 Global = true,
-                Alias = "offline"
+                Alias = "offline",
+                AppContext = new ApplicationLookupContext {
+                    MetadataId = "test"
+                }
             };
 
             var existingDefinition = WhereClauseRegisterService.GetDefinitionToSave("test", "newvalue", false);
@@ -86,9 +89,9 @@ namespace softwrench.sW4.test.Configuration.Service {
 
             _swdbDAO.Setup(f => f.SaveAsync(It.Is(defComparison))).ReturnsAsync(existingDefinition);
 
-            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias,"test")).ReturnsAsync(existingCondition);
+            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias)).ReturnsAsync(existingCondition);
 
-            _swdbDAO.Setup(f => f.SaveAsync(It.Is((Expression<Func<Condition, bool>>) (u => u.Alias == existingCondition.Alias)))).ReturnsAsync(existingCondition);
+            _swdbDAO.Setup(f => f.SaveAsync(It.Is((Expression<Func<Condition, bool>>)(u => u.Alias == existingCondition.Alias)))).ReturnsAsync(existingCondition);
 
             _swdbDAO.Setup(f => f.FindSingleByQueryAsync<PropertyValue>(PropertyValue.ByDefinitionConditionIdModuleProfile, "test", existingCondition.Id, null, null)).ReturnsAsync(null);
 
@@ -139,9 +142,9 @@ namespace softwrench.sW4.test.Configuration.Service {
 
             _swdbDAO.Setup(f => f.SaveAsync(It.Is(defComparison))).ReturnsAsync(existingDefinition);
 
-            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias, "test")).ReturnsAsync(existingCondition);
+            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias)).ReturnsAsync(existingCondition);
 
-            _swdbDAO.Setup(f => f.SaveAsync(It.Is((Expression<Func<Condition, bool>>)(u => u.Alias == existingCondition.Alias)))).ReturnsAsync(existingCondition);
+            //            _swdbDAO.Setup(f => f.SaveAsync(It.Is((Expression<Func<Condition, bool>>)(u => u.Alias == existingCondition.Alias)))).ReturnsAsync(existingCondition);
 
             _swdbDAO.Setup(f => f.FindSingleByQueryAsync<PropertyValue>(PropertyValue.ByDefinitionConditionIdModuleProfile, "test", existingCondition.Id, null, null)).ReturnsAsync(oldValue);
 
@@ -183,7 +186,7 @@ namespace softwrench.sW4.test.Configuration.Service {
 
             _swdbDAO.Setup(f => f.SaveAsync(It.Is(defComparison))).ReturnsAsync(existingDefinition);
 
-            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias, "test")).ReturnsAsync(null);
+            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAliasAndKey, conditionToRegister.Alias, "test")).ReturnsAsync(null);
 
             _swdbDAO.Setup(f => f.FindSingleByQueryAsync<PropertyValue>(PropertyValue.ByDefinitionNoCondition, "test", null)).ReturnsAsync(null);
 

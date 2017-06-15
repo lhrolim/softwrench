@@ -284,6 +284,8 @@ namespace softWrench.sW4.Configuration.Services {
             var realValue = condition.RealCondition;
             if (!condition.Global) {
                 realValue.FullKey = configKey;
+            } else {
+                realValue.FullKey = null;
             }
 
 
