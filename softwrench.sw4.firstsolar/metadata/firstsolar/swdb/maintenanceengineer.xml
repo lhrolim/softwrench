@@ -43,7 +43,7 @@
 
           <field attribute="status" hidden="true"/>
 
-          <optionfield label="To" attribute="email" requiredexpression="true">
+          <optionfield label="To" attribute="email">
             <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
           </optionfield>
           <field label="" attribute="todummy" readonly="true" default="omengineering@firstsolar.com"/>
