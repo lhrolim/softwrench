@@ -268,7 +268,7 @@ namespace softWrench.sW4.Configuration.Services {
             //this means that we actually have a condition rather then just a simple utility class WhereClauseRegisterCondition, that could be used for profiles and modules
             if (condition.Global) {
                 storedCondition =
-                    await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAlias, condition.Alias);
+                    await _dao.FindSingleByQueryAsync<Condition>(Condition.GlobalByAlias, condition.Alias);
             } else {
                 storedCondition =
                     await _dao.FindSingleByQueryAsync<Condition>(Condition.ByAliasAndKey, condition.Alias, configKey);

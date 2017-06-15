@@ -89,7 +89,7 @@ namespace softwrench.sW4.test.Configuration.Service {
 
             _swdbDAO.Setup(f => f.SaveAsync(It.Is(defComparison))).ReturnsAsync(existingDefinition);
 
-            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias)).ReturnsAsync(existingCondition);
+            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.GlobalByAlias, conditionToRegister.Alias)).ReturnsAsync(existingCondition);
 
             _swdbDAO.Setup(f => f.SaveAsync(It.Is((Expression<Func<Condition, bool>>)(u => u.Alias == existingCondition.Alias)))).ReturnsAsync(existingCondition);
 
@@ -142,7 +142,7 @@ namespace softwrench.sW4.test.Configuration.Service {
 
             _swdbDAO.Setup(f => f.SaveAsync(It.Is(defComparison))).ReturnsAsync(existingDefinition);
 
-            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.ByAlias, conditionToRegister.Alias)).ReturnsAsync(existingCondition);
+            _swdbDAO.Setup(f => f.FindSingleByQueryAsync<Condition>(Condition.GlobalByAlias, conditionToRegister.Alias)).ReturnsAsync(existingCondition);
 
             //            _swdbDAO.Setup(f => f.SaveAsync(It.Is((Expression<Func<Condition, bool>>)(u => u.Alias == existingCondition.Alias)))).ReturnsAsync(existingCondition);
 
