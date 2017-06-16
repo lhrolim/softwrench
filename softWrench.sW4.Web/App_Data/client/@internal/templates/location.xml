@@ -155,6 +155,7 @@
         <property key="mobile.fetchlimit" value="3000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="application.maindetailschema" value="locationdetail"/>
+        <property key="list.offline.text.indexlist" value="location,type,status,hierarchy"/>
       </properties>
 
       <filters>

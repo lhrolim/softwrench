@@ -98,6 +98,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Content Include="metadata\gric\menu.mobile.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="web_content\gric\images\branding.png" />
     <Content Include="web_content\gric\images\header-email.jpg" />
     <Content Include="web_content\gric\images\logo-byline.png" />

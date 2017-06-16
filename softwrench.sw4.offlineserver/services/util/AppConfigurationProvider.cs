@@ -18,7 +18,7 @@ namespace softwrench.sw4.offlineserver.services.util {
         /// <returns>JObject containing the offline app's configurations</returns>
         public JObject AppConfig() {
             var config = BaseConfig();
-            var statusColor = _statusColorResolver.FetchCatalogs();
+            var statusColor = _statusColorResolver.FetchCatalogs() ?? _statusColorResolver.FetchFallbackCatalogs();
             statusColor = statusColor ?? new JObject();
             config.Add("statuscolor", statusColor);
             return config;

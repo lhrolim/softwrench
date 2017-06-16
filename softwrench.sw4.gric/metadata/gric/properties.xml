@@ -1,59 +1,74 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata">
+<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
 
   <property key="baseWSPrefix" value="SW"/>
   <property key="externalSystemName" value="SW" />
   <property key="wsprovider" value="mif" />
   <property key="maximo_DB_provider" value="System.Data.SQL"/>
   <property key="swdb_provider" value="System.Data.SQL"/>
-  <property key="defaultOrgId" value="GRGE"/>
-  <property key="defaultSiteId" value="VQ"/>
-  <property key="composition.mainbuttonstoshow" value="cancel"/>
-  <property key="sourcemapping" value="maximo7.5"/>
-  <property key="targetmapping" value="maximo7.5"/>
-  <property key="maxAttachmentSize" value="20"/>
+  <property key="maxAttachmentSize" value="10"/>
+  <!--in MB-->
   <property key="maxScreenshotSize" value="5"/>
+  <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <!--
-      maximoutc property set to the full name of the timezone the maximo 
+  <property key="defaultOrgId" value="GRICORG"/>
+  <property key="defaultSiteId" value="DRSSITE"/>
+  <property key="defaultStoreloc" value="CENTRAL"/>
+  <property key="sourcemapping" value="maximo7.5"/>
+
+  <!-- maximoutc property set to the full name of the timezone the maximo 
       server is set to, refer to the maximoutc.txt in the doc folder for 
-      a list of accepted values
-  -->
+      a list of accepted values -->
   <property key="maximoutc" value="US Mountain Standard Time"/>
 
+  <property key="email.smtp.host" value="172.24.12.4"/>
+  <!--property key="email.smtp.port" value="587"/-->
+  <property key="email.stmp.enableSSL" value="false"/>
+  <property key="notifications.activityStream.enabled" value="false"/>
+  <property key="dashboard.enabled" value="false"/>
+  <property key="ui.adminmenu.showclassic" value="false"/>
+  <property key="ui.toolbars.showlabels" value="true"/>
+  <property key="iiscontextpath" value=""/>
+
   <environment key="dev">
-    <property key="basewsURL" value="http://10.50.100.125/meaweb/wsdl/" />
+    <property key="basewsURL" value="http://10.50.100.125:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.125;Initial Catalog=SWMAX;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.125;Initial Catalog=SWDB_SWMAX;User Id=sw;password=softwrench;" />
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="M@xadm1n"/>
   </environment>
 
   <environment key="qa">
     <property key="basewsURL" value="http://10.50.100.126/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.50.100.50;Initial Catalog=GRC75MAX;User Id=MAXIMO;password=MAXIMO;" />
     <property key="swdb_url" value="Data Source=10.50.100.50;Initial Catalog=swdb_grc75max;User Id=sw;password=softwrench;" />
-   <!-- <property key="ldapServer" value="192.168.2.11"/>
-    <property key="ldapPortNumber" value="389"/>
-    <property key="ldapBaseDn" value="ou=GROUPS,ou=MAXIMO,dc=sas,dc=local"/>-->
     <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="M@xadm1n"/>
   </environment>
 
-  <!--<environment key="prod">
-    <property key="maximo_DB_provider" value="System.Data.SQL"/>
-    <property key="defaultOrgId" value="GRGE"/>
-    <property key="defaultSiteId" value=""/>
-    <property key="basewsURL" value="http://10.20.24.76/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=10.20.24.75;Initial Catalog=GRC75MAX;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_url" value="Data Source=10.20.24.75;Initial Catalog=SW;User Id=MAXIMO;password=MAXIMO;" />
-    <property key="swdb_provider" value="System.Data.SQL"/>
-    <property key="ldapServer" value="10.12.4.41"/>
-    <property key="ldapPortNumber" value="389"/>
-    <property key="ldapBaseDn" value="DC=GRC,DC=LOCAL"/>
+  <environment key="uat">
+    <property key="basewsURL" value="http://172.24.10.41/meaweb/wsdl/" />
+    <property key="basewfURL" value="http://172.24.10.41/meaweb/wf/" />
+    <property key="swdb_url" value="Data Source=172.24.10.46;Initial Catalog=GRCSWDB5DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="maximo_DB_url" value="Data Source=172.24.10.46;Initial Catalog=GRC75DEV;User Id=MAXIMO;password=MAXIMO;" />
+    <!--  <property key="wsprovider" value="rest" />-->
+    <property key="basewsRestURL" value="http://172.24.10.41/maxrest/rest/os/" />
+    <property key="restcredentials.user" value="mxintadm"/>
+    <property key="restcredentials.password" value="mxintadm"/>
     <property key="mifcredentials.user" value="mxintadm"/>
-    <property key="mifcredentials.password" value="M@x1mo23"/>
-  </environment>-->
+    <property key="mifcredentials.password" value="mxintadm"/>
+  </environment>
 
+  <environment key="prod">
+    <property key="basewsURL" value="http://172.24.10.40/meaweb/wsdl/" />
+    <property key="basewfURL" value="http://172.24.10.40/meaweb/wf/" />
+    <property key="swdb_url" value="Data Source=172.24.10.46;Initial Catalog=GRCSWDB5;User Id=MAXIMO;password=MAXIMO;" />
+    <property key="maximo_DB_url" value="Data Source=172.24.10.46;Initial Catalog=GRC75MAX;User Id=MAXIMO;password=MAXIMO;" />
+    <!--  <property key="wsprovider" value="rest" />-->
+    <property key="basewsRestURL" value="http://172.24.10.40/maxrest/rest/os/" />
+    <property key="restcredentials.user" value="mxintadm"/>
+    <property key="restcredentials.password" value="mxintadm"/>
+    <property key="mifcredentials.user" value="mxintadm"/>
+    <property key="mifcredentials.password" value="mxintadm"/>
+  </environment>
 </Properties>
- 
-  
-

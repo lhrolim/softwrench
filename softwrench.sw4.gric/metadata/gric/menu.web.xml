@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="horizontal" indexitem="SR" >
-
-  <reference id="servicereq"/>
+<!--Check menutemplate.web.xml-->
+<Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="horizontal" indexitem="WO">
   <reference id="workorder"/>
- 
+  <reference id="asset"/>
+  <reference id="location"/>
 </Menu>

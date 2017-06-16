@@ -27,6 +27,7 @@
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
+        <property key="list.offline.text.indexlist" value="failurecode"/>
       </properties>
       <schemas>
         <list>

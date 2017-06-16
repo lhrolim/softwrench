@@ -125,7 +125,7 @@
             return null;
         }
 
-        function getIconText(item) {
+        function getIconText(item, iscomposition) {
             if (!item) {
                 return null;
             }
@@ -137,6 +137,10 @@
 
             if (!datamap) {
                 return null;
+            }
+
+            if ((iscomposition === "true" && !item.id) || (iscomposition !== "true" && !item.remoteId)) {
+                return "";
             }
 
             const displayable = offlineSchemaService.locateDisplayableByQualifier(crudContextService.currentListSchema(), "icon");
@@ -208,7 +212,7 @@
             const iconService = currentIconProvider();
             return {
                 color: delegateToDeclaredServiceProxy(getIconColor, "getIconColor", iconService)(item),
-                text: delegateToDeclaredServiceProxy(getIconText, "getIconText", iconService)(item),
+                text: delegateToDeclaredServiceProxy(getIconText, "getIconText", iconService)(item, iscomposition),
                 icon: delegateToDeclaredServiceProxy(getIconIcon, "getIconIcon", iconService)(item, iscomposition),
                 textColor: delegateToDeclaredServiceProxy(getTextColor, "getTextColor", iconService)(item),
                 clazz: delegateToDeclaredServiceProxy(getIconClass, "getIconClass", iconService)(item, iscomposition)

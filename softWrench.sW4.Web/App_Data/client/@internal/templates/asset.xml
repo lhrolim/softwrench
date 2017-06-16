@@ -192,7 +192,7 @@
         <property key="mobile.fetchlimit" value="1000"/>
         <property key="mobile.userInteractionEnabled" value="false"/>
         <property key="icon.composition.tab" value="fa fa-tags"/>
-        
+        <property key="list.offline.text.indexlist" value="location,assetnum"/>
       </properties>
       <schemas>
         
