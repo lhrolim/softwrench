@@ -16,6 +16,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
@@ -116,6 +117,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                         }
                     }
                 }
+
+                HandleWonum(item);
             }
 
             return baseList;
@@ -203,10 +206,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 result.ResultObject.SetAttribute(relatedDataKey, groupDictionary[relatedDataKey]);
             }
 
+            HandleWonum(result.ResultObject);
+
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
             await LoadTechSupManager(result);
 
             return result;
+        }
+
+        private void HandleWonum(AttributeHolder ah) {
+            var wpnum = ah.GetStringAttribute("wpnum");
+            ah.SetAttribute("wonum", wpnum != null && wpnum.StartsWith("WP") ? "NA" + wpnum.Substring(2) : wpnum);
         }
 
         private async Task LoadTechSupManager(ApplicationDetailResult result) {
@@ -311,7 +321,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var woData = BuildWoData(operationWrapper);
 
-            package.Wonum = wonum;
+            package.Wpnum = wonum.StartsWith("NA") ? "WP" + wonum.Substring(2) : wonum;
 
             var nullableWorkorderId = crudoperationData.GetLongAttribute("workorderid");
             if (nullableWorkorderId == null) {

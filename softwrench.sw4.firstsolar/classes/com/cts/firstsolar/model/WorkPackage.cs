@@ -9,7 +9,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
 
     [Class(Table = "OPT_WORKPACKAGE", Lazy = false)]
-    public class WorkPackage : IBaseEntity {
+    public class WorkPackage : IBaseEntity
+    {
+
+        private string _wonum;
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -20,9 +23,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public long WorkorderId { get; set; }
 
+        public string Wonum {
+            get {
+                if (_wonum != null) {
+                    return _wonum;
+                }
+                _wonum = Wpnum != null && Wpnum.StartsWith("WP") ? "NA" + Wpnum.Substring(2) : Wpnum;
+                return _wonum;
+            }
+            set { _wonum = value; }
+        }
+
         [Property]
         [UserIdProperty]
-        public string Wonum { get; set; }
+        public string Wpnum { get; set; }
 
         [Property]
         public DateTime? CreatedDate { get; set; }

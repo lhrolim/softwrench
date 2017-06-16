@@ -272,6 +272,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
             }
         }
+
+        /// <summary>
+        /// Wpnum column on workpackage
+        /// </summary>
+        [Migration(201706131500)]
+        public class SWWEB_2930_3011Migration : Migration {
+
+            public override void Up() {
+                Rename.Column("wonum").OnTable("OPT_WORKPACKAGE").To("wpnum");
+            }
+
+            public override void Down() {
+
+            }
+        }
     }
 
 

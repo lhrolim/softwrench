@@ -158,7 +158,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 rejectUrl,
                 pendingUrl,
                 packageUrl,
-                wonum = package.Wonum,
+                wpnum = package.Wpnum,
                 summary = woData.GetAttribute("description"),
                 description = woData.GetAttribute("ld_.ldtext"),
                 worktype = woData.GetAttribute("worktype"),

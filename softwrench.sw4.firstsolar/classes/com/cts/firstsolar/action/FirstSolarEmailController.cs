@@ -58,7 +58,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 emailService.HandleReject(entity, wp);
             }
 
-            return View("GenericRequest", new EmailRequestModel { WoNum = wp.Wonum, Token = token, Type = entity.GetType().Name, Action = newStatus.LabelName(), EntityName = entity.EntityDescription });
+            return View("GenericRequest", new EmailRequestModel { WoNum = wp.Wpnum, Token = token, Type = entity.GetType().Name, Action = newStatus.LabelName(), EntityName = entity.EntityDescription });
         }
 
 
