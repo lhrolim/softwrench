@@ -3,7 +3,7 @@
     
     function fsengineeringevaluationService($rootScope, $http, $q, modalService, schemaCacheService, crudContextHolderService, submitService) {
 
-        const woDetailSchema = "editdetail";
+        const woDetailSchema = "workpackagesimplecomposition";
 
         function buildDatamap(schema) {
             const datamap = {};

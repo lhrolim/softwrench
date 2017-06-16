@@ -356,6 +356,22 @@
           <field attribute="schedstart"/>
         </schema>
 
+        <schema id="workpackagesimplecomposition" abstract="true" title="Work Order Details" platform="web">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="wonum" hidden="true"/>
+          <field attribute="reportdate" hidden="true"/>
+
+          <section id="compositions">
+            <composition relationship="worklog" label="Work Logs" hidden="true">
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSE'" orderbyfield="modifydate desc"/>
+            </composition>
+            <composition relationship="attachment" label="Attachments" hidden="true">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" allowremoval="@status!='CLOSE'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+          </section>
+        </schema>
 
         <list redeclaring="false" platform="web">
           <filters>

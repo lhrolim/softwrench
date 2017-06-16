@@ -3,7 +3,7 @@
     
     function fsworkpackagefilesService($http, $q, schemaCacheService, crudContextHolderService, submitService, compositionService, searchService) {
 
-        const woDetailSchema = "editdetail";
+        const woDetailSchema = "workpackagesimplecomposition";
 
         function getWoDatamap(woId) {
             const params = {
