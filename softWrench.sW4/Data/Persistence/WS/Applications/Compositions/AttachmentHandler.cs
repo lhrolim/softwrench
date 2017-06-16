@@ -110,7 +110,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
                     var title = attachment.GetAttribute("document").ToString();
-                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo");
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo",true);
                     var desc = docinfo != null && !string.IsNullOrEmpty(docinfo.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
 
                     data = attachment.GetUnMappedAttribute("newattachment");
