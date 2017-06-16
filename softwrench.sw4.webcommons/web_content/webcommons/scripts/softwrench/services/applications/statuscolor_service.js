@@ -31,7 +31,7 @@ modules.webcommons.service('statuscolorService', ["$rootScope", "contextService"
         //return "#777";
 
         var statuscolorFallbackJson = $rootScope.statuscolorFallbackJson;
-        if (!statuscolorFallbackJson) {
+        if (!statuscolorFallbackJson || angular.equals({}, statuscolorFallbackJson)) {
             statuscolorFallbackJson = contextService.fetchFromContext("statuscolorfallback", true);
             $rootScope.statuscolorFallbackJson = statuscolorFallbackJson;
         }
@@ -57,7 +57,7 @@ modules.webcommons.service('statuscolorService', ["$rootScope", "contextService"
             }
 
             var statuscolorJson = $rootScope.statusColor;
-            if (statuscolorJson === undefined) {
+            if (statuscolorJson === undefined || angular.equals({}, statuscolorJson)) {
                 statuscolorJson = contextService.fetchFromContext("statuscolor", true);
                 $rootScope.statusColor = statuscolorJson;
             }

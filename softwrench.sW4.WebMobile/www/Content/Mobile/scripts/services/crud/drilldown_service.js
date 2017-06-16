@@ -4,11 +4,13 @@
     function drillDownService($q, swdbDAO, crudContextHolderService, securityService, applicationStateService) {
         let locationApp = "location";
         let assetApp = "asset";
+        let isFlat = true;
         applicationStateService.getAppConfig().then((config) => {
             const client = config.server.client;
             if (client === "firstsolar") {
                 locationApp = "offlinelocation";
                 assetApp = "offlineasset";
+                isFlat = false;
             }
         });
 
@@ -47,10 +49,10 @@
         const locationsQuery = function () {
             const drillDown = dd();
             if (drillDown.locationQuery) {
-                const locationClause = buildLocationClause("`root`.textindex04 like '%/", "/%'");
+                const locationClause = isFlat ? " (1=1) " : buildLocationClause("`root`.textindex04 like '%/", "/%'");
                 return ` \`root\`.application = '${locationApp}' and ${locationClause} ${locationSearchWc(drillDown, "root")} order by \`root\`.textindex01`;
             }
-            const locationClause = buildLocationClause("`root`.datamap like '%\"parent\":\"", "\"%'");
+            const locationClause = isFlat ? " (1=1) " : buildLocationClause("`root`.datamap like '%\"parent\":\"", "\"%'");
             return ` \`root\`.application = '${locationApp}' and ${locationClause} order by \`root\`.textindex01`;
         }
 
@@ -59,7 +61,17 @@
         const assetQuery = function (order) {
             const drillDown = dd();
             const orderClause = order ? " order by `root`.textindex02 " : "";
+            const currentLocation = getCurrentLocation();
+
+            if (isFlat && !currentLocation) {
+                return ` \`root\`.application = '${assetApp}' ${assetSearchWc(drillDown)} ${orderClause} `;
+            }
+
             const locationClause1 = buildLocationClause("`root`.textindex01 = '", "'");
+            if (isFlat) {
+                return ` \`root\`.application = '${assetApp}' ${assetSearchWc(drillDown)} and ${locationClause1} ${orderClause} `;
+            }
+
             const locationClause2 = buildLocationClause("textindex04 like '%/", "/%'");
             return ` \`root\`.application = '${assetApp}' ${assetSearchWc(drillDown)} and (${locationClause1} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = '${locationApp}' and ${locationClause2})) ${orderClause} `;
         }
@@ -82,14 +94,34 @@
             drillDown.page = 0;
 
             const promises = [];
-            promises.push(swdbDAO.findByQuery("AssociationData", locationsQuery(), updatePaginationOptions(drillDown)));
 
-            const locationClause1 = buildLocationClause("`root`.textindex04 like '%/", "/%'");
-            promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${locationApp}' and ${locationClause1} ${locationSearchWc(drillDown, "root")}`));
+            const currentLocation = getCurrentLocation();
 
-            const locationClause2 = buildLocationClause("`root`.textindex01 = '", "'");
-            const locationClause3 = buildLocationClause("textindex04 like '%/", "/%'");
-            promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${assetApp}' and (${locationClause2} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = '${locationApp}' and ${locationClause3}))`));
+            // location list
+            if (isFlat && currentLocation) {
+                promises.push($q.when([]));
+            } else {
+                promises.push(swdbDAO.findByQuery("AssociationData", locationsQuery(), updatePaginationOptions(drillDown)));
+            }
+
+            // location count
+            if (isFlat && currentLocation) {
+                promises.push($q.when(0));
+            }else if (isFlat) {
+                promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${locationApp}' ${locationSearchWc(drillDown, "root")}`));
+            } else {
+                const locationClause1 = buildLocationClause("`root`.textindex04 like '%/", "/%'");
+                promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${locationApp}' and ${locationClause1} ${locationSearchWc(drillDown, "root")}`));
+            }
+
+            // asset count
+            if (isFlat && !currentLocation) {
+                promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${assetApp}'`));
+            } else {
+                const locationClause2 = buildLocationClause("`root`.textindex01 = '", "'");
+                const locationClause3 = buildLocationClause("textindex04 like '%/", "/%'");
+                promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${assetApp}' and (${locationClause2} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = '${locationApp}' and ${locationClause3}))`));
+            }
 
             return $q.all(promises).then((results) => {
                 setMoreItemsAvailable(drillDown, results[0]);

@@ -42,10 +42,6 @@
     <entity name="asset" idAttribute="assetuid" useridAttribute="assetnum" whereclause="!@siteid = 'DRSSITE'">
     </entity>
     <entity name="location" idAttribute="locationsid" whereclause="!@siteid = 'DRSSITE'">
-      <attributes>
-        <attribute name="parent" query=" (SELECT parent FROM lochierarchy WHERE location = !@location AND siteid = !@siteid AND orgid = !@orgid) " type="varchar"/>
-        <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
-      </attributes>
     </entity>
     <entity name="person" idAttribute="personuid" useridAttribute="personid" whereclause="!@locationsite = 'DRSSITE'">
     </entity>
@@ -135,22 +131,6 @@
           </commandbars>
 
         </detail>
-      </schemas>
-    </application>
-    <application name="location" title="Location" entity="location">
-      <schemas>
-        <list platform="mobile">
-          <field attribute="location" label="Location" readonly="true"/>
-          <field attribute="description" label="Description"/>
-          <field attribute="classstructure_.description" label="Class Structure"/>
-          <field attribute="assets" label="Assets"/>
-          <field attribute="type" label="Type"/>
-          <field attribute="status" label="Status"/>
-          <field attribute="siteid" label="Site"/>
-          <field attribute="orgid" hidden="true"/>
-          <field attribute="parent" hidden="true" />
-          <field attribute="hierarchy" hidden="true" />
-        </list>
       </schemas>
     </application>
   </applications>
