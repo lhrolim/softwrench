@@ -70,6 +70,7 @@ namespace softwrench.sw4.user.Migration {
             }
 
             if (toDelete.Any()) {
+                DAO.ExecuteSql("delete from SEC_FIELD_PER where schema_id in (select id from SEC_CONTAINER_PER where app_id in ({0}))".Fmt(GenerateInString(toDelete)));
                 DAO.ExecuteSql("delete from SEC_CONTAINER_PER where app_id in ({0})".Fmt(GenerateInString(toDelete)));
                 DAO.ExecuteSql("delete from SEC_COMPOSITION_PER where app_id in ({0})".Fmt(GenerateInString(toDelete)));
                 DAO.ExecuteSql("delete from SEC_ACTION_PER where app_id in ({0})".Fmt(GenerateInString(toDelete)));
