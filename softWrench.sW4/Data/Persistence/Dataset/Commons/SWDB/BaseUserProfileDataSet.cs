@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.portable.Util;
 using Iesi.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
@@ -44,8 +45,51 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 profileOb = _userProfileManager.FindByName(profileDatamap.GetAttribute("name") as string);
             }
             HandleBasicRoles(profileOb, profileDatamap);
+            HandleAppPermissions(profileOb, profileDatamap);
             //HandleUsers(profileOb, profileDatamap);
             return result;
+        }
+
+        private void HandleAppPermissions(UserProfile profileOb, DataMap profileDatamap) {
+
+            //force eager cache
+
+            var apps = MetadataProvider.FetchTopLevelApps(null, null);
+            var appPermissions = new List<IDictionary<string, object>>();
+
+            if (profileOb.ApplicationPermissions == null) {
+                profileOb.ApplicationPermissions = new HashSet<ApplicationPermission>();
+            }
+
+            foreach (var app in apps) {
+                IDictionary<string, object> dict = new Dictionary<string, object>();
+                var title = app.Title;
+                if (app.ApplicationName == "otherworkorder") {
+                    //TODO: make it generic
+                    title = "Group Workorders";
+                }
+
+                dict["title"] = title;
+                dict["#application"] = app.ApplicationName;
+
+                var loadApplicationPermissions = profileOb.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(app.ApplicationName));
+                if (loadApplicationPermissions != null) {
+                    dict["id"] = loadApplicationPermissions.Id;
+                    dict["#appallowview"] = loadApplicationPermissions.AllowView;
+                    dict["#appallowcreation"] = loadApplicationPermissions.AllowCreation;
+                    dict["#appallowupdate"] = loadApplicationPermissions.AllowUpdate;
+                    dict["#fullAppPermission"] = loadApplicationPermissions;
+                } else {
+                    dict["#appallowview"] = false;
+                    dict["#appallowcreation"] = false;
+                    dict["#appallowupdate"] = false;
+                }
+                //force eager cache
+                MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, app.ApplicationName);
+                dict["hascreationschema"] = app.HasCreationSchema;
+                appPermissions.Add(dict);
+            }
+            profileDatamap.SetAttribute("#apppermissions_", appPermissions);
         }
 
         [UsedImplicitly]
@@ -78,7 +122,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         public IEnumerable<IAssociationOption> GetSchemas(OptionFieldProviderParameters parameters) {
             var entity = parameters.OriginalEntity;
             var mode = entity.GetStringAttribute("selectedmode");
-            var application = entity.GetStringAttribute("#application");
+            var application = entity.GetStringAttribute("application");
             SchemaPermissionMode schemaMode;
             Enum.TryParse(mode, true, out schemaMode);
             var completeApplicationMetadataDefinition = MetadataProvider.Application(application);
@@ -112,7 +156,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         public IEnumerable<IAssociationOption> GetSelectableTabs(OptionFieldProviderParameters parameters) {
             var entity = parameters.OriginalEntity;
             var mode = entity.GetStringAttribute("selectedmode");
-            var application = entity.GetStringAttribute("#application");
+            var application = entity.GetStringAttribute("application");
             var schemaId = entity.GetStringAttribute("schema");
             SchemaPermissionMode schemaMode;
             Enum.TryParse(mode, true, out schemaMode);
@@ -150,13 +194,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var result = await base.GetCompositionData(application, request, currentData);
             if (request.CompositionList != null && request.CompositionList.Contains("#fieldPermissions_") && request.CompositionList.Count == 1) {
-                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("#application"));
+                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
                 var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
                 return _userProfileManager.LoadAvailableFieldsAsCompositionData(schema, result.OriginalCruddata.GetStringAttribute("#selectedtab"), request.PaginatedSearch.PageNumber);
             }
 
             if (request.CompositionList != null && request.CompositionList.Contains("#actionPermissions_") && request.CompositionList.Count == 1) {
-                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("#application"));
+                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
                 var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
                 return _userProfileManager.LoadAvailableActionsAsComposition(schema, request.PaginatedSearch.PageNumber);
             }

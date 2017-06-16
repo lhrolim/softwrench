@@ -6,7 +6,7 @@
 
 
 
-        constructor($q,$http,crud_inputcommons, fieldService, schemaService, tabsService, eventService,formatService, crudContextHolderService) {
+        constructor($q, $http, crud_inputcommons, fieldService, schemaService, tabsService, eventService, formatService, crudContextHolderService) {
             this.crud_inputcommons = crud_inputcommons;
             this.fieldService = fieldService;
             this.schemaService = schemaService;
@@ -34,22 +34,22 @@
             const parentSchema = this.crudContextHolderService.currentSchema();
 
             const key = {
-                schemaId : parentSchema.schemaId,
+                schemaId: parentSchema.schemaId,
                 mode: parentSchema.mode,
                 platform: platform()
             };
 
             const params = {
-                options: {printMode:true},
+                options: { printMode: true },
                 application: parentSchema.applicationName,
                 detailRequest: {
                     key,
-                    id:this.fieldService.getId(parentdata, parentSchema)
+                    id: this.fieldService.getId(parentdata, parentSchema)
                 }
             };
-            
+
             const compositionsToExpand = {
-                [relationship]:{ schema: compositionlistschema, value: true }
+                [relationship]: { schema: compositionlistschema, value: true }
             };
             //                var compositionsToExpand = { 'worklog_': true };
 
@@ -58,35 +58,35 @@
             return params;
         }
 
-        expandAll({clonedData,wasExpandedBefore,detailData,compositiondata,compositiondetailschema,relationship,parentdata,compositionlistschema}) {
+        expandAll({clonedData, wasExpandedBefore, detailData, compositiondata, compositiondetailschema, relationship, parentdata, compositionlistschema}) {
             if (wasExpandedBefore) {
-            Object.keys(detailData).forEach(key => {
-                detailData[key].expanded = true;
-            });
-            return this.$q.reject();
-        }
+                Object.keys(detailData).forEach(key => {
+                    detailData[key].expanded = true;
+                });
+                return this.$q.reject();
+            }
 
-        var compositionListData = [];
-        for (let i = 0; i < compositiondata.length; i++) {
-            const data = compositiondata[i];
-            const id = data[compositiondetailschema.idFieldName];
-            compositionListData[id] = data;
-        }
-            const parameters = this.buildExpandAllParams(relationship,parentdata, compositionlistschema, compositiondetailschema);
+            var compositionListData = [];
+            for (let i = 0; i < compositiondata.length; i++) {
+                const data = compositiondata[i];
+                const id = data[compositiondetailschema.idFieldName];
+                compositionListData[id] = data;
+            }
+            const parameters = this.buildExpandAllParams(relationship, parentdata, compositionlistschema, compositiondetailschema);
 
             const urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(parameters)));
-            return this.$http.get(urlToInvoke).then(response=> {
+            return this.$http.get(urlToInvoke).then(response => {
                 const result = response.data;
                 result.resultObject[relationship].forEach(value => {
                     const itemId = value[compositiondetailschema.idFieldName];
-                    this.doToggle({clonedData, detailData,relationship,parentdata,compositionlistschema}, value, compositionListData[itemId], true, itemId);
+                    this.doToggle({ clonedData, detailData, relationship, parentdata, compositionlistschema }, value, compositionListData[itemId], true, itemId);
                 });
-                
+
             });
         }
 
 
-        isSingleSelection (compositionlistSchema) {
+        isSingleSelection(compositionlistSchema) {
             return "single" === this.schemaService.getProperty(compositionlistSchema, "list.selectionstyle");
         }
 
@@ -100,20 +100,32 @@
           * @param {} rowIndex 
           * @returns {} 
           */
-        handleSingleSelectionClick (compositionlistSchema,items, originalcompositiondata,item, rowIndex) {
+        handleSingleSelectionClick(compositionlistSchema, items, originalcompositiondata, item, rowIndex) {
             if (!this.isSingleSelection(compositionlistSchema)) {
                 return;
             }
             const previousValue = item[CompositionConstants.Selected];
 
+            //if all items besides the current selected one are already false, it means we are unselecting the current checkbox
+            var isUnselecting = previousValue !== "false" && items.filter(a => a[CompositionConstants.Selected] === "false").length === items.length - 1;
+
             for (let i = 0; i < items.length; i++) {
+
                 items[i][CompositionConstants.Selected] = "false";
-                originalcompositiondata[i][CompositionConstants.Selected] = "false";
+                originalcompositiondata()[i][CompositionConstants.Selected] = "false";
             }
-            if (previousValue == undefined || "false" == previousValue) {
-                item[CompositionConstants.Selected] = "true";
+
+            item[CompositionConstants.Selected] = "true";
+            //updating the original item, to make it possible to send custom action selection to server-side
+            originalcompositiondata()[rowIndex][CompositionConstants.Selected] = "true";
+
+
+            if (isUnselecting) {
+                item[CompositionConstants.Selected] = "false";
                 //updating the original item, to make it possible to send custom action selection to server-side
-                originalcompositiondata[rowIndex][CompositionConstants.Selected] = "true";
+                originalcompositiondata()[rowIndex][CompositionConstants.Selected] = "false";
+
+                items.forEach(i => i[CompositionConstants.Selected] = undefined);
             }
 
         }
@@ -122,7 +134,7 @@
          *  Method that gets called whenever a composition entry gets their detail data shown, for read-only purposes. This is not triggered upon a modal edition
          *
          */
-        doToggle ({clonedData, detailData,relationship,parentdata,compositionlistschema}, item, originalListItem, forcedState, informedId) {
+        doToggle({clonedData, detailData, relationship, parentdata, compositionlistschema}, item, originalListItem, forcedState, informedId) {
 
             const parentschema = this.crudContextHolderService.currentSchema();
 
@@ -130,13 +142,13 @@
 
             if (clonedData[id] == undefined) {
                 clonedData[id] = {
-                    data : this.formatService.doContentStringConversion(jQuery.extend(true, {}, item))
+                    data: this.formatService.doContentStringConversion(jQuery.extend(true, {}, item))
                 };
             }
 
             if (detailData[id] == undefined) {
                 detailData[id] = {
-                    expanded : false,
+                    expanded: false,
                     data: this.formatService.doContentStringConversion(item),
                 };
                 detailData[id].data[CompositionConstants.IsCreation] = id == null || id < 0;
@@ -156,12 +168,12 @@
             }
         }
 
-      
+
 
 
     }
 
-    compositionListViewModel.$inject = ["$q","$http",'crud_inputcommons', 'fieldService', 'schemaService', 'tabsService', 'eventService', 'formatService', 'crudContextHolderService'];
+    compositionListViewModel.$inject = ["$q", "$http", 'crud_inputcommons', 'fieldService', 'schemaService', 'tabsService', 'eventService', 'formatService', 'crudContextHolderService'];
 
     angular.module('sw_layout').service('compositionListViewModel', compositionListViewModel);
 

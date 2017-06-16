@@ -39,7 +39,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         }
 
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all-delete-orphan")]
         [Key(1, Column = "schema_id")]
         [OneToMany(2, ClassType = typeof(FieldPermission))]
         [JsonConverter(typeof(IesiSetConverter<FieldPermission>))]

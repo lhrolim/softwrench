@@ -43,7 +43,7 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all-delete-orphan")]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(CompositionPermission))]
         [JsonConverter(typeof(IesiSetConverter<CompositionPermission>))]
@@ -51,7 +51,7 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all-delete-orphan")]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "app_id")]
         [OneToMany(2, ClassType = typeof(ActionPermission))]
         [JsonConverter(typeof(IesiSetConverter<ActionPermission>))]
@@ -90,19 +90,9 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        public bool HasNoPermissions {
-            //TODO: add AllowRemoval later...
-            get {
-                return !AllowCreation && !AllowUpdate && !AllowView;
-            }
-        }
+        public bool HasNoPermissions => !AllowCreation && !AllowUpdate && !AllowView;
 
-        public bool AllDefault {
-            //TODO: add AllowRemoval later...
-            get {
-                return HasNoPermissions;
-            }
-        }
+        public bool AllDefault => HasNoPermissions;
 
         public bool HasContainerPermissionOfSchema(string schema) {
             return ContainerPermissions != null && ContainerPermissions.Any(c => c.Schema.EqualsIc(schema));
@@ -167,8 +157,26 @@ namespace softwrench.sw4.user.classes.entities.security {
 
         }
 
+        protected bool Equals(ApplicationPermission other) {
+            return string.Equals(ApplicationName, other.ApplicationName) && Equals(Profile.Id, other.Profile.Id);
+        }
+
+        public override bool Equals(object obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ApplicationPermission)obj);
+        }
+
+        public override int GetHashCode() {
+            unchecked {
+                return ((ApplicationName != null ? ApplicationName.GetHashCode() : 0) * 397) ^ (Profile != null ? Profile.GetHashCode() : 0);
+            }
+        }
+
         public override string ToString() {
-            return string.Format("ApplicationName: {0}, AllowCreation: {1}, AllowUpdate: {2}, AllowView: {3}", ApplicationName, AllowCreation, AllowUpdate, AllowView);
+            return
+                $"ApplicationName: {ApplicationName}, AllowCreation: {AllowCreation}, AllowUpdate: {AllowUpdate}, AllowView: {AllowView}";
         }
     }
 }

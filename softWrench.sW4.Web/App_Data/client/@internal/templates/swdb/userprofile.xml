@@ -43,7 +43,7 @@
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>
+<!--              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>-->
               <command icon="fa-users" label="Apply Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple" cssclasses="large-button"/>
               <command icon="fa-users" label="Remove Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple" cssclasses="large-button"/>
               <!--</container>-->
@@ -75,23 +75,31 @@
           <!-- Application and basic setup  -->
           <section orientation="horizontal">
             <header displacement="ontop" label="Application Settings" params="fieldset=true" />
-            <optionfield attribute="#application" providerattribute="topLevelApplications" label="Application">
-              <event type="afterchange" service="userProfileService" method="onApplicationChange"/>
-              <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>
-            </optionfield>
-            <field attribute="#appallowview" label="Read Only?" showexpression="@application!=null">
-              <renderer type="checkbox" params="layout=left"/>
-              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
-            </field>
+            
+            
+            
+<!--            <optionfield attribute="#application" providerattribute="topLevelApplications" label="Application">-->
+<!--              <event type="afterchange" service="userProfileService" method="onApplicationChange"/>-->
+<!--              <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>-->
+<!--            </optionfield>-->
+<!--            <field attribute="#appallowview" label="Read Only?" showexpression="@application!=null">-->
+<!--              <renderer type="checkbox" params="layout=left"/>-->
+<!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
+<!--            </field>-->
+<!---->
+<!--            <field attribute="#appallowcreation" label="Create Records?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">-->
+<!--              <renderer type="checkbox" params="layout=left"/>-->
+<!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
+<!--            </field>-->
+<!--            <field attribute="#appallowupdate" label="Update Records?" showexpression="@application!=null">-->
+<!--              <renderer type="checkbox" params="layout=left"/>-->
+<!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
+<!--            </field>-->
 
-            <field attribute="#appallowcreation" label="Create Records?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">
-              <renderer type="checkbox" params="layout=left"/>
-              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
-            </field>
-            <field attribute="#appallowupdate" label="Update Records?" showexpression="@application!=null">
-              <renderer type="checkbox" params="layout=left"/>
-              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
-            </field>
+            <composition detailschema="" fetchtype="eager"  relationship="#apppermissions"  printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="applicationrepresentation"/>
+            </composition>
+
           </section>
 
           <section showexpression="@application!=null &amp;&amp; @anybasicpermission">
@@ -182,6 +190,32 @@
             <property key="compositions.disable.filter" value="true"/>
           </properties>
         </schema>
+
+        <schema id="applicationrepresentation" stereotype="list.singleselection">
+          <field hidden="true" attribute="id"/>
+          <field attribute="#application" hidden="true" />
+          <field label="Application" attribute="title" />
+          <field attribute="#appallowview" label="Read Only?">
+            <renderer type="checkbox" params="layout=left;editable=true;clickservice=userProfileService.basicRoleChanged"/>
+            <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
+          </field>
+
+          <field attribute="#appallowcreation" label="Create Records?" enableexpression="@hascreationschema">
+            <renderer type="checkbox" params="layout=left;editable=true;clickservice=userProfileService.basicRoleChanged"/>
+            <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
+          </field>
+          <field attribute="#appallowupdate" label="Update Records?" showexpression="@application!=null">
+            <renderer type="checkbox" params="layout=left;editable=true;clickservice=userProfileService.basicRoleChanged"/>
+            <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>
+          </field>
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+            <property key="compositions.disable.filter" value="true"/>
+            <property key="list.click.service" value="userProfileService.onApplicationChange"/>
+          </properties>
+        </schema>
+
 
         <schema id="fieldRepresentation" stereotype="list">
           <event type="onload" service="userProfileService" method="availableFieldsRefreshed"/>

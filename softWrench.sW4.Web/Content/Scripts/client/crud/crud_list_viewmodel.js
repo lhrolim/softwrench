@@ -24,7 +24,7 @@
         initGridFromDatamapAndSchema(datamap, schema, panelId) {
 
             const applicationListResultObj = {
-                datamap,
+                resultObject:datamap,
                 schema
             }
 

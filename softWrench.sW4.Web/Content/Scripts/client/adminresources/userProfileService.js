@@ -46,7 +46,7 @@
                 //due to mode changes
                 return;
             }
-            const application = parameters.fields["#application"];
+            const application = parameters.fields["application"];
             const schemaId = parameters.fields["schema"];
             dm["#fieldPermissions_"] = [];
 
@@ -120,7 +120,7 @@
             if (!!parameters.oldValue && !!parameters.newValue) {
                 simpleLog.debug("beforeAppChange:storing updated transient data for {0}".format(parameters.oldValue));
                 storeFromDmIntoTransient({
-                    "#application": parameters.oldValue
+                    "application": parameters.oldValue
                 });
             }
         }
@@ -144,10 +144,12 @@
         }
 
         //afterchange
-        function basicRoleChanged(parameters) {
-            const fields = parameters.fields;
-            if (parameters.target.attribute === "#appallowview") {
-                if (parameters.oldValue === false && parameters.newValue === true) {
+        function basicRoleChanged(fieldMetadata, parentdata, fields) {
+            var dm = crudContextHolderService.rootDataMap();
+
+            //            const fields = parameters.fields;
+            if (fieldMetadata.attribute === "#appallowview") {
+                if (fields["#appallowview"] === true) {
                     fields["#appallowcreation"] = false;
                     fields["#appallowupdate"] = false;
                 }
@@ -157,8 +159,11 @@
                 fields["#appallowview"] = false;
             }
 
+            if (dm["application"] !== fields["#application"]) {
+                return;
+            }
 
-            fields["anybasicpermission"] = fields["#appallowview"] || fields["#appallowupdate"] || fields["#appallowcreation"];
+            dm["anybasicpermission"] = (fields["#appallowview"] || fields["#appallowupdate"] || fields["#appallowcreation"]);
 
         }
 
@@ -180,11 +185,17 @@
 
         //afterchange
         function onApplicationChange(parameters) {
-            var dm = parameters.fields;
-            var nextApplication = dm["#application"];
+            var nextApplication = parameters["#application"];
+            if (!parameters["#selected"]) {
+                nextApplication = null;
+            }
+
+            var dm = crudContextHolderService.rootDataMap();
 
             //cleaning up data
             dm["schema"] = dm["selectedmode"] = dm["#selectedtab"] = dm["iscompositiontab"] = null;
+            dm["application"] = nextApplication;
+            dm["anybasicpermission"] = (parameters["#appallowview"] || parameters["#appallowupdate"] || parameters["#appallowcreation"]);
 
             resetAssociations("selectableTabs", "selectableModes", "schemas");
 
@@ -199,7 +210,7 @@
 
             if (!!transientData[nextApplication]) {
                 simpleLog.info("application has changed to {0}, but we already have local transient data. no need to fetch from the server".format(nextApplication));
-                mergeTransientIntoDatamap({ "#application": nextApplication });
+                mergeTransientIntoDatamap({ "application": nextApplication });
                 return $q.when();
             }
             const queryParameters = {
@@ -213,20 +224,12 @@
                 const data = httpResponse.data;
                 const appPermission = data.appPermission;
                 const hasCreationSchema = data.hasCreationSchema;
-                dm["hasCreationSchema"] = hasCreationSchema;
                 dm["#currentloadedapplication"] = appPermission;
-
-                if (!appPermission) {
-                    dm["#appallowcreation"] = false;
-                    //blocking everything by default
-                    dm["#appallowupdate"] = dm["#appallowremoval"] = dm["#appallowview"] = false;
-                    return $q.when();
-                }
 
                 transientData[nextApplication] = appPermission;
                 transientData[nextApplication]["hasCreationSchema"] = hasCreationSchema;
 
-                mergeTransientIntoDatamap({ "#application": nextApplication });
+                mergeTransientIntoDatamap({ "application": nextApplication });
 
             });
         }
@@ -237,7 +240,7 @@
             dm["#selectedtab"] = dm["iscompositiontab"] = null;
             cleanUpCompositions();
             crudContextHolderService.updateEagerAssociationOptions("selectableTabs", []);
-            const application = parameters.fields["#application"];
+            const application = parameters.fields["application"];
             var schemaId = parameters.fields["schema"];
             if (schemaId == null) {
                 return;
@@ -312,7 +315,14 @@
         }
 
         function filterAvailableModes(item) {
-            const dm = crudContextHolderService.rootDataMap();
+
+            const root = crudContextHolderService.rootDataMap();
+            const dm = root["#apppermissions_"].find(a => a["#application"] === root["application"]);
+            if (!dm) {
+                return false;
+            }
+
+
             const allowCreation = dm["#appallowcreation"];
             const allowUpdate = dm["#appallowupdate"];
             const allowView = dm["#appallowview"]; //            if (allowCreation && allowUpdate && allowView) {
@@ -358,7 +368,7 @@
 
             var transientData = $rootScope["#transientprofiledata"];
 
-            var application = dispatcher["#application"] ? dispatcher["#application"] : dm["#application"];
+            var application = dispatcher["application"] ? dispatcher["application"] : dm["application"];
             if (!application) {
                 //save method called on blank application
                 return transientData;
@@ -512,7 +522,7 @@
                     transientAppData.containerPermissions.push(actualContainerPermission);
                 }
             }
-                //#endregion
+            //#endregion
             else {
                 //#region compositionhandling 
                 var compAllowCreation = dm["#compallowcreation"];
@@ -556,7 +566,7 @@
 
         function mergeTransientIntoDatamap(dispatcher) {
             var dm = crudContextHolderService.rootDataMap();
-            var application = dm["#application"];
+            var application = dm["application"];
             var schema = dm.schema;
             var tab = dm["#selectedtab"];
             const transientAppData = $rootScope["#transientprofiledata"][application];
@@ -567,7 +577,7 @@
 
             simpleLog.info("merge transiet into datamap for app {0}".format(application));
 
-            if (dispatcher["#application"]) {
+            if (dispatcher["application"]) {
 
                 dm["hasCreationSchema"] = transientAppData.hasCreationSchema;
                 //no need to restore this data on every single operation
@@ -651,12 +661,25 @@
             //last storal
             storeFromDmIntoTransient();
             const dm = crudContextHolderService.rootDataMap();
-            const appPermissions = Object.keys($rootScope["#transientprofiledata"])
-                .map(function (key) {
-                    return $rootScope["#transientprofiledata"][key];
-                }).filter(function (ob) {
-                    return ob["_#isDirty"];
-                }); //TODO: add pagination support here
+
+            const appPermissions = dm["#apppermissions_"].map(a => {
+
+                var transientData = $rootScope["#transientprofiledata"][a["#application"]] || {};
+                var { containerPermissions, actionPermissions, compositionPermissions } = transientData;
+
+
+                return {
+                    allowCreation: a["#appallowcreation"],
+                    allowUpdate: a["#appallowupdate"],
+                    allowView: a["#appallowview"],
+                    applicationName: a["#application"],
+                    containerPermissions,
+                    actionPermissions,
+                    compositionPermissions,
+                    id: a["id"]
+                }
+            });
+
             const selectedRoles = dm["#basicroles_"].filter(function (role) {
                 return role["_#selected"];
             }).map(function (selectedRole) {
@@ -678,6 +701,12 @@
                 resultObject.applications.forEach(function (resultDTO) {
                     //updating so that id no longer null
                     const app = resultDTO.appPermission;
+
+                    const compEntry = dm["#apppermissions_"].find(a => a["#application"] === app.applicationName);
+                    if (compEntry != null) {
+                        compEntry["id"] = app.id;
+                    }
+
                     $rootScope["#transientprofiledata"][app.applicationName] = app;
                     $rootScope["#transientprofiledata"][app.applicationName].hasCreationSchema = resultDTO.hasCreationSchema;
                 });
@@ -713,7 +742,7 @@
                     };
                     return restService.postPromise("UserProfile", "BatchUpdate", params, selectedApps).then(function (httpResponse) {
                         $rootScope["#transientprofiledata"] = {};
-                        crudContextHolderService.rootDataMap()["#application"] = null;
+                        crudContextHolderService.rootDataMap()["application"] = null;
                     });
 
 
@@ -754,11 +783,13 @@
                     const params = {
                         profileId: profileId
                     };
-                    return restService.postPromise("UserProfile", "removeMultiple", params, usernames);
+                    return restService.postPromise("UserProfile", "removeMultiple", params, usernames).then(r => {
+                        return modalService.hide();
+                    });
                 }
-            }).catch(err => 
+            }).catch(err =>
                 alertService.alert("There is no user associated to this security group. Operation cannot be executed")
-            );
+                );
         }
 
         function applyMultiple() {
@@ -793,7 +824,9 @@
                     const params = {
                         profileId: profileId
                     };
-                    return restService.postPromise("UserProfile", "applyMultiple", params, usernames);
+                    return restService.postPromise("UserProfile", "applyMultiple", params, usernames).then(r => {
+                        return modalService.hide();
+                    });
                 }
             }).catch(err => {
                 alertService.alert("All users are already associated to this security group. Operation cannot be executed");

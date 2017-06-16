@@ -360,14 +360,16 @@
         }
 
         $scope.determineCheckBoxValueType = function (fieldMetadata, datamap, isTrueValue) {
+            if (!fieldMetadata.dataType) {
+                return isTrueValue ? 'true' : 'false';
+            }
+
             switch (fieldMetadata.dataType) {
                 case "smallint":
                     return isTrueValue ? 1 : 0;
-                    break;
 
                 case "boolean":
                     return isTrueValue ? 'true' : 'false';
-                    break;
             }
         };
 
