@@ -231,6 +231,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Upate the in memory user if the change is for the currently logged in user
             var currentUser = SecurityFacade.CurrentUser();
             user = await _userManager.SaveUser(user, false);
+            if (operation.EqualsIc(OperationConstants.CRUD_CREATE)) {
+                //SWWEB-3026, odd one-to-one mapping, cascading not working correctly
+                user.UserPreferences = await _swdbDAO.SaveAsync<UserPreferences>(new UserPreferences() { UserId = user.Id });
+            }
+
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
                 //TODO: Async
                 var fullUser = AsyncHelper.RunSync(() => _securityFacade.FetchUser(user.Id.Value));
@@ -265,7 +270,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
 
             var type = UserCreationType.Admin;
-            
+
 
             var firstName = json.StringValue("firstname");
             var lastName = json.StringValue("lastname");
@@ -289,7 +294,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             };
             user.IsActive = isactive;
             user.Locked = isLocked;
-            if (user.UserPreferences == null) {
+            if (user.Id != null && user.UserPreferences == null) {
+
                 var userPreferences = await _swdbDAO.FindSingleByQueryAsync<UserPreferences>(UserPreferences.PreferenesByUserId, user.Id);
                 if (userPreferences == null) {
                     user.UserPreferences = new UserPreferences {
@@ -298,8 +304,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 } else {
                     user.UserPreferences = userPreferences;
                 }
+                user.UserPreferences.Signature = signature;
             }
-            user.UserPreferences.Signature = signature;
+            
             user.SiteId = json.StringValue("locationsite") ?? user.SiteId;
             user.OrgId = json.StringValue("locationorg") ?? user.SiteId;
             var screenSecurityGroups = LoadProfiles(json);
@@ -331,9 +338,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
 
         public String UnregisteredUsers(FilterWhereClauseParameters parameters) {
-            var personIds = _swdbDAO.FindByNativeQuery("select maximopersonid from sw_user2 where creationtype='self' and isactive = :p0 order by creationdate",false).Select(a=> a["maximopersonid"]);
+            var personIds = _swdbDAO.FindByNativeQuery("select maximopersonid from sw_user2 where creationtype='self' and isactive = :p0 order by creationdate", false).Select(a => a["maximopersonid"]);
             var enumerable = personIds as IList<string> ?? personIds.ToList();
-            if (!enumerable.Any()){
+            if (!enumerable.Any()) {
                 return "1!=1";
             }
             return "person.personid in ({0})".Fmt(BaseQueryUtil.GenerateInString(enumerable));
