@@ -44,7 +44,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var detail = await base.GetApplicationDetail(application, user, request);
             var maximoPersonId = detail.ResultObject.GetStringAttribute("personid");
             var siteid = detail.ResultObject.GetStringAttribute("locationsite");
-            var props = _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId, siteid);
+
+            IDictionary<string, object> props = new Dictionary<string, object>();
+            if (!string.IsNullOrEmpty(maximoPersonId)) {
+                props = _userFacilityBuilder.AdjustUserFacilityProperties(new Dictionary<string, object>(), maximoPersonId, siteid);
+            }
 
             var available = props.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)
                 ? props[FirstSolarConstants.AvailableFacilitiesProp] as List<string>

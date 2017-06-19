@@ -1216,7 +1216,7 @@
 
       <components>
         <componentdisplayable id="facilities">
-          <optionfield attribute="facilities" label="Preferred Facilities" searchoperation="eq" default="" providerattribute="availableFacilities" >
+          <optionfield attribute="facilities" label="Preferred Facilities" searchoperation="eq" default="" providerattribute="availableFacilities" showexpression="@personid != null">
             <renderer type="multiselectautocompleteclient" params="creationallowed=false"/>
           </optionfield>
         </componentdisplayable>
