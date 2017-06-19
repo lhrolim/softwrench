@@ -366,6 +366,7 @@
                 Object.keys(currentDatamap).filter(f => f.startsWith("#workorder_")).forEach(k => {
                     delete currentDatamap[k];
                 });
+                delete currentDatamap["wpnum"];
                 return null;
             }
             return this.applicationService.getApplicationDataPromise("workorder", "workpackageschema", { id: workorderid }).then(result => {
@@ -378,7 +379,8 @@
                 Object.keys(resultWo).forEach(k => {
                     currentDatamap["#workorder_." + k] = resultWo[k];
                 });
-
+                const wonum = resultWo["wonum"];
+                currentDatamap["wpnum"] = wonum && wonum.startsWith("NA") ? "WP" + wonum.substring(2) : wonum;
             });
         }
 
