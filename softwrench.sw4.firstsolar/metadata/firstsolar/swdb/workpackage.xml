@@ -402,11 +402,31 @@
 
           </tab>
 
-          
+          <tab label="Attachments" icon="fa-paperclip" id="attachments" enableexpression="@id!=null" countrelationship="#allattachments_">
+            <composition inline="true" relationship="#allattachments_" label="" detailschema="attachmentdetail">
+              <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="attachmentlist"/>
+            </composition>
+          </tab>
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Package"  platform="web" stereotype="detailnew">
 
+        </schema>
+
+        <schema id="attachmentlist" stereotype="compositionlist">
+          <field attribute="id" hidden="true"/>
+          <field attribute="#attachdocument" label="Document"/>
+          <field attribute="#attachsource" label="Source"/>
+          <field attribute="#attachcreateddate" label="Created Date">
+            <renderer type="datetime"/>
+          </field>
+          <properties>
+            <property key="list.click.event" value="attachmentService.selectAttachment"/>
+          </properties>
+        </schema>
+
+        <!-- workaround to show expand button-->
+        <schema id="attachmentdetail" stereotype="compositiondetail">
         </schema>
       </schemas>
     </application>

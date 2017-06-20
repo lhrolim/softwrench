@@ -4,6 +4,7 @@
         public const string AttachsRelationship = "wkpgattachments_";
         public const string CallOutAttachsRelationship = "wkpgcoattachments_";
         public const string MaintenanceEngAttachsRelationship = "wkpgmeattachments_";
+        public const string AllAttachmentsRelationship = "wkpgallattachments_";
 
         public const string TechSupManagerQuery = @"
             select  g.onm_regional_manager as regmanager, g.onm_site_manager as supervisor, g.onm_maintenance_supervisor as tech from 

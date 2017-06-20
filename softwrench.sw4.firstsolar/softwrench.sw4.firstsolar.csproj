@@ -229,6 +229,7 @@
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarMaintenanceEngineeringHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarOptConfigurations.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageAttachmentsHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCompositionHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

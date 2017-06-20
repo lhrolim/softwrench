@@ -62,6 +62,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         [Import]
         public FirstSolarMaintenanceEngineeringHandler MaintenanceEngineeringHandler { get; set; }
 
+        [Import]
+        public FirstSolarWorkPackageCompositionHandler CompositionHandler { get; set; }
+
 
         #region list
 
@@ -486,63 +489,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 FSWPackageConstants.WorklogsRelationship,
                 FSWPackageConstants.AttachsRelationship,
                 FSWPackageConstants.CallOutAttachsRelationship,
-                FSWPackageConstants.MaintenanceEngAttachsRelationship
+                FSWPackageConstants.MaintenanceEngAttachsRelationship,
+                FSWPackageConstants.AllAttachmentsRelationship
             };
 
             var woCompList = await GetWoCompositions(woId, woNum, woSite, relList);
-            HandleWorkLogs(woCompList, compList);
-            HandleAttachments(woCompList, compList);
+            CompositionHandler.HandleAttachmentsTab(woCompList, compList);
+            CompositionHandler.HandleTestsWorkLogs(woCompList, compList);
+            CompositionHandler.HandleTestAttachments(woCompList, compList);
             CallOutHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
 
             MaintenanceEngineeringHandler.LoadEngineerNames(compList, woSite);
             return compList;
-        }
-
-        private static void HandleWorkLogs(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
-            var wkpkgWorkLogs = woResult.ResultObject.First(pair => FSWPackageConstants.WorklogsRelationship.Equals(pair.Key)).Value;
-
-            var workLogMap = new Dictionary<string, IList<Dictionary<string, object>>>();
-            wkpkgWorkLogs.ResultList.ForEach(worklog => {
-                var description = worklog["description"].ToString();
-                var realRelationship = "#" + description.Substring(7) + "s_";
-                if (!workLogMap.ContainsKey(realRelationship)) {
-                    workLogMap.Add(realRelationship, new List<Dictionary<string, object>>());
-                }
-                workLogMap[realRelationship].Add(worklog);
-            });
-
-            workLogMap.ForEach(pair => {
-                var searchResult = new EntityRepository.SearchEntityResult {
-                    ResultList = pair.Value,
-                    IdFieldName = wkpkgWorkLogs.IdFieldName,
-                    PaginationData = wkpkgWorkLogs.PaginationData
-                };
-                packageResult.ResultObject.Add(pair.Key, searchResult);
-            });
-        }
-
-        private static void HandleAttachments(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
-            var wkpkgAttachs = woResult.ResultObject.First(pair => FSWPackageConstants.AttachsRelationship.Equals(pair.Key)).Value;
-
-            var attachsMap = new Dictionary<string, IList<Dictionary<string, object>>>();
-            wkpkgAttachs.ResultList.ForEach(attach => {
-                var filter = attach["docinfo_.urlparam1"].ToString().ToLower();
-                var realRelationship = "#" + filter.Substring(7) + "fileexplorer_";
-                if (!attachsMap.ContainsKey(realRelationship)) {
-                    attachsMap.Add(realRelationship, new List<Dictionary<string, object>>());
-                }
-                attachsMap[realRelationship].Add(attach);
-            });
-
-            attachsMap.ForEach(pair => {
-                var searchResult = new EntityRepository.SearchEntityResult {
-                    ResultList = pair.Value,
-                    IdFieldName = wkpkgAttachs.IdFieldName,
-                    PaginationData = wkpkgAttachs.PaginationData
-                };
-                packageResult.ResultObject.Add(pair.Key, searchResult);
-            });
         }
 
         private WorkPackage GetOrCreatePackage(OperationWrapper operationWrapper) {
