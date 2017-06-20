@@ -291,9 +291,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         | SecurityProtocolType.Tls12
         | SecurityProtocolType.Ssl3;
 
-                    var fileBytes = client.DownloadData(finalURL);
+                    var fileBytes = await client.DownloadDataTaskAsync(finalURL);
                     if (docinfoURL.Contains(".")) {
-                        var extension = docinfoURL.Substring(docinfoURL.LastIndexOf(".") + 1);
+                        var extension = docinfoURL.Substring(docinfoURL.LastIndexOf(".", StringComparison.Ordinal) + 1);
 
                         // Attach extension to the file name for file association; however, if the extension exist, then don't add extension
                         //                        if (!fileName.ToLower().EndsWith(extension)) {

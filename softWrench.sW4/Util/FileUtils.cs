@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using cts.commons.portable.Util;
 
 namespace softWrench.sW4.Util {
@@ -33,9 +36,10 @@ namespace softWrench.sW4.Util {
                 // extract file name, truncking the name without extension
                 lastIndexOf = filename.LastIndexOf(".", System.StringComparison.Ordinal);
                 filename =
-                    lastIndexOf != -1 ?
-                        filename.Substring(0, maxChars - (filename.Length - lastIndexOf)) + filename.Substring(lastIndexOf) :
-                        filename.Substring(0, maxChars);
+                    lastIndexOf != -1
+                        ? filename.Substring(0, maxChars - (filename.Length - lastIndexOf)) +
+                          filename.Substring(lastIndexOf)
+                        : filename.Substring(0, maxChars);
             }
 
             return filename;
@@ -74,6 +78,32 @@ namespace softWrench.sW4.Util {
             }
             var formattedAttachmentString = validator + fileB64;
             return formattedAttachmentString;
+        }
+
+        public static byte[] GenerateZip(List<Tuple<byte[], string>> files) {
+            if (files == null) {
+                return null;
+            }
+
+            using (var compressedFileStream = new MemoryStream()) {
+                //Create an archive and store the stream in memory.
+                using (var zipArchive = new ZipArchive(compressedFileStream, ZipArchiveMode.Update, false)) {
+                    foreach (var caseAttachmentModel in files) {
+                        //Create a zip entry for each attachment
+                        var zipEntry = zipArchive.CreateEntry(caseAttachmentModel.Item2);
+
+                        //Get the stream of the attachment
+                        using (var originalFileStream = new MemoryStream(caseAttachmentModel.Item1)) {
+                            using (var zipEntryStream = zipEntry.Open()) {
+                                //Copy the attachment stream to the zip entry stream
+                                originalFileStream.CopyTo(zipEntryStream);
+                            }
+                        }
+                    }
+
+                }
+                return compressedFileStream.ToArray();
+            }
         }
     }
 }

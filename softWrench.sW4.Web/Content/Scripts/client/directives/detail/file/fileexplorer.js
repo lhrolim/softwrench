@@ -1,7 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_components").directive("fileexplorer", ["contextService", "dispatcherService", "attachmentService", function (contextService, dispatcherService, attachmentService) {
+    angular.module("sw_components").directive("fileexplorer", ["contextService", "dispatcherService", "attachmentService", "fileService", "schemaService", "crudContextHolderService","alertService",
+        function (contextService, dispatcherService, attachmentService, fileService, schemaService, crudContextHolderService, alertService) {
         const directive = {
 
             restrict: "E",
@@ -26,6 +27,27 @@
                 scope.browseFile = function ($event) {
                     $event.preventDefault();
                     element.find(".upload-input").trigger("click");
+                };
+
+                scope.downloadAll = function ($event) {
+                    $event.preventDefault();
+
+                    //TODO: make it workpackage agnostic 
+                    const ownerId = scope.datamap["#workorder_.workorderid"];//schemaService.getId(scope.datamap, crudContextHolderService.currentSchema());
+                    const userId = scope.datamap["#workorder_.wonum"];//schemaService.getId(scope.datamap, crudContextHolderService.currentSchema());
+                    const ownerTable = "workorder";// TODO: make it generic scope.datamap["class"];
+                    const relationship = scope.fieldMetadata.relationship;
+
+                    const parameters = {
+                        ownerId,
+                        userId,
+                        ownerTable,
+                        relationship
+                    }
+
+                    const controllerUrl = url(`/FileExplorer/DownloadAll?${$.param(parameters)}`);
+                    return fileService.downloadPromise(controllerUrl).catch((errorMessage) => alertService.alert("error downloading file"));
+
                 };
 
                 function getExt(fileName) {
