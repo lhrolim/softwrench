@@ -296,7 +296,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return groupDictionary;
         }
 
-        
+
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var package = await SavePackage(operationWrapper);
 
@@ -308,7 +308,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 siteId = token.Value<string>();
             }
 
-            await HandleEmails(package.Item1, siteId, package.Item2, package.Item3);
+            await HandleEmails(package.Item1, siteId, package.Item2, package.Item3, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
             return new TargetResult(package.Item1.Id.ToString(), null, package);
         }
 
@@ -519,9 +519,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return Dao.FindByPK<WorkPackage>(typeof(WorkPackage), id);
         }
 
-        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend) {
+        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, bool isCreation) {
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
+            if (isCreation) {
+                
+            }
         }
 
         public override string ApplicationName() {

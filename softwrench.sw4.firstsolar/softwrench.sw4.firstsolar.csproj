@@ -211,6 +211,8 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\Swweb3020Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\Swweb3022Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2974Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\IFsEmailRequest.cs" />
@@ -221,6 +223,8 @@
     <Compile Include="classes\com\cts\firstsolar\model\SubContractor.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\WorkPackage.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarLocationCacheJob.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\WorkPackageEmailStatus.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\WorkPackageEmailRequestAdapter.cs" />
     <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\callout\exception\IFSEmailWorkflowException.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarBaseEmailService.cs" />
@@ -231,6 +235,7 @@
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarOptConfigurations.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageAttachmentsHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCompositionHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCreationEmailHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -261,6 +266,7 @@
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolar\htmls\templates\workpackagecreation.html" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengineeremail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengrejectemail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\calloutemail.html" />
