@@ -43,10 +43,11 @@
 
           <field attribute="status" hidden="true"/>
 
-          <optionfield label="To" attribute="email">
+          <field label="To" attribute="email" readonly="true" defaultexpression="@defaultmetoemail"/>
+          <optionfield label="Cc" attribute="cc">
             <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
           </optionfield>
-          <field label="" attribute="todummy" readonly="true" default="omengineering@firstsolar.com"/>
+          
 
           <field attribute="reason" label="Reason for Request" requiredexpression="true">
             <renderer type="textarea"/>

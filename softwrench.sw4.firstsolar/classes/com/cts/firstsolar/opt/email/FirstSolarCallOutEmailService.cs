@@ -29,7 +29,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var subject = callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDate(callout.ContractorStartDate), callout.SiteName);
 
             var msg = GenerateEmailBody(request, package, siteId);
-            var emailData = new EmailData(GetFrom(), request.Email, subject, msg, attachs);
+            var emailData = new EmailData(GetFrom(), request.Email, subject, msg, attachs) {Cc = request.Cc};
             return emailData;
         }
 
@@ -62,7 +62,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     pendingUrl,
                     subcontractor = callout.SubContractorName == null ? "" : callout.SubContractorName,
                     expirationdate = FmtDate(callout.ExpirationDate),
-                    contractorstartdate= FmtDate(callout.ContractorStartDate),
+                    contractorstartdate = FmtDate(callout.ContractorStartDate),
                     ponumber = callout.PoNumber,
                     tonumber = callout.ToNumber,
                     site = callout.SiteName,

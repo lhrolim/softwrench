@@ -14,6 +14,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         int? Id { get; set; }
         int WorkPackageId { get; set; }
         string Email { get; set; }
+        string Cc { get; set; }
         DateTime? ActualSendTime { get; set; }
     }
 }

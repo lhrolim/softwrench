@@ -50,8 +50,8 @@
       <HintPath>..\packages\cts.commons.persistence.1.2.6368.42727\lib\net46\cts.commons.persistence.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.3.6352.31885, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6352.31885\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.3.6380.21974, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6380.21974\lib\net46\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.web.1.2.6156.25003\lib\net46\cts.commons.web.dll</HintPath>

@@ -1,4 +1,5 @@
 ﻿using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
 
@@ -18,6 +19,22 @@ namespace softWrench.sW4.Util {
 
         public string GetClientKey() {
             return ApplicationConfiguration.ClientName;
+        }
+
+        public bool IsProd() {
+            return ApplicationConfiguration.IsProd();
+        }
+
+        public bool IsDev() {
+            return ApplicationConfiguration.IsDev();
+        }
+
+        public bool IsQa() {
+            return ApplicationConfiguration.IsQA();
+        }
+
+        public bool IsUat() {
+            return ApplicationConfiguration.Profile.Contains("uat");
         }
 
         public bool IsLocal() {

@@ -56,8 +56,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return await dao.SaveAsync(request);
         }
 
-        public virtual string HandleSendTo(AttributeHolder data) {
-            var stringOrArray = data.GetAttribute("email");
+        public virtual string HandleEmailRecipient(AttributeHolder data, string attributeName) {
+            var stringOrArray = data.GetAttribute(attributeName);
             if (stringOrArray == null) {
                 return null;
             }

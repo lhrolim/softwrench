@@ -12,6 +12,16 @@ namespace cts.commons.simpleinjector.app
         bool IsOracle(DBType maximo);
         string GetClientKey();
 
+        bool IsProd();
+
+        bool IsDev();
+
+        bool IsQa();
+
+        bool IsUat();
+
+
+
         bool IsLocal();
 
         bool IsUnitTest { get; }

@@ -24,7 +24,7 @@
             schemaCacheService.fetchSchema("_MaintenanceEngineering", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(fsrequestService.buildDatamap(schema), item);
                 mergedItem["sendtime"] = fsrequestService.defaultSendTime();
-                mergedItem["email"] = "";
+                mergedItem["email"] = crudContextHolderService.rootDataMap()["defaultmetoemail"];
                 mergedItem["#maintenanceengineeringfileexplorer_"] = [];
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);

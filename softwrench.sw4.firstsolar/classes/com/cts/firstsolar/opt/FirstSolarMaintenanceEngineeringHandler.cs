@@ -116,7 +116,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
             
             me.Reason = crudoperationData.GetStringAttribute("reason");
-            me.Email = MaintenanceEmailService.HandleSendTo(crudoperationData);
+            me.Email = MaintenanceEmailService.HandleEmailRecipient(crudoperationData,"email");
+            me.Cc= MaintenanceEmailService.HandleEmailRecipient(crudoperationData,"cc");
             me.WorkPackageId = workpackage.Id ?? 0;
             me.GenerateToken();
 

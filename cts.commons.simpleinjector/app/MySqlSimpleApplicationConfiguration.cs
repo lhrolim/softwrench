@@ -19,6 +19,22 @@ namespace cts.commons.simpleinjector.app {
             return "";
         }
 
+        public bool IsProd() {
+            return false;
+        }
+
+        public bool IsDev() {
+            return false;
+        }
+
+        public bool IsQa() {
+            return false;
+        }
+
+        public bool IsUat() {
+            return false;
+        }
+
         public bool IsLocal() {
             return false;
         }

@@ -14,6 +14,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association.Lookup;
@@ -65,6 +66,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         [Import]
         public FirstSolarWorkPackageCompositionHandler CompositionHandler { get; set; }
 
+        [Import]
+        public IConfigurationFacade ConfigFacade { get; set; }
 
         #region list
 
@@ -197,6 +200,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             if (result.ResultObject.GetLongAttribute("workorderid") != null) {
                 await AddWorkorderRelatedData(user, result);
             }
+
+            var defaultEmail = ConfigFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultMeToEmailKey);
+            result.ResultObject.SetAttribute("defaultmetoemail", defaultEmail);
 
             if (!request.IsEditionRequest) {
                 //for a creation, regardless of a blank wp or from an existing workorder, no need to check SWDB further
