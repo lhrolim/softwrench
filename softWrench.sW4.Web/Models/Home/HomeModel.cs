@@ -44,7 +44,9 @@ namespace softWrench.sW4.Web.Models.Home {
         public RouteInfo RouteInfo { get; set; }
         public RouteListInfo RouteListInfo { get; set; }
         public string ApplicationVersion { get; set; }
-        public IApplicationResponse ResultData { get; set; }
+        public string ResultDataJSON { get; set; }
+
+        public bool Anonymous { get; set; }
 
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,

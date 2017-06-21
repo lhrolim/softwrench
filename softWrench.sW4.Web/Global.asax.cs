@@ -190,6 +190,9 @@ namespace softWrench.sW4.Web {
                 Response.Cache.SetNoStore();
             }
 
+//            var inMemoryUser = SecurityFacade.CurrentUser();
+//            HttpContext.Current.User = inMemoryUser;
+
             if (AuthLog.IsDebugEnabled) {
                 try {
                     var cookie = Request.Cookies[FormsAuthentication.FormsCookieName];

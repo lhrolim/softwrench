@@ -158,10 +158,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public string AccessToken { get; set; }
 
-        [Bag(0, Table = "OPT_WPEMAILSTATUS", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False)]
+        [Bag(0, Table = "OPT_WPEMAILSTATUS", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Inverse = true)]
         [Key(1, Column = "workpackageid")]
         [OneToMany(2, ClassType = typeof(WorkPackageEmailStatus))]
-        public virtual IList<WorkPackageEmailStatus> EmailStatuses { get; set; }
+        public virtual IList<WorkPackageEmailStatus> EmailStatuses { get; set; } = new List<WorkPackageEmailStatus>();
 
 
 

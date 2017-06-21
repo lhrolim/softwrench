@@ -425,7 +425,7 @@
     <Compile Include="Controllers\Application\Ticket\StatusBatchController.cs" />
     <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />
-    <Compile Include="Controllers\FirstSolar\FirstSolarWPEmailController.cs" />
+    <Compile Include="Controllers\FirstSolar\FirstSolarWpGenericEmailController.cs" />
     <Compile Include="Controllers\MappingToolController.cs" />
     <Compile Include="Controllers\Dynamic\ScriptsController.cs" />
     <Compile Include="Controllers\MetadataController.cs" />

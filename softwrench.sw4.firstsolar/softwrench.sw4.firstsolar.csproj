@@ -228,6 +228,7 @@
     <Compile Include="classes\com\cts\firstsolar\offline\FirstSolarSynchronizationManager.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\callout\exception\IFSEmailWorkflowException.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarBaseEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarBaseEmailRequestEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCallOutHandler.cs" />

@@ -904,6 +904,7 @@
     <Compile Include="Util\SW4Log4NetUtil.cs" />
     <Compile Include="Util\SwConstants.cs" />
     <Compile Include="Util\TaskFactoryExtensions.cs" />
+    <Compile Include="Util\TokenUtil.cs" />
     <Compile Include="Util\TransactionConstants.cs" />
     <Compile Include="Util\TransactionStatistics\Email\TransactionStatsEmailer.cs" />
     <Compile Include="Util\TransactionStatistics\Job\TransStatsReporterJob.cs" />

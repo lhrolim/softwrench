@@ -52,6 +52,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public DateTime? AckDate { get; set; }
 
 
+        [ManyToOne(Column = "workpackageid", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+        public WorkPackage WorkPackage { get; set; }
 
 
     }

@@ -6,7 +6,7 @@
 <article ng-controller="HomeController">
     <script type="text/javascript">
         var homeModel = @Html.Raw(JsonConvert.SerializeObject(this.Model));
-        var userLanguage = '@Html.Raw((User as InMemoryUser).Language)';
+        var userLanguage = '@Html.Raw((User as InMemoryUser) == null ? "en" : (User as InMemoryUser).Language)';
         var currentModule = '@Request.Params.Get("currentmodule")';
     </script>
 

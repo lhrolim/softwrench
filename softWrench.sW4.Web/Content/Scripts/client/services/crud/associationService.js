@@ -149,7 +149,7 @@
             const fieldsTosubmit = this.submitServiceCommons.removeExtraFields(datamap, true, schema);
             const key = this.schemaService.buildApplicationMetadataSchemaKey(schema);
             const lazyAssociationsBeingResolvedLocal = this.lazyAssociationsBeingResolved;
-            const updateLazyFn = this.crudContextHolderService.updateLazyAssociationOption.bind(this);
+            const updateLazyFn = this.crudContextHolderService.updateLazyAssociationOption.bind(this.crudContextHolderService);
 
             const parameters = {
                 key,

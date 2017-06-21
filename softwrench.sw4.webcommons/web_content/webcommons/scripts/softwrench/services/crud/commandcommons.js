@@ -17,6 +17,11 @@
         function getCommands(schema, position, commandBarRegistry) {
             const hasPossibilityOfbeingOverriden = schema.commandSchema.hasDeclaration;
             const bar = commandBarRegistry;
+            if (bar == null) {
+                //for some scenarions such as anonymous visualization of a single detail item, the bars won´t be brought
+                return null;
+            }
+
             const fallbackKey = `#${position}`;
             var commandKey = hasPossibilityOfbeingOverriden ? `${schema.applicationName}_${schema.schemaId}_${schema.mode.toLowerCase()}.#${position}` : fallbackKey;
             var commandbar = bar[commandKey];

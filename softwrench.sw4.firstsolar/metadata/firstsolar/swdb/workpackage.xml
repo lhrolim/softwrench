@@ -409,6 +409,8 @@
           </tab>
         </schema>
 
+        <schema id="viewdetail" parentschema="adetail" mode="output"/>
+
         <schema id="newdetail" parentschema="adetail" title="New Work Package"  platform="web" stereotype="detailnew">
 
         </schema>

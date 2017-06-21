@@ -41,7 +41,7 @@
             $scope.mainlogo = config.logo;
             $scope.myprofileenabled = config.myProfileEnabled;
 
-            if (!sessionStorage["ctx_loggedin"]) {
+            if (!sessionStorage["ctx_loggedin"] && !localHomeModel.Anonymous) {
                 //if the session storage flag was null it meanas login has just happened. Otherwise we´re talking about a browser refresh
                 $rootScope.$broadcast(JavascriptEventConstants.Login);
                 dynamicScriptsCacheService.syncWithServerSideScripts();
@@ -112,10 +112,36 @@
             }
 
             if (!redirectUrl) {
+                if (!!localHomeModel.ResultDataJSON) {
+                    var resultData = JSON.parse(localHomeModel.ResultDataJSON);
+
+                    return handleResponse(resultData.redirectURL, resultData);
+                }
+
                 return $q.when(null);
             }
 
             return redirect(redirectUrl);
+        }
+
+        function handleResponse(redirectUrl,result) {
+            configurationService.updateConfigurations();
+
+
+            $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
+            $scope.$parent.resultData = result.resultObject;
+            $scope.$parent.resultObject = result;
+            // if (nullOrUndef($rootScope.currentmodule) && !nullOrUndef(currentModule) && currentModule != "") {
+            // $rootScope.currentmodule = currentModule;
+            // }
+
+            $scope.$emit('sw_indexPageLoaded', redirectUrl);
+            $scope.$emit(JavascriptEventConstants.TitleChanged, result.title);
+            if (!angular.isUndefined(homeModel.Message)) {
+                const messageType = homeModel.MessageType || "success";
+                alertService.notifymessage(messageType, homeModel.Message);
+                homeModel.Message = null;
+            }
         }
 
 
@@ -129,26 +155,8 @@
             }
 
             log.info(`getting crud data at ${redirectUrl}`);
-            return $http(parameters).then(function (response) {
-                // updates the configs on page load
-                configurationService.updateConfigurations();
-
-                const result = response.data;
-
-                $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
-                $scope.$parent.resultData = result.resultObject;
-                $scope.$parent.resultObject = result;
-                // if (nullOrUndef($rootScope.currentmodule) && !nullOrUndef(currentModule) && currentModule != "") {
-                // $rootScope.currentmodule = currentModule;
-                // }
-
-                $scope.$emit('sw_indexPageLoaded', redirectUrl);
-                $scope.$emit(JavascriptEventConstants.TitleChanged, result.title);
-                if (!angular.isUndefined(homeModel.Message)) {
-                    const messageType = homeModel.MessageType || "success";
-                    alertService.notifymessage(messageType, homeModel.Message);
-                    homeModel.Message = null;
-                }
+            return $http(parameters).then(response => {
+                return handleResponse(redirectUrl, response.data);
             });
         }
 

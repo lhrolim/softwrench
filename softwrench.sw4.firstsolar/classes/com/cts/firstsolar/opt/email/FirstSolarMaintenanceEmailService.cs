@@ -22,7 +22,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
-    public class FirstSolarMaintenanceEmailService : FirstSolarBaseEmailService {
+    public class FirstSolarMaintenanceEmailService : FirstSolarBaseEmailRequestEmailService {
 
         [Import]
         public IMaximoHibernateDAO MaxDao { get; set; }

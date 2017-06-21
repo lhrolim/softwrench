@@ -3,6 +3,7 @@ using System.Globalization;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using NHibernate.Mapping.Attributes;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
@@ -59,11 +60,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
             if (Token != null) {
                 return false;
             }
-
-            var token = "" + new Random(100).Next(10000);
-            token += DateTime.Now.TimeInMillis().ToString(CultureInfo.InvariantCulture);
-            token += AuthUtils.GetSha1HashData(token);
-            Token = token;
+            Token = TokenUtil.GenerateDateTimeToken();
             return true;
         }
     }

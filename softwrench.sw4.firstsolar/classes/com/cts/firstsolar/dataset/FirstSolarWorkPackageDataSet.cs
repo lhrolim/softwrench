@@ -64,6 +64,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public FirstSolarMaintenanceEngineeringHandler MaintenanceEngineeringHandler { get; set; }
 
         [Import]
+        public FirstSolarWorkPackageCreationEmailHandler WpCreationEmailHandler { get; set; }
+
+        [Import]
         public FirstSolarWorkPackageCompositionHandler CompositionHandler { get; set; }
 
         [Import]
@@ -512,7 +515,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private WorkPackage GetOrCreatePackage(OperationWrapper operationWrapper) {
             if (!OperationConstants.CRUD_UPDATE.Equals(operationWrapper.OperationName)) {
-                return new WorkPackage();
+                return new WorkPackage { AccessToken = TokenUtil.GenerateDateTimeToken() };
             }
 
             var id = int.Parse(operationWrapper.Id);
@@ -523,7 +526,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
             if (isCreation) {
-                
+                await WpCreationEmailHandler.SendEmail(package, package, siteId);
             }
         }
 

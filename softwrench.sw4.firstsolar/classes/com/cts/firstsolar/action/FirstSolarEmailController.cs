@@ -36,7 +36,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
 
         [System.Web.Http.HttpGet]
-        private async Task<ActionResult> DoTransition<T>(string token, string status, FirstSolarBaseEmailService emailService) where T : class, IFsEmailRequest, new() {
+        private async Task<ActionResult> DoTransition<T>(string token, string status, FirstSolarBaseEmailRequestEmailService emailService) where T : class, IFsEmailRequest, new() {
             var entity = await DAO.FindSingleByQueryAsync<T>(new T().ByToken, token);
             if (entity == null) {
                 throw IFSEmailWorkflowException.NotFound<T>();
