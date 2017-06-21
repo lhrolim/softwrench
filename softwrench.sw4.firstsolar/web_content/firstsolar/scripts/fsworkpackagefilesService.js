@@ -54,8 +54,7 @@
                     file.persisted = true;
                     const packageDatamap = crudContextHolderService.rootDataMap();
                     const packageSchema = crudContextHolderService.currentSchema();
-                    crudContextHolderService.clearCompositionsLoaded();
-                    return compositionService.searchCompositionList(relationship, packageSchema, packageDatamap);
+                    compositionService.populateWithCompositionData(packageSchema, packageDatamap);
                 });
             });
         }
