@@ -177,32 +177,42 @@
           </section>
 
 
-          <section orientation="horizontal" showexpression="@wpnum != null">
-            <section>
-              <header displacement="ontop" label="Interconnect Documents" params="fieldset=true"/>
-              <optionfield attribute="interconnectdocs" default="na" defaultexpression="na">
-                <renderer type="radio" params="vertical=true"/>
-                <option label="N/A" value="na"/>
-                <option label="Switching Order (ONLY)" value="switching"/>
-                <option label="Source of Power Clearance" value="source"/>
-              </optionfield>
-            </section>
-
-
+          <section orientation="vertical" showexpression="@wpnum != null">
             <section orientation="horizontal">
-              <header displacement="ontop" label="Operation Procedures" params="fieldset=true"/>
               <section>
-                <optionfield attribute="outagetype" >
-                  <renderer type="radio" params="maxrows=1"/>
-                  <option label="NOP" value="NOP"/>
-                  <option label="MOP" value="MOP"/>
+                <header displacement="ontop" label="Interconnect Documents" params="fieldset=true"/>
+                <optionfield attribute="interconnectdocs" default="na" defaultexpression="na">
+                  <renderer type="radio" params="vertical=true"/>
+                  <option label="N/A" value="na"/>
+                  <option label="Switching Order (ONLY)" value="switching"/>
+                  <option label="Source of Power Clearance" value="source"/>
                 </optionfield>
               </section>
-              <section>
-                <field label="Site Technician" attribute="#technician" readonly="true"/>
-                <field label="Site Supervisor" attribute="#supervisor" readonly="true"/>
-                <field label="Regional Plant Manager" attribute="#manager" readonly="true"/>
+
+              <section orientation="horizontal">
+                <header displacement="ontop" label="Operation Procedures" params="fieldset=true"/>
+                <section>
+                  <optionfield attribute="outagetype" >
+                    <renderer type="radio" params="maxrows=1"/>
+                    <option label="NOP" value="NOP"/>
+                    <option label="MOP" value="MOP"/>
+                  </optionfield>
+                </section>
+                <section>
+                  <field label="Site Technician" attribute="#technician" readonly="true"/>
+                  <field label="Site Supervisor" attribute="#supervisor" readonly="true"/>
+                  <field label="Regional Plant Manager" attribute="#manager" readonly="true"/>
+                </section>
               </section>
+            </section>
+
+            <section orientation="horizontal">
+              <composition inline="true" relationship="#interconnectfileexplorer_" label="Interconnect Documents" detailschema="">
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+              </composition>
+              <composition inline="true" relationship="#operationprocfileexplorer_" label="Operation Procedures Files" detailschema="">
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+              </composition>
             </section>
           </section>
 
