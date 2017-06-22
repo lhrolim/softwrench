@@ -428,7 +428,7 @@
               </composition>
             </tab>
 
-            <composition detailschema="" relationship="emailtracking_" label="Email Tracking">
+            <composition detailschema="" relationship="emailtracking_" label="Email Tracking" showexpression="@wpnum!=null">
               <collectionproperties allowcreation="false" allowupdate="false" allowremoval="false"/>
             </composition>
 
@@ -465,6 +465,7 @@
     <application entity="WorkPackageEmailStatus" name="emailstatus" title="Email Tracking">
       <properties>
         <property key ="icon" value="fa fa-envelope-o"/>
+        <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
       </properties>
 
       <schemas>

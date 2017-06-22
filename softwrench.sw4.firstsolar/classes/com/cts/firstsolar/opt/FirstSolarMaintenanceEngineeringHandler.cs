@@ -39,16 +39,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AttachmentsHandler.HandleAttachmentsOnCompositionLoad(woResult, packageResult, AttachmentsRelationship, FSWPackageConstants.MaintenanceEngAttachsRelationship);
         }
 
-        public void HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData) {
+        public bool HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData) {
             var existingMaintenanceEng = package.MaintenanceEngineerings;
             package.MaintenanceEngineerings = new List<MaintenanceEngineering>();
+            var anyNewMe = false;
+
             if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("maintenanceEngineerings_")) {
                 var maintenanceEngsData = crudoperationData.AssociationAttributes["maintenanceEngineerings_"] as List<CrudOperationData>;
                 if (maintenanceEngsData == null) {
                     throw new Exception("Incorrect format of maintenance engineering list.");
                 }
                 maintenanceEngsData.ForEach((data) => {
-                    package.MaintenanceEngineerings.Add(HandleMaintenanceEng(data, GetOurCreateMaintenanceEng(data, existingMaintenanceEng), package, woData));
+                    var me = GetorCreateMaintenanceEng(data, existingMaintenanceEng);
+                    anyNewMe = anyNewMe || me.Id == null;
+                    package.MaintenanceEngineerings.Add(HandleMaintenanceEng(data, me, package, woData));
                 });
             }
             existingMaintenanceEng?.ForEach(me => {
@@ -57,6 +61,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 }
                 Dao.Delete(me);
             });
+            return anyNewMe;
         }
 
         public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<MaintenanceEngineering> mesToSend) {
@@ -114,10 +119,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 var dateFromJson = Convert.ToDateTime(crudoperationData.GetStringAttribute("sendTime"), new CultureInfo("en-US"));
                 me.SendTime = dateFromJson.FromUserToMaximo(SecurityFacade.CurrentUser());
             }
-            
+
             me.Reason = crudoperationData.GetStringAttribute("reason");
-            me.Email = MaintenanceEmailService.HandleEmailRecipient(crudoperationData,"email");
-            me.Cc= MaintenanceEmailService.HandleEmailRecipient(crudoperationData,"cc");
+            me.Email = MaintenanceEmailService.HandleEmailRecipient(crudoperationData, "email");
+            me.Cc = MaintenanceEmailService.HandleEmailRecipient(crudoperationData, "cc");
             me.WorkPackageId = workpackage.Id ?? 0;
             me.GenerateToken();
 
@@ -128,7 +133,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return me;
         }
 
-        private static MaintenanceEngineering GetOurCreateMaintenanceEng(CrudOperationData crudoperationData, IList<MaintenanceEngineering> existingMes) {
+        private static MaintenanceEngineering GetorCreateMaintenanceEng(CrudOperationData crudoperationData, IList<MaintenanceEngineering> existingMes) {
             var id = crudoperationData.GetIntAttribute("id");
             if (id == null || existingMes == null) {
                 return new MaintenanceEngineering();

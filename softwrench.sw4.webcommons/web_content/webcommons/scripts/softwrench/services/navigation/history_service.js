@@ -360,6 +360,10 @@
         }
 
         function getRouteInfo() {
+            if (contextService.get("anonymous", false, true)) {
+                return null;
+            }
+
             var routeInfo = localStorageService.get(routeInfoKey);
             if (routeInfo) {
                 return $q.when(routeInfo);

@@ -358,12 +358,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             package = await Dao.SaveAsync(package);
             HandleGenericLists(crudoperationData, package);
 
-            CallOutHandler.HandleCallOuts(crudoperationData, package, woData);
+            var anyNewCallout = CallOutHandler.HandleCallOuts(crudoperationData, package, woData);
 
-            MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData);
+            var anyNewMe = MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData);
 
             package = await Dao.SaveAsync(package);
-            crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+
+            if (anyNewCallout || anyNewMe) {
+                crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+            }
+
 
             SaveMaximoWorkorder(woData);
 

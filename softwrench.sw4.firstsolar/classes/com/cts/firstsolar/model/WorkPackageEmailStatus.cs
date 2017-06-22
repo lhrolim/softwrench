@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
@@ -52,6 +53,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public DateTime? AckDate { get; set; }
 
 
+        //To avoid self referencing loops, check SWWEB-3020 comments
+        [JsonIgnore]
         [ManyToOne(Column = "workpackageid", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public WorkPackage WorkPackage { get; set; }
 

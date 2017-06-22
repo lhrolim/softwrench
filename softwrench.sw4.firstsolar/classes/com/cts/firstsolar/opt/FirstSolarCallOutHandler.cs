@@ -40,16 +40,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AttachmentsHandler.HandleAttachmentsOnCompositionLoad(woResult, packageResult, AttachmentsRelationship, FSWPackageConstants.CallOutAttachsRelationship);
         }
 
-        public void HandleCallOuts(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData) {
+        public bool HandleCallOuts(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData) {
             var existingCallOuts = package.CallOuts;
             package.CallOuts = new List<CallOut>();
+
+            var anyNewCallOut = false;
+
             if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("callOuts_")) {
                 var callOutsData = crudoperationData.AssociationAttributes["callOuts_"] as List<CrudOperationData>;
                 if (callOutsData == null) {
                     throw new Exception("Incorrect format of subcontractors call out list.");
                 }
                 callOutsData.ForEach((data) => {
-                    package.CallOuts.Add(HandleCallout(data, GetOurCreateCallOut(data, existingCallOuts), package, woData));
+                    var callout = GetOrCreateCallOut(data, existingCallOuts);
+                    anyNewCallOut = anyNewCallOut || callout.Id == null;
+                    package.CallOuts.Add(HandleCallout(data, callout, package, woData));
                 });
             }
             existingCallOuts?.ForEach(callout => {
@@ -58,6 +63,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 }
                 Dao.Delete(callout);
             });
+            return anyNewCallOut;
         }
 
         public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend) {
@@ -87,7 +93,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
             var nullableSubcontractorId = crudoperationData.GetStringAttribute("subcontractorid");
             var subContractorName = crudoperationData.GetStringAttribute("subcontractorname");
-            
+
             if (crudoperationData.AssociationAttributes.ContainsKey("subcontractor_")) {
                 var subcontractor = (CrudOperationData)crudoperationData.AssociationAttributes["subcontractor_"];
                 subContractorName = subcontractor.GetStringAttribute("name");
@@ -102,7 +108,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             callOut.SubContractorName = subContractorName;
 
             callOut.Status = newStatus;
-            callOut.Email = CallOutEmailService.HandleEmailRecipient(crudoperationData,"email");
+            callOut.Email = CallOutEmailService.HandleEmailRecipient(crudoperationData, "email");
 
             if (sendNow.HasValue && sendNow.Value) {
                 callOut.SendTime = DateTime.Now.FromServerToMaximo();
@@ -124,7 +130,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return callOut;
         }
 
-        private static CallOut GetOurCreateCallOut(CrudOperationData crudoperationData, IList<CallOut> existingCallOuts) {
+        private static CallOut GetOrCreateCallOut(CrudOperationData crudoperationData, IList<CallOut> existingCallOuts) {
             var id = crudoperationData.GetIntAttribute("id");
             if (id == null || existingCallOuts == null) {
                 return new CallOut();
