@@ -17,6 +17,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
@@ -223,6 +224,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
             await LoadTechSupManager(result);
 
+            if (application.Schema.SchemaId.Equals("viewdetail")) {
+                //two rounds, since we need to first load the workorder details, and only then we´re able to fully bring the associations of it
+                var associationResults = await BuildAssociationOptions(result.ResultObject, application.Schema, new SchemaAssociationPrefetcherRequest());
+                result.AssociationOptions = associationResults;
+            }
+
             return result;
         }
 
@@ -315,7 +322,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return new TargetResult(package.Item1.Id.ToString(), null, package);
         }
 
-        
+
         public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>> SavePackage(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var package = GetOrCreatePackage(operationWrapper);

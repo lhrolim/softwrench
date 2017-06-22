@@ -41,6 +41,8 @@
             $scope.mainlogo = config.logo;
             $scope.myprofileenabled = config.myProfileEnabled;
 
+            contextService.set("anonymous", localHomeModel.Anonymous,true);
+
             if (!sessionStorage["ctx_loggedin"] && !localHomeModel.Anonymous) {
                 //if the session storage flag was null it meanas login has just happened. Otherwise we´re talking about a browser refresh
                 $rootScope.$broadcast(JavascriptEventConstants.Login);

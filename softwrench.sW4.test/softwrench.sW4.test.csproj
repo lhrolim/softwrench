@@ -283,6 +283,7 @@
     <Compile Include="Metadata\Entities\TargetConstantHandlerTest.cs" />
     <Compile Include="Metadata\Entities\ManchesterSlicedEntityMetadataBuilderTest.cs" />
     <Compile Include="Metadata\ApplicationMetadataValidatorTest.cs" />
+    <Compile Include="Metadata\FirstSolarCustomizationTest.cs" />
     <Compile Include="Metadata\MetadataProviderTest.cs" />
     <Compile Include="Metadata\MissingSchemaFieldsTest.cs" />
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />

@@ -1,8 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Security;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -17,6 +21,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Util;
+using softWrench.sW4.Web.Models;
 using softWrench.sW4.Web.Models.Home;
 
 namespace softWrench.sW4.Web.Controllers.FirstSolar {
@@ -26,6 +31,7 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
     public class FirstSolarWpGenericEmailController : Controller {
 
         private const string Index = "~/Views/Home/Index.cshtml";
+        private const string Error = "~/Views/Shared/Error.cshtml";
 
         [Import]
         public SWDBHibernateDAO Dao { get; set; }
@@ -47,6 +53,8 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
             var wp = await Dao.FindSingleByQueryAsync<WorkPackage>(WorkPackage.ByToken, token);
             if (wp == null) {
                 Log.WarnFormat("work package with token {0} not found", token);
+                var e = new HttpResponseException(HttpStatusCode.Unauthorized);
+                return View(Error, ErrorModel(Request));
             }
 
             var user = InMemoryUser.NewAnonymousInstance();
@@ -58,12 +66,14 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
                 .ApplyPolicies(key, user, ClientPlatform.Web);
 
 
-            var response = await DataSetProvider.LookupDataSet("_workpackage", applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, new DetailRequest(wp.Id.ToString(), key));
+            var detailRequest = new DetailRequest(wp.Id.ToString(), key);
+
+            var dataSet = DataSetProvider.LookupDataSet("_workpackage", applicationMetadata.Schema.SchemaId);
+
+            var response = await dataSet.GetApplicationDetail(applicationMetadata, user, detailRequest);
 
             response.Title = I18NResolver.I18NSchemaTitle(response.Schema);
             response.Mode = "output";
-
-
 
             var emailStatus = wp.EmailStatuses.FirstOrDefault(e => e.Id == emailStatusId);
             if (emailStatus != null) {
@@ -86,6 +96,13 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
 
             return View(Index, model);
 
+        }
+
+        public HomeModel ErrorModel(HttpRequestBase request) {
+            var model = HomeService.BaseHomeModel(request, null);
+            model.Error = ErrorConfig.GetLastError();
+            model.Title = "Error | softWrench";
+            return model;
         }
 
     }
