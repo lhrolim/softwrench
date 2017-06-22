@@ -1,9 +1,32 @@
 (function (modules) {
     "use strict";
 
-modules.rootCommons.service('restService', ["$http", "$log", "contextService", function ($http, $log, contextService) {
+modules.rootCommons.service('restService', ["$http", "$log","$q", "contextService", function ($http, $log,$q, contextService) {
+
+    const anonymousControllers = [
+    "Signin",
+    "FirstSolarEmail",
+    "FirstSolarWpGenericEmail",
+    "UserSetup/DefinePassword",
+    "UserSetup/DoSetPassword",
+    "UserSetupWebApi/ForgotPassword",
+    "UserSetupWebApi/SendActivationEmail",
+    "UserSetupWebApi/NewUserRegistration"
+
+    ];
 
     return {
+
+        
+        validateAnonymous: function (controller, action) {
+            if (anonymousControllers.some(a=> a === controller)) {
+                return true;
+            }
+            if (anonymousControllers.some(a => a === (controller + "/" + action))) {
+                return true;
+            }
+            return false;
+        },
 
         getActionUrl: function (controller, action, parameters) {
             action = (action === undefined || action == null) ? 'get' : action;
@@ -67,8 +90,13 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
         postPromise: function (controller, action, queryParameters, json, config) {
             const url = this.getActionUrl(controller, action, queryParameters);
             const log = $log.getInstance("restService#invokePost",["post","network"]);
-            log.info("invoking post on url {0}".format(url));
-            return $http.post(url, json, config);
+            if (contextService.get("anonymous", false, true) && !this.validateAnonymous(controller, action)) {
+                log.warn("mocking call to {0}. consider filtering that request off the stack".format(url));
+                return $q.reject();
+            } else {
+                log.info("invoking post on url {0}".format(url));
+                return $http.post(url, json, config);
+            }
         },
 
         post: function () {
@@ -78,8 +106,14 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
         putPromise: function (controller, action, queryParameters, json, config) {
             const url = this.getActionUrl(controller, action, queryParameters);
             const log = $log.getInstance("restService#invokePut", ["put", "network"]);
-            log.info("invoking put on url {0}".format(url));
-            return $http.put(url, json, config);
+
+            if (contextService.get("anonymous", false, true) && !this.validateAnonymous(controller, action)) {
+                log.info("mocking call to {0} consider filtering that request off the stack".format(url));
+                return $q.reject();
+            } else {
+                log.info("invoking put on url {0}".format(url));
+                return $http.put(url, json, config);    
+            }
         },
 
         put: function () {
@@ -100,8 +134,14 @@ modules.rootCommons.service('restService', ["$http", "$log", "contextService", f
         getPromise: function (controller, action, queryParameters, config) {
             const url = this.getActionUrl(controller, action, queryParameters);
             const log = $log.getInstance("restService#invokeGet");
-            log.info("invoking get on url {0}".format(url));
-            return $http.get(url, config);
+
+            if (contextService.get("anonymous", false, true) && !this.validateAnonymous(controller, action)) {
+                log.info("mocking call to {0} consider filtering that request off the stack".format(url));
+                return $q.reject();
+            } else {
+                log.info("invoking get on url {0}".format(url));
+                return $http.get(url, config);
+            }
         },
 
         getPromiseNoDigest: function (controller, action, queryParameters, config = {}) {

@@ -428,7 +428,7 @@
               </composition>
             </tab>
 
-            <composition detailschema="" relationship="emailtracking_" label="Email Tracking" showexpression="@wpnum!=null">
+            <composition detailschema="" relationship="emailtracking_" label="Email Tracking" showexpression="@id!=null">
               <collectionproperties allowcreation="false" allowupdate="false" allowremoval="false"/>
             </composition>
 

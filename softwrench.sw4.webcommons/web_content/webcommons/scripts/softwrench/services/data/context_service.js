@@ -204,7 +204,7 @@
 
                 let dateTimeFormat = config.displayableFormats.dateTimeFormat;
 
-                if (dateTimeFormat.indexOf("hh") !== -1 && dateTimeFormat.indexOf("a") === -1) {
+                if (!!dateTimeFormat && dateTimeFormat.indexOf("hh") !== -1 && dateTimeFormat.indexOf("a") === -1) {
                     dateTimeFormat += " a";
                 }
 
