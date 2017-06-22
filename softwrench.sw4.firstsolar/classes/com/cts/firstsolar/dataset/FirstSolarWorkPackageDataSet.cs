@@ -480,18 +480,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         public async Task<CompositionFetchResult> GetWoCompositions(string woId, string woNum, string woSite, List<string> compositions) {
             var user = SecurityFacade.CurrentUser();
-            var key = new ApplicationMetadataSchemaKey("workpackageschema", SchemaMode.None, ClientPlatform.Web);
-            var woApp = MetadataProvider.Application("workorder").ApplyPolicies(key, user, ClientPlatform.Web);
+            var woApp = MetadataProvider.Application("workorder").ApplyPolicies(FirstSolarWorkPackageCompositionHandler.CompositionSchemaKey, user, ClientPlatform.Web);
             var woData = new JObject { { "workorderid", woId }, { "wonum", woNum }, { "siteid", woSite } };
-
-            var woRequest = new CompositionFetchRequest {
-                CompositionList = compositions,
-                Id = woId + "",
-                Key = key,
-                PaginatedSearch = new PaginatedSearchRequestDto { PageNumber = 1, PageSize = 1000 }
-            };
-
-            return await base.GetCompositionData(woApp, woRequest, woData);
+            return await base.GetCompositionData(woApp, CompositionHandler.WoCompositionRequest(woId, compositions), woData);
         }
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,
@@ -515,8 +506,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var woCompList = await GetWoCompositions(woId, woNum, woSite, relList);
             CompositionHandler.HandleAttachmentsTab(woCompList, compList);
-            CompositionHandler.HandleTestsWorkLogs(woCompList, compList);
-            CompositionHandler.HandleTestAttachments(woCompList, compList);
+            CompositionHandler.HandleWorkLogs(woCompList, compList);
+            CompositionHandler.HandleAttachments(woCompList, compList);
             CallOutHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
 

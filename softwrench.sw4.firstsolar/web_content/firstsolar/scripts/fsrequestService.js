@@ -17,7 +17,7 @@
         function verifyDelete(item, i18N) {
             const status = item["status"];
             if (scheduledStatus !== status) {
-                alertService.alert(`Is not possible delete a ${i18N} request with status "${status}".`);
+                alertService.alert(`Sent requests cannot be deleted.`);
                 return false;
             }
             return true;

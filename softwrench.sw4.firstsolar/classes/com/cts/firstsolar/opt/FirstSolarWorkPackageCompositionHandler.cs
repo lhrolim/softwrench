@@ -7,20 +7,25 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Metadata;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
     public class FirstSolarWorkPackageCompositionHandler : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent> {
 
+        public static readonly ApplicationMetadataSchemaKey CompositionSchemaKey = new ApplicationMetadataSchemaKey("workpackageschema", SchemaMode.None, ClientPlatform.Web);
+
         private const string UnknownSource = "Unknown";
         private const string RelayEventAttachmentSource = "Relay Event File";
         private const string CallOutEmailAttachmentSource = "Subcontractor Email Attachment";
         private const string MaintenanceEngEmailAttachmentSource = "Maintenance Engineering Email Attachment";
+        private const string InterconnectDocsAttachmentSource = "Interconnect Document";
+        private const string OperationProcAttachmentSource = "Operation Procedure File";
 
         private readonly Dictionary<string, string> _testsI18NDict = new Dictionary<string, string>();
 
-        public void HandleTestsWorkLogs(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
+        public void HandleWorkLogs(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
             var wkpkgWorkLogs = woResult.ResultObject.First(pair => FSWPackageConstants.WorklogsRelationship.Equals(pair.Key)).Value;
 
             var workLogMap = new Dictionary<string, IList<Dictionary<string, object>>>();
@@ -43,7 +48,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             });
         }
 
-        public void HandleTestAttachments(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
+        public void HandleAttachments(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
             var wkpkgAttachs = woResult.ResultObject.First(pair => FSWPackageConstants.AttachsRelationship.Equals(pair.Key)).Value;
 
             var attachsMap = new Dictionary<string, IList<Dictionary<string, object>>>();
@@ -86,8 +91,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 var filter = baseFilter.ToString().ToLower();
                 if (filter.StartsWith("swwpkg:")) {
                     var test = filter.Substring(7);
+                    
                     if ("relayevent".Equals(test)) {
                         attach["#attachsource"] = RelayEventAttachmentSource;
+                    } else if ("interconnect".Equals(test)) {
+                        attach["#attachsource"] = InterconnectDocsAttachmentSource;
+                    } else if ("operationproc".Equals(test)) {
+                        attach["#attachsource"] = OperationProcAttachmentSource;
                     } else {
                         attach["#attachsource"] = _testsI18NDict.ContainsKey(test) ? _testsI18NDict[test] : UnknownSource;
                     }
@@ -108,6 +118,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 PaginationData = allAttachs.PaginationData
             };
             packageResult.ResultObject.Add("#allattachments_", searchResult);
+        }
+
+        public CompositionFetchRequest WoCompositionRequest(string woId, List<string> compositions) {
+            return new CompositionFetchRequest {
+                CompositionList = compositions,
+                Id = woId + "",
+                Key = CompositionSchemaKey,
+                PaginatedSearch = new PaginatedSearchRequestDto {
+                    PageNumber = 1,
+                    PageSize = 1000,
+                    NumberOfPages = 1,
+                    PaginationOptions = new List<int>() { 1000 }
+                }
+            };
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
