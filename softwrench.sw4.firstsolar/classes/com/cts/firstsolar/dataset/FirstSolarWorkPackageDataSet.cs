@@ -299,7 +299,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return groupDictionary;
         }
 
-
+        [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var package = await SavePackage(operationWrapper);
 
@@ -315,7 +315,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return new TargetResult(package.Item1.Id.ToString(), null, package);
         }
 
-        [Transactional(DBType.Swdb)]
+        
         public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>> SavePackage(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var package = GetOrCreatePackage(operationWrapper);

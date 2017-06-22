@@ -97,7 +97,7 @@ namespace softWrench.sW4.Web.Controllers.Configuration {
                 //not all categories are related to whereclauses only these need to be validated
                 string value;
                 if (category.ValuesToSave.TryGetValue(definition.FullKey, out value)) {
-                    _whereClauseFacade.ValidateWhereClause(category.Key, value, category.Condition);
+                    await _whereClauseFacade.ValidateWhereClause(category.Key, value, category.Condition);
                 }
             }
 

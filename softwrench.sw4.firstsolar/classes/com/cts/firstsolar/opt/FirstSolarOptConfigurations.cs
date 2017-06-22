@@ -30,6 +30,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 PropertyDataType = PropertyDataType.STRING,
             });
 
+            
+
             ConfigurationFacade.Register(DefaultMeToEmailKey, new PropertyDefinition {
                 Description = "Default email to be used as 'to' on the maintenance engineering emails.",
                 StringValue = ApplicationConfiguration.IsProd() ? "omengineering@firstsolar.com" : "softwrench@firstsolar.com",
@@ -38,7 +40,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
             ConfigurationFacade.Register(DefaultOptInterOutageToEmailKey, new PropertyDefinition {
                 Description = "Default email to be used as 'to' on Intercompany Outage checkbox scenario.",
-                StringValue = ApplicationConfiguration.IsProd() ? "omengineering@firstsolar.com" : "softwrench@firstsolar.com",
+                StringValue = ApplicationConfiguration.IsProd() ? "omengineering@firstsolar.com" : ApplicationConfiguration.IsUat()? "softwrench@firstsolar.com" : "DevTeam@controltechnologysolutions.com",
                 PropertyDataType = PropertyDataType.STRING,
             });
 

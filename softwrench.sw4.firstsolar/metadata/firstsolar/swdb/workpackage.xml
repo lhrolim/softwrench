@@ -22,7 +22,18 @@
         <relationship to="_MaintenanceEngineering_" qualifier="maintenanceEngineerings" collection="true">
           <relationshipAttribute from="id" to="workpackageid" primary="true"/>
         </relationship>
+
+        <relationship to="_WorkPackageEmailStatus_" qualifier="emailtracking" collection="true">
+          <relationshipAttribute from="id" to="workpackageid" primary="true"/>
+        </relationship>
+
       </relationships>
+    </entity>
+
+    <entity name="WorkPackageEmailStatus" idAttribute="id">
+      <attributes>
+        <attribute name="status" query="CASE WHEN !@ackdate is not null THEN 'Acknowledged' ELSE 'Sent' end " type="varchar"/>
+      </attributes>
     </entity>
 
   </entities>
@@ -407,6 +418,11 @@
               <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="attachmentlist"/>
             </composition>
           </tab>
+
+          <composition detailschema="" relationship="emailtracking_" label="Email Tracking">
+            <collectionproperties allowcreation="false" allowupdate="false" allowremoval="false"/>
+          </composition>
+          
         </schema>
 
         <schema id="viewdetail" parentschema="adetail" mode="output"/>
@@ -431,6 +447,28 @@
         <schema id="attachmentdetail" stereotype="compositiondetail">
         </schema>
       </schemas>
+    </application>
+
+    <application entity="WorkPackageEmailStatus" name="emailstatus" title="Email Tracking">
+      <properties>
+        <property key ="icon" value="fa fa-envelope-o"/>
+      </properties>
+
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="id" hidden="true"/>
+          <field attribute="email" label="Email"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="senddate" label="Send Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field attribute="ackdate" label="Acknowledgement Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+        </schema>
+        
+      </schemas>
+      
     </application>
 
 

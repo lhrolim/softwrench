@@ -41,7 +41,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.Scripts {
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var id = string.IsNullOrEmpty(operationWrapper.Id) ? (int?)null : int.Parse(operationWrapper.Id);
             var entry = (ScriptEntry)null;
-            var origEntry = id != null ? SWDAO.FindByPK<ScriptEntry>(typeof(ScriptEntry), id) : null;
+            var origEntry = id != null ? await SWDAO.FindByPKAsync<ScriptEntry>(id) : null;
             var json = operationWrapper.JSON;
             if (operationWrapper.OperationName.EqualsIc(OperationConstants.CRUD_DELETE)) {
                 DeleteEntry(origEntry, json);

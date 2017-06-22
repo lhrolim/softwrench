@@ -36,8 +36,6 @@ namespace softWrench.sW4.Util {
 
         public static string SystemVersion => ConfigurationManager.AppSettings["version"];
 
-        [Import]
-        private IConfigurationFacade _facade;
 
         public static string SystemVersionIgnoreDash {
             get {

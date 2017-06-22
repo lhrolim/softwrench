@@ -267,7 +267,7 @@
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
-    <Content Include="web_content\firstsolar\htmls\templates\workpackagecreation.html" />
+    <Content Include="web_content\firstsolar\htmls\templates\workpackageemail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengineeremail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengrejectemail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\calloutemail.html" />
