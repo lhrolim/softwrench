@@ -39,7 +39,10 @@
                 $scope.showPrintLogo = false;
                 $scope.displayableID = null;
 
-                const path = $(routes_basecontext)[0].value;
+                var path = "/sw4";
+                if (!angular.mock && !window.cordova) {
+                    path = $(routes_basecontext)[0].value;
+                }
 
                 if ("otb" === $rootScope.clientName) {
                     $scope.printLogo = path + "/Content/Images/logo-pdf.png";
