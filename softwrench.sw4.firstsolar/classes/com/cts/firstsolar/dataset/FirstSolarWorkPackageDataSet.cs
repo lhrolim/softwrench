@@ -17,6 +17,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
@@ -62,6 +63,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         [Import]
         public FirstSolarMaintenanceEngineeringHandler MaintenanceEngineeringHandler { get; set; }
+
+        [Import]
+        public FirstSolarWorkPackageCreationEmailHandler WpCreationEmailHandler { get; set; }
 
         [Import]
         public FirstSolarWorkPackageCompositionHandler CompositionHandler { get; set; }
@@ -220,6 +224,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
             await LoadTechSupManager(result);
 
+            if (application.Schema.SchemaId.Equals("viewdetail")) {
+                //two rounds, since we need to first load the workorder details, and only then we´re able to fully bring the associations of it
+                var associationResults = await BuildAssociationOptions(result.ResultObject, application.Schema, new SchemaAssociationPrefetcherRequest());
+                result.AssociationOptions = associationResults;
+            }
+
             return result;
         }
 
@@ -296,7 +306,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return groupDictionary;
         }
 
-        
+        [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var package = await SavePackage(operationWrapper);
 
@@ -308,11 +318,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 siteId = token.Value<string>();
             }
 
-            await HandleEmails(package.Item1, siteId, package.Item2, package.Item3);
+            await HandleEmails(package.Item1, siteId, package.Item2, package.Item3, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
             return new TargetResult(package.Item1.Id.ToString(), null, package);
         }
 
-        [Transactional(DBType.Swdb)]
+
         public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>> SavePackage(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var package = GetOrCreatePackage(operationWrapper);
@@ -348,12 +358,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             package = await Dao.SaveAsync(package);
             HandleGenericLists(crudoperationData, package);
 
-            CallOutHandler.HandleCallOuts(crudoperationData, package, woData);
+            var anyNewCallout = CallOutHandler.HandleCallOuts(crudoperationData, package, woData);
 
-            MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData);
+            var anyNewMe = MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData);
 
             package = await Dao.SaveAsync(package);
-            crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+
+            if (anyNewCallout || anyNewMe) {
+                crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+            }
+
 
             SaveMaximoWorkorder(woData);
 
@@ -503,16 +517,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private WorkPackage GetOrCreatePackage(OperationWrapper operationWrapper) {
             if (!OperationConstants.CRUD_UPDATE.Equals(operationWrapper.OperationName)) {
-                return new WorkPackage();
+                return new WorkPackage { AccessToken = TokenUtil.GenerateDateTimeToken() };
             }
 
             var id = int.Parse(operationWrapper.Id);
             return Dao.FindByPK<WorkPackage>(typeof(WorkPackage), id);
         }
 
-        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend) {
+        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, bool isCreation) {
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
+            if (isCreation) {
+                await WpCreationEmailHandler.SendEmail(package, package, siteId);
+            }
         }
 
         public override string ApplicationName() {

@@ -9,8 +9,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
 
     [Class(Table = "OPT_WORKPACKAGE", Lazy = false)]
-    public class WorkPackage : IBaseEntity
-    {
+    public class WorkPackage : IBaseEntity {
+
+        public static string ByToken = "from WorkPackage where AccessToken = ?";
+
 
         private string _wonum;
 
@@ -150,7 +152,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> FeederTestsList { get; set; } = new List<GenericListRelationship>();
 
-        
+        /// <summary>
+        /// Token used to access this workpackage without requiring the user to be authenticated
+        /// </summary>
+        [Property]
+        public string AccessToken { get; set; }
+
+        [Bag(0, Table = "OPT_WPEMAILSTATUS", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Inverse = true)]
+        [Key(1, Column = "workpackageid")]
+        [OneToMany(2, ClassType = typeof(WorkPackageEmailStatus))]
+        public virtual IList<WorkPackageEmailStatus> EmailStatuses { get; set; } = new List<WorkPackageEmailStatus>();
+
 
 
         public override string ToString() {

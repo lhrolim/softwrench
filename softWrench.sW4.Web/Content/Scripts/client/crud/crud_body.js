@@ -171,6 +171,10 @@
                     return !expressionService.evaluate(tab.enableExpression, datamap, $scope, tab);
                 }
 
+                $scope.showTopToolbar = function () {
+                    return $scope.isDetail && !contextService.get("anonymous", false, true);
+                }
+
                 $scope.setForm = function (form) {
                     crudContextHolderService.crudForm($scope.panelid, form);
                 };

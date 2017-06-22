@@ -123,7 +123,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return token?.Value<string>();
         }
 
-        public async Task HandleEmails(WorkPackage package, string siteId, string attachsRelationship, string filterPrefix, IEnumerable<IFsEmailRequest> requests, FirstSolarBaseEmailService emailService) {
+        public async Task HandleEmails(WorkPackage package, string siteId, string attachsRelationship, string filterPrefix, IEnumerable<IFsEmailRequest> requests, FirstSolarBaseEmailRequestEmailService emailService) {
             var requestsList = requests as IList<IFsEmailRequest> ?? requests.ToList();
 
             if (!requestsList.Any()) {
@@ -142,7 +142,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             });
         }
 
-        public void HandleEmail(IFsEmailRequest request, WorkPackage package, string siteId, string filterPrefix, string relationship, FirstSolarBaseEmailService emailService) {
+        public void HandleEmail(IFsEmailRequest request, WorkPackage package, string siteId, string filterPrefix, string relationship, FirstSolarBaseEmailRequestEmailService emailService) {
             // to avoid cicle
             var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
 
@@ -152,7 +152,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId, filterPrefix, attachs, emailService));
         }
 
-        private async Task InnerHandleEmail(IFsEmailRequest request, WorkPackage package, string siteId, string filterPrefix, EntityRepository.SearchEntityResult attachs, FirstSolarBaseEmailService emailService) {
+        private async Task InnerHandleEmail(IFsEmailRequest request, WorkPackage package, string siteId, string filterPrefix, EntityRepository.SearchEntityResult attachs, FirstSolarBaseEmailRequestEmailService emailService) {
             var emailAttachs = new List<EmailAttachment>();
             var attachTasks = new List<Task>();
 

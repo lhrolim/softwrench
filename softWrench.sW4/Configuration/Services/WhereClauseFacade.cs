@@ -89,8 +89,8 @@ namespace softWrench.sW4.Configuration.Services {
             return result;
         }
 
-        public void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null) {
-             _whereClauseRegisterService.ValidateWhereClause(applicationName, whereClause, condition);
+        public async Task ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null) {
+             await _whereClauseRegisterService.ValidateWhereClause(applicationName, whereClause, condition);
         }
 
         private static string GetConvertedWhereClause(WhereClauseResult whereClauseResult, InMemoryUser user, string defaultValue = DefaultWhereClause) {
@@ -118,7 +118,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         [Transactional(DBType.Swdb)]
         public virtual async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false, bool systemValueRegister = true) {
-            var result = Validate(applicationName,query, validate, condition);
+            var result = await Validate(applicationName,query, validate, condition);
             if (!result) {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
                 return;
@@ -177,7 +177,7 @@ namespace softWrench.sW4.Configuration.Services {
             return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName.ToLower());
         }
 
-        private bool Validate(string applicationName, string whereClause, bool throwException = true, WhereClauseRegisterCondition condition=null) {
+        private async Task<bool> Validate(string applicationName, string whereClause, bool throwException = true, WhereClauseRegisterCondition condition=null) {
             var items = MetadataProvider.FetchAvailableAppsAndEntities();
             if (!items.Contains(applicationName)) {
                 if (throwException) {
@@ -186,7 +186,7 @@ namespace softWrench.sW4.Configuration.Services {
                 return false;
             }
             if (!string.IsNullOrEmpty(whereClause) && throwException) {
-                ValidateWhereClause(applicationName, whereClause, condition);
+                await ValidateWhereClause(applicationName, whereClause, condition);
             }
 
             return true;

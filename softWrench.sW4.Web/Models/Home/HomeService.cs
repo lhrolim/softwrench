@@ -47,6 +47,8 @@ namespace softWrench.sW4.Web.Models.Home {
             return GetUrlFromApplication(application, schema.SchemaId, schema.Mode, schema.Platform, id);
         }
 
+       
+
         public virtual string GetUrlFromApplication(string application, ApplicationSchemaDefinition schema, string userid, string siteid) {
             return GetUrlFromApplication(application, schema.SchemaId, schema.Mode, schema.Platform, null, userid, siteid);
         }
@@ -75,6 +77,15 @@ namespace softWrench.sW4.Web.Models.Home {
             }
             response.Redirect("~/UserSetup/ChangePassword");
             return true;
+        }
+
+        public HomeModel BaseHomeModel(HttpRequestBase request, InMemoryUser user, ApplicationSchemaDefinition schema) {
+            var model = BaseHomeModel(request, user);
+            model.FromRoute = true;
+            model.Title = schema.Title;
+            model.ApplicationName = schema.ApplicationName;
+            model.SchemaId = schema.SchemaId;
+            return model;
         }
 
         public virtual HomeModel BaseHomeModel(HttpRequestBase request, InMemoryUser user = null, MenuModel menuModel = null) {

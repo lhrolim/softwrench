@@ -149,7 +149,7 @@
             const fieldsTosubmit = this.submitServiceCommons.removeExtraFields(datamap, true, schema);
             const key = this.schemaService.buildApplicationMetadataSchemaKey(schema);
             const lazyAssociationsBeingResolvedLocal = this.lazyAssociationsBeingResolved;
-            const updateLazyFn = this.crudContextHolderService.updateLazyAssociationOption.bind(this);
+            const updateLazyFn = this.crudContextHolderService.updateLazyAssociationOption.bind(this.crudContextHolderService);
 
             const parameters = {
                 key,
@@ -195,10 +195,11 @@
          *   hideDescription --> whether to show only the label value, false by default
          *   allowTransientValue --> whether to allow the insertion of new values, which do not necessarily match a server value
          *   isEager --> whether or not this is an eagerly loaded association
+         *   avoidPromise --> angular interpolation function does not unwrap promises automatically. Therefore, we need for some scenarios to recover the value
          * 
          * @returns {} 
          */
-        getLabelText(associationKey, itemValue, options = {}) {
+        getLabelText(associationKey, itemValue, options = {avoidPromise:false,hideDescription:false,isEager:false}) {
             const log = this.$log.get("associationService#getLabelText", ["association"]);
 
             if (options.isEager) {
@@ -209,11 +210,18 @@
             var allowTransientValue = options.allowTransientValue || false;
 
             if (itemValue == null) {
+                if (options.avoidPromise) {
+                    return itemValue;
+                }
                 //if item is null no need to perform any further action
                 return this.$q.when(null);
             }
             const item = this.crudContextHolderService.fetchLazyAssociationOption(associationKey, itemValue);
             if (options.hideDescription === "true" || options.hideDescription === true) {
+                if (options.avoidPromise) {
+                    return itemValue;
+                }
+
                 return this.$q.when(itemValue);
             }
 
@@ -222,15 +230,31 @@
             if (item == null) {
                 if (!this.crudContextHolderService.associationsResolved()) {
                     log.debug("schema associations not resolved yet, waiting...");
+                    if (options.avoidPromise) {
+                        return itemValue;
+                    }
+                    return this.$q.when(itemValue);
+                }
+
+                if (this.contextService.get("anonymous", false, true) || options.avoidPromise) {
+                    log.debug("cannot load extra association texts running on anonymous mode");
+                    if (options.avoidPromise) {
+                        return itemValue;
+                    }
                     return this.$q.when(itemValue);
                 }
 
                 if (this.lazyAssociationsBeingResolved.indexOf(associationKey) !== -1) {
                     log.debug("association was already requested, waiting");
+                    if (options.avoidPromise) {
+                        return itemValue;
+                    }
                     return this.$q.when(itemValue);
                 }
 
                 log.debug("fetching association option from server");
+
+
 
                 return this.lookupSingleAssociationByValue(associationKey, itemValue).then(function (association) {
                     if (association == null && allowTransientValue) {
@@ -239,8 +263,13 @@
                     return parseLabelTextFn(association, options);
                 });
             }
+            const labelText = parseLabelTextFn(item, options);
 
-            return this.$q.when(parseLabelTextFn(item, options));
+            if (options.avoidPromise) {
+                return labelText;
+            }
+
+            return this.$q.when(labelText);
 
         }
 

@@ -6,14 +6,15 @@
     function detailService($log, $q, $timeout, $rootScope, associationService, eventService, compositionService, fieldService, schemaService, contextService, crudContextHolderService) {
 
         function isEditDetail(schema, datamap) {
-            return fieldService.getId(datamap, schema) != undefined;
+            return (fieldService.getId(datamap, schema) != undefined && "output" !== schema.mode);
         };
 
         function handleAssociations(datamap, schema, result) {
-            const shouldFetchAssociations = !result.allAssociationsFetched;
+            const isAnonyomous = contextService.get("anonymous", false, true);
+            const shouldFetchAssociations = !result.allAssociationsFetched && !isAnonyomous;
 
             //some associations might already been retrieved
-            associationService.updateFromServerSchemaLoadResult(result.associationOptions, !shouldFetchAssociations);
+            associationService.updateFromServerSchemaLoadResult(result.associationOptions,null, !shouldFetchAssociations);
 
             if (shouldFetchAssociations) {
                 return $timeout(function () {
@@ -123,7 +124,10 @@
         function detailLoaded(datamap, schema, result) {
             updateLegacyCrudContext(datamap, schema);
             crudContextHolderService.detailLoaded();
+
             return fetchRelationshipData(datamap, schema, result);
+
+
         }
 
         return {
@@ -133,6 +137,6 @@
 
     angular.module("sw_layout")
         .service("detailService",
-            ["$log", "$q", "$timeout", "$rootScope", "associationService", "eventService", "compositionService", "fieldService", "schemaService", "contextService", "crudContextHolderService", detailService]);
+        ["$log", "$q", "$timeout", "$rootScope", "associationService", "eventService", "compositionService", "fieldService", "schemaService", "contextService", "crudContextHolderService", detailService]);
 
 })(angular);

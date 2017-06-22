@@ -89,6 +89,10 @@
         }
 
         function customPath(stateUrl, contextPath) {
+            if (stateUrl == null) {
+                return null;
+            }
+
             const user = contextService.getUserData();
             const username = user.login;
             const myprofilePath = contextPath + myProfileBaseUrl + username;
@@ -201,7 +205,9 @@
         }
 
         function updatePath(stateUrl) {
-            getRouteInfo().then(routeInfo => doUpdatePath(stateUrl, routeInfo));
+            if (stateUrl) {
+                getRouteInfo().then(routeInfo => doUpdatePath(stateUrl, routeInfo));    
+            }
         }
 
         function updateState(state) {
@@ -354,6 +360,10 @@
         }
 
         function getRouteInfo() {
+            if (contextService.get("anonymous", false, true)) {
+                return null;
+            }
+
             var routeInfo = localStorageService.get(routeInfoKey);
             if (routeInfo) {
                 return $q.when(routeInfo);

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
@@ -18,9 +20,7 @@ using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Configuration.Services.Api;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
-
-    public abstract class FirstSolarBaseEmailService : ISingletonComponent {
-
+    public abstract class FirstSolarBaseEmailService <T> : ISingletonComponent{
         protected readonly IEmailService EmailService;
         protected Template Template;
         protected readonly RedirectService RedirectService;
@@ -32,6 +32,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         private readonly string _headerImageUrl;
         protected readonly IApplicationConfiguration AppConfig;
 
+        [Import]
+        public ISWDBHibernateDAO Dao { get; set; }
+
         protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) {
             Log.Debug("init Log");
             EmailService = emailService;
@@ -42,19 +45,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             _headerImageUrl = HandleHeaderImage();
         }
 
-        public virtual async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
-            Validate.NotNull(request, "toSend");
-            Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
-
-            var dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>();
-            var emailData = BuildEmailData(request, package, siteId, attachs);
-            EmailService.SendEmail(emailData);
-
-            request.Status = RequestStatus.Sent;
-            request.ActualSendTime = DateTime.Now;
-
-            return await dao.SaveAsync(request);
-        }
+        public abstract Task<T> SendEmail(T request, WorkPackage package,string siteId, List<EmailAttachment> attachs = null);
+            
 
         public virtual string HandleEmailRecipient(AttributeHolder data, string attributeName) {
             var stringOrArray = data.GetAttribute(attributeName);
@@ -72,7 +64,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return string.Join(", ", sendToArray);
         }
 
-        public abstract void HandleReject(IFsEmailRequest request, WorkPackage package);
 
         protected Template BuildTemplate() {
             var templateContent = File.ReadAllText(_templatePath);
@@ -116,5 +107,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         protected string GetFrom() {
             return ConfigurationFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultFromEmailKey);
         }
+
     }
 }

@@ -25,7 +25,7 @@ namespace softWrench.sW4.Configuration.Services.Api {
 
 
 
-        void ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null);
+        Task ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null);
 
         /// <summary>
         /// Given an application returns a list of associated profiles that have different whereclauses on it, constrained to the ones that the current user have

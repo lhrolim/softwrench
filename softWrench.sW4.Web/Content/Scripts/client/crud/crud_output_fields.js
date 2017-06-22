@@ -51,7 +51,7 @@ app.directive('crudOutputFields', function (contextService) {
             forprint: "="
         },
 
-        controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService, richTextService, layoutservice) {
+        controller: function ($scope, $injector, formatService, printService, tabsService, fieldService, commandService, redirectService, i18NService, expressionService, richTextService, layoutservice, associationService, crudContextHolderService) {
             $scope.$name = 'crud_output_fields';
 
             $scope.contextPath = function (path) {
@@ -91,6 +91,16 @@ app.directive('crudOutputFields', function (contextService) {
                     }
                 }
             }
+
+            $scope.getFormattedValue = function (value, column, datamap) {
+                if (column.type === 'ApplicationAssociationDefinition') {
+                    //interpolation does not work with promises
+                    var result = associationService.getLabelText(column.associationKey, value, { avoidPromise: true });
+                    return result;
+                }
+
+                return formatService.format(value, column, datamap);
+            };
 
 
             $scope.getSectionStyle = function (fieldMetadata) {

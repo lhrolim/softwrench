@@ -5,7 +5,7 @@
     <template path="swdb/callout.xml"/>
     <template path="swdb/maintenanceengineer.xml"/>
   </templates>
-  
+
   <entities>
     <entity name="WorkPackage" idAttribute="id">
       <relationships>
@@ -22,11 +22,22 @@
         <relationship to="_MaintenanceEngineering_" qualifier="maintenanceEngineerings" collection="true">
           <relationshipAttribute from="id" to="workpackageid" primary="true"/>
         </relationship>
+
+        <relationship to="_WorkPackageEmailStatus_" qualifier="emailtracking" collection="true">
+          <relationshipAttribute from="id" to="workpackageid" primary="true"/>
+        </relationship>
+
       </relationships>
     </entity>
 
+    <entity name="WorkPackageEmailStatus" idAttribute="id">
+      <attributes>
+        <attribute name="status" query="CASE WHEN !@ackdate is not null THEN 'Acknowledged' ELSE 'Sent' end " type="varchar"/>
+      </attributes>
+    </entity>
+
   </entities>
-  
+
   <applications>
 
     <application entity="WorkPackage" name="WorkPackage" title="Work Package">
@@ -64,10 +75,9 @@
         </list>
 
 
-        <schema id="adetail" stereotype="detail">
+        <schema id="adetailnotabs" stereotype="detail" abstract="true">
 
-          <event type="onschemafullyloaded" service="fsworkpackageService" method="onSchemaLoad"/>
-<!--          <event service="fsworkpackageService" method="componentsLoad" type="onschemafullyloaded"/>-->
+          <!--          <event service="fsworkpackageService" method="componentsLoad" type="onschemafullyloaded"/>-->
 
           <field attribute="id" hidden="true" label="Work Package "/>
           <field attribute="wpnum" hidden="true" label="Work Package "/>
@@ -216,92 +226,196 @@
             </section>
           </section>
 
+          <section id="compositions" ></section>
 
-          <tab label="Planning/Scheduling" icon="fa-calendar" id="planningsched" enableexpression="@wpnum!=null" countrelationship="">
-            <section orientation="horizontal" attribute="subcontractorenabled">
-              <header label="Subcontractor" params="fieldset=true;enablecontrol=true"/>
-              <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="" fetchtype="eager">
-                <collectionproperties listschema="calloutline" autocommit="false" allowremoval="true"/>
-                <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
-              </composition>
-            </section>
+        </schema>
 
-            <section orientation="horizontal" attribute="maintenanceenabled">
-              <header label="Maintenance Engineering" params="fieldset=true;enablecontrol=true"/>
-              <composition inline="true" relationship="maintenanceEngineerings" label="" detailschema="detailview" printschema="" fetchtype="eager">
-                <collectionproperties listschema="maintenanceengline" autocommit="false" allowremoval="true"/>
-                <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsmaintananceengService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fsmaintananceengService.openModalEdit;composition.inline.deletefunction=fsmaintananceengService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
-              </composition>
-            </section>
 
-            <section attribute="testresultreviewenabled" >
-              <header label="Test Results Review" params="fieldset=true;enablecontrol=true"/>
-              <section orientation="horizontal">
-                <field label="Results for Review" attribute="resultsforreview"></field>
-                <field label="Days Upon Closure" attribute="daysuponclosure">
-                  <renderer type="numericinput"/>
+        <schema id="adetail" stereotype="detail" parentschema="adetailnotabs">
+          <event type="onschemafullyloaded" service="fsworkpackageService" method="onSchemaLoad"/>
+
+          <section id="compositions">
+
+
+            <tab label="Planning/Scheduling" icon="fa-calendar" id="planningsched" enableexpression="@wpnum!=null" countrelationship="">
+              <section orientation="horizontal" attribute="subcontractorenabled">
+                <header label="Subcontractor" params="fieldset=true;enablecontrol=true"/>
+                <composition inline="true" relationship="callOuts" label="" detailschema="detailview" printschema="" fetchtype="eager">
+                  <collectionproperties listschema="calloutline" autocommit="false" allowremoval="true"/>
+                  <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fscalloutService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fscalloutService.openModalEdit;composition.inline.deletefunction=fscalloutService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
+                </composition>
+              </section>
+
+              <section orientation="horizontal" attribute="maintenanceenabled">
+                <header label="Maintenance Engineering" params="fieldset=true;enablecontrol=true"/>
+                <composition inline="true" relationship="maintenanceEngineerings" label="" detailschema="detailview" printschema="" fetchtype="eager">
+                  <collectionproperties listschema="maintenanceengline" autocommit="false" allowremoval="true"/>
+                  <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsmaintananceengService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fsmaintananceengService.openModalEdit;composition.inline.deletefunction=fsmaintananceengService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Request"/>
+                </composition>
+              </section>
+
+              <section attribute="testresultreviewenabled" >
+                <header label="Test Results Review" params="fieldset=true;enablecontrol=true"/>
+                <section orientation="horizontal">
+                  <field label="Results for Review" attribute="resultsforreview"></field>
+                  <field label="Days Upon Closure" attribute="daysuponclosure">
+                    <renderer type="numericinput"/>
+                  </field>
+                </section>
+                <field label="Request Explanation" attribute="requestexplanation">
+                  <renderer type="textarea"/>
                 </field>
               </section>
-              <field label="Request Explanation" attribute="requestexplanation">
-                <renderer type="textarea"/>
-              </field>
-            </section>
-          </tab>
+            </tab>
 
-          <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
+            <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
 
 
-            <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files and Walk Down Photos" detailschema="">
-              <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
-            </composition>
+              <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files and Walk Down Photos" detailschema="">
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+              </composition>
 
-            <composition inline="true" relationship="#relayeventevaluations_" label="Engineering Evaluation - Event File" detailschema="worklog.workpackageview" printschema="">
-              <collectionproperties listschema="worklog.workpackagelist" autocommit="true" allowremoval="false" allowupdate="true" allowcreation="true"/>
-              <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.editfunction=fsengineeringevaluationService.openModalEdit;composition.inline.forcehideremove=true;composition.inline.addTitle=Evaluation"/>
-            </composition>
+              <composition inline="true" relationship="#relayeventevaluations_" label="Engineering Evaluation - Event File" detailschema="worklog.workpackageview" printschema="">
+                <collectionproperties listschema="worklog.workpackagelist" autocommit="true" allowremoval="false" allowupdate="true" allowcreation="true"/>
+                <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.editfunction=fsengineeringevaluationService.openModalEdit;composition.inline.forcehideremove=true;composition.inline.addTitle=Evaluation"/>
+              </composition>
 
-            <section>
-              <header label="Component Tests" params="fieldset=true"/>
+              <section>
+                <header label="Component Tests" params="fieldset=true"/>
 
-              <section orientation="horizontal">
-                <optionfield label="Components" attribute="engcomponents">
-                  <renderer type="checkbox" params="layout=left"/>
-                  <option label="GSU" value="GSU"/>
-                  <option label="SF6 Breaker" value="SF6"/>
-                  <option label="Vacuum Breaker" value="VACUUM"/>
-                  <option label="Air Switches" value="AIRS"/>
-                  <option label="Cap Bank" value="CAPB"/>
-                  <option label="Battery Bank/Charger" value="BATTERY"/>
-                  <option label="Feeder" value="FEEDER"/>
-                  <option label="Relay" value="RELAY"/>
-                  <!--                    <option label="Telemetry" value="TELEMETRY"/>-->
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
+                <section orientation="horizontal">
+                  <optionfield label="Components" attribute="engcomponents">
+                    <renderer type="checkbox" params="layout=left"/>
+                    <option label="GSU" value="GSU"/>
+                    <option label="SF6 Breaker" value="SF6"/>
+                    <option label="Vacuum Breaker" value="VACUUM"/>
+                    <option label="Air Switches" value="AIRS"/>
+                    <option label="Cap Bank" value="CAPB"/>
+                    <option label="Battery Bank/Charger" value="BATTERY"/>
+                    <option label="Feeder" value="FEEDER"/>
+                    <option label="Relay" value="RELAY"/>
+                    <!--                    <option label="Telemetry" value="TELEMETRY"/>-->
+                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                  </optionfield>
 
-                <section showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('GSU')!= -1 ">
-                  <optionfield attribute="gsuimmediatetests" label="GSU Testing - Immediate Response" qualifier="gsu">
+                  <section showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('GSU')!= -1 ">
+                    <optionfield attribute="gsuimmediatetests" label="GSU Testing - Immediate Response" qualifier="gsu">
+                      <renderer type="checkbox" params="layout=left"/>
+
+                      <option  label="Capture Oil Sampling" value="gsucaptureoil"/>
+                      <option  label="Capture Bushing Monitoring Data" value="gsucapturemon"/>
+                      <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="gsuoilsampleanddissolved"/>
+
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                    <optionfield attribute="gsutests" label="GSU Testing" qualifier="gsu">
+                      <renderer type="checkbox" params="layout=left"/>
+
+                      <option  label="Transformer Turns Ratio (TTR) Test" value="gsutransformer"/>
+                      <option  label="Megger Test" value="gsumegger"/>
+                      <option  label="Overall Power Factor Test" value="gsuoverall"/>
+                      <option  label="(C1/C2) Bushing Power Factor Test" value="gsuc1c2"/>
+                      <option  label="Leakage Reactance Test" value="gsuleakage"/>
+                      <option  label="Test Results to Doble Engineers" value="gsutestresultstodoble"/>
+                      <option  label="Recommend Repair" value="gsurepair"/>
+                      <option  label="Recommend Replace" value="gsureplace"/>
+
+                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                    </optionfield>
+
+                  </section>
+
+                  <optionfield label="SF6 Breaker Testing" attribute="sf6tests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('SF6')!= -1 " qualifier="sf6">
                     <renderer type="checkbox" params="layout=left"/>
 
-                    <option  label="Capture Oil Sampling" value="gsucaptureoil"/>
-                    <option  label="Capture Bushing Monitoring Data" value="gsucapturemon"/>
-                    <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="gsuoilsampleanddissolved"/>
+                    <option  label="Megger Test" value="sf6megger"/>
+                    <option  label="Ductor Test" value="sf6ductor"/>
+                    <option  label="HI-Pot Test" value="sf6hipot"/>
+                    <option  label="Test SF6 for Purity &amp; Moisture" value="sf6testsf6"/>
+                    <option  label="Overall Power Factor Test" value="sf6overallpower"/>
+                    <option  label="Bushing Power Factor Test" value="sf6bushingpower"/>
+                    <option  label="Recommend Repair" value="sf6repair"/>
+                    <option  label="Recommend Replace" value="sf6replace"/>
 
                     <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
-                  <optionfield attribute="gsutests" label="GSU Testing" qualifier="gsu">
+
+                  <optionfield label="Vaccuum Breaker Testing" attribute="vacuumtests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('VACUUM')!= -1 " qualifier="vacuum">
                     <renderer type="checkbox" params="layout=left"/>
 
-                    <option  label="Transformer Turns Ratio (TTR) Test" value="gsutransformer"/>
-                    <option  label="Megger Test" value="gsumegger"/>
-                    <option  label="Overall Power Factor Test" value="gsuoverall"/>
-                    <option  label="(C1/C2) Bushing Power Factor Test" value="gsuc1c2"/>
-                    <option  label="Leakage Reactance Test" value="gsuleakage"/>
-                    <option  label="Test Results to Doble Engineers" value="gsutestresultstodoble"/>
-                    <option  label="Recommend Repair" value="gsurepair"/>
-                    <option  label="Recommend Replace" value="gsureplace"/>
+                    <option  label="Megger Test" value="vacmegger"/>
+                    <option  label="Ductor Test" value="vacductor"/>
+                    <option  label="HI-Pot Test" value="vachipot"/>
+                    <option  label="Contact Erosion Test" value="vaccontacterosion"/>
+                    <option  label="Bushing Power Factor Test" value="vacbushingpower"/>
+                    <option  label="Recommend Repair" value="vacrepair"/>
+                    <option  label="Recommend Replace" value="vacreplace"/>
+
+                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                  </optionfield>
+
+
+                  <optionfield label="Air Switch Testing" attribute="airswitchertests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('AIRS')!= -1 " qualifier="airs">
+                    <renderer type="checkbox" params="layout=left"/>
+
+                    <option  label="Megger Test" value="airmegger"/>
+                    <option  label="Ductor Test" value="airductor"/>
+                    <option  label="HI-Pot Test" value="airhipot"/>
+                    <option  label="Functionality Test (open-close-open)" value="airftoco"/>
+                    <option  label="Recommend Repair" value="airrepair"/>
+                    <option  label="Recommend Replace" value="airreplace"/>
+
+                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                  </optionfield>
+
+                  <optionfield attribute="capbanktests" label="Cap Bank Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('CAPB')!= -1 " qualifier="capb">
+                    <renderer type="checkbox" params="layout=left"/>
+
+                    <option  label="Measure Capacitance" value="capmeasurecap"/>
+                    <option  label="Recommend Repair" value="caprepair"/>
+                    <option  label="Recommend Replace" value="capreplace"/>
+
+                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                  </optionfield>
+
+                  <optionfield attribute="batterytests" label="Battery Bank/Charger Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('BATTERY')!= -1 " qualifier="battery">
+                    <renderer type="checkbox" params="layout=left"/>
+
+                    <option  label="Recommend Repair" value="batrepair"/>
+                    <option  label="Recommend Replace" value="batreplace"/>
+
+                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                  </optionfield>
+
+                  <optionfield attribute="relaytests" label="Relay Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('RELAY')!= -1 " qualifier="relay">
+                    <renderer type="checkbox" params="layout=left"/>
+
+                    <option  label="Recommend Repair" value="relrepair"/>
+                    <option  label="Recommend Replace" value="relreplace"/>
+
+                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
+                  </optionfield>
+
+                  <optionfield attribute="feedertests" label="Feeder Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('FEEDER')!= -1 " qualifier="feeder">
+                    <renderer type="checkbox" params="layout=left"/>
+
+                    <option  label="Megger Test" value="feedmegger"/>
+                    <option  label="Ductor Test" value="feedductor"/>
+                    <option  label="HI-Pot Test" value="feedhipot"/>
+                    <option  label="Transformer Turns Ratio (TTR) Test" value="feedttr"/>
+                    <option  label="Recommend Repair" value="feedrepair"/>
+                    <option  label="Recommend Replace" value="feedreplace"/>
 
                     <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
@@ -309,114 +423,31 @@
 
                 </section>
 
-                <optionfield label="SF6 Breaker Testing" attribute="sf6tests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('SF6')!= -1 " qualifier="sf6">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Megger Test" value="sf6megger"/>
-                  <option  label="Ductor Test" value="sf6ductor"/>
-                  <option  label="HI-Pot Test" value="sf6hipot"/>
-                  <option  label="Test SF6 for Purity &amp; Moisture" value="sf6testsf6"/>
-                  <option  label="Overall Power Factor Test" value="sf6overallpower"/>
-                  <option  label="Bushing Power Factor Test" value="sf6bushingpower"/>
-                  <option  label="Recommend Repair" value="sf6repair"/>
-                  <option  label="Recommend Replace" value="sf6replace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
-
-                <optionfield label="Vaccuum Breaker Testing" attribute="vacuumtests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('VACUUM')!= -1 " qualifier="vacuum">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Megger Test" value="vacmegger"/>
-                  <option  label="Ductor Test" value="vacductor"/>
-                  <option  label="HI-Pot Test" value="vachipot"/>
-                  <option  label="Contact Erosion Test" value="vaccontacterosion"/>
-                  <option  label="Bushing Power Factor Test" value="vacbushingpower"/>
-                  <option  label="Recommend Repair" value="vacrepair"/>
-                  <option  label="Recommend Replace" value="vacreplace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
-
-                <optionfield label="Air Switch Testing" attribute="airswitchertests" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('AIRS')!= -1 " qualifier="airs">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Megger Test" value="airmegger"/>
-                  <option  label="Ductor Test" value="airductor"/>
-                  <option  label="HI-Pot Test" value="airhipot"/>
-                  <option  label="Functionality Test (open-close-open)" value="airftoco"/>
-                  <option  label="Recommend Repair" value="airrepair"/>
-                  <option  label="Recommend Replace" value="airreplace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
-                <optionfield attribute="capbanktests" label="Cap Bank Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('CAPB')!= -1 " qualifier="capb">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Measure Capacitance" value="capmeasurecap"/>
-                  <option  label="Recommend Repair" value="caprepair"/>
-                  <option  label="Recommend Replace" value="capreplace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
-                <optionfield attribute="batterytests" label="Battery Bank/Charger Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('BATTERY')!= -1 " qualifier="battery">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Recommend Repair" value="batrepair"/>
-                  <option  label="Recommend Replace" value="batreplace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
-                <optionfield attribute="relaytests" label="Relay Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('RELAY')!= -1 " qualifier="relay">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Recommend Repair" value="relrepair"/>
-                  <option  label="Recommend Replace" value="relreplace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
-                <optionfield attribute="feedertests" label="Feeder Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('FEEDER')!= -1 " qualifier="feeder">
-                  <renderer type="checkbox" params="layout=left"/>
-
-                  <option  label="Megger Test" value="feedmegger"/>
-                  <option  label="Ductor Test" value="feedductor"/>
-                  <option  label="HI-Pot Test" value="feedhipot"/>
-                  <option  label="Transformer Turns Ratio (TTR) Test" value="feedttr"/>
-                  <option  label="Recommend Repair" value="feedrepair"/>
-                  <option  label="Recommend Replace" value="feedreplace"/>
-
-                  <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
-                  <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
-                </optionfield>
-
               </section>
 
-            </section>
-
-            <section id="components">
-              <!--Placeholder section to display the components on the screen-->
-            </section>
+              <section id="components">
+                <!--Placeholder section to display the components on the screen-->
+              </section>
 
 
-          </tab>
+            </tab>
 
-          <tab label="Attachments" icon="fa-paperclip" id="attachments" enableexpression="@id!=null" countrelationship="#allattachments_">
-            <composition inline="true" relationship="#allattachments_" label="" detailschema="attachmentdetail">
-              <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="attachmentlist"/>
+            <tab label="Attachments" icon="fa-paperclip" id="attachments" enableexpression="@id!=null" countrelationship="#allattachments_">
+              <composition inline="true" relationship="#allattachments_" label="" detailschema="attachmentdetail">
+                <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="attachmentlist"/>
+              </composition>
+            </tab>
+
+            <composition detailschema="" relationship="emailtracking_" label="Email Tracking" showexpression="@id!=null">
+              <collectionproperties allowcreation="false" allowupdate="false" allowremoval="false"/>
             </composition>
-          </tab>
+
+          </section>
+
+        </schema>
+
+        <schema id="viewdetail" parentschema="adetailnotabs" mode="output">
+
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Package"  platform="web" stereotype="detailnew">
@@ -439,6 +470,29 @@
         <schema id="attachmentdetail" stereotype="compositiondetail">
         </schema>
       </schemas>
+    </application>
+
+    <application entity="WorkPackageEmailStatus" name="emailstatus" title="Email Tracking">
+      <properties>
+        <property key ="icon" value="fa fa-envelope-o"/>
+        <property key ="icon.composition.tab" value="fa fa-envelope-o"/>
+      </properties>
+
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="id" hidden="true"/>
+          <field attribute="email" label="Email"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="senddate" label="Send Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+          <field attribute="ackdate" label="Acknowledgement Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
+          </field>
+        </schema>
+
+      </schemas>
+
     </application>
 
 

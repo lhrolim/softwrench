@@ -204,48 +204,9 @@
 
 
 
-                        $scope.getGroupedCheckboxOptions = function (fieldMetadata) {
-                            if (fieldMetadata.jscache == null) {
-                                fieldMetadata.jscache = {};
-                            }
-                            if (fieldMetadata.jscache.grouppedcheckboxes) {
-                                return fieldMetadata.jscache.grouppedcheckboxes;
-                            }
-
-                            const maxrows = parseInt(fieldMetadata.rendererParameters["maxrows"] || 1000);
-                            const options = $scope.getCheckboxOptions(fieldMetadata) || [];
-
-                            const numberofColumns = Math.ceil(options.length / maxrows);
-                            const numberOfRows = Math.min(options.length, maxrows);
-
-                            const result = [];
+                     
 
 
-                            let j;
-                            let currentIndex;
-
-                            for (let i = 0; i < numberOfRows; i++) {
-                                result[i] = [];
-                                j = 0;
-                                while (j < numberofColumns) {
-                                    currentIndex = (j * maxrows) + i;
-                                    if (options.length > currentIndex) {
-                                        result[i].push(options[currentIndex]);
-                                    }
-                                    j++;
-                                }
-                            }
-                            fieldMetadata.jscache.grouppedcheckboxes = result;
-                            return result;
-                        }
-
-                        $scope.getCheckboxOptions = function (fieldMetadata) {
-                            if (fieldMetadata.providerAttribute == null) {
-                                return fieldMetadata.options;
-                            }
-                            const contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-                            return crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid);
-                        }
                         $scope.isPositionLeft = function (fieldMetadata) {
                             return "left".equalIc(fieldMetadata.rendererParameters['position']);
                         }
@@ -361,14 +322,7 @@
                         };
 
 
-                        /* CHECKBOX functions */
-                        $scope.isCheckboxSelected = function (option, datamapKey) {
-                            const model = $scope.datamap[datamapKey];
-                            if (model == undefined) {
-                                return false;
-                            }
-                            return model.indexOf(option.value) > -1;
-                        };
+                      
 
                         $scope.restoreDefault = function (fieldMetadata) {
                             alertService.confirm("Are you sure you want to restore this field to its default value?").then(r => {

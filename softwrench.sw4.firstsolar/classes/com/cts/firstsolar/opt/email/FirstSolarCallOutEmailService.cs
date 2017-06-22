@@ -12,7 +12,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
-    public class FirstSolarCallOutEmailService : FirstSolarBaseEmailService {
+    public class FirstSolarCallOutEmailService : FirstSolarBaseEmailRequestEmailService {
 
 
         private new static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarCallOutEmailService));

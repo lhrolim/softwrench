@@ -6,7 +6,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         Scheduled, Sent, Approved, Rejected, Pending, Error
     }
 
+
+    public enum WpRequestStatus {
+        Sent, Ack
+    }
+
     public class RequestStatusConverter : EnumStringType<RequestStatus> {
+    }
+
+    public class WpRequestStatusConverter : EnumStringType<WpRequestStatus> {
     }
 
 

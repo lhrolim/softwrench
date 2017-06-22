@@ -136,29 +136,22 @@ namespace softWrench.sW4.Web.Controllers {
             return detailSchema == null ? NotFound(user) : RouteView(user, appMetadata, detailSchema, iserId, siteId);
         }
 
-        private HomeModel BaseHomeModel(InMemoryUser user, ApplicationSchemaDefinition schema) {
-            var model = _homeService.BaseHomeModel(Request, user);
-            model.FromRoute = true;
-            model.Title = schema.Title;
-            model.ApplicationName = schema.ApplicationName;
-            model.SchemaId = schema.SchemaId;
-            return model;
-        }
+      
 
         private ActionResult RouteView(InMemoryUser user, IApplicationIdentifier appMetadata, [NotNull]ApplicationSchemaDefinition schema, string id) {
-            var model = BaseHomeModel(user, schema);
+            var model = _homeService.BaseHomeModel(Request,user, schema);
             model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, id);
             return View(Index, model);
         }
 
         private ActionResult RouteView(InMemoryUser user, IApplicationIdentifier appMetadata, ApplicationSchemaDefinition schema, string userid, string siteid) {
-            var model = BaseHomeModel(user, schema);
+            var model = _homeService.BaseHomeModel(Request,user, schema);
             model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, userid, siteid);
             return View(Index, model);
         }
 
         private ActionResult RouteListView(InMemoryUser user, IApplicationIdentifier appMetadata, ApplicationSchemaDefinition schema) {
-            var model = BaseHomeModel(user, schema);
+            var model = _homeService.BaseHomeModel(Request,user, schema);
             model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, null);
             model.RouteListInfo = new RouteListInfo {
                 ApplicationName = appMetadata.ApplicationName,

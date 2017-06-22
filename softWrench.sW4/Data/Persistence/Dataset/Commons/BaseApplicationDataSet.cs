@@ -644,9 +644,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return new OperationWrapper(application, entityMetadata, operation, json, id);
         }
 
+        #pragma warning disable 1998
         public virtual async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             return Engine().Execute(operationWrapper);
         }
+        #pragma warning restore 1998
 
         public async Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData) {

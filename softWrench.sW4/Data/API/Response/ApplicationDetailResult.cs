@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data.API.Response {
             Id = id;
         }
 
-        public AssociationMainSchemaLoadResult AssociationOptions { get; }
+        public AssociationMainSchemaLoadResult AssociationOptions { get; set; }
 
 
         public string CachedSchemaId { get; set; }

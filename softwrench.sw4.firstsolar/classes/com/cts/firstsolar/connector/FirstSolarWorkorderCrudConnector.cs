@@ -34,19 +34,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
             Log.Debug("init..");
         }
 
-        private string BaseAssignmentWorkflowQuery =
-
-        @"select wf.description, wfa.actionid, wfa.instruction, wf.wfid, wf.processname, wf.assignid from wfassignment wf
-        inner join wfaction wfa
-        on (wf.nodeid = wfa.ownernodeid and wfa.processname = wf.processname and wf.processrev = wfa.processrev)
-        inner join wfcallstack c on (wf.nodeid = c.nodeid and wf.wfid = c.wfid)         
-        where wf.assignid = (select wf.assignid from wfassignment wf
-        where ownertable = 'workorder' and ownerid = '{0}' and processname = 'EPC-WOP'
-        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
-        and (wf.assigncode = '{1}'))
-        and wf.assignstatus in (select value from synonymdomain where domainid='WFASGNSTATUS' and maxvalue='ACTIVE')
-        and (wf.assigncode = '{1}' )
-        and wfa.actionid = '759'";
 
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeCreation(maximoTemplateData);

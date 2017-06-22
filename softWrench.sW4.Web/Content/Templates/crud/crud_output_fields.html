@@ -60,6 +60,62 @@
                             </label>
 
                         </div>
+                        
+                        <div ng-switch-when="checkbox">
+                            <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
+                                <thead ng-if="fieldMetadata.label!=null">
+                                <tr><td class="optionfieldheader">{{fieldMetadata.label}}</td></tr>
+                                </thead>
+                                <tr ng-repeat="optionArrays in getGroupedCheckboxOptions(fieldMetadata)">
+                                    <td ng-repeat="option in optionArrays" class="checkboxcolumn">
+                                        <span>
+                                            <span ng-if="isPositionLeft(fieldMetadata)">
+                                                <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                            </span>
+                                            <input type="checkbox"
+                                                   name="datamap[fieldMetadata.attribute]"
+                                                   value="{{option.value}}"
+                                                   ng-disabled="true"
+                                                   ng-checked="isCheckboxSelected(option,fieldMetadata.associationKey)">
+                                            <span ng-if="!isPositionLeft(fieldMetadata)">
+                                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                                <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                            </span>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div ng-switch-when="radio">
+                            <label ng-if="fieldMetadata.rendererParameters['vertical']==null" ng-repeat="option in GetAssociationOptions(fieldMetadata)" class="checkbox-inline">
+                                <input type="radio"
+                                       name="{{fieldMetadata.attribute}}"
+                                       value="{{option.value}}"
+                                       ng-disabled="true"
+                                       ng-model="datamap[fieldMetadata.attribute]">
+                                <span>
+                                    {{i18NOptionField(option,fieldMetadata,schema)}}
+                                    <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                </span>
+                            </label>
+                            <div ng-if="fieldMetadata.rendererParameters['vertical']!=null" class="radio" ng-repeat="option in GetAssociationOptions(fieldMetadata)">
+                                <label>
+                                    <input type="radio"
+                                           name="{{fieldMetadata.attribute}}"
+                                           ng-disabled="true"
+                                           value="{{option.value}}"
+                                           ng-model="datamap[fieldMetadata.attribute]">
+                                    <span>
+                                        {{i18NOptionField(option,fieldMetadata,schema)}}
+                                        <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        
+
                         <div ng-switch-default>
                             <label class="form-control"
                                    ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap) | linebreak"
@@ -129,7 +185,39 @@
                                 </div>
 
                                 <div ng-switch-when="checkbox">
-                                    <i class="fa {{getBooleanClass(datamap,fieldMetadata.attribute)}}"></i>
+                                    
+                                   
+                                    
+                                    <div ng-if="fieldMetadata.type !== 'OptionField'">
+                                        <i class="fa {{getBooleanClass(datamap,fieldMetadata.attribute)}}"></i>{{fieldMetadata.label}}
+                                    </div>
+                                </div>
+                                
+                                <div ng-switch-when="radio">
+                                    <label ng-if="fieldMetadata.rendererParameters['vertical']==null" ng-repeat="option in GetAssociationOptions(fieldMetadata)" class="checkbox-inline">
+                                        <input type="radio"
+                                               name="{{fieldMetadata.attribute}}"
+                                               value="{{option.value}}"
+                                               ng-disabled="true"
+                                               ng-model="datamap[fieldMetadata.attribute]">
+                                        <span>
+                                            {{i18NOptionField(option,fieldMetadata,schema)}}
+                                            <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                        </span>
+                                    </label>
+                                    <div ng-if="fieldMetadata.rendererParameters['vertical']!=null" class="radio" ng-repeat="option in GetAssociationOptions(fieldMetadata)">
+                                        <label>
+                                            <input type="radio"
+                                                   name="{{fieldMetadata.attribute}}"
+                                                   ng-disabled="true"
+                                                   value="{{option.value}}"
+                                                   ng-model="datamap[fieldMetadata.attribute]">
+                                            <span>
+                                                {{i18NOptionField(option,fieldMetadata,schema)}}
+                                                <icon ng-show="option.help" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{option.help}}"></icon>
+                                            </span>
+                                        </label>
+                                    </div>
                                 </div>
 
                                 <div ng-switch-when="link">
@@ -153,7 +241,18 @@
                                           ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}" />
 
                                 <div ng-switch-default>
-                                    <label class="form-control"
+                                    <label
+                                        ng-if="fieldMetadata.type == 'ApplicationAssociationDefinition'"
+                                        class="form-control"
+                                        ng-init="bindEvalExpression(fieldMetadata)"
+                                        data-attribute="{{fieldMetadata.attribute}}">
+                                        {{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}
+                                    </label>
+
+
+                                    <label 
+                                           ng-if="fieldMetadata.type != 'ApplicationAssociationDefinition'"
+                                           class="form-control"
                                            ng-bind-html="getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap) | linebreak"
                                            ng-init="bindEvalExpression(fieldMetadata)"
                                            data-attribute="{{fieldMetadata.attribute}}">

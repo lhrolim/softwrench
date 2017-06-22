@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using softwrench.sw4.webcommons.classes.api;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Security;
 
@@ -43,6 +44,9 @@ namespace softWrench.sW4.Web.Models.Home {
         public RouteInfo RouteInfo { get; set; }
         public RouteListInfo RouteListInfo { get; set; }
         public string ApplicationVersion { get; set; }
+        public string ResultDataJSON { get; set; }
+
+        public bool Anonymous { get; set; }
 
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,

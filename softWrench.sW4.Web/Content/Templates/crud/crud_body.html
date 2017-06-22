@@ -9,7 +9,7 @@
     </section>
 
     <div id="affixpagination" class="hiddenonprint toolbar-primary" ng-class="{'affix-pagination' : ismodal !== 'true' }" ng-if="ismodal !== 'true'">
-        <div class="context clearfix header-menu" ng-if="isDetail" ng-class="schema.stereotypeAttr" ng-init="showdirbutons = showdirectionButtons()">
+        <div class="context clearfix header-menu" ng-if="showTopToolbar()" ng-class="schema.stereotypeAttr" ng-init="showdirbutons = showdirectionButtons()">
             <div class="row tool-row main-commands">
                 <div class="left">
                     <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema" class="detail-primary"/>

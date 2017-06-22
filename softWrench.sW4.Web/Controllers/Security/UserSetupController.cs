@@ -234,7 +234,6 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private readonly UserManager _userManager;
         private readonly UserSetupEmailService _userSetupEmailService;
-        private UserLinkManager _userLinkManager;
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IMaximoHibernateDAO _maxdao;
 
