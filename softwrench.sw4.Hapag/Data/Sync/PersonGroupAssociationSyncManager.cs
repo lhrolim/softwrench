@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using cts.commons.Util;
 using softwrench.sw4.user.classes.entities;
 using HlagLocationManager = softwrench.sw4.Hapag.Security.HlagLocationManager;
 
@@ -233,10 +234,11 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 return 3;
             }
         }
+        
         public void HandleEvent(UserLoginEvent eventToDispatch) {
             var user = eventToDispatch.InMemoryUser;
             if ("true".Equals(MetadataProvider.GlobalProperty("ldap.syncalways")) && !string.IsNullOrEmpty(user.MaximoPersonId) && !string.IsNullOrEmpty(user.Login)) {
-                SyncUser(user);
+                AsyncHelper.RunSync(()=>SyncUser(user));
             }
         }
     }
