@@ -29,7 +29,6 @@
   <if test="${property::exists('ignoretstamp')==true}">
     <!--makes development easier-->
     <property name="deploypath" value="${OutputDir}/deploy/local"></property>
-    <delete dir="${OutputDir}/deploy/local" failonerror="false"/>
   </if>
 
   <!--These will come from jenkins-->
