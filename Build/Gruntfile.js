@@ -166,6 +166,7 @@ module.exports = function (grunt) {
                     "ui-ace.js": "angular-ui-ace/ui-ace.min.js",
                     // utils
                     "moment.js": "moment/min/moment.min.js",
+                    "moment-tz.js": "moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js",
                     "spin.js": "spin.js/spin.min.js",
                     "lz-string.js": "lz-string/libs/lz-string.min.js",
                     // devextreme
@@ -255,6 +256,7 @@ module.exports = function (grunt) {
                 src: [
                      // utils
                     "<%= bowercopy.scripts.options.destPrefix %>/moment.js",
+                    "<%= bowercopy.scripts.options.destPrefix %>/moment-tz.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/spin.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/lz-string.js",
                     // jquery

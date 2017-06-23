@@ -80,7 +80,8 @@
             const date = new Date();
             const toNextDay = (date.getUTCHours() <= 7);
             const currentOffSet = date.getTimezoneOffset();
-            const diff = (420 - currentOffSet) / 60; // AZ timezone = -7
+            const offset = moment().tz("US/Arizona")._offset;
+            const diff = ((-1* offset) - currentOffSet) / 60; // AZ timezone = -7
             date.setHours(17, 0, 0, 0);
             date.addHours(diff);
             if (toNextDay) {

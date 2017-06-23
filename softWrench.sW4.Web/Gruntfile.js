@@ -125,6 +125,7 @@ module.exports = function (grunt) {
                     "pdf/angular-pdf.js": "angular-pdf/dist/angular-pdf.js",
                     // utils
                     "utils/a-moment.js": "moment/min/moment.min.js",
+                    "utils/moment-tz.js": "moment-timezone/builds/moment-timezone-with-data-2012-2022.min.js",
                     "utils/moment-locale-de.js": "moment/locale/de.js",
                     "utils/moment-locale-es.js": "moment/locale/es.js",
                     "utils/spin.js": "spin.js/spin.js",
