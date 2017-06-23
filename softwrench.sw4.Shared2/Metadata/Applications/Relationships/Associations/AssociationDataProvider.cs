@@ -6,11 +6,13 @@
         public string PostFilterFunctionName { get; set; }
 
         public string WhereClause { get; set; }
+        public string MetadataId { get; set; }
 
-        public AssociationDataProvider(string prefilterFunctionName, string postFilterFunctionName, string whereClause) {
+        public AssociationDataProvider(string prefilterFunctionName, string postFilterFunctionName, string whereClause, string metadataId) {
             PreFilterFunctionName = prefilterFunctionName;
             PostFilterFunctionName = postFilterFunctionName;
             WhereClause = whereClause;
+            MetadataId = metadataId;
         }
 
         public AssociationDataProvider() { }

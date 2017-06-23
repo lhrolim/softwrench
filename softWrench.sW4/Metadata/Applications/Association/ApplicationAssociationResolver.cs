@@ -31,7 +31,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         private const string WrongPostFilterMethod = "PostfilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
         private const string ValueKeyConst = "value";
 
-        private ILog Log = LogManager.GetLogger(typeof (ApplicationAssociationResolver));
+        private ILog Log = LogManager.GetLogger(typeof(ApplicationAssociationResolver));
 
         private static EntityRepository EntityRepository => SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>(typeof(EntityRepository));
 
@@ -97,13 +97,20 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 associationFilter.AppendWhereClause(EntityUtil.EvaluateQuery(association.Schema.DataProvider.WhereClause, originalEntity));
             }
 
+            if (association.Schema.DataProvider.MetadataId != null) {
+                associationFilter.Context =
+                    new sW4.Security.Context.ApplicationLookupContext {
+                        MetadataId = association.Schema.DataProvider.MetadataId
+                    };
+            }
+
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
             associationFilter.QueryAlias = association.AssociationKey;
 
             //caching for multithread access
             associationFilter.GetParameters();
 
-            var queryResponse =await EntityRepository.Get(entityMetadata, associationFilter);
+            var queryResponse = await EntityRepository.Get(entityMetadata, associationFilter);
 
             // execute query count in separate thread and update the dto with the pagination data
             if (isLookupMode) {

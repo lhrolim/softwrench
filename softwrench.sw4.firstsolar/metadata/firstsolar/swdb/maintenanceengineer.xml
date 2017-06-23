@@ -30,7 +30,9 @@
         </schema>
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
-          <association label="Engineer" labelfield="#workorder_.fakelabor_.displayname" target="engineer" requiredexpression="true"></association>
+          <association label="Engineer" labelfield="#workorder_.fakelabor_.displayname" target="engineer" requiredexpression="true" qualifier="maintenanceengineerlookup">
+            <dataprovider metadataid="maintenanceengineerlookup"/>
+          </association>
 
           <section orientation="horizontal">
             <field attribute="sendtime" label="Send Request" requiredexpression="true" showexpression="@sendnow === false" helpicon="right" tooltip="Default schedule time is 5pm US Mountain Standard timezone (-7 utc) ">

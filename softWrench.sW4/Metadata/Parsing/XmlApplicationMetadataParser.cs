@@ -447,10 +447,12 @@ namespace softWrench.sW4.Metadata.Parsing {
                 ApplicationMetadataValidator.AddAssociationPostFilterToValidate(applicationName, schemaId, postfilterFunction);
             }
 
-            if (whereClause == null && prefilterFunction == null && postfilterFunction == null) {
-                throw new InvalidOperationException("either whereclause of filterfunction should be provided for a dataprovider");
+            var metadataId = dataProviderElement.Attribute(XmlMetadataSchema.DataProviderMetadataId).ValueOrDefault((string)null);
+
+            if (whereClause == null && prefilterFunction == null && postfilterFunction == null && metadataId==null) {
+                throw new InvalidOperationException("either whereclause, metadataid, or filterfunction should be provided for a dataprovider");
             }
-            return new AssociationDataProvider(prefilterFunction, postfilterFunction, whereClause);
+            return new AssociationDataProvider(prefilterFunction, postfilterFunction, whereClause, metadataId);
         }
 
 

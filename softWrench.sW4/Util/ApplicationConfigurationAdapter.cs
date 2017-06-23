@@ -34,7 +34,7 @@ namespace softWrench.sW4.Util {
         }
 
         public bool IsUat() {
-            return ApplicationConfiguration.Profile.Contains("uat");
+            return ApplicationConfiguration.IsUat();
         }
 
         public bool IsLocal() {

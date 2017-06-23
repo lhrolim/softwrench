@@ -693,6 +693,7 @@
     <attribute name="whereClause" type="string"></attribute>
     <attribute name="prefilterfunction" type="string"></attribute>
     <attribute name="method" type="string"></attribute>
+    <attribute name="metadataid" type="string"></attribute>
   </complexType>
 
   <complexType name="AssociationDetail">

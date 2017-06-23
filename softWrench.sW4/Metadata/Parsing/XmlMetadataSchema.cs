@@ -113,6 +113,7 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string DataProviderElement = "dataprovider";
         public const string DataProviderWhereClause = "whereClause";
         public const string DataProviderPreFilterFunction = "prefilterfunction";
+        public const string DataProviderMetadataId = "metadataid";
         public const string DataProviderPostFilterFunction = "postfilterfunction";
 
         //           <composition attribute="worklog" label="Worklogs" >

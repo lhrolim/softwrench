@@ -370,6 +370,9 @@ namespace softWrench.sW4.Util {
         public static bool IsQA() {
             return Profile == "qa";
         }
+        public static bool IsUat() {
+            return Profile == "uat";
+        }
 
         public static bool IsProd() {
             return Profile.ToLower().StartsWith("prod");

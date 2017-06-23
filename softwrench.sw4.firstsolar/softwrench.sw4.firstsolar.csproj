@@ -203,12 +203,12 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarAssetLookupDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarLocationDataSet.cs" />
-    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarMaintenanceEngineerDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkPackageDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
+    <Compile Include="classes\com\cts\firstsolar\FirstSolarOptWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3020Migration.cs" />
