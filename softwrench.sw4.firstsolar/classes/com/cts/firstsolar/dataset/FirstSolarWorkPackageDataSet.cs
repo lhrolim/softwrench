@@ -202,6 +202,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
 
             var result = await base.GetApplicationDetail(application, user, request);
+            if (result == null) {
+                return null;
+            }
 
             //either for edition, or for a creation out of an existing workorder
             if (result.ResultObject.GetLongAttribute("workorderid") != null) {
