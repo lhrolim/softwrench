@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 using softwrench.sW4.TestBase;
+using softWrench.sW4.Metadata.Security;
 
 namespace softwrench.sW4.test.Util {
     [TestClass]
@@ -63,6 +64,24 @@ namespace softwrench.sW4.test.Util {
             var serverTimezone = -1 * TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes;
             var userTime = DateExtensions.MaximoConversion(_zeroHour, serverTimezone, DateExtensions.ConversionKind.MaximoToUser);
             Assert.AreEqual(0, userTime.Hour);
+        }
+
+
+        [TestMethod]
+        public void TestFromUserToServer() {
+            Assert.AreEqual(_zeroHour.Hour, 0);
+            //now, we should considered that maximo is deployed on same timezone as server
+            //luiz: need to get server timezone to pass as user timezone, or test would fail in my machine (or on any AZ)
+            var serverTimezone = -1 * TimeZone.CurrentTimeZone.GetUtcOffset(DateTime.Now).TotalMinutes;
+
+            const int brazilOffset = 180;
+
+            var user = InMemoryUser.NewAnonymousInstance();
+            user.TimezoneOffset = brazilOffset;
+
+            var serverTime = DateExtensions.UserMaximoConversion(_zeroHour, user, DateExtensions.ConversionKind.UserToMaximo,-7);
+            
+            Assert.AreEqual(20, serverTime.Hour);
         }
     }
 }

@@ -52,7 +52,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
         private static Dictionary<string, object> BuildAttributes(JObject row) {
             var dict = new Dictionary<string, object>();
-            dict["ACTFINISH"] = ConversionUtil.HandleDateConversion(row.StringValue("actfinish"));
+            dict["ACTFINISH"] = ConversionUtil.HandleDateConversion(row.StringValue("actfinish"),false);
             //now we can finish the mapping using target file
             dict["#ReconCd"] = row.StringValue("#ReconCd");
             dict["#pmchange"] = "y".EqualsIc(row.StringValue("#pmchange"));

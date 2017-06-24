@@ -65,6 +65,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public FirstSolarMaintenanceEngineeringHandler MaintenanceEngineeringHandler { get; set; }
 
         [Import]
+        public FirstSolarDailyOutageMeetingHandler DailyOutageMeetingHandler { get; set; }
+
+        [Import]
         public FirstSolarWorkPackageCreationEmailHandler WpCreationEmailHandler { get; set; }
 
         [Import]
@@ -362,9 +365,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var anyNewMe = MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData);
 
+            var anyNewDom = DailyOutageMeetingHandler.HandleDailyOutageMeetings(crudoperationData, package);
+
             package = await Dao.SaveAsync(package);
 
-            if (anyNewCallout || anyNewMe) {
+            if (anyNewCallout || anyNewMe || anyNewDom) {
                 crudoperationData.ReloadMode = ReloadMode.FullRefresh;
             }
 

@@ -111,12 +111,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             callOut.Email = CallOutEmailService.HandleEmailRecipient(crudoperationData, "email");
 
             if (sendNow.HasValue && sendNow.Value) {
-                callOut.SendTime = DateTime.Now.FromServerToMaximo();
+                callOut.SendTime = DateTime.Now;
                 callOut.SendNow = true;
             } else {
                 callOut.Status = RequestStatus.Scheduled;
-                var dateFromJson = Convert.ToDateTime(crudoperationData.GetStringAttribute("sendTime"), new CultureInfo("en-US"));
-                callOut.SendTime = dateFromJson.FromUserToMaximo(SecurityFacade.CurrentUser());
             }
 
 

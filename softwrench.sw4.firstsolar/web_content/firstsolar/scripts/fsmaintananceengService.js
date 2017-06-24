@@ -60,6 +60,9 @@
             if (!fsrequestService.verifyDelete(item, i18N)) {
                 return;
             }
+            if (!fsrequestService.validatePackage()) {
+                return;
+            }
             alertService.confirm("Are you sure you want to delete this maintenance engineering?").then(() => {
                 return fsrequestService.postDelete(callback, rollback);
             });

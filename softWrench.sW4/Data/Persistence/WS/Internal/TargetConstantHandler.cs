@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                     if (i != splitted.Count() - 1) {
                         objectToUse = ReflectionUtil.InstantiateAndSetIfNull(objectToUse, propertyName);
                     } else {
-                        WsUtil.SetValueIfNull(objectToUse, propertyName, ConversionUtil.ConvertFromMetadataType(constValue.Type, constValue.Value));
+                        WsUtil.SetValueIfNull(objectToUse, propertyName, ConversionUtil.ConvertFromMetadataType(constValue.Type, constValue.Value,false));
                         //                        ReflectionUtil.SetProperty(objectToUse, propertyName, constValue.Value);
                     }
                 }

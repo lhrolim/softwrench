@@ -98,7 +98,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime FromUserToServer(this DateTime date, InMemoryUser user) {
-            return UserMaximoConversion(date, user, ConversionKind.UserToMaximo, 0);
+            return UserMaximoConversion(date, user, ConversionKind.UserToMaximo, Convert.ToInt32(DateTimeOffset.Now.Offset.Hours));
         }
 
         public static DateTime FromUserToRightKind(this DateTime date, InMemoryUser user) {
@@ -141,7 +141,7 @@ namespace softWrench.sW4.Util {
             if (!user.TimezoneOffset.HasValue) {
                 return date;
             }
-            return MaximoConversion(date, user.TimezoneOffset.Value, ConversionKind.MaximoToUser, 0);
+            return MaximoConversion(date, user.TimezoneOffset.Value, ConversionKind.MaximoToUser, Convert.ToInt32(DateTimeOffset.Now.Offset.Hours));
         }
 
         public static DateTime FromServerToMaximo(this DateTime date, int? maximoOverridenOffset = null) {

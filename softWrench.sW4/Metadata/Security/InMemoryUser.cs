@@ -165,7 +165,7 @@ namespace softWrench.sW4.Metadata.Security {
         /// Time difference between UTC time and the user local time, in minutes
         /// (UTCTime - ClientTime)
         /// </summary>
-        public int? TimezoneOffset { get; private set; }
+        public int? TimezoneOffset { get; set; }
 
         public IList<Role> Roles { get; }
 

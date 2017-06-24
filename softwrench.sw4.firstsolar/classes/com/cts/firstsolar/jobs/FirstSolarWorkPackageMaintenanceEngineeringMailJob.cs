@@ -41,7 +41,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         }
 
         public override async Task ExecuteJob() {
-            var mes = await _dao.FindByQueryAsync<MaintenanceEngineering>(MaintenanceEngineering.ByStatusAndTime, DateTime.Now.FromServerToMaximo());
+            var mes = await _dao.FindByQueryAsync<MaintenanceEngineering>(MaintenanceEngineering.ByStatusAndTime, DateTime.Now);
             if (mes != null && mes.Any()) {
                 mes.ForEach(HandleMaintenanceEngineering);
                 Log.InfoFormat("done sending {0} maintenance engineerings", mes.Count);

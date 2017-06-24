@@ -83,6 +83,8 @@ namespace softWrench.sW4.Metadata.Entities {
         [NotNull]
         public EntitySchema Schema { get; }
 
+        public bool IsSwDb => Name.EndsWith("_");
+
 
         [NotNull]
         public ConnectorParameters ConnectorParameters { get; }

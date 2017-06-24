@@ -26,6 +26,24 @@
                 mergedItem["sendtime"] = fsrequestService.defaultSendTime();
                 mergedItem["#editing"] = true;
                 mergedItem["#calloutfileexplorer_"] = [];
+
+                if (sessionStorage.mockfscallout) {
+
+                    mergedItem["subcontractorid"] = "ATI";
+                    mergedItem["email"] = "devteam@controltechnologysolutions.com";
+                    mergedItem["sitename"] = "fs";
+                    mergedItem["tonumber"] = "mockedto";
+                    mergedItem["nottoexceedamount"] = 1;
+                    mergedItem["scopeofwork"] = "mocked scope of work";
+                    mergedItem["plantcontacts"] = "mocked plant contacts";
+                    mergedItem["otherinfo"] = "mocked other info";
+                    var futureDate = new Date();
+                    futureDate.addDays(2);
+                    mergedItem["expirationdate"] = futureDate;
+                    mergedItem["contractorstartdate"] = futureDate;
+
+                }
+
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);
                 });
@@ -64,6 +82,9 @@
 
         function deleteRow(item, callback, rollback) {
             if (!fsrequestService.verifyDelete(item, i18N)) {
+                return;
+            }
+            if (!fsrequestService.validatePackage()) {
                 return;
             }
             alertService.confirm("Are you sure you want to delete this subcontractor callout?").then(() => {

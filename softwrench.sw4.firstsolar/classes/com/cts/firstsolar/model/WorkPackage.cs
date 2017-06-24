@@ -61,7 +61,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public bool? MaintenanceEnabled { get; set; }
 
+        [Property]
+        public DateTime? EstimatedCompDate { get; set; }
 
+        [Property]
+        public DateTime? ActualCompDate { get; set; }
+
+        [Property]
+        public string MwhLostTotal { get; set; }
+
+        [Property]
+        public string ExpectedMwhLost { get; set; }
+
+        [Property]
+        public string MwhLostPerDay { get; set; }
+
+        [Property]
+        public string ProblemStatement { get; set; }
 
 
         #region resultsForReview
@@ -99,6 +115,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Key(1, Column = "workpackageid")]
         [OneToMany(2, ClassType = typeof(MaintenanceEngineering))]
         public virtual IList<MaintenanceEngineering> MaintenanceEngineerings { get; set; }
+
+        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, OrderBy = "MeetingTime asc")]
+        [Key(1, Column = "workpackageid")]
+        [OneToMany(2, ClassType = typeof(DailyOutageMeeting))]
+        public virtual IList<DailyOutageMeeting> DailyOutageMeetings { get; set; }
 
 
 

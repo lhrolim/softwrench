@@ -8,6 +8,7 @@ using System.Web.Http;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Util.DeployValidation;
@@ -108,7 +109,10 @@ namespace softWrench.sW4.Util {
                 }
                 //Add an other case for boolean
 
-                var castedValue = HandleCasting(prop, value);
+                //TODO: expand to subclasses
+                var isSwdbEntity = baseObject.GetType().GetCustomAttribute<ClassAttribute>() != null; 
+
+                var castedValue = HandleCasting(prop, value, isSwdbEntity);
 
                 prop.SetValue(baseObject, castedValue);
             } catch (Exception e) {
@@ -132,7 +136,7 @@ namespace softWrench.sW4.Util {
             return (attrib != null);
         }
 
-        private static object HandleCasting(PropertyDescriptor prop, object value) {
+        private static object HandleCasting(PropertyDescriptor prop, object value, bool isSwdbEntity) {
             var propertyType = prop.PropertyType;
 
 
@@ -154,7 +158,7 @@ namespace softWrench.sW4.Util {
             }
 
             if ("DateTime".EqualsIc(propertyType.Name) && !(value is DateTime)) {
-                return ConversionUtil.HandleDateConversion(value as string);
+                return ConversionUtil.HandleDateConversion(value as string, isSwdbEntity);
             }
             if ("Int64".EqualsIc(propertyType.Name)) {
                 return Convert.ToInt64(value);

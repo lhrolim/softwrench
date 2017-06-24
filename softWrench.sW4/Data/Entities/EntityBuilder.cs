@@ -70,7 +70,7 @@ namespace softWrench.sW4.Data.Entities {
                 HandleRelationship<T>(entityType, metadata, associationAttributes, property);
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name == name);
                 if (attribute != null) {
-                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value));
+                    attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value, metadata.IsSwDb));
                 }
             } else if (collectionAssociation != null) {
                 var collectionType = metadata.RelatedEntityMetadata(collectionAssociation.Qualifier);
@@ -86,7 +86,7 @@ namespace softWrench.sW4.Data.Entities {
                 if (attribute != null && !attributes.ContainsKey(property.Name)) {
                     var type = GetType(metadata, attribute);
                     try {
-                        var valueFromJson = GetValueFromJson(type, property.Value);
+                        var valueFromJson = GetValueFromJson(type, property.Value, metadata.IsSwDb);
                         attributes.Add(property.Name, valueFromJson);
                     } catch (Exception e) {
                         Log.Error("error casting object", e);
@@ -136,11 +136,11 @@ namespace softWrench.sW4.Data.Entities {
                 string idValue = null;
                 string userIdValue = null;
                 if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, out idTkn)) {
-                    var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn);
+                    var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn, metadata.IsSwDb);
                     idValue = valueFromJson == null ? null : valueFromJson.ToString();
                 }
                 if (jToken.TryGetValue(collectionType.Schema.UserIdAttribute.Name, out idTkn)) {
-                    var valueFromJson = GetValueFromJson(collectionType.Schema.UserIdAttribute.Type, idTkn);
+                    var valueFromJson = GetValueFromJson(collectionType.Schema.UserIdAttribute.Type, idTkn, metadata.IsSwDb);
                     userIdValue = valueFromJson == null ? null : valueFromJson.ToString();
                 }
 
@@ -190,7 +190,7 @@ namespace softWrench.sW4.Data.Entities {
 
 
 
-        private static object GetValueFromJson(string type, JToken value) {
+        private static object GetValueFromJson(string type, JToken value, bool isSwdbEntity) {
             //TODO: review.
             if (null == value) {
                 return null;
@@ -208,13 +208,13 @@ namespace softWrench.sW4.Data.Entities {
                 if (stValue == "$null$ignorewatch") {
                     return null;
                 }
-                return ConversionUtil.ConvertFromMetadataType(type, stValue);
+                return ConversionUtil.ConvertFromMetadataType(type, stValue, isSwdbEntity);
 
             }
             var array = value.ToObject<Object[]>();
             for (var i = 0; i < array.Length; i++) {
                 if (array[i] != null) {
-                    array[i] = ConversionUtil.ConvertFromMetadataType(type, array[i].ToString());
+                    array[i] = ConversionUtil.ConvertFromMetadataType(type, array[i].ToString(), isSwdbEntity);
                 }
             }
 

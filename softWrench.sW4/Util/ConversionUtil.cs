@@ -16,7 +16,7 @@ namespace softWrench.sW4.Util {
         };
 
 
-        public static object ConvertFromMetadataType(string type, string stValue) {
+        public static object ConvertFromMetadataType(string type, string stValue, bool isSWDBDate) {
             //TODO: review.
 
             if (type == "varchar" || type == "string") {
@@ -37,7 +37,7 @@ namespace softWrench.sW4.Util {
             }
             if (type == "datetime" || type == "timestamp") {
 
-                return HandleDateConversion(stValue);
+                return HandleDateConversion(stValue, isSWDBDate);
             }
             if (type == "decimal") {
                 return Convert.ToDecimal(stValue);
@@ -60,7 +60,7 @@ namespace softWrench.sW4.Util {
             return stValue;
         }
 
-        public static DateTime? HandleDateConversion(string stValue) {
+        public static DateTime? HandleDateConversion(string stValue, bool isSwdbDate) {
             if (string.IsNullOrEmpty(stValue)) {
                 return null;
             }
@@ -72,10 +72,17 @@ namespace softWrench.sW4.Util {
             }
 
             var kind = (ApplicationConfiguration.IsISM() || WsUtil.Is71()) ? DateTimeKind.Utc : DateTimeKind.Local;
+            if (isSwdbDate) {
+                kind = DateTimeKind.Local;
+            }
+
             var user = SecurityFacade.CurrentUser(false);
             try {
                 var dateFromJson = Convert.ToDateTime(stValue, new CultureInfo("en-US"));
                 var date = DateTime.SpecifyKind(dateFromJson, kind);
+                if (isSwdbDate) {
+                    return date.FromUserToServer(user);
+                }
                 var fromUserToRightKind = date.FromUserToRightKind(user);
                 return fromUserToRightKind;
             } catch (Exception) {

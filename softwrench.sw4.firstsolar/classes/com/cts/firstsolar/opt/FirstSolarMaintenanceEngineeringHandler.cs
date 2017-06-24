@@ -13,6 +13,7 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -99,6 +100,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             RequestStatus newStatus;
             Enum.TryParse(status, true, out newStatus);
 
+            me = EntityBuilder.PopulateTypedEntity(crudoperationData, me);
+
 
             if (me.Status.IsSubmitted()) {
                 if (!newStatus.IsSubmitted()) {
@@ -108,19 +111,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 return me;
             }
 
-            me.Engineer = crudoperationData.GetStringAttribute("engineer");
             me.Status = newStatus;
 
             if (sendNow.HasValue && sendNow.Value) {
-                me.SendTime = DateTime.Now.FromServerToMaximo();
+                me.SendTime = DateTime.Now;
                 me.SendNow = true;
             } else {
                 me.Status = RequestStatus.Scheduled;
-                var dateFromJson = Convert.ToDateTime(crudoperationData.GetStringAttribute("sendTime"), new CultureInfo("en-US"));
-                me.SendTime = dateFromJson.FromUserToMaximo(SecurityFacade.CurrentUser());
             }
 
-            me.Reason = crudoperationData.GetStringAttribute("reason");
             me.Email = MaintenanceEmailService.HandleEmailRecipient(crudoperationData, "email");
             me.Cc = MaintenanceEmailService.HandleEmailRecipient(crudoperationData, "cc");
             me.WorkPackageId = workpackage.Id ?? 0;

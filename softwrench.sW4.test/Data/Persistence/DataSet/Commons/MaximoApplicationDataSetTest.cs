@@ -95,19 +95,22 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
         }
 
         public class FakeSRApplicationDataSet : BaseServiceRequestDataSet {
+
+#pragma warning disable 1998
             public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
                 var data = operationWrapper.OperationData() as CrudOperationData;
                 data.ReloadMode = ReloadMode.MainDetail;
                 return new TargetResult("100", "100", null);
             }
+#pragma warning restore 1998
 
-         
+
 
             public override string SchemaId() {
                 return "newdetail";
             }
         }
-    
+
 
     }
 }

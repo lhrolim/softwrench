@@ -117,8 +117,8 @@
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sW4.batches, Version=1.3.6367.35882, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.batches.1.3.6367.35882\lib\net46\softwrench.sW4.batches.dll</HintPath>
+    <Reference Include="softwrench.sW4.batches, Version=1.3.6383.35436, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.batches.1.3.6383.35436\lib\net46\softwrench.sW4.batches.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
@@ -213,8 +213,10 @@
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3020Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3022Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\Swweb3024Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2974Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolar\model\DailyOutageMeeting.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\IFsEmailRequest.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\RequestStatus.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\MaintenanceEngineering.cs" />
@@ -232,6 +234,7 @@
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCallOutHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarDailyOutageMeetingHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarMaintenanceEngineeringHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarOptConfigurations.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageAttachmentsHandler.cs" />
@@ -242,6 +245,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\firstsolar\menu.mobile.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="metadata\firstsolar\swdb\dailyoutagemeeting.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="metadata\firstsolar\swdb\maintenanceengineer.xml">
@@ -276,6 +282,7 @@
     <Content Include="web_content\firstsolar\htmls\fscalloutnottoexceedamounttext.html" />
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
+    <Content Include="web_content\firstsolar\scripts\fsdailyoutagemeetingService.js" />
     <Content Include="web_content\firstsolar\scripts\fsrequestService.js" />
     <Content Include="web_content\firstsolar\scripts\fsemailrequestcontroller.js" />
     <Content Include="web_content\firstsolar\scripts\aaa_firstsolarmodule.js" />

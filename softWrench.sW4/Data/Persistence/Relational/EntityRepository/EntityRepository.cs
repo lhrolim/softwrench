@@ -104,7 +104,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                 var date = (DateTime)value;
                 date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
                 return date;
-            } if (entityMetadata.SWEntity()) {
+            }
+            if (entityMetadata.SWEntity()) {
                 var date = (DateTime)value;
                 date = DateTime.SpecifyKind(date, DateTimeKind.Local);
                 return date;
@@ -190,7 +191,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                 }
 
                 foreach (var column in dict) {
-                    item[FixKey(column.Key, entityMetadata)] = column.Value;
+                    var value = column.Value;
+                    if (entityMetadata.IsSwDb && column.Value is DateTime) {
+                        var date = (DateTime)column.Value;
+                        value = DateTime.SpecifyKind(date, DateTimeKind.Local);
+                    }
+                    item[FixKey(column.Key, entityMetadata)] = value;
+
+
                 }
                 list.Add(item);
             }

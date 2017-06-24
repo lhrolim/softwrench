@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="DailyOutageMeeting" idAttribute="id">
+      <relationships>
+        <relationship to="_WorkPackage_" qualifier="workpackage">
+          <relationshipAttribute from="workpackageid" to="id" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+  <applications>
+    <application entity="DailyOutageMeeting" name="DailyOutageMeeting" title="Daily Outage Meeting">
+      <schemas>
+        <schema id="dailyoutagelineline" stereotype="compositionlist" platform="web">
+          <field attribute="meetingtime" label="Meeting Time" readonly="true">
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="criticalpath" hidden="true"/>
+          <field attribute="openactionitems" hidden="true"/>
+          <field attribute="completedactionitems" hidden="true"/>
+          <field attribute="summary" hidden="true"/>
+        </schema>
+
+        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          <field attribute="meetingtime" label="Meeting Time" requiredexpression="true">
+            <renderer type="datetime"/>
+          </field>
+          <field label="Critical Path/Constraints" attribute="criticalpath"/>
+          <field label="Open Action Items" attribute="openactionitems"/>
+          <field label="Completed Action Items" attribute="completedactionitems"/>
+          <field attribute="summary" label="Meeting Summary">
+            <renderer type="textarea"/>
+          </field>
+          
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="add" icon="fa-check" service="fsdailyoutagemeetingService" method="saveDailyOutageMeeting" label="Save" primary="true" position="+save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Daily Outage Meeting"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="detail" parentschema="adetail" title="Daily Outage Meeting"  platform="web" stereotype="detail">
+        </schema>
+
+        <schema id="detailview" title="Daily Outage Meeting"  platform="web" stereotype="detail">
+          <field label="Critical Path/Constraints" attribute="criticalpath"/>
+          <field label="Open Action Items" attribute="openactionitems"/>
+          <field label="Completed Action Items" attribute="completedactionitems"/>
+          <field attribute="summary" label="Meeting Summary">
+            <renderer type="textarea"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

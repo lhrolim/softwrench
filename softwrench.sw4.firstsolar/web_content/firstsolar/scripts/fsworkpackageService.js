@@ -616,6 +616,10 @@
             const fileExplorerComp = this.fieldService.getDisplayableByKey(rootSchema, "#relayeventfileexplorer_");
             const worklogComp = this.fieldService.getDisplayableByKey(rootSchema, "#relayeventevaluations_");
 
+            const dailyOutageMeeting = datamap["dailyOutageMeetings_"];
+            const dailyOutageMeetingCount = dailyOutageMeeting ? dailyOutageMeeting.length : 0;
+            this.crudContextHolderService.setTabRecordCount("daulyoutage", null, dailyOutageMeetingCount);
+
             worklogCompositionSchema = worklogComp.schema;
             fileExplorerCompositionSchema = fileExplorerComp.schema;
             log.debug("caching composition schemas");
