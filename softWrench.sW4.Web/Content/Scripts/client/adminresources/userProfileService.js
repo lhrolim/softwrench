@@ -227,7 +227,7 @@
                 dm["#currentloadedapplication"] = appPermission;
 
                 transientData[nextApplication] = appPermission;
-                transientData[nextApplication]["hasCreationSchema"] = hasCreationSchema;
+//                transientData[nextApplication]["hasCreationSchema"] = hasCreationSchema;
 
                 mergeTransientIntoDatamap({ "application": nextApplication });
 

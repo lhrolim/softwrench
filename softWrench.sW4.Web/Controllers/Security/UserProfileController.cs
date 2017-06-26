@@ -189,12 +189,11 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public virtual BlankApplicationResponse ApplyMultiple(int profileId, [FromBody]List<string> usernames) {
             var newProfile = _userProfileManager.FindById(profileId);
             var usersEnum = usernames as IList<string> ?? usernames.ToList();
-
-            var personIds = maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
-            IList<string> results = new List<string>();
-            foreach (var personId in personIds) {
-                results.Add(personId["personid"]);
+            if (!usernames.Any()) {
+                return new BlankApplicationResponse { ErrorMessage = "At least one user needs to be selected" };
             }
+
+            var results = GetListOfPersonIds(usernames);
 
             var users = new List<User>(UserManager.GetUserByPersonIds(results));
 
@@ -221,12 +220,10 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 };
             }
 
+            var first = usernames.First();
 
-            var personIds = maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
-            IList<string> results = new List<string>();
-            foreach (var personId in personIds) {
-                results.Add(personId["personid"]);
-            }
+            var results = GetListOfPersonIds(usernames, first);
+
 
             var users = new List<User>(UserManager.GetUserByPersonIds(results));
 
@@ -241,6 +238,34 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return new BlankApplicationResponse() {
                 SuccessMessage = "{0} users successfully updated".Fmt(usersEnum.Count())
             };
+        }
+
+        private IList<string> GetListOfPersonIds(IList<string> usernames)
+        {
+
+            var first = usernames.First();
+
+            // this call is changing so many times on both client/server side that I´ll check for both ways
+            int n;
+            var isNumeric = int.TryParse(first, out n);
+
+            IList<string> results = new List<string>();
+
+
+            if (isNumeric)
+            {
+                results = usernames;
+            }
+            else
+            {
+                var personIds =
+                    maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
+                foreach (var personId in personIds)
+                {
+                    results.Add(personId["personid"]);
+                }
+            }
+            return results;
         }
 
         [HttpPost]
