@@ -240,8 +240,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
         }
 
-        private IList<string> GetListOfPersonIds(IList<string> usernames)
-        {
+        private IList<string> GetListOfPersonIds(IList<string> usernames) {
 
             var first = usernames.First();
 
@@ -252,16 +251,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
             IList<string> results = new List<string>();
 
 
-            if (isNumeric)
-            {
+            if (!isNumeric) {
                 results = usernames;
-            }
-            else
-            {
+            } else {
                 var personIds =
                     maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
-                foreach (var personId in personIds)
-                {
+                foreach (var personId in personIds) {
                     results.Add(personId["personid"]);
                 }
             }
