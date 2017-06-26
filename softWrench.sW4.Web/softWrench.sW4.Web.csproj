@@ -541,10 +541,6 @@
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="App_Data\Client\%40internal\templates\swdb\whereclause.xml" />
-    <Content Include="App_Data\Client\dzsp21\properties.xml">
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\Images\apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\bulletinboard.xml" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
