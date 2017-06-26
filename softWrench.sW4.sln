@@ -81,9 +81,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.tgcs", "softwrench.sw4.tgcs\softwrench.sw4.tgcs.csproj", "{83D9B360-0879-487F-B03C-62044846192C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CustomerProjects", "CustomerProjects", "{83D14F98-4C2C-4DFD-986E-CE555983AADF}"
-	ProjectSection(SolutionItems) = preProject
-		softwrench.sw4.gric\softwrench.sw4.gric.csproj = softwrench.sw4.gric\softwrench.sw4.gric.csproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SoftwrenchCommons", "SoftwrenchCommons", "{937C72D2-3D57-4CCA-A900-D923237DB610}"
 EndProject

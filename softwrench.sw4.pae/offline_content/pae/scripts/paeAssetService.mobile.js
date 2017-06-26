@@ -15,6 +15,7 @@
         };
 
         function scanBySerialnum(serialnum) {
+            serialnum = serialnum.slice(-12);
 
             return maximoDataService.loadSingleItemByField("transportation", "serialnum", serialnum)
                 .catch(error => {
@@ -76,6 +77,21 @@
 
                 auditAndOpenDetail(promise, "asset", data);
             });
+        }
+
+        function markAsScanned(datamap) {
+            const asset = crudContextService.currentDetailItem();
+            const personId = securityService.currentFullUser()["PersonId"];
+            const now = new Date();
+            asset.isDirty = true;
+            asset.datamap["invposttype"] = "AUTOMATIC";
+            asset.datamap["invpostdateby"] = personId;
+            asset.datamap["changeby"] = personId;
+            asset.datamap["invpostdate"] = now;
+            asset.datamap["changedate"] = now;
+            asset.datamap["scanremarks"] = "No Scan Remarks Entered";
+
+            return offlineSaveService.saveItem("transportation", asset, "Transportation", false);
         }
 
         function initTransportationScanEventListener(schema, parameters) {
@@ -142,8 +158,10 @@
             initAssetGridListener,
             initTransportationDetailListener,
             initTransportationGridListener,
+            markAsScanned,
+            preSync,
             transportationAssetChanged,
-            preSync
+            
         };
         return service;
         //#endregion

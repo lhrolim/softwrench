@@ -2,13 +2,14 @@
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Persistence.WS.Commons;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
 namespace softwrench.sw4.pae.classes.com.cts.pae.connector {
-    class PaeAssetCrudConnector : CrudConnectorDecorator {
+    public class PaeAssetCrudConnector : BaseAssetCrudConnector {
 
         public override void BeforeUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var asset = maximoTemplateData.IntegrationObject;
@@ -48,7 +49,7 @@ namespace softwrench.sw4.pae.classes.com.cts.pae.connector {
         }
 
         public override string ApplicationName() {
-            return "asset";
+            return "asset,paeasset";
         }
 
 

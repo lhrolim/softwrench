@@ -28,7 +28,7 @@
 
     <!--Person-->
     <template path="@person.xml"/>
-  
+
   </templates>
 
   <entities>
@@ -141,7 +141,7 @@
             </field>
             <field attribute="supervisor" label="Appr. Authority"/>
           </customization>
-          
+
           <commandbars>
             <commandgroup position="gridtop">
               <removecommand id="new"/>
@@ -228,7 +228,7 @@
             <field attribute="linecost" label="Line Cost"/>
           </customization>
         </schema>
-        
+
         <detail stereotype="compositiondetail" title="PR Line Details">
           <field attribute="storeloc" label="Storeroom"/>
           <field label="GL Debit Account" attribute="gldebitacct"/>
@@ -296,7 +296,7 @@
           <field attribute="bcn" label="BCN" />
           <field attribute="status" label="Status" />
         </list>
-        
+
         <detail platform="web">
           <event type="onload" expression="$e.datamap['#originallocation'] = $e.datamap.location"/>
 
@@ -333,24 +333,24 @@
           </section>
 
           <reference id="transportation_hiddenfields"/>
-          
+
         </detail>
-        
+
         <!-- #endregion -->
-        
+
         <!-- #region mobile -->
         <list platform="mobile">
           <event type="onload" service="paeAssetService" method="initTransportationGridListener"/>
-          
+
           <field attribute="assetnum" label="Asset #" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>
           <field attribute="serialnum" label="VIN / SN" qualifier="excerpt"/>
         </list>
-        
+
         <detail platform="mobile">
           <event type="onload" service="paeAssetService" method="initTransportationDetailListener"/>
           <event type="offline.presave" service="paeAssetService" method="transportationAssetChanged"/>
-          
+
           <field attribute="assetnum" label="Asset #" readonly="true" qualifier="title"/>
           <field attribute="description" label="Description" readonly="true" qualifier="subtitle"/>
           <field attribute="serialnum" label="VIN / SN" qualifier="summary"/>
@@ -367,6 +367,32 @@
           <field attribute="changedate" label="Changed Date" readonly="true" />
 
           <reference id="transportation_hiddenfields"/>
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab">
+              <container id="detail.container" icon="fa-bolt">
+                
+                <command id="quicksync"
+                         service="itemActionService" method="quickSyncCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowQuickSyncForCurrentItem"
+                         icon="ion-loop" label="Quick Sync"/>
+
+                <command id="markscanned"
+                         service="paeAssetService" method="markAsScanned"
+                         icon="fa fa-calendar-check-o" label="Update Inventory Dates"/>
+
+                <command id="restoreitem"
+                         service="itemActionService" method="deleteOrRestoreCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
+                         icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
+
+
+              </container>
+            </commandgroup>
+          </commandbars>
+
+
+
         </detail>
         <!-- #endregion -->
       </schemas>
@@ -381,21 +407,21 @@
       <schemas>
         <!-- #region mobile -->
         <list platform="mobile">
-           <properties>
+          <properties>
             <property key="list.width.min" value="768px"/>
           </properties>
           <event type="onload" service="paeAssetService" method="initAssetGridListener"/>
-          
+
           <field attribute="assetid" hidden="true"/>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
           <field attribute="location" label="Location" qualifier="subtitle"/>
           <field attribute="status" label="Status" qualifier="featured"/>
           <field attribute="propmanuf" label="Manufacturer" qualifier="excerpt"/>
         </list>
-        
+
         <detail platform="mobile">
           <event type="onload" service="paeAssetService" method="initAssetDetailListener"/>
-          
+
           <field attribute="plustsoldamt" hidden="true"/>
           <field attribute="plusttotalmprevenue" hidden="true"/>
           <field attribute="taxpercent" hidden="true"/>
@@ -414,12 +440,12 @@
           <field attribute="assetid" hidden="true" />
 
           <field attribute="assetnum" label="Barcode Number"  readonly="true" />
-          
+
           <association label="Status:" target="status" labelfield="assetstatus.description">
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
-          
-          
+
+
           <association target="proptype" label="Property Type" labelfield="assettype_.description">
             <renderer type="lookup" />
           </association>
@@ -437,7 +463,7 @@
           <field attribute="orgid"  label="Site" hidden="true"/>
         </detail>
         <!-- #endregion -->
-          
+
         <list platform="web">
           <field attribute="assetid" hidden="true"/>
           <field attribute="assetnum" label="Asset" qualifier="title"/>
