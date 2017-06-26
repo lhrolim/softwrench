@@ -222,7 +222,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             var first = usernames.First();
 
-            var results = GetListOfPersonIds(usernames, first);
+            var results = GetListOfPersonIds(usernames);
 
 
             var users = new List<User>(UserManager.GetUserByPersonIds(results));
