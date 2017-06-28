@@ -117,10 +117,7 @@
                   <renderer type="lookup" params="avoidautofocus=true"/>
                 </association>
 
-                <association label="Site Name" target="#workorder_.siteid" labelfield="#workorder_.site_.description"
-                             requiredexpression="true" defaultexpression="@user.site">
-                  <renderer type="lookup" />
-                </association>
+                <field label="Site Name" attribute="#workorder_.site_.description" readonly="true"/>
 
                 <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location" >
                   <renderer type="lookup" params="application=asset;schemaId=assetLookupList;hidecode=true"/>

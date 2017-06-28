@@ -14,24 +14,29 @@
             return fsrequestService.postSave(saveDatamap, callback, rollback);
         }
 
+        function beforeOpenModal(item) {
+            const wpDatamap = crudContextHolderService.rootDataMap();
+            item["orgid"] = wpDatamap["#workorder_.orgid"];
+            item["#editing"] = true;
+            if (!item["sitename"]) {
+                item["sitename"] = wpDatamap["#workorder_.site_.description"];
+            }
+        }
+
         function openModalNew(item, callback, rollback) {
             if (!fsrequestService.validatePackage()) {
                 return;
             }
-            const wpDatamap = crudContextHolderService.rootDataMap();
 
             schemaCacheService.fetchSchema("_CallOut", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(fsrequestService.buildDatamap(schema), item);
-                mergedItem["orgid"] = wpDatamap ["#workorder_.orgid"];
+                beforeOpenModal(mergedItem);
                 mergedItem["sendtime"] = fsrequestService.defaultSendTime();
-                mergedItem["#editing"] = true;
                 mergedItem["#calloutfileexplorer_"] = [];
 
                 if (sessionStorage.mockfscallout) {
-
                     mergedItem["subcontractorid"] = "ATI";
                     mergedItem["email"] = "devteam@controltechnologysolutions.com";
-                    mergedItem["sitename"] = "fs";
                     mergedItem["tonumber"] = "mockedto";
                     mergedItem["nottoexceedamount"] = 1;
                     mergedItem["scopeofwork"] = "mocked scope of work";
@@ -41,7 +46,6 @@
                     futureDate.addDays(2);
                     mergedItem["expirationdate"] = futureDate;
                     mergedItem["contractorstartdate"] = futureDate;
-
                 }
 
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
@@ -57,14 +61,15 @@
             if (!fsrequestService.validatePackage()) {
                 return;
             }
-
-            const wpDatamap = crudContextHolderService.rootDataMap();
+            
             if (item["subcontractor_.id"]) {
                 item["subcontractor"] = item["subcontractor_.id"] + "";
             }
-            item["orgid"] = wpDatamap["#workorder_.orgid"];
-            item["#editing"] = true;
-            item["email"] = item["email"].split(",");
+            beforeOpenModal(item);
+
+            if (typeof item["email"] === "string") {
+                item["email"] = item["email"].split(",");
+            }
 
             fsrequestService.addAttachments(item, "#calloutfileexplorer_");
 
