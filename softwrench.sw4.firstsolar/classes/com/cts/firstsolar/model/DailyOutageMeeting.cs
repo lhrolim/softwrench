@@ -13,9 +13,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         }
 
         [Property]
-        public int WorkPackageId { get; set; }
-
-        [Property]
         public DateTime? MeetingTime { get; set; }
 
         [Property]

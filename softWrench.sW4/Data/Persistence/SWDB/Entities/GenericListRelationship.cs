@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHibernate.Mapping.Attributes;
+﻿using NHibernate.Mapping.Attributes;
 
 namespace softWrench.sW4.Data.Persistence.SWDB.Entities {
 
@@ -12,7 +7,6 @@ namespace softWrench.sW4.Data.Persistence.SWDB.Entities {
     /// </summary>
     [Class(Table = "GEN_LISTRELATIONSHIP", Lazy = false)]
     public class GenericListRelationship {
-
 
         public const string AllOfParent = "from GenericListRelationship where ParentEntity =? and ParentId = ?";
 
@@ -33,7 +27,5 @@ namespace softWrench.sW4.Data.Persistence.SWDB.Entities {
 
         [Property]
         public string Value { get; set; }
-
-
     }
 }

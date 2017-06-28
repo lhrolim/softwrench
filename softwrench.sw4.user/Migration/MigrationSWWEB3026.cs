@@ -35,7 +35,7 @@ namespace softwrench.sw4.user.Migration {
 
 
         [Transactional(DBType.Swdb)]
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             //Cannot run this now as several customers would fail
 
 

@@ -14,7 +14,7 @@ namespace cts.commons.persistence.Transaction {
             }
 
             transactionableMethods.ForEach(method => {
-                if (!method.IsPublic || !method.IsVirtual) {
+                if (!method.IsPublic || !method.IsVirtual || method.IsFinal) {
                     throw new Exception(string.Format("{0} needs to be public and virtual to work with [Transactional].", MethodExGelper(method, type)));
                 }
 

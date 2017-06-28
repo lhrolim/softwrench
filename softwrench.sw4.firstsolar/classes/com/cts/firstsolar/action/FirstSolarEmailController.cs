@@ -52,7 +52,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             entity.Status = newStatus;
 
             await DAO.SaveAsync(entity);
-            var wp = await DAO.FindByPKAsync<WorkPackage>(entity.WorkPackageId);
+            var wp = entity.WorkPackage;
 
             if (RequestStatus.Rejected.Equals(newStatus)) {
                 emailService.HandleReject(entity, wp);

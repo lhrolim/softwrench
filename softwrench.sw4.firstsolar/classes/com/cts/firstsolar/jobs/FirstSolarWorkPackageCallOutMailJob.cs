@@ -53,7 +53,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         }
 
         private void HandleCallout(CallOut callOut){
-            var package = _dao.FindByPK<WorkPackage>(typeof (WorkPackage), callOut.WorkPackageId);
+            var package = callOut.WorkPackage;
             var wos = _maximoDao.FindByNativeQuery("select siteid from workorder where workorderid = '{0}'".Fmt(package.WorkorderId));
             var siteid = wos.First()["siteid"];
             _callOutHandler.HandleEmail(callOut, package, siteid);

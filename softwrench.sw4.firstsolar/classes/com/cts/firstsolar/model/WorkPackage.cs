@@ -94,8 +94,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         #endregion
 
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False,
-            Where = "ParentColumn = 'outages' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False,
+            Where = "ParentColumn = 'outages' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> OutagesList { get; set; } = new List<GenericListRelationship>();
@@ -106,69 +106,69 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public string InterConnectDocs { get; set; }
 
-        [Bag(0, Table = "OPT_CALLOUT", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False)]
-        [Key(1, Column = "workpackageid")]
+        [Bag(0, Table = "OPT_CALLOUT", Cascade = "all", Lazy = CollectionLazy.False, Inverse = true)]
+        [Key(1, Column = "workpackageid", NotNull = true)]
         [OneToMany(2, ClassType = typeof(CallOut))]
         public virtual IList<CallOut> CallOuts { get; set; }
 
-        [Bag(0, Table = "OPT_MAINTENANCE_ENG", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False)]
-        [Key(1, Column = "workpackageid")]
+        [Bag(0, Table = "OPT_MAINTENANCE_ENG", Cascade = "all", Lazy = CollectionLazy.False, Inverse = true)]
+        [Key(1, Column = "workpackageid", NotNull = true)]
         [OneToMany(2, ClassType = typeof(MaintenanceEngineering))]
         public virtual IList<MaintenanceEngineering> MaintenanceEngineerings { get; set; }
 
-        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, OrderBy = "MeetingTime asc")]
-        [Key(1, Column = "workpackageid")]
+        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "MeetingTime asc")]
+        [Key(1, Column = "workpackageid", NotNull = true)]
         [OneToMany(2, ClassType = typeof(DailyOutageMeeting))]
         public virtual IList<DailyOutageMeeting> DailyOutageMeetings { get; set; }
 
 
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'engcomponents' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'engcomponents' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> EngComponentsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsuimmediatetests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsuimmediatetests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> GsuImmediateTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsutests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsutests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> GsuTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'sf6tests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'sf6tests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> Sf6TestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'vacuumtests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'vacuumtests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> VacuumTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'airswitchertests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'airswitchertests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> AirSwitcherTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'capbanktests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'capbanktests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> CapBankTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'batterytests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'batterytests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> BatteryTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'relaytests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'relaytests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> RelayTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Where = "ParentColumn = 'feedertests' and ParentEntity = 'WorkPackage' ")]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'feedertests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> FeederTestsList { get; set; } = new List<GenericListRelationship>();
@@ -179,7 +179,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public string AccessToken { get; set; }
 
-        [Bag(0, Table = "OPT_WPEMAILSTATUS", Cascade = "all-delete-orphan", Lazy = CollectionLazy.False, Inverse = true)]
+        [Bag(0, Table = "OPT_WPEMAILSTATUS", Cascade = "all", Lazy = CollectionLazy.False, Inverse = true)]
         [Key(1, Column = "workpackageid")]
         [OneToMany(2, ClassType = typeof(WorkPackageEmailStatus))]
         public virtual IList<WorkPackageEmailStatus> EmailStatuses { get; set; } = new List<WorkPackageEmailStatus>();

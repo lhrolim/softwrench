@@ -17,7 +17,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.workord
         }
 
         [Transactional(DBType.Swdb)]
-        public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             if (MetadataProvider.Application("workorder", false) == null) return;
             _wcFacade.Register("_wobatch", "userid = @userid", new WhereClauseRegisterCondition() { AppContext = new ApplicationLookupContext() { Schema = "list" } });
             _wcFacade.Register("workorder", "@woBatchWhereClauseProvider.CreateBatchWhereClause", WhereClauseRegisterCondition.ForSchema("createbatchlist"));

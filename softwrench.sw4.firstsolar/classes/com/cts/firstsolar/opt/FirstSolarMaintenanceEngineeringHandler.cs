@@ -122,7 +122,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
             me.Email = MaintenanceEmailService.HandleEmailRecipient(crudoperationData, "email");
             me.Cc = MaintenanceEmailService.HandleEmailRecipient(crudoperationData, "cc");
-            me.WorkPackageId = workpackage.Id ?? 0;
+            me.WorkPackage = workpackage;
             me.GenerateToken();
 
             me = Dao.Save(me);

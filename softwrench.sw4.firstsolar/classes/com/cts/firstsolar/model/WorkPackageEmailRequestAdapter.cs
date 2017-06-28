@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
@@ -11,7 +7,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public WorkPackageEmailRequestAdapter(WorkPackage workPackage) {
             Token = workPackage.AccessToken;
             EntityDescription = "Work Package";
-            WorkPackageId = workPackage.Id.Value;
+            WorkPackage = workPackage;
         }
 
         public string Token { get; set; }
@@ -22,7 +18,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         public RequestStatus Status { get; set; }
         public int? Id { get; set; }
-        public int WorkPackageId { get; set; }
+        public WorkPackage WorkPackage { get; set; }
         public string Email { get; set; }
         public string Cc { get; set; }
         public DateTime? ActualSendTime { get; set; }

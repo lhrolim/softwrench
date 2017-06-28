@@ -6,6 +6,7 @@ using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 
@@ -16,8 +17,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         public ISWDBHibernateDAO Dao { get; set; }
 
         public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package) {
-            var existingDom = package.DailyOutageMeetings;
-            package.DailyOutageMeetings = new List<DailyOutageMeeting>();
+            if (package.DailyOutageMeetings == null) {
+                package.DailyOutageMeetings = new List<DailyOutageMeeting>();
+            }
+
+            var toKeepDom = new List<DailyOutageMeeting>();
             var anyNewDom = false;
 
             if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("callOuts_")) {
@@ -26,25 +30,30 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                     throw new Exception("Incorrect format of daily outage meeting list.");
                 }
                 domsData.ForEach((data) => {
-                    var dom = GetOurCreateDailyOutageMeeting(data, existingDom);
+                    var dom = GetOurCreateDailyOutageMeeting(data, package.DailyOutageMeetings, toKeepDom);
                     anyNewDom = anyNewDom || dom.Id == null;
-                    package.DailyOutageMeetings.Add(HandleDailyOutageMeeting(data, dom, package));
+                    EntityBuilder.PopulateTypedEntity(data, dom);
+                    if (dom.Id != null) {
+                        return;
+                    }
+                    package.DailyOutageMeetings.Add(dom);
+                    toKeepDom.Add(dom);
                 });
             }
-            existingDom?.ForEach(dom => {
+
+            var deleted = new List<DailyOutageMeeting>();
+            package.DailyOutageMeetings.ForEach(dom => {
+                if (toKeepDom.Contains(dom)) {
+                    return;
+                }
                 Dao.Delete(dom);
+                deleted.Add(dom);
             });
+            deleted.ForEach(dom => package.DailyOutageMeetings.Remove(dom));
             return anyNewDom;
         }
 
-        private DailyOutageMeeting HandleDailyOutageMeeting(CrudOperationData crudoperationData, DailyOutageMeeting dom, WorkPackage workpackage) {
-            EntityBuilder.PopulateTypedEntity(crudoperationData, dom);
-            dom.WorkPackageId = workpackage.Id ?? 0;
-            dom = Dao.Save(dom);
-            return dom;
-        }
-
-        private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(CrudOperationData crudoperationData, IList<DailyOutageMeeting> existingDom) {
+        private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(AttributeHolder crudoperationData, ICollection<DailyOutageMeeting> existingDom, ICollection<DailyOutageMeeting> toKeepDom) {
             var id = crudoperationData.GetIntAttribute("id");
             if (id == null || existingDom == null) {
                 return new DailyOutageMeeting();
@@ -53,7 +62,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (found == null) {
                 return new DailyOutageMeeting() { Id = id };
             }
-            existingDom.Remove(found);
+            toKeepDom.Add(found);
             return found;
         }
     }

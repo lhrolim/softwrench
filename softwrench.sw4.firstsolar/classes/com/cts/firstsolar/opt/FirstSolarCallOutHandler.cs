@@ -118,7 +118,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
 
 
-            callOut.WorkPackageId = workpackage.Id ?? 0;
+            callOut.WorkPackage = workpackage;
             callOut.GenerateToken();
 
             callOut = Dao.Save(callOut);

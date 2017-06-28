@@ -2,6 +2,7 @@
 using System.Globalization;
 using cts.commons.portable.Util;
 using cts.commons.Util;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Util;
 
@@ -23,8 +24,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public string Engineer { get; set; }
 
-        [Property]
-        public int WorkPackageId { get; set; }
+        [JsonIgnore]
+        [ManyToOne(NotNull = true, Column = "workpackageid", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
+        public WorkPackage WorkPackage { get; set; }
 
         [Property]
         public DateTime? SendTime { get; set; }

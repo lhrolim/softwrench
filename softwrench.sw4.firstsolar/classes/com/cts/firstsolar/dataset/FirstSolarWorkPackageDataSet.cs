@@ -410,80 +410,50 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
         private void HandleGenericLists(CrudOperationData crudoperationData, WorkPackage package) {
-            var originalList = package.OutagesList;
-            package.OutagesList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.OutagesList, "outages");
-
-            originalList = package.EngComponentsList;
-            package.EngComponentsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.EngComponentsList, "engcomponents");
-
-            originalList = package.GsuImmediateTestsList;
-            package.GsuImmediateTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.GsuImmediateTestsList, "gsuimmediatetests");
-
-            originalList = package.GsuTestsList;
-            package.GsuTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.GsuTestsList, "gsutests");
-
-            originalList = package.Sf6TestsList;
-            package.Sf6TestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.Sf6TestsList, "sf6tests");
-
-            originalList = package.VacuumTestsList;
-            package.VacuumTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.VacuumTestsList, "vacuumtests");
-
-            originalList = package.AirSwitcherTestsList;
-            package.AirSwitcherTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.AirSwitcherTestsList, "airswitchertests");
-
-            originalList = package.CapBankTestsList;
-            package.CapBankTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.CapBankTestsList, "capbanktests");
-
-
-            originalList = package.BatteryTestsList;
-            package.BatteryTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.BatteryTestsList, "batterytests");
-
-            originalList = package.RelayTestsList;
-            package.RelayTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.RelayTestsList, "relaytests");
-
-            originalList = package.FeederTestsList;
-            package.FeederTestsList = new List<GenericListRelationship>();
-            HandleGenericList(crudoperationData, originalList, package.FeederTestsList, "feedertests");
+            var id = package.Id;
+            HandleGenericList(crudoperationData, package.OutagesList, "outages", id);
+            HandleGenericList(crudoperationData, package.EngComponentsList, "engcomponents", id);
+            HandleGenericList(crudoperationData, package.GsuImmediateTestsList, "gsuimmediatetests", id);
+            HandleGenericList(crudoperationData, package.GsuTestsList, "gsutests", id);
+            HandleGenericList(crudoperationData, package.Sf6TestsList, "sf6tests", id);
+            HandleGenericList(crudoperationData, package.VacuumTestsList, "vacuumtests", id);
+            HandleGenericList(crudoperationData, package.AirSwitcherTestsList, "airswitchertests", id);
+            HandleGenericList(crudoperationData, package.CapBankTestsList, "capbanktests", id);
+            HandleGenericList(crudoperationData, package.BatteryTestsList, "batterytests", id);
+            HandleGenericList(crudoperationData, package.RelayTestsList, "relaytests", id);
+            HandleGenericList(crudoperationData, package.FeederTestsList, "feedertests", id);
         }
 
-        private GenericListRelationship GetOrCreateItem(string value, string column, [CanBeNull] IList<GenericListRelationship> existingItems) {
-            if (existingItems == null) {
-                return null;
-            }
-
-            var found = existingItems.FirstOrDefault(itemObj => value.Equals(itemObj.Value));
-            if (found == null) {
-                return new GenericListRelationship() {
-                    Value = value,
-                    ParentColumn = column,
-                    ParentEntity = "WorkPackage"
-                };
-            }
-            existingItems.Remove(found);
-            return found;
-        }
-
-        private void HandleGenericList(CrudOperationData crudoperationData, IList<GenericListRelationship> originalList, IList<GenericListRelationship> newList, string column) {
+        private void HandleGenericList(CrudOperationData crudoperationData, ICollection<GenericListRelationship> originalList, string column, int? packageId) {
             var currentValues = crudoperationData.GetUnMappedAttribute(column);
+            var toKeep = new List<GenericListRelationship>();
             if (!string.IsNullOrEmpty(currentValues?.Trim())) {
                 var values = currentValues.Split(',');
                 values.ForEach((value) => {
-                    newList.Add(GetOrCreateItem(value.Trim(), column, originalList));
+                    value = value.Trim();
+                    var found = originalList.FirstOrDefault(itemObj => value.Equals(itemObj.Value)) ?? new GenericListRelationship() {
+                        Value = value,
+                        ParentColumn = column,
+                        ParentEntity = "WorkPackage"
+                    };
+                    if (found.Id == null) {
+                        found.ParentId = packageId ?? 0;
+                        found = Dao.Save(found);
+                        originalList.Add(found);
+                    }
+                    toKeep.Add(found);
                 });
             }
-            originalList?.ForEach(originalItem => {
-                Dao.Delete(originalItem);
+
+            var deleted = new List<GenericListRelationship>();
+            originalList.ForEach(item => {
+                if (toKeep.Contains(item)) {
+                    return;
+                }
+                Dao.Delete(item);
+                deleted.Add(item);
             });
+            deleted.ForEach(item => originalList.Remove(item));
         }
 
         public async Task<CompositionFetchResult> GetWoCompositions(string woId, string woNum, string woSite, List<string> compositions) {
