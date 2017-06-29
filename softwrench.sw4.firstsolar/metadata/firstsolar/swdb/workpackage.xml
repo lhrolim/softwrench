@@ -144,6 +144,9 @@
                   <renderer type="datetime"/>
                 </field>
 
+                <field label="Build Complete?" attribute="buildcomplete" defaultexpression="false" default="false">
+                  <renderer type="checkbox"/>
+                </field>
               </section>
             </section>
             <field label="Summary" attribute="#workorder_.description"/>

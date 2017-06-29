@@ -79,6 +79,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public string ProblemStatement { get; set; }
 
+        [Property]
+        public bool? BuildComplete { get; set; }
+
 
         #region resultsForReview
 
