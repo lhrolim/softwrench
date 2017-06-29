@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.Pagination;
@@ -58,7 +59,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 searchRequest.SearchParams = request.SearchDTO.SearchParams;
                 searchRequest.SearchValues = request.SearchDTO.SearchValues;
             } else if (request.SearchDTO.QuickSearchDTO != null) {
-                searchRequest.AppendWhereClause(_quickSearchHelper.BuildOrWhereClause(new List<string>{
+
+                var dbType = association.EntityAssociation.IsSwDbApplication ? DBType.Swdb : DBType.Maximo;
+
+                searchRequest.AppendWhereClause(_quickSearchHelper.BuildOrWhereClause(dbType,new List<string>{
                     association.EntityAssociation.PrimaryAttribute().To,
                     association.LabelFields.FirstOrDefault(),
                 }));

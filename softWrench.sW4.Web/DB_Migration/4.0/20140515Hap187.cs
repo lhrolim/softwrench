@@ -1,12 +1,13 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0 {
     [Migration(201405150345)]
     public class Migration20140515Hap187 : FluentMigrator.Migration {
         public override void Up() {
             Create.Table("sw_extraattributes")
-                .WithColumn("id").AsInt32().PrimaryKey("pk_swextravalues").Identity()
+                .WithIdColumn()
                 .WithColumn("maximoid").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("maximotable").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("attributename").AsString(MigrationUtil.StringMedium).NotNullable()

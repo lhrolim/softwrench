@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Properties xmlns="http://www.controltechnologysolutions.com/propertiesmetadata" >
+
+  <property key="baseWSPrefix" value="SW"/>
+  <property key="externalSystemName" value="SW" />
+  <property key="wsprovider" value="mif" />
+  
+  <property key="defaultOrgId" value="EAGLENA"/>
+  <property key="defaultSiteId" value="VQ"/>
+  <property key="sourcemapping" value="maximo7.5"/>
+
+
+  <property key="swdb_provider" value="Oracle.DataAccess.Client"/>
+  <property key="maximo_DB_provider" value="Oracle.DataAccess.Client"/>
+<!--  <property key="notifications.activityStream.enabled" value="true"/>-->
+
+
+  <environment key="dev">
+    <property key="basewsURL" value="http://10.50.100.90:9080/meaweb/wsdl/" />
+    <property key="maximo_DB_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.53)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=DZSPDEV)));User Id=maximo;Password=maximo;" />
+    <property key="swdb_url" value="Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=10.50.100.53)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=SWDB)));User Id=sw;Password=sw;" />
+    <property key="mifcredentials.user" value="maxadmin"/>
+    <property key="mifcredentials.password" value="maxadmin"/>
+  </environment>
+  
+</Properties>
+  
+ 
+  
+

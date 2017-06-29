@@ -1,12 +1,13 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._5._15._0 {
     [Migration(201608191800)]
     public class MigrationSWWEB2709 : Migration {
         public override void Up() {
             Create.Table("DYN_SCRIPT_ENTRY")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("Name").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("Target").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("Description").AsString(MigrationUtil.StringLarge).Nullable()

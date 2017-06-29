@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._1._0 {
 
@@ -19,7 +20,7 @@ namespace softWrench.sW4.Web.DB_Migration._1._0 {
 
 
             Create.Table("CONF_PROPERTYVALUE")
-                .WithColumn("ID").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("condition_").AsString(4000).Nullable()
                 .WithColumn("value").AsString(4000).NotNullable()
                 .WithColumn("definition_id").AsString().ForeignKey("propval_definition_def", "CONF_PROPERTYDEFINITION", "fullkey").NotNullable();

@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.Shared2.Data.Association;
@@ -145,11 +146,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
 
 
-        public string Name {
-            get {
-                return ApplicationName;
-            }
-        }
+        public string Name => ApplicationName;
 
         public string IdFieldName {
             get; set;
@@ -195,11 +192,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private SchemaFilters _schemaFilters;
 
         [DefaultValue(true)]
-        public bool RedeclaringSchema {
-            get {
-                return _redeclaringSchema;
-            }
-        }
+        public bool RedeclaringSchema => _redeclaringSchema;
 
         public IDictionary<string, ApplicationCompositionSchema> CompositionSchemas {
             get; set;
@@ -269,11 +262,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         //TODO: test the JsonIgnore field on Ipad
         [JsonIgnore]
-        public IList<ApplicationFieldDefinition> Fields {
-            get {
-                return GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition));
-            }
-        }
+        public IList<ApplicationFieldDefinition> Fields => GetDisplayable<ApplicationFieldDefinition>(typeof(ApplicationFieldDefinition));
 
         /// <summary>
         /// Map of associations to be returned to the offline client side. Not intended to be used on server side, nor on online mode
@@ -459,27 +448,14 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [JsonIgnore]
-        public virtual IList<ApplicationRelationshipDefinition> Relationships {
-            get {
-                return GetDisplayable<ApplicationRelationshipDefinition>(typeof(ApplicationRelationshipDefinition));
-            }
-        }
-
+        public virtual IList<ApplicationRelationshipDefinition> Relationships => GetDisplayable<ApplicationRelationshipDefinition>(typeof(ApplicationRelationshipDefinition));
 
 
         [JsonIgnore]
-        public virtual IList<IDependableField> DependableFields {
-            get {
-                return GetDisplayable<IDependableField>(typeof(IDependableField));
-            }
-        }
+        public virtual IList<IDependableField> DependableFields => GetDisplayable<IDependableField>(typeof(IDependableField));
 
         [JsonIgnore]
-        public virtual IList<IDataProviderContainer> DataProviderContainers {
-            get {
-                return GetDisplayable<IDataProviderContainer>(typeof(IDataProviderContainer));
-            }
-        }
+        public virtual IList<IDataProviderContainer> DataProviderContainers => GetDisplayable<IDataProviderContainer>(typeof(IDataProviderContainer));
 
         [JsonIgnore]
         public IEnumerable<ApplicationFieldDefinition> NonRelationshipFields {
@@ -565,11 +541,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         [JsonIgnore]
-        public ISet<ApplicationEvent> EventSet {
-            get {
-                return new HashSet<ApplicationEvent>(_events.Values);
-            }
-        }
+        public ISet<ApplicationEvent> EventSet => new HashSet<ApplicationEvent>(_events.Values);
 
         protected bool Equals(ApplicationSchemaDefinition other) {
             return string.Equals(SchemaId, other.SchemaId) && Mode == other.Mode
@@ -688,6 +660,12 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        [JsonIgnore]
+        public bool IsSwDbApplication => ApplicationName.StartsWith("_");
+
+
+        [JsonIgnore]
+        public DBType DbType => IsSwDbApplication ? DBType.Swdb : DBType.Maximo;
 
     }
 }

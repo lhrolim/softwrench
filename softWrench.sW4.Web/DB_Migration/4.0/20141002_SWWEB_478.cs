@@ -1,12 +1,13 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0 {
     [Migration(201410021630)]
     public class Migration201410021630SWWEB478 : FluentMigrator.Migration {
         public override void Up() {
             Create.Table("MAX_COMMREADFLAG")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("Application").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("ApplicationItemId").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("UserId").AsInt32().NotNullable()

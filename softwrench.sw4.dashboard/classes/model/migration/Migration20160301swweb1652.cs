@@ -6,7 +6,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
     public class Migration20160301swweb1652 : Migration {
 
         public override void Up() {
-            Alter.Column("configuration").OnTable("DASH_GRAPHICPANEL").AsClob();
+//            Alter.Column("configuration").OnTable("DASH_GRAPHICPANEL").AsClob();
 
         }
 

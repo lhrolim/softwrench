@@ -4,14 +4,16 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 
 namespace softWrench.sW4.Data.Persistence {
-    public class PaginationData :IPaginationData{
-       
+    public class PaginationData : IPaginationData {
+
 
         public PaginationData(int pageSize, int pageNumber, string qualifiedSortColumn) {
             PageSize = pageSize;
             PageNumber = pageNumber;
-            QualifiedOrderByColumn = qualifiedSortColumn;
-            OrderByColumn = qualifiedSortColumn.Contains(".") ? qualifiedSortColumn.Split('.')[1] : qualifiedSortColumn;
+            if (qualifiedSortColumn != null) {
+                QualifiedOrderByColumn = qualifiedSortColumn;
+                OrderByColumn = qualifiedSortColumn.Contains(".") ? qualifiedSortColumn.Split('.')[1] : qualifiedSortColumn;
+            }
         }
 
         public static PaginationData GetInstance(SearchRequestDto searchDTO, EntityMetadata entityMetadata) {

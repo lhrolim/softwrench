@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0 {
     [Migration(201404281700)]
@@ -8,7 +9,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
             Delete.Table("audit_ismtransaction");
 
             Create.Table("audi_trail")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("name").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("begintime").AsDateTime().NotNullable()
                 .WithColumn("endtime").AsDateTime().NotNullable();
@@ -33,7 +34,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
             Delete.Table("audi_trail");
 
             Create.Table("audi_trail")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("name").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("begintime").AsDateTime().NotNullable()
                 .WithColumn("endtime").AsDateTime().NotNullable();

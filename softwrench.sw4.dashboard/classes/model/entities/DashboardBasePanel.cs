@@ -60,7 +60,7 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             get; set;
         }
 
-        [Property]
+        [Property(Column = "size_")]
         public int Size {
             get; set;
         }

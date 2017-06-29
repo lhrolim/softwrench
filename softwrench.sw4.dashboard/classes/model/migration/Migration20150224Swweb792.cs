@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softwrench.sw4.dashboard.classes.model.migration {
     [Migration(201502241200)]
@@ -7,7 +8,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
         public override void Up() {
 
             Create.Table("DASH_DASHBOARD").
-                WithColumn("id").AsInt32().PrimaryKey().Identity()
+                 WithIdColumn()
                 .WithColumn("layout").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("title").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("userid").AsInt32().ForeignKey("fk_dashboard_user_id", "SW_USER2", "id").Nullable()
@@ -18,7 +19,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
 
 
             Create.Table("DASH_BASEPANEL").
-                WithColumn("id").AsInt32().PrimaryKey().Identity()
+                WithIdColumn()
                 .WithColumn("alias_").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("title").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("userid").AsInt32().ForeignKey("fk_dashboardpanel_user_id", "SW_USER2", "id").Nullable()
@@ -34,17 +35,17 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
                 .WithColumn("fields").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("defaultsortfield").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("limit_").AsInt32().NotNullable().WithDefaultValue(30);
-                
+
 
             Create.Table("DASH_DASHBOARDREL").
-                WithColumn("id").AsInt32().PrimaryKey().Identity()
+                WithIdColumn()
                 .WithColumn("position").AsInt32().NotNullable()
                 .WithColumn("panel_id").AsInt32().ForeignKey("dash_rel_base_panel", "DASH_BASEPANEL", "id").Nullable()
                 .WithColumn("dashboard_id").AsInt32().ForeignKey("fk_dashboardrel_dash_id", "DASH_DASHBOARD", "id").Nullable();
 
 
             Create.Table("DASH_USERPREFERENCES").
-                WithColumn("id").AsInt32().PrimaryKey().Identity()
+                WithIdColumn()
                 .WithColumn("preferred_id").AsInt32().ForeignKey("dash_preferences_dashboard", "DASH_DASHBOARD", "id");
 
 

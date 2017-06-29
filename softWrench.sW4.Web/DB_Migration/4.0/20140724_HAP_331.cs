@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0 {
@@ -9,7 +10,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
         public override void Up() {
             if (ApplicationConfiguration.ClientName == "hapag") {
                 Create.Table("hist_ticket")
-                    .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                    .WithIdColumn()
                     .WithColumn("ticketid").AsString(MigrationUtil.StringMedium).NotNullable()
                     .WithColumn("description").AsString(MigrationUtil.StringLarge).Nullable()
                     .WithColumn("reportedby").AsString(MigrationUtil.StringMedium).Nullable()
@@ -24,7 +25,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
                     .WithColumn("importdate").AsDateTime().Nullable();
 
                 Create.Table("hist_workorder")
-                    .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                    .WithIdColumn()
                     .WithColumn("wonum").AsString(MigrationUtil.StringMedium).NotNullable()
                     .WithColumn("description").AsString(MigrationUtil.StringLarge).Nullable()
                     .WithColumn("location").AsString(MigrationUtil.StringMedium).Nullable()

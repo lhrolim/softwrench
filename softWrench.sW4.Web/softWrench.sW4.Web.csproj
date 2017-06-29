@@ -85,6 +85,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
     </Reference>
+    <Reference Include="cts.commons.persistence, Version=1.3.6388.37081, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.3.6388.37081\lib\net46\cts.commons.persistence.dll</HintPath>
+    </Reference>
+    <Reference Include="cts.commons.simpleinjector, Version=1.3.6383.35639, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6383.35639\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    </Reference>
     <Reference Include="cts.commons.web, Version=1.2.6156.25003, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.web.1.2.6156.25003\lib\net46\cts.commons.web.dll</HintPath>
       <Private>True</Private>
@@ -108,10 +114,6 @@
     <Reference Include="Google.Protobuf, Version=3.0.0.0, Culture=neutral, PublicKeyToken=a7d26565bac4d604, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Protobuf.3.0.0\lib\net45\Google.Protobuf.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="IBM.Data.DB2, Version=9.0.0.2, Culture=neutral, PublicKeyToken=7c307b91aa13d208, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\IBM.Data.DB2.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
@@ -165,7 +167,7 @@
     </Reference>
     <Reference Include="Oracle.DataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Oracle.DataAccess.dll</HintPath>
+      <HintPath>Dependencies\64\Oracle.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="Quartz, Version=2.2.1.400, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
@@ -201,9 +203,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="softwrench.sW4.batches, Version=1.3.6388.37187, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.batches.1.3.6388.37187\lib\net46\softwrench.sW4.batches.dll</HintPath>
+    </Reference>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.3.6388.37384, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.3.6388.37384\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    </Reference>
+	 <Reference Include="softwrench.sw4.user, Version=1.4.6388.37273, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.4.6388.37273\lib\net46\softwrench.sw4.user.dll</HintPath>
     </Reference>
     <Reference Include="SpreadsheetLight">
       <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
@@ -475,6 +482,7 @@
     <Compile Include="DB_Migration\5.18.5\20170134_SWWEB_2913.cs" />
     <Compile Include="DB_Migration\5.19.0\20170210_SWWEB_2918.cs" />
     <Compile Include="DB_Migration\5.20.0\20170302_SWWEB_2929.cs" />
+    <Compile Include="DB_Migration\5.29.0\20170627_SWWEB_3032.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
@@ -493,6 +501,10 @@
     <Compile Include="DB_Migration\DB2 FluentMigrator\Db2Quoter.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\Db2TypeMap.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\EmptyDescriptionGenerator.cs" />
+    <Compile Include="DB_Migration\Oracle\CustomOracleGenerator.cs" />
+    <Compile Include="DB_Migration\Oracle\CustomOracleProcessor.cs" />
+    <Compile Include="DB_Migration\Oracle\CustomOracleProcessorFactory.cs" />
+    <Compile Include="DB_Migration\Oracle\OracleCustomMapper.cs" />
     <Compile Include="Email\BaseEmailer.cs" />
     <Compile Include="Email\MetadataEmailer.cs" />
     <Compile Include="Email\ScriptsEmailer.cs" />
@@ -528,6 +540,10 @@
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
     <Content Include="App_Data\Client\%40internal\templates\swdb\whereclause.xml" />
+    <Content Include="App_Data\Client\dzsp21\properties.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Images\apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\bulletinboard.xml" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
@@ -951,6 +967,9 @@
     <Content Include="Content\templates\crud\pdf.html" />
     <Content Include="Content\templates\directives\file\fileexplorer.html" />
     <Content Include="Content\templates\swlabel.html" />
+    <!-- <Content Include="Dependencies\oci.dll"> -->
+    <!-- <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> -->
+    <!-- </Content> -->
     <Content Include="favicon.ico" />
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
@@ -1163,9 +1182,10 @@
     <Content Include="Content\templates\usersetup\forgotpassword.html" />
     <Content Include="Content\templates\usersetup\welcomeemail_manualpassword.html" />
     <Content Include="Content\templates\usersetup\welcomeemail_automaticpassword.html" />
-    <Content Include="Dependencies\Oracle.DataAccess.dll" />
     <Content Include="App_Data\Client\hapag\i18n\de\labels.json" />
     <None Include="App_Data\Client\hapag\i18n\en\labels.json" />
+    <Content Include="Dependencies\64\Oracle.DataAccess.dll" />
+    <Content Include="Dependencies\x86\Oracle.DataAccess.dll" />
     <None Include="Doc\securitygroup.md" />
     <Content Include="Doc\eventService.txt" />
     <Content Include="Doc\maximoutc.txt" />
@@ -1265,14 +1285,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
-      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
-      <Name>cts.commons.persistence</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\cts.commons.simpleinjector\cts.commons.simpleinjector.csproj">
-      <Project>{841b4dea-a209-4aa8-a73c-29c33e01eee0}</Project>
-      <Name>cts.commons.simpleinjector</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
       <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
       <Name>softwrench.sw4.apachegold</Name>
@@ -1281,17 +1293,9 @@
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
-      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
-      <Name>softwrench.sW4.batches</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
       <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
       <Name>softwrench.sw4.chicago</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
-      <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
-      <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.firstsolar\softwrench.sw4.firstsolar.csproj">
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
@@ -1309,13 +1313,13 @@
       <Project>{8248b6ce-335f-4611-89d2-1a79da5192c2}</Project>
       <Name>softwrench.sw4.pae</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.problem\softwrench.sw4.problem.csproj">
+      <Project>{8062dce9-1422-4ca7-8004-ffa7794a6516}</Project>
+      <Name>softwrench.sw4.problem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
-      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
-      <Name>softwrench.sw4.user</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>

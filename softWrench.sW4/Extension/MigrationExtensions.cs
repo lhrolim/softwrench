@@ -4,10 +4,11 @@ using FluentMigrator.Builders.Alter.Column;
 using FluentMigrator.Builders.Create.Column;
 using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Exceptions;
+using FluentMigrator.Infrastructure;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Extension {
-    
+
     public static class MigrationExtensions {
 
         /// <summary>
@@ -17,8 +18,7 @@ namespace softWrench.sW4.Extension {
         /// </summary>
         /// <param name="alterColumnAsTypeOrInSchemaSyntax"></param>
         /// <returns></returns>
-        public static IAlterColumnOptionSyntax AsClob(this IAlterColumnAsTypeOrInSchemaSyntax alterColumnAsTypeOrInSchemaSyntax)
-        {
+        public static IAlterColumnOptionSyntax AsClob(this IAlterColumnAsTypeOrInSchemaSyntax alterColumnAsTypeOrInSchemaSyntax) {
             var customClobType = CustomClobType();
             return alterColumnAsTypeOrInSchemaSyntax.AsCustom(customClobType);
         }
@@ -30,8 +30,7 @@ namespace softWrench.sW4.Extension {
         /// </summary>
         /// <param name="createTableColumnAsTypeSyntax"></param>
         /// <returns></returns>
-        public static ICreateTableColumnOptionOrWithColumnSyntax AsClob(this ICreateTableColumnAsTypeSyntax createTableColumnAsTypeSyntax) 
-        {
+        public static ICreateTableColumnOptionOrWithColumnSyntax AsClob(this ICreateTableColumnAsTypeSyntax createTableColumnAsTypeSyntax) {
             var customClobType = CustomClobType();
             return createTableColumnAsTypeSyntax.AsCustom(customClobType);
         }
@@ -50,12 +49,25 @@ namespace softWrench.sW4.Extension {
             return createColumnAsTypeOrInSchemaSyntax.AsCustom(customClobType);
         }
 
-        private static string CustomClobType()
-        {
+        public static ICreateTableColumnOptionOrWithColumnSyntax WithIdColumn(this ICreateTableWithColumnSyntax tableWithColumnSyntax, bool use64 = false) {
+            var initialSyntax = tableWithColumnSyntax.WithColumn("ID");
+            var typeSyntax = use64 ? initialSyntax.AsInt64() : initialSyntax.AsInt32();
+            var tableCreationSyntax = typeSyntax
+                .NotNullable()
+                .PrimaryKey();
+            if (ApplicationConfiguration.IsOracle(DBType.Swdb)) {
+                //oracles does not allow identities
+                return tableCreationSyntax;
+            }
+
+            return tableCreationSyntax
+                .Identity();
+        }
+
+        private static string CustomClobType() {
             string customClobType = null;
             var dbType = ApplicationConfiguration.DiscoverDBMS(DBType.Swdb);
-            switch (dbType)
-            {
+            switch (dbType) {
                 case DBMS.MSSQL:
                     customClobType = "NVARCHAR(MAX)";
                     break;
@@ -75,7 +87,7 @@ namespace softWrench.sW4.Extension {
             return customClobType;
         }
 
-        
+
 
     }
 }

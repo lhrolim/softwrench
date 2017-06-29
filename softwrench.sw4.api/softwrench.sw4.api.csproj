@@ -35,8 +35,8 @@
       <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.3.6380.21974, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6380.21974\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.3.6383.35639, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6383.35639\lib\net46\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="Iesi.Collections, Version=4.0.0.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\packages\Iesi.Collections.4.0.0.4000\lib\net40\Iesi.Collections.dll</HintPath>
@@ -96,6 +96,7 @@
     <Compile Include="classes\integration\IOperationWrapper.cs" />
     <Compile Include="classes\integration\ProblemData.cs" />
     <Compile Include="classes\integration\TargetResult.cs" />
+    <Compile Include="classes\migration\MigrationContext.cs" />
     <Compile Include="classes\user\ISWUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

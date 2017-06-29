@@ -22,7 +22,7 @@ using ctes = softwrench.sw4.dashboard.classes.service.statistics.StatisticsConst
 namespace softwrench.sw4.dashboard.classes.service.statistics {
     public class StatisticsService : ISingletonComponent {
 
-        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = "select COALESCE(CAST({1} as varchar), 'NULL') as {1}, count(*) as " + ctes.FIELD_VALUE_VARIABLE_NAME +
+        private const string COUNT_BY_PROPERTY_ORDERED_TEMPLATE = "select COALESCE(CAST({1} as varchar(300)), 'NULL') as {1}, count(*) as " + ctes.FIELD_VALUE_VARIABLE_NAME +
                                                                     @" from {0} 
                                                                         {2}
                                                                         group by {1}
@@ -64,14 +64,17 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         }
 
         private static IEnumerable<StatisticsResponseEntry> FormatQueryResult(IEnumerable<dynamic> resultSet, string propertyName, string nullValueLabel) {
+
             return resultSet.Cast<IDictionary<string, object>>()
                 // cast so ExpandoObject's properties can be indexed by string key
-                .Select(d =>
+                .Select(item =>
                 {
-                    var fieldObjectValue = d[propertyName];
+                    var d = new Dictionary<string, object>(item, StringComparer.CurrentCultureIgnoreCase);
+
+                    var fieldObjectValue = d[propertyName.ToUpper()];
                     var fieldValue = fieldObjectValue?.ToString();
                     var fieldCountLong = d[ctes.FIELD_VALUE_VARIABLE_NAME] as long?;
-                    var fieldCount = fieldCountLong ?? Convert.ToInt64((int)d[ctes.FIELD_VALUE_VARIABLE_NAME]);
+                    var fieldCount = fieldCountLong ?? Convert.ToInt64(d[ctes.FIELD_VALUE_VARIABLE_NAME]);
                     // value is `null`: label configured by request. Otherwise try and grab the label from the query
                     string label = null;
                     if (string.IsNullOrEmpty(fieldValue) || string.Equals(fieldValue, "NULL")) {

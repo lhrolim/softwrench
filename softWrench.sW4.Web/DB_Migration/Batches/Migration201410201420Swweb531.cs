@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration.Batches {
     [Migration(201410201420)]
@@ -9,7 +10,7 @@ namespace softWrench.sW4.Web.DB_Migration.Batches {
 
         public override void Up() {
             Create.Table("BAT_BATCH")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("Application").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("alias_").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("schema_").AsString(MigrationUtil.StringSmall).NotNullable()

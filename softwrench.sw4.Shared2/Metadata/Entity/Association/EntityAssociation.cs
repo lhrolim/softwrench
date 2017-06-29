@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
+using Newtonsoft.Json;
 
 namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
     public class EntityAssociation {
@@ -84,6 +86,13 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         public bool IsTransient {
             get { return Attributes.Any(a => a.From!= null && a.From.StartsWith("#")); }
         }
+
+        [JsonIgnore]
+        public bool IsSwDbApplication => To.StartsWith("_");
+
+        [JsonIgnore]
+        public DBType DbType => IsSwDbApplication ? DBType.Swdb : DBType.Maximo;
+
 
 
         public override string ToString() {

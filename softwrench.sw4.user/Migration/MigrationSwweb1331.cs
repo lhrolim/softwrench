@@ -1,5 +1,7 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softwrench.sw4.api.classes.migration;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.user.Migration {
     [Migration(201508221123)]
@@ -16,7 +18,10 @@ namespace softwrench.sw4.user.Migration {
             Create.UniqueConstraint("uq_userlinktoken").OnTable("USER_ACTIVATIONLINK").Column("token");
             Create.UniqueConstraint("uq_userlinkuser").OnTable("USER_ACTIVATIONLINK").Column("user_id");
 
-            Create.Index("idx_userlink_token").OnTable("USER_ACTIVATIONLINK").OnColumn("token");
+            if (!MigrationContext.IsOracle) {
+                Create.Index("idx_userlink_token").OnTable("USER_ACTIVATIONLINK").OnColumn("token");
+            }
+
         }
 
         public override void Down() {

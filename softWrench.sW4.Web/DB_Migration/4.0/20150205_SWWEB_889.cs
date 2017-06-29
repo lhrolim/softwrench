@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using softWrench.sW4.Extension;
 
 
 namespace softWrench.sW4.Web.DB_Migration._4._0
@@ -9,7 +10,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0
         public override void Up()
         {
             Create.Table("SW_METADATAEDITOR")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("Metadata").AsBinary().NotNullable()
                 .WithColumn("Comments").AsString().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()

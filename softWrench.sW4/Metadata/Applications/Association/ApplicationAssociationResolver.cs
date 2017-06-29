@@ -156,7 +156,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                     ? new[] { primaryAttribute.To, GetLabelFieldForQuickSearch(association) }
                     : new[] { GetLabelFieldForQuickSearch(association) };
 
-            var quickSearchWhereClause = QuickSearchHelper.BuildOrWhereClause(listOfFields, association.EntityAssociation.To);
+            var quickSearchWhereClause = QuickSearchHelper.BuildOrWhereClause(association.EntityAssociation.DbType, listOfFields, association.EntityAssociation.To);
             associationFilter.AppendWhereClause(quickSearchWhereClause);
         }
 

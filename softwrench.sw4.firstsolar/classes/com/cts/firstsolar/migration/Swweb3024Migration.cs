@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
@@ -15,7 +16,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
             Create.Column("problemstatement").OnTable("OPT_WORKPACKAGE").AsString(MigrationUtil.StringLarge).Nullable();
 
             Create.Table("OPT_DAILY_OUTAGE_MEETING")
-            .WithColumn("id").AsInt32().PrimaryKey().Identity()
+            .WithIdColumn()
             .WithColumn("workpackageid").AsInt32().NotNullable()
             .WithColumn("meetingtime").AsDateTime().Nullable()
             .WithColumn("criticalpath").AsString(MigrationUtil.StringMedium).Nullable()

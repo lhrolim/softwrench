@@ -96,6 +96,7 @@
         }
 
         public class Email {
+            public const string Enabled = "/Global/Email/Smtp/Enabled";
             public const string Host = "/Global/Email/Smtp/Host";
             public const string Port = "/Global/Email/Smtp/Port";
             public const string Timeout = "/Global/Email/Smtp/Timeout";

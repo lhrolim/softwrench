@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Data.Search;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
     public class RowstampQueryBuilder : IWhereBuilder {
         //TODO: this will work on MSSQL Maximos, but need to review for DB2/ Oracle
-        private const string Both = " Cast({0}.rowstamp as BIGINT) > :lowerrowstamp and Cast({0}.rowstamp as BIGINT) < :upperrowstamp ";
-        private const string Upper = " CAST({0}.rowstamp as BIGINT)< :upperrowstamp ";
-        private const string Lower = " CAST({0}.rowstamp as BIGINT) > :lowerrowstamp ";
+        private const string Both = " Cast({0}.rowstamp as {1}) > :lowerrowstamp and Cast({0}.rowstamp as {1}) < :upperrowstamp ";
+        private const string Upper = " CAST({0}.rowstamp as {1})< :upperrowstamp ";
+        private const string Lower = " CAST({0}.rowstamp as {1}) > :lowerrowstamp ";
 
         private readonly Rowstamps _rowstamps;
 
@@ -22,15 +24,20 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
                 return null;
             }
             string sql = null;
+            var isSwdb = entityName.EndsWith("_");
+            var dbType = isSwdb ? DBType.Swdb : DBType.Maximo;
+            var typeName = ApplicationConfiguration.IsOracle(dbType) ? "NUMBER" : "BIGINT";
+
+
             switch (_rowstamps.CurrentMode()) {
                 case Rowstamps.RowstampMode.Both:
-                    sql = Both.Fmt(entityName);
+                    sql = Both.Fmt(entityName, typeName);
                     break;
                 case Rowstamps.RowstampMode.Lower:
-                    sql = Lower.Fmt(entityName);
+                    sql = Lower.Fmt(entityName, typeName);
                     break;
                 case Rowstamps.RowstampMode.Upper:
-                    sql = Upper.Fmt(entityName);
+                    sql = Upper.Fmt(entityName, typeName);
                     break;
             }
             return sql;

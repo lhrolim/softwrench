@@ -40,8 +40,8 @@
       <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.3.6380.21974, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6380.21974\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.3.6383.35639, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6383.35639\lib\net46\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>

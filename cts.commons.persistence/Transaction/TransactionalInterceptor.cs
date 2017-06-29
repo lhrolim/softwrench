@@ -94,7 +94,7 @@ namespace cts.commons.persistence.Transaction {
                 if (task != null) {
                     await task;
                 }
-            } catch (Exception e) {
+            } catch (Exception) {
                 RollbackTx(contexts);
                 contexts.ToList().ForEach(context => Clear(context, true));
                 throw;

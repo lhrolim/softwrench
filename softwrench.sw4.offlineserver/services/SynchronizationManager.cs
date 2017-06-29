@@ -529,10 +529,13 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         protected virtual async Task<List<JSONConvertedDatamap>> FetchData(bool isAssociationData, SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata,
-            Rowstamps rowstamps = null, List<string> itemsToDownload = null, bool isLimited = false) {
+            Rowstamps rowstamps = null, List<string> itemsToDownload = null, bool isLimited = false)
+        {
+
+            var qualifier = ApplicationConfiguration.IsOracle(entityMetadata.DbType) ? entityMetadata.Name + "." : "";
 
             var searchDto = new SearchRequestDto {
-                SearchSort = isLimited ? "rowstamp desc" : "rowstamp asc",
+                SearchSort = isLimited ? "{0}rowstamp desc".Fmt(qualifier) : "{0}rowstamp asc".Fmt(qualifier),
                 Key = new ApplicationMetadataSchemaKey {
                     ApplicationName = appMetadata.Name
                 }

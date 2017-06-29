@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using NHibernate.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API;
@@ -13,6 +14,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
     public class BaseCommlogDataset : MaximoApplicationDataSet {
@@ -65,9 +67,17 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
             return postParams.Options;
         }
 
+        public string GetSummary(string context) {
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo)) {
+                return "SUBSTR({0}.message, 1, 50)".Fmt(context);
+            }
+
+            return "SUBSTRING({0}.message, 1, 50)".Fmt(context);
+        }
+
         public override string ApplicationName() {
             return "commlog";
         }
-        
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration {
 
@@ -10,7 +11,7 @@ namespace softWrench.sW4.Web.DB_Migration {
 //            Delete.Column("condition_").FromTable("conf_propertyvalue");
 
             Create.Table("CONF_CONDITION")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("alias_").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("siteid").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("metadataid").AsString(MigrationUtil.StringMedium).Nullable()
@@ -28,7 +29,7 @@ namespace softWrench.sW4.Web.DB_Migration {
 
             Create.Table("CONF_WCCONDITION")
                 .WithColumn("WcWcId").AsInt32().PrimaryKey().ForeignKey("wccondition_parent", "conf_condition", "id")
-                .WithColumn("mode").AsString(MigrationUtil.StringMedium).Nullable()
+                .WithColumn("mode_").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("schema_").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("fullkey").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("parentschema").AsString(MigrationUtil.StringMedium).Nullable()

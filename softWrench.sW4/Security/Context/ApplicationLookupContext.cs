@@ -7,7 +7,7 @@ namespace softWrench.sW4.Security.Context {
     [Component]
     public class ApplicationLookupContext {
 
-        [Property]
+        [Property(Column = "mode_")]
         public virtual string Mode { get; set; }
 
         [Property(Column = "schema_")]

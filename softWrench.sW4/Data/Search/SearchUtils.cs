@@ -328,6 +328,10 @@ namespace softWrench.sW4.Data.Search {
                 return new Tuple<string, ParameterType, string>(baseResult, resultType, baseResult);
             }
             if (searchParameter.FilterSearch) {
+                if (ApplicationConfiguration.IsOracle(entity.DbType)) {
+                    var filterString = "UPPER(COALESCE(cast({0} as varchar(4000)),''))".Fmt(baseResult);
+                    return new Tuple<string, ParameterType, string>(filterString, resultType, baseResult);
+                }
                 //if this is a filter search input lets make it case insensitive
                 return new Tuple<string, ParameterType, string>("UPPER(COALESCE(" + baseResult + ",''))", resultType, baseResult);
             }

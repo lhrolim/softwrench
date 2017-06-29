@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softwrench.sw4.Shared2.Metadata.Applications.Filter;
@@ -136,8 +137,11 @@ namespace softWrench.sW4.Data.Filter {
             var entityAssociation = MetadataProvider.Entity(schema.EntityName).LocateAssociationByLabelField(filterProvider);
             var primaryAttribute = entityAssociation.Item1.PrimaryAttribute();
 
-            if (!string.IsNullOrEmpty(labelSearchString)) {
-                return _quickSearchHelper.BuildOrWhereClause(new List<string>
+            if (!string.IsNullOrEmpty(labelSearchString))
+            {
+                var dbType = schema.IsSwDbApplication ? DBType.Swdb : DBType.Maximo;
+
+                return _quickSearchHelper.BuildOrWhereClause(dbType,new List<string>
                 {
                     primaryAttribute.To,
                     entityAssociation.Item2.Name

@@ -65,7 +65,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
 
             var sb = new StringBuilder();
             sb.Append("(");
-            sb.Append(_quickSearchHelper.BuildOrWhereClause(validFilterAttributes));
+            sb.Append(_quickSearchHelper.BuildOrWhereClause(schema.DbType, validFilterAttributes));
 
 
             // ReSharper disable once PossibleNullReferenceException
@@ -148,7 +148,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
                     sb.Append(first ? " and (" : " or ");
                     first = false;
                     var ignoreCoalesce = IgnoreCoalesce(fieldDefinition);
-                    sb.Append(QuickSearchHelper.QuickSearchStatement(entityAssociation.Qualifier + "." + fieldToInclude, ignoreCoalesce));
+                    sb.Append(QuickSearchHelper.QuickSearchStatement(entityAssociation.Qualifier + "." + fieldToInclude, entityAssociation.DbType, ignoreCoalesce));
                 }
 
                 if (!first) {
@@ -171,7 +171,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
                         entityAssociation.Qualifier, entityAttribute, entityAssociation.Qualifier);
 
                     var ignoreCoalesce = IgnoreCoalesce(nonHidden);
-                    sb.Append(QuickSearchHelper.QuickSearchStatement(queryAttribute, ignoreCoalesce));
+                    sb.Append(QuickSearchHelper.QuickSearchStatement(queryAttribute, entityAssociation.DbType, ignoreCoalesce));
                 }
                 if (!first) {
                     //at least one entry was found, closing parenthesis

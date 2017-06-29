@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using JetBrains.Annotations;
+using Newtonsoft.Json;
 using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Metadata.Entities.Connectors;
@@ -325,5 +327,8 @@ namespace softWrench.sW4.Metadata.Entities {
         public bool SWEntity() {
             return this.Name.EndsWith("_");
         }
+
+        [JsonIgnore]
+        public DBType DbType => SWEntity() ? DBType.Swdb : DBType.Maximo;
     }
 }

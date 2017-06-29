@@ -10,7 +10,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._10
         public override void Up()
         {
             Create.Table("PREF_GENERALUSER")
-                .WithColumn("Id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("user_id").AsInt32().ForeignKey("fk_prefgeneraluser_user", "SW_USER2", "id").Nullable()
                 .WithColumn("signature").AsClob().Nullable();
         }

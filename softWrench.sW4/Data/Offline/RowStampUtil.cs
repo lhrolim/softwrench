@@ -18,6 +18,7 @@ namespace softWrench.sW4.Data.Offline {
         public const string RowstampColumnName = "rowstamp";
 
         private static readonly string MSSQLRowstampQuery = "Cast ({0}.{1} as Bigint) > {2}";
+        private static readonly string OracleRowstampQuery = "Cast ({0}.{1} as NUMBER) > {2}";
         private static readonly string RowstampQuery = "{0}.{1} > {2}";
 
 
@@ -25,7 +26,11 @@ namespace softWrench.sW4.Data.Offline {
             if (ApplicationConfiguration.IsMSSQL(DBType.Maximo)) {
 
                 return ConvertByteArrayToLong(dbstamp);
-            } else if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
+            }
+            if (ApplicationConfiguration.IsDB2(DBType.Maximo)) {
+                return System.Convert.ToInt64(dbstamp);
+            }
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo)) {
                 return System.Convert.ToInt64(dbstamp);
             }
             return 1;
@@ -34,7 +39,7 @@ namespace softWrench.sW4.Data.Offline {
 
         private static long? ConvertByteArrayToLong(object dbstamp) {
             if (dbstamp is long) {
-                return (long) dbstamp;
+                return (long)dbstamp;
             }
             // cloning so it doesn't alter parameter
             // this was necessary because it is being called multiple times on the same dbstamp
@@ -81,6 +86,9 @@ namespace softWrench.sW4.Data.Offline {
         public static string RowstampWhereCondition(EntityMetadata entityMetadata, long rowstamp, SearchRequestDto searchDto) {
             var extraRowstamps = entityMetadata.Schema.Attributes.Where(s => s.Name.StartsWith("rowstamp") && !s.Name.Equals("rowstamp"));
             var patternToUse = ApplicationConfiguration.IsMSSQL(DBType.Maximo) ? MSSQLRowstampQuery : RowstampQuery;
+            if (ApplicationConfiguration.IsOracle(DBType.Maximo)) {
+                patternToUse = OracleRowstampQuery;
+            }
 
             var sb = new StringBuilder(patternToUse.Fmt(entityMetadata.Name, "rowstamp", rowstamp));
             foreach (var extraRowstamp in extraRowstamps) {

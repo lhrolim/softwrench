@@ -7,6 +7,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._2._0 {
 
         public override void Up()
         {
+
             Create.Table("PROB_PROBLEM")
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                 .WithColumn("RecordType").AsString().NotNullable()

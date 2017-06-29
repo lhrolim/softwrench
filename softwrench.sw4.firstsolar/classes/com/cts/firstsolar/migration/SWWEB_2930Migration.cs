@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
@@ -19,7 +20,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
 
             Create.Table("OPT_WORKPACKAGE")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("workorderid").AsInt64().NotNullable()
                 .WithColumn("wonum").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("createddate").AsDateTime().NotNullable()
@@ -27,13 +28,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
                 .WithColumn("interconnectdocs").AsString(MigrationUtil.StringSmall).Nullable();
 
             Create.Table("OPT_SUBCONTRACTOR")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("name").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("description").AsString(MigrationUtil.StringMedium).Nullable();
 
 
             Create.Table("OPT_CALLOUT")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("workpackageid").AsInt32().NotNullable()
                 .WithColumn("subcontractorid").AsInt32().NotNullable()
                 .WithColumn("sendtime").AsDateTime().NotNullable()
@@ -69,7 +70,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
 
             Create.Table("GEN_LISTRELATIONSHIP")
-                .WithColumn("id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("parententity").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("parentid").AsInt64().NotNullable()
                 .WithColumn("parentcolumn").AsString(MigrationUtil.StringSmall).NotNullable()
@@ -125,7 +126,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
 
         public override void Up() {
             Create.Table("OPT_MAINTENANCE_ENG")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("workpackageid").AsInt32().NotNullable()
                 .WithColumn("engineer").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("sendtime").AsDateTime().NotNullable()

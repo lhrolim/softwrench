@@ -8,9 +8,9 @@ namespace softWrench.sW4.Web.DB_Migration._4._2._0 {
     public class Migration201507201700Swweb1166Part4 : Migration {
         public override void Up() {
             // db2 a limitation preventing a change from varchar to clob
-            if (ApplicationConfiguration.IsDB2(DBType.Swdb)) {
+            if (ApplicationConfiguration.IsDB2(DBType.Swdb) || ApplicationConfiguration.IsOracle(DBType.Swdb)) {
                 Create.Column("TEMP_Message").OnTable("PROB_PROBLEM").AsClob().Nullable();
-                Execute.Sql("UPDATE PROB_PROBLEM SET TEMP_Message=CAST(Message AS CLOB)");
+//                Execute.Sql("UPDATE PROB_PROBLEM SET TEMP_Message=CAST(Message AS CLOB)");
                 Delete.Column("Message").FromTable("PROB_PROBLEM");
                 Rename.Column("TEMP_Message").OnTable("PROB_PROBLEM").To("Message");
             } else {

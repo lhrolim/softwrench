@@ -27,7 +27,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
 
             buffer.AppendFormat("select ");
             if (entityMetadata.FetchLimit() != null && queryMode == QueryCacheKey.QueryMode.Sync) {
-                buffer.Append(string.Format(" top({0}) ", entityMetadata.FetchLimit()));
+                if (!ApplicationConfiguration.IsOracle(entityMetadata.DbType)) {
+                    //oracle uses limit instead
+                    buffer.Append($" top({entityMetadata.FetchLimit()}) ");
+                }
+
             }
 
             var attributes = preAtributes ?? entityMetadata.Attributes(NoCollections) as IList<EntityAttribute> ?? entityMetadata.Attributes(NoCollections).ToList();

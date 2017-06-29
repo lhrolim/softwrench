@@ -1,4 +1,5 @@
 ﻿using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softwrench.sw4.dashboard.classes.model.migration {
     [Migration(201510190915)]
@@ -8,7 +9,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
             Create.Table("DASH_GRAPHICPANEL")
                 .WithColumn("gpid").AsInt32().PrimaryKey().ForeignKey("dash_graphicpanel_parent", "DASH_BASEPANEL", "id")
                 .WithColumn("provider").AsString().NotNullable()
-                .WithColumn("configuration").AsString().NotNullable();
+                .WithColumn("configuration").AsClob().NotNullable();
         }
 
         public override void Down() {

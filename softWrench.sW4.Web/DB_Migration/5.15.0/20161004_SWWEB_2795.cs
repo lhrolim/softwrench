@@ -1,12 +1,13 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._5._15._0 {
     [Migration(201610261725)]
     public class _20161004_SWWEB_2795 : Migration {
         public override void Up() {
             Create.Table("AUD_SESSION")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("UserId").AsInt64().Nullable()
                 .WithColumn("StartDate").AsDateTime().Nullable()
                 .WithColumn("EndDate").AsDateTime().Nullable();

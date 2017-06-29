@@ -153,7 +153,8 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             protected override int? GetCreatedByUser() {
                 // force createdby to be 'swadmin' user
-                return (int)_dao.FindSingleByNativeQuery<object>("select id from sw_user2 where username = ?", "swadmin");
+                var id = _dao.FindSingleByNativeQuery<object>("select id from sw_user2 where username = ?", "swadmin");
+                return Convert.ToInt32(id);
             }
         }
 

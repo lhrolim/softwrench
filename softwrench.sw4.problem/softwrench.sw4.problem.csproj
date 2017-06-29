@@ -37,12 +37,11 @@
       <HintPath>..\packages\cts.commons.1.2.6151.15243\lib\net46\cts.commons.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.2.6170.17097, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.2.6170.17097\lib\net46\cts.commons.persistence.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cts.commons.persistence, Version=1.3.6388.37081, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.3.6388.37081\lib\net46\cts.commons.persistence.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.3.6380.21974, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6380.21974\lib\net46\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.3.6383.35639, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.3.6383.35639\lib\net46\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>

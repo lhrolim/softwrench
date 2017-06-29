@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using cts.commons.persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
@@ -27,20 +28,20 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic
         [TestMethod]
         public void TestOrWhereClauseWithoutRelationshipAttributes()
         {
-            var result = QuickSearchHelper.BuildOrWhereClause(attributes, "item");
+            var result = QuickSearchHelper.BuildOrWhereClause(DBType.Swdb, attributes, "item");
             Assert.IsTrue(result.Contains("((UPPER(COALESCE(item.itemnum,'')) like :quicksearchstring)OR(UPPER(COALESCE(item.description,'')) like :quicksearchstring))"));
         }
 
         [TestMethod]
         public void TestOrWhereClauseWithRelationshipAttributes()
         {
-            var result = QuickSearchHelper.BuildOrWhereClause(attributesWithRelationships, "item");
+            var result = QuickSearchHelper.BuildOrWhereClause(DBType.Swdb,attributesWithRelationships, "item");
             Assert.IsTrue(result.Contains("((UPPER(COALESCE(item.itemnum,'')) like :quicksearchstring)OR(UPPER(COALESCE(item.description,'')) like :quicksearchstring)OR(UPPER(COALESCE(location_.location,'')) like :quicksearchstring)OR(UPPER(COALESCE(location_.description,'')) like :quicksearchstring))"));
         }
 
         public void TestOrWhereClauseWithoutContext()
         {
-            var result = QuickSearchHelper.BuildOrWhereClause(attributes);
+            var result = QuickSearchHelper.BuildOrWhereClause(DBType.Swdb,attributes);
             Assert.IsTrue(result.Contains("((UPPER(COALESCE(itemnum,'')) like :quicksearchstring)OR(UPPER(COALESCE(description,'')) like :quicksearchstring))"));
         }
     }

@@ -2,6 +2,7 @@
 using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.DB_Migration._5._20._0 {
@@ -20,7 +21,7 @@ namespace softWrench.sW4.Web.DB_Migration._5._20._0 {
             Alter.Table("DYN_SCRIPT_ENTRY").AddColumn("Lastupdate").AsInt64().WithDefaultValue(DateTime.Now.ToUnixTimeStamp());
 
             Create.Table("DYN_SCRIPT_JSENTRY")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                .WithIdColumn(true)
                 .WithColumn("Name").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("Target").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("Description").AsString(MigrationUtil.StringLarge).Nullable()

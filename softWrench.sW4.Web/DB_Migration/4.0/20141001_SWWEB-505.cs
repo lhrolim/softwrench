@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._4._0 {
     [Migration(201410011621)]
@@ -8,7 +9,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
         {
 
             Create.Table("PREF_GRIDFILTER")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("alias_").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("application").AsString(MigrationUtil.StringSmall).NotNullable()
                 .WithColumn("schema_").AsString(MigrationUtil.StringSmall).Nullable()
@@ -20,7 +21,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
                 .WithColumn("creator").AsInt32().ForeignKey("fk_filter_user_id", "SW_USER2", "id");
 
             Create.Table("PREF_GRIDFILTERASSOCIATION")
-                .WithColumn("id").AsInt32().PrimaryKey().Identity()
+                .WithIdColumn()
                 .WithColumn("user_id").AsInt32().ForeignKey("fk_user_id", "SW_USER2", "id")
                 .WithColumn("gridfilter_id").AsInt32().ForeignKey("fk_gridfilter_id", "PREF_GRIDFILTER", "id")
                 .WithColumn("joiningdate").AsDateTime().NotNullable();

@@ -10,7 +10,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         /// Complete SELECT statistics query for wo.status: includes the statuses's descriptions as labels.
         /// </summary>
         private static readonly string WoStatusWhereclauseCompleteQuery = string.Format(
-            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as {0}, s.description as {1} 
+            @"select COALESCE(CAST(status as varchar(300)), 'NULL') as status, count(*) as {0}, s.description as {1} 
                 from workorder 
                 left join synonymdomain s
        	            on status = s.value
@@ -23,7 +23,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         /// Complete SELECT statistics query for sr.status: includes the statuses's descriptions as labels.
         /// </summary>
         private static readonly string SRStatusWhereclauseCompleteQuery = string.Format(
-            @"select COALESCE(CAST(status as varchar), 'NULL') as status, count(*) as {0}, s.description as {1} 
+            @"select COALESCE(CAST(status as varchar(300)), 'NULL') as status, count(*) as {0}, s.description as {1} 
                 from sr 
                 left join synonymdomain s
        	            on status = s.value

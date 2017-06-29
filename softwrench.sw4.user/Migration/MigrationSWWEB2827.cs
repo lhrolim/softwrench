@@ -12,7 +12,7 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("id").AsInt32().PrimaryKey().Identity()
                 .WithColumn("password").AsString(MigrationUtil.StringLarge).NotNullable()
                 .WithColumn("registertime").AsDateTime().NotNullable()
-                .WithColumn("userid").AsInt32().NotNullable().ForeignKey("SW_USER2", "ID");
+                .WithColumn("userid").AsInt32().NotNullable().ForeignKey("fk_user_pass_user","SW_USER2", "ID");
 
 
             Alter.Table("SW_USER2").AddColumn("passwordexpirationtime").AsDateTime().Nullable();
@@ -23,7 +23,7 @@ namespace softwrench.sw4.user.Migration {
                 .WithColumn("registertime").AsDateTime().Nullable()
                 .WithColumn("numberofattempts").AsInt32().NotNullable()
                 .WithColumn("globalnumberofattempts").AsInt32().NotNullable()
-                .WithColumn("userid").AsInt32().ForeignKey("SW_USER2", "ID");
+                .WithColumn("userid").AsInt32().ForeignKey("fk_auth_attempt_user", "SW_USER2", "ID");
 
 
             Create.UniqueConstraint("usr_uq_authattempt").OnTable("USER_AUTHATTEMPT").Column("userid");

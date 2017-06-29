@@ -227,6 +227,13 @@ namespace softWrench.sW4.Data.Configuration {
             #endregion
 
             #region EmailConfig
+
+            facade.Register(ConfigurationConstants.Email.Enabled, new PropertyDefinition {
+                Description = "whether the smtp email server is enabled. Setting to false will skip all emails regardless of the other parameters",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                DefaultValue = "true"
+            });
+
             facade.Register(ConfigurationConstants.Email.Host, new PropertyDefinition {
                 Description = "the ip of the smtp email host. No HTTP/HTTPS required",
                 PropertyDataType = PropertyDataType.STRING,

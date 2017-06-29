@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using cts.commons.persistence.Util;
 using FluentMigrator;
 
 namespace softWrench.sW4.Web.DB_Migration
@@ -10,7 +11,7 @@ namespace softWrench.sW4.Web.DB_Migration
         public override void Up()
         {
             Create.Column("department").OnTable("SW_USER2").AsString(200).Nullable();
-            Create.Column("phone").OnTable("SW_USER2").AsString(20).Nullable();
+            Create.Column("phone").OnTable("SW_USER2").AsString(MigrationUtil.StringMedium).Nullable();
             Create.Column("language").OnTable("SW_USER2").AsString(20).Nullable();
             //Execute.WithConnection(InsertDefaultUserProfiles); // this method is only necessary because i couldn't retrieve identities insert ids
         }

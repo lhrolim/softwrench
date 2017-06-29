@@ -300,7 +300,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             var query = _entityQueryBuilder.AllRowsForSync(entityMetadata, rowstamps, searchDto);
             //TODO: hack to avoid garbage data and limit size of list queries.
             var sql = query.Sql;
-            var queryResult = await GetDao(entityMetadata).FindByNativeQueryAsync(sql, query.Parameters, null, searchDto.QueryAlias);
+
+            IPaginationData data = null;
+            if (ApplicationConfiguration.IsOracle(entityMetadata.DbType) && entityMetadata.FetchLimit() != null) {
+//                sql += " limit {0} ".Fmt(entityMetadata.FetchLimit());
+                data = new PaginationData(entityMetadata.FetchLimit().Value, 1, null);
+            }
+
+            
+
+            var queryResult = await GetDao(entityMetadata).FindByNativeQueryAsync(sql, query.Parameters, data, searchDto.QueryAlias);
             var rows = queryResult.Cast<IEnumerable<KeyValuePair<string, object>>>();
             return rows as IList<IEnumerable<KeyValuePair<string, object>>> ?? rows.ToList();
 

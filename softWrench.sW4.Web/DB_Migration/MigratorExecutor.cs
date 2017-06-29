@@ -10,9 +10,12 @@ using FluentMigrator.Runner.Announcers;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Processors;
 using FluentMigrator.Runner.Processors.MySql;
+using FluentMigrator.Runner.Processors.Oracle;
 using log4net;
+using softwrench.sw4.api.classes.migration;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.DB_Migration.DB2_FluentMigrator;
+using softWrench.sW4.Web.DB_Migration.Oracle;
 
 namespace softWrench.sW4.Web.DB_Migration {
     public class MigratorExecutor {
@@ -28,10 +31,16 @@ namespace softWrench.sW4.Web.DB_Migration {
             var mssqlServer = ApplicationConfiguration.IsMSSQL(DBType.Swdb);
             if (mssqlServer) {
                 _serverType = "mssql";
-            } else {
-                var db2Server = ApplicationConfiguration.IsDB2(DBType.Swdb);
-                _serverType = db2Server ? "db2" : "mysql";
+            } else if (ApplicationConfiguration.IsDB2(DBType.Swdb)) {
+                _serverType = "db2";
+            } else if (ApplicationConfiguration.IsMySql()) {
+                _serverType = "mysql";
+            } else if (ApplicationConfiguration.IsOracle(DBType.Swdb)) {
+                _serverType = "oracle";
             }
+
+            MigrationContext.ServerType = _serverType;
+
         }
 
         private class MigrationOptions : IMigrationProcessorOptions {
@@ -42,23 +51,23 @@ namespace softWrench.sW4.Web.DB_Migration {
 
         public void Migrate(Action<IMigrationRunner> runnerAction) {
             var before = Stopwatch.StartNew();
-            if (ApplicationConfiguration.IsLocal() && !ApplicationConfiguration.IsLocalHostSWDB()) {
-                Log.Debug("Ignoring Migration on remoteDB");
-                //avoid misconfiguration to change the schema of a remote database
-                return;
-            }
+            //            if (ApplicationConfiguration.IsLocal() && !ApplicationConfiguration.IsLocalHostSWDB()) {
+            //                Log.Debug("Ignoring Migration on remoteDB");
+            //                //avoid misconfiguration to change the schema of a remote database
+            //                return;
+            //            }
 
             var options = new MigrationOptions { PreviewOnly = false, Timeout = 0 };
             var factory = GetFactory();
             var assembly = Assembly.GetExecutingAssembly();
 
             //using (var announcer = new NullAnnouncer())
-            var announcer = new TextWriterAnnouncer(s => System.Diagnostics.Debug.WriteLine(s));
+            var announcer = new TextWriterAnnouncer(s => System.Diagnostics.Debug.WriteLine(s)) { ShowSql = true };
             var migrationContext = new RunnerContext(announcer) {
-            #if DEBUG
+#if DEBUG
                 // will create testdata
                 Profile = "development"
-            #endif
+#endif
             };
             var processor = factory.Create(_connectionString, announcer, options);
             var runner = new MigrationRunner(assembly, migrationContext, processor);
@@ -76,6 +85,10 @@ namespace softWrench.sW4.Web.DB_Migration {
             }
             if (_serverType == "db2") {
                 return new Db2ProcessorFactory();
+            }
+
+            if (_serverType == "oracle") {
+                return new CustomOracleProcessorFactory();
             }
 
             return new MySqlProcessorFactory();

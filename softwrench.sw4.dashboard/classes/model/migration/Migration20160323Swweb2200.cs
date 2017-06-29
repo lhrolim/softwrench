@@ -8,8 +8,7 @@ namespace softwrench.sw4.dashboard.classes.model.migration {
 
         public override void Up() {
             Delete.Column("layout").FromTable("DASH_DASHBOARD");
-
-            Create.Column("size").OnTable("DASH_BASEPANEL").AsInt32().NotNullable().WithDefaultValue(12);
+            Create.Column("size_").OnTable("DASH_BASEPANEL").AsInt32().NotNullable().WithDefaultValue(12);
         }
 
         public override void Down() {

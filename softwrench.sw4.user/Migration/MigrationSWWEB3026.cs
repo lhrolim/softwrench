@@ -10,6 +10,7 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using log4net;
+using softwrench.sw4.api.classes.migration;
 
 namespace softwrench.sw4.user.Migration {
     //    [Migration(201706162232)]
@@ -79,7 +80,16 @@ namespace softwrench.sw4.user.Migration {
 
             DAO.ExecuteSql("ALTER TABLE SEC_APPLICATION_PER ADD CONSTRAINT uq_app_profile UNIQUE (profile_id,applicationname)");
 
-            DAO.ExecuteSql("insert into VersionInfo (version, appliedOn, Description) values ('{0}','{1}','{2}')".Fmt("201706162232", DateTime.Now.ToShortDateString(), "MigrationSwweb3026"));
+            if (!MigrationContext.IsOracle) {
+                DAO.ExecuteSql(
+                    "insert into VersionInfo (version, appliedOn, Description) values ('{0}','{1}','{2}')".Fmt(
+                        "201706162232", DateTime.Now.ToShortDateString(), "MigrationSwweb3026"));
+            } else {
+                DAO.ExecuteSql(
+                    "insert into VersionInfo (version, appliedOn, Description) values ('{0}',TO_DATE('{1}','DD-MM-YYYY'),'{2}')".Fmt(
+                        "201706162232", DateTime.Now.ToString("dd/MM/yyyy"), "MigrationSwweb3026"));
+            }
+
 
         }
     }

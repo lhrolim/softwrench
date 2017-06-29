@@ -10,6 +10,7 @@ using System.Net.Mail;
 using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Metadata;
 using softwrench.sw4.api.classes.email;
@@ -18,6 +19,7 @@ using LogManager = log4net.LogManager;
 using Polly;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
+using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
@@ -35,12 +37,27 @@ namespace softWrench.sW4.Email {
             Log.DebugFormat("init log...");
         }
 
+
+
+        [CanBeNull]
         // ReSharper disable once AssignNullToNotNullAttribute
         private SmtpClient ConfiguredSmtpClient() {
             var objsmtpClient = new SmtpClient();
 
-            
-            objsmtpClient.Host = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.Host);
+            var enabled = ConfigFacade.Lookup<bool>(ConfigurationConstants.Email.Enabled);
+            if (!enabled) {
+                Log.WarnFormat("smtp server is disabled. Activate it under the configuration section");
+                return null;
+            }
+
+            var host = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.Host);
+            if (host == null) {
+                Log.WarnFormat("smtp server is not properly setup. Please visit the configuration section");
+                throw new MissingConfigurationException(
+                    "smtp server is not properly setup. Please visit the configuration section. (Set it to 'disabled' to prevent sending emails at all) ");
+            }
+
+            objsmtpClient.Host = host;
 
             var overriddenPort = ConfigFacade.Lookup<string>(ConfigurationConstants.Email.Port);
             if (overriddenPort != null) {
@@ -107,7 +124,7 @@ namespace softWrench.sW4.Email {
                     var smtpClient = ConfiguredSmtpClient();
                     var email = BuildMailMessage(emailData);
                     // Send the email message synchronously
-                    smtpClient.Send(email);
+                    smtpClient?.Send(email);
                 });
             } catch (Exception ex) {
                 Log.Error(ex);
