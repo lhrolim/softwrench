@@ -27,6 +27,7 @@
           <field attribute="status" label="Status" readonly="true"/>
           <field attribute="reason" hidden="true"/>
           <field attribute="email" hidden="true"/>
+          <field attribute="cc" hidden="true"/>
         </schema>
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">

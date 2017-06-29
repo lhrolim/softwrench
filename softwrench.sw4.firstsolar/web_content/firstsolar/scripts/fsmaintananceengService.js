@@ -41,7 +41,9 @@
             }
             
             fsrequestService.addAttachments(item, "#maintenanceengineeringfileexplorer_");
-            item["email"] = item["email"].split(",");
+            if (typeof item["cc"] === "string") {
+                item["cc"] = item["cc"].split(",");
+            }
 
             schemaCacheService.fetchSchema("_MaintenanceEngineering", "detail").then((schema) => {
                 item["email"] = item["email"] || "";
