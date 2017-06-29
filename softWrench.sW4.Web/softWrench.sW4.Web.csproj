@@ -963,6 +963,7 @@
     <Content Include="Content\templates\crud\pdf.html" />
     <Content Include="Content\templates\directives\file\fileexplorer.html" />
     <Content Include="Content\templates\swlabel.html" />
+    <Content Include="Dependencies\x86\IBM.Data.DB2.dll" />
     <!-- <Content Include="Dependencies\oci.dll"> -->
     <!-- <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory> -->
     <!-- </Content> -->
