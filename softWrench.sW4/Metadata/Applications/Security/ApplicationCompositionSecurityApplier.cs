@@ -23,14 +23,17 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                 return originalCompositions;
             }
             var appPermission = user.MergedUserProfile.Permissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(schema.ApplicationName));
-            if (appPermission == null || !appPermission.CompositionPermissions.Any(c => c.Schema.EqualsIc(schema.SchemaId))) {
-                Log.DebugFormat("no security constraint, removing default compositions for schema {0}",schema.GetApplicationKey());
+            if (appPermission == null || appPermission.CompositionPermissions == null || !appPermission.CompositionPermissions.Any(c => c.Schema.EqualsIc(schema.SchemaId))) {
+                Log.DebugFormat("no security constraint, removing default compositions for schema {0}", schema.GetApplicationKey());
                 return originalCompositions;
             }
-            var clonedDictionary = new Dictionary<string,ApplicationCompositionSchema>(originalCompositions);
-            foreach (var compositionPermission in appPermission.CompositionPermissions)
-            {
-                var key = compositionPermission.CompositionKey + "_";
+            var clonedDictionary = new Dictionary<string, ApplicationCompositionSchema>(originalCompositions);
+            foreach (var compositionPermission in appPermission.CompositionPermissions) {
+                var key = compositionPermission.CompositionKey;
+                if (!key.EndsWith("_")) {
+                    key = key + "_";
+                }
+
                 if (!clonedDictionary.ContainsKey(key)) {
                     Log.WarnFormat("composition {0} not found at schema {1}", compositionPermission.CompositionKey, schema.GetApplicationKey());
                     continue;

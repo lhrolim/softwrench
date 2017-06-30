@@ -7,6 +7,8 @@ using cts.commons.simpleinjector;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 
@@ -16,7 +18,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         [Import]
         public ISWDBHibernateDAO Dao { get; set; }
 
-        public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package) {
+        public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package, ApplicationSchemaDefinition schema) {
+
+            if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "dailyOutageMeetings"))) {
+                //might be disabled due to security reasons
+                return false;
+            }
+
             if (package.DailyOutageMeetings == null) {
                 package.DailyOutageMeetings = new List<DailyOutageMeeting>();
             }

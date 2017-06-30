@@ -201,7 +201,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
         public CompositionFetchResult LoadAvailableFieldsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
-            var fields = schema.NonHiddenFieldsOfTab(tab);
+            var fields =  schema.NonHiddenFieldsOfTab(tab);
             const int pageSize = 10;
             var applicationAttributeDisplayables = fields as IApplicationAttributeDisplayable[] ?? fields.ToArray();
             var totalCount = applicationAttributeDisplayables.Count();
@@ -231,6 +231,29 @@ namespace softWrench.sW4.Security.Services {
                 compositionData.ResultList.Add(dict);
             }
             return CompositionFetchResult.SingleCompositionInstance("#fieldPermissions_", compositionData);
+        }
+
+
+        public CompositionFetchResult LoadAvailableSectionsAsCompositionData(ApplicationSchemaDefinition schema, string tab, int pageNumber) {
+            var sections = schema.Sections(tab).Where(s => s.Id != null);
+            const int pageSize = 10;
+            var applicationAttributeDisplayables = sections as ApplicationSection[] ?? sections.ToArray();
+            var totalCount = applicationAttributeDisplayables.Count();
+            var sectionsToShow = applicationAttributeDisplayables.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+            var compositionData = new EntityRepository.SearchEntityResult();
+            compositionData.PaginationData = new PaginatedSearchRequestDto(totalCount, pageNumber, pageSize, null, new List<int>() { pageSize });
+            compositionData.ResultList = new List<Dictionary<string, object>>();
+
+            foreach (var section in sectionsToShow) {
+                var dict = new Dictionary<string, object>();
+                dict["sectionId"] = section.Id;
+                dict["sectionlabel"] = section.HeaderLabel;
+                dict["permission"] = "fullcontrol";
+                dict["originalpermission"] = dict["permission"];
+                compositionData.ResultList.Add(dict);
+            }
+            return CompositionFetchResult.SingleCompositionInstance("#sectionPermissions_", compositionData);
         }
 
         [CanBeNull]

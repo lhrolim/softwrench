@@ -32,18 +32,20 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
-        public static SecurityModeCheckResult VerifySecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
+        public static SecurityModeCheckResult VerifyMainSecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
             if (user.IsSwAdmin()) {
                 //SWDB apps have their own rule as for now.
                 return SecurityModeCheckResult.Allow;
             }
 
-            if (application.Name.StartsWith("_")) {
+            var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
+                .Any(a => a.ApplicationName.EqualsIc(application.Name));
+
+            if (application.Name.StartsWith("_") && !isTopLevelApp) {
                 return VerifySecurityModeSw(user, application);
             }
 
-            var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
-                .Any(a => a.ApplicationName.EqualsIc(application.Name));
+            
 
 
             var profile = user.MergedUserProfile;

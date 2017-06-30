@@ -32,6 +32,7 @@
             {
                 schema: "detail",
                 containerKey: "#main",
+                sectionPermissions: [],
                 fieldPermissions: [
                 {
                     fieldKey: "location",
@@ -119,6 +120,8 @@
             "schema": "detail",
             iscompositiontab: false,
             "#selectedtab": "#main",
+            "#sectionPermissions_" : [],
+
             "#fieldPermissions_": [
                 //this has been changed on screen
                 {
@@ -535,6 +538,7 @@
             "schema": "detail",
             "#selectedtab": "#main",
             iscompositiontab: true,
+            "#sectionPermissions_": [],
             "#fieldPermissions_": [
              //this has been changed on screen
              {

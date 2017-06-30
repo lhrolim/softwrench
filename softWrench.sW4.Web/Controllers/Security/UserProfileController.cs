@@ -103,6 +103,13 @@ namespace softWrench.sW4.Web.Controllers.Security {
             return _userProfileManager.LoadAvailableActionsAsComposition(schema, pageNumber);
         }
 
+        [HttpGet]
+        public CompositionFetchResult LoadAvailableSections(string application, string schemaId, string tab, int pageNumber) {
+            var app = MetadataProvider.Application(application);
+            var schema = app.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
+            return _userProfileManager.LoadAvailableSectionsAsCompositionData(schema, tab, pageNumber);
+        }
+
         [HttpPost]
         public IGenericResponseResult Delete(int? id) {
 

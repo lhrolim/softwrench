@@ -93,7 +93,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
 
             foreach (var propertyInfo in clonedDisplayable.GetType().GetProperties()) {
 
-                if (!propertyInfo.CanRead && propertyInfo.CanWrite) {
+                if (!propertyInfo.CanRead || !propertyInfo.CanWrite) {
                     continue;
                 }
                 var componentValue = propertyInfo.GetValue(clonedDisplayable);

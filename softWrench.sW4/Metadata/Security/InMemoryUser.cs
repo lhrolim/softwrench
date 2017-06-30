@@ -14,6 +14,7 @@ using System.Security.Principal;
 using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Preferences;
 using softWrench.sW4.Util;
@@ -23,6 +24,7 @@ namespace softWrench.sW4.Metadata.Security {
         private MergedUserProfile _mergedUserProfile;
         internal IDictionary<ClientPlatform, MenuDefinition> CachedMenu = new ConcurrentDictionary<ClientPlatform, MenuDefinition>();
         private IDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>> _cachedBars = new ConcurrentDictionary<ClientPlatform, IDictionary<string, CommandBarDefinition>>();
+
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(InMemoryUserExtensions));
 
@@ -117,8 +119,8 @@ namespace softWrench.sW4.Metadata.Security {
             TimezoneOffset = Convert.ToInt32(TimeZoneInfo.Local.GetUtcOffset(DateTime.UtcNow).TotalMinutes);
         }
 
-        public static InMemoryUser NewAnonymousInstance(bool active = true, bool locked=false) {
-            return new InMemoryUser("anonymous") { Active = active, Locked = locked};
+        public static InMemoryUser NewAnonymousInstance(bool active = true, bool locked = false) {
+            return new InMemoryUser("anonymous") { Active = active, Locked = locked };
         }
 
         public Boolean IsAnonymous() {
@@ -159,7 +161,7 @@ namespace softWrench.sW4.Metadata.Security {
 
         public bool? Active { get; private set; }
 
-        public bool Locked {get; private set; }
+        public bool Locked { get; private set; }
 
         /// <summary>
         /// Time difference between UTC time and the user local time, in minutes
@@ -173,7 +175,7 @@ namespace softWrench.sW4.Metadata.Security {
 
         public bool ChangePassword { get; }
 
-        public DateTime? PasswordExpirationTime {get;}
+        public DateTime? PasswordExpirationTime { get; }
 
         [JsonIgnore]
         public User DBUser {
@@ -261,10 +263,10 @@ namespace softWrench.sW4.Metadata.Security {
                 var allProperties = Genericproperties;
                 var syncProperties = allProperties == null
                     ? new Dictionary<string, object>()
-                    : allProperties.Where(p => p.Key!=null && p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
+                    : allProperties.Where(p => p.Key != null && p.Key.StartsWith("sync.")).ToDictionary(p => p.Key, p => p.Value);
                 syncProperties.Add("siteid", SiteId);
                 syncProperties.Add("orgid", OrgId);
-                if (Genericproperties.ContainsKey("laborcode")){
+                if (Genericproperties.ContainsKey("laborcode")) {
                     syncProperties.Add("laborcode", Genericproperties["laborcode"]);
                 }
                 return syncProperties;
@@ -286,7 +288,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
         public int SessionAuditId {
-            get;  set;
+            get; set;
         }
 
         public bool IsSwAdmin() {

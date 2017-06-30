@@ -33,6 +33,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>> _cachedAssociations = new Dictionary<SchemaFetchMode, IList<ApplicationAssociationDefinition>>();
         private readonly IDictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>> _cachedCompositions = new Dictionary<SchemaFetchMode, IList<ApplicationCompositionDefinition>>();
         private readonly IDictionary<string, IEnumerable<IApplicationAttributeDisplayable>> _cachedFieldsOfTab = new Dictionary<string, IEnumerable<IApplicationAttributeDisplayable>>();
+        private readonly IDictionary<string, IEnumerable<ApplicationSection>> _cachedSectionsOfTab = new Dictionary<string, IEnumerable<ApplicationSection>>();
 
         private readonly IDictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>> _cachedTabs = new Dictionary<SchemaFetchMode, IList<IApplicationIndentifiedDisplayable>>();
 
@@ -431,6 +432,19 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             var nonHiddenFieldsOfTab = result as IList<IApplicationAttributeDisplayable> ?? result.ToList();
             _cachedFieldsOfTab[tabId] = nonHiddenFieldsOfTab;
             return nonHiddenFieldsOfTab;
+        }
+
+        [NotNull]
+        public virtual IEnumerable<ApplicationSection> Sections(string tabId, SchemaFetchMode mode = SchemaFetchMode.All) {
+            if (_cachedSectionsOfTab.ContainsKey(tabId)) {
+                return _cachedSectionsOfTab[tabId];
+            }
+            var result = DisplayableUtil.GetDisplayable<ApplicationSection>(new[] { typeof(ApplicationSection) }, Displayables, mode, false, tabId == "main" ? null : tabId)
+                .Where(f => !f.IsHidden && f.Id != null);
+
+            var sectionsOfTab = result as IList<ApplicationSection> ?? result.ToList();
+            _cachedSectionsOfTab[tabId] = sectionsOfTab;
+            return sectionsOfTab;
         }
 
 

@@ -53,7 +53,12 @@
 
             wipeDynamicSections = function () {
                 const componentsTopSection = fieldService.getDisplayableByKey(crudContextHolderService.currentSchema(), "components");
-                componentsTopSection.displayables = [];
+                if (componentsTopSection) {
+                    //might be null due to security policies
+                    componentsTopSection.displayables = [];    
+                }
+
+                
             }
 
 
@@ -620,8 +625,16 @@
             const dailyOutageMeetingCount = dailyOutageMeeting ? dailyOutageMeeting.length : 0;
             this.crudContextHolderService.setTabRecordCount("daulyoutage", null, dailyOutageMeetingCount);
 
-            worklogCompositionSchema = worklogComp.schema;
-            fileExplorerCompositionSchema = fileExplorerComp.schema;
+            if (worklogComp != null) {
+                //might be null due to security policies
+                worklogCompositionSchema = worklogComp.schema;    
+            }
+
+            if (fileExplorerComp != null) {
+                fileExplorerCompositionSchema = fileExplorerComp.schema;    
+            }
+            
+            
             log.debug("caching composition schemas");
 
             //to correct SWWEB-3012

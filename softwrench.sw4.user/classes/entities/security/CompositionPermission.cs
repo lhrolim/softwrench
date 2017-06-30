@@ -89,5 +89,9 @@ namespace softwrench.sw4.user.classes.entities.security {
             }
 
         }
+
+        public override string ToString() {
+            return $"{nameof(CompositionKey)}: {CompositionKey}, {nameof(AllowCreation)}: {AllowCreation}, {nameof(AllowUpdate)}: {AllowUpdate}, {nameof(AllowRemoval)}: {AllowRemoval}, {nameof(AllowView)}: {AllowView}";
+        }
     }
 }

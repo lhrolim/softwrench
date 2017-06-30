@@ -188,6 +188,7 @@
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarConstants.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarOfflineSiteIdBuilder.cs" />
+    <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarSecurityGroupSetup.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarUserFacilityBuilder.cs" />
     <Compile Include="classes\com\cts\firstsolar\connector\FirstSolarWorkorderCrudConnector.cs" />

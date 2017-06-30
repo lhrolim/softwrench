@@ -250,7 +250,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
         private async Task<CompositionFetchResult> DoGetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
-            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema);
+            var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema, SecurityFacade.CurrentUser());
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             IDictionary<string, EntityRepository.SearchEntityResult> result;

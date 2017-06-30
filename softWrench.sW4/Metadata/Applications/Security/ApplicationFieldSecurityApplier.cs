@@ -56,8 +56,10 @@ namespace softWrench.sW4.Metadata.Applications.Security {
 
 
             var containerPermissions = applicationPermission.ContainerPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
+
             var compositionPermissions = applicationPermission.CompositionPermissions == null ? new List<CompositionPermission>()
                 : applicationPermission.CompositionPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
+
             resultingFields.AddRange(GetAllowedFields(applicationPermission, fieldsToRetain, schema.Displayables, compositionPermissions,
                 containerPermissions, "main"));
 
@@ -95,7 +97,9 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                 } else {
                     if (field is ApplicationCompositionDefinition) {
                         var comp = (ApplicationCompositionDefinition)field;
-                        var compPermission = compositionPermissions.FirstOrDefault(c => (c.CompositionKey + "_").EqualsIc(comp.TabId));
+
+
+                        var compPermission = compositionPermissions.FirstOrDefault(c => EntityUtil.IsRelationshipNameEquals(c.CompositionKey, comp.TabId));
 
                         if (applicationPermission.AllowUpdate) {
                             if (compPermission == null) {
@@ -135,6 +139,18 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                         }
                     } else if (field is ApplicationSection) {
                         var section = (ApplicationSection)field;
+
+                        if (section.Id != null) {
+                            var sectionPermission = container.SectionPermissions.FirstOrDefault(s => s.SectionId.EqualsIc(section.Id));
+                            if (sectionPermission != null && !sectionPermission.AnyPermission) {
+                                continue;
+                            }
+                            if (sectionPermission != null && sectionPermission.ReadOnly) {
+                                section.EnableExpression = "false";
+                            }
+                        }
+
+
                         var numberOfFieldsBefore = section.Displayables.Count;
                         section.Displayables = GetAllowedFields(applicationPermission,
                             fieldsToRetain, section.Displayables, compositionPermissions, permissions, currentContainerKey);

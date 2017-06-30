@@ -165,6 +165,7 @@
     <Compile Include="classes\entities\MergedUserProfile.cs" />
     <Compile Include="classes\entities\PasswordHistory.cs" />
     <Compile Include="classes\entities\security\ContainerPermission.cs" />
+    <Compile Include="classes\entities\security\SectionPermission.cs" />
     <Compile Include="classes\entities\security\FieldPermission.cs" />
     <Compile Include="classes\entities\security\ActionPermission.cs" />
     <Compile Include="classes\entities\security\CompositionPermission.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Migration\MigrationSwweb1216.cs" />
     <Compile Include="Migration\MigrationSwweb2284.cs" />
     <Compile Include="Migration\MigrationSwoff197.cs" />
+    <Compile Include="Migration\MigrationSWWEB3049.cs" />
     <Compile Include="Migration\MigrationSWWEB3026.cs" />
     <Compile Include="Migration\MigrationSWWEB2907.cs" />
     <Compile Include="Migration\MigrationSWWEB2827.cs" />

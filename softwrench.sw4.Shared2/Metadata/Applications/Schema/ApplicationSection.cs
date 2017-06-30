@@ -131,6 +131,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 }
             }
 
+
+            
+
+
         }
         protected virtual void ValidateOrientation(string orientation) {
 
@@ -191,6 +195,15 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
             set {
                 _displayables = value;
+            }
+        }
+
+        public string HeaderLabel {
+            get {
+                if (Header != null) {
+                    return Header.Label;
+                }
+                return Label ?? Id;
             }
         }
     }

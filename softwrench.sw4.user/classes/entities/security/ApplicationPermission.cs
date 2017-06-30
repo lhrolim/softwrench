@@ -98,7 +98,10 @@ namespace softwrench.sw4.user.classes.entities.security {
             return ContainerPermissions != null && ContainerPermissions.Any(c => c.Schema.EqualsIc(schema));
         }
 
-
+        /// <summary>
+        ///  this call is used to merge multiple profiles, so that the less restrictive one takes precedence in the end
+        /// </summary>
+        /// <param name="other"></param>
         public void Merge(ApplicationPermission other) {
             AllowCreation = AllowCreation || other.AllowCreation;
             AllowUpdate = AllowCreation || other.AllowUpdate;

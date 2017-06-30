@@ -20,13 +20,13 @@
         <property key="application.mainnewdetailschema" value="detail"/>
         <property key="application.security.clientadmin" value="true"/>
       </properties>
-      
+
       <schemas>
         <list title="Security Groups">
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-                <command label="Refresh Cache" icon="fa-refresh" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache" cssclasses="large-button"/>
+              <command label="Refresh Cache" icon="fa-refresh" tooltip="Refresh any database changes into application" id="refresh cache" service="userProfileService" method="refreshCache" cssclasses="large-button"/>
               <!--</container>-->
             </commandgroup>
             <commandgroup position="gridtop">
@@ -37,13 +37,13 @@
           <field label="Name" attribute="name" />
           <field label="Description" attribute="description" />
         </list>
-        
+
         <detail>
 
           <commandbars>
             <commandgroup position="actions">
               <!--<container label="Actions" id="actioncontainer" icon="fa-bolt">-->
-<!--              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>-->
+              <!--              <command icon="fa-clone" label="Batch Update" tooltip="make modifications to several applications all in once" id="batchupdate" service="userProfileService" method="batchUpdate" cssclasses="large-button"/>-->
               <command icon="fa-users" label="Apply Users" tooltip="Apply the current profile to multiple user accounts at once" id="applymultiple" service="userProfileService" method="applyMultiple" cssclasses="large-button"/>
               <command icon="fa-users" label="Remove Users" tooltip="Remove the current profile from multiple user accounts at once" id="removemultiple" service="userProfileService" method="removeMultiple" cssclasses="large-button"/>
               <!--</container>-->
@@ -51,13 +51,13 @@
             <commandgroup position="detail.primary">
               <removecommand id="print"/>
               <command id="save" service="userProfileService" method="save" cssclasses="large-button"/>
-              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+canel" cssclasses="large-button" 
+              <command id="delete" service="userProfileService" method="delete" label="Delete" icon="fa-trash" position="+canel" cssclasses="large-button"
                        showexpression="!!@id &amp;&amp; !!@deletable" enableexpression="!!@id &amp;&amp; !!@deletable"/>
             </commandgroup>
           </commandbars>
 
           <field attribute="deletable" hidden="true" default="1" />
-          
+
           <section orientation="horizontal">
             <header displacement="ontop" label="General" params="fieldset=true" />
             <field label="Name" attribute="name" requiredexpression="true"/>
@@ -75,26 +75,26 @@
           <!-- Application and basic setup  -->
           <section orientation="horizontal">
             <header displacement="ontop" label="Application Settings" params="fieldset=true" />
-            
-            
-            
-<!--            <optionfield attribute="#application" providerattribute="topLevelApplications" label="Application">-->
-<!--              <event type="afterchange" service="userProfileService" method="onApplicationChange"/>-->
-<!--              <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>-->
-<!--            </optionfield>-->
-<!--            <field attribute="#appallowview" label="Read Only?" showexpression="@application!=null">-->
-<!--              <renderer type="checkbox" params="layout=left"/>-->
-<!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
-<!--            </field>-->
-<!---->
-<!--            <field attribute="#appallowcreation" label="Create Records?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">-->
-<!--              <renderer type="checkbox" params="layout=left"/>-->
-<!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
-<!--            </field>-->
-<!--            <field attribute="#appallowupdate" label="Update Records?" showexpression="@application!=null">-->
-<!--              <renderer type="checkbox" params="layout=left"/>-->
-<!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
-<!--            </field>-->
+
+
+
+            <!--            <optionfield attribute="#application" providerattribute="topLevelApplications" label="Application">-->
+            <!--              <event type="afterchange" service="userProfileService" method="onApplicationChange"/>-->
+            <!--              <event type="beforechange" service="userProfileService" method="beforeApplicationChange"/>-->
+            <!--            </optionfield>-->
+            <!--            <field attribute="#appallowview" label="Read Only?" showexpression="@application!=null">-->
+            <!--              <renderer type="checkbox" params="layout=left"/>-->
+            <!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
+            <!--            </field>-->
+            <!---->
+            <!--            <field attribute="#appallowcreation" label="Create Records?" showexpression="@application!=null &amp;&amp; @hasCreationSchema==true">-->
+            <!--              <renderer type="checkbox" params="layout=left"/>-->
+            <!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
+            <!--            </field>-->
+            <!--            <field attribute="#appallowupdate" label="Update Records?" showexpression="@application!=null">-->
+            <!--              <renderer type="checkbox" params="layout=left"/>-->
+            <!--              <event type="afterchange" service="userProfileService" method="basicRoleChanged"/>-->
+            <!--            </field>-->
 
             <composition detailschema="" fetchtype="eager"  relationship="#apppermissions"  printschema="" inline="true">
               <collectionproperties allowcreation="false" listschema="applicationrepresentation"/>
@@ -103,7 +103,7 @@
           </section>
 
           <section showexpression="@application!=null &amp;&amp; @anybasicpermission">
-            <header displacement="ontop" label="Mode Settings" params="fieldset=true" />
+            <header displacement="ontop" label="Mode Selection" params="fieldset=true" />
             <!-- Mode/Schema/Tab selection  -->
             <section orientation="horizontal">
               <optionfield label="Mode" attribute="selectedmode">
@@ -153,20 +153,39 @@
               </field>
             </section>
 
+
+            <section>
+              <header label="Sections Settings" displacement="ontop" params="fieldset=true;backgroundcolor=cadetblue"></header>
+              <composition detailschema="" fetchtype="lazy"  relationship="#sectionPermissions"  printschema="" inline="true" showexpression="@schema!=null &amp;&amp; @#selectedtab!=null &amp;&amp; !@iscompositiontab">
+                <collectionproperties allowcreation="false" listschema="sectionrepresentation"/>
+              </composition>
+            </section>
+            
+            
+
+
             <!-- Fields and Action selection  -->
             <section orientation="horizontal" showexpression="@schema!=null &amp;&amp; @#selectedtab!=null &amp;&amp; !@iscompositiontab">
 
-              <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
-                <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
-              </composition>
-              
+              <section>
+                <header label="Field Settings" displacement="ontop" params="fieldset=true;backgroundcolor=cadetblue"></header>
+                
+                <composition detailschema="" fetchtype="lazy"  relationship="#fieldPermissions"  printschema="" inline="true">
+                  <collectionproperties allowcreation="false" listschema="fieldRepresentation"/>
+                </composition>
+
+              </section>
+
+
               <!-- Only show actions for the main tab -->
               <section showexpression="@#selectedtab=='main'">
-                
+
+                <header label="Action Settings" displacement="ontop" params="fieldset=true;backgroundcolor=cadetblue"></header>
+
                 <composition detailschema="" fetchtype="lazy"  relationship="#actionPermissions"  printschema="" inline="true">
                   <collectionproperties allowcreation="false" listschema="actionRepresentation"/>
                 </composition>
-                
+
               </section>
             </section>
 
@@ -176,7 +195,7 @@
               <collectionproperties allowcreation="false" listschema="userRepresentation" />
             </composition>
           </tab>-->
-          
+
           <event type="onschemafullyloaded" method="onSchemaLoad" service="userProfileService"/>
         </detail>
 
@@ -217,6 +236,34 @@
         </schema>
 
 
+        <schema id="sectionRepresentation" stereotype="list">
+          <field hidden="true" attribute="sectionId"/>
+          <field label="Section Name" attribute="sectionlabel" />
+
+
+          <optionfield attribute="permission" label="Permission" >
+            <option label="Full Control" value="fullcontrol"/>
+            <option label="None" value="none"/>
+            <option label="Read Only" value="readonly"/>
+          </optionfield>
+          
+<!--          <field attribute="readonly" label="Read Only?">-->
+<!--            <renderer type="checkbox" params="layout=left;editable=true;clickservice=userProfileService.sectionRoleChanged"/>-->
+<!--          </field>-->
+<!---->
+<!--          <field attribute="fullcontrol" label="Full Control?" >-->
+<!--            <renderer type="checkbox" params="layout=left;editable=true;clickservice=userProfileService.sectionRoleChanged"/>-->
+<!--          </field>-->
+          
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+            <property key="compositions.disable.filter" value="true"/>
+<!--            <property key="list.click.service" value="userProfileService.onApplicationChange"/>-->
+          </properties>
+        </schema>
+        
+        
         <schema id="fieldRepresentation" stereotype="list">
           <event type="onload" service="userProfileService" method="availableFieldsRefreshed"/>
           <field hidden="true" attribute="fieldKey"/>
@@ -243,8 +290,12 @@
           <event type="onload" service="userProfileService" method="activeUsersRefreshed"/>
           <field hidden="true" attribute="userid"/>
           <field label="User" attribute="username" />
-          --><!--<field label="First Name" attribute="firstname"/>--><!--
-          --><!--<field label="Last Name" attribute="lastname"/>--><!--
+          -->
+        <!--<field label="First Name" attribute="firstname"/>-->
+        <!--
+          -->
+        <!--<field label="Last Name" attribute="lastname"/>-->
+        <!--
           <properties>
             <property key="list.paginationsize" value="10"/>
             <property key="list.paginationoptions" value="10"/>

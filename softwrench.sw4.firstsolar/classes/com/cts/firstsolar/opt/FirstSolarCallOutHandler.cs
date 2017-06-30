@@ -12,6 +12,8 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Data.Persistence.Operation;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Security.Services;
@@ -40,7 +42,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AttachmentsHandler.HandleAttachmentsOnCompositionLoad(woResult, packageResult, AttachmentsRelationship, FSWPackageConstants.CallOutAttachsRelationship);
         }
 
-        public bool HandleCallOuts(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData) {
+        public bool HandleCallOuts(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
+
+            if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "callout"))) {
+                //might be disabled due to security reasons
+                return false;
+            }
+
             var existingCallOuts = package.CallOuts;
             package.CallOuts = new List<CallOut>();
 

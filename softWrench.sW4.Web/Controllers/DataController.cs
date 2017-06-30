@@ -75,7 +75,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
-            var securityModeCheckResult = user.VerifySecurityMode(applicationMetadata, request);
+            var securityModeCheckResult = user.VerifyMainSecurityMode(applicationMetadata, request);
 
             if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
                 throw new SecurityException("You do not have permission to access this application. Please contact your administrator");

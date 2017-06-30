@@ -55,7 +55,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         public void HandleAttachmentsOnCompositionLoad(CompositionFetchResult woResult, CompositionFetchResult packageResult, string localRelationship, string woRelationship) {
-            var callOutAttachs = woResult.ResultObject.First(pair => woRelationship.Equals(pair.Key)).Value;
+            var callOutAttachs = woResult.ResultObject.FirstOrDefault(pair => woRelationship.Equals(pair.Key)).Value;
+            if (callOutAttachs == null) {
+                //might be null due to security policies
+                return;
+            }
+
 
             var attachsMap = new Dictionary<string, IList<Dictionary<string, object>>>();
             callOutAttachs.ResultList.ForEach(attach => {

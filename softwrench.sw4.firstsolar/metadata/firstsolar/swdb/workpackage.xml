@@ -98,7 +98,7 @@
             <event type="afterchange" service="fsworkpackageService" method="onWorkorderSelected"/>
           </association>
 
-          <section showexpression="@wpnum != null">
+          <section showexpression="@wpnum != null" id="mainworkorder">
             <header displacement="ontop" label="Work Order Details" params="fieldset=true" />
             <section orientation="horizontal">
               <section>
@@ -156,7 +156,7 @@
           </section>
 
 
-          <section orientation="horizontal" showexpression="@wpnum != null" >
+          <section orientation="horizontal" showexpression="@wpnum != null" id="outagesection">
             <section orientation="horizontal" >
               <header displacement="ontop" label="Tier Level" params="fieldset=true;"/>
 
@@ -193,7 +193,7 @@
           </section>
 
 
-          <section orientation="vertical" showexpression="@wpnum != null">
+          <section orientation="vertical" showexpression="@wpnum != null" id="otherdocs">
             <section orientation="horizontal">
               <section>
                 <header displacement="ontop" label="Interconnect Documents" params="fieldset=true"/>

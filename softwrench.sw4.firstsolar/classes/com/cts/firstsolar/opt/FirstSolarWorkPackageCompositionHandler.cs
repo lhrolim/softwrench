@@ -26,7 +26,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         private readonly Dictionary<string, string> _testsI18NDict = new Dictionary<string, string>();
 
         public void HandleWorkLogs(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
-            var wkpkgWorkLogs = woResult.ResultObject.First(pair => FSWPackageConstants.WorklogsRelationship.Equals(pair.Key)).Value;
+            var wkpkgWorkLogs = woResult.ResultObject.FirstOrDefault(pair => FSWPackageConstants.WorklogsRelationship.Equals(pair.Key)).Value;
+
+            if (wkpkgWorkLogs == null) {
+                //might be null due to security restrictions
+                return;
+            }
+
 
             var workLogMap = new Dictionary<string, IList<Dictionary<string, object>>>();
             wkpkgWorkLogs.ResultList.ForEach(worklog => {
@@ -49,7 +55,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         public void HandleAttachments(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
-            var wkpkgAttachs = woResult.ResultObject.First(pair => FSWPackageConstants.AttachsRelationship.Equals(pair.Key)).Value;
+            var wkpkgAttachs = woResult.ResultObject.FirstOrDefault(pair => FSWPackageConstants.AttachsRelationship.Equals(pair.Key)).Value;
+            if (wkpkgAttachs == null) {
+                //might be null due to security restrictions
+                return;
+            }
 
             var attachsMap = new Dictionary<string, IList<Dictionary<string, object>>>();
             wkpkgAttachs.ResultList.ForEach(attach => {
@@ -72,7 +82,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         public void HandleAttachmentsTab(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
-            var allAttachs = woResult.ResultObject.First(pair => FSWPackageConstants.AllAttachmentsRelationship.Equals(pair.Key)).Value;
+            var allAttachs = woResult.ResultObject.FirstOrDefault(pair => FSWPackageConstants.AllAttachmentsRelationship.Equals(pair.Key)).Value;
+            if (allAttachs == null) {
+                //could be missing due to security profile restrictions
+                return;
+            }
+
 
             var attachList = new List<Dictionary<string, object>>();
             allAttachs.ResultList.ForEach(attach => {
@@ -91,7 +106,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 var filter = baseFilter.ToString().ToLower();
                 if (filter.StartsWith("swwpkg:")) {
                     var test = filter.Substring(7);
-                    
+
                     if ("relayevent".Equals(test)) {
                         attach["#attachsource"] = RelayEventAttachmentSource;
                     } else if ("interconnect".Equals(test)) {

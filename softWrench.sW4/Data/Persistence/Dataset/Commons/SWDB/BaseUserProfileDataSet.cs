@@ -165,7 +165,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
                 completeApplicationMetadataDefinition.Schema(new ApplicationMetadataSchemaKey(schemaId, SchemaMode.None, ClientPlatform.Web));
             var results = new List<PriorityBasedAssociationOption>();
             results.Add(new PriorityBasedAssociationOption("main", "Main", 0, new Dictionary<string, object> { { "type", "main" } }));
-            results.AddRange(schema.Tabs().Select(c => new PriorityBasedAssociationOption(c.Attribute, c.Label, 1, new Dictionary<string, object> { { "type", c.Type } })));
+            results.AddRange(schema.Tabs().Select(c => new PriorityBasedAssociationOption(c.Attribute, !string.IsNullOrEmpty(c.Label) ? c.Label : c.Attribute, 1, new Dictionary<string, object> { { "type", c.Type } })));
             return results;
         }
 
@@ -193,16 +193,23 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var result = await base.GetCompositionData(application, request, currentData);
-            if (request.CompositionList != null && request.CompositionList.Contains("#fieldPermissions_") && request.CompositionList.Count == 1) {
-                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
-                var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
+            if (request.CompositionList == null || request.CompositionList.Count != 1) {
+                return result;
+            }
+
+            var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
+            var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
+
+            if (request.CompositionList.Contains("#fieldPermissions_")) {
                 return _userProfileManager.LoadAvailableFieldsAsCompositionData(schema, result.OriginalCruddata.GetStringAttribute("#selectedtab"), request.PaginatedSearch.PageNumber);
             }
 
-            if (request.CompositionList != null && request.CompositionList.Contains("#actionPermissions_") && request.CompositionList.Count == 1) {
-                var app = MetadataProvider.Application(result.OriginalCruddata.GetStringAttribute("application"));
-                var schema = app.Schema(new ApplicationMetadataSchemaKey(result.OriginalCruddata.GetStringAttribute("schema"), SchemaMode.None, ClientPlatform.Web));
+            if (request.CompositionList.Contains("#actionPermissions_")) {
                 return _userProfileManager.LoadAvailableActionsAsComposition(schema, request.PaginatedSearch.PageNumber);
+            }
+
+            if (request.CompositionList.Contains("#sectionPermissions_")) {
+                return _userProfileManager.LoadAvailableSectionsAsCompositionData(schema, result.OriginalCruddata.GetStringAttribute("#selectedtab"), request.PaginatedSearch.PageNumber);
             }
 
             return result;

@@ -11,6 +11,8 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
@@ -40,7 +42,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AttachmentsHandler.HandleAttachmentsOnCompositionLoad(woResult, packageResult, AttachmentsRelationship, FSWPackageConstants.MaintenanceEngAttachsRelationship);
         }
 
-        public bool HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData) {
+        public bool HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
+            
+
+            if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "maintenanceEngineerings"))) {
+                //might be disabled due to security reasons
+                return false;
+            }
+
+
             var existingMaintenanceEng = package.MaintenanceEngineerings;
             package.MaintenanceEngineerings = new List<MaintenanceEngineering>();
             var anyNewMe = false;

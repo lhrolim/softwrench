@@ -49,6 +49,7 @@
             const application = parameters.fields["application"];
             const schemaId = parameters.fields["schema"];
             dm["#fieldPermissions_"] = [];
+            dm["#sectionPermissions_"] = [];
 
             simpleLog.debug("tab changed to {0}".format(tab));
             const fullObject = crudContextHolderService.fetchEagerAssociationOptions("selectableTabs").filter(function (item) {
@@ -67,16 +68,23 @@
 
             if (!isCompositionTab) {
                 const queryParameters = {
-                    application: application,
-                    schemaId: schemaId,
-                    tab: tab,
-                    pageNumber: 1
+                    application,
+                    schemaId,
+                    tab,
+                    pageNumber: 1,
                 };
                 restService.getPromise("UserProfile", "LoadAvailableFields", queryParameters).then(function (httpResponse) {
                     const compositionData = httpResponse.data.resultObject;
                     $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, compositionData);
                     mergeTransientIntoDatamap({ tab: tab });
                 });
+
+                restService.getPromise("UserProfile", "LoadAvailableSections", queryParameters).then(function (httpResponse) {
+                    const compositionData = httpResponse.data.resultObject;
+                    $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, compositionData);
+                    mergeTransientIntoDatamap({ tab: tab });
+                });
+
             } else {
                 dm["#compallowupdate"] = dm["#compallowcreation"] = true;
                 cleanUpCompositions(false);
@@ -86,6 +94,8 @@
             //resize/position elements
             fixHeaderService.callWindowResize();
         }
+
+       
 
         //afterchange
         function afterModeChanged(parameters) {
@@ -166,6 +176,7 @@
             dm["anybasicpermission"] = (fields["#appallowview"] || fields["#appallowupdate"] || fields["#appallowcreation"]);
 
         }
+
 
         //afterchange
         function cmpRoleChanged(parameters) {
@@ -467,7 +478,8 @@
                 var actualContainerPermission = {
                     schema: schema,
                     containerKey: tab,
-                    fieldPermissions: []
+                    fieldPermissions: [],
+                    sectionPermissions:[]
                 };
 
                 if (containerIndex !== -1) {
@@ -521,6 +533,46 @@
                     transientAppData["_#isDirty"] = true;
                     transientAppData.containerPermissions.push(actualContainerPermission);
                 }
+
+                var sectionPermissionsToIterate = dm["#sectionPermissions_"] || [];
+
+                if (dispatcher["#sectionPermissions_"]) {
+                    simpleLog.debug("restoring from sectionPermissions paginate scenario");
+                    fieldPermissionsToIterate = dispatcher["#sectionPermissions_"];
+                }
+
+                sectionPermissionsToIterate.forEach(function (screnItem) {
+                    const idx = actualContainerPermission.sectionPermissions.findIndex(function (storedItem) {
+                        return storedItem.sectionId === screnItem.sectionId;
+                    });
+                    if (idx === -1) {
+                        if (screnItem.fullcontrol !== screnItem.originalpermission) {
+                            //no element, let´s add unless we have the fullcontrol mode which is default...
+                            simpleLog.debug("adding non default field permission into container for field {0} ".format(screnItem.fieldKey));
+                            actualContainerPermission.sectionPermissions.push({
+                                permission: screnItem.permission,
+                                sectionId: screnItem.sectionId
+                            });
+                            hasAnyChange = hasAnyChange || true;
+                        }
+                    } else {
+                        const storedItem = actualContainerPermission.sectionPermissions[idx];
+                        hasAnyChange = hasAnyChange || storedItem.permission !== screnItem.permission;
+                        if (storedItem.permission !== "fullcontrol" && screnItem.permission === "fullcontrol") {
+                            //remove the item since now it is fullcontrol...
+                            actualContainerPermission.sectionPermissions.splice(idx, 1);
+                        } else if (storedItem.permission !== screnItem.permission) {
+                            actualContainerPermission.sectionPermissions[idx].permission = screnItem.permission;
+                        }
+                    }
+                });
+
+                if (hasAnyChange || containerIndex === -1) {
+                    transientAppData["_#isDirty"] = true;
+                    transientAppData.containerPermissions.push(actualContainerPermission);
+                }
+
+
             }
             //#endregion
             else {
@@ -533,7 +585,7 @@
                 var allDefault = compAllowCreation === true && compAllowView === true && compAllowUpdate === true;
                 transientAppData.compositionPermissions = transientAppData.compositionPermissions || [];
                 var cmpIndex = transientAppData.compositionPermissions.findIndex(function (item) {
-                    return item.compositionKey === tab;
+                    return item.compositionKey === tab && item.schema === schema;
                 });
                 if (cmpIndex === -1) {
                     if (!allDefault) {
@@ -624,6 +676,17 @@
                             screenField.permission = item.permission;
                         }
                     });
+
+                    container.sectionPermissions.forEach(function (item) {
+                        const screenField = dm["#sectionPermissions_"].firstOrDefault(function (screenItem) {
+                            return screenItem.sectionId === item.sectionId;
+                        });
+                        if (screenField != null && screenField.permission !== item.permission) {
+                            simpleLog.debug("restoring permission of field {0} from {1} to {2}".format(screenField.fieldKey, screenField.permission, item.permission));
+                            screenField.permission = item.permission;
+                        }
+                    });
+
                     // Restore view setting
                     dm['#hidecontainer'] = container.allowView != undefined ? !container.allowView : false;
                 }

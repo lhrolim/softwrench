@@ -2,7 +2,7 @@
 
     public class EntityUtil {
         public static bool IsRelationshipNameEquals(string firstName, string secondName) {
-            return GetRelationshipName(firstName) == GetRelationshipName(secondName);
+            return GetRelationshipName(firstName).Equals(GetRelationshipName(secondName),System.StringComparison.CurrentCultureIgnoreCase);
         }
 
         public static string GetRelationshipName(string attribute) {

@@ -47,6 +47,14 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all-delete-orphan")]
+        [Key(1, Column = "schema_id")]
+        [OneToMany(2, ClassType = typeof(SectionPermission))]
+        [JsonConverter(typeof(IesiSetConverter<SectionPermission>))]
+        public virtual ISet<SectionPermission> SectionPermissions {
+            get; set;
+        }
+
         protected bool Equals(ContainerPermission other) {
             return string.Equals(Schema, other.Schema) && string.Equals(ContainerKey, other.ContainerKey);
         }
@@ -65,20 +73,32 @@ namespace softwrench.sw4.user.classes.entities.security {
         }
 
         public void Merge(ContainerPermission other) {
-            if (other.FieldPermissions == null) {
-                return;
-            }
-
-
-            foreach (var otherField in other.FieldPermissions) {
-                var thisField = FieldPermissions.FirstOrDefault(
-                    f => f.FieldKey.EqualsIc(otherField.FieldKey));
-                if (thisField == null) {
-                    FieldPermissions.Add(otherField);
-                } else {
-                    thisField.Merge(otherField);
+            if (other.FieldPermissions != null) {
+                foreach (var otherField in other.FieldPermissions) {
+                    var thisField = FieldPermissions.FirstOrDefault(
+                        f => f.FieldKey.EqualsIc(otherField.FieldKey));
+                    if (thisField == null) {
+                        FieldPermissions.Add(otherField);
+                    } else {
+                        thisField.Merge(otherField);
+                    }
                 }
             }
+
+            if (other.SectionPermissions != null) {
+                foreach (var otherSection in other.SectionPermissions) {
+                    var thisSection = SectionPermissions.FirstOrDefault(
+                        f => f.SectionId.EqualsIc(otherSection.SectionId));
+                    if (thisSection == null) {
+                        SectionPermissions.Add(otherSection);
+                    } else {
+                        thisSection.Merge(otherSection);
+                    }
+                }
+            }
+
+
+
         }
     }
 }
