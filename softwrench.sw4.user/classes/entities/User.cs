@@ -180,7 +180,7 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
-        [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "UserId", Cascade = "all")]
+        [OneToOne(ClassType = typeof(UserPreferences), Lazy = Laziness.False, PropertyRef = "User", Cascade = "all")]
         public UserPreferences UserPreferences {
             get; set;
         }

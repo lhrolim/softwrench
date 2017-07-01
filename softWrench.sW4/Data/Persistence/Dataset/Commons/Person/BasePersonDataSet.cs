@@ -233,7 +233,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             user = await _userManager.SaveUser(user, false);
             if (operation.EqualsIc(OperationConstants.CRUD_CREATE)) {
                 //SWWEB-3026, odd one-to-one mapping, cascading not working correctly
-                user.UserPreferences = await _swdbDAO.SaveAsync<UserPreferences>(new UserPreferences() { UserId = user.Id });
+                //                user.UserPreferences = await _swdbDAO.SaveAsync<UserPreferences>(new UserPreferences() { User = user.Id });
             }
 
             if (user.UserName.EqualsIc(currentUser.Login) && user.Id != null) {
@@ -294,19 +294,22 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             };
             user.IsActive = isactive;
             user.Locked = isLocked;
-            if (user.Id != null && user.UserPreferences == null) {
 
-                var userPreferences = await _swdbDAO.FindSingleByQueryAsync<UserPreferences>(UserPreferences.PreferenesByUserId, user.Id);
+            var userPreferences = user.UserPreferences;
+            if (userPreferences == null) {
+                if (user.Id != null) {
+                    userPreferences = await _swdbDAO.FindSingleByQueryAsync<UserPreferences>(UserPreferences.PreferenesByUserId, user.Id);
+                }
                 if (userPreferences == null) {
                     user.UserPreferences = new UserPreferences {
-                        UserId = user.Id
+                        User = user
                     };
                 } else {
                     user.UserPreferences = userPreferences;
                 }
                 user.UserPreferences.Signature = signature;
             }
-            
+
             user.SiteId = json.StringValue("locationsite") ?? user.SiteId;
             user.OrgId = json.StringValue("locationorg") ?? user.SiteId;
             var screenSecurityGroups = LoadProfiles(json);

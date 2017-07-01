@@ -10,7 +10,7 @@ namespace softwrench.sw4.user.classes.entities {
     [Class(Table = "PREF_GENERALUSER", Lazy = false)]
     public sealed class UserPreferences : IBaseEntity {
 
-        public const string PreferenesByUserId = "from UserPreferences where UserId = ?";
+        public const string PreferenesByUserId = "from UserPreferences where User.Id = ?";
         public const string PreferenesByProfileId = "from UserPreferences where ProfileId = ?";
 
         [Id(0, Name = "Id")]
@@ -19,8 +19,9 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
-        [Property(Column = "user_id")]
-        public int? UserId {
+        [ManyToOne(Column = "user_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, NotNull =true)]
+        [JsonIgnore]
+        public User User {
             get; set;
         }
 
@@ -38,13 +39,6 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
 
-        public static UserPreferences FromJson(JToken jObject) {
-            var preferences = new UserPreferences();
-            preferences.Id = (int?)jObject["id"];
-            preferences.UserId = (int?)jObject["userid"];
-            preferences.Signature = (string)jObject["signature"];
-            return preferences;
-        }
 
         private bool Equals(UserPreferences other) {
             return Id == other.Id;
