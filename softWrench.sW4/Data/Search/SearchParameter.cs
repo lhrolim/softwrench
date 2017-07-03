@@ -6,6 +6,7 @@ namespace softWrench.sW4.Data.Search {
     public class SearchParameter {
 
         public SearchParameter(string rawValue) {
+            RawValue = rawValue;
             Refresh(rawValue);
         }
 
@@ -85,6 +86,11 @@ namespace softWrench.sW4.Data.Search {
         public object Value {
             get; set;
         }
+
+        public string RawValue {
+            get; set;
+        }
+
         public bool IsList {
             get {
                 return SearchOperator == SearchOperator.OR;

@@ -1,7 +1,7 @@
 ﻿(function(modules) {
     "use strict";
 
-modules.webcommons.service('statuscolorService', ["$rootScope", "contextService", function ($rootScope, contextService) {
+    modules.webcommons.service('statuscolorService', ["$rootScope", "$injector", "contextService", "schemaService","dispatcherService", function ($rootScope, $injector, contextService, schemaService, dispatcherService) {
 
     var fallbackFunction = function (status, applicationname) {
 
@@ -91,6 +91,17 @@ modules.webcommons.service('statuscolorService', ["$rootScope", "contextService"
             contextService.insertIntoContext("statuscolorfallback", fallbackJson);
         },
 
+        getColorObject: function(column, datamap, schema) {
+            var service = schemaService.getProperty(schema, "list.colorscheme.service");
+            const colorScheme = dispatcherService.invokeServiceByString(service, [column, datamap, schema]);
+            if (!!colorScheme) {
+                if (!colorScheme.forecolor) {
+                    colorScheme.forecolor = 'white';
+                }
+            }
+
+            return colorScheme;
+        },
 
         /// <summary>
         /// convert named color or #rgb into #rrggbb format

@@ -359,6 +359,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 result.ResultObject.SetAttribute("#workorder_." + field.Key, field.Value);
             }
             result.ResultObject.SetAttribute("wooutreq", workorderDM.GetIntAttribute("outreq"));
+            var wonum = workorderDM.GetStringAttribute("wonum");
+            var wpnum = wonum == null ? null : (wonum.StartsWith("NA") ? "WP" + wonum.Substring(2) : wonum);
+            result.ResultObject.SetAttribute("wpnum", wpnum);
         }
 
         private async Task<Dictionary<string, ISet<string>>> MapRelatedData(int parentEntityId) {

@@ -4,7 +4,7 @@
     angular.module('sw_layout').directive('columnWidths', function ($log, $timeout) {
         "ngInject";
 
-        var log = $log.getInstance('sw4.columnwidthcss');
+        var log = $log.getInstance('sw4.columnwidthcss', ['style']);
 
         return {
             scope: {

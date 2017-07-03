@@ -59,7 +59,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return filterViewableWidgetsByUser;
         }
 
-        private static void FilterPanelBasedOnRole(InMemoryUser user, DashboardBasePanel panel) {
+        protected virtual void FilterPanelBasedOnRole(InMemoryUser user, DashboardBasePanel panel) {
             if (!(panel is DashboardGridPanel)) {
                 return;
             }

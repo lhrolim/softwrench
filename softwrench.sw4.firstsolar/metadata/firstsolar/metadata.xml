@@ -212,6 +212,7 @@
       <attributes>
         <attribute name="parent" query=" (SELECT parent FROM lochierarchy WHERE location = !@location AND siteid = !@siteid AND orgid = !@orgid) " type="varchar"/>
         <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
+        <attribute name="facilityname" query=" (select f.facility from (SELECT top 1 a.ancestor, l.description as facility, LEN(a.ancestor) anc_length FROM locancestor a left join locations l on a.ancestor = l.location WHERE a.location = !@location AND a.ancestor != !@location AND a.siteid = !@siteid AND a.orgid = !@orgid AND a.ancestor like SUBSTRING(a.location, 0, 3) + '%' order by anc_length asc) f) " type="varchar"/>
       </attributes>
     </entity>
   </entities>
@@ -315,10 +316,8 @@
 
 
       <schemas>
-
-
-        <!--#region online-->
-
+        
+        <!--#region Work Package --> 
         <schema id="workpackageschema" redeclaring="false" stereotype="detail" platform="web">
           <field attribute="wonum"/>
           <field attribute="workorderid"/>
@@ -382,7 +381,67 @@
             </composition>
           </section>
         </schema>
+        
+        <schema id="workpackageincomingdash" stereotype="list" platform="web">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wonum" label="WO#">
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler"/>
+          <field attribute="location_.facilityname" label="Site Name">
+            <renderer type="default" params="width=20%" />
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" params="width=20%" />
+          </field>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type="datetime" params="width=20%" />
+          </field>
+          <properties>
+            <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
+            <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
+          </properties>
+        </schema>
+        
+        <schema id="workpackagebuilddash" stereotype="list" platform="web">
+          <filters>
+            <filter attribute="#wpnum" style="width:300px" whereclause="wpnum like !@#value" />
+            <booleanfilter attribute="#buildcomplete"  whereclause="buildcomplete = !@#value" />
+          </filters>
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="reportdate" hidden="true"/>
+          <field attribute="#id" hidden="true"/>
+          <field attribute="wonum" label="WO#">
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="#wpnum" label="WP#">
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler"/>
+          <field attribute="location_.facilityname" label="Site Name">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type="datetime" params="width=15%" />
+          </field>
+          <field attribute="#buildcomplete" label="Build Complete?">
+            <renderer type="checkbox" params="width=15%" />
+          </field>
 
+          <properties>
+            <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
+            <property key="list.click.service" value="fsDashboardService.buildDashClick"/>
+          </properties>
+        </schema>
+
+        <schema id="workpackagebuild290dash" parentschema="workpackagebuilddash"></schema>
+        
+        <!--#endregion-->
+
+        <!--#region Online-->
         <list redeclaring="false" platform="web">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
@@ -755,7 +814,7 @@
 
         <!--#endregion-->
 
-        <!-- #region: Mobile -->
+        <!--#region Mobile -->
 
         <list platform="mobile" title="WO - Assigned" redeclaring="true">
           <filters>
@@ -823,7 +882,7 @@
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterFailureChanged"/>
           </association>
 
-          <!-- Region Problems, cuase Remedy -->
+          <!-- Problems, cuase Remedy -->
           <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="offlineproblemlist_.description" requiredexpression="@worktype_.type == 'CM' &amp;&amp; @status==='COMP'" extraprojectionvalues="failurelist" >
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterProblemChanged"/>
           </association>
@@ -880,7 +939,7 @@
         <schema id="newdetail" title="Work Order" stereotype="detailnew" platform="mobile" redeclaring="true" parentschema="basedetail">
           <event type="onload" service="fsWorkorderOfflineService" method="onNewDetailLoad"/>
         </schema>
-        <!-- #endregion -->
+        <!--#endregion -->
 
       </schemas>
 

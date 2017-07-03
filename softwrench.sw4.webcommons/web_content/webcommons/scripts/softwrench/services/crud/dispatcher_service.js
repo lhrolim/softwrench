@@ -56,7 +56,16 @@
             }
         },
 
+        /**
+         * 
+         * @param {} serviceString an angular name in the form servicename.methodname
+         * @param {} parameters an array of parameters to invoke
+         * @returns {} 
+         */
         invokeServiceByString: function (serviceString, parameters) {
+            if (serviceString == null) {
+                return null;
+            }
 
             var serviceArray = serviceString.split(".");
             if (serviceArray.length != 2) {
