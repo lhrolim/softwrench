@@ -110,7 +110,7 @@ angular.module('sw_layout')
                 const tdWidth = $(this).width();
                 const th = $('thead th.{0}'.format(tdClass), table);
                 th.width(tdWidth);
-                $('.cell-wrapper', th).width(tdWidth);
+//                $('.cell-wrapper', th).width(tdWidth);
             });
         }
     };

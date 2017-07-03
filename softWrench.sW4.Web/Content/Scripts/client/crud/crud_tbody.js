@@ -321,7 +321,15 @@
 
                         var rowTextColor = scope.classificationColor(datamap[i].classificationid, schema.applicationName);
 
-                        html += "<tr class='{0}' style='cursor: {1};color: {2}' rel='hideRow'>".format(rowClass, cursortype, rowTextColor);
+                        var rowColorScheme = statuscolorService.getColorObject(null, datamap[i], schema);
+
+                        if (rowColorScheme != null) {
+                            html += "<tr class='{0}' style='cursor: {1};color: {2};background-color : {3}' rel='hideRow'>".format(rowClass, cursortype, rowColorScheme.forecolor, rowColorScheme.bgcolor);
+                        } else {
+                            html += "<tr class='{0}' style='cursor: {1};color: {2}' rel='hideRow'>".format(rowClass, cursortype, rowTextColor);    
+                        }
+
+                        
                         needsWatchers = hasMultipleSelector || hasSingleSelector;
 
                         html += "<td class='select-multiple' data-title=\"Select\" {0}>".format(!hasMultipleSelector ? 'style="display:none"' : '');

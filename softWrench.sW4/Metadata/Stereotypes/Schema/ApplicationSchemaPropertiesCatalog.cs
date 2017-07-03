@@ -42,6 +42,19 @@
         public const string ListClickService = "list.click.service";
 
         /// <summary>
+        /// Use this property to define a client side method (column, rowdatamap, schema) which should return an object containing 2 props:
+        /// { 
+        /// bgcolor, 
+        /// fgcolor
+        /// }
+        /// 
+        /// whenever the secondparameter (column) is null, the service will have the oportunity to return the entire row scheme
+        /// 
+        /// </summary>
+        public const string ListColorSchemeService = "list.colorscheme.service";
+
+
+        /// <summary>
         /// if false the search icon would remain static (true by default)
         /// </summary>
         public const string ListShowSearchIcon = "list.advancedfilter.showsearchicon";
@@ -56,15 +69,7 @@
         /// </summary>
         public const string ListSelectionModeByDefault = "list.selectionmodebydefault";
 
-        /// <summary>
-        /// property to specify what´s the next schema that should be routed from the current schema
-        /// </summary>
-        public const string RoutingNextSchemaId = "nextschema.schemaid";
-
-        /// <summary>
-        /// property to specify what´s the next schema that should be routed from the current schema
-        /// </summary>
-        public const string RoutingNextApplication = "routing.nextapplication";
+      
 
         /// <summary>
         ///
@@ -124,33 +129,6 @@
         public const string ListOfflineDateIndexes = "list.offline.date.indexlist";
 
         /// <summary>
-        /// If true forces the sync of an application as association data.
-        /// </summary>
-        public const string OfflineForceAssocSync = "offline.force.assoc.sync";
-
-
-        /// <summary>
-        /// If true forces the sync of an application as an application data.
-        /// </summary>
-        public const string OfflineForceSync = "offline.force.sync";
-
-        /// <summary>
-        /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
-        /// </summary>
-        public const string AfterSubmitAction = "aftersubmit.redirectaction";
-
-        /// <summary>
-        /// Use this property to specify a custom javascript validation to be called whenever the form is about to be submitted
-        /// </summary>
-        public const string OnCrudSaveEventValidationService = "beforesubmit.onvalidation";
-
-        /// <summary>
-        /// Set this property to true to allow the framework to pass not only the selected values, but also the labels of it on the json unmapedattributes. 
-        /// These can be fetched using (#+attributename + "_label") ==> xxx becomes "#xxx_label"
-        /// </summary>
-        public const string AddAssociationLables = "addassociationlabels";
-
-        /// <summary>
         ///  property for specifying the default size of the pagination
         /// </summary>
         public const string DefaultPaginationSize = "list.paginationsize";
@@ -202,6 +180,46 @@
         /// </summary>
         public const string PreventNoResultsNew = "list.preventnoresultsnew";
 
+
+
+        /// <summary>
+        /// property to specify what´s the next schema that should be routed from the current schema
+        /// </summary>
+        public const string RoutingNextSchemaId = "nextschema.schemaid";
+
+        /// <summary>
+        /// property to specify what´s the next schema that should be routed from the current schema
+        /// </summary>
+        public const string RoutingNextApplication = "routing.nextapplication";
+
+        /// <summary>
+        /// If true forces the sync of an application as association data.
+        /// </summary>
+        public const string OfflineForceAssocSync = "offline.force.assoc.sync";
+
+
+        /// <summary>
+        /// If true forces the sync of an application as an application data.
+        /// </summary>
+        public const string OfflineForceSync = "offline.force.sync";
+
+        /// <summary>
+        /// Use this property to specify a custom controller/action to redirect after the save has been performed.Value should be on the format serviceName.methodName
+        /// </summary>
+        public const string AfterSubmitAction = "aftersubmit.redirectaction";
+
+        /// <summary>
+        /// Use this property to specify a custom javascript validation to be called whenever the form is about to be submitted
+        /// </summary>
+        public const string OnCrudSaveEventValidationService = "beforesubmit.onvalidation";
+
+        /// <summary>
+        /// Set this property to true to allow the framework to pass not only the selected values, but also the labels of it on the json unmapedattributes. 
+        /// These can be fetched using (#+attributename + "_label") ==> xxx becomes "#xxx_label"
+        /// </summary>
+        public const string AddAssociationLables = "addassociationlabels";
+
+     
 
 
         /// <summary>

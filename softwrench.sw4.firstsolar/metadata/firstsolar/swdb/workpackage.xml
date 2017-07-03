@@ -84,6 +84,12 @@
           </field>
         </list>
 
+        <schema id="dashlist" stereotype="list" platform="online">
+          <field attribute="id"/>
+          <field attribute="wpnum"/>
+          <field attribute="workorderid"/>
+          <field attribute="buildcomplete"/>
+        </schema>
 
         <schema id="adetailnotabs" stereotype="detail" abstract="true">
 
