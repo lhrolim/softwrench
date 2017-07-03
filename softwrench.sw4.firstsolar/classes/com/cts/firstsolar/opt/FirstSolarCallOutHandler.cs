@@ -44,7 +44,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public bool HandleCallOuts(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
 
-            if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "callout"))) {
+            if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "callouts"))) {
                 //might be disabled due to security reasons
                 return false;
             }
