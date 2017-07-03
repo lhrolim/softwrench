@@ -30,6 +30,7 @@ using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
 using softWrench.sW4.Data.Entities.Audit;
+using softWrench.sW4.Metadata.Applications.Security;
 using softWrench.sW4.Util.TransactionStatistics;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -47,14 +48,17 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly I18NResolver _i18NResolver;
         protected readonly IContextLookuper ContextLookuper;
         private readonly IAuditManager _auditManager;
+        private readonly UserMainSecurityApplier _mainSecurityApplier;
+
         private readonly TransactionStatisticsService txService;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager, TransactionStatisticsService txService) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager, TransactionStatisticsService txService, UserMainSecurityApplier mainSecurityApplier) {
             _i18NResolver = i18NResolver;
             ContextLookuper = contextLookuper;
             CompositionExpander = expander;
             _auditManager = auditManager;
             this.txService = txService;
+            _mainSecurityApplier = mainSecurityApplier;
         }
 
         /// <summary>
@@ -75,7 +79,7 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
-            var securityModeCheckResult = user.VerifyMainSecurityMode(applicationMetadata, request);
+            var securityModeCheckResult = _mainSecurityApplier.VerifyMainSecurityMode(user,applicationMetadata, request);
 
             if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
                 throw new SecurityException("You do not have permission to access this application. Please contact your administrator");

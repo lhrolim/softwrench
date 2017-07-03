@@ -32,57 +32,7 @@ namespace softWrench.sW4.Metadata.Security {
         }
 
 
-        public static SecurityModeCheckResult VerifyMainSecurityMode(this InMemoryUser user, ApplicationMetadata application, DataRequestAdapter request) {
-            if (user.IsSwAdmin()) {
-                //SWDB apps have their own rule as for now.
-                return SecurityModeCheckResult.Allow;
-            }
-
-            var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
-                .Any(a => a.ApplicationName.EqualsIc(application.Name));
-
-            if (application.Name.StartsWith("_") && !isTopLevelApp) {
-                return VerifySecurityModeSw(user, application);
-            }
-
-            
-
-
-            var profile = user.MergedUserProfile;
-            var permission = profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
-            if (permission == null) {
-                if (isTopLevelApp) {
-                    //no permission to that particular application
-                    return SecurityModeCheckResult.Block;
-                }
-                return SecurityModeCheckResult.Allow;
-
-            }
-            var viewingExisting = request.Id != null || request.UserId != null;
-            var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;
-            if (application.Schema.Stereotype.Equals(SchemaStereotype.Search)) {
-                //TODO: think about this in the future
-                return SecurityModeCheckResult.Allow;
-            }
-
-            if (isList && !permission.HasNoPermissions) {
-                return SecurityModeCheckResult.Allow;
-            }
-
-            if (viewingExisting) {
-                if (permission.HasNoPermissions) {
-                    return SecurityModeCheckResult.Block;
-                }
-                if (!permission.AllowUpdate) {
-                    //users can view, but using output mode only
-                    return SecurityModeCheckResult.OutPut;
-                }
-            }
-            if (!viewingExisting && !permission.AllowCreation) {
-                return SecurityModeCheckResult.Block;
-            }
-            return SecurityModeCheckResult.Allow;
-        }
+       
 
         [NotNull]
         public static IEnumerable<CompleteApplicationMetadataDefinition> Applications([NotNull] this InMemoryUser user) {
@@ -119,29 +69,6 @@ namespace softWrench.sW4.Metadata.Security {
 
         }
 
-        private static SecurityModeCheckResult VerifySecurityModeSw(this IPrincipal user, ApplicationMetadata application) {
-            var applicationMetadata = MetadataProvider.Application(application.Name, false);
-            if (applicationMetadata == null) {
-                return SecurityModeCheckResult.Block;
-            }
 
-            var lookuper = SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>();
-            var context = lookuper.LookupContext();
-            var local = ApplicationConfiguration.IsLocal();
-
-            var isSysAdmin = user.IsInRole(Role.SysAdmin) || (local && context.MockSecurity);
-            var sysAdminApplication = applicationMetadata.GetProperty(ApplicationSchemaPropertiesCatalog.SystemAdminApplication);
-            if ("true".EqualsIc(sysAdminApplication) && isSysAdmin) {
-                return SecurityModeCheckResult.Allow;
-            }
-
-            var isClientAdmin = user.IsInRole(Role.ClientAdmin) || (local && context.MockSecurity);
-            var clientAdminApplication = applicationMetadata.GetProperty(ApplicationSchemaPropertiesCatalog.ClientAdminApplication);
-            if ("true".EqualsIc(clientAdminApplication) && isClientAdmin) {
-                return SecurityModeCheckResult.Allow;
-            }
-
-            return SecurityModeCheckResult.Block;
-        }
     }
 }

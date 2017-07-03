@@ -228,6 +228,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="classes\controller\" />
     <Folder Include="classes\job\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

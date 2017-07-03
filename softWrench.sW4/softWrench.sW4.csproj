@@ -504,6 +504,7 @@
     <Compile Include="Metadata\Applications\Schema\SchemaFilterBuilder.cs" />
     <Compile Include="Metadata\Applications\Security\ApplicationCompositionSecurityApplier.cs" />
     <Compile Include="Metadata\Applications\Security\ApplicationFieldSecurityApplier.cs" />
+    <Compile Include="Metadata\Applications\Security\UserMainSecurityApplier.cs" />
     <Compile Include="Metadata\Applications\Validator\ApplicationMetadataValidator.cs" />
     <Compile Include="Metadata\Menu\MenuCatalogMerger.cs" />
     <Compile Include="Metadata\Menu\XMLMenuParserCommons.cs" />
