@@ -9,7 +9,7 @@
 
     class workPackageService {
 
-        constructor($rootScope,$q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService) {
+        constructor($rootScope, $q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService) {
             this.$rootScope = $rootScope;
             this.$q = $q;
             this.$log = $log;
@@ -25,14 +25,14 @@
 
 
             testsMap = {
-                "GSU" : ["gsuimmediatetests", "gsutests"],
-                "SF6" : ["sf6tests"],
-                "VACUUM" : ["vacuumtests"],
-                "AIRS" : ["airswitchertests"],
-                "CAPB" : ["capbanktests"],
-                "BATTERY" : ["batterytests"],
-                "FEEDER" : ["feedertests"],
-                "RELAY" : ["relaytests"]
+                "GSU": ["gsuimmediatetests", "gsutests"],
+                "SF6": ["sf6tests"],
+                "VACUUM": ["vacuumtests"],
+                "AIRS": ["airswitchertests"],
+                "CAPB": ["capbanktests"],
+                "BATTERY": ["batterytests"],
+                "FEEDER": ["feedertests"],
+                "RELAY": ["relaytests"]
             }
 
             //#region private functions
@@ -48,7 +48,7 @@
                 if (sectionIdx !== -1) {
                     log.debug(`removing section for component ${option.label}`);
                     componentsTopSection.displayables.splice(sectionIdx, 1);
-                }	
+                }
             }
 
             wipeDynamicSections = function () {
@@ -104,15 +104,15 @@
 
 
                     }
-                    
+
 
                 }
 
-                return { preferredIdx, idxToInsert}
+                return { preferredIdx, idxToInsert }
             }
 
 
-         
+
 
             generateOuterSection = function (schema, componentName, preferredIdx) {
                 const engComponentsField = fieldService.getDisplayableByKey(schema, "engcomponents");
@@ -135,20 +135,20 @@
                     displayables: [],
                     rendererParameters: {},
                     showExpression: 'true',
-                  
+
                 };
 
-//                const intermediateSection2 = angular.copy(intermediateSection1);
-//                intermediateSection2.attribute = componentName + "section2";
-//
-//                const intermediateSection3 = angular.copy(intermediateSection1);
-//                intermediateSection3.attribute = componentName + "section3";
+                //                const intermediateSection2 = angular.copy(intermediateSection1);
+                //                intermediateSection2.attribute = componentName + "section2";
+                //
+                //                const intermediateSection3 = angular.copy(intermediateSection1);
+                //                intermediateSection3.attribute = componentName + "section3";
 
                 const resultSection = {
                     attribute: componentName + "section",
                     orientation: "vertical",
                     rendererParameters: {
-//                        class: "borderedsection"
+                        //                        class: "borderedsection"
                     },
                     displayables: [
                         intermediateSection
@@ -156,24 +156,24 @@
                     showExpression: 'true',
                     type: "ApplicationSection",
                     preferredIdx: preferredIdx,
-//                    header: {
-//                        label,
-//                        displacement: "sameline",
-//                        showExpression: "true",
-//                        parameters: {
-//                            fieldset: "true"
-//                        }
-//                    }
+                    //                    header: {
+                    //                        label,
+                    //                        displacement: "sameline",
+                    //                        showExpression: "true",
+                    //                        parameters: {
+                    //                            fieldset: "true"
+                    //                        }
+                    //                    }
                 };
 
                 return resultSection;
             }
 
-            generateTestSection = function (outerSectionName,selectedTest,preferredIdx) {
+            generateTestSection = function (outerSectionName, selectedTest, preferredIdx) {
 
                 const resultSection = {
-                    id: outerSectionName +selectedTest.value + "section",
-                    attribute: outerSectionName+selectedTest.value + "section",
+                    id: outerSectionName + selectedTest.value + "section",
+                    attribute: outerSectionName + selectedTest.value + "section",
                     rendererParameters: {
                         class: "borderedsection"
                     },
@@ -210,7 +210,7 @@
                     type: "ApplicationCompositionDefinition",
                     inline: true,
                     relationship: worklogKey(selectedTest.value),
-//                    label: "Engineering Evaluation " + selectedTest.label,
+                    //                    label: "Engineering Evaluation " + selectedTest.label,
                     detailschema: 'worklog.workpackageview',
                     printschema: '',
                     showExpression: 'true',
@@ -249,7 +249,7 @@
                     type: "ApplicationCompositionDefinition",
                     inline: true,
                     relationship: attachmentKey(selectedTest.value),
-//                    label: selectedTest.label,
+                    //                    label: selectedTest.label,
                     schema: fileExplorerCompositionSchema,
                     showExpression: 'true',
                     collection: true,
@@ -263,7 +263,7 @@
                 }
             }
 
-            redimensionIntermediateSectionsInternalAdding = function (componentSection,intermediateSectionIdx,intermediateSection,indexToConsider,itemToInsert) {
+            redimensionIntermediateSectionsInternalAdding = function (componentSection, intermediateSectionIdx, intermediateSection, indexToConsider, itemToInsert) {
 
                 const log = $log.get("workpackageservice#redimensionIntermediateSections", ["workpackage"]);
 
@@ -309,7 +309,7 @@
                     return null;
                 }
 
-                
+
 
                 //picking last index, and removing it from current section, since it will be overflown to the next
                 const nextSection = componentSection.displayables[intermediateSectionIdx + 1];
@@ -318,12 +318,12 @@
                 intermediateSection.displayables.push(firstItemofNext);
             }
 
-            testWithWorklogs = function(dm, baseKey) {
+            testWithWorklogs = function (dm, baseKey) {
                 const worklog = worklogKey(baseKey);
                 return dm[worklog] && dm[worklog].length > 0;
             }
 
-            testWithAttachments = function(dm, baseKey) {
+            testWithAttachments = function (dm, baseKey) {
                 const attach = attachmentKey(baseKey);
                 return dm[attach] && dm[attach].length > 0;
             }
@@ -333,7 +333,7 @@
 
         }
 
-        redimensionIntermediateSections (componentSection, indexToConsider, itemToInsert) {
+        redimensionIntermediateSections(componentSection, indexToConsider, itemToInsert) {
             const log = this.$log.get("workpackageservice#redimensionIntermediateSections", ["workpackage"]);
             const deletion = !itemToInsert;
             const intermediateSectionIdx = Math.floor(indexToConsider / maxColumns);
@@ -353,7 +353,7 @@
             }
 
             if (!deletion) {
-                redimensionIntermediateSectionsInternalAdding(componentSection,intermediateSectionIdx,intermediateSection,indexToConsider,itemToInsert);
+                redimensionIntermediateSectionsInternalAdding(componentSection, intermediateSectionIdx, intermediateSection, indexToConsider, itemToInsert);
             } else {
                 redimensionIntermediateSectionsInternalRemoving(componentSection, intermediateSectionIdx, intermediateSection, indexToConsider);
             }
@@ -415,10 +415,10 @@
                     log.debug(`adding missing outer component section for ${outerSectionName} at position ${idxToInsert}`);
                 }
                 const idxData = locatePreferredSectionIdx(schema, outerSection, option.value, field);
-                const generatedTestSection = generateTestSection(outerSectionName,option, idxData.preferredIdx);
+                const generatedTestSection = generateTestSection(outerSectionName, option, idxData.preferredIdx);
                 const idxToInsertInternalSection = idxData.idxToInsert;
                 log.debug(`adding missing internal test section ${outerSectionName}${option.value} at position ${idxToInsertInternalSection} for ${outerSectionName} `);
-//                outerSection.displayables.splice(idxToInsertInternalSection,0,generatedTestSection);
+                //                outerSection.displayables.splice(idxToInsertInternalSection,0,generatedTestSection);
                 this.redimensionIntermediateSections(outerSection, idxToInsertInternalSection, generatedTestSection);
 
             } else {
@@ -444,10 +444,10 @@
                         internalSectionIdx++;
                     }
                 }
-                
+
                 log.debug(`removing internal test section ${option.value} at position ${internalSectionIdx} for ${outerSectionName} `);
                 this.redimensionIntermediateSections(outerSection, internalSectionIdx);
-//                outerSection.displayables.splice(internalSectionIdx, 1);
+                //                outerSection.displayables.splice(internalSectionIdx, 1);
             }
         }
 
@@ -536,7 +536,7 @@
             if (gsucaptureoilLoaded && !gsucapturemonLoaded) {
                 datamap[test].push("gsucapturemon");
                 this.innerReevaluateSections(fieldMetadata, fieldMetadata.options.find((testOption) => testOption.value === "gsucapturemon"));
-            }else if (gsucapturemonLoaded && !gsucaptureoilLoaded) {
+            } else if (gsucapturemonLoaded && !gsucaptureoilLoaded) {
                 datamap[test].push("gsucaptureoil");
                 this.innerReevaluateSections(fieldMetadata, fieldMetadata.options.find((testOption) => testOption.value === "gsucaptureoil"));
             }
@@ -546,12 +546,12 @@
         checkSectionRefresh(event) {
             const field = event.fieldMetadata;
             const option = event.option;
-            
+
             const dm = this.crudContextHolderService.rootDataMap();
             let selectedValue = dm[field.attribute];
             const selecting = selectedValue == undefined || (!!selectedValue && selectedValue.indexOf(option.value) === -1);
-            
-            
+
+
             if (selecting) {
                 if (field.attribute !== "gsuimmediatetests") {
                     return this.$q.when();
@@ -612,7 +612,7 @@
             return this.$q.reject();
         }
 
-      
+
         // onload
         onSchemaLoad(parameters) {
             const log = this.$log.get("workpackageservice#onSchemaLoad", ["workpackage"]);
@@ -646,7 +646,7 @@
 
         }
 
-        
+
 
 
         //#region Public methods
@@ -659,7 +659,7 @@
 
     }
 
-    workPackageService.$inject = ['$rootScope','$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService'];
+    workPackageService.$inject = ['$rootScope', '$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService'];
 
     angular.module('sw_layout').service('fsworkpackageService', workPackageService);
 

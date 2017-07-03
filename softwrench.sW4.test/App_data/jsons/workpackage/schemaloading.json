@@ -23,5 +23,25 @@
     "#workorder_.rowstamp": 47998916,
     "#workorder_.ld_.ldtext": null,
     "#workorder_.Application": "workorder",
-    "#workorder_.Approwstamp": 47998916
+    "#workorder_.Approwstamp": 47998916,
+    "dailyOutageMeetings_": [
+        {
+            "meetingtime": "2017-06-29T04:00:00",
+            "mwhlostyesterday": 1.1,
+            "criticalpath": null,
+            "openactionitems": null,
+            "completedactionitems": null,
+            "summary": null,
+            "id": 1
+        },
+        {
+            "meetingtime": "2017-06-29T04:00:00",
+            "mwhlostyesterday": 2.7,
+            "criticalpath": null,
+            "openactionitems": null,
+            "completedactionitems": null,
+            "summary": null,
+            "id": 2
+        }
+    ]
 }

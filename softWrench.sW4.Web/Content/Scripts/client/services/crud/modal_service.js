@@ -122,6 +122,10 @@
                     }
                 },
 
+                isShowingModal: function () {
+                    return crudContextHolderService.isShowingModal();
+                },
+
          
 
 

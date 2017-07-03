@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -230,6 +231,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
             await LoadTechSupManager(result);
 
+            HandleMwhTotals(result.ResultObject);
+
             if (application.Schema.SchemaId.Equals("viewdetail")) {
                 //two rounds, since we need to first load the workorder details, and only then we´re able to fully bring the associations of it
                 var associationResults = await BuildAssociationOptions(result.ResultObject, application.Schema, new SchemaAssociationPrefetcherRequest());
@@ -237,6 +240,36 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
 
             return result;
+        }
+
+        private void HandleMwhTotals(DataMap dm) {
+            if (!dm.ContainsKey("dailyOutageMeetings_")) {
+                return;
+            }
+            //SWWEB-3047
+            var dailyMeetings = (IList<Dictionary<string, object>>)dm["dailyOutageMeetings_"];
+            decimal sum = 0;
+            foreach (var dailyMeeting in dailyMeetings) {
+                if (dailyMeeting.ContainsKey("mwhlostyesterday")) {
+                    sum += Convert.ToDecimal(dailyMeeting["mwhlostyesterday"]);
+                }
+            }
+            dm["mwhlosttotal"] = sum;
+        }
+
+
+        private void HandleMwhTotalsAfterSave(WorkPackage wp) {
+            if (!wp.DailyOutageMeetings.Any()) {
+                return;
+            }
+            //SWWEB-3047
+            var dailyMeetings = wp.DailyOutageMeetings;
+            decimal sum = 0;
+            foreach (var dailyMeeting in dailyMeetings) {
+
+                sum += dailyMeeting.MWHLostYesterday;
+            }
+            wp.MwhLostTotal = sum.ToString(new CultureInfo("en-US"));
         }
 
         private void HandleWonum(AttributeHolder ah) {
@@ -314,7 +347,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
-            var package = await SavePackage(operationWrapper);
+            var tupleResult = await SavePackage(operationWrapper);
 
             var siteId = "";
             var json = operationWrapper.JSON;
@@ -324,8 +357,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 siteId = token.Value<string>();
             }
 
-            await HandleEmails(package.Item1, siteId, package.Item2, package.Item3, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
-            return new TargetResult(package.Item1.Id.ToString(), null, package);
+            var workPackage = tupleResult.Item1;
+
+            await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
+            HandleMwhTotalsAfterSave(workPackage);
+            return new TargetResult(workPackage.Id.ToString(), null, workPackage);
         }
 
 

@@ -67,7 +67,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public DateTime? ActualCompDate { get; set; }
 
-        [Property]
         public string MwhLostTotal { get; set; }
 
         [Property]

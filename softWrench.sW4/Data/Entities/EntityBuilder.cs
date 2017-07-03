@@ -47,9 +47,9 @@ namespace softWrench.sW4.Data.Entities {
 
         public static TYped PopulateTypedEntity<T, TYped>(T entity, TYped objectToPopulate) where T : Entity {
             foreach (var entry in entity) {
-                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value,true);
+                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value, true);
             }
-            foreach (var entry in entity.UnmappedAttributes){
+            foreach (var entry in entity.UnmappedAttributes) {
                 ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value, true);
             }
 
@@ -196,6 +196,10 @@ namespace softWrench.sW4.Data.Entities {
                 return null;
             }
             if (value.Type != JTokenType.Array) {
+                if ("decimal".EqualsIc(type)) {
+                    return value.ToObject<decimal>();
+                }
+
 
                 var stValue = value.ToString();
                 if (stValue == "") {

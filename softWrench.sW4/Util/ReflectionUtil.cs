@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -165,6 +166,10 @@ namespace softWrench.sW4.Util {
             }
             if ("Int32".EqualsIc(propertyType.Name)) {
                 return Convert.ToInt32(value);
+            }
+
+            if ("Decimal".EqualsIc(propertyType.Name)) {
+                return Convert.ToDecimal(value, new CultureInfo("en-US"));
             }
 
             return value;

@@ -406,8 +406,10 @@
                             {{fieldMetadata.rendererParameters['prepend']}}
                         </span>
                         <div style="display:inline-block">
-                            <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float'"
+                            <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float' || fieldMetadata.rendererParameters['numberType'] === 'decimal'"  
                                    data-field="{{fieldMetadata.attribute}}"
+                                   step=".01"
+                                   pattern="^\d+(?:\.\d{1,2})?$"
                                    id="spinner"
                                    class="hidden-phone form-control"
                                    ng-model="datamap[fieldMetadata.attribute]"
