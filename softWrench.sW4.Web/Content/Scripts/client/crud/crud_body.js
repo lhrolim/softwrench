@@ -141,13 +141,18 @@
 
                     // covers breadcrumb redirect when the target page does not have the active tab of the src page
                     const tab = crudContextHolderService.getActiveTab();
-                    var datamap = $scope.datamap;
-                    if (tab != null && !tabsService.hasTab($scope.schema, tab)) {
-                        // active tab not found
-                        redirectService.redirectToTab($scope.getMainTabId());
-                    } else {
-                        redirectService.redirectToTab(tab);
+
+                    if (!modalService.isShowingModal()) {
+                        //TODO: make current tab panelid aware
+                        if (tab != null && !tabsService.hasTab($scope.schema, tab)) {
+                            // active tab not found
+                            redirectService.redirectToTab($scope.getMainTabId());
+                        } else {
+                            redirectService.redirectToTab(tab);
+                        }
                     }
+
+                  
 
                     $timeout(function () {
                         //time for the components to be rendered

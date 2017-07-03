@@ -133,6 +133,10 @@ namespace softWrench.sW4.Metadata.Validator {
                    && memberInfo.PropertyType != typeof (long?)
                    && memberInfo.PropertyType != typeof (int)
                    && memberInfo.PropertyType != typeof (long)
+                   && memberInfo.PropertyType != typeof (decimal)
+                   && memberInfo.PropertyType != typeof (decimal?)
+                   && memberInfo.PropertyType != typeof (float)
+                   && memberInfo.PropertyType != typeof (float?)
                    && memberInfo.PropertyType != typeof (byte[])
                    && !memberInfo.PropertyType.IsEnumOrNullableEnum();
 

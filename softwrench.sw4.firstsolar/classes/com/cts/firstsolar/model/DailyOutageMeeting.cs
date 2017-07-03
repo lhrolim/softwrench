@@ -26,5 +26,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         [Property]
         public string Summary { get; set; }
+
+        [Property]
+        public decimal MWHLostYesterday { get; set; }
     }
 }

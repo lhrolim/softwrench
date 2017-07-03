@@ -32,7 +32,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var toKeepDom = new List<DailyOutageMeeting>();
             var anyNewDom = false;
 
-            if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("callOuts_")) {
+            if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("dailyOutageMeetings_")) {
                 var domsData = crudoperationData.AssociationAttributes["dailyOutageMeetings_"] as List<CrudOperationData>;
                 if (domsData == null) {
                     throw new Exception("Incorrect format of daily outage meeting list.");

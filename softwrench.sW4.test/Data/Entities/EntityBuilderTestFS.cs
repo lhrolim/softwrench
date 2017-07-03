@@ -41,6 +41,14 @@ namespace softwrench.sW4.test.Data.Entities {
 
             Assert.IsNotNull(entity.GetAttribute("#workorder_.worktype"));
 
+            var rels = entity.GetRelationship("dailyOutageMeetings_") as List<CrudOperationData>;
+
+            Assert.IsNotNull(rels);
+
+            Assert.AreEqual(new Decimal(1.1),rels[0].GetAttribute("mwhlostyesterday"));
+
+
+
         }
 
 

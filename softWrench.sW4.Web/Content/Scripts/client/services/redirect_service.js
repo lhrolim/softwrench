@@ -71,9 +71,16 @@
         };
 
         function redirectToTab(tabId) {
+            const log = $log.get("redirectService#redirectToTab", ["route"]);
+            log.info(`redirecting to tab ${tabId}`);
+
+
             return $timeout(function () {
                 //this timeout is needed because a digest might already be in progress
-                contextService.setActiveTab(tabId);
+                if (!modalService.isShowingModal()) {
+                    //TODO: make it panelid-aware
+                    contextService.setActiveTab(tabId);    
+                }
                 const tab = $('a[href="#' + tabId + '"]');
                 tab.trigger('click');
             }, 0, false);

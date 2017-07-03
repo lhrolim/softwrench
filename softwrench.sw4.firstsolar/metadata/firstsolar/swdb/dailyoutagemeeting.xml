@@ -17,6 +17,8 @@
           <field attribute="meetingtime" label="Meeting Time" readonly="true">
             <renderer type="datetime"/>
           </field>
+          <field attribute="mwhlostyesterday" label="MWH Lost Yesterday"/>
+
           <field attribute="criticalpath" hidden="true"/>
           <field attribute="openactionitems" hidden="true"/>
           <field attribute="completedactionitems" hidden="true"/>
@@ -26,6 +28,9 @@
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
           <field attribute="meetingtime" label="Meeting Time" requiredexpression="true">
             <renderer type="datetime"/>
+          </field>
+          <field attribute="mwhlostyesterday" label="MWH Lost Yesterday">
+            <renderer type="numericinput" params="min=0"/>
           </field>
           <field label="Critical Path/Constraints" attribute="criticalpath"/>
           <field label="Open Action Items" attribute="openactionitems"/>
