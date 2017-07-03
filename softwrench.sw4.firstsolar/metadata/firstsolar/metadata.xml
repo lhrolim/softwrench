@@ -328,6 +328,7 @@
           <field attribute="status"/>
           <field attribute="siteid"/>
           <field attribute="site_.description"/>
+          <field attribute="pm_.description"/>
           <field attribute="orgid"/>
           <field attribute="assetnum"/>
           <field attribute="jpnum"/>

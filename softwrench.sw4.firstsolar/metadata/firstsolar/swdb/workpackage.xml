@@ -136,9 +136,11 @@
                 </association>
 
 
-                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description"  enableexpression="@#workorder_.worktype &amp;&amp; @#workorder_.worktype.equalsIc('PM')">
-                  <renderer type="lookup" />
-                </association>
+                <field label="PM #" attribute="#workorder_.pm_.description" readonly="true"/>
+                
+<!--                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description"  enableexpression="@#workorder_.worktype &amp;&amp; @#workorder_.worktype.equalsIc('PM')">-->
+<!--                  <renderer type="lookup" />-->
+<!--                </association>-->
 
                 <field attribute="#workorder_.schedstart" label="Scheduled Start">
                   <renderer type="datetime"/>
