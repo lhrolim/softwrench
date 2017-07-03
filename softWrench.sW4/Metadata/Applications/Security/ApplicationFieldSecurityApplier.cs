@@ -139,7 +139,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                     } else if (field is ApplicationSection) {
                         var section = (ApplicationSection)field;
 
-                        if (section.Id != null) {
+                        if (section.Id != null && container!=null) {
                             var sectionPermission = container.SectionPermissions.FirstOrDefault(s => s.SectionId.EqualsIc(section.Id));
                             if (sectionPermission != null && !sectionPermission.AnyPermission) {
                                 continue;
