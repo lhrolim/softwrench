@@ -87,9 +87,14 @@
         public const string ListSchemaOrderBy = "list.defaultorderby";
 
         /// <summary>
-        /// Comma separated list of fields to be included on quicksearch fot the given compositionlist schema. If not specified any visible text fields would be included
+        /// Comma separated list of fields to be included on quicksearch fot the given schema. If not specified any visible text fields would be included
         /// </summary>
         public const string ListQuickSearchFields = "list.search.quicksearchfields";
+
+        /// <summary>
+        /// Comma separated list of fields to be excluded on quicksearch fot the given schema. If not specified any visible text fields would be included
+        /// </summary>
+        public const string ListQuickSearchFieldsToExclude = "list.search.quicksearchfieldstoexclude";
 
         /// <summary>
         /// If true the quick search does not requires a enter or click to start a search.
@@ -100,6 +105,8 @@
         /// Comma separated list of compositions that should not be included in the list of available search options
         /// </summary>
         public const string ListQuickSearchCompositionsToExclude = "list.search.compositionstoexclude";
+
+       
 
         /// <summary>
         /// Comma separated list of text fields that should be used as index on offline search.

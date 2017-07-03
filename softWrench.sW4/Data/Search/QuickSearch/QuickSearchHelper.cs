@@ -12,31 +12,41 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
     public class QuickSearchHelper : ISingletonComponent {
 
         private const string QUICK_SEARCH_PARAM_NAME = "quicksearchstring";
-        private const string QUICK_SEARCH_PARAM_VALUE_PATTERN = "%{0}%";
-        private const string QUICK_SEARCH_PARAM_QUERY_PATTERN = "(UPPER(COALESCE({0},'')) like :" + QUICK_SEARCH_PARAM_NAME + ")";
 
-        private const string QUICK_SEARCH_PARAM__ORACLE_QUERY_PATTERN = "(UPPER(COALESCE(cast({0} as varchar(4000)),'')) like :" + QUICK_SEARCH_PARAM_NAME + ")";
+
+        private const string QUICK_SEARCH_PARAM_VALUE_PATTERN = "%{0}%";
+        private const string QUICK_SEARCH_PARAM_QUERY_PATTERN = "(UPPER(COALESCE({0},'')) like {1})";
+
+        private const string QUICK_SEARCH_PARAM__ORACLE_QUERY_PATTERN = "(UPPER(COALESCE(cast({0} as varchar(4000)),'')) like {1})";
 
         public static bool HasQuickSearchData([NotNull]SearchRequestDto dto) {
             return dto.QuickSearchDTO != null;
         }
 
-        public static string QuickSearchStatement([NotNull]string attribute, DBType dbtype, bool ignoreCoalesce = false) {
+        public static string QuickSearchStatement([NotNull]string attribute, DBType dbtype, bool ignoreCoalesce = false, string valueToAppend = null) {
             if (ignoreCoalesce) {
+                if (valueToAppend != null) {
+                    return "({0} like {1})".Fmt(attribute, QuickSearchDataValue(valueToAppend,true));
+                }
+
                 return "({0} like :{1})".Fmt(attribute, QUICK_SEARCH_PARAM_NAME);
             }
 
             var isOracle = ApplicationConfiguration.IsOracle(dbtype);
 
             return isOracle
-                ? string.Format(QUICK_SEARCH_PARAM__ORACLE_QUERY_PATTERN, attribute)
-                : string.Format(QUICK_SEARCH_PARAM_QUERY_PATTERN, attribute);
+                ? string.Format(QUICK_SEARCH_PARAM__ORACLE_QUERY_PATTERN, attribute, valueToAppend!= null ? QuickSearchDataValue(valueToAppend,true) : ":" + QUICK_SEARCH_PARAM_NAME)
+                : string.Format(QUICK_SEARCH_PARAM_QUERY_PATTERN, attribute, valueToAppend != null ? QuickSearchDataValue(valueToAppend, true) : ":" + QUICK_SEARCH_PARAM_NAME);
         }
 
 
         public static string QuickSearchParamName => QUICK_SEARCH_PARAM_NAME;
 
-        public static string QuickSearchDataValue(string data) {
+        public static string QuickSearchDataValue(string data, bool quote = false) {
+            if (quote)
+            {
+                return "'"+ string.Format(QUICK_SEARCH_PARAM_VALUE_PATTERN, data).ToUpper() + "'";
+            }
             return string.Format(QUICK_SEARCH_PARAM_VALUE_PATTERN, data).ToUpper();
         }
 
@@ -48,8 +58,9 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
         /// </summary>
         /// <param name="attributes"></param>
         /// <param name="context"></param>
+        /// <param name="valueToAppend"></param>
         /// <returns></returns>
-        public virtual string BuildOrWhereClause(DBType dbtype, IEnumerable<string> attributes, string context = null) {
+        public virtual string BuildOrWhereClause(DBType dbtype, IEnumerable<string> attributes, string context = null, string valueToAppend = null) {
             var attrs = attributes.ToList();
 
             /* not prefixing complete select statements */
@@ -63,7 +74,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             }
 
             // iterate filters and 'OR' the attributes
-            return "(" + string.Join("OR", attributesForStatement.Select((item) => QuickSearchStatement(item, dbtype))) + ")";
+            return "(" + string.Join("OR", attributesForStatement.Select((item) => QuickSearchStatement(item, dbtype,false, valueToAppend))) + ")";
         }
 
         private static bool IsSelectStatement(string attribute) {

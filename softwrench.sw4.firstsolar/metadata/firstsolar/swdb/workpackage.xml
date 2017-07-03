@@ -50,6 +50,10 @@
       </properties>
       <schemas>
         <list stereotype="list" title="Work Packages">
+          <properties>
+            <property key="list.search.quicksearchfieldstoexclude" value="wpnum,#outreq,createdate"/>
+          </properties>
+          
           <filters>
             <optionfilter attribute="#status" provider="#workorder_.synstatus_.description" displaycode="true" style="width:300px" whereclause="status in (!@#value)" />
             <optionfilter attribute="#worktype" provider="#workorder_.worktype_.wtypedesc" displaycode="true" style="width:300px" whereclause="worktype in (!@#value)" />
@@ -137,10 +141,10 @@
 
 
                 <field label="PM #" attribute="#workorder_.pm_.description" readonly="true"/>
-                
-<!--                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description"  enableexpression="@#workorder_.worktype &amp;&amp; @#workorder_.worktype.equalsIc('PM')">-->
-<!--                  <renderer type="lookup" />-->
-<!--                </association>-->
+
+                <!--                <association label="PM #" target="#workorder_.pmnum" labelfield="#workorder_.pm_.description"  enableexpression="@#workorder_.worktype &amp;&amp; @#workorder_.worktype.equalsIc('PM')">-->
+                <!--                  <renderer type="lookup" />-->
+                <!--                </association>-->
 
                 <field attribute="#workorder_.schedstart" label="Scheduled Start">
                   <renderer type="datetime"/>
@@ -311,7 +315,7 @@
                 </composition>
               </section>
             </tab>
-            
+
             <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
 
 
@@ -477,7 +481,7 @@
             </tab>
 
 
-            
+
             <tab label="Attachments" icon="fa-paperclip" id="attachments" enableexpression="@id!=null" countrelationship="#allattachments_">
               <composition inline="true" relationship="#allattachments_" label="" detailschema="attachmentdetail">
                 <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="attachmentlist"/>

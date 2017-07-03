@@ -259,6 +259,7 @@
     <Compile Include="Data\Relationship\RestResponseParserTest.cs" />
     <Compile Include="Data\Relationship\RestEntityRepositoryTest.cs" />
     <Compile Include="Data\Search\ApplicationSearchTest.cs" />
+    <Compile Include="Data\Search\QuickSearch\FsQuickSearchWhereClauseHandlerTest.cs" />
     <Compile Include="Data\Search\QuickSearch\LookupQuickSearchTest.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchWhereClauseHandlerTest.cs" />
     <Compile Include="Data\Search\SearchTest2.cs" />

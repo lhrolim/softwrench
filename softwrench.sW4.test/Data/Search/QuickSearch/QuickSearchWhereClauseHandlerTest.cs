@@ -44,7 +44,7 @@ namespace softwrench.sW4.test.Data.Search.QuickSearch {
                 MetadataProvider.Application("_whereclause").Schemas()[new ApplicationMetadataSchemaKey("list")];
 
             // not interested in testing this component here
-            _helperMock.Setup(a => a.BuildOrWhereClause(DBType.Maximo, It.IsAny<IEnumerable<string>>(), null)).Returns("1=1");
+            _helperMock.Setup(a => a.BuildOrWhereClause(DBType.Maximo, It.IsAny<IEnumerable<string>>(), null, null)).Returns("1=1");
 
             _scanner = new TestSimpleInjectorScanner();
             _scanner.ResgisterSingletonMock(_helperMock);
@@ -77,7 +77,7 @@ namespace softwrench.sW4.test.Data.Search.QuickSearch {
 
             worklogListSchema.Properties[ApplicationSchemaPropertiesCatalog.ListQuickSearchFields] = "description";
 
-            _helperMock.Verify(a => a.BuildOrWhereClause(DBType.Maximo, It.IsAny<IEnumerable<string>>(), null), Times.Once());
+            _helperMock.Verify(a => a.BuildOrWhereClause(DBType.Maximo, It.IsAny<IEnumerable<string>>(), null, null), Times.Once());
 
             Assert.AreEqual(
                 "(1=1 or exists (select 1 from worklog as worklog_ where SR.ticketid = worklog_.recordkey and (SR.siteid = worklog_.siteid or worklog_.siteid is null) and worklog_.class = 'SR' and ((UPPER(COALESCE(worklog_.description,'')) like :quicksearchstring) or (UPPER(COALESCE(worklog_.createby,'')) like :quicksearchstring))))",
@@ -162,7 +162,7 @@ or exists (select 1 from commlog as commlog_ where SR.ticketuid = commlog_.owner
 
             worklogListSchema.Properties[ApplicationSchemaPropertiesCatalog.ListQuickSearchFields] = "description";
 
-            _helperMock.Verify(a => a.BuildOrWhereClause(DBType.Maximo,It.IsAny<IEnumerable<string>>(), null), Times.Once());
+            _helperMock.Verify(a => a.BuildOrWhereClause(DBType.Maximo,It.IsAny<IEnumerable<string>>(), null, null), Times.Once());
 
             //if list of fields is blank, do not add any clausues
             Assert.AreEqual("(1=1)", result.WhereClause);
@@ -170,9 +170,12 @@ or exists (select 1 from commlog as commlog_ where SR.ticketuid = commlog_.owner
 
         [TestMethod]
         public void TestWithAttributetoServerField() {
-            var result = QuickSearchWhereClauseHandler.AttribteAppendingApplicationPrefix("#application",MetadataProvider.Entity("whereclause_"),_wcListSchema.Fields);
+            var result = QuickSearchWhereClauseHandler.AttribteAppendingApplicationPrefix(_wcListSchema,"#application",MetadataProvider.Entity("whereclause_"),_wcListSchema.Fields);
             Assert.AreEqual("whereclause_.definition_id",result);
             
         }
+
+
+
     }
 }

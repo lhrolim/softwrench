@@ -69,6 +69,11 @@ namespace softWrench.sW4.Data.API.Response {
 
         public string ApplicationName => Schema.ApplicationName;
 
+        public static ApplicationListResult BlankResult(PaginatedSearchRequestDto searchDTO, ApplicationSchemaDefinition schema) {
+            return new ApplicationListResult(0, searchDTO, new List<DataMap>(), schema, null);
+        }
+
+
         public string Id {
             get; private set;
         }

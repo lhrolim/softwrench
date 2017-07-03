@@ -61,7 +61,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
                 .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter) && !StatusFilter(f.Attribute, schema));
 
             var validFilterAttributes = filtersToApply
-                    .Select(f => AttribteAppendingApplicationPrefix(f.Attribute, entity,  schema.Fields));
+                    .Select(f => AttribteAppendingApplicationPrefix(schema,f.Attribute, entity,  schema.Fields)).Where(f => f!= null);
 
             var sb = new StringBuilder();
             sb.Append("(");
@@ -186,7 +186,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             return fieldDefinition.DataType != null && fieldDefinition.DataType.Equals("text") && !fieldDefinition.DeclaredAsQueryOnEntity;
         }
 
-        internal static string AttribteAppendingApplicationPrefix(string attribute, EntityMetadata entity, IList<ApplicationFieldDefinition> displayables) {
+        internal static string AttribteAppendingApplicationPrefix(ApplicationSchemaDefinition schema, string attribute, EntityMetadata entity, IList<ApplicationFieldDefinition> displayables) {
 
             var attributes = entity.Attributes(EntityMetadata.AttributesMode.NoCollections);
             var result = entity.LocateNonCollectionAttribute(attribute, attributes);

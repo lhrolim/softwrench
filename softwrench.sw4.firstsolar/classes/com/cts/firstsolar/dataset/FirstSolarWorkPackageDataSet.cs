@@ -6,8 +6,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
+using NHibernate.Mapping.ByCode;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
@@ -32,6 +34,8 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Persistence.SWDB.Entities;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Data.Search;
+using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
@@ -74,6 +78,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         [Import]
         public FirstSolarWorkPackageCompositionHandler CompositionHandler { get; set; }
 
+
+        private static QuickSearchHelper QuickSearchHelper => SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
+
+//        [Import]
+//        public QuickSearchHelper QuickSearchHelperInstance { get; set; }
+
         [Import]
         public IConfigurationFacade ConfigFacade { get; set; }
 
@@ -85,16 +95,38 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             if (HasMaximoFilters(searchDto)) {
                 maximoDatamap = await LookupMaximoData(application, searchDto);
+                if (!maximoDatamap.Any()) {
+                    return ApplicationListResult.BlankResult(searchDto, application.Schema);
+                }
                 searchDto = HandleMaximoRestrictions(searchDto, maximoDatamap);
             }
 
+            var previousQuickSearchDTO = searchDto.QuickSearchDTO;
 
-            if (HasQuickFilters(searchDto)) {
-                return await PerformUnionSearch(application, searchDto);
+            if (searchDto.QuickSearchDTO != null) {
+
+                var query = searchDto.QuickSearchDTO;
+                //TODO: union with swdb --> right now we´re applying a manual quicksearch, but making sure we remove the original quick search and restore it later
+                searchDto.QuickSearchDTO = null;
+
+                searchDto.AppendWhereClause("(" + QuickSearchHelper.BuildOrWhereClause(DBType.Maximo,new List<string> {"wonum", "description", "worktype", "status"}, null, query.QuickSearchData) + ")" );
+                maximoDatamap = await LookupMaximoData(application, searchDto);
+
+//                searchDto.QuickSearchDTO = query;
+                if (!maximoDatamap.Any())
+                {
+                    searchDto.QuickSearchDTO = previousQuickSearchDTO;
+                    return ApplicationListResult.BlankResult(searchDto, application.Schema);
+                }
+                searchDto.WhereClause = null;
+
+                searchDto = HandleMaximoRestrictions(searchDto, maximoDatamap);
+                //                return await PerformUnionSearch(application, searchDto);
             }
 
             SanitizeDTOForSWDB(searchDto);
             var baseList = await base.GetList(application, searchDto);
+            baseList.PageResultDto.QuickSearchDTO = previousQuickSearchDTO;
             if (maximoDatamap == null) {
                 //there was no maximo filters which could have forced the maximodata to be fetched up to this point
                 //let´s pick the corresponding workorder data based on the wonums of the workpage criteria
@@ -185,10 +217,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private async Task<ApplicationListResult> PerformUnionSearch(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
             return await base.GetList(application, searchDto);
-        }
-
-        private bool HasQuickFilters(PaginatedSearchRequestDto searchDto) {
-            return searchDto.QuickSearchDTO != null;
         }
 
         private bool HasMaximoFilters(PaginatedSearchRequestDto searchDto) {
@@ -400,7 +428,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             package = await Dao.SaveAsync(package);
             HandleGenericLists(crudoperationData, package);
 
-            
+
 
             var anyNewCallout = CallOutHandler.HandleCallOuts(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
 
