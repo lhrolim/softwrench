@@ -55,10 +55,9 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             }
 
 
-            var containerPermissions = applicationPermission.ContainerPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
+            var containerPermissions = applicationPermission.ContainerPermissions?.Where(c => c.Schema.EqualsIc(schema.SchemaId)) ?? new HashSet<ContainerPermission>();
 
-            var compositionPermissions = applicationPermission.CompositionPermissions == null ? new List<CompositionPermission>()
-                : applicationPermission.CompositionPermissions.Where(c => c.Schema.EqualsIc(schema.SchemaId));
+            var compositionPermissions = applicationPermission.CompositionPermissions?.Where(c => c.Schema.EqualsIc(schema.SchemaId)) ?? new List<CompositionPermission>();
 
             resultingFields.AddRange(GetAllowedFields(applicationPermission, fieldsToRetain, schema.Displayables, compositionPermissions,
                 containerPermissions, "main"));
