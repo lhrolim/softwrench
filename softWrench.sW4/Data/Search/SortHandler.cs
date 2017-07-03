@@ -20,6 +20,11 @@ namespace softWrench.sW4.Data.Search {
 
             var translatedFields = schema.Fields.Where(f => f.AttributeToServer != null);
             if (!translatedFields.Any()) {
+                var searchField = schema.Fields.FirstOrDefault(f => f.Attribute.Equals(dto.SearchSort));
+                if (searchField == null || searchField.IsTransient()) {
+                    dto.SearchSort = null;
+                    return;
+                }
                 return;
             }
 
