@@ -35,7 +35,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             WorkPackageEmailStatus emailStatus = null;
             EmailData emailData = null;
 
-            if (!"na".EqualsIc(wp.InterConnectDocs)) {
+            if (wp.InterConnectDocs != null && !"na".EqualsIc(wp.InterConnectDocs)) {
                 HandleInterConnectedEmail(wp, subject, out emailStatus, out emailData);
             }
 
