@@ -192,7 +192,7 @@ namespace softWrench.sW4.Data.Entities {
 
         private static object GetValueFromJson(string type, JToken value, bool isSwdbEntity) {
             //TODO: review.
-            if (null == value) {
+            if (null == value || (value.Type == JTokenType.Null)) {
                 return null;
             }
             if (value.Type != JTokenType.Array) {
