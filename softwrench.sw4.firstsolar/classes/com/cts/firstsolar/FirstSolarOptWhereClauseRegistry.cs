@@ -28,6 +28,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
                         MetadataId = "maintenanceengineerlookup"
                     }
                 });
+
+            
+            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid = '1801' " : "";
+            WhereClauseFacade.Register("workorder", "workorder.status in('INPRG', 'APPR', 'WOEN', 'ENRV', 'HOLD', 'WAPPR')" + siteClause,
+                new WhereClauseRegisterCondition {
+                    AppContext = new softWrench.sW4.Security.Context.ApplicationLookupContext {
+                        MetadataId = "wpcreationlookup"
+                    }
+                });
         }
     }
 }
