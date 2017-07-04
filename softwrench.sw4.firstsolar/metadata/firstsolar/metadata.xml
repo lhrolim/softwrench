@@ -212,7 +212,7 @@
       <attributes>
         <attribute name="parent" query=" (SELECT parent FROM lochierarchy WHERE location = !@location AND siteid = !@siteid AND orgid = !@orgid) " type="varchar"/>
         <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
-        <attribute name="facilityname" query=" (select f.facility from (SELECT top 1 a.ancestor, l.description as facility, LEN(a.ancestor) anc_length FROM locancestor a left join locations l on a.ancestor = l.location WHERE a.location = !@location AND a.ancestor != !@location AND a.siteid = !@siteid AND a.orgid = !@orgid AND a.ancestor like SUBSTRING(a.location, 0, 3) + '%' order by anc_length asc) f) " type="varchar"/>
+        <attribute name="facilityname" query=" (select f.facility from (SELECT top 1 a.ancestor, l.description as facility, LEN(a.ancestor) anc_length FROM locancestor a left join locations l on a.ancestor = l.location WHERE a.location = !@location AND a.siteid = !@siteid AND a.orgid = !@orgid AND a.ancestor like SUBSTRING(a.location, 0, 3) + '%' order by anc_length asc) f) " type="varchar"/>
       </attributes>
     </entity>
   </entities>
