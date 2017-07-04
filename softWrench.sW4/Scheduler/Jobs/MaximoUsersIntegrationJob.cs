@@ -44,7 +44,7 @@ namespace softWrench.sW4.Scheduler.Jobs {
 
 
         public override bool RunAtStartup() {
-            return !ApplicationConfiguration.IsLocal();
+            return false;
         }
     }
 }
