@@ -20,14 +20,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package, ApplicationSchemaDefinition schema) {
 
+            if (package.DailyOutageMeetings == null) {
+                package.DailyOutageMeetings = new List<DailyOutageMeeting>();
+            }
+
             if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "dailyOutageMeetings"))) {
                 //might be disabled due to security reasons
                 return false;
             }
 
-            if (package.DailyOutageMeetings == null) {
-                package.DailyOutageMeetings = new List<DailyOutageMeeting>();
-            }
+          
 
             var toKeepDom = new List<DailyOutageMeeting>();
             var anyNewDom = false;

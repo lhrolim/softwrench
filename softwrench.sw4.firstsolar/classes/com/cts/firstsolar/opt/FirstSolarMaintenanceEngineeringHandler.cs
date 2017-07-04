@@ -46,6 +46,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             
 
             if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "maintenanceEngineerings"))) {
+                package.MaintenanceEngineerings = package.MaintenanceEngineerings ?? new List<MaintenanceEngineering>();
                 //might be disabled due to security reasons
                 return false;
             }

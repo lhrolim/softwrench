@@ -106,6 +106,7 @@
 
           <association label="Work Order" labelfield="workorder_.description" target="wonum" extraprojectionvalues="workorderid" enableexpression="@id== null">
             <event type="afterchange" service="fsworkpackageService" method="onWorkorderSelected"/>
+            <dataprovider metadataid="wpcreationlookup"/>
           </association>
 
           <section showexpression="@wpnum != null" id="mainworkorder">

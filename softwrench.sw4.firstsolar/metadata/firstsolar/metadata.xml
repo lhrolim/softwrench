@@ -385,17 +385,20 @@
         <schema id="workpackageincomingdash" stereotype="list" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="wonum" label="WO#">
-            <renderer type="default" params="width=10%" />
+            <renderer type="default" params="width=7%" />
           </field>
-          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler"/>
+          <field attribute="description" label="Summary"/>
+          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
+            <renderer type="default" params="width=15%" />
+          </field>
           <field attribute="location_.facilityname" label="Site Name">
-            <renderer type="default" params="width=20%" />
+            <renderer type="default" params="width=15%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=20%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
-            <renderer type="datetime" params="width=20%" />
+            <renderer type="datetime" params="width=15%" />
           </field>
           <properties>
             <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
@@ -411,24 +414,25 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="reportdate" hidden="true"/>
           <field attribute="#id" hidden="true"/>
-          <field attribute="wonum" label="WO#">
-            <renderer type="default" params="width=10%" />
-          </field>
+          <field attribute="wonum" hidden="true"/>
           <field attribute="#wpnum" label="WP#">
-            <renderer type="default" params="width=10%" />
+            <renderer type="default" params="width=7%" />
           </field>
-          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler"/>
+          <field attribute="description" label="Summary"/>
+          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
+            <renderer type="default" params="width=15%" />
+          </field>
           <field attribute="location_.facilityname" label="Site Name">
             <renderer type="default" params="width=15%" />
           </field>
           <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=10%" />
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type="datetime" params="width=15%" />
           </field>
           <field attribute="#buildcomplete" label="Build Complete?">
-            <renderer type="checkbox" params="width=15%" />
+            <renderer type="checkbox" params="width=12%" />
           </field>
 
           <properties>

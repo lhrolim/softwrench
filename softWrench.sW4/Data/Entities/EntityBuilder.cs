@@ -101,7 +101,12 @@ namespace softWrench.sW4.Data.Entities {
                     if (value == "$null$ignorewatch") {
                         value = null;
                     }
-                    entity.UnmappedAttributes.Add(property.Name, value);
+                    if (entity.UnmappedAttributes.ContainsKey(property.Name)) {
+                        Log.WarnFormat("key already present at the dictionary");
+                    } else {
+                        entity.UnmappedAttributes.Add(property.Name, value);
+                    }
+
                 }
             }
         }

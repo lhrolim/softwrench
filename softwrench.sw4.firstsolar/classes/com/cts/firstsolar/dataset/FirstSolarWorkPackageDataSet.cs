@@ -392,7 +392,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
             HandleMwhTotalsAfterSave(workPackage);
-            return new TargetResult(workPackage.Id.ToString(), null, workPackage);
+            return new TargetResult(workPackage.Id.ToString(), null, null);
         }
 
 
@@ -442,7 +442,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             package = await Dao.SaveAsync(package);
 
             if (anyNewCallout || anyNewMe || anyNewDom) {
-                crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+                crudoperationData.ReloadMode = ReloadMode.MainDetail;
             }
 
 

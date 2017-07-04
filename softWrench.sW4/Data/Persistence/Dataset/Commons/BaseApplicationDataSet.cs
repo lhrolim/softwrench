@@ -634,7 +634,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //Main detail reload mode... full refresh would be handled at a higher level
             var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            result.ResultObject = await Engine().FindById(slicedEntityMetadata, id, userIdSite);
+            var detailRequest = new DetailRequest();
+            detailRequest.Key = application.Schema.GetSchemaKey();
+            detailRequest.UserIdSitetuple = userIdSite;
+            detailRequest.Id = id;
+            var detailResult = await GetApplicationDetail(application, SecurityFacade.CurrentUser(), detailRequest);
+            result.ResultObject = detailResult.ResultObject;
             return result;
 
 

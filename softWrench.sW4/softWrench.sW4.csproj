@@ -360,6 +360,7 @@
     <Compile Include="Data\API\JsonRequestWrapper.cs" />
     <Compile Include="Data\API\Response\ApplicationDetailResult.cs" />
     <Compile Include="Data\API\Response\ApplicationListResult.cs" />
+    <Compile Include="Data\API\Response\CompositionCreationResponse.cs" />
     <Compile Include="Data\API\Response\GenericApplicationResponse.cs" />
     <Compile Include="Data\API\Response\NotFoundResponse.cs" />
     <Compile Include="Data\API\Response\ReloadMode.cs" />

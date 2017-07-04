@@ -11,12 +11,8 @@ using softWrench.sW4.Util;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
     public class FirstSolarDashboardWcBuilder : IDynamicWhereBuilder {
 
-        protected DateTime Last5Days = DateTime.Now;
-        protected List<string> WosWithPackages = new List<string>();
-
         protected DateTime Last30Days = DateTime.Now;
-        protected DateTime Last31Days = DateTime.Now;
-        protected DateTime Last60Days = DateTime.Now;
+        protected List<string> WosWithPackages = new List<string>();
 
         [Import]
         public ISWDBHibernateDAO SWDBDao { get; set; }
@@ -43,10 +39,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
 
         public virtual IDictionary<string, object> GetParameters() {
             return new Dictionary<string, object>() {
-                { "last5Days", Last5Days },
-                { "wosWithPackage", WosWithPackages },
-                { "last30Days", Last30Days },
-                { "last60Days", Last60Days }
+                { "wosWithPackage", new List<string>(WosWithPackages) },
+                { "last30Days", Last30Days }
             };
         }
 
@@ -56,24 +50,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         }
 
         protected virtual string MaintenanceIncomingQuery() {
-            Last5Days = DateUtil.BeginOfDay(DateUtil.ParsePastAndFuture("5days", -1));
-            WosWithPackages = SWDBDao.FindByNativeQuery("select workorderid from opt_workpackage where createddate > :p0", Last5Days).Select(dict => dict["workorderid"]).ToList();
-            if (WosWithPackages.Any()) {
-                return "workorder.reportdate >= :last5Days and workorder.workorderid not in (:wosWithPackage)";
-            }
-            return "workorder.reportdate >= :last5Days";
+            // TODO: add a flag on wp to know if its completed to not search all wps on this query
+            WosWithPackages = SWDBDao.FindByNativeQuery("select workorderid from opt_workpackage").Select(dict => dict["workorderid"]).ToList();
+            return WosWithPackages.Any() ? "workorder.workorderid not in (:wosWithPackage)" : "1=1";
         }
 
         protected virtual string MaintenanceBuildQuery() {
             Last30Days = DateUtil.BeginOfDay(DateUtil.ParsePastAndFuture("30days", -1));
-            Last5Days = DateUtil.BeginOfDay(DateUtil.ParsePastAndFuture("5days", -1));
-            return "workorder.reportdate < :last5Days and workorder.reportdate >= :last30Days";
+            return "workorder.reportdate >= :last30Days";
         }
 
         protected virtual string MaintenanceBuild290Query() {
-            Last60Days = DateUtil.BeginOfDay(DateUtil.ParsePastAndFuture("60days", -1));
             Last30Days = DateUtil.BeginOfDay(DateUtil.ParsePastAndFuture("30days", -1));
-            return "workorder.reportdate < :last30Days and workorder.reportdate >= :last60Days";
+            return "workorder.reportdate < :last30Days";
         }
     }
 }
