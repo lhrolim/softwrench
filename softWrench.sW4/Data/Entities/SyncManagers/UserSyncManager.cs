@@ -169,7 +169,7 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
         }
 
         [CanBeNull]
-        private async Task <IList<User>> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser = false) {
+        private async Task<IList<User>> GetUserFromMaximoUsers(IEnumerable<AttributeHolder> maximoPersons, bool forceUser = false) {
             IList<User> result = new List<User>();
             foreach (var maximoPerson in maximoPersons) {
                 var userName = (string)maximoPerson.GetAttribute("maxuser_.loginid");
@@ -211,9 +211,18 @@ namespace softWrench.sW4.Data.Entities.SyncManagers {
                     var user = await DAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, userToIntegrate.user.MaximoPersonId);
                     if (user != null) {
                         user.MergeMaximoWithNewUser(userToIntegrate.user);
-                        DAO.Save(user);
+                        try {
+                            DAO.Save(user);
+                        } catch (Exception e) {
+                            Log.Error(e);
+                        }
+
                     } else {
-                        DAO.Save(userToIntegrate.user);
+                        try {
+                            DAO.Save(userToIntegrate.user);
+                        } catch (Exception e) {
+                            Log.Error(e);
+                        }
                     }
 
                 }

@@ -5,6 +5,8 @@ using softwrench.sw4.dashboard.classes.startup;
 using System.ComponentModel.Composition;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using log4net;
+using NHibernate.Mapping.ByCode;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Configuration.Services.Api;
 
@@ -21,6 +23,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public const string BuildPanelSchemaId = "workpackagebuilddash";
         public const string BuildPanel290SchemaId = "workpackagebuild290dash";
 
+        private ILog Log = LogManager.GetLogger(typeof(FirstSolarDashboardInitializer));
 
         [Import]
         public DashboardInitializationService DashboardInitializationService { get; set; }
@@ -32,7 +35,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public ISWDBHibernateDAO Dao { get; set; }
 
         [Transactional(DBType.Swdb)]
-        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
+        public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch)
+        {
+
+            Log.Info("initing fs dashboard registry");
+
             var maintenanceDash = DashboardInitializationService.FindByAlias(MaintenanceDashAlias) ??
                                   DashboardInitializationService.CreateDashboard("Maintenance Queues", MaintenanceDashAlias, new List<DashboardBasePanel>());
             maintenanceDash.Application = "_WorkPackage";
@@ -74,6 +81,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashQuery", "WoMaintenananceBuild", "dashboard:" + BuildPanelAlias);
             DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashQuery", "WoMaintenananceBuild290", "dashboard:" + BuildPanelAlias290);
             DashboardInitializationService.AddPanelsToDashboard(maintenanceDash, panels);
+
+            Log.Info("finishing dashboard registry");
         }
 
         public int Order => ChartInitializer.ORDER + 1;
