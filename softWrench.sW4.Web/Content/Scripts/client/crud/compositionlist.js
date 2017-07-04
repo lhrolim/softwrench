@@ -1000,12 +1000,18 @@
 
         //#endregion
 
+        
 
         $scope.clearNewCompositionDataForBatches = function () {
+
+            
 
             if (!$scope.isBatch()) {
                 return;
             }
+
+            const rootDatamap = crudContextHolderService.rootDataMap();
+            const updatedCompositionData = rootDatamap[$scope.relationship];
 
             //removing watchers first
             if ($scope.unWatcherArray) {
@@ -1013,6 +1019,9 @@
                     unwatcher();
                 });
             }
+
+            $scope.compositiondata = updatedCompositionData;
+
             //removing dirty flag
             $scope.compositionData().forEach((item, index) => {
                 delete item[CompositionConstants.IsDirty];

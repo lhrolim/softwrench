@@ -441,8 +441,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             package = await Dao.SaveAsync(package);
 
-            if (anyNewCallout || anyNewMe) {
-                crudoperationData.ReloadMode = ReloadMode.FullRefresh;
+            if (anyNewCallout || anyNewMe || anyNewDom) {
+                crudoperationData.ReloadMode = ReloadMode.MainDetail;
             }
 
 
