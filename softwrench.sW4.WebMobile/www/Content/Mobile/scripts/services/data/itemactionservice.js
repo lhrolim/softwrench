@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function itemActionService($q, synchronizationFacade, crudContextService, $ionicPopup, laborService) {
+    function itemActionService($q, synchronizationFacade, crudContextService, $ionicPopup, laborService, alertService) {
         //#region Utils
         //#endregion
 
@@ -45,11 +45,11 @@
                 .then(() => crudContextService.refreshGrid())
                 .then(() => $ionicPopup.alert({
                     title: "Quick Sync",
-                    template: "Sync Successful"
+                    template: alertService.buildCenteredTemplate("Sync Successful")
                 }))
                 .catch(error => $ionicPopup.alert({
                     title: "Quick Sync",
-                    template: error.message || "An error happened during sync"
+                    template: alertService.buildCenteredTemplate(error.message || "An error happened during sync")
                 }));
         }
 
@@ -116,7 +116,7 @@
     //#region Service registration
 
     angular.module("sw_mobile_services")
-        .factory("itemActionService", ["$q", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", itemActionService]);
+        .factory("itemActionService", ["$q", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", "alertService", itemActionService]);
 
     //#endregion
 

@@ -1,8 +1,8 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('GridItemPopOverController', ["$log", "$scope", "synchronizationFacade", "crudContextService", "itemActionService", "$ionicPopup", "menuModelService",
-        function ($log, $scope, synchronizationFacade, crudContextService, itemActionService, $ionicPopup, menuModelService) {
+    softwrench.controller('GridItemPopOverController', ["$log", "$scope", "synchronizationFacade", "crudContextService", "itemActionService", "$ionicPopup", "menuModelService", "alertService",
+        function ($log, $scope, synchronizationFacade, crudContextService, itemActionService, $ionicPopup, menuModelService, alertService) {
 
 
             $scope.quicksync = function () {
@@ -17,7 +17,7 @@
                 }).then(r => {
                     $ionicPopup.alert({
                         title: "Quick Sync",
-                        template: "Sync Successful"
+                        template: alertService.buildCenteredTemplate("Sync Successful")
                     });
                 }).finally(() => {
                     $scope.$emit("sw_griditemoperationperformed");

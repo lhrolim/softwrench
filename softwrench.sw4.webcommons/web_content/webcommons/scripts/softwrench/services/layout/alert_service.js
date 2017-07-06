@@ -162,6 +162,10 @@
             notificationViewModel.createNotification('warning', null, message, exception.type, exception.message, exception.stack);
         };
 
+        const buildCenteredTemplate = function (msg) {
+            return `<div style='text-align: center;vertical-align: middle;'>${msg}</div>`;
+        }
+
         const service = {
             confirm,
             confirmCancel,
@@ -170,7 +174,8 @@
             notifymessage,
             notifyexception,
             notifyWarning,
-            success
+            success,
+            buildCenteredTemplate
         };
 
         //display notification on JS error
