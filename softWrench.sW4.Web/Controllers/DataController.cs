@@ -195,6 +195,8 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(currentschemaKey, user, platform);
 
+            ContextLookuper.SetInternalQueryExecution();
+
             var maximoResult = new MaximoResult(id, null);
             if (!mockMaximo) {
                 maximoResult = DataSetProvider.LookupAsBaseDataSet(application)

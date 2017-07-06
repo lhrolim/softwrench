@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Linq;
+using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Data.Persistence.Relational {
 
@@ -33,7 +34,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             } else {
                 //where clauses should always be rebuild independent of cache, due to context variation, like modules, profiles, etc...
                 var whereBuilder = SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(typeof(DataConstraintsWhereBuilder));
-                var whereConstraint = whereBuilder.BuildWhereClause(entityMetadata.Name, queryMode,queryParameter.SearchDTO);
+                var whereConstraint = whereBuilder.BuildWhereClause(entityMetadata.Name, queryMode, queryParameter.SearchDTO);
                 queryString = String.Format(queryString, whereConstraint);
             }
             if (entityMetadata.HasUnion()) {
@@ -74,7 +75,7 @@ namespace softWrench.sW4.Data.Persistence.Relational {
             projectionBuilder.Append(QuerySelectBuilder.BuildSelectAttributesClause(entityMetadata, queryMode, queryParameter.SearchDTO));
             projectionBuilder.Append(QueryFromBuilder.Build(entityMetadata, queryParameter.SearchDTO));
             buffer.Append(projectionBuilder);
-            buffer.Append(compositeWhereBuilder.BuildWhereClause(entityMetadata.Name,queryMode, queryParameter.SearchDTO));
+            buffer.Append(compositeWhereBuilder.BuildWhereClause(entityMetadata.Name, queryMode, queryParameter.SearchDTO));
 
             var hasUnionWhereClauses = queryParameter.SearchDTO != null && queryParameter.SearchDTO.UnionWhereClauses != null;
             var isUnion = entityMetadata.HasUnion() || queryMode == QueryCacheKey.QueryMode.Union || hasUnionWhereClauses;
@@ -98,6 +99,9 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         protected IWhereBuilder GetCompositeBuilder(EntityMetadata entityMetadata, InternalQueryRequest queryParameter) {
             IList<IWhereBuilder> whereBuilders = new List<IWhereBuilder>();
+
+
+
             if (queryParameter.Id != null) {
                 //TODO: make some kind of hash to determine if this is needed...
                 whereBuilders.Add(new ByIdWhereBuilder(entityMetadata, queryParameter.Id));
@@ -112,16 +116,20 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                         : new SearchUtils(queryParameter.SearchDTO, entityMetadata.Name, entityMetadata.GetTableName(), searchParameterUtilsList));
                 }
             }
-            
+
             whereBuilders.Add(new FixedSearchWhereClauseBuilder());
-           
+
             if (queryParameter.Rowstamps != null) {
                 whereBuilders.Add(new RowstampQueryBuilder(queryParameter.Rowstamps));
             }
             if (!ApplicationConfiguration.IsUnitTest) {
-                whereBuilders.Add(
-                    SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(
-                        typeof(DataConstraintsWhereBuilder)));
+                var contextLookuper = SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
+                var context = contextLookuper.LookupContext();
+                if (queryParameter.Id == null || !context.InternalQueryExecution) {
+                    whereBuilders.Add(
+                        SimpleInjectorGenericFactory.Instance.GetObject<DataConstraintsWhereBuilder>(
+                            typeof(DataConstraintsWhereBuilder)));
+                }
             }
             whereBuilders.Add(new MultiTenantCustomerWhereBuilder());
             return new CompositeWhereBuilder(whereBuilders);

@@ -12,6 +12,7 @@ using softWrench.sW4.Security.Services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Web.Common;
 
 namespace softWrench.sW4.Web.Controllers.Routing {
@@ -19,6 +20,9 @@ namespace softWrench.sW4.Web.Controllers.Routing {
 
         private readonly BaseApplicationDataSet _dataObjectSet = new BaseApplicationDataSet();
         private readonly DataSetProvider _dataSetProvider = DataSetProvider.GetInstance();
+
+        private MockingUtils mockUtils =
+            SimpleInjectorGenericFactory.Instance.GetObject<MockingUtils>(typeof(MockingUtils));
 
         /// <summary>
         /// this data is serialized into a '.' separated string, in the format, schemaId.mode.platform. 
@@ -83,7 +87,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var dataSet = _dataSetProvider.LookupAsBaseDataSet(applicationName);
             if (resultSchema.Stereotype == SchemaStereotype.Detail) {
                 if (maximoMocked && id==null) {
-                    return MockingUtils.GetMockedDataMap(applicationName, resultSchema, nextMetadata);
+                    return mockUtils.GetMockedDataMap(applicationName, resultSchema, nextMetadata);
                 }
                 var detailRequest = new DetailRequest(nextSchemaKey, null) { Id = id };
                 detailRequest.CompositionsToFetch = operation != OperationConstants.CRUD_CREATE ? "#all" : null;

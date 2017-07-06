@@ -22,6 +22,8 @@ namespace softWrench.sW4.Security.Context {
 
         public string Module { get; set; }
 
+        public bool InternalQueryExecution { get; set; }
+
         private IDictionary<string, string> _parameters;
 
 

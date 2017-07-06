@@ -6,5 +6,6 @@ namespace softWrench.sW4.Security.Context {
         ContextHolder LookupContext();
 
         void FillContext(ApplicationMetadataSchemaKey key);
+        void SetInternalQueryExecution();
     }
 }

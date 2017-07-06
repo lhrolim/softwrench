@@ -57,6 +57,13 @@ namespace softWrench.sW4.Data.Persistence.Relational {
 
         }
 
+
+        public AttributeHolder FindOne([NotNull] EntityMetadata entityMetadata, [NotNull] PaginatedSearchRequestDto searchDto) {
+            searchDto.PageSize = 1;
+            searchDto.PageNumber = 1;
+            return Get(entityMetadata, searchDto).FirstOrDefault();
+        }
+
         private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
 
             return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => pair.Value, StringComparer.OrdinalIgnoreCase));

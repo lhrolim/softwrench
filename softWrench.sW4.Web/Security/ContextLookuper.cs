@@ -44,6 +44,12 @@ namespace softWrench.sW4.Web.Security {
             }
         }
 
+        public void SetInternalQueryExecution()
+        {
+            var ctx = LookupContext();
+            ctx.InternalQueryExecution = true;
+        }
+
         public static ContextHolder AddContext(ContextHolder context, bool isHttp) {
             context.Environment = ApplicationConfiguration.Profile;
             if (isHttp) {
