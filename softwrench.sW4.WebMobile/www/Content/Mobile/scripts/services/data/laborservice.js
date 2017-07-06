@@ -4,23 +4,42 @@
     function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, $log, offlineSchemaService, offlineSaveService, $rootScope, menuModelService) {
         //#region Utils
 
-        const constants = {
-            cache: {
-                laborKey: "sw:labor:activelabor",
-                laborParentKey: "sw:labor:activelabor:parent"
-            }
-        };
-
         const truncateDecimal = value => parseFloat(value.toFixed(2));
 
-        function cacheStartedLabor (parentId, labor) {
-            localStorageService.put(constants.cache.laborParentKey, parentId);
-            localStorageService.put(constants.cache.laborKey, labor);
+        let parentIdCache = null;
+        let laborCache = null;
+
+        // init cache
+        dao.findUnique("ActiveLaborTracker").then((tracker) => {
+            if (!tracker) {
+                return;
+            }
+            
+            parentIdCache = tracker.parentid;
+            dao.findById("DataEntry", parentIdCache).then((parent) => {
+                if (!parent || !parent.datamap || !parent.datamap["labtrans_"]) {
+                    return;
+                }
+                const labTrans = parent.datamap["labtrans_"];
+                angular.forEach(labTrans, (labor) => {
+                    if (labor[constants.localIdKey] === tracker.laborlocalid) {
+                        laborCache = labor;
+                    }
+                });
+            });
+        });
+
+        function trackStartedLabor(parentId, labor) {
+            parentIdCache = parentId;
+            laborCache = labor;
+            return dao.instantiate("ActiveLaborTracker", { parentid: parentIdCache, laborlocalid: labor[constants.localIdKey] }).then(tracker => dao.save(tracker));
         }
 
-        function clearCachedLabor() {
-            localStorageService.remove(constants.cache.laborParentKey);
-            localStorageService.remove(constants.cache.laborKey);
+        function clearTrackedLabor() {
+            return dao.executeQuery("delete from ActiveLaborTracker").then(() => {
+                parentIdCache = null;
+                laborCache = null;
+            });
         }
 
         function calculateLineCost(regularhours, payrate) {
@@ -30,9 +49,9 @@
             return _.isNaN(linecost) ? 0 : truncateDecimal(linecost);
         }
 
-        const getActiveLabor = () => localStorageService.get(constants.cache.laborKey);
+        const getActiveLabor = () => laborCache;
 
-        const getActiveLaborParent = () => localStorageService.get(constants.cache.laborParentKey);
+        const getActiveLaborParent = () => parentIdCache;
 
         const hasActiveLabor = () => !!getActiveLabor();
 
@@ -90,11 +109,11 @@
                     const context = crudContextService.getCrudContext();
                     if (!!inCurrentParent) {
                         // update the current detail context
-//                        context.originalDetailItemDatamap = savedParent.datamap;
+                        // context.originalDetailItemDatamap = savedParent.datamap;
                     } else {
                         // find the correct parent in the list and update it
                         const parentIndex = context.itemlist.findIndex(i => i.id === savedParent.id);
-                        if(parentIndex >= 0) context.itemlist[parentIndex] = savedParent;
+                        if (parentIndex >= 0) context.itemlist[parentIndex] = savedParent;
                     }
                     return labor;
                 });
@@ -110,10 +129,11 @@
             return setInitialLaborAndCraft(labor, 0)
                 .then(initialized => saveLabor(parent, initialized, true, "Labor Timer Started"))
                 .then(saved => {
-                    cacheStartedLabor(parent.id, saved);
-                    menuModelService.updateAppsCount();
-                    $rootScope.$broadcast("sw.labor.start");
-                    return saved;
+                    return trackStartedLabor(parent.id, saved).then(() => {
+                        menuModelService.updateAppsCount();
+                        $rootScope.$broadcast("sw.labor.start");
+                        return saved;
+                    });
                 });
         }
 
@@ -129,9 +149,10 @@
             const realParent = parent || crudContextService.currentDetailItem();
 
             return saveLabor(realParent, labor, stopingOnCurrentParent, "Labor Timer Stopped").then(() => {
-                clearCachedLabor();
-                $rootScope.$broadcast("sw.labor.stop");
-                return labor;
+                return clearTrackedLabor().then(() => {
+                    $rootScope.$broadcast("sw.labor.stop");
+                    return labor;
+                });
             });
         }
 
@@ -191,8 +212,9 @@
                 // TODO: Add a alert on all cases that causes this to let user choose between finishing the labor or discard it
                 if (!parent) {
                     $log.get("laborService#saveLabor").warn("Parent labor not found! This is the case when a labor timer is started and for some reason the parent of the labor is not on db anymore.");
-                    clearCachedLabor();
-                    return doStartLaborTransaction();
+                    return clearTrackedLabor().then(() => {
+                        return doStartLaborTransaction();
+                    });
                 }
                 return startLaborTransactionWhenLaborAlreadyStarted(parent);
             });

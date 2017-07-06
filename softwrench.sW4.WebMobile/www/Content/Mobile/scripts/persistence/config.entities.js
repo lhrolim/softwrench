@@ -357,6 +357,11 @@
         entities.Cookie.deleteAllStatement = "delete from Cookie";
         //#endregion
 
+        entities.ActiveLaborTracker = persistence.define("ActiveLaborTracker", {
+            parentid: "TEXT",
+            laborlocalid: "TEXT"
+        });
+
     }]);
 
 })(angular, persistence);

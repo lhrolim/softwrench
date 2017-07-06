@@ -312,6 +312,18 @@
                 this.dropTable("Cookie");
             }
         });
+
+        migrationGroup.addMigration("table ActiveLaborTracker", {
+            up: function () {
+                this.createTable("ActiveLaborTracker", (t) => {
+                    t.text("parentid");
+                    t.text("laborlocalid");
+                });
+            },
+            down: function () {
+                this.dropTable("ActiveLaborTracker");
+            }
+        });
     }]);
 
 })(angular, persistence);
