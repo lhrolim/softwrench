@@ -81,11 +81,11 @@
                 );
         }
 
-        function saveLabor(parent, labor, inCurrentParent) {
+        function saveLabor(parent, labor, inCurrentParent, saveCustomMessage) {
             const application = crudContextService.currentApplicationName();
             const laborMetadata = getLabTransMetadata();
 
-            return offlineSaveService.addAndSaveComposition(application, parent, labor, laborMetadata)
+            return offlineSaveService.addAndSaveComposition(application, parent, labor, laborMetadata, saveCustomMessage)
                 .then(savedParent => {
                     const context = crudContextService.getCrudContext();
                     if (!!inCurrentParent) {
@@ -108,7 +108,7 @@
             offlineSchemaService.fillDefaultValues(laborDetailSchema, labor, parent.datamap);
 
             return setInitialLaborAndCraft(labor, 0)
-                .then(initialized => saveLabor(parent, initialized, true))
+                .then(initialized => saveLabor(parent, initialized, true, "Labor Timer Started"))
                 .then(saved => {
                     cacheStartedLabor(parent.id, saved);
                     menuModelService.updateAppsCount();
@@ -128,7 +128,7 @@
             const stopingOnCurrentParent = !parent;
             const realParent = parent || crudContextService.currentDetailItem();
 
-            return saveLabor(realParent, labor, stopingOnCurrentParent).then(() => {
+            return saveLabor(realParent, labor, stopingOnCurrentParent, "Labor Timer Stopped").then(() => {
                 clearCachedLabor();
                 $rootScope.$broadcast("sw.labor.stop");
                 return labor;
@@ -158,7 +158,7 @@
         function startLaborTransactionWhenLaborAlreadyStarted(parent) {
             return $ionicPopup.confirm({
                 title: "Labor Reporting",
-                template: "There's a labor reporting in progress. Would you like to stop it in order to start a new one ?"
+                template: "There's a labor timer started. Would you like to stop it in order to start a new one?"
             }).then(res => {
                 if (res) {
                     // user wants to stop the current: stop it then start a new one
@@ -190,7 +190,7 @@
                 // (after a sync that forces it not shown anymore or was a created one and deleted)
                 // TODO: Add a alert on all cases that causes this to let user choose between finishing the labor or discard it
                 if (!parent) {
-                    $log.get("laborService#saveLabor").warn("Parent labor not found! This is the case when a labor is started and for some reason the parent of the labor is not on db anymore.");
+                    $log.get("laborService#saveLabor").warn("Parent labor not found! This is the case when a labor timer is started and for some reason the parent of the labor is not on db anymore.");
                     clearCachedLabor();
                     return doStartLaborTransaction();
                 }
@@ -210,7 +210,7 @@
 
             return $ionicPopup.confirm({
                 title: "Active Labor Report",
-                template: "Are you sure you want to finish the current labor report ?"
+                template: "Are you sure you want to stop the labor timer?"
             })
             .then(res =>  res ? doStopLaborTransaction() : null);
         }

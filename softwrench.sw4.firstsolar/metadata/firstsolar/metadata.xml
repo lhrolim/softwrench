@@ -931,10 +931,10 @@
 
                 <command id="startlabtrans" service="laborService" method="startLaborTransaction"
                          showexpression="service:laborService.shouldAllowLaborStart"
-                         icon="ion-play" label="Start Labor Report" cssclasses="green"/>
+                         icon="ion-play" label="Start Labor Timer" cssclasses="green"/>
                 <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
                          showexpression="service:laborService.shouldAllowLaborFinish"
-                         icon="ion-stop" label="Finish Labor Report" cssclasses="red" />
+                         icon="ion-stop" label="Stop Labor Timer" cssclasses="red" />
               </container>
             </commandgroup>
           </commandbars>

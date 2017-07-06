@@ -7,7 +7,7 @@
 
         var entities = offlineEntities;
 
-        const doSave = function (applicationName, item, title, showConfirmationMessage) {
+        const doSave = function (applicationName, item, title, showConfirmationMessage, saveCustomMessage) {
             const idxArrays = crudContextHolderService.getIndexes();
             const idx = searchIndexService.buildIndexes(idxArrays.textIndexes, idxArrays.numericIndexes, idxArrays.dateIndexes, item.datamap);
 
@@ -45,7 +45,7 @@
                     }
                     $rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
                     return showConfirmationMessage === undefined || showConfirmationMessage === null || showConfirmationMessage === true
-                        ? $ionicPopup.alert({ title: `${title} Saved Successfully` }).then(() => item)
+                        ? $ionicPopup.alert({ title: saveCustomMessage ? saveCustomMessage : `${title} Saved Successfully` }).then(() => item)
                         : item;
                 });
         };
@@ -56,7 +56,7 @@
                 return doSave(applicationName, item, title, showConfirmationMessage);
             },
 
-            addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata) {
+            addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata, saveCustomMessage) {
                 const datamap = item.datamap;
                 const associationKey = compositionMetadata.associationKey;
                 const compositionAppMetadata = metadataModelService.getCompositionByName(compositionMetadata.attribute);
@@ -77,7 +77,7 @@
                         //this will be stored on the Attachement entity instead
                         delete compositionItem["newattachment"];
                         datamap[associationKey].push(compositionItem);
-                        return doSave(applicationName, item, title);
+                        return doSave(applicationName, item, title, null, saveCustomMessage);
                     });
                 }
 
@@ -88,7 +88,7 @@
                     const itemPosition = datamap[associationKey].findIndex(e => e[constants.localIdKey] === compositionItem[constants.localIdKey]);
                     datamap[associationKey][itemPosition] = compositionItem;
                 }
-                return doSave(applicationName, item, title);
+                return doSave(applicationName, item, title, null, saveCustomMessage);
             },
         }
 
