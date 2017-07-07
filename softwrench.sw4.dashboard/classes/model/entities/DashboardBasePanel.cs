@@ -40,8 +40,6 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             get; set;
         }
 
-        private bool _visible = true;
-
         [ComponentProperty]
         public virtual DashboardFilter Filter {
             get; set;
@@ -51,6 +49,12 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         public DateTime CreationDate {
             get; set;
         }
+
+        [Property]
+        public string UserProfiles{
+            get; set;
+        }
+
         [Property]
         public DateTime? UpdateDate {
             get; set;
@@ -72,20 +76,9 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         /// <summary>
         /// Transient property that can make the panel invisible due to a presence of a role blocking it, for instance, or some other business logic
         /// </summary>
-        public bool Visible {
-            get {
-                return _visible;
-            }
-            set {
-                _visible = value;
-            }
-        }
+        public bool Visible { get; set; } = true;
 
-        public string Type {
-            get {
-                return GetType().Name;
-            }
-        }
+        public string Type => GetType().Name;
 
         protected bool Equals(DashboardBasePanel other) {
             return string.Equals(Alias, other.Alias);

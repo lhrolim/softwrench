@@ -14,7 +14,7 @@
                     }
                 },
 
-                showWithModalData: function(modalData) {
+                showWithModalData: function (modalData) {
                     $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modalData);
                 },
 
@@ -34,7 +34,7 @@
                 ///     listResult: 
                 /// 
                 /// </param>
-                
+
                 /// <param name="savefn">the savefn to execute upon modal submit click. It should have the following signature:
                 ///     save(modaldatamap) where:
                 ///         modaldatamap is the datamap of the modal
@@ -93,9 +93,9 @@
                         useavailableheight: properties.useavailableheight
                     };
 
-                    
+
                     $rootScope.$broadcast(JavascriptEventConstants.ModalShown, modaldata);
-                    
+
                 },
 
 
@@ -124,12 +124,10 @@
 
                 isShowingModal: function () {
                     return crudContextHolderService.isShowingModal();
-                },
-
-         
+                }
 
 
-                panelid: "#modal"
+
             };
 
         }]);

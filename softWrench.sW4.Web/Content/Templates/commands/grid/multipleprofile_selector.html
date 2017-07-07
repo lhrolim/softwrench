@@ -1,4 +1,4 @@
-<span ng-controller="GridMultipleProfileController" ng-show="hasMultiplesProfiles()">
+<span ng-controller="GridMultipleProfileController"  ng-if="hasMultiplesProfiles()">
     <i class="fa fa-users fa-fw" rel="tooltip" data-original-title="Security groups which would filter the grid data"/>
         <select class="combobox form-control-static" ng-model="currentSelectedProfile"
                 ng-options="profile.id as profile.name for profile in getMultiplesProfiles()" ng-change="changeCurrentProfile()"></select>

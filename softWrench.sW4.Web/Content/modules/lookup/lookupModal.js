@@ -62,6 +62,14 @@
                 $scope.searchSort = {};
                 $scope.searchObj = {};
 
+
+                $scope.$on(JavascriptEventConstants.RefreshGrid, function (event, searchData, searchOperator, extraparameters = {}) {
+                    if (extraparameters.panelid !== "#modal") {
+                        return;
+                    }
+                    $scope.lookupModalSearch();
+                });
+
                 $scope.lookupModalSearch = function (pageNumber) {
                     if (!$scope.loadedmodals[$scope.lookupObj.fieldMetadata.attribute]) {
                         //handling the case where an esc key is hit, closing the modal, but the ng-change is still active.

@@ -1,4 +1,6 @@
-﻿using cts.commons.portable.Util;
+﻿using System;
+using System.Collections.Generic;
+using cts.commons.portable.Util;
 using softWrench.sW4.Security.Context;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
@@ -15,6 +17,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string CurrentModuleKey = "currentmodule";
         private const string CurrentMetadataKey = "currentmetadata";
         private const string CurrentProfileKey = "currentprofile";
+        private const string ConstrainedProfilesKey = "constrainedprofiles";
         private const string PrintMode = "printmode";
         private const string ScanMode = "scanmode";
         private const string OfflineMode = "offlinemode";
@@ -27,6 +30,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
             var currentModule = RequestUtil.GetValue(actionContext.Request, CurrentModuleKey);
             var currentMetadataId = RequestUtil.GetValue(actionContext.Request, CurrentMetadataKey);
             var profileAsString = RequestUtil.GetValue(actionContext.Request, CurrentProfileKey);
+            var constrainedProfilesSt = RequestUtil.GetValue(actionContext.Request, ConstrainedProfilesKey);
             var printMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, PrintMode));
             var scanMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, ScanMode));
             var offlineMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, OfflineMode));
@@ -37,6 +41,15 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (currentMetadataId != null) {
                 appCtx = new ApplicationLookupContext { MetadataId = currentMetadataId };
             }
+            var constrainedProfiles = new HashSet<int?>();
+
+            if (constrainedProfilesSt != null) {
+                var profilesToLimit = constrainedProfilesSt.Split(',');
+                foreach (var profile in profilesToLimit) {
+                    constrainedProfiles.Add(Convert.ToInt32(profile));
+                }
+            }
+
             var instance = ContextLookuper.GetInstance();
             instance.AddContext(new ContextHolder {
                 Module = currentModule,
@@ -46,7 +59,8 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 OfflineMode = offlineMode,
                 MockMaximo = mockMaximo,
                 MockSecurity = mockSecurity,
-                CurrentSelectedProfile = string.IsNullOrEmpty(profileAsString) ? (int?) null : int.Parse(profileAsString),
+                CurrentSelectedProfile = string.IsNullOrEmpty(profileAsString) ? (int?)null : int.Parse(profileAsString),
+                ConstrainedProfiles = constrainedProfiles,
                 MetadataParameters = PropertyUtil.ConvertToDictionary(currentMetadataParameter)
             });
 

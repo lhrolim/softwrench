@@ -458,6 +458,7 @@
             /// 
             /// pageNumber --> the page in which to perform the search, would be 1 by default
             /// pageSize --> the number of items to display per page, would be 30 by default
+            /// panelid --> the panel which initiated the request
             /// mode --> the mode of the schema to use, defaults to none
             /// searchOperators --> the array of operators to apply to searchdata array, in the same order
             /// searchSort --> the sorting object
@@ -501,10 +502,11 @@
                 if (extraParameters.addToHistory) {
                     historyService.addToHistory(urlToUse);
                 }
-                if (extraParameters.metadataid != null) {
+                if (!!extraParameters.metadataid || !!extraParameters.panelid) {
                     return $http.get(urlToUse, {
                         headers: {
-                            currentmetadata: extraParameters.metadataid
+                            currentmetadata: extraParameters.metadataid,
+                            panelid: extraParameters.panelid
                         }
                     });
                 } else {

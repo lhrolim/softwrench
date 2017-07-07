@@ -11,8 +11,11 @@
                         lockCommandBars();
                         lockTabs();
                     }
+                    const panelid = config.headers['panelid'] || null;
+
                     config.headers['currentmodule'] = config.headers['currentmodule'] || contextService.retrieveFromContext('currentmodule');
-                    config.headers['currentprofile'] = config.headers['currentprofile'] || crudContextHolderService.getCurrentSelectedProfile();
+                    config.headers['currentprofile'] = config.headers['currentprofile'] || crudContextHolderService.getCurrentSelectedProfile(panelid);
+                    config.headers['constrainedprofiles'] = config.headers['constrainedprofiles'] || crudContextHolderService.getConstrainedProfiles(panelid);
                     config.headers['currentmetadata'] = config.headers['currentmetadata'] || contextService.retrieveFromContext('currentmetadata');
                     config.headers['mockerror'] = sessionStorage['mockerror'];
                     config.headers['mockmaximo'] = sessionStorage['mockmaximo'];

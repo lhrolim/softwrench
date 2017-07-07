@@ -207,6 +207,14 @@
             return this.getContext(panelid).currentSelectedProfile;
         }
 
+        getConstrainedProfiles(panelid) {
+            return this.getContext(panelid).constrainedProfiles;
+        }
+
+        setConstrainedProfiles(constrainedProfiles,panelid) {
+            return this.getContext(panelid).constrainedProfiles = constrainedProfiles;
+        }
+
         setCurrentSelectedProfile(currentProfile, panelid) {
             return this.getContext(panelid).currentSelectedProfile = currentProfile;
         }
@@ -331,6 +339,12 @@
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
             //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
             this.contextService.insertIntoContext("grid_refreshdata", { data: applicationListResult, panelid }, true);
+        }
+
+        lookupDataLoaded(lookupResult) {
+            const context = this.getContext("#modal");
+            context.affectedProfiles = lookupResult.affectedProfiles;
+            context.currentSelectedProfile = lookupResult.currentSelectedProfile;
         }
 
         disposeDetail(panelid, clearTab) {

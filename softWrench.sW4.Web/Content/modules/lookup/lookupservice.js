@@ -27,11 +27,11 @@
                 if (!!searchDatamap) {
                     fields = searchDatamap;
                 }
-                const eagerOptions = this.getEagerLookupOptions(lookupDTO,searchDTO);
+                const eagerOptions = this.getEagerLookupOptions(lookupDTO, searchDTO);
                 if (!!eagerOptions) {
                     return this.$q.when(eagerOptions);
                 }
-           
+
 
                 //this should reflect LookupOptionsFetchRequestDTO.cs
                 const parameters = {
@@ -42,7 +42,11 @@
                 parameters.searchDTO = searchDTO;
                 const urlToUse = url("/api/generic/Association/GetLookupOptions?" + $.param(parameters));
                 const jsonString = angular.toJson(this.datamapSanitizeService.sanitizeDataMapToSendOnAssociationFetching(fields));
-                return this.$http.post(urlToUse, jsonString).then(response=> {
+                return this.$http.post(urlToUse, jsonString, {
+                    headers: {
+                        panelid: "#modal"
+                    }
+                }).then(response => {
                     return response.data;
                 });
             }
@@ -52,9 +56,9 @@
 
         }
 
-        
 
-        clearAutoCompleteCache(associationKey = RequiredParam ) {
+
+        clearAutoCompleteCache(associationKey = RequiredParam) {
             return this.$rootScope.$broadcast(JavascriptEventConstants.ClearAutoCompleteCache, associationKey);
         }
 
@@ -183,23 +187,27 @@
             lookupObj.schema = associationResult.associationSchemaDefinition;
             lookupObj.options = associationResult.associationData;
 
-         
+
             lookupObj.modalPaginationData = {
                 pageCount: associationResult.pageCount,
                 pageNumber: associationResult.pageNumber,
                 pageSize: associationResult.pageSize,
                 totalCount: associationResult.totalCount,
                 selectedPage: associationResult.pageNumber,
-                paginationOptions : associationResult.paginationOptions || [10, 30, 100]
-        };
+                paginationOptions: associationResult.paginationOptions || [10, 30, 100]
+            };
 
 
-        if (associationResult.searchDTO && associationResult.searchDTO.searchParams && associationResult.searchDTO.searchValues) {
-            const searchDataAndOperator = this.searchService.buildSearchDataAndOperations(associationResult.searchDTO.searchParams, associationResult.searchDTO.searchValues);
-            lookupObj.searchData = searchDataAndOperator.searchData;
-            lookupObj.searchOperator = searchDataAndOperator.searchOperator;
-        }
-            
+            if (associationResult.searchDTO && associationResult.searchDTO.searchParams && associationResult.searchDTO.searchValues) {
+                const searchDataAndOperator = this.searchService.buildSearchDataAndOperations(associationResult.searchDTO.searchParams, associationResult.searchDTO.searchValues);
+                lookupObj.searchData = searchDataAndOperator.searchData;
+                lookupObj.searchOperator = searchDataAndOperator.searchOperator;
+            }
+
+            if (!!associationResult.affectedProfiles && associationResult.affectedProfiles.length > 1) {
+                this.crudContextHolderService.lookupDataLoaded(associationResult);
+            }
+
             return lookupObj;
         }
 

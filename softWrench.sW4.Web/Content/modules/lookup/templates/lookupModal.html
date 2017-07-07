@@ -9,9 +9,15 @@
                     <h4 class="modal-title">{{i18N('general.select','Select')}} {{lookupObj.fieldMetadata.label}}</h4>
                 </div>
                 <div class="context clearfix">
+                    
+                    <grid-multiple-profile panelid="'#modal'"></grid-multiple-profile>
+
                     <div class="input-group lazy-search">
+                        
+                        
+
                         <input type="search" class="hidden-phone form-control" ng-model="lookupsearchdata" ng-model-options='{ debounce: 350 }' data-type="lookupsearchinput"
-                               placeholder="Find {{placeholder}}" data-association-key="{{provider}}" ng-enter="lookupModalSearch(pageNumber)" ng-change="lookupModalSearch(pageNumber, $event)"  />
+                               placeholder="Find {{placeholder}}" data-association-key="{{provider}}" ng-enter="lookupModalSearch(pageNumber)" ng-change="lookupModalSearch(pageNumber, $event)"/>
                         <span class="input-group-addon last" ng-click="lookupModalSearch(pageNumber)">
                             <i class="fa fa-search"></i>
                         </span>

@@ -14,7 +14,7 @@
             const idx = previousURL.indexOf("#");
             contextService.deleteFromContext("swGlobalRedirectURL");
             if (idx !== -1) {
-                $location.path(previousURL.subString(0,idx));
+                $location.path(previousURL.subString(0, idx));
             }
             $location.url($location.path());
             window.location.reload();
@@ -76,6 +76,8 @@
 
 
             return $timeout(function () {
+
+                //TODO: make it panelid-aware
                 //this timeout is needed because a digest might already be in progress
                 if (!modalService.isShowingModal()) {
                     //TODO: make it panelid-aware
@@ -214,7 +216,7 @@
                     crudContextHolderService.applicationChanged(nextSchema, serverResponse.resultObject);
                 }
             }
-            
+
 
             return $rootScope.$broadcast(JavascriptEventConstants.RenderViewWithData, serverResponse);
         };
@@ -353,8 +355,8 @@
     }
 
     angular
-    .module('sw_layout')
-    .service('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', "$location", "crudContextHolderService", redirectService]);
+        .module('sw_layout')
+        .service('redirectService', ['$http', '$rootScope', '$log', '$q', 'contextService', 'fixHeaderService', 'restService', 'applicationService', 'alertService', 'modalService', 'schemaCacheService', '$timeout', 'searchService', 'historyService', "$location", "crudContextHolderService", redirectService]);
 
 })(angular);
 

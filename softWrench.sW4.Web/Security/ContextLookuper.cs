@@ -11,6 +11,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using softwrench.sw4.api.classes.fwk.context;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
@@ -62,6 +63,11 @@ namespace softWrench.sW4.Web.Security {
             var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
             //TODO: Async
             var availableProfiles = AsyncHelper.RunSync(() => WhereClauseFacade.ProfilesByApplication(applicationName, user));
+            if (context.ConstrainedProfiles != null && context.ConstrainedProfiles.Any()) {
+                availableProfiles =
+                    new HashSet<UserProfile>(availableProfiles.Where(a => context.ConstrainedProfiles.Contains(a.Id)));
+            }
+
             context.AvailableProfilesForGrid = availableProfiles;
             if (availableProfiles.Any() && context.CurrentSelectedProfile == null) {
                 //if the profile was already set at client side, let´s not change it
@@ -120,7 +126,12 @@ namespace softWrench.sW4.Web.Security {
                     return context;
                 }
 
-                context.UserProfiles = new SortedSet<int?>(user.Profiles.Select(s => s.Id));
+                if (context.ConstrainedProfiles != null && context.ConstrainedProfiles.Any()) {
+                    context.UserProfiles = new SortedSet<int?>(user.Profiles.Select(s => s.Id).Where(p => context.ConstrainedProfiles.Contains(p)));
+                } else {
+                    context.UserProfiles = new SortedSet<int?>(user.Profiles.Select(s => s.Id));
+                }
+
                 context.Environment = ApplicationConfiguration.Profile;
                 context.OrgId = user.OrgId;
                 context.SiteId = user.SiteId;

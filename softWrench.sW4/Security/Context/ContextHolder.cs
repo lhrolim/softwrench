@@ -22,9 +22,16 @@ namespace softWrench.sW4.Security.Context {
             get; set;
         }
 
-        public IEnumerable<UserProfile> AvailableProfilesForGrid {
+        /// <summary>
+        /// Some operations might be limited to a few profiles, even if the user is a member of multiple ones.
+        /// Ex: one dashboard that is limited to one given profile, and the user has 2 (ex: ledalfow dashboards while the user is a member of both ledaflow and support24)
+        /// </summary>
+        public IEnumerable<int?> ConstrainedProfiles {
             get; set;
         }
+
+
+        public IEnumerable<UserProfile> AvailableProfilesForGrid { get; set; } = new List<UserProfile>();
 
         public string User {
             get; set;

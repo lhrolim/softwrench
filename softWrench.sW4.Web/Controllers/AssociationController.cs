@@ -13,6 +13,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.API.Association;
 using softWrench.sW4.Data.API.Association.Lookup;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
@@ -95,6 +96,7 @@ namespace softWrench.sW4.Web.Controllers {
             _contextLookuper.FillContext(request.ParentKey);
             var applicationMetadata = MetadataProvider.Application(application).ApplyPoliciesWeb(request.ParentKey);
 
+            
 
             var baseDataSet = _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
 
@@ -103,6 +105,21 @@ namespace softWrench.sW4.Web.Controllers {
 
 
             var response = await baseDataSet.GetLookupOptions(applicationMetadata, request, cruddata);
+
+
+            var association = applicationMetadata.Schema.Associations().FirstOrDefault(f => (EntityUtil.IsRelationshipNameEquals(f.AssociationKey, request.AssociationFieldName)));
+
+            if (association != null) {
+                var entityName = association.EntityAssociation.To;
+                if (entityName.EqualsIc("sr")) {
+                    entityName = "servicerequest";
+                }
+                _contextLookuper.FillGridContext(entityName, SecurityFacade.CurrentUser());
+            }
+
+            var ctx = _contextLookuper.LookupContext();
+            response.AffectedProfiles = ctx.AvailableProfilesForGrid.Select(s => s.ToDTO());
+            response.CurrentSelectedProfile = ctx.CurrentSelectedProfile;
 
             return new GenericResponseResult<LookupOptionsFetchResultDTO>(response);
         }

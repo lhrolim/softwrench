@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Applications;
@@ -19,6 +20,15 @@ namespace softWrench.sW4.Data.API.Association.Lookup {
                 TotalCount = associationData?.Count() ?? 0
             };
         }
+
+        public IEnumerable<UserProfile.UserProfileDTO> AffectedProfiles {
+            get; set;
+        }
+
+        public int? CurrentSelectedProfile {
+            get; set;
+        }
+
 
         public LookupOptionsFetchResultDTO(int totalCount, int pageNumber, int pageSize, IEnumerable<IAssociationOption> associationData, ApplicationMetadata associationApplicationMetadata, SearchRequestDto searchDTO = null)
             : base(associationData) {

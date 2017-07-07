@@ -17,6 +17,7 @@
             templateUrl: contextService.getResourceUrl('/Content/Templates/crud/crud_list.html'),
             scope: {
                 schema: '=',
+                constrainedprofiles: '=',
                 datamap: '=',
                 fieldstodisplay: '=',
                 previousschema: '=',
@@ -37,14 +38,14 @@
                 "fieldService", "commandService", "i18NService", "modalService", "multisortService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
-                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService",
+                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService","crudlistViewmodel",
                 function ($scope, $q, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService, printService,
                     fieldService, commandService, i18NService, modalService, multisortService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
-                    checkpointService, schemaCacheService, dispatcherService, schemaService) {
+                    checkpointService, schemaCacheService, dispatcherService, schemaService, crudlistViewmodel) {
 
                     $scope.$name = "crudlist";
 
@@ -532,11 +533,13 @@
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
                             metadataid: $scope.metadataid,
                             saveSwGlobalRedirectURL: typeof $scope.panelid === "undefined" && $scope.ismodal !== "true",
-                            addToHistory: typeof $scope.panelid === "undefined" && !printMode
+                            addToHistory: typeof $scope.panelid === "undefined" && !printMode,
+                            panelid: $scope.panelid
                         }).then(response => {
                             var data = response.data;
                             // Set the scroll position to the top of the new page
                             contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
+                            crudlistViewmodel.initGridFromServerResult(data, $scope.panelid);
                             if (!printMode) {
                                 $scope.gridRefreshed(data, $scope.panelid);
                             } else {
@@ -792,6 +795,7 @@
                             $scope.panelid = modalService.panelid;
                         }
 
+                        crudContextHolderService.setConstrainedProfiles($scope.constrainedprofiles, $scope.panelid);
                         $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
 
                         if (dataRefreshed) {

@@ -55,6 +55,11 @@ namespace softWrench.sW4.Configuration.Definitions {
             var comparison = other.MatchType.GetPriority().CompareTo(MatchType.GetPriority());
             if (comparison == 0) {
                 var numberOfExacts = other.NumberOfExacts.CompareTo(NumberOfExacts);
+                if (numberOfExacts == 0 && ProfileAsked && _profile.HasValue && other._profile.HasValue) {
+                    //let´s order by profile numbering, so that the multiselect combo displays the right value on the screen
+                    return _profile.Value.CompareTo(other._profile.Value);
+                }
+
                 return numberOfExacts == 0 ? 1 : numberOfExacts;
             }
 
