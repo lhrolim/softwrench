@@ -24,12 +24,22 @@
             return configs[key];
         }
 
-        function updateConfigurations() {
+        function updateConfigurations(nodigest=true) {
             const parameters = {
                 cacheTimestamp: contextService.get(timestampKey, true)
             };
             const config = { avoidspin: true };
-            return restService.getPromiseNoDigest("Configuration", "GetClientSideConfigurations", parameters, config).then(result => {
+            var promise;
+            if (nodigest) {
+                promise = restService.getPromiseNoDigest("Configuration",
+                    "GetClientSideConfigurations",
+                    parameters,
+                    config);
+            } else {
+                promise = restService.getPromise("Configuration","GetClientSideConfigurations",parameters,config);
+            }
+
+            return promise.then(result => {
                 const data = result.data;
                 if (!data || data === "null") {
                     return null;

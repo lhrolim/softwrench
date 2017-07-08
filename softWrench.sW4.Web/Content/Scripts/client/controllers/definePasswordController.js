@@ -69,7 +69,7 @@
 
         $scope.confirm = function () {
             spinService.start();
-            configurationService.updateConfigurations()
+            configurationService.updateConfigurations(false)
                 .then(() => passwordValidationService.validatePasswordAsync($scope.user.password, { username: $scope.username }))
                 .then(errors => $scope.innerConfirm(errors));
         }
