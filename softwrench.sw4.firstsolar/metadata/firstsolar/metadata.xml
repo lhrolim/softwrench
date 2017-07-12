@@ -401,7 +401,6 @@
             <renderer type="datetime" params="width=15%" />
           </field>
           <properties>
-            <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
           </properties>
         </schema>
@@ -415,6 +414,9 @@
           <field attribute="reportdate" hidden="true"/>
           <field attribute="#id" hidden="true"/>
           <field attribute="wonum" hidden="true"/>
+          <field attribute="#colorcode">
+            <renderer type="colorcode" params="width=2%;"/>
+          </field>
           <field attribute="#wpnum" label="WP#">
             <renderer type="default" params="width=7%" />
           </field>

@@ -374,6 +374,11 @@
                                 var color = scope.statusColor(dm[column.rendererParameters['column']] || 'null', schema.applicationName);
                                 html += "<div class='statuscolumncolor' style='background-color:{0}'>".format(color);
                             }
+                            else if (column.rendererType === 'colorcode') {
+                                var colorCode = dm[attribute] || "white";
+                                var colorCodeClass = column.rendererParameters["color.code.custom.class"] || "grid-color-code";
+                                html += `<div class="${colorCodeClass}" style="background-color:${colorCode}">`;
+                            }
                             else if (column.rendererType === 'checkbox') {
                                 var name = attribute;
                                 html += "<div class='cell-wrapper'>";

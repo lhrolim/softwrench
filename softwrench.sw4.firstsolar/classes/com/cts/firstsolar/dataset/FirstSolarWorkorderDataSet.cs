@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
@@ -144,7 +146,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return await EntityRepository.GetGrouppingById(GetWorkPackageEntity(), wpSearchDTO);
         }
 
-        private static ApplicationListResult BuildCombinedProjectedData(ApplicationListResult baseList, IDictionary<string, DataMap> wpData) {
+        private ApplicationListResult BuildCombinedProjectedData(ApplicationListResult baseList, IDictionary<string, DataMap> wpData) {
+            var context = ContextLookuper.LookupContext();
+            var schema = context.ApplicationLookupContext.Schema;
+
             foreach (var item in baseList.ResultObject) {
                 //TODO: fix call hierarchy, as it´s always a DataMap
                 var dm = item as DataMap;
@@ -162,6 +167,25 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                         dm.Add("#" + field.Key, field.Value);
                     }
                 }
+
+                if (dm.ContainsKey("#buildcomplete") && (dm["#buildcomplete"] is bool) && (dm["#buildcomplete"] as bool?).Value) {
+                    dm["#colorcode"] = "#39b54a"; // green
+                    continue;
+                }
+                if (FirstSolarDashboardInitializer.BuildPanel290SchemaId.Equals(schema)) {
+                    dm["#colorcode"] = "#f65752"; // red
+                    continue;
+                }
+
+                if (!dm.ContainsKey("reportdate") || !(dm["reportdate"] is DateTime)) {
+                    continue;
+                }
+
+                var reportDate = (dm["reportdate"] as DateTime?).Value;
+                var today = DateUtil.BeginOfDay(DateTime.Now);
+                var reportDay = DateUtil.BeginOfDay(reportDate);
+                var diffInDays = (today - reportDay).Days;
+                dm["#colorcode"] = diffInDays >= 6 && diffInDays <= 25 ? "#39b54a" : "#f2d935"; // green or yellow
             }
             return baseList;
         }

@@ -13,34 +13,9 @@
                 return null;
             }
 
-            if (datamap["#buildcomplete"]) {
+            if (schema.schemaId === "workpackagebuild290dash" && !datamap["#buildcomplete"]) {
                 return {
-                    bgcolor: '#39b54a', // green,
-                    forecolor: 'white'
-                }
-            }
-
-            if (schema.schemaId === "workpackagebuilddash") {
-                const today = moment().startOf("day");
-                const reportDay = moment(datamap["reportdate"]).startOf("day");
-                const diffInDays = today.diff(reportDay, "days");
-                if (diffInDays >= 6 && diffInDays <= 25) {
-                    return {
-                        bgcolor: '#39b54a', // green,
-                        forecolor: 'white'
-                    }
-                }
-
-                return {
-                    bgcolor: '#f2d935', // yellow,
-                    forecolor: 'black'
-                }
-            }
-
-            if (schema.schemaId === "workpackagebuild290dash") {
-                return {
-                    bgcolor: '#f65752', // red,
-                    forecolor: 'white'
+                    forecolor: "#f65752" // red
                 }
             }
         }
