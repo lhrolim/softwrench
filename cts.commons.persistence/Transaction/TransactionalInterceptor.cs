@@ -137,7 +137,8 @@ namespace cts.commons.persistence.Transaction {
             if (context.TransactionCounter != 1 && !force) {
                 return;
             }
-
+            context.Session?.Dispose();
+            context.Transaction?.Dispose();
             // clears the transaction context
             if (context.Session != null && context.Session.IsOpen) {
                 context.Session.Close();
