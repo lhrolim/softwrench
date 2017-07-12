@@ -124,8 +124,10 @@
 
                 isShowingModal: function () {
                     return crudContextHolderService.isShowingModal();
-                }
+                },
 
+                //do not remove this constant
+                panelid: "#modal"
 
 
             };

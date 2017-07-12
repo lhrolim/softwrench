@@ -8,6 +8,7 @@
             }
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(fsrequestService.buildDatamap(schema), item);
+                mergedItem["mwhlostyesterday"] = 0;
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback);
                 });
