@@ -50,10 +50,10 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
             get; set;
         }
 
-        [Property]
-        public string UserProfiles{
-            get; set;
-        }
+//        [Property]
+//        public string UserProfiles{
+//            get; set;
+//        }
 
         [Property]
         public DateTime? UpdateDate {

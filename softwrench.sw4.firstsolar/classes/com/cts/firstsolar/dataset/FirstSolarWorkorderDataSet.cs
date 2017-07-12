@@ -141,8 +141,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             wpFilters.ForEach(pair => {
                 wpSearchDTO.AppendSearchEntry(pair.Key, pair.Value.RawValue);
             });
-            wpSearchDTO.WhereClause = DefaultValuesBuilder.ConvertAllValues(" WorkPackage_.createddate > @past(60 days) ", SecurityFacade.CurrentUser());
+//            wpSearchDTO.WhereClause = DefaultValuesBuilder.ConvertAllValues(" WorkPackage_.createddate > :createddate ", SecurityFacade.CurrentUser());
             wpSearchDTO.PageSize = 1000;
+            var now = DateTime.Now;
+            now = DateUtil.BeginOfDay(now.AddDays(-60));
+
+            wpSearchDTO.AppendSearchEntry(":createddate", ">=" + now.ToShortDateString());
+            
             return await EntityRepository.GetGrouppingById(GetWorkPackageEntity(), wpSearchDTO);
         }
 

@@ -404,6 +404,32 @@
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
           </properties>
         </schema>
+
+
+        <schema id="workpackageincomingcmdash" stereotype="list" platform="web">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wonum" label="WO#">
+            <renderer type="default" params="width=7%" />
+          </field>
+          <field attribute="description" label="Summary"/>
+          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="location_.facilityname" label="Site Name">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="assetnum" label="Asset">
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="schedstart" label="Scheduled Start Date">
+            <renderer type="datetime" params="width=15%" />
+          </field>
+          <properties>
+            <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
+            <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
+          </properties>
+        </schema>
+        
         
         <schema id="workpackagebuilddash" stereotype="list" platform="web">
           <filters>

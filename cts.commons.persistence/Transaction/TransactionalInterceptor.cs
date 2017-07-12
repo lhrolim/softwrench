@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using Castle.DynamicProxy;
+using log4net;
+using log4net.Core;
 using IInterceptor = Castle.DynamicProxy.IInterceptor;
 
 namespace cts.commons.persistence.Transaction {
@@ -17,6 +19,8 @@ namespace cts.commons.persistence.Transaction {
 
         private const string TransactionContextKey = "TransactionContext";
         private readonly SimpleInjectorGenericFactory _factory;
+
+        private ILog Log = LogManager.GetLogger(typeof(TransactionalInterceptor));
 
         // forces SimpleInjectorGenericFactory to be resolved first, do not remove
         public TransactionalInterceptor(SimpleInjectorGenericFactory factory) {
@@ -107,7 +111,8 @@ namespace cts.commons.persistence.Transaction {
                     CommitTx(context);
                     Clear(context);
                     context.TransactionCounter--;
-                } catch (Exception) {
+                } catch (Exception e) {
+                    Log.Warn(e);
                     InnerRollbackTx(context, true);
                     Clear(context, true);
                     throw;

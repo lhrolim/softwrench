@@ -26,6 +26,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                 return MaintenanceIncomingQuery();
             }
 
+            if (FirstSolarDashboardInitializer.IncomingCmPanelSchemaId.Equals(searchDto.Key.SchemaId)) {
+                return MaintenanceIncomingQuery();
+            }
+
             if (FirstSolarDashboardInitializer.BuildPanelSchemaId.Equals(searchDto.Key.SchemaId)) {
                 return MaintenanceBuildQuery();
             }
@@ -49,7 +53,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'PM' and workorder.outreq = 1" + siteClause;
         }
 
+        public virtual string MaintenanceCmDashQuery() {
+            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808' )" : "";
+            return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'wo' and workorder.outreq = 1" + siteClause;
+        }
+
         protected virtual string MaintenanceIncomingQuery() {
+            // TODO: add a flag on wp to know if its completed to not search all wps on this query
+            WosWithPackages = SWDBDao.FindByNativeQuery("select workorderid from opt_workpackage").Select(dict => dict["workorderid"]).ToList();
+            return WosWithPackages.Any() ? "workorder.workorderid not in (:wosWithPackage)" : "1=1";
+        }
+
+        protected virtual string MaintenanceIncomingCmQuery() {
             // TODO: add a flag on wp to know if its completed to not search all wps on this query
             WosWithPackages = SWDBDao.FindByNativeQuery("select workorderid from opt_workpackage").Select(dict => dict["workorderid"]).ToList();
             return WosWithPackages.Any() ? "workorder.workorderid not in (:wosWithPackage)" : "1=1";
