@@ -73,6 +73,7 @@
 <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
         <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
+        <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
         <attribute name="outreq" type="boolean"/>
       </attributes>
       <relationships>
@@ -212,7 +213,7 @@
       <attributes>
         <attribute name="parent" query=" (SELECT parent FROM lochierarchy WHERE location = !@location AND siteid = !@siteid AND orgid = !@orgid) " type="varchar"/>
         <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
-        <attribute name="facilityname" query=" (select f.facility from (SELECT top 1 a.ancestor, l.description as facility, LEN(a.ancestor) anc_length FROM locancestor a left join locations l on a.ancestor = l.location WHERE a.location = !@location AND a.siteid = !@siteid AND a.orgid = !@orgid AND a.ancestor like SUBSTRING(a.location, 0, 3) + '%' order by anc_length asc) f) " type="varchar"/>
+        <attribute name="facilityname" query=" (CASE WHEN !@location like 'ACS%' THEN 'ACS1'  WHEN !@location like 'ALM%' THEN 'ALM1'  WHEN !@location like 'AVV%' THEN 'AVV1' WHEN !@location like 'BRS%' THEN 'BRS1' WHEN !@location like 'CBLA%' THEN 'CBLA' WHEN !@location like 'CIM%' THEN 'CIM1' WHEN !@location like 'GAL%' THEN 'GAL1' WHEN !@location like 'HON%' THEN 'HON1' WHEN !@location like 'LMS%' THEN 'LMS1' WHEN !@location like 'MAN%' THEN 'MAN1' WHEN !@location like 'MLK%' THEN 'MLK1' WHEN !@location like 'MSS%' THEN 'MSS1' WHEN !@location like 'OTE%' THEN 'OTE1' WHEN !@location like 'REE%' THEN 'REE1' WHEN !@location like 'SDVL%' THEN 'SDVL' WHEN !@location like 'SSN%' THEN 'SSN1' WHEN !@location like 'STT%' THEN 'STT1' WHEN !@location like 'AES%' THEN 'AES1' WHEN !@location like 'ALP%' THEN 'ALP1' WHEN !@location like 'AVS%' THEN 'AVS1' WHEN !@location like 'BWS%' THEN 'BWS1' WHEN !@location like 'CCS%' THEN 'CCS1' WHEN !@location like 'CGL%' THEN 'CGL1' WHEN !@location like 'CID%' THEN 'CID1' WHEN !@location like 'CVS%' THEN 'CVS1' WHEN !@location like 'DSS%' THEN 'DSS1' WHEN !@location like 'IVS%' THEN 'IVS1' WHEN !@location like 'IVW%' THEN 'IVW1' WHEN !@location like 'KBSA%' THEN 'KBSA' WHEN !@location like 'KBSB%' THEN 'KBSB' WHEN !@location like 'KNS%' THEN 'KNS1' WHEN !@location like 'KSS%' THEN 'KSS1' WHEN !@location like 'LHS%' THEN 'LHS1' WHEN !@location like 'NSS%' THEN 'NSS1' WHEN !@location like 'ORS%' THEN 'ORS1' WHEN !@location like 'SES1%' THEN 'SES1' WHEN !@location like 'SES2%' THEN 'SES2' WHEN !@location like 'SGAH%' THEN 'SGAH' WHEN !@location like 'SGAK%' THEN 'SGAK' WHEN !@location like 'SGSO%' THEN 'SGSO' WHEN !@location like 'SLS%' THEN 'SLS1' WHEN !@location like 'TPZ%' THEN 'TPZ1' WHEN 1=1 THEN 'Error' END) " type="varchar"/>
       </attributes>
     </entity>
   </entities>
@@ -389,16 +390,22 @@
           </field>
           <field attribute="description" label="Summary"/>
           <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=13%" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=8%" />
           </field>
-          <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=10%" />
+          <field attribute="asset_.description" label="Asset">
+            <renderer type="default" params="width=13%" />
+          </field>
+          <field attribute="reportdate" label="Reported Date">
+            <renderer type="datetime" params="width=10%" />
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type="datetime" params="width=15%" />
+          </field>
+          <field attribute="daysleft" label="Days Left">
+            <renderer type="numericinput" params="width=8%" />
           </field>
           <properties>
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
@@ -437,9 +444,9 @@
             <booleanfilter attribute="#buildcomplete"  whereclause="buildcomplete = !@#value" />
           </filters>
           <field attribute="workorderid" hidden="true"/>
-          <field attribute="reportdate" hidden="true"/>
           <field attribute="#id" hidden="true"/>
           <field attribute="wonum" hidden="true"/>
+          <field attribute="#buildcomplete" hidden="true"/>
           <field attribute="#colorcode">
             <renderer type="colorcode" params="width=2%;"/>
           </field>
@@ -448,19 +455,22 @@
           </field>
           <field attribute="description" label="Summary"/>
           <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=13%" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=8%" />
           </field>
-          <field attribute="assetnum" label="Asset">
-            <renderer type="default" params="width=10%" />
+          <field attribute="asset_.description" label="Asset">
+            <renderer type="default" params="width=13%" />
+          </field>
+          <field attribute="reportdate" label="Reported Date">
+            <renderer type="datetime" params="width=10%" />
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type="datetime" params="width=15%" />
           </field>
-          <field attribute="#buildcomplete" label="Build Complete?">
-            <renderer type="checkbox" params="width=12%" />
+          <field attribute="daysleft" label="Days Left">
+            <renderer type="numericinput" params="width=8%" />
           </field>
 
           <properties>

@@ -116,9 +116,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             if (searchDto.SearchSort != null) {
                 replaced = true;
                 searchDto.SearchSort = searchDto.SearchSort.Replace("#wpnum", "wonum");
-                if ("#buildcomplete".Equals(searchDto.SearchSort)) {
-                    searchDto.SearchSort = null;
-                }
             }
             var result = await base.GetList(application, searchDto);
             if (replaced) {
