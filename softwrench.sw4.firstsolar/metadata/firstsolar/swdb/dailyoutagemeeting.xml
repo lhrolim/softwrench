@@ -17,7 +17,7 @@
           <field attribute="meetingtime" label="Meeting Time" readonly="true">
             <renderer type="datetime"/>
           </field>
-          <field attribute="mwhlostyesterday" label="MWH Lost" hidden="true"/>
+          <field attribute="mwhlostyesterday" label="MWH Lost" />
 
           <field attribute="criticalpath" hidden="true"/>
           <field attribute="openactionitems" hidden="true"/>
