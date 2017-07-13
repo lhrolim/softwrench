@@ -59,7 +59,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Title = "29-0 Days Queue",
                     Application = "workorder",
                     AppFields = "reportdate,#wpnum,description,plannerscheduler_.displayname,location_.facilityname,asset_.description,reportdate,schedstart,daysleft,#buildcomplete,#colorcode",
-                    DefaultSortField = "schedstart",
+                    DefaultSortField = "daysleft",
                     SchemaRef = BuildPanel290SchemaId,
                     Limit = 10,
                     Size = 12
@@ -70,7 +70,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Title = "Build Queue (54-30 Days)",
                     Application = "workorder",
                     AppFields = "reportdate,#wpnum,description,plannerscheduler_.displayname,location_.facilityname,asset_.description,reportdate,schedstart,daysleft,#buildcomplete,#colorcode",
-                    DefaultSortField = "schedstart",
+                    DefaultSortField = "daysleft",
                     SchemaRef = BuildPanelSchemaId,
                     Limit = 10,
                     Size = 12
@@ -81,7 +81,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Title = "Incoming Queue PM (55+ Days)",
                     Application = "workorder",
                     AppFields = "wonum,description,plannerscheduler_.displayname,location_.facilityname,asset_.description,reportdate,schedstart,daysleft",
-                    DefaultSortField = "schedstart",
+                    DefaultSortField = "daysleft",
                     SchemaRef = IncomingPanelSchemaId,
                     Limit = 10,
                     Size = 12

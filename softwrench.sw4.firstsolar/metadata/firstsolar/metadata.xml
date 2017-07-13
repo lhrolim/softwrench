@@ -420,12 +420,12 @@
           </field>
           <field attribute="description" label="Summary"/>
           <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
-            <renderer type="default" params="width=35%" />
+            <renderer type="default" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
             <renderer type="default" params="width=15%" />
           </field>
-          <field attribute="assetnum" label="Asset">
+          <field attribute="asset_.description" label="Asset">
             <renderer type="default" params="width=28%" />
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
