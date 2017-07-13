@@ -187,7 +187,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 var today = DateUtil.BeginOfDay(DateTime.Now);
                 var reportDay = DateUtil.BeginOfDay(reportDate);
                 var diffInDays = (today - reportDay).Days;
-                dm["#colorcode"] = diffInDays >= 6 && diffInDays <= 25 ? "#39b54a" : "#f2d935"; // green or yellow
+                dm["#colorcode"] = diffInDays <= 25 ? "#39b54a" : "#f2d935"; // green or yellow
             }
             return baseList;
         }
