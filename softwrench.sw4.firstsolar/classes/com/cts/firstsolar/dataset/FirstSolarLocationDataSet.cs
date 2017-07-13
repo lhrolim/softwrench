@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using cts.commons.portable.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API.Response;
@@ -7,6 +8,7 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarLocationDataSet : BaseLocationDataSet {
@@ -61,6 +63,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         /// </summary>
         public IEnumerable<IAssociationOption> GetFsPcsLocations(OptionFieldProviderParameters parameters) {
             return new List<IAssociationOption>();
+        }
+
+        public string FacilityQuery(string context) {
+            if (!ApplicationConfiguration.IsProd()) {
+                return "SUBSTRING({0}.location, 0, 5)".Fmt(context);
+            }
+            return "CASE WHEN exists (select * from onmparms o where {0}.location like o.value + '%') THEN (select G.scadA_GUID from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on  (o.description=G.assettitle or o.value=G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') WHEN 1=1 then SUBSTRING({0}.location, 0, 5) END".Fmt(context);
         }
     }
 }
