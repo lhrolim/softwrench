@@ -423,10 +423,13 @@
             <renderer type="default" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
-            <renderer type="default" params="width=15%" />
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="asset_.description" label="Asset">
-            <renderer type="default" params="width=28%" />
+            <renderer type="default" params="width=20%" />
+          </field>
+          <field attribute="reportdate" label="Reported Date">
+            <renderer type="datetime" params="width=10%" />
           </field>
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type="datetime" params="width=15%" />

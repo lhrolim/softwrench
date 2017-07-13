@@ -56,7 +56,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             {
                 FirstSolarDashboardInitializer.IncomingPanelAlias,
                 FirstSolarDashboardInitializer.BuildPanelAlias,
-                FirstSolarDashboardInitializer.BuildPanelAlias290
+                FirstSolarDashboardInitializer.BuildPanelAlias290,
+                FirstSolarDashboardInitializer.IncomingPanelCmAlias
             });
         }
     }
