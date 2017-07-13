@@ -102,7 +102,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Application = "workorder",
                     AppFields = "reportdate,#wpnum,description,plannerscheduler_.displayname,location_.facilityname,assetnum,schedstart,#buildcomplete",
                     DefaultSortField = "schedstart",
-                    SchemaRef = IncomingPanelSchemaId,
+                    SchemaRef = IncomingCmPanelSchemaId,
                     Limit = 10,
                     Size = 12
                 }
