@@ -123,12 +123,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         public virtual void RegisterWhereClause(string application, string query, string alias, string metadataId) {
             var lookupContext = new ApplicationLookupContext() { MetadataId = metadataId };
 
-            var wc = _whereClauseFacade.Lookup(application, lookupContext);
-            if (wc != null && !wc.IsEmpty() && wc.Query != null && !"1=1".Equals(wc.Query.Trim())) {
-                return;
-            }
-
-            _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition() {
+          _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition {
                 Alias = alias,
                 AppContext = lookupContext
             });

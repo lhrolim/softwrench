@@ -21,7 +21,9 @@
             }
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "detail").then((schema) => {
                 modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
-                    fsrequestService.postSave(saveDatamap, callback, rollback);
+                    fsrequestService.postSave(saveDatamap, callback, rollback).then(r => {
+                        return r;
+                    });
                 });
             });
         }

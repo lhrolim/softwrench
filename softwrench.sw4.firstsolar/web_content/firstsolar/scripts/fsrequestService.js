@@ -42,8 +42,9 @@
             callback(saveDatamap);
             return applicationService.save({
                 dispatchedByModal: false
-            }).then(() => {
+            }).then((result) => {
                 modalService.hide();
+                return result;
             }).catch(() => {
                 rollback();
             });
