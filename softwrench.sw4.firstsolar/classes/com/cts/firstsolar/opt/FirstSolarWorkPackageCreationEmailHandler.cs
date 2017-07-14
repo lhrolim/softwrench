@@ -30,14 +30,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         [Transactional(DBType.Swdb)]
         public override async Task<WorkPackage> SendEmail(WorkPackage wp, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
-            var subject = "[First Solar] New WorkPackage {0} Created".Fmt(wp.Wpnum);
+            var subject = "[{0}] A new Work Package has been created".Fmt(wp.Wpnum);
 
             WorkPackageEmailStatus emailStatus = null;
             EmailData emailData = null;
 
-            if (wp.InterConnectDocs != null && !"na".EqualsIc(wp.InterConnectDocs)) {
-                HandleInterConnectedEmail(wp, subject, out emailStatus, out emailData);
-            }
+            //if (wp.InterConnectDocs != null && !"na".EqualsIc(wp.InterConnectDocs)) {
+            //    HandleInterConnectedEmail(wp, subject, out emailStatus, out emailData);
+            //}
+
+            // at first always send the email - InterConnectDocs condition will be added later
+            HandleInterConnectedEmail(wp, subject, out emailStatus, out emailData);
 
             if (emailStatus != null) {
                 //sending sync so that we can catch and handle the exception
@@ -99,7 +102,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return "Work Package";
         }
 
-        protected override EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
+        protected override EmailData BuildEmailData(WorkPackage request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             throw new NotImplementedException();
         }
     }

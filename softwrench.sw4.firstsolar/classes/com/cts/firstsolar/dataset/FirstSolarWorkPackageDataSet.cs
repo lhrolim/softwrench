@@ -394,7 +394,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var workPackage = tupleResult.Item1;
 
-            await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
+            await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
             HandleMwhTotalsAfterSave(workPackage);
 
             var dm = DataMap.BlankInstance("_workpackage");
@@ -404,7 +404,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
 
-        public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>> SavePackage(OperationWrapper operationWrapper) {
+        public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>, IEnumerable<DailyOutageMeeting>>> SavePackage(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var package = GetOrCreatePackage(operationWrapper);
 
@@ -458,8 +458,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var toSendCallouts = package.CallOuts.Where(c => c.SendNow && (RequestStatus.Scheduled.Equals(c.Status) || RequestStatus.Error.Equals(c.Status)));
             var toSendMes = package.MaintenanceEngineerings.Where(m => m.SendNow && (RequestStatus.Scheduled.Equals(m.Status) || RequestStatus.Error.Equals(m.Status)));
+            var toSendDoms = package.DailyOutageMeetings.Where(d => d.SendNow && (d.Status == null || RequestStatus.Error.Equals(d.Status)));
 
-            return new Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>>(package, toSendCallouts, toSendMes);
+            return new Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>, IEnumerable<DailyOutageMeeting>>(package, toSendCallouts, toSendMes, toSendDoms);
         }
 
         private static CrudOperationData BuildWoData(OperationWrapper operationWrapper) {
@@ -579,9 +580,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return Dao.FindByPK<WorkPackage>(typeof(WorkPackage), id);
         }
 
-        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, bool isCreation) {
+        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
+            DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);
             if (isCreation) {
                 await WpCreationEmailHandler.SendEmail(package, package, siteId);
             }

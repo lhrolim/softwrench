@@ -82,5 +82,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
             return View("Index", expando);
         }
+
+        [System.Web.Http.HttpGet]
+        public ActionResult Meeting() {
+            var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingEmailService>();
+            var dom = Dao.FindAll<DailyOutageMeeting>(typeof(DailyOutageMeeting)).First();
+            var package = Dao.FindAll<WorkPackage>(typeof(WorkPackage)).First();
+
+            var html = service.GenerateEmailBody(dom, package, "1803");
+
+            var file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\Desktop\\meeting.html");
+            file.WriteLine(html);
+            file.Close();
+
+            dynamic expando = new ExpandoObject();
+            var htmlModel = expando as IDictionary<string, object>;
+            htmlModel.Add("content", html);
+
+            return View("Index", expando);
+        }
     }
 }

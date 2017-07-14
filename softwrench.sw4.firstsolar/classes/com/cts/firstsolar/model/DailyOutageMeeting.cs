@@ -29,5 +29,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         [Property]
         public decimal MWHLostYesterday { get; set; }
+
+        /// <summary>
+        /// "Sent" - daily outage meeting email sent
+        /// "Error" - error during email send
+        /// null - email not sent
+        /// </summary>
+        [Property(Column = "status", TypeType = typeof(RequestStatusConverter))]
+        public RequestStatus? Status { get; set; }
+
+        [Property]
+        public bool SendNow { get; set; }
+
+        [Property]
+        public DateTime? ActualSendTime { get; set; }
     }
 }

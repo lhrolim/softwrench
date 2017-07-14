@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using cts.commons.Util;
+using Common.Logging;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Util;
@@ -15,8 +19,13 @@ using softWrench.sW4.Data.Persistence.Operation;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
     public class FirstSolarDailyOutageMeetingHandler : ISingletonComponent {
 
+        private static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarDailyOutageMeetingHandler));
+
         [Import]
         public ISWDBHibernateDAO Dao { get; set; }
+
+        [Import]
+        public FirstSolarDailyOutageMeetingEmailService EmailService { get; set; }
 
         public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package, ApplicationSchemaDefinition schema) {
 
@@ -28,8 +37,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 //might be disabled due to security reasons
                 return false;
             }
-
-          
 
             var toKeepDom = new List<DailyOutageMeeting>();
             var anyNewDom = false;
@@ -63,6 +70,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return anyNewDom;
         }
 
+        public void HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
+            var dailyOutageMeetings = domsToSend as IList<DailyOutageMeeting> ?? domsToSend.ToList();
+            if (!dailyOutageMeetings.Any()) {
+                return;
+            }
+            dailyOutageMeetings.ForEach(request => {
+                AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId));
+            });
+        }
+
         private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(AttributeHolder crudoperationData, ICollection<DailyOutageMeeting> existingDom, ICollection<DailyOutageMeeting> toKeepDom) {
             var id = crudoperationData.GetIntAttribute("id");
             if (id == null || existingDom == null) {
@@ -74,6 +91,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
             toKeepDom.Add(found);
             return found;
+        }
+
+        private async Task InnerHandleEmail(DailyOutageMeeting dom, WorkPackage package, string siteId) {
+            try {
+                await EmailService.SendEmail(dom, package, siteId);
+            } catch (Exception ex) {
+                dom.Status = RequestStatus.Error;
+                Log.ErrorFormat("Failed to send email for {0} {1} from workorder with wonum {2} from site {3}: {4}", EmailService.RequestI18N(), dom.Id, package.Wonum, siteId, ex.Message);
+                await Dao.SaveAsync(dom);
+            }
         }
     }
 }

@@ -94,7 +94,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         public abstract string RequestI18N();
-        protected abstract EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null);
+        protected abstract EmailData BuildEmailData(T request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null);
 
         public string FmtDate(DateTime? date) {
             if (date == null) {

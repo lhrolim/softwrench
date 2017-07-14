@@ -17,6 +17,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public const string DefaultOptInterOutageToEmailKey = "/FirstSolar/OPT/DefaultInterOutageToEmail";
 
+        public const string DefaultDailyOutageMeetingToEmailKey = "/FirstSolar/OPT/DefaultDailyOutageMeetingToEmail";
+
         [Import]
         public IConfigurationFacade ConfigurationFacade { get; set; }
 
@@ -44,7 +46,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 PropertyDataType = PropertyDataType.STRING,
             });
 
-
+            ConfigurationFacade.Register(DefaultDailyOutageMeetingToEmailKey, new PropertyDefinition {
+                Description = "Default emails to be used as 'to' on Daily Outage Meeting emails.",
+                StringValue = "",
+                PropertyDataType = PropertyDataType.STRING,
+            });
         }
     }
 }

@@ -17,18 +17,25 @@
           <field attribute="meetingtime" label="Meeting Time" readonly="true">
             <renderer type="datetime"/>
           </field>
+          <field attribute="status" label="Email Status" />
           <field attribute="mwhlostyesterday" label="MWH Lost" />
 
           <field attribute="criticalpath" hidden="true"/>
           <field attribute="openactionitems" hidden="true"/>
           <field attribute="completedactionitems" hidden="true"/>
           <field attribute="summary" hidden="true"/>
+          <field attribute="sendnow" hidden="true"/>
         </schema>
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
-          <field attribute="meetingtime" label="Meeting Time" requiredexpression="true">
-            <renderer type="datetime"/>
-          </field>
+          <section orientation="horizontal">
+            <field attribute="meetingtime" label="Meeting Time" requiredexpression="true">
+              <renderer type="datetime"/>
+            </field>
+            <field attribute="sendnow" label="Send Email Now">
+              <renderer type="checkbox" params="inputsize=3;layout=left"/>
+            </field>
+          </section>
           <field attribute="mwhlostyesterday" label="MWH Lost">
             <renderer type="numericinput" params="min=0"/>
           </field>
