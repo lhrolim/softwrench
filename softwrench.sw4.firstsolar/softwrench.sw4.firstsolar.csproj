@@ -242,6 +242,7 @@
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarBaseEmailRequestEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarMaintenanceEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\email\FirstSolarCallOutEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCustomGlobalFedQueries.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarCallOutHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarDailyOutageMeetingHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarMaintenanceEngineeringHandler.cs" />

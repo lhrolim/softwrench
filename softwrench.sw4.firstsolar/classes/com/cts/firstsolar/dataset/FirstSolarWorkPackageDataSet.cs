@@ -321,7 +321,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 {
                     {FSWPackageConstants.TechColumn, "Test Technician"},
                     {FSWPackageConstants.SupervisorColumn, "Test Supervisor"},
-                    {FSWPackageConstants.RegionalManagerColumn, "Test Manager"}
+                    {FSWPackageConstants.RegionalManagerColumn, "Test Manager"},
+                    {FSWPackageConstants.PlannerColumn, "Test Planner"}
                 };
             }
 
@@ -334,6 +335,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             }
             if (row.ContainsKey(FSWPackageConstants.RegionalManagerColumn)) {
                 result.ResultObject.SetAttribute("#manager", row[FSWPackageConstants.RegionalManagerColumn]);
+            }
+            if (row.ContainsKey(FSWPackageConstants.PlannerColumn)) {
+                result.ResultObject.SetAttribute("#planner", row[FSWPackageConstants.PlannerColumn]);
             }
         }
 

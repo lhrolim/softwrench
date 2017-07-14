@@ -75,6 +75,7 @@
         <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
         <attribute name="outreq" type="boolean"/>
+        <attribute name="planner" type="varchar" query="@firstSolarCustomGlobalFedQueries.PlannerQuery"/>
       </attributes>
       <relationships>
 
@@ -213,7 +214,7 @@
       <attributes>
         <attribute name="parent" query=" (SELECT parent FROM lochierarchy WHERE location = !@location AND siteid = !@siteid AND orgid = !@orgid) " type="varchar"/>
         <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
-        <attribute name="facilityname" query="@firstSolarLocationDataSet.FacilityQuery" type="varchar"/>
+        <attribute name="facilityname" query="@firstSolarCustomGlobalFedQueries.FacilityQuery" type="varchar"/>
       </attributes>
     </entity>
   </entities>
@@ -389,7 +390,7 @@
             <renderer type="default" params="width=7%" />
           </field>
           <field attribute="description" label="Summary"/>
-          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
+          <field attribute="planner" label="Planner/Scheduler">
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
@@ -419,7 +420,7 @@
             <renderer type="default" params="width=7%" />
           </field>
           <field attribute="description" label="Summary"/>
-          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
+          <field attribute="planner" label="Planner/Scheduler">
             <renderer type="default" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
@@ -457,7 +458,7 @@
             <renderer type="default" params="width=7%" />
           </field>
           <field attribute="description" label="Summary"/>
-          <field attribute="plannerscheduler_.displayname" label="Planner/Scheduler">
+          <field attribute="planner" label="Planner/Scheduler">
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">

@@ -64,12 +64,5 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public IEnumerable<IAssociationOption> GetFsPcsLocations(OptionFieldProviderParameters parameters) {
             return new List<IAssociationOption>();
         }
-
-        public string FacilityQuery(string context) {
-            if (!ApplicationConfiguration.IsProd()) {
-                return "SUBSTRING({0}.location, 0, 5)".Fmt(context);
-            }
-            return "CASE WHEN exists (select * from onmparms o where {0}.location like o.value + '%') THEN (select G.scadA_GUID from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on  (o.description=G.assettitle or o.value=G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') WHEN 1=1 then SUBSTRING({0}.location, 0, 5) END".Fmt(context);
-        }
     }
 }

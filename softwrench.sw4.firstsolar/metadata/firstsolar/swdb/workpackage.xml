@@ -136,9 +136,7 @@
                   <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
                 </association>
 
-                <association label="Planner/Scheduler" target="#workorder_.supervisor" labelfield="#workorder_.plannerscheduler_.supervisor" >
-                  <renderer type="lookup" />
-                </association>
+                <field label="Planner/Scheduler" attribute="#planner" readonly="true"/>
 
               </section>
               <section>
