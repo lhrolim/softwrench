@@ -104,7 +104,7 @@ namespace softWrench.sW4.Web.Controllers {
                 actionURL = String.Format("api/generic/{0}/{1}", controllerToRedirect, actionToRedirect);
             }
             var unescapedQs = WebAPIUtil.GetUnescapedQs(queryString);
-//            ValidateSecurity(unescapedQs);
+            ValidateSecurity(unescapedQs);
 
             var redirectURL = String.Format("{0}?{1}", actionURL, unescapedQs);
 
