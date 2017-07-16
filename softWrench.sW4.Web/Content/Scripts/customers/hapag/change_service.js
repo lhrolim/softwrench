@@ -53,7 +53,9 @@ app.factory('changeservice', function ($http, redirectService, formatService, fi
                 }
                 
             }
-            var parameters = { id: id, popupmode: 'browser' };
+            var hmachash = isSr ? datamap['srhmachash'] : datamap['hmachash'];
+
+            var parameters = { id: id, popupmode: 'browser', hmachash:hmachash };
 
             var detailSchemaId = "detail";
 

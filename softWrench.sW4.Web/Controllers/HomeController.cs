@@ -104,35 +104,36 @@ namespace softWrench.sW4.Web.Controllers {
                 actionURL = String.Format("api/generic/{0}/{1}", controllerToRedirect, actionToRedirect);
             }
             var unescapedQs = WebAPIUtil.GetUnescapedQs(queryString);
-            ValidateSecurity(unescapedQs);
-
+            var allowed = application== "solution" || ValidateSecurity(unescapedQs);
+        
             var redirectURL = String.Format("{0}?{1}", actionURL, unescapedQs);
 
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
 
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo,
-                _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, _lookuper.LookupContext().Module, windowTitle, message, messageType));
+            var homeModel = new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo,
+                _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, _lookuper.LookupContext().Module, windowTitle, message, messageType);
+            homeModel.Allowed = allowed;
+
+            return View("Index", homeModel);
         }
 
-        private static void ValidateSecurity(string unescapedQs) {
+        private static bool ValidateSecurity(string unescapedQs) {
             var qsValues = HttpUtility.ParseQueryString(unescapedQs);
             var ids = qsValues.GetValues("id");
             var hashs = qsValues.GetValues("hmachash");
             if (ids == null) {
-                return;
+                return true;
             }
 
             if (ids != null && hashs == null) {
-                throw new InvalidOperationException(
-                    "You don´t have enough permissions to see that register. contact your administrator");
+                return false;
             }
             var hash = hashs[0];
             if (!AuthUtils.HmacShaEncode(ids[0]).Equals(hash)) {
-                throw new InvalidOperationException(
-                    "You don´t have enough permissions to see that register. contact your administrator");
+                return false;
             }
-
+            return true;
         }
 
         private string GenerateHashString() {

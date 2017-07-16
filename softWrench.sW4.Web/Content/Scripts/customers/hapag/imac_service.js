@@ -181,7 +181,8 @@ app.factory('imacservice', function ($http, $rootScope, alertService, fieldServi
         opendetail: function (datamap, displayables) {
 
             var id = datamap['ticketid'];
-            var parameters = { id: id, popupmode: 'browser' };
+            var hmachash = datamap["hmachash"];
+            var parameters = { id: id,hmachash:hmachash, popupmode: 'browser' };
             redirectService.goToApplicationView('imac', 'detail', 'output', null, parameters);
         },
 

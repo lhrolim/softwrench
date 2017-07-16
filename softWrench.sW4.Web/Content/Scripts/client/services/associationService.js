@@ -7,10 +7,14 @@ app.factory('associationService', function ($injector, $http, $timeout, $log, $r
         var key = associationFieldMetadata.associationKey;
         datamap[key] = {};
         datamap.extrafields = instantiateIfUndefined(datamap.extrafields);
-        if (associationFieldMetadata.extraProjectionFields == null) {
+        if (associationFieldMetadata.extraProjectionFields == null || associationFieldMetadata.extraProjectionFields.length===0) {
             return;
         }
-        for (var i = 0; i < associationFieldMetadata.extraProjectionFields.length; i++) {
+
+        var extraFields = associationFieldMetadata.extraProjectionFields;
+        extraFields = extraFields.push("hmachash");
+
+        for (var i = 0; i < extraFields; i++) {
             var extrafield = associationFieldMetadata.extraProjectionFields[i];
             var valueToSet = null;
             if (underlyingValue != null) {

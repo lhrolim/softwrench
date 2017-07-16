@@ -12,6 +12,7 @@ using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Util;
+using softWrench.sW4.AUTH;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.SimpleInjector;
@@ -149,6 +150,12 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                 foreach (var column in dict) {
                     item[FixKey(column.Key, entityMetadata)] = column.Value;
                 }
+                if (entityMetadata.Name == "relatedrecord") {
+                    item["hmachash"] = AuthUtils.HmacShaEncode(item["relatedreckey"].ToString());
+                } else if (entityMetadata.Name == "ticket" || entityMetadata.Name == "imac") {
+                    item["hmachash"] = AuthUtils.HmacShaEncode(item["ticketid"].ToString());
+                } 
+
                 list.Add(item);
             }
 

@@ -23,6 +23,9 @@ namespace softWrench.sW4.Data {
             if (fields.ContainsKey(idFieldName) && fields[idFieldName]!=null) {
                 fields.Add("hmachash", AuthUtils.HmacShaEncode(fields[idFieldName].ToString()));
             }
+            if (fields.ContainsKey("hlagchangeticketid") && fields["hlagchangeticketid"] != null) {
+                fields.Add("srhmachash", AuthUtils.HmacShaEncode(fields["hlagchangeticketid"].ToString()));
+            }
             
 
         }

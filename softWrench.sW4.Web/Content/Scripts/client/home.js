@@ -7,6 +7,11 @@
 
         var redirectUrl = url(homeModel.Url);
         i18NService.load(homeModel.I18NJsons, userLanguage);
+        if (!homeModel.Allowed) {
+            alertService.alert('You don´t have enough permissions to see that register. contact your administrator');
+            return;
+        }
+
 
 
         var sessionRedirectURL = sessionStorage.swGlobalRedirectURL;

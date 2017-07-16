@@ -536,7 +536,7 @@ app.directive('crudInputFields', function (contextService) {
 
             $scope.opendetails = function (fieldMetadata) {
                 if ($scope.enabletoopendetails(fieldMetadata)) {
-                    var parameters = { id: $scope.paramstopendetails.idtopendetails, popupmode: 'browser' };
+                    var parameters = { id: $scope.paramstopendetails.idtopendetails, hmachash: $scope.paramstopendetails.hmachash, popupmode: 'browser' };
                     redirectService.goToApplicationView($scope.paramstopendetails.application, 'detail', 'output', null, parameters);
                 }
             };
@@ -552,8 +552,15 @@ app.directive('crudInputFields', function (contextService) {
                         }
 
                         var id = $scope.datamap[idtopendetails];
+                        var idx = idtopendetails.indexOf(".");
+                        var baseName = "";
+                        if (idx !== -1) {
+                            baseName = idtopendetails.substr(0, idtopendetails.indexOf(".") + 1);
+                        }
+                        var hmachash = $scope.datamap[baseName+"hmachash"];
+
                         if (!nullOrUndef(id) && !nullOrUndef(application)) {
-                            $scope.paramstopendetails = { idtopendetails: id, application: application };
+                            $scope.paramstopendetails = { idtopendetails: id, hmachash:hmachash, application: application };
                         }
                     }
                 }

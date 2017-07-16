@@ -69,7 +69,10 @@ namespace softWrench.sW4.Web.Controllers {
             }
             RequestUtil.ValidateMockError(Request);
 
-            ValidateHashSecurity(request);
+            if (!"solution".EqualsIc(application)) {
+                ValidateHashSecurity(request);
+            }
+            
 
             var applicationMetadata = MetadataProvider
                 .Application(application)
@@ -84,7 +87,7 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private static void ValidateHashSecurity(DataRequestAdapter request) {
-            if (request.Id == null) {
+            if (request.Id == null ) {
                 return;
             }
 

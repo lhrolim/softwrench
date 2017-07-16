@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -26,9 +27,11 @@ namespace softWrench.sW4.Web.Models.Home {
         public string WindowTitle { get; set; }
 
         public long InitTimeMillis { get; set; }
+        public bool Allowed { get; set; }
 
         public HomeModel(string url, string title, HomeConfigs configs, InMemoryUser user, bool hasLogoPopup, 
             JObject i18NJsons, string clientName,string initialModule, string windowTitle = null, string message = null, string messageType = null) {
+            Allowed = true;
             Url = url;
             InitTimeMillis = configs.InitTimeMillis;
             Title = title;
@@ -48,7 +51,7 @@ namespace softWrench.sW4.Web.Models.Home {
             Message = message;
             MessageType = messageType;
         }
-
+        
 
     }
 }

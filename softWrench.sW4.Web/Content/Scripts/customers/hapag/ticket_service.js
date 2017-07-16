@@ -36,6 +36,7 @@ app.factory('ticketservice', function ($http, redirectService,alertService,field
             }            
 
             var id = datamap['ticketid'];
+            var hmachash = datamap['hmachash'];
             var entity = datamap['class'];
             var application = null;
             if (entity == 'SR') {
@@ -49,7 +50,7 @@ app.factory('ticketservice', function ($http, redirectService,alertService,field
             }
 
             if (application != null) {
-                var parameters = { id: id, popupmode: 'browser' };
+                var parameters = { id: id, hmachash: hmachash, popupmode: 'browser' };
                 redirectService.goToApplicationView(application, 'detail', 'output', null, parameters);
             } else {
                 alertService.alert('This Application {0} is not supported'.format(entity));

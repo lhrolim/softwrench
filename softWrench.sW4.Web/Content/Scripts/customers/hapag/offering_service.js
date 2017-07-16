@@ -13,7 +13,7 @@ app.factory('oferringservice', function ($http, redirectService, formatService, 
         /// <param name="datamap"></param>
         /// <param name="column"></param>
         openDetail: function (datamap, column) {
-            var parameters = { id: datamap['ticketid'], popupmode: 'browser' };
+            var parameters = { id: datamap['ticketid'], hmachash: datamap["hmachash"], popupmode: 'browser' };
             redirectService.goToApplicationView('servicerequest', 'detail', 'output', null, parameters);
         },
 

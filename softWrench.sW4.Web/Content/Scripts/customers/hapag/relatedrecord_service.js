@@ -9,6 +9,7 @@ app.factory('relatedrecordservice', function ($http, redirectService, alertServi
         opendetail: function (datamap, schema) {
 
             var id = datamap['relatedreckey'];
+            var hmachash = datamap['hmachash'];
             var entity = datamap['relatedrecclass'];
             var application = null;
             if (entity == 'SR') {
@@ -22,7 +23,7 @@ app.factory('relatedrecordservice', function ($http, redirectService, alertServi
             }
 
             if (application != null) {
-                var parameters = { id: id, popupmode: 'browser' };
+                var parameters = { id: id, hmachash: hmachash, popupmode: 'browser' };
                 var module = contextService.retrieveFromContext('currentmodule');
                 if (module && module.equalsAny("tom", "itom")) {
                     contextService.insertIntoContext("currentmodulenewwindow", module);    
