@@ -232,6 +232,7 @@ app.directive('crudList', function (contextService) {
                 };
 
                 var id = rowdm.fields[$scope.schema.idFieldName];
+                var hmachash = rowdm.fields["hmachash"];
                 if (id == null || id == "-666") {
                     window.alert('error id is null');
                     return;
@@ -245,7 +246,7 @@ app.directive('crudList', function (contextService) {
                     schemaid = detailSchema();
                 }
                 contextService.insertIntoContext("currentmodulenewwindow", contextService.retrieveFromContext('currentmodule'));
-                $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, { id: id, popupmode: popupmode });
+                $scope.$emit("sw_renderview", applicationname, schemaid, mode, $scope.title, { id: id, hmachash: hmachash, popupmode: popupmode });
             };
 
             $scope.renderListView = function (parameters) {

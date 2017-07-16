@@ -45,6 +45,15 @@ namespace softWrench.sW4.Web.Common {
             return String.Format("{0}?{1}", actionURL, queryString);
         }
 
+        public static string GetUnescapedQs(string queryString) {
+            if (queryString != null) {
+                queryString = queryString.Replace(AndSeparator, "&");
+                queryString = queryString.Replace(EqualSeparator, "=");
+            }
+            return queryString;
+        }
+
+
         public static void AppendToQueryString(StringBuilder sb, string key, object value) {
             sb.Append(key + EqualSeparator + value + AndSeparator);
         }

@@ -45,7 +45,7 @@ namespace softWrench.sW4.Data.Persistence {
             if (fields.Any(f => f.Attribute == "siteid")) {
                 dictionary["siteid"] = user.SiteId;
             }
-            var schemaDefaultValues = new DataMap(application.Name, dictionary);
+            var schemaDefaultValues = new DataMap(application.Name,application.IdFieldName, dictionary);
             if (initialValues != null) {
                 MergeWithPrefilledValues(schemaDefaultValues, initialValues);
             }

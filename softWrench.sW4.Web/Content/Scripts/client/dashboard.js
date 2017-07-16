@@ -99,9 +99,11 @@ function DashboardController($scope, $http, $templateCache, $rootScope, formatSe
         var schemaObj = schemaService.parseAppAndSchema(dashboard.detailSchema);
         var applicationToUse = schemaObj.app == null ? dashboard.applicationName : schemaObj.app;
         var id = dashboard.idFieldName != "" ? datamap[dashboard.idFieldName] : datamap[$scope.schema.idFieldName];
+        var hmachash = datamap["hmachash"];
         contextService.insertIntoContext("currentmodulenewwindow", contextService.retrieveFromContext('currentmodule'));
         var parameters = {
             id: id,
+            hmachash: hmachash,
             popupmode: $scope.schema.properties['list.click.popupmode'],
             key: {
                 schemaId: schemaObj.schemaId,

@@ -38,7 +38,7 @@ namespace softWrench.sW4.Metadata.Entities.Sliced {
         }
 
         public override AttributeHolder GetAttributeHolder(IEnumerable<KeyValuePair<string, object>> keyValuePairs) {
-            return new DataMap(ApplicationName, keyValuePairs.ToDictionary(pair => pair.Key, pair => pair.Value));
+            return new DataMap(ApplicationName,IdFieldName, keyValuePairs.ToDictionary(pair => pair.Key, pair => pair.Value));
         }
 
         public override ISet<EntityAssociation> NonListAssociations() {

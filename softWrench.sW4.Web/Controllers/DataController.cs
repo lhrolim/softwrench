@@ -28,6 +28,7 @@ using System.Net;
 using System.Web.Http;
 using softWrench.sW4.Web.Util;
 using System.Diagnostics;
+using softWrench.sW4.AUTH;
 
 namespace softWrench.sW4.Web.Controllers {
 
@@ -44,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly I18NResolver _i18NResolver;
         protected readonly IContextLookuper ContextLookuper;
 
-        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper,CompositionExpander compositionExpander) {
+        public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander compositionExpander) {
             _i18NResolver = i18NResolver;
             ContextLookuper = contextLookuper;
             COMPOSITIONExpander = compositionExpander;
@@ -68,6 +69,8 @@ namespace softWrench.sW4.Web.Controllers {
             }
             RequestUtil.ValidateMockError(Request);
 
+            ValidateHashSecurity(request);
+
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
@@ -80,7 +83,20 @@ namespace softWrench.sW4.Web.Controllers {
             return response;
         }
 
+        private static void ValidateHashSecurity(DataRequestAdapter request) {
+            if (request.Id == null) {
+                return;
+            }
 
+            if (request.Id != null && request.HmacHash == null) {
+                throw new InvalidOperationException(
+                    "You don´t have enough permissions to see that register. contact your administrator");
+            }
+            if (!AuthUtils.HmacShaEncode(request.Id).Equals(request.HmacHash)) {
+                throw new InvalidOperationException(
+                    "You don´t have enough permissions to see that register. contact your administrator");
+            }
+        }
 
 
         /// <summary>
@@ -206,7 +222,7 @@ namespace softWrench.sW4.Web.Controllers {
                 //mobile requests doesn´t have to handle success messages or redirections
                 return null;
             }
-            if (nextSchemaKey == null){
+            if (nextSchemaKey == null) {
                 //keep on same schema unless explicetely told otherwise
                 nextSchemaKey = currentschemaKey;
             }
@@ -248,7 +264,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             var dataResponse = Get(application, new DataRequestAdapter() { Key = key, SearchDTO = searchRequestDto });
             //fixing the filter parameters used so that it is applied on next queries
-            ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(searchRequestDto,app.Entity);
+            ((ApplicationListResult)dataResponse).PageResultDto.BuildFixedWhereClause(searchRequestDto, app.Entity);
             dataResponse.Title = appSchema.Title;
             dataResponse.Mode = SchemaMode.input.ToString().ToLower();
             return dataResponse;
@@ -289,9 +305,15 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         public class ListSchemaFilter {
-            public string NamePattern { get; set; }
-            public SchemaStereotype? Stereotype { get; set; }
-            public SchemaMode Mode { get; set; }
+            public string NamePattern {
+                get; set;
+            }
+            public SchemaStereotype? Stereotype {
+                get; set;
+            }
+            public SchemaMode Mode {
+                get; set;
+            }
 
 
 

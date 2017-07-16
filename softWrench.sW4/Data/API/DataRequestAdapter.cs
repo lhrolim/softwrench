@@ -24,6 +24,8 @@ namespace softWrench.sW4.Data.API {
 
         public string Id { get; set; }
 
+        public string HmacHash {get; set;}
+
         //TODO: this is wrong, pick it from custom parameter
         public string Faqid { get; set; }
 

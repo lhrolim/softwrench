@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data
                 fields[field.Attribute] = Convert.ToString(entity.Attributes[field.Attribute]);
             }
 
-            return new DataMap(applicationMetadata.Name, fields);
+            return new DataMap(applicationMetadata.Name,applicationMetadata.IdFieldName, fields);
         }
     }
 }

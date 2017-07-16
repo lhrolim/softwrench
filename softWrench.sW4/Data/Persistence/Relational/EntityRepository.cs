@@ -65,8 +65,10 @@ namespace softWrench.sW4.Data.Persistence.Relational {
         }
 
         private DataMap BuildDataMap(EntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> r) {
+            
 
-            return new DataMap(entityMetadata.Name, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => pair.Value, StringComparer.OrdinalIgnoreCase));
+
+            return new DataMap(entityMetadata.Name,entityMetadata.IdFieldName, r.ToDictionary(pair => FixKey(pair.Key, entityMetadata), pair => pair.Value, StringComparer.OrdinalIgnoreCase));
         }
 
         public IEnumerable<dynamic> RawGet([NotNull] EntityMetadata entityMetadata, [NotNull] SearchRequestDto searchDto) {

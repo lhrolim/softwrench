@@ -1,17 +1,26 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Principal;
 using System.Text;
 
 namespace softWrench.sW4.AUTH {
     public class AuthUtils {
+
+        public static byte[] StandardHmacKey = Encoding.ASCII.GetBytes("Hapag2017TL");
+
         public static IPrincipal CurrentPrincipal {
-            get { return System.Threading.Thread.CurrentPrincipal; }
+            get {
+                return System.Threading.Thread.CurrentPrincipal;
+            }
         }
 
         public static string CurrentPrincipalLogin {
-            get { return CurrentPrincipal.Identity.Name; }
+            get {
+                return CurrentPrincipal.Identity.Name;
+            }
         }
 
         public static string GetSha1HashData(string data) {
@@ -33,6 +42,17 @@ namespace softWrench.sW4.AUTH {
             }
             return returnValue.ToString();
         }
+
+        public static string HmacShaEncode(string input, byte[] key = null) {
+            if (key == null) {
+                key = StandardHmacKey;
+            }
+            var myhmacsha1 = new HMACSHA1(key);
+            var byteArray = Encoding.ASCII.GetBytes(input);
+            var stream = new MemoryStream(byteArray);
+            return myhmacsha1.ComputeHash(stream).Aggregate("", (s, e) => s + String.Format("{0:x2}", e), s => s);
+        }
+
 
         public static bool ValidateSHA1HashData(string inputData, string storedHashData, HashAlgorithm hashAlgorithm = null) {
             string getHashInputData = GetHashData(inputData, hashAlgorithm);

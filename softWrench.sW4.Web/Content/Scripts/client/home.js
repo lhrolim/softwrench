@@ -1,9 +1,9 @@
-﻿function HomeController($scope, $http, $templateCache, $rootScope, $timeout,$log, $compile, contextService, menuService, i18NService, alertService) {
+﻿function HomeController($scope, $http, $location, $templateCache, $rootScope, $timeout, $log, $compile, contextService, menuService, i18NService, alertService) {
     "ngInject";
     $scope.$name = 'HomeController';
 
     function initController() {
-        var log =$log.getInstance('home.js#initController');
+        var log = $log.getInstance('home.js#initController');
 
         var redirectUrl = url(homeModel.Url);
         i18NService.load(homeModel.I18NJsons, userLanguage);
@@ -24,31 +24,31 @@
             url: redirectUrl,
             cache: $templateCache
         })
-        .success(function (result) {
-            $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
-            $scope.$parent.resultData = result.resultObject;
-            $scope.$parent.resultObject = result;
-            //            if (nullOrUndef($rootScope.currentmodule) && !nullOrUndef(currentModule) && currentModule != "") {
-            //                $rootScope.currentmodule = currentModule;
-            //            }
+            .success(function (result) {
+                $scope.$parent.includeURL = contextService.getResourceUrl(result.redirectURL);
+                $scope.$parent.resultData = result.resultObject;
+                $scope.$parent.resultObject = result;
+                //            if (nullOrUndef($rootScope.currentmodule) && !nullOrUndef(currentModule) && currentModule != "") {
+                //                $rootScope.currentmodule = currentModule;
+                //            }
 
-            $scope.$emit('sw_indexPageLoaded', redirectUrl);
-            $scope.$emit('sw_titlechanged', result.title);
+                $scope.$emit('sw_indexPageLoaded', redirectUrl);
+                $scope.$emit('sw_titlechanged', result.title);
 
-            if (homeModel.Message != undefined) {
-                /*if (homeModel.MessageType == 'error') {
-                    var error = { errorMessage: homeModel.Message }
-
-                    $timeout(function () {                        
-                        $rootScope.$broadcast('sw_ajaxerror', error);
-                    }, 1000);
-                    
-                } else {*/
-                alertService.success(homeModel.Message, false);
-                //}
-                homeModel.Message = null;
-            }
-        });
+                if (homeModel.Message != undefined) {
+                    /*if (homeModel.MessageType == 'error') {
+                        var error = { errorMessage: homeModel.Message }
+    
+                        $timeout(function () {                        
+                            $rootScope.$broadcast('sw_ajaxerror', error);
+                        }, 1000);
+                        
+                    } else {*/
+                    alertService.success(homeModel.Message, false);
+                    //}
+                    homeModel.Message = null;
+                }
+            });
     }
 
 
@@ -60,7 +60,7 @@
             if (!nullOrUndef(windowTitle)) {
                 window.document.title = windowTitle;
             }
-            var content=angular.element('#headerline');
+            var content = angular.element('#headerline');
             $compile(content.contents())($scope);
         });
     };

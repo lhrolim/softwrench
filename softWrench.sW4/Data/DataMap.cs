@@ -4,12 +4,14 @@ using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Metadata.Applications;
 using System;
 using System.Collections.Generic;
+using softWrench.sW4.AUTH;
 
 namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
 
 
-        public DataMap([NotNull] string application, [NotNull] IDictionary<string, object> fields, bool rowstampsHandled = false)
+
+        public DataMap([NotNull] string application, string idFieldName,[NotNull] IDictionary<string, object> fields, bool rowstampsHandled = false)
             : base(application, fields) {
             if (!rowstampsHandled) {
                 HandleRowStamps(fields);
@@ -18,6 +20,11 @@ namespace softWrench.sW4.Data {
             if (fields.TryGetValue(RowStampUtil.RowstampColumnName, out rowstampObject)) {
                 Approwstamp = (long)rowstampObject;
             }
+            if (fields.ContainsKey(idFieldName) && fields[idFieldName]!=null) {
+                fields.Add("hmachash", AuthUtils.HmacShaEncode(fields[idFieldName].ToString()));
+            }
+            
+
         }
 
         private void HandleRowStamps(IDictionary<string, object> fields) {
@@ -47,7 +54,7 @@ namespace softWrench.sW4.Data {
                 attributes[pair.Key] = value;
             }
             //true: avoid double rows interation for rowstamp handling
-            return new DataMap(applicationMetadata.Name, attributes, true);
+            return new DataMap(applicationMetadata.Name,applicationMetadata.IdFieldName, attributes, true);
         }
 
 

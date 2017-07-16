@@ -98,7 +98,7 @@ namespace softWrench.sW4.Web.Common {
                 }
                 i++;
             }
-            var dataMap = new DataMap(applicationName, dictionary);
+            var dataMap = new DataMap(applicationName,metadata.IdFieldName, dictionary);
             return new ApplicationDetailResult(dataMap, null, schema,
                         CompositionBuilder.InitializeCompositionSchemas(metadata.Schema), "id");
         }

@@ -12,8 +12,11 @@ using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Home;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Mvc;
+using softWrench.sW4.AUTH;
 using softWrench.sW4.Web.Security;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -48,7 +51,7 @@ namespace softWrench.sW4.Web.Controllers {
                 var app = (ApplicationMenuItemDefinition)indexItem;
                 var key = new ApplicationMetadataSchemaKey(app.Schema, app.Mode, ClientPlatform.Web);
                 var adapter = new DataRequestAdapter(null, key);
-                model = new HomeModel(GetUrlFromApplication(app.Application, adapter), app.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName,indexItem.Module);
+                model = new HomeModel(GetUrlFromApplication(app.Application, adapter), app.Title, FetchConfigs(), user, HasPopupLogo(), _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, indexItem.Module);
             } else if (indexItem is ActionMenuItemDefinition) {
                 var actItem = (ActionMenuItemDefinition)indexItem;
                 var action = actItem.Action;
@@ -84,6 +87,13 @@ namespace softWrench.sW4.Web.Controllers {
             return timeout;
         }
 
+
+        public new ActionResult RedirectToHash(string hash) {
+            return null;
+        }
+
+
+
         public ActionResult RedirectToAction(string application, string controllerToRedirect, string popupmode, string actionToRedirect, string queryString, string message, string messageType) {
             string actionURL;
             var user = SecurityFacade.CurrentUser();
@@ -93,11 +103,45 @@ namespace softWrench.sW4.Web.Controllers {
                 //TODO: actions parameters missing...
                 actionURL = String.Format("api/generic/{0}/{1}", controllerToRedirect, actionToRedirect);
             }
-            var redirectURL = WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
+            var unescapedQs = WebAPIUtil.GetUnescapedQs(queryString);
+//            ValidateSecurity(unescapedQs);
+
+            var redirectURL = String.Format("{0}?{1}", actionURL, unescapedQs);
 
             var windowTitle = GetWindowTitle(redirectURL);
             var hasPopupLogo = HasPopupLogo(application, popupmode);
-            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo, _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, _lookuper.LookupContext().Module, windowTitle, message, messageType));
+
+            return View("Index", new HomeModel(redirectURL, null, FetchConfigs(), user, hasPopupLogo,
+                _i18NResolver.FetchCatalogs(), ApplicationConfiguration.ClientName, _lookuper.LookupContext().Module, windowTitle, message, messageType));
+        }
+
+        private static void ValidateSecurity(string unescapedQs) {
+            var qsValues = HttpUtility.ParseQueryString(unescapedQs);
+            var ids = qsValues.GetValues("id");
+            var hashs = qsValues.GetValues("hmachash");
+            if (ids == null) {
+                return;
+            }
+
+            if (ids != null && hashs == null) {
+                throw new InvalidOperationException(
+                    "You don´t have enough permissions to see that register. contact your administrator");
+            }
+            var hash = hashs[0];
+            if (!AuthUtils.HmacShaEncode(ids[0]).Equals(hash)) {
+                throw new InvalidOperationException(
+                    "You don´t have enough permissions to see that register. contact your administrator");
+            }
+
+        }
+
+        private string GenerateHashString() {
+
+            var nameValues = HttpUtility.ParseQueryString(Request.QueryString.ToString());
+            nameValues.Set("sortBy", "4");
+            string url = Request.Url.AbsolutePath;
+            Response.Redirect(url + "?" + nameValues); // ToString() is called implicitly
+            return null;
         }
 
         public ActionResult MakeSWAdmin() {
