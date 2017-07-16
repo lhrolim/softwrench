@@ -248,6 +248,7 @@ FROM   wochange AS wochange
       )
       AND
       (
+         (
          NOT EXISTS
          (
             SELECT
@@ -269,7 +270,13 @@ FROM   wochange AS wochange
          AND srforchange.templateid IN
          (
             'HLCDECHG','HLCDECHSSO','HLCDECHTUI'
+         ))
+         OR
+         (
+              srforchange.status in ('QUEUED','PENDING','INPROG','REJECTED')
+              AND (UPPER(affectedperson) = UPPER('{5}') OR UPPER(reportedby) = UPPER('{5}'))
          )
+
       )
       AND ( srforchange.pluspcustomer LIKE 'HLC-%' )
       {3}
@@ -352,7 +359,7 @@ FROM   sr AS srforchange
                    AND srforchange.siteid = asset_.siteid ) 
 WHERE  (( srforchange.classificationid IS NULL 
            OR srforchange.classificationid NOT LIKE '8151%' )) 
-       AND ( NOT EXISTS (SELECT 1 
+       AND( ( NOT EXISTS (SELECT 1 
                          FROM   wochange wo4sr_ 
                          WHERE  wo4sr_.origrecordid = srforchange.ticketid 
                                 AND wo4sr_.origrecordclass = 'SR' 
@@ -363,7 +370,13 @@ WHERE  (( srforchange.classificationid IS NULL
                                     srforchange.ticketid 
                                     AND relatedcr_.relatedrecclass = 'SR' 
                                     AND relatedcr_.class = 'CHANGE') 
-             AND srforchange.templateid IN ( {0} ) ) 
+             AND srforchange.templateid IN ( {0} ) )
+         OR
+         (
+              srforchange.status in ('QUEUED','PENDING','INPROG','REJECTED')
+              AND (UPPER(affectedperson) = UPPER('{5}') OR UPPER(reportedby) = UPPER('{5}'))
+         )
+      )
        AND ( srforchange.pluspcustomer LIKE 'HLC-%' )
        {3}
 )";
@@ -386,7 +399,7 @@ WHERE  (( srforchange.classificationid IS NULL
             }
 
             var filterQuerySecondary = GetFilterQuery("srforchange", searchDTO.unionDTO);
-            return BaseQuery.Fmt(externalTemplateIds, personGroupsForQuery, filterQueryMain, filterQuerySecondary, extraUnions);
+            return BaseQuery.Fmt(externalTemplateIds, personGroupsForQuery, filterQueryMain, filterQuerySecondary, extraUnions,user.MaximoPersonId);
         }
 
 
@@ -414,7 +427,7 @@ WHERE  (( srforchange.classificationid IS NULL
             }
 
             var filterQuerySecondary = GetFilterQuery("srforchange", searchDTO.unionDTO);
-            return BaseCountQuery.Fmt(externalTemplateIds, personGroupsForQuery, filterQueryMain, filterQuerySecondary, extraUnions);
+            return BaseCountQuery.Fmt(externalTemplateIds, personGroupsForQuery, filterQueryMain, filterQuerySecondary, extraUnions, user.MaximoPersonId);
         }
 
         private object getMainQueryExcludingTicketId(SearchRequestDto searchDTO) {
