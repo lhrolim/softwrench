@@ -89,7 +89,6 @@ namespace softwrench.sw4.Hapag.Data {
 
 
 
-
         private string InnerTicketWhereClause(string ticketQualifier = "SR") {
             var isWWUser = SecurityFacade.CurrentUser().IsWWUser();
             if (isWWUser) {

@@ -16,12 +16,17 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         internal const string BaseHapagLocationPrefix = "C-HLC-WW-LC-";
         internal const string BaseHapagRegionPrefix = "C-HLC-WW-RG";
 
-        internal const string HapagRegionAmerica = "C-HLC-WW-RG-NAMERICA";
-        internal const string HapagRegionSAmerica = "C-HLC-WW-RG-SAMERICA";
-        internal const string HapagRegionEurope = "C-HLC-WW-RG-EUROPE";
         internal const string HapagRegionAsia = "C-HLC-WW-RG-ASIA";
-        internal const string HapagRegionHeadQuarter = "C-HLC-WW-RG-HQ";
+        internal const string HapagRegionEurope = "C-HLC-WW-RG-EUROPE";
         internal const string HapagRegionGSC = "C-HLC-WW-RG-GSC";
+        internal const string HapagRegionHeadQuarter = "C-HLC-WW-RG-HQ";
+        internal const string HapagRegionAmerica = "C-HLC-WW-RG-NAMERICA";
+        internal const string HapagRegionLAmerica = "C-HLC-WW-RG-LAMERICA";
+        internal const string HapagRegionMidEast = "C-HLC-WW-RG-MIDEAST";
+        
+        
+ 
+        
 
 
         internal const string BaseHapagAreaPrefix = "C-HLC-WW-AR";

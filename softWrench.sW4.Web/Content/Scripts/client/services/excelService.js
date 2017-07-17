@@ -4,8 +4,8 @@
 
 
 app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsService, fixHeaderService,
-    i18NService,userService,
-    redirectService, searchService, contextService, fileService, alertService,restService) {
+    i18NService, userService,
+    redirectService, searchService, contextService, fileService, alertService, restService) {
 
     "ngInject";
 
@@ -17,14 +17,14 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
         if (isInAllAccessModules) {
             return true;
         }
-        
+
 
         var isXitc = contextService.InModule(["xitc"]);
         return isXitc && userService.InGroup("C-HLC-WW-AR-WW");
     }
 
-    function regionSelectionRequired(searchData,region) {
-        var hasSearchInUrl = sessionStorage.swGlobalRedirectURL && sessionStorage.swGlobalRedirectURL.indexOf("searchValues")!=-1;
+    function regionSelectionRequired(searchData, region) {
+        var hasSearchInUrl = sessionStorage.swGlobalRedirectURL && sessionStorage.swGlobalRedirectURL.indexOf("searchValues") != -1;
         return isObjectEmpty(searchData) && !region && !hasSearchInUrl;
     }
 
@@ -43,16 +43,16 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
 
             bootbox.dialog({
                 message: "<form id='infos' action=''>" +
-                    "<label class='control-label'>" + selectText + ":</label><br>" +
-                    "<label class='control-label' for='gridonlyid'>" +
-                    "<input type='radio' name='exportMode' id='gridonlyid' value='list' checked='checked' /> "
-                    + exportModeGridOnlyText +
-                    "</label><br>" +
-                    "<label class='control-label' for='allthecolumnsid'>" +
-                    "<input type='radio' name='exportMode' id='allthecolumnsid' value='assetlistreport' /> "
-                    + exportModeAllTheColumnsText +
-                    "</label>" +
-                    "</form>",
+                "<label class='control-label'>" + selectText + ":</label><br>" +
+                "<label class='control-label' for='gridonlyid'>" +
+                "<input type='radio' name='exportMode' id='gridonlyid' value='list' checked='checked' /> "
+                + exportModeGridOnlyText +
+                "</label><br>" +
+                "<label class='control-label' for='allthecolumnsid'>" +
+                "<input type='radio' name='exportMode' id='allthecolumnsid' value='assetlistreport' /> "
+                + exportModeAllTheColumnsText +
+                "</label>" +
+                "</form>",
                 title: modalTitle,
                 buttons: {
                     main: {
@@ -89,29 +89,33 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
 
                 bootbox.dialog({
                     message: "<form id='region' action=''>" +
-                        "<label class='control-label'>" + selectRegionText + ":</label><br>" +
-                        "<label class='control-label' for='gridonlyid'>" +
-                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-NAMERICA'  /> "
-                            + "Region North America" +
-                        "</label><br>" +
-                        "<label class='control-label' for='gridonlyid'>" +
-                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-SAMERICA' /> "
-                            + "Region South America" +
-                        "</label><br>" +
-                        "<label class='control-label' for='gridonlyid'>" +
-                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-EUROPE'  /> "
-                            + "Region Europe" +
-                        "</label><br>" +
-                       "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-ASIA'  /> "
-                            + "Region Asia" +
-                        "</label><br>" +
-                        "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-GSC'  /> "
-                            + "Region GSC" +
-                        "</label><br>" +
-                          "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-HQ'  /> "
-                            + "Region HeadQuarters" +
-                        "</label><br>" +
-                        "</form>",
+                    "<label class='control-label'>" + selectRegionText + ":</label><br>" +
+                    "<label class='control-label' for='gridonlyid'>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-NAMERICA'  /> "
+                    + "Region North America" +
+                    "</label><br>" +
+                    "<label class='control-label' for='gridonlyid'>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-LAMERICA'  /> "
+                    + "Region Latin America" +
+                    "</label><br>" +
+                    "<label class='control-label' for='gridonlyid'>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-MIDEAST'  /> "
+                    + "Region Middle East" +
+                    "</label><br>" +
+                    "<label class='control-label' for='gridonlyid'>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-EUROPE'  /> "
+                    + "Region Europe" +
+                    "</label><br>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-ASIA'  /> "
+                    + "Region Asia" +
+                    "</label><br>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-GSC'  /> "
+                    + "Region Global Service Center" +
+                    "</label><br>" +
+                    "<input type='radio' name='region' id='gridonlyid' value='C-HLC-WW-RG-HQ'  /> "
+                    + "Region HeadQuarters" +
+                    "</label><br>" +
+                    "</form>",
                     title: selectRegionText,
                     buttons: {
                         main: {
@@ -182,8 +186,8 @@ app.factory('excelService', function ($rootScope, $http, $timeout, $log, tabsSer
 
             parameters.searchDTO = searchDTO;
             //this quick wrapper ajax call will validate if the user is still logged in or not
-            restService.getPromise("ExtendedData", "PingServer").then(function() {
-                fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function(html, url) {}, function(html, url) {
+            restService.getPromise("ExtendedData", "PingServer").then(function () {
+                fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function (html, url) { }, function (html, url) {
                     alertService.alert("Error generating the {0}.{1} report. Please contact your administrator".format(application, schemaToUse));
                 });
             });
