@@ -29,7 +29,7 @@
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
           <section orientation="horizontal">
-            <field attribute="meetingtime" label="Meeting Time" requiredexpression="true">
+            <field attribute="meetingtime" label="Meeting Time" requiredexpression="true" default="@now">
               <renderer type="datetime"/>
             </field>
             <field attribute="sendnow" label="Send Email Now">
