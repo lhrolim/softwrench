@@ -25,6 +25,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public string CompletedActionItems { get; set; }
 
         [Property]
+        public string Cc { get; set; }
+
+        [Property]
         public string Summary { get; set; }
 
         [Property]
