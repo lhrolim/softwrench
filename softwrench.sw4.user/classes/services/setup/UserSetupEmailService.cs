@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
@@ -11,6 +12,7 @@ using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.ldap;
 using Hash = DotLiquid.Hash;
 
 namespace softwrench.sw4.user.classes.services.setup {
@@ -25,22 +27,26 @@ namespace softwrench.sw4.user.classes.services.setup {
         private readonly RedirectService _redirectService;
         private readonly UserLinkManager _linkManager;
         private readonly IApplicationConfiguration _appConfig;
+        private LdapManager _ldapManager;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(UserSetupEmailService));
 
         private readonly string _automaticTemplatePath;
         private readonly string _manualTemplatePath;
+        private readonly string _ldapPasswordTemplatePath;
         private readonly string _forgotPasswordTemplatePath;
         private readonly string _newUserRegistrationApprovalRequestTemplatePath;
         private string _headerImageUrl;
 
-        public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager, IApplicationConfiguration appConfig) {
+        public UserSetupEmailService(IEmailService emailService, RedirectService redirectService, UserLinkManager linkManager, IApplicationConfiguration appConfig, LdapManager ldapManager) {
             Log.Debug("init Log");
             _emailService = emailService;
             _redirectService = redirectService;
             _linkManager = linkManager;
             _appConfig = appConfig;
+            _ldapManager = ldapManager;
             _automaticTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_automaticpassword.html";
+            _ldapPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_ldapsetup.html";
             _manualTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//welcomeemail_manualpassword.html";
             _forgotPasswordTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//forgotpassword.html";
             _newUserRegistrationApprovalRequestTemplatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//usersetup//newuserapproval.html";
@@ -65,13 +71,18 @@ namespace softwrench.sw4.user.classes.services.setup {
             }
         }
 
-        public virtual void SendActivationEmail(User user, string email, string openPassword = null) {
+        public virtual async Task SendActivationEmail(User user, string email, string openPassword = null) {
             Validate.NotNull(email, "email");
             Validate.NotNull(user, "user");
             var automaticMode = openPassword == null;
+            var isLdap = await _ldapManager.IsLdapSetup();
+
             string templateToUse;
             string linkUrl;
-            if (automaticMode) {
+            if (isLdap) {
+                templateToUse = _ldapPasswordTemplatePath;
+                linkUrl = _redirectService.GetRootUrl();
+            } else if (automaticMode) {
                 templateToUse = _automaticTemplatePath;
                 var tokenLink = _linkManager.GenerateTokenLink(user);
                 linkUrl = _redirectService.GetActionUrl("UserSetup", "DefinePassword", "tokenLink={0}".Fmt(tokenLink));

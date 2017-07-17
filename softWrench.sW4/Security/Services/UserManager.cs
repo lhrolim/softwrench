@@ -323,7 +323,7 @@ namespace softWrench.sW4.Security.Services {
 
             dbUser = await UserSyncManager.GetUserFromMaximoBySwUserFallingBackToDefault(dbUser);
             if (dbUser.IsPoPulated()) {
-                UserSetupEmailService.SendActivationEmail(dbUser, email);
+                await UserSetupEmailService.SendActivationEmail(dbUser, email);
             }
         }
 
