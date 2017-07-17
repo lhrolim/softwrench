@@ -50,6 +50,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                     var dom = GetOurCreateDailyOutageMeeting(data, package.DailyOutageMeetings, toKeepDom);
                     anyNewDom = anyNewDom || dom.Id == null;
                     EntityBuilder.PopulateTypedEntity(data, dom);
+                    dom.Cc = EmailService.HandleEmailRecipient(data, "cc");
                     if (dom.Id != null) {
                         return;
                     }

@@ -17,6 +17,7 @@
           <field attribute="meetingtime" label="Meeting Time" readonly="true">
             <renderer type="datetime"/>
           </field>
+          <field label="Cc" attribute="cc" hidden="true"/>
           <field attribute="status" label="Email Status" />
           <field attribute="mwhlostyesterday" label="MWH Lost" />
 
@@ -39,6 +40,11 @@
           <field attribute="mwhlostyesterday" label="MWH Lost">
             <renderer type="numericinput" params="min=0"/>
           </field>
+
+          <optionfield label="Cc" attribute="cc">
+            <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
+          </optionfield>
+          
           <field label="Critical Path/Constraints" attribute="criticalpath"/>
           <field label="Open Action Items" attribute="openactionitems"/>
           <field label="Completed Action Items" attribute="completedactionitems"/>
@@ -61,6 +67,7 @@
         </schema>
 
         <schema id="detailview" title="Daily Outage Meeting"  platform="web" stereotype="detail">
+          <field label="Cc" attribute="cc"/>
           <field label="Critical Path/Constraints" attribute="criticalpath"/>
           <field label="Open Action Items" attribute="openactionitems"/>
           <field label="Completed Action Items" attribute="completedactionitems"/>

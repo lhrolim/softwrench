@@ -21,7 +21,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         private new static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarDailyOutageMeetingEmailService));
 
         [Import]
-        public SWDBHibernateDAO DAO { get; set; }
+        public SWDBHibernateDAO DAO {
+            get; set;
+        }
 
         public FirstSolarDailyOutageMeetingEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) : base(emailService, redirectService, appConfig, configurationFacade) {
             Log.Debug("init Log");
@@ -57,6 +59,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         protected override EmailData BuildEmailData(DailyOutageMeeting dom, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             var to = ConfigurationFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultDailyOutageMeetingToEmailKey);
             if (string.IsNullOrEmpty(to)) {
+                Log.WarnFormat("no daily outage email setup on the configuration section. Returning");
                 return null;
             }
 
@@ -65,7 +68,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var sufix = isNew ? "" : " Updated";
             var subject = "{0}{1}".Fmt(baseSubject, sufix);
             var msg = GenerateEmailBody(dom, package, siteId);
-            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs);
+            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs) { Cc = dom.Cc };
             return emailData;
         }
 
