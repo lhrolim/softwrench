@@ -1,4 +1,6 @@
 ﻿using FluentMigrator;
+using FluentMigrator.Infrastructure;
+using softWrench.sW4.Util;
 using softWrench.sW4.Extension;
 
 namespace softWrench.sW4.Web.DB_Migration._1._0 {
@@ -12,7 +14,7 @@ namespace softWrench.sW4.Web.DB_Migration._1._0 {
                 .WithColumn("fullkey").AsString(255).PrimaryKey()
                 .WithColumn("key_").AsString(255).NotNullable()
                 .WithColumn("defaultvalue").AsString(4000).NotNullable()
-                .WithColumn("description").AsString(65535).Nullable()
+                .WithColumn("description").AsString(ApplicationConfiguration.IsMySql() ? 4000:65535).Nullable()
                 .WithColumn("datatype").AsString(50).NotNullable()
                 .WithColumn("renderer").AsString(50).Nullable()
                 .WithColumn("visible").AsBoolean().WithDefaultValue(true)
