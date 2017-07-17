@@ -49,7 +49,7 @@
                     applicationKey
                 };
                 const selectedFilter = crudContextHolderService.getSelectedFilter();
-                if (!!selectedFilter) {
+                if (!!selectedFilter && selectedFilter.id !==-2) {
                     //there´s no point to create a "previous unsaved filter" if a filter has already been applied. 
                     //Hence setting this flag.
                     checkpointData["ignorepreviousfilter"] = true;
