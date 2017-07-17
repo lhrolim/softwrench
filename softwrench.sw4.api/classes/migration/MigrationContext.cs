@@ -22,6 +22,12 @@ namespace softwrench.sw4.api.classes.migration {
             }
         }
 
+        public static bool IsMySql {
+            get {
+                return "mysql".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
+            }
+        }
+
 
     }
 }

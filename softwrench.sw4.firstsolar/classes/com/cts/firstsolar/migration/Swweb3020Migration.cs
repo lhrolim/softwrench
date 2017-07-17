@@ -1,5 +1,6 @@
 ﻿using cts.commons.persistence.Util;
 using FluentMigrator;
+using softwrench.sw4.api.classes.migration;
 using softWrench.sW4.Extension;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
@@ -10,9 +11,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
         public override void Up() {
             Create.Column("accesstoken").OnTable("OPT_WORKPACKAGE").AsString(MigrationUtil.StringMedium).Nullable();
 
-//            Create.Index("idx_wp_accesstoken").OnTable("OPT_WORKPACKAGE").OnColumn("accesstoken");
+            //            Create.Index("idx_wp_accesstoken").OnTable("OPT_WORKPACKAGE").OnColumn("accesstoken");
 
-            Execute.Sql("CREATE UNIQUE NONCLUSTERED INDEX idx_wp_accesstoken ON OPT_WORKPACKAGE(accesstoken) WHERE accesstoken IS NOT NULL; ");
+            if (!MigrationContext.IsMySql) {
+                Execute.Sql("CREATE UNIQUE NONCLUSTERED INDEX idx_wp_accesstoken ON OPT_WORKPACKAGE(accesstoken) WHERE accesstoken IS NOT NULL; ");
+            }
+            
 
             Create.Table("OPT_WPEMAILSTATUS")
                 .WithIdColumn()
