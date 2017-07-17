@@ -68,7 +68,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 });
             }
             existingMaintenanceEng?.ForEach(me => {
-                if (me.Status.IsSubmitted()) {
+                if (me.Status != null && me.Status.Value.IsSubmitted()) {
                     throw new Exception($"Is not possible delete a maintenance engineering request with status '{me.Status}'. Reload the page to get the updated version of this work package.");
                 }
                 Dao.Delete(me);
@@ -114,7 +114,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             me = EntityBuilder.PopulateTypedEntity(crudoperationData, me);
 
 
-            if (me.Status.IsSubmitted()) {
+            if (me.Status != null && me.Status.Value.IsSubmitted()) {
                 if (!newStatus.IsSubmitted()) {
                     throw new Exception($"Is not possible edit a maintenance engineering request with status '{me.Status}'. Reload the page to get the updated version of this work package.");
                 }

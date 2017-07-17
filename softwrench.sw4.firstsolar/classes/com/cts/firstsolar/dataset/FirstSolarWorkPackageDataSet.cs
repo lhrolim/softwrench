@@ -445,7 +445,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var anyNewMe = MaintenanceEngineeringHandler.HandleMaintenanceEngs(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
 
-            var anyNewDom = DailyOutageMeetingHandler.HandleDailyOutageMeetings(crudoperationData, package, operationWrapper.ApplicationMetadata.Schema);
+            var anyNewDom = DailyOutageMeetingHandler.HandleDailyOutageMeetings(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
 
             package = await Dao.SaveAsync(package);
 
@@ -557,6 +557,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 FSWPackageConstants.AttachsRelationship,
                 FSWPackageConstants.CallOutAttachsRelationship,
                 FSWPackageConstants.MaintenanceEngAttachsRelationship,
+                FSWPackageConstants.DailyOutageMeetingAttachsRelationship,
                 FSWPackageConstants.AllAttachmentsRelationship
             };
 
@@ -566,6 +567,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             CompositionHandler.HandleAttachments(woCompList, compList);
             CallOutHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
+            DailyOutageMeetingHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
 
             MaintenanceEngineeringHandler.LoadEngineerNames(compList, woSite);
             return compList;

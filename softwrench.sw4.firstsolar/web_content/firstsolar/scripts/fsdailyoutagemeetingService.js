@@ -9,6 +9,7 @@
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "newdetail").then((schema) => {
                 const mergedItem = compositionService.buildMergedDatamap(fsrequestService.buildDatamap(schema), item);
                 mergedItem["mwhlostyesterday"] = 0;
+                mergedItem["#domfileexplorer_"] = [];
                 modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback);
                 });
@@ -19,6 +20,9 @@
             if (!fsrequestService.validatePackage()) {
                 return;
             }
+
+            fsrequestService.addAttachments(item, "#domfileexplorer_");
+
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "detail").then((schema) => {
                 modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback).then(r => {

@@ -20,6 +20,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         private const string RelayEventAttachmentSource = "Relay Event File";
         private const string CallOutEmailAttachmentSource = "Subcontractor Email Attachment";
         private const string MaintenanceEngEmailAttachmentSource = "Maintenance Engineering Email Attachment";
+        private const string DomEmailAttachmentSource = "Daily Outage Meeting Email Attachment";
         private const string InterconnectDocsAttachmentSource = "Interconnect Document";
         private const string OperationProcAttachmentSource = "Operation Procedure File";
 
@@ -120,6 +121,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                     attach["#attachsource"] = CallOutEmailAttachmentSource;
                 } else if (filter.StartsWith("swwpkgme:")) {
                     attach["#attachsource"] = MaintenanceEngEmailAttachmentSource;
+                }  else if (filter.StartsWith("swwpkgdo:")) {
+                    attach["#attachsource"] = DomEmailAttachmentSource;
                 } else {
                     attach["#attachsource"] = UnknownSource;
                 }

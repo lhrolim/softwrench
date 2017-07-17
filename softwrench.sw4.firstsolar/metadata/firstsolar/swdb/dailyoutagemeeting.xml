@@ -51,6 +51,10 @@
           <field attribute="summary" label="Meeting Summary">
             <renderer type="textarea"/>
           </field>
+
+          <composition inline="true" relationship="#domfileexplorer_" label="Attachments">
+            <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types"/>
+          </composition>
           
           <commandbars>
             <commandgroup position="modal.detail.primary">

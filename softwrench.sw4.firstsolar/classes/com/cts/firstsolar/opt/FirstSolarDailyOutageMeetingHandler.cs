@@ -8,11 +8,13 @@ using cts.commons.simpleinjector;
 using cts.commons.Util;
 using Common.Logging;
 using NHibernate.Util;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Operation;
 
@@ -27,7 +29,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         [Import]
         public FirstSolarDailyOutageMeetingEmailService EmailService { get; set; }
 
-        public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package, ApplicationSchemaDefinition schema) {
+        [Import]
+        public FirstSolarWorkPackageAttachmentsHandler AttachmentsHandler { get; set; }
+
+        private const string FilterPrefix = "swwpkgdo:";
+        private const string AttachmentsRelationship = "#domfileexplorer_";
+
+        public void HandleAttachmentsOnCompositionLoad(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
+            AttachmentsHandler.HandleAttachmentsOnCompositionLoad(woResult, packageResult, AttachmentsRelationship, FSWPackageConstants.DailyOutageMeetingAttachsRelationship);
+        }
+
+        public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
 
             if (package.DailyOutageMeetings == null) {
                 package.DailyOutageMeetings = new List<DailyOutageMeeting>();
@@ -55,6 +67,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                         return;
                     }
                     package.DailyOutageMeetings.Add(dom);
+
+                    dom = Dao.Save(dom);
+
+                    AttachmentsHandler.HandleAttachments(data, dom.Id ?? 0, AttachmentsRelationship, FilterPrefix, woData);
+
                     toKeepDom.Add(dom);
                 });
             }
@@ -71,14 +88,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return anyNewDom;
         }
 
-        public void HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
-            var dailyOutageMeetings = domsToSend as IList<DailyOutageMeeting> ?? domsToSend.ToList();
-            if (!dailyOutageMeetings.Any()) {
-                return;
-            }
-            dailyOutageMeetings.ForEach(request => {
-                AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId));
-            });
+        public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
+            await AttachmentsHandler.HandleEmails(package, siteId, FSWPackageConstants.DailyOutageMeetingAttachsRelationship, FilterPrefix, domsToSend, EmailService);
         }
 
         private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(AttributeHolder crudoperationData, ICollection<DailyOutageMeeting> existingDom, ICollection<DailyOutageMeeting> toKeepDom) {

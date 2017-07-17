@@ -33,7 +33,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             Validate.NotNull(dom, "toSend");
             var emailData = BuildEmailData(dom, package, siteId, attachs);
             if (emailData == null) {
-                Log.InfoFormat("sending {0} email for {1} to {2}, probably missing '/FirstSolar/OPT/DefaultDailyOutageMeetingToEmail' config", RequestI18N(), dom.Id);
+                Log.InfoFormat("failed to sent {0} email for {1} to {2}, probably missing '/FirstSolar/OPT/DefaultDailyOutageMeetingToEmail' config", RequestI18N(), dom.Id);
                 dom.Status = RequestStatus.Error;
                 return await Dao.SaveAsync(dom);
             }

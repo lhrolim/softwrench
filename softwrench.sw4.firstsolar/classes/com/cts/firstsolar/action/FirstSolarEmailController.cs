@@ -42,8 +42,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 throw IFSEmailWorkflowException.NotFound<T>();
             }
 
-            if (entity.Status.Equals(RequestStatus.Approved) || entity.Status.Equals(RequestStatus.Rejected)) {
-                throw IFSEmailWorkflowException.AlreadyApprovedRejected<T>(entity.Id, entity.Status);
+            if (entity.Status != null && (entity.Status.Equals(RequestStatus.Approved) || entity.Status.Equals(RequestStatus.Rejected))) {
+                throw IFSEmailWorkflowException.AlreadyApprovedRejected<T>(entity.Id, entity.Status.Value);
             }
 
             var newStatus = RequestStatus.Sent;

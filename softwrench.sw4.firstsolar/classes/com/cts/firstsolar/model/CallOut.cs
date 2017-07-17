@@ -63,7 +63,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         ///"Pending" - the subcontractor has clicked pending while they determine whether they can approve the call out 
         /// </summary>
         [Property(Column = "status", TypeType = typeof(RequestStatusConverter))]
-        public RequestStatus Status { get; set; }
+        public RequestStatus? Status { get; set; }
 
         [Property]
         public string Notes { get; set; }

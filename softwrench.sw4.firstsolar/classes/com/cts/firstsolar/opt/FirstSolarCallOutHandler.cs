@@ -90,7 +90,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             RequestStatus newStatus;
             Enum.TryParse(newStatusSt, true, out newStatus);
 
-            if (callOut.Status.IsSubmitted()) {
+            if (callOut.Status != null && callOut.Status.Value.IsSubmitted()) {
                 if (!newStatus.IsSubmitted()) {
                     throw new Exception("Is not possible edit a sent subcontractor callout. Reload the page to get the updated version of this work package.");
                 }

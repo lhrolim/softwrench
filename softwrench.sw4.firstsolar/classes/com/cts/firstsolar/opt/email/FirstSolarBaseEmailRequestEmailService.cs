@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using cts.commons.persistence;
-using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
-using Common.Logging;
-using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
-using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Configuration.Services.Api;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {

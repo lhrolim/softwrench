@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     'use strict';
     
-    function fsrequestService(modalService, crudContextHolderService, applicationService, validationService, alertService) {
+    function fsrequestService(modalService, crudContextHolderService, applicationService, validationService, alertService, compositionService) {
 
         const scheduledStatus = "Scheduled";
 
@@ -43,8 +43,12 @@
             return applicationService.save({
                 dispatchedByModal: false
             }).then((result) => {
-                modalService.hide();
-                return result;
+                const parentSchema = crudContextHolderService.currentSchema();
+                const parentDm = crudContextHolderService.rootDataMap();
+                return compositionService.populateWithCompositionData(parentSchema, parentDm).then(() => {
+                    modalService.hide();
+                    return result;
+                });
             }).catch(() => {
                 rollback();
             });
@@ -104,5 +108,5 @@
         return service;
     }
 
-    angular.module("firstsolar").clientfactory("fsrequestService", ["modalService", "crudContextHolderService", "applicationService", "validationService", "alertService", fsrequestService]);
+    angular.module("firstsolar").clientfactory("fsrequestService", ["modalService", "crudContextHolderService", "applicationService", "validationService", "alertService", "compositionService", fsrequestService]);
 })(angular);

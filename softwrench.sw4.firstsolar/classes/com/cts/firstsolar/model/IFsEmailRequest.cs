@@ -1,7 +1,8 @@
 ﻿using System;
+using cts.commons.persistence;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
-    public interface IFsEmailRequest {
+    public interface IFsEmailRequest : IBaseEntity {
 
         string Token { get; set; }
         string Notes { get; set; }
@@ -9,9 +10,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         string ByToken { get; }
 
-        RequestStatus Status { get; set; }
+        RequestStatus? Status { get; set; }
 
-        int? Id { get; set; }
         WorkPackage WorkPackage { get; set; }
         string Email { get; set; }
         string Cc { get; set; }
