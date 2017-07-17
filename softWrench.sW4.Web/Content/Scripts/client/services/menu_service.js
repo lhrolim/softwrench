@@ -1,9 +1,9 @@
 ﻿(function (angular) {
     'use strict';
 
-    angular.module('sw_layout').service('menuService', ['$rootScope', 'redirectService', 'contextService', 'i18NService', 'securityService', 'checkpointService', '$log', 'userService', 'gridPreferenceService', menuService]);
+    angular.module('sw_layout').service('menuService', ['$rootScope', '$timeout', 'redirectService', 'contextService', 'i18NService', 'securityService', 'checkpointService', '$log', 'userService', 'gridPreferenceService', menuService]);
 
-    function menuService($rootScope, redirectService, contextService, i18NService, securityService, checkpointService, $log, userService, gridPreferenceService) {
+    function menuService($rootScope, $timeout, redirectService, contextService, i18NService, securityService, checkpointService, $log, userService, gridPreferenceService) {
 
         var cleanSelectedLeaf = function () {
             const menu = $("#applicationmenu");
@@ -171,7 +171,9 @@
             if (previousFilter) {
                 const previousDTO = previousFilter.searchDTO;
                 return redirectService.redirectWithData(leaf.application, leaf.schema, previousDTO.searchData, { searchDTO: previousDTO }).then(data => {
-                    $rootScope.$broadcast(JavascriptEventConstants.GRID_SETFILTER, previousFilter);
+                    $timeout(() => {
+                        $rootScope.$broadcast(JavascriptEventConstants.GRID_SETFILTER, previousFilter);
+                    }, 1000, false);
                 });
             }
             return redirectService.goToApplicationView(leaf.application, leaf.schema, leaf.mode, this.getI18nMenuLabel(leaf, null), parameters);
