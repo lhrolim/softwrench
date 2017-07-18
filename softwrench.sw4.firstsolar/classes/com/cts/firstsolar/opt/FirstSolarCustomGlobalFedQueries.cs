@@ -14,7 +14,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public string PlannerQuery(string context) {
             if (!ApplicationConfiguration.IsProd()) {
-                return " 'Test Planner' ";
+                return " ( SUBSTRING({0}.supervisor, 1, 0) + 'Test Planner') ".Fmt(context); // substring turns out to be a empty string, just to avoid a constant in dev
             }
             return " (select top 1 G.onM_Planner_Scheduler from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
         }

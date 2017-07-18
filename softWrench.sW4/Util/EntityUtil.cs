@@ -77,7 +77,7 @@ namespace softWrench.sW4.Util {
             return query;
         }
 
-        public static string GetQueryReplacingMarkers(string query, string entityName, string fromValue = null) {
+        public static string GetQueryReplacingMarkers(string query, string entityName, string fromValue = null, string context = null) {
             var queryReplacingMarker = query.Replace("!@", entityName + ".");
 
             if (fromValue != null) {
@@ -85,7 +85,7 @@ namespace softWrench.sW4.Util {
             }
 
             if (queryReplacingMarker.StartsWith("@")) {
-                queryReplacingMarker = GetServiceQuery(queryReplacingMarker);
+                queryReplacingMarker = GetServiceQuery(queryReplacingMarker, context);
             } else {
                 var user = SecurityFacade.CurrentUser();
                 queryReplacingMarker = DefaultValuesBuilder.ConvertAllValues(queryReplacingMarker, user);

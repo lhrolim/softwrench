@@ -19,20 +19,15 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             Context = context;
         }
 
-        public override string GetQueryReplacingMarkers(string entityName, string fromValue=null) {
-
-
-            if (Query.StartsWith("ref:")) {
-                if (entityName.StartsWith("#")) {
-                    Query = MetadataProvider.SwdbEntityQuery(Query);
-                } else {
-                    Query = MetadataProvider.EntityQuery(Query);
-                }
+        public override string GetQueryReplacingMarkers(string entityName, string fromValue = null, string context = null) {
+            context = Context ?? context;
+            if (Query.StartsWith("ref:") || Query.StartsWith("@")) {
+                return base.GetQueryReplacingMarkers(entityName, fromValue, context);
             }
-            if (Context != null) {
-                return Query.Replace("!@", Context + ".");
+            if (context != null) {
+                return Query.Replace("!@", context + ".");
             }
-            return base.GetQueryReplacingMarkers(entityName);
+            return base.GetQueryReplacingMarkers(entityName, fromValue);
         }
 
 

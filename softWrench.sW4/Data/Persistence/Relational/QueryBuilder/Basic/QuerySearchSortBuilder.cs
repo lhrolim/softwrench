@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
@@ -72,7 +73,13 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                     return $" order by {attribute.Name} {suffix}";
                 }
             }
-            return $" order by {attribute.GetQueryReplacingMarkers(entityMetadata.Name)} {suffix}";
+
+            var context = (string)null;
+            if (attribute.Query != null && attribute.Query.StartsWith("@")) {
+                var result = entityMetadata.LocateNonCollectionAttribute(attribute.Name, new List<EntityAttribute>(){ attribute });
+                context = result.Item2 ?? entityMetadata.Name;
+            }
+            return $" order by {attribute.GetQueryReplacingMarkers(entityMetadata.Name, null, context)} {suffix}";
         }
     }
 

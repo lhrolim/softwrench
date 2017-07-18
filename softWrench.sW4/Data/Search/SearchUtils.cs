@@ -14,6 +14,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Search.QuickSearch;
+using softWrench.sW4.Metadata.Entities.Schema;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -315,7 +316,9 @@ namespace softWrench.sW4.Data.Search {
 
             if (attributeDefinition != null) {
                 if (attributeDefinition.Query != null) {
-                    baseResult = attributeDefinition.GetQueryReplacingMarkers(entityName);
+                    var result = entity.LocateNonCollectionAttribute(attributeDefinition.Name, new List<EntityAttribute>() { attributeDefinition });
+                    var context = result.Item2 ?? entity.Name;
+                    baseResult = attributeDefinition.GetQueryReplacingMarkers(entityName, null, context);
                 }
 
                 if (attributeDefinition.IsDate) {

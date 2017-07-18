@@ -67,7 +67,7 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
             QuoteLiteral = quoteLiteral;
         }
 
-        public string GetQueryReplacingMarkers(string entityName, string fromValue = null) {
+        public string GetQueryReplacingMarkers(string entityName, string fromValue = null, string context = null) {
             var queryReplacingMarkers = Query.Replace("!@", entityName + ".");
             if (fromValue != null) {
                 queryReplacingMarkers = queryReplacingMarkers.Replace("@from", "'" + fromValue + "'");

@@ -66,11 +66,11 @@ namespace softWrench.sW4.Metadata.Entities.Schema {
             return (Name.GetHashCode());
         }
 
-        public virtual string GetQueryReplacingMarkers(string entityName,string fromValue=null) {
+        public virtual string GetQueryReplacingMarkers(string entityName, string fromValue = null, string context = null) {
             if (Query.StartsWith("ref:")) {
                 Query = entityName.StartsWith("#") ? MetadataProvider.SwdbEntityQuery(Query) : MetadataProvider.EntityQuery(Query);
             }
-            return EntityUtil.GetQueryReplacingMarkers(Query, entityName, fromValue);
+            return EntityUtil.GetQueryReplacingMarkers(Query, entityName, fromValue, context);
         }
 
         public EntityAttribute ClonePrependingContext(string context) {
