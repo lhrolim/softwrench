@@ -49,17 +49,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         }
 
         public virtual string MaintenanceDashQuery() {
-            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808' ) " : "";
+            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' ) " : "";
             return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'PM' and workorder.outreq = 1" + siteClause;
         }
 
         public virtual string MaintenanceDashMixedQuery() {
-            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808' ) " : "";
+            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' ) " : "";
             return "workorder.status in ('APPR','INPRG') and workorder.worktype in ('PM','WO') and workorder.outreq = 1" + siteClause;
         }
 
         public virtual string MaintenanceCmDashQuery() {
-            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808' )" : "";
+            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' )" : "";
             return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'wo' and workorder.outreq = 1" + siteClause;
         }
 
