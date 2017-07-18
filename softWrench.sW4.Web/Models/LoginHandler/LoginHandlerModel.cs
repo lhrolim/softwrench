@@ -14,6 +14,8 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         public bool Inactivity { get; set; }
         public bool Forbidden { get; set; }
         public bool UserNotActive { get; set; }
+        public bool HideForgotPassword { get; set; }
+        public bool HideNewUserRegistration { get; set; }
         public ErrorDto Error { get; set; }
 
         public bool UserLocked {get; set;}

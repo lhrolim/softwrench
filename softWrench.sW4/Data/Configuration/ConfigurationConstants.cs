@@ -115,5 +115,17 @@
 
         public const string JsErrorShowDevKey = "/Global/JsError/ShowDev";
         public const string JsErrorShowProdKey = "/Global/JsError/ShowProd";
+
+        public class User {
+            /// <summary>
+            /// Hide forgot password from login page
+            /// </summary>
+            public const string HideForgotPassword = "/Global/User/HideForgotPassword";
+
+            /// <summary>
+            /// Hide new user registration from login page
+            /// </summary>
+            public const string HideNewUserRegistration = "/Global/User/HideNewUserRegistration";
+        }
     }
 }

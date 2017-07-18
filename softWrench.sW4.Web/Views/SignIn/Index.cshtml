@@ -166,11 +166,12 @@
                                 <div class="buttons submit-button col-sm-offset-3 col-sm-6 dev">
                                     <button class="btn col-xs-4 col-sm-5" type="submit" id="btnLogin"><i class="fa fa-sign-in"></i>&ensp;Login</button>
                                     <div class="col-xs-4 col-sm-5">
-                                        <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                                        <a class="btn forgot-password"
-                                           data-toggle="modal" data-target="#newUserRegistrationModal">
-                                            New User Registration
-                                        </a>
+                                        @if (!@Model.HideForgotPassword) {
+                                            <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                        }
+                                        @if (!@Model.HideNewUserRegistration) {
+                                            <a class="btn forgot-password" data-toggle="modal" data-target="#newUserRegistrationModal">New User Registration</a>
+                                        }
                                     </div>
                                 </div>
                             }
@@ -178,11 +179,12 @@
                                 <div class="row buttons submit-button demo">
                                     <button class="btn col-xs-4 col-sm-2" type="submit" id="btnLogin"><i class="fa fa-sign-in"></i>&ensp;Login</button>
                                     <div class="col-xs-4 col-sm-2">
-                                        <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
-                                        <a class="btn forgot-password"
-                                           data-toggle="modal" data-target="#newUserRegistrationModal">
-                                            New User Registration
-                                        </a>
+                                        @if (!@Model.HideForgotPassword) {
+                                            <a class="btn forgot-password" ng-click="showforgotPasswordForm=true">Forgot Password?</a>
+                                        }
+                                        @if (!@Model.HideNewUserRegistration) {
+                                            <a class="btn forgot-password" data-toggle="modal" data-target="#newUserRegistrationModal">New User Registration</a>
+                                        }
                                     </div>
                                 </div>
                             }

@@ -394,6 +394,21 @@ namespace softWrench.sW4.Data.Configuration {
                 PropertyDataType = PropertyDataType.STRING,
             });
             #endregion
+
+
+            #region user
+            facade.RegisterAsync(ConfigurationConstants.User.HideForgotPassword, new PropertyDefinition {
+                Description = "Hide forgot password from login page",
+                DefaultValue = "false",
+                PropertyDataType = PropertyDataType.BOOLEAN
+            });
+
+            facade.RegisterAsync(ConfigurationConstants.User.HideNewUserRegistration, new PropertyDefinition {
+                Description = "Hide new user registration from login page",
+                DefaultValue = "false",
+                PropertyDataType = PropertyDataType.BOOLEAN
+            });
+            #endregion
         }
     }
 }

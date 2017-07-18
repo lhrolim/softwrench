@@ -22,6 +22,8 @@ using System;
 using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.ldap;
 using softwrench.sw4.user.classes.services;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Web.Models;
 
@@ -32,14 +34,16 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly SWDBHibernateDAO _dao;
         private readonly UserManager _userManager;
         private readonly UserPasswordService _userPasswordService;
+        private readonly IConfigurationFacade _configurationFacade;
 
 
-        public SignInController(SecurityFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager, UserPasswordService userPasswordService) {
+        public SignInController(SecurityFacade facade, LdapManager ldapManager, SWDBHibernateDAO dao, UserManager userManager, UserPasswordService userPasswordService, IConfigurationFacade configurationFacade) {
             _facade = facade;
             _ldapManager = ldapManager;
             _dao = dao;
             _userManager = userManager;
             _userPasswordService = userPasswordService;
+            _configurationFacade = configurationFacade;
         }
 
         public ActionResult Index(bool timeout = false, bool forbidden = false) {
@@ -274,9 +278,13 @@ namespace softWrench.sW4.Web.Controllers {
 
         private LoginHandlerModel BuildLoginHandlerModel() {
             string loginMessage = null;
-            return !IsLoginEnabled(ref loginMessage) ?
-                new LoginHandlerModel(false, loginMessage, ClientName(), ProfileName()) :
-                new LoginHandlerModel(true, IsHapagClient(), ClientName(), ProfileName());
+            if (!IsLoginEnabled(ref loginMessage)) {
+                return new LoginHandlerModel(false, loginMessage, ClientName(), ProfileName());
+            }
+            return new LoginHandlerModel(true, IsHapagClient(), ClientName(), ProfileName()) {
+                HideForgotPassword = _configurationFacade.Lookup<bool>(ConfigurationConstants.User.HideForgotPassword),
+                HideNewUserRegistration = _configurationFacade.Lookup<bool>(ConfigurationConstants.User.HideNewUserRegistration)
+            };
         }
     }
 }
