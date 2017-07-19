@@ -1220,15 +1220,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<attribute name="serviceaddresscode" type="varchar" required="false" />
 			</attributes>
 			<relationships>
-				<relationship to="address" qualifier="shipto">
+				<relationship to="pluspservaddr" qualifier="shipto">
 					<relationshipAttribute from="shiptoaddresscode" to="addresscode" primary="true"/>
 					<relationshipAttribute from="orgid" to="orgid" />
 				</relationship>
-				<relationship to="address" qualifier="billto">
+				<relationship to="pluspservaddr" qualifier="billto">
 					<relationshipAttribute from="billtoaddresscode" to="addresscode" primary="true"/>
 					<relationshipAttribute from="orgid" to="orgid" />
 				</relationship>
-				<relationship to="address" qualifier="serv">
+				<relationship to="pluspservaddr" qualifier="serv">
 					<relationshipAttribute from="serviceaddresscode" to="addresscode" primary="true"/>
 					<relationshipAttribute from="orgid" to="orgid" />
 				</relationship>
