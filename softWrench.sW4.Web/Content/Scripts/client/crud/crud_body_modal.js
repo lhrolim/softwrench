@@ -105,7 +105,10 @@
             $scope.previousdata = modaldata.previousdata;
             $scope.modaltitle = modaldata.title;
             $scope.cssclass = modaldata.cssclass;
-            $scope.closeAfterSave = modaldata.closeAfterSave || true;
+
+            const notCloseAfterSave = modaldata.closeAfterSave === false;
+            $scope.closeAfterSave = !notCloseAfterSave;
+
             $scope.cancelOnClickOutside = modaldata.cancelOnClickOutside || false;
             //by default modals, should render as detail stereotype mode
             $scope.isDetail = schemaService.isDetail(schema, true);

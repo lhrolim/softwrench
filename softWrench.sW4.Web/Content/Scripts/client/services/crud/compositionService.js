@@ -89,11 +89,11 @@
                         });
                 };
 
-                function doPopulateWithCompositionData(requestDTO, datamap) {
+                function doPopulateWithCompositionData(requestDTO, datamap, showLoading) {
 
                     const minCompositionArrayAsked = requestDTO.request.compositionList;
 
-                    return fetchCompositions(requestDTO, datamap)
+                    return fetchCompositions(requestDTO, datamap, showLoading)
                         .then(result => {
                             $timeout(() => {
 
@@ -234,7 +234,7 @@
                 * this method will hit the server to fetch associated composition data on a second request making the detail screens faster
                 *
                 */
-                function populateWithCompositionData(schema, datamap) {
+                function populateWithCompositionData(schema, datamap, showLoading) {
                     const applicationName = schema.applicationName;
                     const log = $log.getInstance('compositionservice#populateWithCompositionData');
                     log.info('going to server fetching composition data of {0}, schema {1}.'.format(applicationName, schema.schemaId));
@@ -243,7 +243,7 @@
                     // browser limits simultaneous client requests (usually 6).
                     // doing in a single request so it doesn't impact static files fetching and page loading              
                     const dto = buildFetchRequestDTO(schema, datamap);
-                    return doPopulateWithCompositionData(dto, datamap);
+                    return doPopulateWithCompositionData(dto, datamap, showLoading);
                 };
 
                 /**

@@ -78,7 +78,6 @@
                     if (!addFunction) {
                         scope.datamap[rel] = scope.datamap[rel] || [];
                         scope.datamap[rel].push(newFile);
-                        scope.ignoreWatch = true;
                         return;
                     }
 
@@ -126,8 +125,7 @@
 
 
                 scope.$watch("datamap[fieldMetadata.relationship]", (newValue) => {
-                    if (!newValue || scope.ignoreWatch) {
-                        scope.ignoreWatch = false;
+                    if (!newValue) {
                         return;
                     }
                     scope.files = [];

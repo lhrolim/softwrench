@@ -45,7 +45,7 @@
             }).then((result) => {
                 const parentSchema = crudContextHolderService.currentSchema();
                 const parentDm = crudContextHolderService.rootDataMap();
-                return compositionService.populateWithCompositionData(parentSchema, parentDm).then(() => {
+                return compositionService.populateWithCompositionData(parentSchema, parentDm, true).then(() => {
                     modalService.hide();
                     return result;
                 });
@@ -95,6 +95,10 @@
             return date;
         }
 
+        function requestModalProps() {
+            return { cssclass: "extra-height-modal", closeAfterSave: false };
+        };
+
         const service = {
             verifyEdit,
             verifyDelete,
@@ -103,7 +107,8 @@
             postDelete,
             validatePackage,
             addAttachments,
-            defaultSendTime
+            defaultSendTime,
+            requestModalProps
         };
         return service;
     }

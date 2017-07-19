@@ -26,7 +26,7 @@
                 mergedItem["sendtime"] = fsrequestService.defaultSendTime();
                 mergedItem["email"] = crudContextHolderService.rootDataMap()["defaultmetoemail"];
                 mergedItem["#maintenanceengineeringfileexplorer_"] = [];
-                modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
+                modalService.show(schema, mergedItem, fsrequestService.requestModalProps(), (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);
                 });
             });
@@ -47,7 +47,7 @@
 
             schemaCacheService.fetchSchema("_MaintenanceEngineering", "detail").then((schema) => {
                 item["email"] = item["email"] || "";
-                modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
+                modalService.show(schema, item, fsrequestService.requestModalProps(), (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);
                 });
             });

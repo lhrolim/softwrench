@@ -48,7 +48,7 @@
                     mergedItem["contractorstartdate"] = futureDate;
                 }
 
-                modalService.show(schema, mergedItem, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
+                modalService.show(schema, mergedItem, fsrequestService.requestModalProps(), (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);
                 });
             });
@@ -74,7 +74,7 @@
             fsrequestService.addAttachments(item, "#calloutfileexplorer_");
 
             schemaCacheService.fetchSchema("_CallOut", "detail").then((schema) => {
-                modalService.show(schema, item, { cssclass: 'extra-height-modal' }, (saveDatamap) => {
+                modalService.show(schema, item, fsrequestService.requestModalProps(), (saveDatamap) => {
                     postSave(saveDatamap, callback, rollback);
                 });
             });
