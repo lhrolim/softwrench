@@ -333,6 +333,10 @@
             locationUpdatedByService = false;
         }
 
+        function redirectOneBackHard() {
+            window.history.back();
+        }
+
         function redirectOneBack(msg) {
             const currentIndex = indexOnBreadcrumbHistory();
 
@@ -452,6 +456,7 @@
             wasLocationUpdatedByService,
             resetLocationUpdatedByService,
             redirectOneBack,
+            redirectOneBackHard,
             getRouteInfo,
             // breadcrumb history methods
             indexOnBreadcrumbHistory,

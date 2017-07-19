@@ -145,6 +145,9 @@
             const column = fieldService.getDisplayableByKey($scope.schema, attribute);
             const selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
             const autoloadcomposition = column.rendererParameters.autoloadcomposition;
+            if ($scope.panelid != null) {
+                crudContextHolderService.usebackHistoryNavigation(true);
+            }
 
             //force edition means that the user has clicked the edition icon, so regardless of the mode we need to open the details
             if (selectionModel.selectionMode && !forceEdition) {

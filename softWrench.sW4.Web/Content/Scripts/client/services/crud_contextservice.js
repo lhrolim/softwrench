@@ -675,6 +675,14 @@
 
         //#region navigationServices
 
+        usebackHistoryNavigation(useBackHistoryNavigation) {
+            if (useBackHistoryNavigation !== undefined) {
+                this.getContext().useBackHistoryNavigation = useBackHistoryNavigation;
+                return useBackHistoryNavigation;
+            }
+            return this.getContext().useBackHistoryNavigation;
+        }
+
         isList(panelid) {
             return this.getContext(panelid).isList;
         }
