@@ -66,6 +66,8 @@
     <property key="mifcredentials.password" value="chats-Z8j5ed"/>
     <property key="iiscontextpath" value="http://10.2.8.65/softwrench" />
     <property key="notifications.activityStream.enabled" value="false"/>
+    <property key="maximourldoclinkspath" value="http://10.2.8.240/"/>
+    <property key="maximodoclinkspath" value="&lt;PATH&gt;\DOCLINKS"/>
   </environment>
 
   <environment key="dev-uat">
@@ -112,6 +114,8 @@
     <property key="mifcredentials.user" value="FS117185"/>
     <property key="mifcredentials.password" value="C0ntr0l12!"/>
     <property key="email.smtp.host" value="client.firstsolar.com"/>
+    <property key="maximourldoclinkspath" value="http://10.2.8.240/"/>
+    <property key="maximodoclinkspath" value="&lt;PATH&gt;\DOCLINKS"/>
     <!--    <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>  -->
   </environment>
