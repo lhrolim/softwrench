@@ -3006,13 +3006,13 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
                   <renderer type="default" params="width=67%"/>
                 </field>
               </section>
-              <field label="Street" attribute="location_shipto_.address1"/>
+              <field label="Street" attribute="location_shipto_.streetaddress"/>
               <section id="shiptopaddress2" orientation="horizontal">
                 <header label="Postal Code / City" displacement="sameline"/>
-                <field label="" attribute="location_shipto_.address4"/>
-                <field label="" attribute="location_shipto_.address3"/>
+                <field label="" attribute="location_shipto_.postalcode"/>
+                <field label="" attribute="location_shipto_.city"/>
               </section>
-              <field label="Country" attribute="location_shipto_.address5"/>
+              <field label="Country" attribute="location_shipto_.country"/>
             </section>
 
             <section id="billto" parameters="padding-left=80px;">
@@ -3026,13 +3026,13 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
                   <renderer type="default" params="width=67%"/>
                 </field>
               </section>
-              <field label="Street" attribute="location_billto_.address1"/>
+              <field label="Street" attribute="location_billto_.streetaddress"/>
               <section id="billtoaddress2" orientation="horizontal">
                 <header label="Postal Code / City" displacement="sameline"/>
-                <field label="" attribute="location_billto_.address4"/>
-                <field label="" attribute="location_billto_.address3"/>
+                <field label="" attribute="location_billto_.postalcode"/>
+                <field label="" attribute="location_billto_.city"/>
               </section>
-              <field label="Country" attribute="location_billto_.address5"/>
+              <field label="Country" attribute="location_billto_.country"/>
             </section>
 
             <section id="serviceaddress" parameters="padding-left=80px;">
@@ -3046,13 +3046,13 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
                   <renderer type="default" params="width=67%"/>
                 </field>
               </section>
-              <field label="Street" attribute="location_serv_.address1"/>
+              <field label="Street" attribute="location_serv_.streetaddress"/>
               <section id="serviceaddress3" orientation="horizontal">
                 <header label="Postal Code / City" displacement="sameline"/>
-                <field label="" attribute="location_serv_.address4"/>
-                <field label="" attribute="location_serv_.address3"/>
+                <field label="" attribute="location_serv_.postalcode"/>
+                <field label="" attribute="location_serv_.city"/>
               </section>
-              <field label="Country" attribute="location_serv_.address5"/>
+              <field label="Country" attribute="location_serv_.country"/>
             </section>
 
           </tab>

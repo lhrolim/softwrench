@@ -94,13 +94,14 @@
     <property key="ismcredentials.password" value="xK7AgFqJJQ"/>
   </environment>
 
+  
   <environment key="produat">
     <property key="maximoutc" value="0"/>
     <property key="globalwsdlpath" value="https://170.225.28.205/MPWSNTestProxyWS/DocHandler?wsdl"/>
-    <property key="globaservletpath_inc" value="https://195.183.78.161/HAPAGLLOYDSNINCWS/DocHandlerServlet"/>
-    <property key="globaservletpath_chg" value="https://195.183.78.161/HAPAGLLOYDSNCHGWS/DocHandlerServlet"/>
-    <property key="maximo_DB_url" value="Server=10.132.160.133:5101;Database=maximo;UID=maxsas;PWD=cD2g3nik;currentSchema=maximo;" />
-    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb;User Id=swdb;password=U25GHZxNauvK;" />
+    <property key="globaservletpath_inc" value="https://10.132.170.56/HAPAGLLOYDSNINCWSUAT/DocHandlerServlet"/>
+    <property key="globaservletpath_chg" value="https://10.132.170.56/HAPAGLLOYDSNCHGWSUAT/DocHandlerServlet"/>
+    <property key="maximo_DB_url" value="Server=10.132.160.133:5102;Database=maximo;UID=maxsas;PWD=xmax4sas;currentSchema=maximo;" />
+    <property key="swdb_url" value="Data Source=localhost;Initial Catalog=swdb;User Id=sw;password=NjR=?m7!ZMsz" />
     <property key="swdb_provider" value="System.Data.SQL" />
     <property key="ldapServer" value="adquery.hlag.com"/>
     <property key="ldapPortNumber" value="389"/>
@@ -109,12 +110,11 @@
     <property key="ldap.synceverytime" value="true"/>
     <property key="ldap.allownonmaximousers" value="true"/>
     <property key="basewsURL" value="C:\ServiceIT\config\mifwsdl\UAT\" />
-    <property key="mifcredentials.user" value="dey99msy@ww.hl.lan"/>
-    <property key="mifcredentials.password" value="maximo16"/>
+    <property key="mifcredentials.user" value="t_ebond@ww.hl.lan"/>
+    <property key="mifcredentials.password" value="Maximo"/>
     <property key="ismcredentials.user" value="hl2tkbrg"/>
     <property key="ismcredentials.password" value="xK7AgFqJJQ"/>
   </environment>
-
 
 
 
