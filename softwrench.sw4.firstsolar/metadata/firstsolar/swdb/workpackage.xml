@@ -287,7 +287,7 @@
 
             <tab label="Daily Outage Update" icon="fa-clock-o" id="daulyoutage" showexpression="@#workorder_.worktype == null || @#workorder_.worktype !== 'PM'" enableexpression="@id!=null" countrelationship="">
               <section orientation="horizontal">
-                <field label="Start Date of Outage" attribute="createddate" readonly="true">
+                <field label="Start Date of Outage" attribute="createddate">
                   <renderer type="datetime"/>
                 </field>
                 <field label="Estimated Completion Date" attribute="estimatedcompdate">
