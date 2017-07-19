@@ -324,6 +324,33 @@
                 this.dropTable("ActiveLaborTracker");
             }
         });
+
+        migrationGroup.addMigration("search indexes  for CompositionData", {
+            up: function () {
+                this.addColumn("CompositionDataEntry", "textindex01", "text");
+                this.addColumn("CompositionDataEntry", "textindex02", "text");
+                this.addColumn("CompositionDataEntry", "textindex03", "text");
+                this.addColumn("CompositionDataEntry", "textindex04", "text");
+                this.addColumn("CompositionDataEntry", "textindex05", "text");
+                this.addColumn("CompositionDataEntry", "numericindex01", "numeric");
+                this.addColumn("CompositionDataEntry", "numericindex02", "numeric");
+                this.addColumn("CompositionDataEntry", "dateindex01", "date");
+                this.addColumn("CompositionDataEntry", "dateindex02", "date");
+                this.addColumn("CompositionDataEntry", "dateindex03", "date");
+            },
+            down: function () {
+                this.removeColumn("CompositionDataEntry", "textindex01");
+                this.removeColumn("CompositionDataEntry", "textindex02");
+                this.removeColumn("CompositionDataEntry", "textindex03");
+                this.removeColumn("CompositionDataEntry", "textindex04");
+                this.removeColumn("CompositionDataEntry", "textindex05");
+                this.removeColumn("CompositionDataEntry", "numericindex01");
+                this.removeColumn("CompositionDataEntry", "numericindex02");
+                this.removeColumn("CompositionDataEntry", "dateindex01");
+                this.removeColumn("CompositionDataEntry", "dateindex02");
+                this.removeColumn("CompositionDataEntry", "dateindex03");
+            }
+        });
     }]);
 
 })(angular, persistence);

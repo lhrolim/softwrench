@@ -1,5 +1,5 @@
 <div ng-repeat="field in displayables" class="crud-fields-wrapper">
-    <label class="item item-input" ng-show="!isFieldHidden(field)">
+    <label class="item item-input" ng-show="!isFieldHidden(field)" ng-if="field.type !== 'ApplicationCompositionDefinition'">
         <span class="input-label"><span ng-class="{'is-required' : isFieldRequired(field.requiredExpression)}" class="requiredfieldmark">* </span>{{field.label}}</span>
         <ng-switch on="field.type" class="full-width">
             <div ng-switch-when="ApplicationAssociationDefinition">
@@ -98,5 +98,8 @@
         </ng-switch>
 
     </label>
-       
+    <div ng-if="field.type === 'ApplicationCompositionDefinition'" class="item item-input" style="display: block">
+        <span class="input-label"><span ng-class="{'is-required' : isFieldRequired(field.requiredExpression)}" class="requiredfieldmark">* </span>{{field.label}}</span>
+        <div ng-include="field.schema.renderer.parameters['inline.composition.offline.template']"></div>
+    </div>
 </div>

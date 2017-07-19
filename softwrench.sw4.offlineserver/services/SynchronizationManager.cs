@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,8 +29,11 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
@@ -39,6 +43,9 @@ using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.Synchronizatio
 
 namespace softwrench.sw4.offlineserver.services {
     public class SynchronizationManager : ISingletonComponent {
+
+        [Import]
+        public DataSetProvider DataSetProvider { get; set; }
 
         private readonly OffLineCollectionResolver _resolver;
         private readonly EntityRepository _repository;
@@ -408,7 +415,14 @@ namespace softwrench.sw4.offlineserver.services {
                     newDataMaps.Add(JSONConvertedDatamap.FromFields(dict.Key, list, dict.Value.IdFieldName));
                 }
 
-                result.AddCompositionData(new SynchronizationApplicationResultData(dict.Key, newDataMaps, null));
+                var resultData = new SynchronizationApplicationResultData(dict.Key, newDataMaps, null);
+                var compositionSchema = parameters.CompositionSchemas[compositionDict.Key];
+                var schemas = compositionSchema.Schemas;
+                var anySchema = schemas.List ?? schemas.Detail ?? schemas.Print ?? schemas.Sync;
+                var compositionApp = MetadataProvider.Application(anySchema.ApplicationName);
+                ParseIndexes(resultData.TextIndexes, resultData.NumericIndexes, resultData.DateIndexes, compositionApp);
+
+                result.AddCompositionData(resultData);
             }
             Log.DebugFormat("SYNC:Finished handling compositions. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
@@ -529,8 +543,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         protected virtual async Task<List<JSONConvertedDatamap>> FetchData(bool isAssociationData, SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata,
-            Rowstamps rowstamps = null, List<string> itemsToDownload = null, bool isLimited = false)
-        {
+            Rowstamps rowstamps = null, List<string> itemsToDownload = null, bool isLimited = false) {
 
             var qualifier = ApplicationConfiguration.IsOracle(entityMetadata.DbType) ? entityMetadata.Name + "." : "";
 

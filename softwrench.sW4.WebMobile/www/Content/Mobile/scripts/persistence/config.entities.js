@@ -133,10 +133,21 @@
             datamap: 'JSON',
             remoteId: 'TEXT',//The id of this entry in maximo, it will be null when it´s created locally
             isDirty: 'BOOL', //if this flag is true, it will indicate that some change has been made to this entry locally, and it will appear on the pending sync dashboard
-            rowstamp: 'INT'
+            rowstamp: 'INT',
+            // index for use on searches
+            textindex01: "TEXT",
+            textindex02: "TEXT",
+            textindex03: "TEXT",
+            textindex04: "TEXT",
+            textindex05: "TEXT",
+            numericindex01: "NUMERIC",
+            numericindex02: "NUMERIC",
+            dateindex01: "DATE",
+            dateindex02: "DATE",
+            dateindex03: "DATE"
         });
 
-        entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id) values (?,?,0,?,?,?)";
+        entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id,'textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (:p0,:p1,0,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9,:p10,:p11,:p12,:p13,:p14)";
         entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry set datamap='{0}' rowstamp={1} where remoteId='{2}' and applicaton='{3}'";
         entities.CompositionDataEntry.syncdeletionQuery = "delete from CompositionDataEntry where application = '{0}' and remoteId in ({1})";
 

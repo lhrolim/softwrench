@@ -13,6 +13,7 @@
     <template path="@item.xml"/>
     <template path="@worklogs.xml"/>
     <template path="@attachments.xml"/>
+    <template path="@multiassetlocci.xml"/>
   </templates>
   
 
@@ -121,6 +122,13 @@
           <relationshipAttribute from="orgid" to="orgid" />
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
+        
+        <relationship to="multiassetlocci" collection="true">
+          <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
+          <relationshipAttribute from="woclass" to="RECORDCLASS" />
+          <relationshipAttribute from="siteid" to="worksiteid" />
+          <relationshipAttribute to="isprimary" literal="0" />
+        </relationship>
 
         <relationship to="worklog" collection="true" qualifier="wkpgworklogs">
           <relationshipAttribute from="wonum" to="recordkey" primary="true" />
@@ -221,6 +229,17 @@
         <attribute name="hierarchy" query=" (SELECT '/' + ancestor + '/' FROM locancestor WHERE location = !@location AND ancestor != !@location AND siteid = !@siteid AND orgid = !@orgid FOR XML PATH('')) " type="varchar"/>
         <attribute name="facilityname" query="@firstSolarCustomGlobalFedQueries.FacilityQuery" type="varchar"/>
       </attributes>
+    </entity>
+        
+    <entity name="multiassetlocci" idAttribute="multiid">
+      <relationships>
+        <relationship to="asset" qualifier="offlineasset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+        </relationship>
+        <relationship to="location" qualifier="offlinelocation" >
+          <relationshipAttribute from="location" to="location" primary="true"/>
+        </relationship>
+      </relationships>
     </entity>
   </entities>
 
@@ -563,7 +582,7 @@
             </optionfield>
           </customization>
           <properties>
-            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment,assetnum,siteid"/>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,newattachment,assetnum,siteid,multiassetlocci,multiassetlocci_"/>
             <property key="search.schemaid" value="search"/>
           </properties>
         </schema>
@@ -573,7 +592,7 @@
           <customization position="labtrans"/>
           <customization position="tooltrans"/>
           <properties>
-            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord,assetnum"/>
+            <property key="detail.enabledfields" value="description,ld_.ldtext,location,classstructureid,worktype,worklog,woactivity,commlog,attachment,assetmeter,locationmeter,relatedrecord,assetnum,multiassetlocci,multiassetlocci_"/>
             <property key="search.schemaid" value="search"/>
           </properties>
           <commandbars>
@@ -962,6 +981,10 @@
           <composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
+          <composition inline="true" relationship="multiassetlocci" label="Multi Asset" detailschema="offlinedetail">
+            <renderer type="default" params="inline.composition.offline.template=Content/Mobile/templates/multiassetlocci/multiassetlocci.html"/>
+            <collectionproperties listschema="offlinelist" allowupdate="true" allowcreation="true" orderbyfield="sequence"/>
+          </composition>
         </schema>
 
         <detail platform="mobile" title="Work Order" redeclaring="true" stereotype="detail" parentschema="basedetail">
@@ -1140,6 +1163,11 @@
                        extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
+
+          <composition inline="true" relationship="multiassetlocci" label="Multi Asset" detailschema="offlinedetail">
+            <renderer type="default" params="inline.composition.offline.template=Content/Mobile/templates/multiassetlocci/multiassetlocci.html"/>
+            <collectionproperties listschema="offlinelist" allowupdate="true" allowcreation="true" orderbyfield="sequence"/>
+          </composition>
 
           <!-- EndRegion-->
 
@@ -1766,6 +1794,30 @@
           <field attribute="description"/>
         </list>
       </schemas>
+    </application>
+
+    <application name="multiassetlocci" entity="multiassetlocci" title="Multi Asset Locci">
+      <schemas>
+        <schema id="offlinelist" stereotype="list" platform="mobile">
+          <field attribute="siteid" hidden="true"></field>
+          <association target="assetnum" labelfield="offlineasset.assetnum" label="Asset"/>
+          <association target="location" labelfield="offlinelocation.location" label="Location"/>
+          <field attribute="sequence" label="Sequence"/>
+          <field attribute="progress" label="Progress"/>
+        </schema>
+
+        <schema id="offlinedetail" stereotype="detail" platform="mobile">
+          <field attribute="siteid" hidden="true"></field>
+          <association target="assetnum" labelfield="offlineasset.assetnum" label="Asset"/>
+          <association target="location" labelfield="offlinelocation.location" label="Location"/>
+          <field attribute="sequence" label="Sequence"/>
+          <field attribute="progress" label="Progress"/>
+        </schema>
+      </schemas>
+    
+      <properties>
+        <property key="list.offline.numeric.indexlist" value="sequence"/>
+      </properties>
     </application>
 
     <!-- #endregion-->

@@ -583,8 +583,8 @@
           <section secondarycontent="true" orientation="vertical">
 
             <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
-              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true"/>
-              <renderer type="TABLE" params="mode=batch;"/>
+              <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" orderbyfield="sequence"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;"/>
             </composition>
 
             <section orientation="horizontal">

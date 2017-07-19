@@ -2,11 +2,13 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", "drillDownService", 
+    softwrench.controller("CrudDetailController", ['$log', "$q", '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", "drillDownService", "offlineCompositionService", "inlineCompositionService",
     'crudContextService', 'fieldService',  '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup","loadingService",
-    function (log, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform, drillDownService, 
+    function (log, $q, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform, drillDownService, offlineCompositionService, inlineCompositionService,
     crudContextService, fieldService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService, offlineSchemaService, commandBarDelegate, swAlertPopup, loadingService) {
-        
+
+        $scope.inlineCompositionsLoaded = false;
+
         function turnOffChangeEvents() {
             $rootScope.areChangeEventsEnabled = false;
         }
@@ -25,7 +27,12 @@
             $scope.schema = crudContextService.currentDetailSchema();
             $scope.datamap = crudContextService.currentDetailItemDataMap();
             $scope.item = crudContextHolderService.currentDetailItem();
-            
+
+            if (!$scope.inlineCompositionsLoaded) {
+                $scope.inlineCompositionsLoaded = true;
+                inlineCompositionService.loadInlineCompositions($scope.item, $scope.datamap, $scope.allDisplayables);
+            }
+
             $rootScope.areChangeEventsEnabled = true;
         }
 
@@ -93,6 +100,9 @@
                     // to force change the flag after the events are trigged
                     $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
                     turnOnChangeEvents();
+
+                    // to force inline compositions reload
+                    inlineCompositionService.cancelChanges();
                 }
             });
         }
@@ -102,9 +112,15 @@
         }
 
         $scope.saveChanges = function () {
+            inlineCompositionService.beforeSave($scope.datamap, $scope.allDisplayables);
             crudContextService.saveChanges()
-                .then(() => init())
-                .catch(showValidationErrors);
+                .then(() => {
+                    $scope.inlineCompositionsLoaded = false;
+                    init();
+                }).catch((errors) => {
+                    inlineCompositionService.onSaveFail($scope.datamap, $scope.allDisplayables);
+                    showValidationErrors(errors);
+                });
         };
 
         $scope.hasDirtyChanges = function () {
@@ -173,6 +189,7 @@
                 .then(() => {
                     $scope.datamap = crudContextService.currentDetailItemDataMap();
                     $scope.item = crudContextHolderService.currentDetailItem();
+                    inlineCompositionService.loadInlineCompositions($scope.item, $scope.datamap, $scope.allDisplayables);
                 })
                 .finally(() => {
                     turnOnChangeEvents();

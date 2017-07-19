@@ -200,7 +200,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return detailResult;
         }
 
-        private async Task LoadCompositions(ApplicationMetadata application, DetailRequest request,
+        public virtual async Task LoadCompositions(ApplicationMetadata application, DetailRequest request,
             IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
             var prefetchCompositions =
                 "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) ||

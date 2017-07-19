@@ -253,7 +253,7 @@
 
                     function watchFields() {
                         // watching for changes to trigger afterchange event handlers
-                        const watchableFields = $scope.allDisplayables.filter(f => f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
+                        const watchableFields = $scope.allDisplayables.filter(f => f.events && f.events.hasOwnProperty("afterchange") && !!f.events["afterchange"]);
                         if (!watchableFields || watchableFields.length <= 0) return;
 
                         const logger = $log.get("crud_input_fields", ["datamap", "event", "association"]);

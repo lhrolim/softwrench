@@ -1,8 +1,8 @@
 ﻿(function (mobileServices) {
     "use strict";
 
-    mobileServices.factory('offlineCompositionService', ["$log", "swdbDAO", "offlineEntities", "attachmentDataSynchronizationService",
-        function ($log, swdbDAO, offlineEntities, attachmentDataSynchronizationService) {
+    mobileServices.factory('offlineCompositionService', ["$log", "swdbDAO", "offlineEntities", "attachmentDataSynchronizationService", "searchIndexService",
+        function ($log, swdbDAO, offlineEntities, attachmentDataSynchronizationService, searchIndexService) {
 
             var entities = offlineEntities;
 
@@ -36,7 +36,8 @@
                         const json = datamap.jsonFields || JSON.stringify(datamap);
                         const parsedDM = datamap.jsonFields ? JSON.parse(datamap.jsonFields) : datamap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
-                        const query = { query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, json, datamap.id, String(datamap.approwstamp), id] };
+                        const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, JSON.parse(datamap.jsonFields));
+                        const query = { query: entities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, json, datamap.id, String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
 
                         idsToDelete.push("'" + datamap.id + "'");
                         queryArray.push(query);
@@ -107,6 +108,20 @@
                 }
                 baseQuery += "))";
                 //baseQuery += " or ( parentlocalId = '{0}') )".format(localId);
+
+                if (displayable.schema &&
+                    displayable.schema.collectionProperties &&
+                    displayable.schema.collectionProperties.orderByField &&
+                    displayable.schema.schemas &&
+                    displayable.schema.schemas.list) {
+
+                    const listSchema = displayable.schema.schemas.list;
+                    const appName = listSchema.applicationName;
+                    const column = displayable.schema.collectionProperties.orderByField;
+                    const orderIndex = searchIndexService.getIndexColumn(appName, listSchema, column);
+                    baseQuery += ` order by ${orderIndex}`;
+                }
+
                 log.debug("fetching composition {0} using query {1}".format(displayable.associationKey, baseQuery));
                 return swdbDAO.findByQuery("CompositionDataEntry", baseQuery, { projectionFields: ["remoteId", "datamap"] }).then(function (results) {
                     var resultCompositions = [];
