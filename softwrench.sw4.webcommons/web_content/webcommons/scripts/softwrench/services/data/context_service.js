@@ -218,14 +218,18 @@
 
             getResourceUrl: function (path) {
                 const baseURL = url(path);
-                if (!this.isLocal()) {
-                    const initTime = this.getFromContext("systeminittime");
-                    if (baseURL.indexOf("?") == -1) {
-                        return baseURL + "?" + initTime;
-                    }
-                    return baseURL + "&" + initTime;
+
+                if (this.isLocal() && path.endsWith("png")) {
+                    return baseURL;
                 }
-                return baseURL;
+                let initTime = this.isLocal() ? new Date().getTime() : this.getFromContext("systeminittime");
+
+                if (baseURL.indexOf("?") == -1) {
+                    return baseURL + "?" + initTime;
+                }
+                return baseURL + "&" + initTime;
+
+
             },
 
 

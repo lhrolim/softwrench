@@ -1,16 +1,20 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Optimization;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Util.StaticFileLoad {
     public static class RowStampScriptHelper {
 
-        public static IHtmlString Render(params string[] paths) {
+        public static IHtmlString Render(params string[] paths)
+        {
+            var shouldCacheLocal = paths[0].IndexOf("vendor", StringComparison.CurrentCultureIgnoreCase) != -1;
+
             var defaultValue = Scripts.Render(paths);
-            if (ApplicationConfiguration.IsLocal()) {
+            if (ApplicationConfiguration.IsLocal() && shouldCacheLocal) {
                 return defaultValue;
             }
-            var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
+            var totalMillis = ApplicationConfiguration.IsLocal() ? (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds :  ApplicationConfiguration.GetStartTimeInMillis();
             return new HtmlString(defaultValue.ToHtmlString().Replace(".js", ".js?" + totalMillis));
         }
 
@@ -25,10 +29,10 @@ namespace softWrench.sW4.Web.Util.StaticFileLoad {
 
         public static IHtmlString RenderCss(params string[] paths) {
             var defaultValue = Styles.Render(paths);
-            if (ApplicationConfiguration.IsLocal()) {
-                return defaultValue;
-            }
-            var totalMillis = ApplicationConfiguration.GetStartTimeInMillis();
+            //            if (ApplicationConfiguration.IsLocal()) {
+            //                return defaultValue;
+            //            }
+            var totalMillis = ApplicationConfiguration.IsLocal() ? (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds : ApplicationConfiguration.GetStartTimeInMillis();
             return new HtmlString(defaultValue.ToHtmlString().Replace(".css", ".css?" + totalMillis));
         }
     }
