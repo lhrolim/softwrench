@@ -222,7 +222,7 @@
         };
 
         function goToApplicationView(applicationName, schemaId, mode, title, parameters, jsonData, afterRedirectHook, type) {
-            const log = $log.getInstance('redirectService#goToApplication', ["redirect"]);
+            const log = $log.get('redirectService#goToApplication', ["redirect"]);
             parameters = parameters || {};
 
             $rootScope.$broadcast(JavascriptEventConstants.AppBeforeRedirection, parameters);
@@ -254,10 +254,12 @@
             $rootScope.popupmode = popupMode;
             fixHeaderService.unfix();
 
+            if (redirectUrl && !popupMode) {
+                historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn, true);
+            }
+
             if (jsonData == undefined) {
-                if (redirectUrl && !popupMode) {
-                    historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn, true);
-                }
+               
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
