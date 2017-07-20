@@ -47,7 +47,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         }
 
         public override bool RunAtStartup() {
-            return true;
+            return false;
         }
 
         public override async Task ExecuteJob() {

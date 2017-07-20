@@ -94,13 +94,16 @@ namespace softWrench.sW4.Web {
             new MigratorExecutor("SWDB").Migrate(runner => runner.MigrateUp());
             if (!changeClient) {
                 var container = SimpleInjectorScanner.InitDIController(null);
+                var beforeevent = Stopwatch.StartNew();
                 var dispatcher = (IEventDispatcher)container.GetInstance(typeof(IEventDispatcher));
                 dispatcher.Dispatch(new ApplicationStartedEvent());
+                Log.Info($"appstarted event took {LoggingUtil.MsDelta(beforeevent)}*************");
                 //                ManagedWebSessionContext.Bind(System.Web.HttpContext.Current, SWDBHibernateDAO.SessionManager.SessionFactory.OpenSession());
             }
 
             SecurityFacade.InitSecurity();
-            Log.Info(string.Format("**************App {0} started in {1}*************", HostingEnvironment.ApplicationVirtualPath, LoggingUtil.MsDelta(before)));
+            Log.Info(
+                $"**************App {HostingEnvironment.ApplicationVirtualPath} started in {LoggingUtil.MsDelta(before)}*************");
             ApplicationConfiguration.StartTimeMillis = (long)(DateTime.Now - new DateTime(1970, 1, 1)).TotalMilliseconds;
 
         }
