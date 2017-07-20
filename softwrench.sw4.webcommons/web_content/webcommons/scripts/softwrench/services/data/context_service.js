@@ -170,6 +170,7 @@
                 //clear cache
                 $rootScope.user = userData;
                 this.insertIntoContext('user', JSON.stringify(userData));
+                $rootScope.userContextDate = new Date();
             },
 
             loadConfigs: function (config) {
@@ -222,7 +223,7 @@
                 if (this.isLocal() && path.endsWith("png")) {
                     return baseURL;
                 }
-                let initTime = this.isLocal() ? new Date().getTime() : this.getFromContext("systeminittime");
+                let initTime = this.isLocal() ? $rootScope.userContextDate.getTime() : this.getFromContext("systeminittime");
 
                 if (baseURL.indexOf("?") == -1) {
                     return baseURL + "?" + initTime;
