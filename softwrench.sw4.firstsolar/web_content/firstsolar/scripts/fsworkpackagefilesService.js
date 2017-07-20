@@ -35,7 +35,7 @@
                     "#isDirty": true,
                     createdate: null,
                     "docinfo_.description": file.label,
-                    document: file.label,
+                    document: guid().substring(0, 20),
                     "#filter": `swwpkg:${relationship.substr(1, relationship.length - 14)}`,
                     newattachment: file.value,
                     newattachment_path: file.label,

@@ -100,7 +100,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 new JProperty("#isDirty", true),
                 new JProperty("createdate", null),
                 new JProperty("docinfo_.description", label),
-                new JProperty("document", label),
+                new JProperty("document", Guid.NewGuid().ToString().Substring(0,20)),
                 new JProperty("#filter", filterPrefix + id),
                 new JProperty("newattachment", value),
                 new JProperty("newattachment_path", label),
