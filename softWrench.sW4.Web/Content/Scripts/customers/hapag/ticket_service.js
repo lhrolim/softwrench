@@ -19,7 +19,9 @@ app.factory('ticketservice', function ($http, redirectService,alertService,field
                     status: datamap.customAction,
                     crud: datamap
                 }
-                var urlToUse = url("api/data/operation/servicerequest/SubmitAction?platform=web&id=" + parameters.ticketid);
+
+
+                var urlToUse = url("api/data/operation/{0}/SubmitAction?platform=web&id=".format(schema.applicationName) + parameters.ticketid);
                 parameters = addCurrentSchemaDataToJson(parameters, schema);
                 var json = angular.toJson(parameters);
                 $http.post(urlToUse, json).success(function () {
