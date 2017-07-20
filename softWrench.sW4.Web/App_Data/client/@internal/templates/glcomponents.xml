@@ -24,6 +24,12 @@
   <applications>
     <application name="glcomponents" title="GL-Selector" entity="glcomponents">
       <schemas>
+        <list>
+          <field attribute="glpart-0" label="Cost Center"/>
+          <field attribute="glpart-1" label="Activity"/>
+          <field attribute="glpart-2" label="Resource"/>
+          <field attribute="glpart-3" label="Element"/>
+        </list>
         <schema id="detail" title="GL Details" abstract="true" stereotype="detail" mode="input">
           <optionfield label="Cost Center:" attribute="glpart-0" requiredexpression="true" providerattribute="_0GLComponents75" extraparameter="0">
             <renderer type="AUTOCOMPLETECLIENT"/>
