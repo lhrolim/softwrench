@@ -223,6 +223,10 @@
                 if (this.isLocal() && path.endsWith("png")) {
                     return baseURL;
                 }
+                if (this.isLocal() && $rootScope.userContextDate == null) {
+                    $rootScope.userContextDate = new Date();
+                }
+
                 let initTime = this.isLocal() ? $rootScope.userContextDate.getTime() : this.getFromContext("systeminittime");
 
                 if (baseURL.indexOf("?") == -1) {
