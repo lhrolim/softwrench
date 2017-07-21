@@ -237,6 +237,18 @@
 
             },
 
+//            getResourceUrl: function (path) {
+//                const baseURL = url(path);
+//                if (!this.isLocal()) {
+//                    const initTime = this.getFromContext("systeminittime");
+//                    if (baseURL.indexOf("?") == -1) {
+//                        return baseURL + "?" + initTime;
+//                    }
+//                    return baseURL + "&" + initTime;
+//                }
+//                return baseURL;
+//            },
+
 
             currentModule: function () {
                 return this.retrieveFromContext('currentmodule');

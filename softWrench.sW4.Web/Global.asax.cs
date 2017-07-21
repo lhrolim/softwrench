@@ -47,7 +47,7 @@ namespace softWrench.sW4.Web {
 
         }
 
-      
+
 
         private static void SetFixClient() {
             var applicationPath = HostingEnvironment.ApplicationVirtualPath;
@@ -186,15 +186,15 @@ namespace softWrench.sW4.Web {
         }
 
         protected void Application_EndRequest(object sender, EventArgs e) {
-//            if (ApplicationConfiguration.IsLocal()) {
-//                //do not cache content locally, to make development faster
-//                Response.Cache.SetCacheability(HttpCacheability.NoCache);
-//                Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
-//                Response.Cache.SetNoStore();
-//            }
+            if (ApplicationConfiguration.IsLocal() && !ShouldCache()) {
+                //do not cache content locally, to make development faster
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
+                Response.Cache.SetNoStore();
+            }
 
-//            var inMemoryUser = SecurityFacade.CurrentUser();
-//            HttpContext.Current.User = inMemoryUser;
+            //            var inMemoryUser = SecurityFacade.CurrentUser();
+            //            HttpContext.Current.User = inMemoryUser;
 
             if (AuthLog.IsDebugEnabled) {
                 try {
@@ -237,6 +237,16 @@ namespace softWrench.sW4.Web {
             }
 
             ErrorConfig.Handle(Context, Server.GetLastError());
+        }
+
+        private bool ShouldCache() {
+            if (Request.AppRelativeCurrentExecutionFilePath == null) {
+                return false;
+            }
+
+            return Request.AppRelativeCurrentExecutionFilePath.IndexOf("vendor",StringComparison.CurrentCultureIgnoreCase) !=-1
+                   || Request.AppRelativeCurrentExecutionFilePath.IndexOf(".png", StringComparison.CurrentCultureIgnoreCase) != -1
+                   || Request.AppRelativeCurrentExecutionFilePath.IndexOf(".jpg", StringComparison.CurrentCultureIgnoreCase) != -1;
         }
 
 
