@@ -32,13 +32,13 @@
                 multisortinitdata: "="
             },
 
-            controller: ["$scope",  "$q", "$rootScope", "$filter", "$injector", "$log",
+            controller: ["$scope", "$q", "$rootScope", "$filter", "$injector", "$log",
                 "formatService", "fixHeaderService", "alertService", "gridPreferenceService",
-                "searchService", "tabsService", "userPreferencesService", "printService", 
+                "searchService", "tabsService", "userPreferencesService", "printService",
                 "fieldService", "commandService", "i18NService", "modalService", "multisortService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
-                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService","crudlistViewmodel",
+                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService", "crudlistViewmodel",
                 function ($scope, $q, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService, printService,
@@ -50,11 +50,11 @@
                     $scope.$name = "crudlist";
 
                     var multiSortVisibleKey = "multiSortVisible";
-                    var sortModel = function() {
+                    var sortModel = function () {
                         return crudContextHolderService.getSortModel($scope.panelid);
                     }
 
-                    $scope.multiSortVisible = function() {
+                    $scope.multiSortVisible = function () {
                         return sortModel().multiSortVisible;
                     }
 
@@ -237,7 +237,7 @@
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
 
                         if (!initialLoad) {
-                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);    
+                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);
                         }
 
                         $scope.gridDataChanged($scope.datamap);
@@ -253,7 +253,7 @@
                         });
                         var crudContext = {
                             list_elements: elements,
-                            detail_next: { id : "0" },
+                            detail_next: { id: "0" },
                             detail_previous: { id: "-1" },
                             paginationData: $scope.paginationData,
                             previousData: $scope.datamap,
@@ -292,7 +292,7 @@
                     }
 
 
-                    $scope.cleanup = function() {
+                    $scope.cleanup = function () {
                         $scope.paginationData.filterFixedWhereClause = null;
                         $scope.searchData = {};
                         $scope.searchSort = {};
@@ -322,8 +322,8 @@
                      * @param {Array} multiSort 
                      * @returns {} 
                      */
-                    $scope.refreshGridRequested = function (searchData, searchOperator, 
-                    {panelid,searchSort,quickSearchDTO,metadataid,pageNumber,pageSize,printMode,forcecleanup,avoidspin,addPreSelectedFilters,numberOfPages, multiSort,schemaFilterId} = {}) {
+                    $scope.refreshGridRequested = function (searchData, searchOperator,
+                        { panelid, searchSort, quickSearchDTO, metadataid, pageNumber, pageSize, printMode, forcecleanup, avoidspin, addPreSelectedFilters, numberOfPages, multiSort, schemaFilterId } = {}) {
 
                         if (panelid && panelid.toString() !== $scope.panelid) {
                             //this is none of my business --> another dashboard will handle it
@@ -341,7 +341,7 @@
                         $scope.vm.quickSearchDTO = quickSearchDTO || $scope.vm.quickSearchDTO || { compositionsToInclude: [] };
 
                         $scope.metadataid = metadataid;
-                        
+
 
                         var pagetogo = pageNumber ? pageNumber : $scope.paginationData.pageNumber;
                         const newPageSize = pageSize ? pageSize : $scope.paginationData.pageSize;
@@ -356,12 +356,12 @@
                         if (avoidspin) {
                             contextService.set("avoidspin", true, true);
                         }
-                        
+
                         if (forcecleanup) {
                             $scope.cleanup();
                         }
 
-                        $scope.selectPage(pagetogo, newPageSize, printMode, {addPreSelectedFilters,numberOfPages,schemaFilterId});
+                        $scope.selectPage(pagetogo, newPageSize, printMode, { addPreSelectedFilters, numberOfPages, schemaFilterId });
                     };
 
                     $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
@@ -398,7 +398,7 @@
                         searchService.refreshGrid($scope.searchData, $scope.searchOperator, { quickSearchDTO: filterdata, panelid: $scope.panelid });
                     };
 
-                    $scope.autoQuicksearch = function() {
+                    $scope.autoQuicksearch = function () {
                         return $scope.schema.properties && $scope.schema.properties["list.quicksearch.auto"] === "true";
                     }
 
@@ -450,7 +450,7 @@
 
                     };
 
-                    $scope.handleCustomParamProvider = function(searchDTO) {
+                    $scope.handleCustomParamProvider = function (searchDTO) {
                         if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
                             const customParamProviderString = $scope.schema.properties['schema.customparamprovider'];
                             const customParamProvider = dispatcherService.loadServiceByString(customParamProviderString);
@@ -473,8 +473,8 @@
                     }
 
 
-                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters ={}) {
-                        
+                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters = {}) {
+
                         if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
                             $scope.paginationData.pageNumber = pageNumber;
                             return $q.when();
@@ -482,7 +482,7 @@
 
                         var totalCount = 0;
                         var filterFixedWhereClause = null;
-                  
+
                         if ($scope.paginationData != null) {
                             totalCount = $scope.paginationData.totalCount;
                             //if pageSize is specified, use it... this is used for printing function
@@ -502,8 +502,8 @@
                         if (extraparameters instanceof SearchDTO) {
                             searchDTO = extraparameters;
                         } else {
-                            searchDTO = 
-                                 searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, sortModel().sortColumns);    
+                            searchDTO =
+                                searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, sortModel().sortColumns);
                             searchDTO.pageNumber = pageNumber;
                             searchDTO.totalCount = totalCount;
                             searchDTO.pageSize = pageSize;
@@ -513,7 +513,7 @@
                             searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
                             searchDTO.addPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
                         }
-                   
+
                         // Check for custom param provider
                         $scope.handleCustomParamProvider(searchDTO);
 
@@ -527,7 +527,7 @@
                         }
 
                         $rootScope.printRequested = printMode;
-                        return searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchemaId,{
+                        return searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchemaId, {
                             searchDTO: searchDTO,
                             printMode: printMode,
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
@@ -640,7 +640,7 @@
                             if (preAction) {
                                 datamap = preAction();
                                 if (datamap.then) {
-                                    return datamap.then(function(datamap) {
+                                    return datamap.then(function (datamap) {
                                         return redirectService.goToApplication($scope.schema.applicationName, $scope.schema.noResultsNewSchema, null, datamap);
                                     });
                                 }
@@ -691,24 +691,28 @@
                         //restore the last scroll position, else scroll to the top of the page
                         var scrollObject = contextService.fetchFromContext("scrollto", true);
 
-                        if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
-                            scrollPosition = scrollObject.scrollTop;
-                        } else {
-                            scrollPosition = 0;
+                        if ($scope.panelid == null) {
+                            if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
+                                scrollPosition = scrollObject.scrollTop;
+                            } else {
+                                scrollPosition = 0;
+                            }
+
+                            $timeout(
+                                function () {
+                                    window.scrollTo(0, scrollPosition);
+                                    log.info("Scroll To", scrollPosition, scrollObject);
+                                }, 100, false);
                         }
 
-                        $timeout(
-                            function () {
-                                window.scrollTo(0, scrollPosition);
-                                log.info("Scroll To", scrollPosition, scrollObject);
-                            }, 100, false);
+
 
                         $(".no-touch [rel=tooltip]").tooltip({ container: "body", trigger: "hover" });
                         log.debug("finish table rendered listener");
                     });
 
                     $scope.$on(JavascriptEventConstants.GRID_REFRESHED, function (event, data, panelId) {
-                        $scope.gridRefreshed(data, panelId,true);
+                        $scope.gridRefreshed(data, panelId, true);
                     });
 
                     $scope.$on(JavascriptEventConstants.ToggleSelected, function (event, args) {
@@ -753,7 +757,7 @@
                     });
 
 
-                    this.hasNewSchema = function() {
+                    this.hasNewSchema = function () {
                         return $scope.schema.newSchemaRepresentation != null;
                     }
 
@@ -771,7 +775,7 @@
                     }
 
                     function initController() {
-                        const log = $log.getInstance("crudlist#init", ["grid","init","route","navigation"]);
+                        const log = $log.getInstance("crudlist#init", ["grid", "init", "route", "navigation"]);
                         log.debug("crudlist controller init...")
                         $injector.invoke(BaseController, this, {
                             $scope,
@@ -800,7 +804,7 @@
 
                         if (dataRefreshed) {
                             log.debug("data was already fetched from server... directive was compiled after the response");
-                            $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid,true);
+                            $scope.gridRefreshed(dataRefreshed.data, dataRefreshed.panelid, true);
                         }
                         const pageSize = userPreferencesService.getSchemaPreference("pageSize", $scope.schema.applicationName, $scope.schema.schemaId, $scope.panelid);
                         const dataToRefresh = contextService.fetchFromContext("poll_refreshgridaction" + ($scope.panelid ? $scope.panelid : ""), true, true, true);
@@ -839,7 +843,7 @@
                                 // Set the scroll position to the top of the new page
                                 contextService.insertIntoContext("scrollto", { 'applicationName': $scope.applicationName, 'scrollTop': 0 });
                                 $scope.gridRefreshed(data.data, $scope.panelid);
-                            }).catch(err=> console.log(err));
+                            }).catch(err => console.log(err));
                         }
                     }
 
