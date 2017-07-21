@@ -302,7 +302,7 @@
                 <header label="Lost Energy"  params="fieldset=true"/>
                 <field label="MWH Lost Total" attribute="mwhlosttotal" readonly="true"/>
                 <field label="Expected MWH Lost (Estimated)" attribute="expectedmwhlost"/>
-                <field label="MWH Lost Per day" attribute="mwhlostperday"/>
+                <field label="Expected MWH Lost Per Day" attribute="mwhlostperday"/>
               </section>
 
               <section orientation="horizontal">
