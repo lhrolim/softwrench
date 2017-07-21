@@ -144,6 +144,8 @@
                         const sortModel = crudContextHolderService.getSortModel($scope.panelid);
                         sortModel.sortColumns = multisortService.toMultisortColumns(filter.sort);
                         sortModel.multiSortVisible = true;
+                    } else {
+                        crudContextHolderService.clearSortModel($scope.panelid);
                     }
                     gridPreferenceService.applyFilter(filter, $scope.searchOperator, $scope.quickSearchDto, $scope.panelid);
                 }

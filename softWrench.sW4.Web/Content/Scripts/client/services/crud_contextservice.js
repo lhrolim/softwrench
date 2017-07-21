@@ -11,13 +11,18 @@
             this.contextService = contextService;
             this.schemaCacheService = schemaCacheService;
 
+            this._originalSortModel = {
+                sortColumns: [],
+                multiSortVisible: false
+            }
+
             this._originalContext = {
                 currentSchema: null,
                 rootDataMap: null,
                 originalDatamap: null,
                 isList: null,
                 isDetail: null,
-                crudForm:null,
+                crudForm: null,
 
                 currentApplicationName: null,
                 //a datamap that could be used in a transient fashion but that would have the same lifecycle as the main one, i.e, would get cleaned automatically upon app redirect
@@ -107,11 +112,8 @@
                     selectedFilter: null
                 },
                 customSaveFn: null,
-                sortModel: {
-                    sortColumns: [],
-                    multiSortVisible: false
-                }
-            };
+                sortModel: angular.copy(this._originalSortModel)
+        };
 
             //#region private variables
 
@@ -283,6 +285,14 @@
         getSortModel(panelid) {
             return this.getContext(panelid).sortModel;
         }
+
+        clearSortModel(panelid) {
+            return this.getContext(panelid).sortModel = {
+                sortColumns: [],
+                multiSortVisible: false
+            };
+        }
+
         //#endregion
 
         //#region hooks
