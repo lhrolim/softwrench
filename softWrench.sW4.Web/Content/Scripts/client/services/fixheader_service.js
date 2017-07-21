@@ -2,7 +2,7 @@
     "use strict";
 
 angular.module('sw_layout')
-    .service('fixHeaderService', ["$rootScope", "$log", "$timeout", "contextService", function ($rootScope, $log, $timeout, contextService) {
+    .service('fixHeaderService', ["$rootScope", "$log", "$timeout", "contextService","crudContextHolderService", function ($rootScope, $log, $timeout, contextService,crudContextHolderService) {
 
     var addClassErrorMessageListHander = function (showerrormessage) {
         const affixpaginationid = $("#affixpagination");
@@ -81,6 +81,10 @@ angular.module('sw_layout')
     $(window).resize(window.debounce(setHeaderPosition, 250));
 
     function setHeaderColumnWidths() {
+        const schema = crudContextHolderService.currentSchema();
+        const metadataMinWidth = (!!schema && !!schema.properties) ? schema.properties['list.width.min'] : "0";
+
+
         const modalGrid = $('.modal .listgrid-table:visible');
         if (modalGrid.length == 0) {
             var table = $('.listgrid-table:visible');
@@ -110,7 +114,11 @@ angular.module('sw_layout')
                 const tdWidth = $(this).width();
                 const th = $('thead th.{0}'.format(tdClass), table);
                 th.width(tdWidth);
-//                $('.cell-wrapper', th).width(tdWidth);
+                if (metadataMinWidth && metadataMinWidth.replace("px","") >= table.width()) {
+                    //for overflown scenarios, such as kogt sr grid, we need this to avoid unallignments
+                    $('.cell-wrapper', th).width(tdWidth);
+                }
+    
             });
         }
     };
