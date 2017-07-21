@@ -48,7 +48,7 @@
                 function fetchCompositions(requestDTO, datamap, showLoading) {
                     var log = $log.getInstance('compositionservice#fetchCompositions', ['composition']);
                     const urlToUse = url("/api/generic/Composition/GetCompositionData");
-                    const originalDm =crudContextHolderService.originalDatamap();
+                    const originalDm = crudContextHolderService.originalDatamap();
                     return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                         .then(response => {
                             var data = response.data;
@@ -106,12 +106,12 @@
                                             result[compositionName] = {
                                                 list: [],
                                                 paginationData: {
-                                                    totalCount :0
+                                                    totalCount: 0
                                                 },
                                                 relationship: compositionName
                                             };
                                         }
-                                    });    
+                                    });
                                 }
 
                                 $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, result, minCompositionArrayAsked);
@@ -160,6 +160,22 @@
                 //#endregion
 
                 //#region Public 
+
+                function getCompositions(schema, datamap) {
+                    if (!schema || !schema["cachedCompositions"]) {
+                        return null;
+                    }
+                    var compositions = [];
+                    var cachedCompositions = schema.cachedCompositions;
+
+                    angular.forEach(cachedCompositions, (compositionValue, composition) => {
+                        if (!cachedCompositions.hasOwnProperty(composition)) {
+                            return;
+                        }
+                        compositions.push(composition);
+                    });
+                    return compositions;
+                };
 
                 function getLazyCompositions(schema, datamap) {
                     if (!schema || !schema["cachedCompositions"]) {
@@ -342,8 +358,8 @@
                 }
 
                 function updateCompositionDataAfterSave(schema, datamap, responseDataMap) {
-                    const compositions = this.getLazyCompositions(schema, datamap) || [];
-                    compositions.forEach(composition=> {
+                    const compositions = this.getCompositions(schema, datamap) || [];
+                    compositions.forEach(composition => {
 
                         const currentValue = datamap[composition];
                         const updateFields = responseDataMap;
@@ -406,6 +422,7 @@
                     updateCompositionDataAfterSave,
                     searchCompositionList,
                     isCompositionLodaded,
+                    getCompositions,
                     getLazyCompositions,
                     getCompositionDetailItem,
                     isCompositionListItem,

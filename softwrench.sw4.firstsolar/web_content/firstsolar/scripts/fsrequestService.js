@@ -42,13 +42,6 @@
             callback(saveDatamap);
             return applicationService.save({
                 dispatchedByModal: false
-            }).then((result) => {
-                const parentSchema = crudContextHolderService.currentSchema();
-                const parentDm = crudContextHolderService.rootDataMap();
-                return compositionService.populateWithCompositionData(parentSchema, parentDm, true).then(() => {
-                    modalService.hide();
-                    return result;
-                });
             }).catch(() => {
                 rollback();
             });

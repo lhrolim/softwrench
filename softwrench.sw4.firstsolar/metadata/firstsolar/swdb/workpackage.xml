@@ -538,6 +538,7 @@
           <field attribute="id" hidden="true"/>
           <field attribute="email" label="Email"/>
           <field attribute="status" label="Status"/>
+          <field attribute="qualifier" label="qualifier"/>
           <field attribute="senddate" label="Send Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;"/>
           </field>

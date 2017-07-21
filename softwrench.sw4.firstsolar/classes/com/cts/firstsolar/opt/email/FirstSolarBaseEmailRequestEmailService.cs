@@ -26,6 +26,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var emailData = BuildEmailData(request, package, siteId, attachs);
             EmailService.SendEmail(emailData);
 
+            var emailStatus = new WorkPackageEmailStatus {
+                Email = emailData.SendTo,
+                Operation = softWrench.sW4.Data.Persistence.Operation.OperationConstants.CRUD_UPDATE,
+                Qualifier = request.GetType().Name,
+                SendDate = DateTime.Now,
+                WorkPackage = package
+            };
+
+            package.EmailStatuses.Add(await Dao.SaveAsync(emailStatus));
+
             request.Status = RequestStatus.Sent;
             request.ActualSendTime = DateTime.Now;
 
