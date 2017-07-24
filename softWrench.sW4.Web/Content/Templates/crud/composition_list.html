@@ -260,7 +260,7 @@
                     </div>
                 </td>
             </tr>
-            <tr class="batchadd" ng-if="inline && collectionproperties.allowInsertion == 'true'">
+            <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
                 <td colspan="100%">
                     <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
                 </td>
