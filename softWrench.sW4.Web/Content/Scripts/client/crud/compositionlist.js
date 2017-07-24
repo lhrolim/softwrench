@@ -598,8 +598,23 @@
                     $scope.detailData[originalItem.id].data = originalData;
                 }
             }
+            const compositionlistschema = $scope.compositionlistschema;
 
-            dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
+            const compositionId = item[compositionlistschema.idFieldName];
+
+            const needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
+
+            if (!needServerFetching) {
+                return dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
+            }
+
+            const customParams = $scope.getCustomParameters(compositionlistschema, item);
+
+            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(result => {
+                const datamap = result.resultObject;
+                return dispatcherService.invokeServiceByString(batchEditFunction, [datamap, editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
+            });
+
         }
 
         $scope.executeCompositionCustomClickService = (fullServiceName, column, compositionlistschema, item, clonedItem) => {
