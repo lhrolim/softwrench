@@ -585,7 +585,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
-            DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);
+            await DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);
             if (isCreation) {
                 await WpCreationEmailHandler.SendEmail(package, package, siteId);
             }

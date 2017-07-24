@@ -217,37 +217,19 @@
                 $rootScope.i18NRequired = config.i18NRequired;
             },
 
+         
+
             getResourceUrl: function (path) {
                 const baseURL = url(path);
-
-                if (this.isLocal() && path.endsWith("png")) {
-                    return baseURL;
+                if (!this.isLocal()) {
+                    const initTime = this.getFromContext("systeminittime");
+                    if (baseURL.indexOf("?") == -1) {
+                        return baseURL + "?" + initTime;
+                    }
+                    return baseURL + "&" + initTime;
                 }
-                if (this.isLocal() && $rootScope.userContextDate == null) {
-                    $rootScope.userContextDate = new Date();
-                }
-
-                let initTime = this.isLocal() ? $rootScope.userContextDate.getTime() : this.getFromContext("systeminittime");
-
-                if (baseURL.indexOf("?") == -1) {
-                    return baseURL + "?" + initTime;
-                }
-                return baseURL + "&" + initTime;
-
-
+                return baseURL;
             },
-
-//            getResourceUrl: function (path) {
-//                const baseURL = url(path);
-//                if (!this.isLocal()) {
-//                    const initTime = this.getFromContext("systeminittime");
-//                    if (baseURL.indexOf("?") == -1) {
-//                        return baseURL + "?" + initTime;
-//                    }
-//                    return baseURL + "&" + initTime;
-//                }
-//                return baseURL;
-//            },
 
 
             currentModule: function () {

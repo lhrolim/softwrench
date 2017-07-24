@@ -48,7 +48,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
             ConfigurationFacade.Register(DefaultDailyOutageMeetingToEmailKey, new PropertyDefinition {
                 Description = "Default emails to be used as 'to' on Daily Outage Meeting emails.",
-                StringValue = "",
+                StringValue = ApplicationConfiguration.IsProd() ? "omengineering@firstsolar.com" : ApplicationConfiguration.IsUat() ? "" : "DevTeam@controltechnologysolutions.com",
                 PropertyDataType = PropertyDataType.STRING,
             });
         }

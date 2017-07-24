@@ -42,6 +42,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             EmailService.SendEmail(emailData);
 
+            var emailStatus = new WorkPackageEmailStatus {
+                Email = emailData.SendTo,
+                Operation = softWrench.sW4.Data.Persistence.Operation.OperationConstants.CRUD_UPDATE,
+                Qualifier = "dailyoutagemeeting",
+                SendDate = DateTime.Now,
+                WorkPackage = package
+            };
+
+            package.EmailStatuses.Add(await Dao.SaveAsync(emailStatus));
+
             dom.Status = RequestStatus.Sent;
             dom.ActualSendTime = DateTime.Now;
 
