@@ -602,7 +602,7 @@
 
             const compositionId = item[compositionlistschema.idFieldName];
 
-            const needServerFetching = $scope.fetchfromserver || $scope.detailData[compositionId] == undefined;
+            const needServerFetching = $scope.fetchfromserver;
 
             if (!needServerFetching) {
                 return dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);

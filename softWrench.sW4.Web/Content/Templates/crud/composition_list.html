@@ -271,10 +271,10 @@
                 <td colspan="100%">
                     <p class="no-results" ng-if="showInlineHeader()">
                         <i class="fa fa-info-circle" ng-if="showInlineHeader()"></i>&ensp;{{i18N('general.norecords','No records to display.')}}
-                        <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+                        <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="inline && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
                     </p>
                     <div ng-if="!showInlineHeader()">
-                        <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+                        <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="inline && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
                     </div>
                 </td>
             </tr>
