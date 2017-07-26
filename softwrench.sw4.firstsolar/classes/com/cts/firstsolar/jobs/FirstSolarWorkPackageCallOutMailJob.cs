@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
+using cts.commons.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
 using softWrench.sW4.Scheduler;
@@ -15,11 +16,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         private readonly ISWDBHibernateDAO _dao;
         private readonly IMaximoHibernateDAO _maximoDao;
         private readonly FirstSolarCallOutHandler _callOutHandler;
+        private readonly FirstSolarCustomGlobalFedService _gefedService;
 
-        public FirstSolarWorkPackageCallOutMailJob(ISWDBHibernateDAO dao, IMaximoHibernateDAO maximoDao, FirstSolarCallOutHandler callOutHandler) {
+        public FirstSolarWorkPackageCallOutMailJob(ISWDBHibernateDAO dao, IMaximoHibernateDAO maximoDao, FirstSolarCallOutHandler callOutHandler, FirstSolarCustomGlobalFedService gefedService) {
             _dao = dao;
             _maximoDao = maximoDao;
             _callOutHandler = callOutHandler;
+            _gefedService = gefedService;
         }
 
         public override string Name() {
@@ -54,6 +57,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
 
         private void HandleCallout(CallOut callOut){
             var package = callOut.WorkPackage;
+            AsyncHelper.RunSync(() => _gefedService.LoadGfedData(package, callOut));
             var wos = _maximoDao.FindByNativeQuery("select siteid from workorder where workorderid = '{0}'".Fmt(package.WorkorderId));
             var siteid = wos.First()["siteid"];
             _callOutHandler.HandleEmail(callOut, package, siteid);

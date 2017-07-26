@@ -51,7 +51,6 @@
           <field attribute="ponumber" hidden="true"/>
           <field attribute="tonumber" hidden="true"/>
           <field attribute="email" hidden="true"/>
-          <field attribute="sitename" hidden="true"/>
           <field attribute="billingentity" hidden="true"/>
           <field attribute="nottoexceedamount" hidden="true"/>
           <field attribute="remainingfunds" hidden="true"/>
@@ -91,7 +90,14 @@
             <optionfield label="Send to (Email)" attribute="email" requiredexpression="true">
               <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
             </optionfield>
-            <field attribute="sitename" label="Site Name" requiredexpression="true"/>
+            <field attribute="#facilitytitle" label="Site Name" readonly="true"/>
+            <field attribute="#facilityaddress" label="Address" readonly="true"/>
+            <section orientation="horizontal">
+              <field attribute="#facilitycity" label="City" readonly="true"/>
+              <field attribute="#facilitystate" label="State" readonly="true"/>
+              <field attribute="#facilitypostalcode" label="Zip" readonly="true"/>
+            </section>
+            
             <section orientation="horizontal">
               <field attribute="billingentity" label="Billing Entity" default="First Solar Eletric, LLC" requiredexpression="true"/>
               <field attribute="nottoexceedamount" label="Not to Exceed Amount" requiredexpression="true">
@@ -151,7 +157,11 @@
               <field label="PO#" attribute="ponumber"/>
               <field attribute="email" label="Send to (Email)"/>
               <field attribute="tonumber" label="T.O.#"/>
-              <field attribute="sitename" label="Site Name"/>
+              <field attribute="#facilitytitle" label="Site Name"/>
+              <field attribute="#facilityaddress" label="Address"/>
+              <field attribute="#facilitycity" label="City"/>
+              <field attribute="#facilitystate" label="State"/>
+              <field attribute="#facilitypostalcode" label="Zip"/>
               <field attribute="billingentity" label="Billing Entity"/>
               <field attribute="nottoexceedamount" label="Not to Exceed Amount"/>
               <field attribute="remainingfunds" label="Remaining Funds"/>

@@ -85,8 +85,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public string Email { get; set; }
         public string Cc { get; set; }
 
-        [Property]
-        public string SiteName { get; set; }
+        public string FacilityName { get; set; }
+        public string FacilityAddress { get; set; }
+        public string FacilityCity { get; set; }
+        public string FacilityState { get; set; }
+        public string FacilityPostalCode { get; set; }
 
         [Property]
         public string BillingEntity { get; set; }

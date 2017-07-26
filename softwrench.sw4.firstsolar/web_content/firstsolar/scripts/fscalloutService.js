@@ -18,9 +18,11 @@
             const wpDatamap = crudContextHolderService.rootDataMap();
             item["orgid"] = wpDatamap["#workorder_.orgid"];
             item["#editing"] = true;
-            if (!item["sitename"]) {
-                item["sitename"] = wpDatamap["#workorder_.site_.description"];
-            }
+            item["#facilitytitle"] = wpDatamap["#facilitytitle"];
+            item["#facilityaddress"] = wpDatamap["#facilityaddress"];
+            item["#facilitycity"] = wpDatamap["#facilitycity"];
+            item["#facilitystate"] = wpDatamap["#facilitystate"];
+            item["#facilitypostalcode"] = wpDatamap["#facilitypostalcode"];
         }
 
         function openModalNew(item, callback, rollback) {

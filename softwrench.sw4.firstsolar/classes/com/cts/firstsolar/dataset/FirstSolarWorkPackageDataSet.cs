@@ -257,7 +257,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             HandleWonum(result.ResultObject);
 
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
-            await LoadTechSupManager(result);
+            await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedData(result);
 
             HandleMwhTotals(result.ResultObject);
 
@@ -303,42 +303,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         private void HandleWonum(AttributeHolder ah) {
             var wpnum = ah.GetStringAttribute("wpnum");
             ah.SetAttribute("wonum", wpnum != null && wpnum.StartsWith("WP") ? "NA" + wpnum.Substring(2) : wpnum);
-        }
-
-        private async Task LoadTechSupManager(ApplicationDetailResult result) {
-            var row = (Dictionary<string, string>)null;
-
-            if (ApplicationConfiguration.IsProd()) {
-                var workorderid = result.ResultObject.GetLongAttribute("workorderid");
-                var qryResult =
-                    await MaxDao.FindByNativeQueryAsync(FSWPackageConstants.TechSupManagerQuery, workorderid);
-                if (qryResult == null || !qryResult.Any()) {
-                    return;
-                }
-                row = qryResult.First();
-            } else {
-                row = new Dictionary<string, string>()
-                {
-                    {FSWPackageConstants.TechColumn, "Test Technician"},
-                    {FSWPackageConstants.SupervisorColumn, "Test Supervisor"},
-                    {FSWPackageConstants.RegionalManagerColumn, "Test Manager"},
-                    {FSWPackageConstants.PlannerColumn, "Test Planner"}
-                };
-            }
-
-
-            if (row.ContainsKey(FSWPackageConstants.TechColumn)) {
-                result.ResultObject.SetAttribute("#technician", row[FSWPackageConstants.TechColumn]);
-            }
-            if (row.ContainsKey(FSWPackageConstants.SupervisorColumn)) {
-                result.ResultObject.SetAttribute("#supervisor", row[FSWPackageConstants.SupervisorColumn]);
-            }
-            if (row.ContainsKey(FSWPackageConstants.RegionalManagerColumn)) {
-                result.ResultObject.SetAttribute("#manager", row[FSWPackageConstants.RegionalManagerColumn]);
-            }
-            if (row.ContainsKey(FSWPackageConstants.PlannerColumn)) {
-                result.ResultObject.SetAttribute("#planner", row[FSWPackageConstants.PlannerColumn]);
-            }
         }
 
         public async Task<DataMap> GetWorkorderRelatedData(InMemoryUser user, long? workorderId) {
@@ -583,6 +547,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
         private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
+            await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedData(package, calloutsToSend?.ToList());
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
             await DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);
