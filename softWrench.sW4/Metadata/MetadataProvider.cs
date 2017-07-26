@@ -755,7 +755,7 @@ namespace softWrench.sW4.Metadata {
 
         [CanBeNull]
         public static string RoleByApplication(string applicationName) {
-            var application = Application(applicationName);
+            var application = Application(applicationName,false);
             if (application == null) {
                 return applicationName;
             }
