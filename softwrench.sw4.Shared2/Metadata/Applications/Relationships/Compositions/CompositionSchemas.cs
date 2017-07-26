@@ -13,6 +13,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public ApplicationSchemaDefinition Detail { get; set; }
 
+        public ApplicationSchemaDefinition DetailOutput { get; set; }
+
         public ApplicationSchemaDefinition List { get; set; }
 
         public ApplicationSchemaDefinition Print { get; set; }

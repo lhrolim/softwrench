@@ -760,6 +760,16 @@
         </documentation>
       </annotation>
     </attribute>
+
+    <attribute name="outputschema" type="string">
+      <annotation>
+        <documentation>
+          The schema which will be used on the composition for the expanded output view. If
+          none is provided, "detail" will be used as a default
+        </documentation>
+      </annotation>
+    </attribute>
+    
     <attribute name="printschema" type="string">
       <annotation>
         <documentation>

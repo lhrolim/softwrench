@@ -20,7 +20,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         public bool isPrintEnabled {
             get; set;
         }
-        private ApplicationCompositionSchema _schema;
+
         public ApplicationHeader Header {
             get; set;
         }
@@ -45,13 +45,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             if (relationship == null)
                 throw new ArgumentNullException("relationship");
             _relationship = relationship;
-            _schema = schema;
+            Schema = schema;
             isHidden = hidden;
             isPrintEnabled = printEnabled;
             Header = header;
             if (isHidden) {
                 //if hidden then the detail schema can be marked as empty
-                _schema.DetailSchema = "";
+                Schema.DetailSchema = "";
             }
             Collection = schema is ApplicationCompositionCollectionSchema;
         }
@@ -66,7 +66,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
-        public override string RendererType => _schema.Renderer.RendererType;
+        public override string RendererType => Schema.Renderer.RendererType;
 
         public override string Role => From + "." + Relationship;
 
@@ -79,16 +79,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
 
-        public ApplicationCompositionSchema Schema {
-            get {
-                return _schema;
-            }
-            set {
-                _schema = value;
-            }
-        }
+        public ApplicationCompositionSchema Schema { get; set; }
 
-        public bool Inline => _schema.INLINE;
+        public bool Inline => Schema.INLINE;
 
         public override string ToString() {
             return $"From: {From}, To: {EntityAssociation} , Collection: {Collection}";
@@ -96,7 +89,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public string TabId => Relationship;
 
-        public ISet<string> DependantFields => _schema.DependantFields;
+        public ISet<string> DependantFields => Schema.DependantFields;
 
         public override bool Collection { get; }
 

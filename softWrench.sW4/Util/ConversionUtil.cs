@@ -90,6 +90,9 @@ namespace softWrench.sW4.Util {
                     DateTime dtAux;
                     if (!DateTime.TryParseExact(stValue, dateFormat, null, System.Globalization.DateTimeStyles.None, out dtAux)) continue;
                     var date = DateTime.SpecifyKind(dtAux, kind);
+                    if (isSwdbDate) {
+                        return date.FromUserToServer(user);
+                    }
                     return date.FromUserToRightKind(user);
                 }
 

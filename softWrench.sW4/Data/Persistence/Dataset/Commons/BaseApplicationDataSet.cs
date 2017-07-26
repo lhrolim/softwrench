@@ -496,12 +496,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     ? SchemaFetchMode.SecondaryContent
                     : SchemaFetchMode.MainContent;
 
-                if (composition.Schema.Schemas == null) {
+                if (composition.Schema.Schemas == null || "fileexplorer".Equals(composition.Schema.Renderer.RendererType)) {
                     continue;
                 }
 
                 var listCompositionSchema = composition.Schema.Schemas.List;
                 var compositionAssociations = listCompositionSchema.Associations(mode);
+
+
+
 
                 if (compositionAssociations.Any()) {
                     var compositionData = (IEnumerable<CrudOperationData>)crudData.GetRelationship(composition.AssociationKey);

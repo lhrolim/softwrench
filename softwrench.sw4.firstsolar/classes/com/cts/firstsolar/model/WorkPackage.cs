@@ -61,6 +61,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public bool? MaintenanceEnabled { get; set; }
 
+        #region DailyOutageTab
+
+        
+
         [Property]
         public DateTime? EstimatedCompDate { get; set; }
 
@@ -77,6 +81,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         [Property]
         public string ProblemStatement { get; set; }
+
+
+        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "MeetingTime asc")]
+        [Key(1, Column = "workpackageid", NotNull = true)]
+        [OneToMany(2, ClassType = typeof(DailyOutageMeeting))]
+        public virtual IList<DailyOutageMeeting> DailyOutageMeetings { get; set; }
+
+        [Bag(0, Table = "OPT_DAILY_OUTAGE_ACTION", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "ActionTime asc")]
+        [Key(1, Column = "workpackageid", NotNull = true)]
+        [OneToMany(2, ClassType = typeof(OutageAction))]
+        public virtual IList<OutageAction> OutageActions { get; set; }
+
+
+        #endregion
 
         [Property]
         public bool? BuildComplete { get; set; }
@@ -118,10 +136,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [OneToMany(2, ClassType = typeof(MaintenanceEngineering))]
         public virtual IList<MaintenanceEngineering> MaintenanceEngineerings { get; set; }
 
-        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "MeetingTime asc")]
-        [Key(1, Column = "workpackageid", NotNull = true)]
-        [OneToMany(2, ClassType = typeof(DailyOutageMeeting))]
-        public virtual IList<DailyOutageMeeting> DailyOutageMeetings { get; set; }
 
 
 

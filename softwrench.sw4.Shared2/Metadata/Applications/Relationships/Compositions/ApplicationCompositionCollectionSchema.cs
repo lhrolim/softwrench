@@ -17,9 +17,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
 
 
-        public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, CompositionCollectionProperties collectionProperties,
+        public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, string detailOutputSchema, CompositionCollectionProperties collectionProperties,
             SchemaMode renderMode, CompositionFieldRenderer renderer, string printSchema, string dependantfield, FetchType fetchType, ISet<ApplicationEvent> events = null) :
-            base(inline, detailSchema, renderMode, renderer, printSchema, dependantfield, fetchType, events) {
+            base(inline, detailSchema, detailOutputSchema,renderMode, renderer, printSchema, dependantfield, fetchType, events) {
             _collectionProperties = collectionProperties;
         }
 
@@ -58,7 +58,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         public override object Clone() {
             var props = new CompositionCollectionProperties(AllowRemoval, AllowInsertion, AllowUpdate, CollectionProperties.ListSchema, CollectionProperties.AutoCommit, CollectionProperties.HideExistingData, CollectionProperties.OrderByField, CollectionProperties.PrefilterFunction);
 
-            return new ApplicationCompositionCollectionSchema(INLINE, DetailSchema, props, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
+            return new ApplicationCompositionCollectionSchema(INLINE, DetailSchema,DetailOutputSchema, props, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
         }
     }
 }

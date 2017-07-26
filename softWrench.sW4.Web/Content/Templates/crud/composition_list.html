@@ -21,7 +21,7 @@
            ng-class="showTableHover() ? 'table-hover' : 'no-hover'; inline? 'table-inline' : ''" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead ng-if="showInlineHeader()">
             <tr class="hapag-table-header">
-                <th ng-if="hasDetailSchema()">
+                <th ng-if="hasDetailOutputSchema()">
                     <!--batchMode-->
                 </th>
 
@@ -72,7 +72,7 @@
                 draggable="{{ draggableValue() }}"
                 composition-list-key="{{getCompositionListKey()}}"
                 composition-list-id="{{compositionitem[compositionlistschema.idFieldName]}}">
-                <td ng-if="hasDetailSchema()" class="rowexpand">
+                <td ng-if="hasDetailOutputSchema()" class="rowexpand">
                     <button class="btn btn-default" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
                         <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>
@@ -242,8 +242,8 @@
             <tr ng-repeat-end ng-if="detailData[compositionitem[compositionlistschema.idFieldName]].expanded">
                 <td colspan="100%" style="background-color: white" class="detaildata">
                     <div class="expanded-item-composition" ng-if="isExpandReadOnly()">
-                        <expanded-item-output displayables="compositiondetailschema.displayables"
-                                              schema="compositiondetailschema"
+                        <expanded-item-output displayables="compositionoutputschema.displayables"
+                                              schema="compositionoutputschema"
                                               datamap="detailData[compositionitem[compositionlistschema.idFieldName]].data"
                                               cancelfn="cancelComposition()"
                                               class="clearfix">
@@ -262,7 +262,7 @@
             </tr>
             <tr class="batchadd" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'">
                 <td colspan="100%">
-                    <button class="btn btn-primary" ng-click="addBatchItem()"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+                    <button class="btn btn-primary" ng-click="addItem()"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
                 </td>
             </tr>
         </tbody>
@@ -271,10 +271,11 @@
                 <td colspan="100%">
                     <p class="no-results" ng-if="showInlineHeader()">
                         <i class="fa fa-info-circle" ng-if="showInlineHeader()"></i>&ensp;{{i18N('general.norecords','No records to display.')}}
-                        <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+                        <button class="btn btn-primary" ng-click="addItem()" ng-if="inline && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
                     </p>
                     <div ng-if="!showInlineHeader()">
-                        <button class="btn btn-primary" ng-click="addBatchItem()" ng-if="isBatch() && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+                        <button class="btn btn-primary" ng-click="addItem()" ng-if="inline && collectionproperties.allowInsertion == 'true'"><i class="fa fa-plus"></i>&ensp;{{batchAddTitle}}</button>
+
                     </div>
                 </td>
             </tr>

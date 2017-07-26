@@ -281,7 +281,20 @@ var safePush = function (baseObject, propertyName, item) {
     if (!baseObject[propertyName]) {
         baseObject[propertyName] = [];
     }
-    baseObject[propertyName].push(item);
+    const arr = baseObject[propertyName];
+
+    if (item.id == null) {
+        arr.push(item);
+    } else {
+        const idx = arr.findIndex(a => (a.id != null && a.id === item.id));
+        if (idx !== -1) {
+            arr[idx] = item;
+        } else {
+            arr.push(item);
+        }
+    }
+
+    
 }
 
 var nullifyProperties = function (baseObject, propertyArray) {

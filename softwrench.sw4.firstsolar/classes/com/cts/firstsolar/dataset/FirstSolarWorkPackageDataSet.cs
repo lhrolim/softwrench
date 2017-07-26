@@ -72,11 +72,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         [Import]
         public FirstSolarDailyOutageMeetingHandler DailyOutageMeetingHandler { get; set; }
 
+        
         [Import]
         public FirstSolarWorkPackageCreationEmailHandler WpCreationEmailHandler { get; set; }
 
         [Import]
         public FirstSolarWorkPackageCompositionHandler CompositionHandler { get; set; }
+
+        public FirstSolarOutageActionHandler OutageActionHandler => SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarOutageActionHandler>(typeof(FirstSolarOutageActionHandler));
 
 
         private static QuickSearchHelper QuickSearchHelper => SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
@@ -411,9 +414,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var anyNewDom = DailyOutageMeetingHandler.HandleDailyOutageMeetings(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
 
+            var anyNewAction = OutageActionHandler.HandleOutageActions(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
+
             package = await Dao.SaveAsync(package);
 
-            if (anyNewCallout || anyNewMe || anyNewDom) {
+            if (anyNewCallout || anyNewMe || anyNewDom || anyNewAction) {
                 crudoperationData.ReloadMode = ReloadMode.MainDetail;
             }
 

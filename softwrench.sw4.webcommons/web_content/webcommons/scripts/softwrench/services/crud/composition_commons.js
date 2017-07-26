@@ -26,7 +26,7 @@
 
         /**
        * merges the parent datamap with a specific composition row data, making sure that, 
-       * in case of conflicts, the composition data is sent and not the parent one (ex: both have assets)
+       * in case of conflicts, the composition data is preseverved and not the parent one (ex: both have assets)
        * @param {} datamap 
        * @param {} parentdata 
        * @returns {} 

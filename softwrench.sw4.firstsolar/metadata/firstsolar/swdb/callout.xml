@@ -126,7 +126,7 @@
               <renderer type="textarea"/>
             </field>
 
-            <composition inline="true" relationship="#calloutfileexplorer_" label="Attachments">
+            <composition inline="true" relationship="#calloutfileexplorer_" label="Attachments" fetchtype="manual">
               <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types"/>
             </composition>
           </section>

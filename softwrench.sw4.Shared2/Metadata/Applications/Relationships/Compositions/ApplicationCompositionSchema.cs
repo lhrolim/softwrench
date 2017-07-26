@@ -10,8 +10,6 @@ using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions {
     public class ApplicationCompositionSchema : IPCLCloneable {
-
-        private string _detailSchema;
         private bool _inline;
 
         protected HashSet<string> _dependantFields = new HashSet<string>();
@@ -41,12 +39,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get; set;
         }
 
-        public ApplicationCompositionSchema(bool inline, string detailSchema, SchemaMode renderMode, CompositionFieldRenderer renderer,
+        public ApplicationCompositionSchema(bool inline, string detailSchema,string detailOutputSchema, SchemaMode renderMode, CompositionFieldRenderer renderer,
             string printSchema, string dependantfields, FetchType fetchType, ISet<ApplicationEvent> events = null) {
             Events = new Dictionary<string, ApplicationEvent>();
             _inline = inline;
             Renderer = renderer;
-            _detailSchema = detailSchema;
+            DetailSchema = detailSchema;
+            DetailOutputSchema = detailOutputSchema;
             PrintSchema = printSchema;
             RenderMode = renderMode;
             _eventsSet = events;
@@ -74,14 +73,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         [DefaultValue("detail")]
-        public string DetailSchema {
-            get {
-                return _detailSchema;
-            }
-            set {
-                _detailSchema = value;
-            }
-        }
+        public string DetailSchema { get; set; }
+
+        public string DetailOutputSchema { get; set; }
+
 
 
         public bool INLINE {
@@ -119,11 +114,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public override string ToString() {
-            return string.Format("DetailSchema: {0}, INLINE: {1}", _detailSchema, _inline);
+            return string.Format("DetailSchema: {0}, INLINE: {1}", DetailSchema, _inline);
         }
 
         public virtual object Clone() {
-            return new ApplicationCompositionSchema(INLINE, DetailSchema, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
+            return new ApplicationCompositionSchema(INLINE, DetailSchema,DetailOutputSchema, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
         }
     }
 }

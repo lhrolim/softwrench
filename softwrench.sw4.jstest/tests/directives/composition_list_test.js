@@ -187,6 +187,7 @@
             expect(mockScope.parentdata["worklog_"].length).toBe(1);
 
         }).catch((err) => {
+            console.log(err);
             expect(true).toBeFalsy();
         }).finally(done);
 
@@ -277,7 +278,7 @@
 
         expect(mockScope.compositionData().length).toBe(2);
 
-        mockScope.addBatchItem();
+        mockScope.addItem();
 
         expect(mockScope.compositionData().length).toBe(3);
 

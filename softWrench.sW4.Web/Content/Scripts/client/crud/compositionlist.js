@@ -165,6 +165,12 @@
             $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
             $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
 
+            $scope.compositionoutputschema = $scope.compositionschemadefinition.schemas.detailOutput;
+            if ($scope.compositionschemadefinition.detailOutputSchema !== "") {
+                $scope.compositionoutputschema = $scope.compositionschemadefinition.schemas.detail;
+            }
+
+
             $scope.fetchfromserver = $scope.compositionschemadefinition.fetchFromServer;
             $scope.collectionproperties = $scope.compositionschemadefinition.collectionProperties;
             $scope.inline = $scope.compositionschemadefinition.inline;
@@ -261,7 +267,7 @@
             if (initialDeclaration && fieldService.isPropertyTrue($scope.compositionschemadefinition, "composition.inline.startwithentry")) {
                 //inline composition should apear with an initial item
                 //add BatchItem already configure the listeners
-                $scope.addBatchItem();
+                $scope.addItem();
             }
         }
 
@@ -282,6 +288,7 @@
                     return option !== 0 && $scope.paginationData.totalCount > option;
                 });
         }
+
 
 
         $scope.onAfterCompositionResolved = function (event, compositiondata) {
@@ -328,6 +335,42 @@
         }
 
         $scope.$on(JavascriptEventConstants.NavigateRequestCrawlOcurred, $scope.clearCompositionData);
+
+        $scope.$on(JavascriptEventConstants.DetailLoaded, () => {
+            //update eager fetched compositions, whose data come with the main details rather than on a separate call (these are handled by JavascriptEventConstants.COMPOSITION_RESOLVED)
+            var dm = crudContextHolderService.rootDataMap();
+
+            //TODO: investigate the need of the listener check, was resulting on SWWEB-3012
+            if (!dm || !dm.hasOwnProperty($scope.relationship) || !$scope.compositionschemadefinition.fetchType.equalsIc("eager")) {
+                //this is not the data this tab is interested
+                return;
+            }
+
+            compositionService.pollCompositionEvent();
+            const log = $log.get("compositionlist#resolved", ["composition"]);
+            spinService.stop({ compositionSpin: true });
+            const list = dm[$scope.relationship];
+            if (list == null) {
+                log.debug("cleaning up composition data (but keeping same array)");
+                $scope.clearCompositionData();
+                return;
+            }
+            log.debug("composition data refreshed for {0} | entries: {1}".format($scope.relationship, list.length));
+
+            $scope.compositiondata = list;
+            $scope.parentdata[$scope.relationship] = list;
+
+            $scope.init();
+
+
+            try {
+                $scope.$digest();
+            } catch (e) {
+                //digest already in progress...
+            }
+
+
+        });
 
 
         $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, $scope.onAfterCompositionResolved);
@@ -557,6 +600,10 @@
             return !!$scope.compositiondetailschema;
         }
 
+        $scope.hasDetailOutputSchema = function () {
+            return !!$scope.compositionoutputschema;
+        }
+
         $scope.expansionAllowed = function (item) {
             const compositionId = item[$scope.compositionlistschema.idFieldName]; //we cannot expand an item that doesn´t have an id
             return compositionId != null;
@@ -599,7 +646,25 @@
                 }
             }
 
-            dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
+            const compositionlistschema = $scope.compositionlistschema;
+
+            const compositionId = item[compositionlistschema.idFieldName];
+
+            const needServerFetching = $scope.fetchfromserver;
+
+            if (!needServerFetching) {
+                return dispatcherService.invokeServiceByString(batchEditFunction, [angular.copy(item), editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
+            }
+
+            const customParams = $scope.getCustomParameters(compositionlistschema, item);
+
+            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(result => {
+                const datamap = result.resultObject;
+
+                var mergeddata = compositionCommons.buildMergedDatamap(datamap, angular.copy(item));
+
+                return dispatcherService.invokeServiceByString(batchEditFunction, [mergeddata, editCallback, editRollback, $scope.onAfterSave, $scope.relationship]);
+            });
         }
 
         $scope.executeCompositionCustomClickService = (fullServiceName, column, compositionlistschema, item, clonedItem) => {
@@ -756,7 +821,9 @@
 
         //#region ***************Batch functions **************************************/
 
-        $scope.addBatchItem = function () {
+        $scope.addItem = function () {
+           
+
             const idx = $scope.compositionData().length;
 
             // validates the last row
@@ -786,6 +853,12 @@
 
                 dispatcherService.invokeServiceByString(addFunction, [newItem, addCallback, addRollback, $scope.onAfterSave, $scope.relationship]);
                 return;
+            }else if (!$scope.isBatch()) {
+                $scope.isUpdate = true;
+                const datamap = {
+                    _iscreation: true
+                };
+                return $scope.edit(datamap);
             }
 
             addBatchItemContinue(idx, newItem, listSchema);
@@ -798,7 +871,12 @@
             const fakeNegativeId = newItem[listSchema.idFieldName];
 
             $scope.compositionData().push(newItem);
+            safePush($scope.parentdata, $scope.relationship, newItem);
 
+
+            if (!$scope.isBatch()) {
+                return;
+            }
 
             const watches = crud_inputcommons.configureAssociationChangeEvents($scope, "compositiondata[{0}]".format(idx), listSchema.displayables, fakeNegativeId);
             watches.push(watchForDirty(idx));
@@ -981,6 +1059,9 @@
 
             if (!$scope.paginationData) {
                 $scope.clearNewCompositionDataForBatches();
+                if (data && !!data[$scope.relationship]) {
+                    $scope.compositiondata = data[$scope.relationship];
+                }
                 return $q.when(null);
             }
             const keepfilters = schemaService.isPropertyTrue($scope.parentschema, "compositions.keepfilters");
@@ -1006,12 +1087,16 @@
 
             
 
-            if (!$scope.isBatch()) {
-                return;
-            }
+            
 
             const rootDatamap = crudContextHolderService.rootDataMap();
             const updatedCompositionData = rootDatamap[$scope.relationship];
+
+            if (!$scope.isBatch()) {
+                $scope.clonedCompositionData = updatedCompositionData;
+                return;
+            }
+
 
             //removing watchers first
             if ($scope.unWatcherArray) {

@@ -50,6 +50,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 compositionResult.List = GetListSchema(applicationCompositionSchema, compositionApplication, platform);
                 if (platform != ClientPlatform.Mobile) {
                     compositionResult.Print = GetPrintSchema(applicationCompositionSchema, compositionApplication);
+                    compositionResult.DetailOutput = GetDetailOutputSchema(applicationCompositionSchema, compositionApplication);
                 }
                 if (!composition.IsSelfRelationship) {
                     //this won´t be needed into the synchronization
@@ -65,8 +66,13 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 foreach (var innerComposition in compositionResult.Detail.Compositions()) {
                     if (!checkedCompositions.Contains(innerComposition.Relationship)) {
                         var fromSchema = innerComposition.IsSelfRelationship ? compositionResult.Detail : schema;
-                        //to avod infinte loop
-                        DoInitializeCompositionSchemas(fromSchema, innerComposition, checkedCompositions);
+                        if (!FetchType.Manual.Equals(innerComposition.Schema.FetchType)){
+                            //manually fetched compositions should be skipped, since they are fetched later, by a manual call
+                            //to avod infinte loop
+                            DoInitializeCompositionSchemas(fromSchema, innerComposition, checkedCompositions);
+                        }
+
+                        
                     }
                 }
             }
@@ -99,11 +105,34 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             CompleteApplicationMetadataDefinition compositionApplication) {
             var applicationSchemaDefinitions = compositionApplication.Schemas();
             var printKey = new ApplicationMetadataSchemaKey(compositionSchema.PrintSchema, compositionSchema.RenderMode, ClientPlatform.Web);
+
+            if (compositionSchema.PrintSchema == "" || compositionSchema.Renderer.RendererType.Equals("fileexplorer")) {
+                //This means that the composition is only needed for list visualization
+                return null;
+            }
+
             if (applicationSchemaDefinitions.ContainsKey(printKey)) {
                 return applicationSchemaDefinitions[printKey];
             }
             return GetDetailSchema(compositionApplication, compositionSchema, ClientPlatform.Web);
         }
+
+        private static ApplicationSchemaDefinition GetDetailOutputSchema(ApplicationCompositionSchema compositionSchema,
+            CompleteApplicationMetadataDefinition compositionApplication) {
+            var applicationSchemaDefinitions = compositionApplication.Schemas();
+            var detailOutputSchemaKey = new ApplicationMetadataSchemaKey(compositionSchema.DetailOutputSchema, compositionSchema.RenderMode, ClientPlatform.Web);
+
+            if (compositionSchema.DetailOutputSchema == "" || compositionSchema.Renderer.RendererType.Equals("fileexplorer")) {
+                //This means that the composition is only needed for list visualization
+                return null;
+            }
+
+            if (applicationSchemaDefinitions.ContainsKey(detailOutputSchemaKey)) {
+                return applicationSchemaDefinitions[detailOutputSchemaKey];
+            }
+            return GetDetailSchema(compositionApplication, compositionSchema, ClientPlatform.Web);
+        }
+
 
         private static bool ShouldFetchFromServer(ApplicationSchemaDefinition detail, ApplicationSchemaDefinition list) {
             if (detail == null) {
@@ -148,11 +177,16 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             }
 
             var listKey = new ApplicationMetadataSchemaKey(collectionSchema.CollectionProperties.ListSchema, applicationCompositionSchema.RenderMode, platform);
-            return compositionApplication.Schemas()[listKey];
+            var schemas = compositionApplication.Schemas();
+            if (!schemas.ContainsKey(listKey)) {
+                return null;
+            }
+
+            return schemas[listKey];
         }
 
         private static ApplicationSchemaDefinition GetDetailSchema(CompleteApplicationMetadataDefinition compositionApplication, ApplicationCompositionSchema compositionSchema, ClientPlatform clientPlatform) {
-            if (compositionSchema.DetailSchema == "") {
+            if (compositionSchema.DetailSchema == "" || "fileexplorer".Equals(compositionSchema.Renderer.RendererType)) {
                 //This means that the composition is only needed for list visualization
                 return null;
             }
@@ -171,5 +205,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
             }
             return applicationSchemaDefinitions[detailKey];
         }
+
+
     }
 }

@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+    <application entity="OutageAction" name="OutageAction" title="Outage Action">
+      <schemas>
+        <schema id="list" stereotype="compositionlist" platform="web">
+          <field attribute="actiontime" label="Action Time" readonly="true">
+            <renderer type="datetime"/>
+          </field>
+
+          <field attribute="action" label="Action" />
+          <field attribute="completed" label="Completed" >
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
+
+        <schema id="detail" stereotype="detail" platform="web" title="Outage Action">
+          <field attribute="actiontime" hidden="true"/>
+          <field attribute="action" label="Action" />
+          <field attribute="completed" label="Completed" >
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
+
+      </schemas>
+    </application>
+  </applications>
+</metadata>
+

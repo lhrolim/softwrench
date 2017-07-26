@@ -474,6 +474,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 f => f.Name.LocalName == XmlMetadataSchema.RendererElement);
             var inline = composition.Attribute(XmlMetadataSchema.ApplicationCompositionInlineAttribute).ValueOrDefault(false);
             var schemaId = composition.Attribute(XmlMetadataSchema.ApplicationCompositionSchemaIdAttribute).ValueOrDefault("detail");
+            var outputSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionOutputSchemaIdAttribute).ValueOrDefault((string)null);
             var printSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionPrintAttribute).ValueOrDefault("detail");
             var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault("lazy");
             var fetchType = (FetchType)Enum.Parse(typeof(FetchType), fetchTypeStr, true);
@@ -501,10 +502,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var collectionProperties = ParseCollectionProperties(composition, applicationName, sourceSchemaId);
             var applicationEvents = ParseEvents(composition, schemaId);
             if (collectionProperties != null || isCollection) {
-                return new ApplicationCompositionCollectionSchema(inline, schemaId, collectionProperties, mode,
+                return new ApplicationCompositionCollectionSchema(inline, schemaId, outputSchema, collectionProperties, mode,
                     (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType, applicationEvents);
             }
-            return new ApplicationCompositionSchema(inline, schemaId, mode,
+            return new ApplicationCompositionSchema(inline, schemaId, outputSchema, mode,
                     (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType, applicationEvents);
 
         }
