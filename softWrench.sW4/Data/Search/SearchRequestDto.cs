@@ -21,7 +21,7 @@ namespace softWrench.sW4.Data.Search {
         private QuickSearchDTO _quickSearchDTO;
 
 
-        public IDictionary<string, string> CustomParameters {
+        public IDictionary<string, object> CustomParameters {
             get; set;
         }
         public string CommandId {

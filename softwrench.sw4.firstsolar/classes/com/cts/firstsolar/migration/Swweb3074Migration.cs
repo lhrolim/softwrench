@@ -15,4 +15,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
         public override void Down() {
         }
     }
+
+    [Migration(201707211700)]
+    public class Swweb30742Migration : Migration {
+
+        public override void Up() {
+            Create.Column("token").OnTable("OPT_DAILY_OUTAGE_MEETING").AsString(MigrationUtil.StringMedium).Nullable();
+        }
+
+        public override void Down() {
+        }
+    }
 }

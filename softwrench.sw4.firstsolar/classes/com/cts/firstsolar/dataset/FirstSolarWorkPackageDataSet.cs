@@ -72,7 +72,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         [Import]
         public FirstSolarDailyOutageMeetingHandler DailyOutageMeetingHandler { get; set; }
 
-        
+
         [Import]
         public FirstSolarWorkPackageCreationEmailHandler WpCreationEmailHandler { get; set; }
 
@@ -84,8 +84,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private static QuickSearchHelper QuickSearchHelper => SimpleInjectorGenericFactory.Instance.GetObject<QuickSearchHelper>(typeof(QuickSearchHelper));
 
-//        [Import]
-//        public QuickSearchHelper QuickSearchHelperInstance { get; set; }
+        //        [Import]
+        //        public QuickSearchHelper QuickSearchHelperInstance { get; set; }
 
         [Import]
         public IConfigurationFacade ConfigFacade { get; set; }
@@ -112,12 +112,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 //TODO: union with swdb --> right now we´re applying a manual quicksearch, but making sure we remove the original quick search and restore it later
                 searchDto.QuickSearchDTO = null;
 
-                searchDto.AppendWhereClause("(" + QuickSearchHelper.BuildOrWhereClause(DBType.Maximo,new List<string> {"wonum", "description", "worktype", "status"}, null, query.QuickSearchData) + ")" );
+                searchDto.AppendWhereClause("(" + QuickSearchHelper.BuildOrWhereClause(DBType.Maximo, new List<string> { "wonum", "description", "worktype", "status" }, null, query.QuickSearchData) + ")");
                 maximoDatamap = await LookupMaximoData(application, searchDto);
 
-//                searchDto.QuickSearchDTO = query;
-                if (!maximoDatamap.Any())
-                {
+                //                searchDto.QuickSearchDTO = query;
+                if (!maximoDatamap.Any()) {
                     searchDto.QuickSearchDTO = previousQuickSearchDTO;
                     return ApplicationListResult.BlankResult(searchDto, application.Schema);
                 }
@@ -229,18 +228,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         #endregion
 
 
+        protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var dm = await base.FetchDetailDataMap(application, user, request);
+            if (dm == null) {
+                return null;
+            }
 
+            //either for edition, or for a creation out of an existing workorder
+            if (dm.GetLongAttribute("workorderid") != null) {
+                await AddWorkorderRelatedData(user, dm);
+            }
+            return dm;
+        }
 
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
 
             var result = await base.GetApplicationDetail(application, user, request);
             if (result == null) {
                 return null;
-            }
-
-            //either for edition, or for a creation out of an existing workorder
-            if (result.ResultObject.GetLongAttribute("workorderid") != null) {
-                await AddWorkorderRelatedData(user, result);
             }
 
             var defaultEmail = ConfigFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultMeToEmailKey);
@@ -288,21 +293,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             dm["mwhlosttotal"] = sum;
         }
 
-
-        private void HandleMwhTotalsAfterSave(WorkPackage wp) {
-            if (!wp.DailyOutageMeetings.Any()) {
-                return;
-            }
-            //SWWEB-3047
-            var dailyMeetings = wp.DailyOutageMeetings;
-            decimal sum = 0;
-            foreach (var dailyMeeting in dailyMeetings) {
-
-                sum += dailyMeeting.MWHLostYesterday;
-            }
-            wp.MwhLostTotal = sum.ToString(new CultureInfo("en-US"));
-        }
-
         private void HandleWonum(AttributeHolder ah) {
             var wpnum = ah.GetStringAttribute("wpnum");
             ah.SetAttribute("wonum", wpnum != null && wpnum.StartsWith("WP") ? "NA" + wpnum.Substring(2) : wpnum);
@@ -320,19 +310,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return response.ResultObject;
         }
 
-        private async Task AddWorkorderRelatedData(InMemoryUser user, ApplicationDetailResult result) {
-            var workorderid = result.ResultObject.GetLongAttribute("workorderid");
+        private async Task AddWorkorderRelatedData(InMemoryUser user, DataMap dm) {
+            var workorderid = dm.GetLongAttribute("workorderid");
             var workorderDM = await GetWorkorderRelatedData(user, workorderid);
             if (workorderDM == null) {
                 return;
             }
             foreach (var field in workorderDM) {
-                result.ResultObject.SetAttribute("#workorder_." + field.Key, field.Value);
+                dm.SetAttribute("#workorder_." + field.Key, field.Value);
             }
-            result.ResultObject.SetAttribute("wooutreq", workorderDM.GetIntAttribute("outreq"));
+            dm.SetAttribute("wooutreq", workorderDM.GetIntAttribute("outreq"));
             var wonum = workorderDM.GetStringAttribute("wonum");
             var wpnum = wonum == null ? null : (wonum.StartsWith("NA") ? "WP" + wonum.Substring(2) : wonum);
-            result.ResultObject.SetAttribute("wpnum", wpnum);
+            dm.SetAttribute("wpnum", wpnum);
         }
 
         private async Task<Dictionary<string, ISet<string>>> MapRelatedData(int parentEntityId) {
@@ -362,16 +352,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var workPackage = tupleResult.Item1;
 
             await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
-            HandleMwhTotalsAfterSave(workPackage);
+            DailyOutageMeetingHandler.HandleMwhTotalsAfterSave(workPackage);
 
             var dm = DataMap.BlankInstance("_workpackage");
             dm.SetAttribute("mwhlosttotal", workPackage.MwhLostTotal);
 
-            return new TargetResult(workPackage.Id.ToString(), null, dm);
+            var targetResult = new TargetResult(workPackage.Id.ToString(), null, dm);
+            if (tupleResult.Item5) {
+                targetResult.ReloadMode = ReloadMode.MainDetail;
+                //preventing double composition load
+//                targetResult.CompositionList = new List<string>();
+                //                targetResult.ExtraParameters.Add("loadattachments", true);
+            }
+
+            return targetResult;
         }
 
 
-        public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>, IEnumerable<DailyOutageMeeting>>> SavePackage(OperationWrapper operationWrapper) {
+        public virtual async Task<Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>, IEnumerable<DailyOutageMeeting>, bool>> SavePackage(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var package = GetOrCreatePackage(operationWrapper);
 
@@ -418,9 +416,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             package = await Dao.SaveAsync(package);
 
-            if (anyNewCallout || anyNewMe || anyNewDom || anyNewAction) {
-                crudoperationData.ReloadMode = ReloadMode.MainDetail;
-            }
+            //            if (anyNewCallout || anyNewMe || anyNewDom || anyNewAction) {
+            //                crudoperationData.ReloadMode = ReloadMode.MainDetail;
+            //            }
 
 
             SaveMaximoWorkorder(woData);
@@ -429,7 +427,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var toSendMes = package.MaintenanceEngineerings.Where(m => m.SendNow && (RequestStatus.Scheduled.Equals(m.Status) || RequestStatus.Error.Equals(m.Status)));
             var toSendDoms = package.DailyOutageMeetings.Where(d => d.SendNow && (d.Status == null || RequestStatus.Error.Equals(d.Status)));
 
-            return new Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>, IEnumerable<DailyOutageMeeting>>(package, toSendCallouts, toSendMes, toSendDoms);
+            return new Tuple<WorkPackage, IEnumerable<CallOut>, IEnumerable<MaintenanceEngineering>, IEnumerable<DailyOutageMeeting>, bool>(package, toSendCallouts, toSendMes, toSendDoms, anyNewCallout || anyNewMe || anyNewDom || anyNewAction);
         }
 
         private static CrudOperationData BuildWoData(OperationWrapper operationWrapper) {
@@ -512,33 +510,64 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,
             CompositionFetchRequest request, JObject currentData) {
+
+            //these would bring only the workpackage compositions, such as callouts, dom, me and outageactions
             var compList = await base.GetCompositionData(application, request, currentData);
+
+            var loadWorkLogs = false;
+
+            string woId = null;
+            string woNum = null;
+            string woSite = null;
+
             if (currentData == null) {
-                return compList;
+                if (request.ExtraParameters == null || !request.ExtraParameters.ContainsKey("loadattachments")) {
+                    //workaround to avoid bringing the compositions on the "GetDetail scenario"
+                    return null;
+                }
+                PreFetchedCompositionFetchRequest r = (PreFetchedCompositionFetchRequest)request;
+                var entity = r.PrefetchEntities[0];
+                woId = entity.GetStringAttribute("#workorder_.workorderid");
+                woNum = entity.GetStringAttribute("#workorder_.wonum");
+                woSite = entity.GetStringAttribute("#workorder_.siteid");
+            } else {
+                loadWorkLogs = true;
+                woId = currentData.StringValue("#workorder_.workorderid");
+                woNum = currentData.StringValue("#workorder_.wonum");
+                woSite = currentData.StringValue("#workorder_.siteid");
             }
 
-            var woId = currentData.StringValue("#workorder_.workorderid");
-            var woNum = currentData.StringValue("#workorder_.wonum");
-            var woSite = currentData.StringValue("#workorder_.siteid");
+
+
+
 
             var relList = new List<string> {
-                FSWPackageConstants.WorklogsRelationship,
+
                 FSWPackageConstants.AttachsRelationship,
                 FSWPackageConstants.CallOutAttachsRelationship,
                 FSWPackageConstants.MaintenanceEngAttachsRelationship,
                 FSWPackageConstants.DailyOutageMeetingAttachsRelationship,
                 FSWPackageConstants.AllAttachmentsRelationship
+
             };
 
+            if (loadWorkLogs) {
+                relList.Add(FSWPackageConstants.WorklogsRelationship);
+            }
+
+
+            //attachments and worklogs distribution
             var woCompList = await GetWoCompositions(woId, woNum, woSite, relList);
+
             CompositionHandler.HandleAttachmentsTab(woCompList, compList);
             CompositionHandler.HandleWorkLogs(woCompList, compList);
             CompositionHandler.HandleAttachments(woCompList, compList);
             CallOutHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             DailyOutageMeetingHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
-
             MaintenanceEngineeringHandler.LoadEngineerNames(compList, woSite);
+
+
             return compList;
         }
 

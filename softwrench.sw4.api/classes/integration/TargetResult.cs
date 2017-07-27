@@ -1,4 +1,8 @@
-﻿using softwrench.sw4.api.classes.integration;
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.Annotations;
+using softwrench.sw4.api.classes.integration;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Persistence.WS.API {
@@ -13,11 +17,22 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
 
         public IErrorDto WarningDto { get; set; }
 
+        public ReloadMode? ReloadMode { get; set; }
+
         public bool FullRefresh {
             get; set;
         }
 
+        /// <summary>
+        /// List of compositions to be fetched in case a ReloadMode.MainDetail takes place
+        /// </summary>
+        [CanBeNull]
+        public List<String> CompositionList { get; set; }
 
+        /// <summary>
+        /// Parameters to be propagated internally, that can be used by custom implementations.
+        /// </summary>
+        public IDictionary<string, object> ExtraParameters { get; set; } = new Dictionary<string, object>();
 
         public ApplicationMetadata NextApplication { get; set; }
 

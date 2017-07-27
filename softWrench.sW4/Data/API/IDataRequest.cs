@@ -8,7 +8,7 @@ namespace softWrench.sW4.Data.API
     {
         ApplicationMetadataSchemaKey Key { get; set; }
         String Title { get; set; }
-        IDictionary<string,string> CustomParameters { get; set; }
+        IDictionary<string,object> CustomParameters { get; set; }
         String CommandId { get; set; }
     }
 }

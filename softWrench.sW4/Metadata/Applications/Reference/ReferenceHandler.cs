@@ -88,7 +88,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
         private static object CloneAndResolve([NotNull]IPCLCloneable declaredDisplayable, ApplicationSchemaDefinition schema, ReferenceDisplayable reference) {
             var clonedDisplayable = (declaredDisplayable).Clone();
             if (clonedDisplayable == null) {
-                throw ExceptionUtil.InvalidOperation("wrong clone implementation of component. returnin null", declaredDisplayable.GetType().Name);
+                throw ExceptionUtil.InvalidOperation("wrong clone implementation of component. returning null", declaredDisplayable.GetType().Name);
             }
 
             foreach (var propertyInfo in clonedDisplayable.GetType().GetProperties()) {
@@ -113,7 +113,7 @@ namespace softWrench.sW4.Metadata.Applications.Reference {
                     ComponentDisplayableResolver);
 
                 var section = clonedDisplayable as ApplicationSection;
-                if (section != null) {
+                if (section?.Header != null) {
                     section.Header = (ApplicationHeader)CloneAndResolve(section.Header, schema, reference);
                 }
 

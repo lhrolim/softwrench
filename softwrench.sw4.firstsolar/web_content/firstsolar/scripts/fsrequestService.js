@@ -1,6 +1,6 @@
 ﻿(function (angular) {
     'use strict';
-    
+
     function fsrequestService(modalService, crudContextHolderService, applicationService, validationService, alertService, compositionService) {
 
         const scheduledStatus = "Scheduled";
@@ -42,6 +42,13 @@
             callback(saveDatamap);
             return applicationService.save({
                 dispatchedByModal: false
+            }).then((result) => {
+                const parentSchema = crudContextHolderService.currentSchema();
+                const parentDm = crudContextHolderService.rootDataMap();
+                return compositionService.populateWithCompositionData(parentSchema, parentDm, true).then(() => {
+                    modalService.hide();
+                    return result;
+                });
             }).catch(() => {
                 rollback();
             });
@@ -79,7 +86,7 @@
             const toNextDay = (date.getUTCHours() <= 7);
             const currentOffSet = date.getTimezoneOffset();
             const offset = moment().tz("US/Arizona")._offset;
-            const diff = ((-1* offset) - currentOffSet) / 60; // AZ timezone = -7
+            const diff = ((-1 * offset) - currentOffSet) / 60; // AZ timezone = -7
             date.setHours(17, 0, 0, 0);
             date.addHours(diff);
             if (toNextDay) {

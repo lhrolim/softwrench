@@ -70,6 +70,10 @@
                 return [];
             }
             const listSchema = compositionDisplayable.schema.schemas.list;
+            if (!listSchema) {
+                return [];
+            }
+
             const rows = mainDatamap[compositionDisplayable.relationship];
             var result = [];
             if (!rows) {

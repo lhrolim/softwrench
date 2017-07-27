@@ -10,6 +10,15 @@
                 const mergedItem = compositionService.buildMergedDatamap(fsrequestService.buildDatamap(schema), item);
                 mergedItem["mwhlostyesterday"] = 0;
                 mergedItem["#domfileexplorer_"] = [];
+
+                if (sessionStorage.mockfsdom) {
+                    mergedItem["mwhlostyesterday"] = "5";
+                    mergedItem["criticalpath"] = "Critical Path/Constraints Test";
+                    mergedItem["openactionitems"] = "Open Action Items Test";
+                    mergedItem["completedactionitems"] = "Completed Action Items Test";
+                    mergedItem["summary"] = "Meeting Summary Test";
+                }
+
                 modalService.show(schema, mergedItem, fsrequestService.requestModalProps(), (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback);
                 });

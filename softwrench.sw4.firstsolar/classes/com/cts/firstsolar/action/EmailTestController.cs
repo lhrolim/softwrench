@@ -87,8 +87,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [System.Web.Http.HttpGet]
         public ActionResult Meeting() {
             var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingEmailService>();
+            var handler = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingHandler>();
             var dom = Dao.FindAll<DailyOutageMeeting>(typeof(DailyOutageMeeting)).First();
             var package = Dao.FindAll<WorkPackage>(typeof(WorkPackage)).First();
+            handler.HandleMwhTotalsAfterSave(package);
 
             var html = service.GenerateEmailBody(dom, package, "1803");
 

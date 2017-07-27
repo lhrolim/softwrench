@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Globalization;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
@@ -89,9 +90,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var msg = Template.Render(
                 Hash.FromAnonymousObject(new {
                     headerurl = GetHeaderURL(),
+                    outagestartdate = FmtDate(package.CreatedDate),
+                    estimatedcompletiondate = FmtDate(package.EstimatedCompDate),
+                    actualcompletiondate = FmtDate(package.ActualCompDate),
+                    mwhlosttotal = package.MwhLostTotal,
+                    expectedmwhlost = package.ExpectedMwhLost,
+                    mwhlostperday = package.MwhLostPerDay,
+                    problemstatement = package.ProblemStatement,
                     meetingtime = FmtDate(dom.MeetingTime),
+                    mwhlost = dom.MWHLostYesterday.ToString("0", new CultureInfo("en-US")),
+                    criticalpath = dom.CriticalPath,
+                    openactionitems = dom.OpenActionItems,
+                    completedactionitems = dom.CompletedActionItems,
+                    meetingsummary = dom.Summary,
                     wpnum = package.Wpnum,
-                    workpackageurl = RedirectService.GetApplicationUrl("_WorkPackage", "adetail", "input", package.Id + "")
+                    workpackageurl = RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token))
                 }));
             return msg;
         }

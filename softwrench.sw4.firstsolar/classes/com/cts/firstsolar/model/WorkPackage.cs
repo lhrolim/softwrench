@@ -83,7 +83,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public string ProblemStatement { get; set; }
 
 
-        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "MeetingTime asc")]
+        [Bag(0, Table = "OPT_DAILY_OUTAGE_MEETING", Cascade = "all", Lazy = CollectionLazy.False, Inverse = true, OrderBy = "MeetingTime asc")]
         [Key(1, Column = "workpackageid", NotNull = true)]
         [OneToMany(2, ClassType = typeof(DailyOutageMeeting))]
         public virtual IList<DailyOutageMeeting> DailyOutageMeetings { get; set; }

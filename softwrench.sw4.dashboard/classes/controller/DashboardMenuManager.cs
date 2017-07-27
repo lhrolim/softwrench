@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using log4net;
 using softwrench.sw4.api.classes;
 using softwrench.sw4.api.classes.user;
@@ -59,7 +60,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var enumerable = dashboards as Dashboard[] ?? dashboards.ToArray();
             var count = enumerable.Count();
             if (!canCreateDashBoards && (count == 0 || AllPanelsInvisible(enumerable))) {
-                Log.DebugFormat("User {0} cannot create dashboards and there is no visible panel, returning", user.Identity.Name);
+                Log.DebugFormat("User {0} cannot create dashboards and there is no visible panel, returning", UserName(user));
                 //either has no dashboard, or has only invisible panels due to roles
                 //this user cannot create any dashboard, and there´s no one shared with him --> do not show the menu.
                 return securedMenu;
@@ -67,7 +68,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
             if (!canCreateDashBoards && count == 1) {
-                Log.DebugFormat("User {0} cannot create dashboards, showing visibile one", user.Identity.Name);
+                Log.DebugFormat("User {0} cannot create dashboards, showing visibile one", UserName(user));
                 // if there´s just one dashboard to display and the user cannot create additionals, 
                 // there´s no need to show a container, since there´s just one available action here.
                 var action = new ActionMenuItemDefinition {
@@ -80,11 +81,11 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 dashBoardMenu = action;
                 user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
             } else if (canCreateDashBoards && count == 0) {
-                Log.DebugFormat("No visible dashboards but user {0} can create them", user.Identity.Name);
+                Log.DebugFormat("No visible dashboards but user {0} can create them", UserName(user));
                 var action = ManageDashboardAction;
                 dashBoardMenu = action;
             } else {
-                Log.DebugFormat("Adding user {0} dashboards", user.Identity.Name);
+                Log.DebugFormat("Adding user {0} dashboards", UserName(user));
 
                 //TODO: make it selectable
                 user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] = enumerable.First().Id;
@@ -105,7 +106,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                         Title = dashboard.Title,
                         Icon = "fa fa-bar-chart",
                     };
-                    Log.DebugFormat("Adding dashboard {0}", user.Identity.Name);
+                    Log.DebugFormat("Adding dashboard {0}", UserName(user));
                     container.AddLeaf(action);
                 }
                 dashBoardMenu = container;
@@ -134,6 +135,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return enumerable.All(d => d.Panels.Count == 0 || d.Panels.All(p => !p.Panel.Visible));
         }
 
-      
+        private static string UserName(IPrincipal user) {
+            return user?.Identity != null ? user.Identity.Name : "Anonymous";
+        }
     }
 }

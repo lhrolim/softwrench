@@ -5,118 +5,56 @@
 
 
     <style style="box-sizing:border-box;">
-        fieldset {
-            min-width: 0;
-            padding: 0;
-            margin: 0;
-            border: 0;
+        .mail-field-container {
+            padding: 8px 0px 5px 15px;
         }
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        label {
-            display: inline-block;
-            max-width: 100%;
-            margin-bottom: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .row {
-            margin-right: -15px;
-            margin-left: -15px;
-        }
-
-        .col-xs-12 {
-            width: 100%;
-            float: left;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .col-xs-4 {
-            width: 33.33333%;
-            float: left;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .col-xs-8 {
-            width: 66.66666667%;
-            float: left;
+        .mail-label { 
             font-weight: bold;
-            color: black;
-        }
-
-        .emaillabel {
-            color: black;
-            width: 100%;
-            font-weight: bold;
-        }
-
-        .emailsection {
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            padding: 15px;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .alert-warning {
-            color: #8a6d3b;
-            background-color: #fcf8e3;
-            border-color: #faebcc;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 6px 12px;
-            margin-bottom: 0;
-            font-size: 14px;
-            font-weight: 400;
+            font-size: 13px;
             line-height: 1.42857143;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            -ms-touch-action: manipulation;
-            touch-action: manipulation;
-            cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            background-image: none;
-            border: 1px solid transparent;
+        }
+        .mail-content {
+            background-image:none;
+            border-collapse:collapse;
+            border-color:rgb(204, 204, 204);
+            border-style:solid;
             border-radius: 4px;
-            text-decoration: none;
+            border-width:1px;
+            box-shadow:rgba(0, 0, 0, 0.075) 0px 1px 1px 0px inset;
+            box-sizing:border-box;
+            color:#555;
+            display:block;
+            font-size:14px;
+            height: auto;
+            line-height:20px;
+            margin-bottom:5px;
+            max-width:100%;
+            min-height:34px;
+            padding-bottom:6px;
+            padding-left:12px;
+            padding-right:12px;
+            padding-top:6px;
+            text-align:left;
+            text-shadow:rgba(255, 255, 255, 0.2) 0px 1px 0px;
+            text-size-adjust:100%;
+            word-break:break-word;
         }
-
-        .btn-success {
-            color: #fff;
-            background-color: #5cb85c;
-            border-color: #4cae4c;
+        .mail-area-content {
+            width: 100%;
+            height: auto;
         }
-
-        .btn-danger {
+        .mail-legend-label {
+            margin: 30px 20px 15px 15px;
+            width: calc(100% - 35px);
+            white-space: nowrap;
+            vertical-align: baseline;
+            font-size: 12px;
+            line-height: 24px;
+            background: #aaa;
+            border: none;
+            padding: 8px 10px 5px;
+            font-weight: bold;
             color: #fff;
-            background-color: #ac2925;
-            border-color: #761c19;
-        }
-
-        .btn-warning {
-            color: #fff;
-            background-color: #d58512;
-            border-color: #985f0d;
         }
     </style>
 </head>
@@ -132,6 +70,68 @@
     <p style="box-sizing:border-box;">
     Please click <a href="{{workpackageurl}}" target="_blank">here</a> to see the details.
     <p style="box-sizing:border-box;" />
+    
+    
+    <div class="mail-field-container">
+        <div class="mail-label">Start Date of Outage:</div>
+        <div class="mail-content">{{outagestartdate}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Estimated Completion Date:</div>
+        <div class="mail-content">{{estimatedcompletiondate}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Actual Completion Date:</div>
+        <div class="mail-content">{{actualcompletiondate}}</div>
+    </div>
 
+    <div class="mail-legend-label">Lost Energy</div>
+
+    <div class="mail-field-container">
+        <div class="mail-label">MWH Lost Total:</div>
+        <div class="mail-content">{{mwhlosttotal}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Expected MWH Lost (Estimated):</div>
+        <div class="mail-content">{{expectedmwhlost}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">MWH Lost Per day:</div>
+        <div class="mail-content">{{mwhlostperday}}</div>
+    </div>
+
+    <div class="mail-legend-label">Outage Summary</div>
+
+    <div class="mail-field-container">
+        <div class="mail-label">Problem Statement:</div>
+        <textarea class="mail-content mail-area-content" cols="120" rows="10" wrap="hard" maxlength="" readonly="true">{{problemstatement}}</textarea>
+    </div>
+
+    <div class="mail-legend-label">Daily Update Meeting</div>
+
+    <div class="mail-field-container">
+        <div class="mail-label">Meeting Time:</div>
+        <div class="mail-content">{{meetingtime}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">MWH Lost:</div>
+        <div class="mail-content">{{mwhlost}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Critical Path/Constraints:</div>
+        <div class="mail-content">{{criticalpath}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Open Action Items:</div>
+        <div class="mail-content">{{openactionitems}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Completed Action Items:</div>
+        <div class="mail-content">{{completedactionitems}}</div>
+    </div>
+    <div class="mail-field-container">
+        <div class="mail-label">Meeting Summary:</div>
+        <textarea class="mail-content mail-area-content" cols="120" rows="10" wrap="hard" maxlength="" readonly="true">{{meetingsummary}}</textarea>
+    </div>
 </body>
 </html>

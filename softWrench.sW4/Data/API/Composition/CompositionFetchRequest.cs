@@ -20,6 +20,11 @@ namespace softWrench.sW4.Data.API.Composition {
         public List<String> CompositionList { get; set; }
 
         /// <summary>
+        /// Parameters to be propagated internally, that can be used by custom implementations.
+        /// </summary>
+        public IDictionary<string, object> ExtraParameters { get; set; } = new Dictionary<string, object>();
+
+        /// <summary>
         /// DTO to paginate the composition request result
         /// </summary>
         public PaginatedSearchRequestDto PaginatedSearch { get; set; }

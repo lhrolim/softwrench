@@ -363,7 +363,6 @@
     <Compile Include="Data\API\Response\CompositionCreationResponse.cs" />
     <Compile Include="Data\API\Response\GenericApplicationResponse.cs" />
     <Compile Include="Data\API\Response\NotFoundResponse.cs" />
-    <Compile Include="Data\API\Response\ReloadMode.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
     <Compile Include="Data\CompositeDatamap.cs" />
     <Compile Include="Data\Entities\Audit\AuditSession.cs" />

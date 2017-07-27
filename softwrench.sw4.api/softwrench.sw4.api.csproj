@@ -95,6 +95,7 @@
     <Compile Include="classes\integration\IErrorDto.cs" />
     <Compile Include="classes\integration\IOperationWrapper.cs" />
     <Compile Include="classes\integration\ProblemData.cs" />
+    <Compile Include="classes\integration\ReloadMode.cs" />
     <Compile Include="classes\integration\TargetResult.cs" />
     <Compile Include="classes\migration\MigrationContext.cs" />
     <Compile Include="classes\user\ISWUser.cs" />

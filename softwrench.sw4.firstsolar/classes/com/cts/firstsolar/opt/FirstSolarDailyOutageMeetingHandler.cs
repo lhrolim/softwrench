@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -40,17 +41,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         public bool HandleDailyOutageMeetings(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
-
-            if (package.DailyOutageMeetings == null) {
-                package.DailyOutageMeetings = new List<DailyOutageMeeting>();
-            }
-
             if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "dailyOutageMeetings"))) {
                 //might be disabled due to security reasons
                 return false;
             }
 
-            var toKeepDom = new List<DailyOutageMeeting>();
+            var existingDom = package.DailyOutageMeetings;
+            package.DailyOutageMeetings = new List<DailyOutageMeeting>();
+
             var anyNewDom = false;
 
             if (crudoperationData.AssociationAttributes != null && crudoperationData.AssociationAttributes.ContainsKey("dailyOutageMeetings_")) {
@@ -59,40 +57,45 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                     throw new Exception("Incorrect format of daily outage meeting list.");
                 }
                 domsData.ForEach((data) => {
-                    var dom = GetOurCreateDailyOutageMeeting(data, package.DailyOutageMeetings, toKeepDom);
+                    var dom = GetOurCreateDailyOutageMeeting(data, existingDom);
                     anyNewDom = anyNewDom || dom.Id == null;
                     EntityBuilder.PopulateTypedEntity(data, dom);
                     dom.Cc = EmailService.HandleEmailRecipient(data, "cc");
-                    if (dom.Id != null) {
-                        return;
-                    }
-                    package.DailyOutageMeetings.Add(dom);
+                    dom.GenerateToken();
+                    dom.WorkPackage = package;
 
                     dom = Dao.Save(dom);
-
                     AttachmentsHandler.HandleAttachments(data, dom.Id ?? 0, AttachmentsRelationship, FilterPrefix, woData);
-
-                    toKeepDom.Add(dom);
+                    package.DailyOutageMeetings.Add(dom);
                 });
             }
 
-            var deleted = new List<DailyOutageMeeting>();
-            package.DailyOutageMeetings.ForEach(dom => {
-                if (toKeepDom.Contains(dom)) {
-                    return;
-                }
+            existingDom?.ForEach(dom => {
                 Dao.Delete(dom);
-                deleted.Add(dom);
             });
-            deleted.ForEach(dom => package.DailyOutageMeetings.Remove(dom));
             return anyNewDom;
         }
 
+        public void HandleMwhTotalsAfterSave(WorkPackage wp) {
+            if (!wp.DailyOutageMeetings.Any()) {
+                return;
+            }
+            //SWWEB-3047
+            var dailyMeetings = wp.DailyOutageMeetings;
+            decimal sum = 0;
+            foreach (var dailyMeeting in dailyMeetings) {
+
+                sum += dailyMeeting.MWHLostYesterday;
+            }
+            wp.MwhLostTotal = sum.ToString("0", new CultureInfo("en-US"));
+        }
+
         public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
+            HandleMwhTotalsAfterSave(package);
             await AttachmentsHandler.HandleEmails(package, siteId, FSWPackageConstants.DailyOutageMeetingAttachsRelationship, FilterPrefix, domsToSend, EmailService);
         }
 
-        private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(AttributeHolder crudoperationData, ICollection<DailyOutageMeeting> existingDom, ICollection<DailyOutageMeeting> toKeepDom) {
+        private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(AttributeHolder crudoperationData, ICollection<DailyOutageMeeting> existingDom) {
             var id = crudoperationData.GetIntAttribute("id");
             if (id == null || existingDom == null) {
                 return new DailyOutageMeeting();
@@ -101,18 +104,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (found == null) {
                 return new DailyOutageMeeting() { Id = id };
             }
-            toKeepDom.Add(found);
+            existingDom.Remove(found);
             return found;
-        }
-
-        private async Task InnerHandleEmail(DailyOutageMeeting dom, WorkPackage package, string siteId) {
-            try {
-                await EmailService.SendEmail(dom, package, siteId);
-            } catch (Exception ex) {
-                dom.Status = RequestStatus.Error;
-                Log.ErrorFormat("Failed to send email for {0} {1} from workorder with wonum {2} from site {3}: {4}", EmailService.RequestI18N(), dom.Id, package.Wonum, siteId, ex.Message);
-                await Dao.SaveAsync(dom);
-            }
         }
     }
 }

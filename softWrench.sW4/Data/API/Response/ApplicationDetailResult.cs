@@ -4,6 +4,8 @@ using softwrench.sw4.api.classes.integration;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Association.SchemaLoading;
+using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
@@ -39,6 +41,7 @@ namespace softWrench.sW4.Data.API.Response {
 
         public IDictionary<string, ApplicationCompositionSchema> Compositions => Schema.CompositionSchemas;
 
+        public IEnumerable<KeyValuePair<string, EntityRepository.SearchEntityResult>> EagerCompositionResult { get; set; }
         
 
         public string ApplicationName => Schema.ApplicationName;

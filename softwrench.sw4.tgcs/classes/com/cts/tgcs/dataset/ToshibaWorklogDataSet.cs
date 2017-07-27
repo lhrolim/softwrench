@@ -22,7 +22,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
             if (request.CustomParameters == null || !request.CustomParameters.ContainsKey(MaximoRestUtils.RestMarkerFieldName)) {
                 return await base.FetchDetailDataMap(application, user, request);
             }
-            var isRestWorklog = "true".EqualsIc(request.CustomParameters[MaximoRestUtils.RestMarkerFieldName]);
+            var isRestWorklog = "true".EqualsIc(request.CustomParameters[MaximoRestUtils.RestMarkerFieldName] as string);
             if (!isRestWorklog) {
                 return await base.FetchDetailDataMap(application, user, request);
             }

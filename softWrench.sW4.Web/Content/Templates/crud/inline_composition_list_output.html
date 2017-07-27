@@ -1,35 +1,51 @@
 ﻿<div ng-if="iscollection">
     <table class="table output" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
-        <thead>
-            <tr>
-                <th class="{{safeCSSselector(column.attribute)}}"
-                    ng-repeat="column in compositionlistschema.displayables"
-                    ng-if="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
+	    <thead>
+	        <tr>
+		        <th ng-if="hasDetailSchema()">
+		        </th>
+		        <th class="{{safeCSSselector(column.attribute)}}"
+		            ng-repeat="column in compositionlistschema.displayables"
+		            ng-if="!isCompositionItemFieldHidden(compositionlistschema,column,null)">
 
-                    <span class="add-on part" data-container="body">
-                        {{i18NLabel(column)}}
-                    </span>
-                </th>
-            </tr>
-        </thead>
-        <tbody ng-if="compositionData().length > 0">
-            <tr ng-repeat="(rowindex, compositionitem) in compositionData()"
-                ng-if="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
-                ng-class="$odd ? 'odd' : 'even'">
+			        <span class="add-on part" data-container="body">
+				        {{i18NLabel(column)}}
+			        </span>
+		        </th>
+	        </tr>
+	    </thead>
+	    <tbody ng-if="compositionData().length > 0">
+	        <tr ng-repeat-start="(rowindex, compositionitem) in compositionData()"
+	            ng-if="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
+	            ng-class="$odd ? 'odd' : 'even'">
+		    
+		        <td ng-if="hasDetailSchema()" class="rowexpand">
+			        <button class="btn btn-default" ng-click="toggleDetails(compositionitem)" ng-show="expansionAllowed(compositionitem)">
+				        <i class="fa fa-caret-right" ng-show="!isItemExpanded(compositionitem)"></i>
+				        <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>
+			        </button>
+		        </td>
 
-                <td class="{{safeCSSselector(column.attribute)}}"
-                    ng-repeat="column in compositionlistschema.displayables"
-                    ng-if="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
-                    data-title="{{column.label}}">
-                    <ng-switch on="column.type">
-                        <div ng-switch-when="ApplicationSection">
-                        </div>
-                        <div ng-switch-default>
-                            {{getFormattedValue(compositionitem[column.attribute],column,compositionitem)}}
-                        </div>
-                    </ng-switch>
-                </td>
-            </tr>
+		        <td class="{{safeCSSselector(column.attribute)}}"
+		            ng-repeat="column in compositionlistschema.displayables"
+		            ng-if="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
+		            data-title="{{column.label}}">
+			        <ng-switch on="column.type">
+				        <div ng-switch-when="ApplicationSection">
+				        </div>
+				        <div ng-switch-default>
+					        {{getFormattedValue(compositionitem[column.attribute],column,compositionitem)}}
+				        </div>
+			        </ng-switch>
+		        </td>
+	        </tr>
+	        <tr ng-repeat-end ng-if="expandedData[compositionitem[compositionlistschema.idFieldName]]">
+		        <td colspan="100%" style="background-color: white" class="detaildata">
+			        <div class="expanded-item-composition">
+				        <expanded-item-output displayables="compositiondetailschema.displayables" schema="compositiondetailschema" datamap="compositionitem" class="clearfix"/>
+			        </div>
+		        </td>
+	        </tr>
         </tbody>
         <tbody ng-if="compositionData().length == 0">
             <tr>

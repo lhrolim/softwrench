@@ -97,7 +97,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             get; set;
         }
 
-   
+
 
         //TODO: fix BatchReportEmailService which breaks on unit tests, in case of [Import] usage
         public IBatchSubmissionService BatchSubmissionService => SimpleInjectorGenericFactory.Instance.GetObject<IBatchSubmissionService>();
@@ -178,13 +178,16 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema, user);
             DataMap dataMap;
+            CompositionFetchResult compositionData = null;
             if (request.IsEditionRequest) {
                 dataMap = await FetchDetailDataMap(application, user, request);
 
                 if (dataMap == null) {
                     return null;
                 }
-                await LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
+                //bringing eagerly, or inline compositions, or those especified at the DetailRequest parameter
+                compositionData = await LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
+
 
                 if (request.InitialValues != null) {
                     var initValDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application,
@@ -197,11 +200,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             var associationResults = await BuildAssociationOptions(dataMap, application.Schema, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
+            if (compositionData != null) {
+                //adding eagerly fetched paginated compositions, in case they exist.
+                //inline, non-paginated compositions will be inserted straight on the datamap
+
+                detailResult.EagerCompositionResult =
+                    compositionData.ResultObject.Where(c => c.Value.PaginationData != null);
+            }
+
             return detailResult;
         }
 
-        public virtual async Task LoadCompositions(ApplicationMetadata application, DetailRequest request,
-            IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
+        public virtual async Task<CompositionFetchResult> LoadCompositions(ApplicationMetadata application, DetailRequest request, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
             var prefetchCompositions =
                 "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) ||
                 "#all".Equals(request.CompositionsToFetch);
@@ -209,17 +219,32 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 ? new List<string>()
                 : new List<string>(request.CompositionsToFetch.Split(','));
             var compostionsToUse = new Dictionary<string, ApplicationCompositionSchema>();
-            foreach (var compositionEntry in applicationCompositionSchemas) {
-                if (prefetchCompositions || FetchType.Eager.Equals(compositionEntry.Value.FetchType) ||
-                    compositionEntry.Value.INLINE || compositionList.Contains(compositionEntry.Key)) {
-                    compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+
+            if (compositionList.Any() && !prefetchCompositions) {
+                //bringing only the specified compositions
+                foreach (var compositionEntry in applicationCompositionSchemas) {
+
+                    if (compositionList.Contains(compositionEntry.Key)) {
+                        compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+                    }
+                }
+
+            } else {
+                foreach (var compositionEntry in applicationCompositionSchemas) {
+
+                    if (prefetchCompositions || FetchType.Eager.Equals(compositionEntry.Value.FetchType) ||
+                        compositionEntry.Value.INLINE || compositionList.Contains(compositionEntry.Key)) {
+                        compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
+                    }
                 }
             }
             if (compostionsToUse.Any()) {
                 var preFetchedCompositionFetchRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap });
+                preFetchedCompositionFetchRequest.ExtraParameters = request.CustomParameters;
                 preFetchedCompositionFetchRequest.CompositionList = new List<string>(compostionsToUse.Keys);
-                await GetCompositionData(application, preFetchedCompositionFetchRequest, null);
+                return await GetCompositionData(application, preFetchedCompositionFetchRequest, null);
             }
+            return null;
         }
 
         public virtual async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
@@ -618,7 +643,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var result = await DoExecute(operationWrapper);
             var operationData = operationWrapper.OperationData();
             var crudOperationData = operationData as CrudOperationData;
-            if (crudOperationData == null || crudOperationData.ReloadMode.Equals(ReloadMode.None)) {
+            if (crudOperationData == null) {
+                return result;
+            }
+
+            if (result.ReloadMode == null && crudOperationData.ReloadMode.Equals(ReloadMode.None)) {
                 return result;
             }
             if (crudOperationData.ReloadMode.Equals(ReloadMode.FullRefresh)) {
@@ -637,10 +666,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
             //Main detail reload mode... full refresh would be handled at a higher level
             var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            var detailRequest = new DetailRequest();
-            detailRequest.Key = application.Schema.GetSchemaKey();
-            detailRequest.UserIdSitetuple = userIdSite;
-            detailRequest.Id = id;
+
+            var detailRequest = new DetailRequest {
+                Key = application.Schema.GetSchemaKey(),
+                UserIdSitetuple = userIdSite,
+                Id = id,
+                CustomParameters = result.ExtraParameters,
+                CompositionsToFetch = result.CompositionList == null ? null : string.Join(",", result.CompositionList)
+            };
+
             var detailResult = await GetApplicationDetail(application, SecurityFacade.CurrentUser(), detailRequest);
             result.ResultObject = detailResult.ResultObject;
             return result;
@@ -652,11 +686,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return new OperationWrapper(application, entityMetadata, operation, json, id);
         }
 
-        #pragma warning disable 1998
+#pragma warning disable 1998
         public virtual async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             return Engine().Execute(operationWrapper);
         }
-        #pragma warning restore 1998
+#pragma warning restore 1998
 
         public async Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,
             AssociationUpdateRequest request, JObject currentData) {

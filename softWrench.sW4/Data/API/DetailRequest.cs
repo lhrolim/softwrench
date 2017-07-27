@@ -20,7 +20,7 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
-        public IDictionary<string, string> CustomParameters {
+        public IDictionary<string, object> CustomParameters {
             get; set;
         }
 
@@ -43,7 +43,7 @@ namespace softWrench.sW4.Data.API {
         public DetailRequest() {
         }
 
-        public DetailRequest(ApplicationMetadataSchemaKey key, IDictionary<string, string> customParameters) {
+        public DetailRequest(ApplicationMetadataSchemaKey key, IDictionary<string, object> customParameters) {
             Key = key;
             CustomParameters = customParameters;
         }

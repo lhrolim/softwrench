@@ -9,7 +9,7 @@ namespace softWrench.sW4.Data.API {
 
         public string Title { get; set; }
 
-        public IDictionary<string, string> CustomParameters { get; set; }
+        public IDictionary<string, object> CustomParameters { get; set; }
         
         public string CommandId { get; set; }
 

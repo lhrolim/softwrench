@@ -47,6 +47,24 @@
                         return $scope.compositiondata || [];
                     }
 
+                    $scope.hasDetailSchema = function() {
+                        return !!$scope.compositiondetailschema;
+                    }
+
+                    $scope.expansionAllowed = function (item) {
+                        const compositionId = item[$scope.compositionlistschema.idFieldName]; //we cannot expand an item that doesn´t have an id
+                        return compositionId != null;
+                    }
+
+                    $scope.isItemExpanded = function (item) {
+                        const compositionId = item[$scope.compositionlistschema.idFieldName];
+                        return $scope.compositiondata[compositionId] && $scope.compositiondata[compositionId].expanded;
+                    }
+
+                    $scope.toggleDetails = function (compositionitem) {
+                        $scope.expandedData[compositionitem[$scope.compositionlistschema.idFieldName]] = !$scope.expandedData[compositionitem[$scope.compositionlistschema.idFieldName]];
+                    };
+
                     function compositionDataResolved(compositiondata) {
                         if (!compositiondata) {
                             //this is not the data this tab is interested
@@ -74,7 +92,9 @@
                         $scope.compositionschemadefinition = $scope.metadata.schema;
                         $scope.compositiondata = $scope.parentdata[$scope.metadata.relationship];
                         $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
+                        $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
                         $scope.schema = $scope.compositionlistschema;
+                        $scope.expandedData = {};
 
                         if ($scope.compositiondata && $scope.printDefered) {
                             $scope.printDefered.resolve();

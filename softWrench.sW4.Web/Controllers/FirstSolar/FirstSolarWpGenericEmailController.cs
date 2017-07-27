@@ -1,12 +1,9 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
 using System.Web.Mvc;
-using System.Web.Security;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -51,15 +48,37 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
         [System.Web.Mvc.AllowAnonymous]
         public async Task<ActionResult> Ack(string token, int emailStatusId) {
             var wp = await Dao.FindSingleByQueryAsync<WorkPackage>(WorkPackage.ByToken, token);
+
             if (wp == null) {
                 Log.WarnFormat("work package with token {0} not found", token);
-                var e = new HttpResponseException(HttpStatusCode.Unauthorized);
                 return View(Error, ErrorModel(Request));
             }
 
-            var user = InMemoryUser.NewAnonymousInstance();
+            var emailStatus = wp.EmailStatuses.FirstOrDefault(e => e.Id == emailStatusId);
+            if (emailStatus != null) {
+                Log.InfoFormat("acking workpackage {0} for user email {1}", wp.Wonum, emailStatus.Email);
+                emailStatus.AckDate = DateTime.Now;
+                await Dao.SaveAsync(emailStatus);
+            }
 
-            var key = new ApplicationMetadataSchemaKey("viewdetail", SchemaMode.output, ClientPlatform.Web);
+            return await BuildResult(wp, new ApplicationMetadataSchemaKey("viewdetail", SchemaMode.output, ClientPlatform.Web));
+        }
+
+        [System.Web.Mvc.AllowAnonymous]
+        public async Task<ActionResult> DailyOutageView(string token) {
+            var dom = await Dao.FindSingleByQueryAsync<DailyOutageMeeting>(new DailyOutageMeeting().ByToken, token);
+
+            if (dom == null) {
+                Log.WarnFormat("daily outage meeting with token {0} not found", token);
+                return View(Error, ErrorModel(Request));
+            }
+
+            var wp = dom.WorkPackage;
+            return await BuildResult(wp, new ApplicationMetadataSchemaKey("viewdailyoutage", SchemaMode.output, ClientPlatform.Web));
+        }
+
+        private async Task<ActionResult> BuildResult(WorkPackage wp, ApplicationMetadataSchemaKey key) {
+            var user = InMemoryUser.NewAnonymousInstance();
 
             var applicationMetadata = MetadataProvider
                 .Application("_workpackage")
@@ -75,15 +94,6 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
             response.Title = I18NResolver.I18NSchemaTitle(response.Schema);
             response.Mode = "output";
 
-            var emailStatus = wp.EmailStatuses.FirstOrDefault(e => e.Id == emailStatusId);
-            if (emailStatus != null) {
-                Log.InfoFormat("acking workpackage {0} for user email {1}", wp.Wonum, emailStatus.Email);
-                emailStatus.AckDate = DateTime.Now;
-                await Dao.SaveAsync(emailStatus);
-            }
-
-
-
             var model = HomeService.BaseHomeModel(Request, user, applicationMetadata.Schema);
             response.RedirectURL = "/Content/Controller/Application.html";
             model.Anonymous = true;
@@ -93,9 +103,7 @@ namespace softWrench.sW4.Web.Controllers.FirstSolar {
                     ContractResolver = new CamelCasePropertyNamesContractResolver()
                 });
 
-
             return View(Index, model);
-
         }
 
         public HomeModel ErrorModel(HttpRequestBase request) {
