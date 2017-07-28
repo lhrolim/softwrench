@@ -361,7 +361,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             if (tupleResult.Item5) {
                 targetResult.ReloadMode = ReloadMode.MainDetail;
                 //preventing double composition load
-//                targetResult.CompositionList = new List<string>();
+                //                targetResult.CompositionList = new List<string>();
                 //                targetResult.ExtraParameters.Add("loadattachments", true);
             }
 
@@ -510,6 +510,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,
             CompositionFetchRequest request, JObject currentData) {
+
+            if (request.CompositionList != null && !request.CompositionList.Contains("dailyOutageMeetings_")) {
+                request.CompositionList.Add("dailyOutageMeetings_");
+            }
 
             //these would bring only the workpackage compositions, such as callouts, dom, me and outageactions
             var compList = await base.GetCompositionData(application, request, currentData);

@@ -7,6 +7,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
+using DotLiquid.Tags;
 using log4net;
 using Newtonsoft.Json.Linq;
 using NHibernate.Util;
@@ -78,6 +79,26 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 };
                 packageResult.ResultObject.Add(pair.Key, searchResult);
             });
+
+
+
+            //SWWEB-3083 --> matching the compositions which have attachments
+            //TODO: come up with a more generic solution
+            if (woRelationship.EqualsIc("wkpgdomattachments_") && packageResult.ResultObject.ContainsKey("#domfileexplorer_")) {
+                if (packageResult.ResultObject.ContainsKey("dailyOutageMeetings_")) {
+                    var doms = packageResult.ResultObject["dailyOutageMeetings_"].ResultList;
+                    foreach (var dom in doms) {
+                        var id = dom["id"];
+                        var hasAttachment = packageResult.ResultObject["#domfileexplorer_"].ResultList
+                            .Any(f => f["docinfo_.urlparam1"].Equals("swwpkgdo:"+id));
+                        if (hasAttachment) {
+                            dom["#hasattachments"] = true;
+                        }
+                    }
+                }
+
+
+            }
         }
 
         public async Task AddEmailAttachment(IDictionary<string, object> attach, List<EmailAttachment> emailAttachs) {
