@@ -35,8 +35,6 @@
             </div>
         </div>
 
-        <ion-refresher pulling-text="Pull to Sync" on-refresh="fullSync()" pulling-icon="fa fa-refresh" spinner="none"> </ion-refresher>
-
         <ion-list class="has-header crud-list" ng-if="crudlist.items.length >0" >
             <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->
             <ion-item class="crud-item"
