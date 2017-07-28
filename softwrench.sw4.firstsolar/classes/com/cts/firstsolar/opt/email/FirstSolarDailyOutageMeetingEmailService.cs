@@ -12,6 +12,7 @@ using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.PDF;
 using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
@@ -21,10 +22,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         private new static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarDailyOutageMeetingEmailService));
 
+        private const string EmailTemplate = "//Content//Customers//firstsolar//htmls//templates//meeting.html";
+        private static readonly string PdfTemplate = AppDomain.CurrentDomain.BaseDirectory + "//Content//Customers//firstsolar//htmls//templates//meetingpdf.html";
+
+
         [Import]
-        public SWDBHibernateDAO DAO {
-            get; set;
-        }
+        public SWDBHibernateDAO DAO { get; set; }
+
+        [Import]
+        public PdfService PdfService { get; set; }
 
         public FirstSolarDailyOutageMeetingEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) : base(emailService, redirectService, appConfig, configurationFacade) {
             Log.Debug("init Log");
@@ -60,7 +66,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         protected override string GetTemplatePath() {
-            return "//Content//Customers//firstsolar//htmls//templates//meeting.html";
+            return EmailTemplate;
         }
 
         public override string RequestI18N() {
@@ -78,35 +84,49 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var baseSubject = "[{0}] Daily Outage Meeting".Fmt(package.Wpnum);
             var sufix = isNew ? "" : " Updated";
             var subject = "{0}{1}".Fmt(baseSubject, sufix);
-            var msg = GenerateEmailBody(dom, package, siteId);
+
+            var hash = BuildTemplateHash(dom, package);
+
+            var msg = GenerateEmailBody(dom, package, siteId, hash);
+
+            if (attachs == null) {
+                attachs = new List<EmailAttachment>();
+            }
+            attachs.Add(BuildPdfReport(hash));
+
             var emailData = new EmailData(GetFrom(), to, subject, msg, attachs) { Cc = dom.Cc };
             return emailData;
         }
 
-        public string GenerateEmailBody(DailyOutageMeeting dom, WorkPackage package, string siteId) {
-
+        public string GenerateEmailBody(DailyOutageMeeting dom, WorkPackage package, string siteId, Hash hash = null) {
             BuildTemplate();
+            return Template.Render(hash ?? BuildTemplateHash(dom, package));
+        }
 
-            var msg = Template.Render(
-                Hash.FromAnonymousObject(new {
-                    headerurl = GetHeaderURL(),
-                    outagestartdate = FmtDate(package.CreatedDate),
-                    estimatedcompletiondate = FmtDate(package.EstimatedCompDate),
-                    actualcompletiondate = FmtDate(package.ActualCompDate),
-                    mwhlosttotal = package.MwhLostTotal,
-                    expectedmwhlost = package.ExpectedMwhLost,
-                    mwhlostperday = package.MwhLostPerDay,
-                    problemstatement = package.ProblemStatement,
-                    meetingtime = FmtDate(dom.MeetingTime),
-                    mwhlost = dom.MWHLostYesterday.ToString("0", new CultureInfo("en-US")),
-                    criticalpath = dom.CriticalPath,
-                    openactionitems = dom.OpenActionItems,
-                    completedactionitems = dom.CompletedActionItems,
-                    meetingsummary = dom.Summary,
-                    wpnum = package.Wpnum,
-                    workpackageurl = RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token))
-                }));
-            return msg;
+        private EmailAttachment BuildPdfReport(Hash hash) {
+            var pdfTemplate = BuildTemplate(PdfTemplate);
+            var pdfHtml = pdfTemplate.Render(hash);
+            return EmailService.CreateAttachment(PdfService.HtmlToPdf(pdfHtml, "Daily Outage Meeting Report"), "DailyOutageMeetingReport.pdf");
+        }
+
+        private Hash BuildTemplateHash(DailyOutageMeeting dom, WorkPackage package) {
+            return Hash.FromAnonymousObject(new {
+                outagestartdate = FmtDate(package.CreatedDate),
+                estimatedcompletiondate = FmtDate(package.EstimatedCompDate),
+                actualcompletiondate = FmtDate(package.ActualCompDate),
+                mwhlosttotal = package.MwhLostTotal,
+                expectedmwhlost = package.ExpectedMwhLost,
+                mwhlostperday = package.MwhLostPerDay,
+                problemstatement = package.ProblemStatement,
+                meetingtime = FmtDate(dom.MeetingTime),
+                mwhlost = dom.MWHLostYesterday.ToString("0", new CultureInfo("en-US")),
+                criticalpath = dom.CriticalPath,
+                openactionitems = dom.OpenActionItems,
+                completedactionitems = dom.CompletedActionItems,
+                meetingsummary = dom.Summary,
+                wpnum = package.Wpnum,
+                workpackageurl = RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token))
+            });
         }
     }
 }

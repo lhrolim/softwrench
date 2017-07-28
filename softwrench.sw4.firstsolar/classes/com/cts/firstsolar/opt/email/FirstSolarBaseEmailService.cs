@@ -29,7 +29,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         protected static readonly ILog Log = LogManager.GetLogger(typeof(FirstSolarCallOutEmailService));
 
         private readonly string _templatePath;
-        private readonly string _headerImageUrl;
+        protected readonly string HeaderImageUrl;
         protected readonly IApplicationConfiguration AppConfig;
 
         [Import]
@@ -42,7 +42,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             ConfigurationFacade = configurationFacade;
             AppConfig = appConfig;
             _templatePath = AppDomain.CurrentDomain.BaseDirectory + GetTemplatePath();
-            _headerImageUrl = HandleHeaderImage();
+            HeaderImageUrl = HandleHeaderImage();
         }
 
         public abstract Task<T> SendEmail(T request, WorkPackage package,string siteId, List<EmailAttachment> attachs = null);
@@ -64,11 +64,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return string.Join(", ", sendToArray);
         }
 
+        protected Template BuildTemplate(string path) {
+            var templateContent = File.ReadAllText(path);
+            return Template.Parse(templateContent); // Parses and compiles the template  
+        }
+
 
         protected Template BuildTemplate() {
-            var templateContent = File.ReadAllText(_templatePath);
             if (Template == null || AppConfig.IsLocal()) {
-                Template = Template.Parse(templateContent); // Parses and compiles the template    
+                Template = BuildTemplate(_templatePath);
             }
             return Template;
         }
@@ -90,7 +94,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         }
 
         protected string GetHeaderURL() {
-            return RedirectService.GetRootUrl() + _headerImageUrl;
+            return RedirectService.GetRootUrl() + HeaderImageUrl;
         }
 
         public abstract string RequestI18N();
