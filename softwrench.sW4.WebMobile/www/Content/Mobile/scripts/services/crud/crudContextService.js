@@ -167,7 +167,7 @@
                 if (tab.type !== "ApplicationCompositionDefinition") {
                     //tabs do not need to load from the database since the data is already contained on the main datamap
                     crudContext.composition.currentTab = tab;
-                    return routeService.go("main.cruddetail.compositionlist");
+                    return routeService.go("main.cruddetail.tab");
                 }
 
                 return offlineCompositionService.loadCompositionList(crudContext.currentDetailItem, tab).then(function (compositionItems) {

@@ -25,6 +25,7 @@
             $scope.allDisplayables = crudContextService.mainDisplayables();
             $scope.displayables = wizardService.getWizardFields($scope.allDisplayables);
             $scope.schema = crudContextService.currentDetailSchema();
+            $scope.allDisplayablesIncludingTabs = schemaService.allFieldsIncludingTabs($scope.schema);
             $scope.datamap = crudContextService.currentDetailItemDataMap();
             $scope.item = crudContextHolderService.currentDetailItem();
 
@@ -112,13 +113,13 @@
         }
 
         $scope.saveChanges = function () {
-            inlineCompositionService.beforeSave($scope.datamap, $scope.allDisplayables);
+            inlineCompositionService.beforeSave($scope.datamap, $scope.allDisplayablesIncludingTabs);
             crudContextService.saveChanges()
                 .then(() => {
                     $scope.inlineCompositionsLoaded = false;
                     init();
                 }).catch((errors) => {
-                    inlineCompositionService.onSaveFail($scope.datamap, $scope.allDisplayables);
+                    inlineCompositionService.onSaveFail($scope.datamap, $scope.allDisplayablesIncludingTabs);
                     showValidationErrors(errors);
                 });
         };

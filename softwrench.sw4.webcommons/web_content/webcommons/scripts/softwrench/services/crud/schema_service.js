@@ -78,8 +78,16 @@
 
         }
 
+        function allFieldsIncludingTabs(schema) {
+            return flattenDisplayables(schema.displayables);
+        }
+
         function nonTabFields(schema) {
             return flattenDisplayables(fieldService.nonTabFields(schema.displayables, true));
+        };
+
+        function nonTabFieldsFromDisplayables(displayables) {
+            return flattenDisplayables(fieldService.nonTabFields(displayables, true));
         };
 
         function hasAnyFieldOnMainTab(schema) {
@@ -306,7 +314,9 @@
             isPropertyTrue,
             locateDisplayableByQualifier: locateDisplayableByQualifier,
             locateJquerySectionElementByApp: locateJquerySectionElementByApp,
+            allFieldsIncludingTabs: allFieldsIncludingTabs,
             nonTabFields: nonTabFields,
+            nonTabFieldsFromDisplayables: nonTabFieldsFromDisplayables,
             parseAppAndSchema: parseAppAndSchema,
             isStereotype: isStereotype,
             isDetail: isDetail,

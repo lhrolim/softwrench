@@ -5,7 +5,10 @@
     function MultiAssetController($log, $scope, $q, crudContextHolderService, offlineAssociationService, inlineCompositionService) {
         "ngInject";
 
-        angular.forEach(crudContextHolderService.currentDetailSchema().displayables, function (d) {
+        const crudContext = crudContextHolderService.getCrudContext();
+        const multiAssetTab = crudContext.composition.currentTab;
+
+        angular.forEach(multiAssetTab.displayables, function (d) {
             if (d.attribute === "multiassetlocci") {
                 $scope.fieldMetadata = d;
             }
@@ -23,26 +26,22 @@
             const promisses = [];
             angular.forEach($scope.multiassets, (multiasset) => {
                 const associationDataEntry = {};
-                promisses.push(loadAssociation(multiasset, "assetnum", "offlineasset_", "description", associationDataEntry));
-                promisses.push(loadAssociation(multiasset, "location", "offlinelocation_", "description", associationDataEntry));
+                promisses.push(loadAsset(multiasset, associationDataEntry));
+                associationDataEntry["offlinelocation_"] = multiasset["location"];
                 $scope.associationData[multiasset["multiid"]] = associationDataEntry;
             });
             $q.all(promisses).then(() => $scope.loaded = true).catch((e) => console.log(e));
         }
         load();
 
-        function loadAssociation(parentDatamap, valueField, association, labelField, associationDataEntry) {
-            if (!associationDataEntry[association]) {
-                associationDataEntry[association] = {};
-            }
-            const value = parentDatamap[valueField];
-            associationDataEntry[association][value] = {};
-            if (!value) {
+        function loadAsset(parentDatamap, associationDataEntry) {
+            const assetNum = parentDatamap["assetnum"];
+            associationDataEntry["offlineasset_"] = assetNum;
+            if (!assetNum) {
                 return $q.when(null);
             }
-            return offlineAssociationService.filterPromise($scope.detailSchema, parentDatamap, association, `"${valueField}":"${value}"`, null, true).then((assocs) => {
-                const label = assocs && assocs[0] ? assocs[0].datamap[labelField] : null;
-                associationDataEntry[association][value] = label ? `${value} - ${label}` : value;
+            return offlineAssociationService.filterPromise($scope.detailSchema, parentDatamap, "offlineasset_", `"assetnum":"${assetNum}"`, null, true).then((assocs) => {
+                associationDataEntry["assetdescription"] = assocs && assocs[0] ? assocs[0].datamap["description"] : null;
             });
         }
 
@@ -50,25 +49,10 @@
             load();
         });
 
-        $scope.options = {
-            loop: false,
-            effect: "slide",
-            speed: 500
-        }
-
         $scope.toggleProcess = function(multiasset) {
             multiasset.progress = multiasset.progress ? 0 : 1;
             multiasset["#isDirty"] = "true";
         }
-
-        $scope.$on("$ionicSlides.sliderInitialized", function (event, data) {
-            $scope.slider = data.slider;
-        });
-
-        $scope.$on("$ionicSlides.slideChangeEnd", function (event, data) {
-            $scope.activeIndex = data.slider.activeIndex;
-            $scope.previousIndex = data.slider.previousIndex;
-        });
     }
 
     window.MultiAssetController = MultiAssetController;

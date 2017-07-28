@@ -970,6 +970,13 @@
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
 
+          <tab  label="Multiple Assets, Locations" icon="fa-list" id="multiasset">
+            <composition inline="true" relationship="multiassetlocci" detailschema="offlinedetail">
+              <renderer type="default" params="inline.composition.offline.template=Content/Mobile/templates/multiassetlocci/multiassetlocci.html"/>
+              <collectionproperties listschema="offlinelist" allowupdate="true" allowcreation="true" orderbyfield="sequence"/>
+            </composition>
+          </tab>
+
           <composition relationship="matusetrans" label="Materials" >
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
@@ -980,10 +987,6 @@
           </composition>
           <composition relationship="attachment" label="Attachments">
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
-          </composition>
-          <composition inline="true" relationship="multiassetlocci" label="Multi Asset" detailschema="offlinedetail">
-            <renderer type="default" params="inline.composition.offline.template=Content/Mobile/templates/multiassetlocci/multiassetlocci.html"/>
-            <collectionproperties listschema="offlinelist" allowupdate="true" allowcreation="true" orderbyfield="sequence"/>
           </composition>
         </schema>
 
@@ -1163,13 +1166,14 @@
                        extraprojectionvalues="failurelist">
             <event type="afterchange" service="fsWorkorderOfflineService" method="afterRemedyChanged"/>
           </association>
-
-          <composition inline="true" relationship="multiassetlocci" label="Multi Asset" detailschema="offlinedetail">
-            <renderer type="default" params="inline.composition.offline.template=Content/Mobile/templates/multiassetlocci/multiassetlocci.html"/>
-            <collectionproperties listschema="offlinelist" allowupdate="true" allowcreation="true" orderbyfield="sequence"/>
-          </composition>
-
           <!-- EndRegion-->
+
+          <tab  label="Multiple Assets, Locations" icon="fa-list" id="multiasset">
+            <composition inline="true" relationship="multiassetlocci" detailschema="offlinedetail">
+              <renderer type="default" params="inline.composition.offline.template=Content/Mobile/templates/multiassetlocci/multiassetlocci.html"/>
+              <collectionproperties listschema="offlinelist" allowupdate="true" allowcreation="true" orderbyfield="sequence"/>
+            </composition>
+          </tab>
 
           <!-- Region Compositions: materials, labors, attachmets -->
           <composition relationship="matusetrans" label="Materials" >

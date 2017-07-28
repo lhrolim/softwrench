@@ -8,7 +8,7 @@
         }
 
         $scope.getTabIcon = function (tab) {
-            return tab.schema.schemas.list.properties['icon.composition.tab'];
+            return tab.type === "ApplicationTabDefinition" ? tab.icon : tab.schema.schemas.list.properties['icon.composition.tab'];
         };
 
         $scope.loadTab = function (tab) {

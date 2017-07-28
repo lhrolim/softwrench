@@ -334,6 +334,15 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                         }
                     }
                 })
+                .state("main.cruddetail.tab", {
+                    url: "/tab",
+                    views: {
+                        'body': {
+                            templateUrl: "Content/Mobile/templates/crud_tab.html",
+                            controller: "CrudTabController"
+                        }
+                    }
+                })
                 .state('main.cruddetail.locationdrilldown', {
                     url: "/locationdrilldown",
                     cache: false,
