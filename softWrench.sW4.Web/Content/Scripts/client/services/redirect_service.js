@@ -20,6 +20,24 @@
             window.location.reload();
         };
 
+        /**
+         * Implementing SWWEB-2919
+         */
+        function redirectToDetailAfterCreation() {
+            const id = crudContextHolderService.rootId();
+
+            const previousURL = $location.path();
+            const idx = previousURL.indexOf("/new");
+            contextService.deleteFromContext("swGlobalRedirectURL");
+            if (idx !== -1) {
+                $location.path(previousURL.substr(0, idx) + "/uid/" + id);
+            } else {
+                var applicationName = crudContextHolderService.currentSchema().applicationName;
+                $location.path($location.path() + `/web/${applicationName}/uid/${id}`);
+            }
+            $location.url($location.path());
+        };
+
         function redirectToAction(title, controller, action, parameters, target) {
             if (parameters === undefined || parameters == null) {
                 parameters = {};
@@ -81,7 +99,7 @@
                 //this timeout is needed because a digest might already be in progress
                 if (!modalService.isShowingModal()) {
                     //TODO: make it panelid-aware
-                    contextService.setActiveTab(tabId);    
+                    contextService.setActiveTab(tabId);
                 }
                 const tab = $('a[href="#' + tabId + '"]');
                 tab.trigger('click');
@@ -259,7 +277,7 @@
             }
 
             if (jsonData == undefined) {
-               
+
 
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
@@ -351,6 +369,7 @@
             redirectToAction,
             redirectToHome,
             redirectToTab,
+            redirectToDetailAfterCreation,
             redirectWithData
         };
         return service;

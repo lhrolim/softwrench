@@ -691,7 +691,7 @@
                         //restore the last scroll position, else scroll to the top of the page
                         var scrollObject = contextService.fetchFromContext("scrollto", true);
 
-                        if ($scope.panelid == null) {
+                        if ($scope.panelid == null || $scope.panelid === "#modal") {
                             if (scrollObject && $scope.schema.applicationName === scrollObject.applicationName) {
                                 scrollPosition = scrollObject.scrollTop;
                             } else {

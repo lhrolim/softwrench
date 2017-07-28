@@ -193,6 +193,12 @@
             return context.rootDataMap;
         }
 
+        rootId() {
+            const dm = this.rootDataMap();
+            const schema = this.currentSchema();
+            return dm[schema.idFieldName];
+        }
+
         originalDatamap(panelid, datamap) {
             const context = this.getContext(panelid);
             if (datamap) {

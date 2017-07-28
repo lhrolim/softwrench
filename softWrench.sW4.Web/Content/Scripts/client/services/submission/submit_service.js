@@ -93,6 +93,7 @@ class SubmitResult {
                 //updating the id, useful when it´s a creation and we need to update value return from the server side
                 fields[schema.idFieldName] = serverData.id;
                 fields[schema.userIdFieldName] = serverData.userId;
+                this.redirectService.redirectToDetailAfterCreation();
             }
         }
 
