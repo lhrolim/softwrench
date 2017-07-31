@@ -14,6 +14,7 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.PDF;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
@@ -31,6 +32,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         [Import]
         public PdfService PdfService { get; set; }
+
+        [Import]
+        public FirstSolarCustomGlobalFedService GFedService { get; set; }
 
         public FirstSolarDailyOutageMeetingEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) : base(emailService, redirectService, appConfig, configurationFacade) {
             Log.Debug("init Log");
@@ -75,9 +79,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         protected override EmailData BuildEmailData(DailyOutageMeeting dom, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             var to = ConfigurationFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultDailyOutageMeetingToEmailKey);
-            if (string.IsNullOrEmpty(to)) {
+            if (string.IsNullOrEmpty(to) && !ApplicationConfiguration.IsProd()) {
                 Log.WarnFormat("no daily outage email setup on the configuration section. Returning");
                 return null;
+            }
+
+            // 'to' not set on config on prod load the emails from gfed
+            if (string.IsNullOrEmpty(to)) {
+                to = AsyncHelper.RunSync(() => GFedService.BuildToFromGfed(dom, package));
             }
 
             var isNew = dom.ActualSendTime == null;

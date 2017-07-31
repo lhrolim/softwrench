@@ -4,15 +4,56 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
-using NHibernate.Util;
-using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
-using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
     public class FirstSolarCustomGlobalFedService : ISingletonComponent {
+
+        public const string GFedQuery = @"
+            select * from 
+                (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') as PlantName from workorder w where w.workorderid = ?) x 
+                    left join 
+                (Select assettitle as facilityTitle, 
+	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_regional_manager and onm_regional_manager is not null) as regmanager, 
+	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_site_manager and onm_site_manager is not null) as supervisor, 
+	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technician, 
+	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onM_Planner_Scheduler and onM_Planner_Scheduler is not null) as planner, 
+	                [street address line 1] as facilityAddress, 
+	                city as facilityCity, 
+	                [state code] as facilityState, 
+	                [postal code] as facilityPostalCode
+                from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on x.PlantName=G.facilityTitle";
+
+        public const string TechColumn = "technician";
+        public const string SupervisorColumn = "supervisor";
+        public const string RegionalManagerColumn = "regmanager";
+        public const string PlannerColumn = "planner";
+
+        public const string FacilityTitleColumn = "facilityTitle";
+        public const string FacilityAdressColumn = "facilityAddress";
+        public const string FacilityCityColumn = "facilityCity";
+        public const string FacilityStateColumn = "facilityState";
+        public const string FacilityPostalCodeColumn = "facilityPostalCode";
+
+        public const string GFedEmailQuery = @"
+            select * from 
+                (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') as PlantName from workorder w where w.workorderid = ?) x 
+                    left join 
+                (Select assettitle as facilityTitle, 
+	                onm_regional_manager  as  regmanageremail, 
+	                onm_site_manager as supervisoremail,
+	                onM_Planner_Scheduler  as planneremail, 
+	                onM_Account_Manager as accountmanageremail,
+	                [performance Engineer Email(s)] as perfengineeremail
+                from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on x.PlantName=G.facilityTitle";
+
+        public const string RegionalManagerEmailColumn = "regmanageremail";
+        public const string SupervisorEmailColumn = "supervisoremail";
+        public const string PlannerEmailColumn = "planneremail";
+        public const string AccountManagerEmailColumn = "accountmanageremail";
+        public const string PerformanceEngineerEmailColumn = "perfengineeremail";
 
         // DO NOT USE [Import] HERE THERE IS A BUG WITH REFLECTION
 
@@ -33,7 +74,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (!ApplicationConfiguration.IsProd()) {
                 return " ( SUBSTRING({0}.supervisor, 1, 0) + 'Test Planner') ".Fmt(context); // substring turns out to be a empty string, just to avoid a constant in dev
             }
-            return " (select top 1 G.onM_Planner_Scheduler from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
+            return " (select top 1 (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = G.onM_Planner_Scheduler and G.onM_Planner_Scheduler is not null) from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
         }
 
         public async Task LoadGfedData(ApplicationDetailResult result) {
@@ -42,18 +83,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 return;
             }
 
-            if (row.ContainsKey(FSWPackageConstants.TechColumn)) {
-                result.ResultObject.SetAttribute("#technician", row[FSWPackageConstants.TechColumn]);
-            }
-            if (row.ContainsKey(FSWPackageConstants.SupervisorColumn)) {
-                result.ResultObject.SetAttribute("#supervisor", row[FSWPackageConstants.SupervisorColumn]);
-            }
-            if (row.ContainsKey(FSWPackageConstants.RegionalManagerColumn)) {
-                result.ResultObject.SetAttribute("#manager", row[FSWPackageConstants.RegionalManagerColumn]);
-            }
-            if (row.ContainsKey(FSWPackageConstants.PlannerColumn)) {
-                result.ResultObject.SetAttribute("#planner", row[FSWPackageConstants.PlannerColumn]);
-            }
+            AddColumn(row, result.ResultObject, TechColumn);
+            AddColumn(row, result.ResultObject, SupervisorColumn);
+            AddColumn(row, result.ResultObject, RegionalManagerColumn);
+            AddColumn(row, result.ResultObject, PlannerColumn);
 
             AddFacilityData(row, result.ResultObject);
 
@@ -89,62 +122,82 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AddFacilityData(row, callout);
         }
 
+        public async Task<string> BuildToFromGfed(DailyOutageMeeting dom, WorkPackage package) {
+            var toList = new List<string>();
+            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedQuery, package.WorkorderId);
+            if (qryResult != null && qryResult.Any()) {
+                var row = qryResult.First();
+                AddEmail(row, toList, PlannerEmailColumn);
+                AddEmail(row, toList, RegionalManagerColumn);
+                AddEmail(row, toList, SupervisorEmailColumn);
+                AddEmail(row, toList, AccountManagerEmailColumn);
+                AddEmail(row, toList, PerformanceEngineerEmailColumn);
+            }
+            toList.Add("fsocoperators@firstsolar.com");
+            toList.Add("fsocleadership@firstsolar.com");
+            toList.Add("brent.galyon@firstsolar.com");
+            toList.Add("support@controltechnologysolutions.com");
+            return string.Join("; ", toList);
+        }
+
         private async Task<Dictionary<string, string>> LoadGfedData(long? workOrderId) {
             if (!ApplicationConfiguration.IsProd()) {
                 return new Dictionary<string, string>() {
-                    {FSWPackageConstants.TechColumn, "Test Technician"},
-                    {FSWPackageConstants.SupervisorColumn, "Test Supervisor"},
-                    {FSWPackageConstants.RegionalManagerColumn, "Test Manager"},
-                    {FSWPackageConstants.PlannerColumn, "Test Planner"},
-                    {FSWPackageConstants.FacilityTitleColumn, "Test Facility"},
-                    {FSWPackageConstants.FacilityAdressColumn, "1234 Test Street"},
-                    {FSWPackageConstants.FacilityCityColumn, "Scottsdale"},
-                    {FSWPackageConstants.FacilityStateColumn, "AZ"},
-                    {FSWPackageConstants.FacilityPostalCodeColumn, "12345"}
+                    {TechColumn, "Test Technician"},
+                    {SupervisorColumn, "Test Supervisor"},
+                    {RegionalManagerColumn, "Test Manager"},
+                    {PlannerColumn, "Test Planner"},
+                    {FacilityTitleColumn, "Test Facility"},
+                    {FacilityAdressColumn, "1234 Test Street"},
+                    {FacilityCityColumn, "Scottsdale"},
+                    {FacilityStateColumn, "AZ"},
+                    {FacilityPostalCodeColumn, "12345"}
                 };
             }
 
 
-            var qryResult = await _maxDao.FindByNativeQueryAsync(FSWPackageConstants.GFedQueryQuery, workOrderId);
+            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedQuery, workOrderId);
             if (qryResult == null || !qryResult.Any()) {
                 return null;
             }
             return qryResult.First();
         }
 
-        private void AddFacilityData(Dictionary<string, string> source, Dictionary<string, object> target) {
-            if (source.ContainsKey(FSWPackageConstants.FacilityTitleColumn)) {
-                target.Add("#facilitytitle", source[FSWPackageConstants.FacilityTitleColumn]);
-            }
-            if (source.ContainsKey(FSWPackageConstants.FacilityAdressColumn)) {
-                target.Add("#facilityaddress", source[FSWPackageConstants.FacilityAdressColumn]);
-            }
-            if (source.ContainsKey(FSWPackageConstants.FacilityCityColumn)) {
-                target.Add("#facilitycity", source[FSWPackageConstants.FacilityCityColumn]);
-            }
-            if (source.ContainsKey(FSWPackageConstants.FacilityStateColumn)) {
-                target.Add("#facilitystate", source[FSWPackageConstants.FacilityStateColumn]);
-            }
-            if (source.ContainsKey(FSWPackageConstants.FacilityPostalCodeColumn)) {
-                target.Add("#facilitypostalcode", source[FSWPackageConstants.FacilityPostalCodeColumn]);
+        private static void AddFacilityData(Dictionary<string, string> source, Dictionary<string, object> target) {
+            AddColumn(source, target, FacilityTitleColumn);
+            AddColumn(source, target, FacilityAdressColumn);
+            AddColumn(source, target, FacilityCityColumn);
+            AddColumn(source, target, FacilityStateColumn);
+            AddColumn(source, target, FacilityPostalCodeColumn);
+        }
+
+        private static void AddColumn(Dictionary<string, string> source, Dictionary<string, object> target, string column) {
+            if (source.ContainsKey(column)) {
+                target.Add("#" + column.ToLower(), source[column]);
             }
         }
 
-        private void AddFacilityData(Dictionary<string, string> source, CallOut callout) {
-            if (source.ContainsKey(FSWPackageConstants.FacilityTitleColumn)) {
-                callout.FacilityName = source[FSWPackageConstants.FacilityTitleColumn];
+        private static void AddEmail(Dictionary<string, string> source, List<string> target, string column) {
+            if (source.ContainsKey(column) && !string.IsNullOrEmpty(source[column])) {
+                target.Add(source[column]);
             }
-            if (source.ContainsKey(FSWPackageConstants.FacilityAdressColumn)) {
-                callout.FacilityAddress = source[FSWPackageConstants.FacilityAdressColumn];
+        }
+
+        private static void AddFacilityData(Dictionary<string, string> source, CallOut callout) {
+            if (source.ContainsKey(FacilityTitleColumn)) {
+                callout.FacilityName = source[FacilityTitleColumn];
             }
-            if (source.ContainsKey(FSWPackageConstants.FacilityCityColumn)) {
-                callout.FacilityCity = source[FSWPackageConstants.FacilityCityColumn];
+            if (source.ContainsKey(FacilityAdressColumn)) {
+                callout.FacilityAddress = source[FacilityAdressColumn];
             }
-            if (source.ContainsKey(FSWPackageConstants.FacilityStateColumn)) {
-                callout.FacilityState = source[FSWPackageConstants.FacilityStateColumn];
+            if (source.ContainsKey(FacilityCityColumn)) {
+                callout.FacilityCity = source[FacilityCityColumn];
             }
-            if (source.ContainsKey(FSWPackageConstants.FacilityPostalCodeColumn)) {
-                callout.FacilityPostalCode = source[FSWPackageConstants.FacilityPostalCodeColumn];
+            if (source.ContainsKey(FacilityStateColumn)) {
+                callout.FacilityState = source[FacilityStateColumn];
+            }
+            if (source.ContainsKey(FacilityPostalCodeColumn)) {
+                callout.FacilityPostalCode = source[FacilityPostalCodeColumn];
             }
         }
     }

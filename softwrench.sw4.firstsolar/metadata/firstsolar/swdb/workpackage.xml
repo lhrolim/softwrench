@@ -282,7 +282,7 @@
                 <section>
                   <field label="Site Technician" attribute="#technician" readonly="true"/>
                   <field label="Site Supervisor" attribute="#supervisor" readonly="true"/>
-                  <field label="Regional Plant Manager" attribute="#manager" readonly="true"/>
+                  <field label="Regional Plant Manager" attribute="#regmanager" readonly="true"/>
                 </section>
               </section>
             </section>
