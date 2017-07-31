@@ -633,6 +633,10 @@
             if (fileExplorerComp != null) {
                 fileExplorerCompositionSchema = fileExplorerComp.schema;    
             }
+
+            if (rootSchema.id === "newdetail" && datamap["workorderid"]) {
+                this.onWorkorderSelected({ fields: { "workorder_.workorderid": datamap["workorderid"] } });
+            }
             
             
             log.debug("caching composition schemas");
