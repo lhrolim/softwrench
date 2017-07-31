@@ -84,10 +84,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var dailyMeetings = wp.DailyOutageMeetings;
             decimal sum = 0;
             foreach (var dailyMeeting in dailyMeetings) {
-
                 sum += dailyMeeting.MWHLostYesterday;
             }
-            wp.MwhLostTotal = sum.ToString("0", new CultureInfo("en-US"));
+            wp.MwhLostTotal = sum.ToString(new CultureInfo("en-US"));
         }
 
         public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
