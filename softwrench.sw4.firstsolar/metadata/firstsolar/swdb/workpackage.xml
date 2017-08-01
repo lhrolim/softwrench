@@ -96,7 +96,7 @@
             <header label="Outage Actions"  params="fieldset=true"/>
             <composition inline="true" relationship="outageActions" label="" outputschema="" detailschema="detail" printschema="" fetchtype="eager" >
               <collectionproperties listschema="list" autocommit="true" allowcreation="true" allowupdate="true" orderbyfield="actiontime desc"/>
-              <renderer type="TABLE" params="mode=batch;composition.inline.addTitle=Action"/>
+              <renderer type="TABLE" params="composition.inline.addTitle=Action"/>
             </composition>
           </section>
         </componentdisplayable>
