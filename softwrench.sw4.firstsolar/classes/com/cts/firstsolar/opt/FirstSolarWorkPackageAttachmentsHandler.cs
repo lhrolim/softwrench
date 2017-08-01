@@ -162,7 +162,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var relList = new List<string> { attachsRelationship };
             var wonum = package.Wonum;
             var woCompositions = await dataset.GetWoCompositions(package.WorkorderId.ToString(), wonum, siteId, relList);
-            var attachs = woCompositions.ResultObject.First(pair => attachsRelationship.Equals(pair.Key)).Value;
+
+            EntityRepository.SearchEntityResult attachs = null;
+            if (woCompositions.ResultObject != null && woCompositions.ResultObject.Any()) {
+                attachs = woCompositions.ResultObject.First(pair => attachsRelationship.Equals(pair.Key)).Value;
+            }
             requestsList.ForEach(request => {
                 AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId, filterPrefix, attachs, emailService));
             });
@@ -183,7 +187,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var attachTasks = new List<Task>();
 
             try {
-                attachs.ResultList.ForEach(attach => {
+                attachs?.ResultList?.ForEach(attach => {
                     var filter = filterPrefix + request.Id;
                     if (filter.Equals(attach["docinfo_.urlparam1"])) {
                         attachTasks.Add(AddEmailAttachment(attach, emailAttachs));
