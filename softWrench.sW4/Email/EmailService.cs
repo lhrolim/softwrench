@@ -23,7 +23,7 @@ using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
-        private const int TRY_AGAIN_COUNT = 3;
+        private const int TRY_AGAIN_COUNT = 1;
 
         private static readonly Regex HtmlInlineImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]\\s*data:([^'\"]+)['\"][^>]*>");
 
