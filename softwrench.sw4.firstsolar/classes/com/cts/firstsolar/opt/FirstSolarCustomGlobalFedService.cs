@@ -128,7 +128,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (qryResult != null && qryResult.Any()) {
                 var row = qryResult.First();
                 AddEmail(row, toList, PlannerEmailColumn);
-                AddEmail(row, toList, RegionalManagerColumn);
+                AddEmail(row, toList, RegionalManagerEmailColumn);
                 AddEmail(row, toList, SupervisorEmailColumn);
                 AddEmail(row, toList, AccountManagerEmailColumn);
                 AddEmail(row, toList, PerformanceEngineerEmailColumn);
