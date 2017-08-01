@@ -21,17 +21,26 @@ namespace softWrench.sW4.Data.Relationship.Composition {
     public class CompositionBuilder : ISingletonComponent {
 
 
+        public static ApplicationCompositionSecurityApplier CompositionApplier {
+            get {
+                if (SimpleInjectorGenericFactory.Instance == null) {
+                    return new ApplicationCompositionSecurityApplier();
+                }
+                return SimpleInjectorGenericFactory.Instance.GetObject<ApplicationCompositionSecurityApplier>();
+            }
+        }
+
 
         public static IDictionary<string, ApplicationCompositionSchema> InitializeCompositionSchemas(ApplicationSchemaDefinition schema, InMemoryUser user = null) {
             if (schema.CachedCompositions != null) {
-                return ApplicationCompositionSecurityApplier.ApplySecurity(schema, schema.CachedCompositions, user);
+                return CompositionApplier.ApplySecurity(schema, schema.CachedCompositions, user);
             }
             var compositionMetadatas = new Dictionary<string, ApplicationCompositionSchema>();
             foreach (var composition in schema.Compositions()) {
                 compositionMetadatas.Add(composition.Relationship, DoInitializeCompositionSchemas(schema, composition, new IdentitySet()));
             }
             schema.CachedCompositions = compositionMetadatas;
-            return ApplicationCompositionSecurityApplier.ApplySecurity(schema, schema.CachedCompositions, user);
+            return CompositionApplier.ApplySecurity(schema, schema.CachedCompositions, user);
         }
 
 
@@ -66,13 +75,13 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 foreach (var innerComposition in compositionResult.Detail.Compositions()) {
                     if (!checkedCompositions.Contains(innerComposition.Relationship)) {
                         var fromSchema = innerComposition.IsSelfRelationship ? compositionResult.Detail : schema;
-                        if (!FetchType.Manual.Equals(innerComposition.Schema.FetchType)){
+                        if (!FetchType.Manual.Equals(innerComposition.Schema.FetchType)) {
                             //manually fetched compositions should be skipped, since they are fetched later, by a manual call
                             //to avod infinte loop
                             DoInitializeCompositionSchemas(fromSchema, innerComposition, checkedCompositions);
                         }
 
-                        
+
                     }
                 }
             }

@@ -164,9 +164,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var woCompositions = await dataset.GetWoCompositions(package.WorkorderId.ToString(), wonum, siteId, relList);
 
             EntityRepository.SearchEntityResult attachs = null;
-            if (woCompositions.ResultObject != null && woCompositions.ResultObject.Any()) {
+//            if (woCompositions.ResultObject != null && woCompositions.ResultObject.Any()) {
                 attachs = woCompositions.ResultObject.First(pair => attachsRelationship.Equals(pair.Key)).Value;
-            }
+//            }
             requestsList.ForEach(request => {
                 AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId, filterPrefix, attachs, emailService));
             });
