@@ -16,6 +16,8 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
@@ -53,11 +55,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public void HandleInterConnectedEmail(WorkPackage wp, string subject, out WorkPackageEmailStatus emailStatus, out EmailData emailData, List<EmailAttachment> attachs = null) {
             var toEmail = ConfigFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultOptInterOutageToEmailKey);
+
+            // config not set and is not prod do not send email
+            if (string.IsNullOrEmpty(toEmail) && !ApplicationConfiguration.IsProd()) {
+                emailStatus = null;
+                emailData = null;
+                return;
+            }
+
+            string cc = null;
+            if (string.IsNullOrEmpty(toEmail)) {
+                var user = SecurityFacade.CurrentUser();
+                toEmail = user.Email;
+                cc = "brent.galyon@firstsolar.com";
+            }
+
+            // user has no email set
             if (string.IsNullOrEmpty(toEmail)) {
                 emailStatus = null;
                 emailData = null;
                 return;
             }
+
 
             emailStatus = new WorkPackageEmailStatus {
                 Email = toEmail,
@@ -67,7 +86,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             };
 
             var msg = GenerateEmailBody(wp, emailStatus);
-            emailData = new EmailData(GetFrom(), toEmail, subject, msg, attachs);
+            emailData = new EmailData(GetFrom(), toEmail, subject, msg, attachs) {Cc = cc};
         }
 
 
