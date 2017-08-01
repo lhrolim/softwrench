@@ -124,7 +124,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public async Task<string> BuildToFromGfed(DailyOutageMeeting dom, WorkPackage package) {
             var toList = new List<string>();
-            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedQuery, package.WorkorderId);
+            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedEmailQuery, package.WorkorderId);
             if (qryResult != null && qryResult.Any()) {
                 var row = qryResult.First();
                 AddEmail(row, toList, PlannerEmailColumn);
