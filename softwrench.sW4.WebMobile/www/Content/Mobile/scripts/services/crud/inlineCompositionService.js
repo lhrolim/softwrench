@@ -27,7 +27,7 @@
             }
         }
 
-        loadInlineCompositions(item, datamap, allDisplayables) {
+        loadInlineCompositions(item, datamap, allDisplayables, tabId = "main") {
             const promises = [];
             angular.forEach(allDisplayables, (displayable) => {
                 if (displayable.type !== "ApplicationCompositionDefinition" || !displayable.inline || displayable.relationship in datamap) {
@@ -43,10 +43,10 @@
                     datamap[displayable.relationship] = this.arrayToObj(compositionList);
                 });
             });
-            this.$q.all(promises).then(() => {
+            return this.$q.all(promises).then(() => {
                 const context = this.crudContextHolderService.getCrudContext();
                 context.originalDetailItemDatamap = angular.copy(datamap);
-                this.$rootScope.$broadcast(compositionLoadedEvent);
+                return this.$rootScope.$broadcast(compositionLoadedEvent, tabId);
             });
         }
 

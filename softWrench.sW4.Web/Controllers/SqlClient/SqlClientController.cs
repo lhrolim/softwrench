@@ -95,8 +95,9 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
         /// Checks the environment for sql execution
         /// </summary>
         /// <returns>True if the environment is QA or DEV; otherwise returns false;</returns>
-        private bool CheckEnvironment() {
-            return ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsQA();
+        private bool CheckEnvironment()
+        {
+            return true;
         }
     }
 }

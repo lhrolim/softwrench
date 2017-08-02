@@ -5,6 +5,8 @@
     function MultiAssetController($log, $scope, $q, crudContextHolderService, offlineAssociationService, inlineCompositionService) {
         "ngInject";
 
+        const multiAssetLog = $log.get("multiasset");
+
         const crudContext = crudContextHolderService.getCrudContext();
         const multiAssetTab = crudContext.composition.currentTab;
 
@@ -19,6 +21,8 @@
         $scope.loaded = false;
 
         function load() {
+
+            multiAssetLog.debug("loading multiassets");
             $scope.loaded = false;
             const dm = crudContextHolderService.currentDetailItemDataMap();
             $scope.multiassets = dm["multiassetlocci_"] || [];
@@ -45,8 +49,11 @@
             });
         }
 
-        $scope.$on(inlineCompositionService.compositionLoadedEventName(), () => {
-            load();
+        $scope.$on(inlineCompositionService.compositionLoadedEventName(), (event,tabid) => {
+//            if (tabid === "multiasset") {
+                load();    
+//            }
+            
         });
 
         $scope.toggleProcess = function(multiasset) {

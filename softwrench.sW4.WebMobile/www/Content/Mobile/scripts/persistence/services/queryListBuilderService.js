@@ -11,6 +11,10 @@
         function buildExtraLaborAttribute(childListSchema, childEntityName) {
             //TODO: make more generic...
             const user = securityService.currentFullUser();
+            if (user == null) {
+                return securityService.logout();
+            }
+
             let realLabor = user.properties["laborcode"];
             if (!realLabor) {
                 //keeping here for compatibility backwards

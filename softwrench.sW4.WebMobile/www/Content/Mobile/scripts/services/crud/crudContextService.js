@@ -607,11 +607,18 @@
                     if (isRippleEmulator()) {
                         contextService.insertIntoContext("crudcontext", crudContext);
                     }
+                    
+
                     log.debug("loading problems");
                     return problemService.getProblems(item.id).then(problems => {
                         log.debug("problems loaded done");
                         crudContext.currentProblems = problems;
-                        return routeService.go("main.cruddetail.maininput");
+                        if (!!crudContext.composition.currentTab) {
+                            this.loadTab(crudContext.composition.currentTab);
+                        } else {
+                            return routeService.go("main.cruddetail.maininput");    
+                        }
+                        
                     }).then(() => {
                         log.debug("crud detail finished loading");
                         $rootScope.$broadcast("sw_cruddetailrefreshed");
