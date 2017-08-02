@@ -347,7 +347,7 @@ namespace softwrench.sw4.offlineserver.services {
             results.LimitedAssociations.Add(userAppMetadata.Name, isLimited);
 
             var datamaps = await FetchData(true, entityMetadata, userAppMetadata, rowstamp, null, isLimited);
-            results.AddIndividualJsonDatamaps(association.ApplicationName, datamaps);
+            results.AddIndividualJsonDatamaps(association.ApplicationName, association.IdFieldName,datamaps);
         }
 
         protected virtual async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
