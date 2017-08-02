@@ -42,7 +42,7 @@
 
     <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" 
                  on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
-        <div class="crud-title" ng-if="isOnMainTab() && !isOnDrillDown()">
+        <div class="crud-title" ng-if="!isOnDrillDown()">
             <div class="row" on-hold="showDirtyOptions($event)">
                 <div class="col col-25 crud-icon">
                     <crud-icon item="item" isdetail="true" datamap="datamap"></crud-icon>

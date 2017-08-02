@@ -18,7 +18,8 @@ const localhostDevData = {
 
 //dev data that should be used only at development mode (Aaaron´s user) User Master password $@$Pass2
 //FS VPN data
-const fsVpnLocalData = {
+const fsVpnLocalData =  {
+
     //set to true to allow starting the app at the login screen
     showlogin: false,
     username: "fs112894",
@@ -49,6 +50,9 @@ const devLocalData = {
 
 
 
+
+
+
 const fsVpnProdLocalData = {
     //set to true to allow starting the app at the login screen
     showlogin: false,
@@ -63,3 +67,4 @@ const fsVpnProdLocalData = {
 };
 
 window.localdevdata = localhostDevData;
+

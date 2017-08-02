@@ -13,9 +13,15 @@
 
                 if (!$scope.tabInlineCompositionsLoaded) {
                     $scope.tabInlineCompositionsLoaded = true;
-                    inlineCompositionService.loadInlineCompositions($scope.item, $scope.datamap, $scope.tabAllDisplayables);
+                    inlineCompositionService.loadInlineCompositions($scope.item, $scope.datamap, $scope.tabAllDisplayables, $scope.tab.id);
                 }
             }
+
+            $scope.$on('sw_cruddetailrefreshed', function () {
+                //                $scope.datamap = crudContextService.currentDetailItemDataMap();
+                $scope.tabInlineCompositionsLoaded = false;
+                init();
+            });
 
 
             init();
