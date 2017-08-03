@@ -243,21 +243,21 @@
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
             const tomorrowTime = todayTime + day;
-            return `assignment_.dateindex02 >= ${todayTime} and assignment_.dateindex02 < ${tomorrowTime}`;
+            return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime}`;
         }
 
         // `assignment_`.dateindex02 = scheduled date
         getPastWosWhereClause() {
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
-            return `assignment_.dateindex02 < ${todayTime}`;
+            return `assignment_.dateindex01 < ${todayTime}`;
         }
 
         // `assignment_`.dateindex02 = scheduled date
         getFutureWosWhereClause() {
             const now = new Date();
             const tomorrowTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime() + day;
-            return `assignment_.dateindex02 >= ${tomorrowTime}`;
+            return `assignment_.dateindex01 >= ${tomorrowTime}`;
         }
 
         getCreatedWosWhereClause() {
