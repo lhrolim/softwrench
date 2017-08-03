@@ -219,6 +219,7 @@
                 $scope.isSysAdmin = menuModel.isSysAdmin;
                 $scope.isDynamicAdmin = menuModel.isDynamicAdmin;
                 $scope.isClientAdmin = menuModel.isClientAdmin;
+                $scope.myprofileenabled = menuModel.myProfileEnabled;
                 $('.hapag-body').addClass('hapag-body-loaded');
             });
 

@@ -11,12 +11,15 @@ namespace softWrench.sW4.Web.Models.Home {
         private readonly bool _isClientAdmin;
         private readonly bool _isDynamicAdmin;
 
-        public MenuModel(MenuDefinition menu, IDictionary<string, CommandBarDefinition> commandBars, bool isSysAdmin, bool isClientAdmin, bool isDynamicAdmin) {
+        public bool MyProfileEnabled { get; set; }
+
+        public MenuModel(MenuDefinition menu, IDictionary<string, CommandBarDefinition> commandBars, bool isSysAdmin, bool isClientAdmin, bool isDynamicAdmin, bool myProfileEnabled) {
             _menu = menu;
             _isSysAdmin = isSysAdmin;
             _isClientAdmin = isClientAdmin;
             _commandBars = commandBars;
             _isDynamicAdmin = isDynamicAdmin;
+            MyProfileEnabled = myProfileEnabled;
         }
 
         public MenuDefinition Menu {

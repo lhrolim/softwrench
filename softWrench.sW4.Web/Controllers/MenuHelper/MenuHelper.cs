@@ -17,32 +17,35 @@ using softWrench.sW4.Web.Models.Home;
 using softWrench.sW4.Web.Security;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using softWrench.sW4.Configuration.Services;
+using softWrench.sW4.Data.Configuration;
 
 namespace softWrench.sW4.Web.Controllers.MenuHelper {
     public class MenuHelper : ISingletonComponent {
 
         private readonly IEnumerable<IMenuManager> _managers;
         private readonly MenuSecurityManager _menuSecurityManager;
-        private ContextLookuper _contextLookuper;
+        private readonly ContextLookuper _contextLookuper;
+        private readonly ConfigurationFacade _configurationFacade;
 
-        public MenuHelper(Container container, MenuSecurityManager menuSecurityManager, ContextLookuper contextLookuper)
-        {
+        public MenuHelper(Container container, MenuSecurityManager menuSecurityManager, ContextLookuper contextLookuper, ConfigurationFacade configurationFacade) {
             _menuSecurityManager = menuSecurityManager;
             _contextLookuper = contextLookuper;
+            _configurationFacade = configurationFacade;
             _managers = container.GetAllInstances<IMenuManager>();
         }
 
 
-     
+
 
         public MenuModel BuildMenu(ClientPlatform platform) {
             try {
                 var user = SecurityFacade.CurrentUser();
-                var isSysAdmin = user.IsInRole(Role.SysAdmin) ||  (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
+                var isSysAdmin = user.IsInRole(Role.SysAdmin) || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 var isClientAdmin = user.IsInRole(Role.ClientAdmin) || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 var isDynamicAdmin = user.IsInRolInternal(Role.DynamicAdmin, false) || (ApplicationConfiguration.IsLocal() && _contextLookuper.LookupContext().MockSecurity);
                 bool fromCache;
-                var securedMenu = _menuSecurityManager.Menu(user,platform, out fromCache);
+                var securedMenu = _menuSecurityManager.Menu(user, platform, out fromCache);
                 if (!user.Genericproperties.ContainsKey("menumanagerscached")) {
                     //to avoid adding items multiple times
                     foreach (var menuManager in _managers) {
@@ -51,7 +54,8 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
                     user.Genericproperties["menumanagerscached"] = true;
                 }
                 var securedBars = user.SecuredBars(platform, MetadataProvider.CommandBars(platform));
-                return new MenuModel(securedMenu, securedBars, isSysAdmin, isClientAdmin, isDynamicAdmin);
+                var myProfileEnabled = _configurationFacade.Lookup<bool>(ConfigurationConstants.MyProfileEnabled);
+                return new MenuModel(securedMenu, securedBars, isSysAdmin, isClientAdmin, isDynamicAdmin, myProfileEnabled);
             } catch (InvalidOperationException) {
                 FormsAuthentication.SignOut();
                 return null;
