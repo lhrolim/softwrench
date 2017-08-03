@@ -46,25 +46,13 @@
             return this.$q.all(promises).then(() => {
                 const context = this.crudContextHolderService.getCrudContext();
                 context.originalDetailItemDatamap = angular.copy(datamap);
+                angular.forEach(allDisplayables, (displayable) => {
+                    if (displayable.type === "ApplicationCompositionDefinition" && displayable.inline && datamap[displayable.relationship] && typeof datamap[displayable.relationship] === "object") {
+                        datamap[displayable.relationship] = this.objToArray(datamap[displayable.relationship]);
+                        context.originalDetailItemDatamap[displayable.relationship] = this.objToArray(context.originalDetailItemDatamap[displayable.relationship]);
+                    }
+                });
                 return this.$rootScope.$broadcast(compositionLoadedEvent, tabId);
-            });
-        }
-
-        beforeSave(datamap, allDisplayables) {
-            angular.forEach(allDisplayables, (displayable) => {
-                if (displayable.type === "ApplicationCompositionDefinition" && displayable.inline) {
-                    // back to array to save and keep compatible with server
-                    datamap[displayable.relationship] = this.objToArray(datamap[displayable.relationship]);
-                }
-            });
-        }
-
-        onSaveFail(datamap, allDisplayables) {
-            angular.forEach(allDisplayables, (displayable) => {
-                if (displayable.type === "ApplicationCompositionDefinition" && displayable.inline) {
-                    // back to obj to keep angular copy and catch changes to know if it's dirty
-                    datamap[displayable.relationship] = this.arrayToObj(datamap[displayable.relationship]);
-                }
             });
         }
 
