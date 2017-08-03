@@ -23,7 +23,7 @@ using softWrench.sW4.Exceptions;
 
 namespace softWrench.sW4.Email {
     public class EmailService : IEmailService {
-        private const int TRY_AGAIN_COUNT = 3;
+        private const int TRY_AGAIN_COUNT = 1;
 
         private static readonly Regex HtmlInlineImgRegex = new Regex("<img[^>]+src\\s*=\\s*['\"]\\s*data:([^'\"]+)['\"][^>]*>");
 
@@ -102,6 +102,7 @@ namespace softWrench.sW4.Email {
         /// <param name="emailData">The email data</param>
         public virtual void SendEmail(EmailData emailData) {
             try {
+                Log.Debug("Sending email to {0} - cc to {1} - bcc to {2}".Fmt(emailData.SendTo, emailData.Cc, emailData.BCc));
                 Policy.Handle<SmtpFailedRecipientsException>(ex => {
                     var tryAgain = CheckEmailClientMailboxBusy(ex.StatusCode);
 

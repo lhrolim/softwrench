@@ -16,7 +16,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
             if (!MigrationContext.IsMySql) {
                 Execute.Sql("CREATE UNIQUE NONCLUSTERED INDEX idx_wp_accesstoken ON OPT_WORKPACKAGE(accesstoken) WHERE accesstoken IS NOT NULL; ");
             }
-            
+
 
             Create.Table("OPT_WPEMAILSTATUS")
                 .WithIdColumn()
@@ -26,6 +26,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
                 .WithColumn("qualifier").AsString(MigrationUtil.StringMedium)
                 .WithColumn("senddate").AsDateTime().Nullable()
                 .WithColumn("ackdate").AsDateTime().Nullable();
+        }
+
+        public override void Down() {
+
+        }
+
+    }
+
+
+    [Migration(201708011352)]
+    public class Swweb3020_2Migration : Migration {
+
+        public override void Up() {
+            Alter.Column("email").OnTable("OPT_WPEMAILSTATUS").AsString(MigrationUtil.StringMax);
         }
 
         public override void Down() {

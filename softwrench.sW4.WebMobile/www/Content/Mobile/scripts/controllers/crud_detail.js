@@ -117,13 +117,11 @@
             }
 
             $scope.saveChanges = function () {
-                inlineCompositionService.beforeSave($scope.datamap, $scope.allDisplayablesIncludingTabs);
                 crudContextService.saveChanges()
                     .then(() => {
                         $scope.inlineCompositionsLoaded = false;
                         init();
                     }).catch((errors) => {
-                        inlineCompositionService.onSaveFail($scope.datamap, $scope.allDisplayablesIncludingTabs);
                         showValidationErrors(errors);
                     });
             };

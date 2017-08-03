@@ -18,7 +18,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
         }
 
         //TODO: make it a simpleinjector component
-        public static IDictionary<string, ApplicationCompositionSchema> ApplySecurity(ApplicationSchemaDefinition schema, IDictionary<string, ApplicationCompositionSchema> originalCompositions, InMemoryUser user) {
+        public IDictionary<string, ApplicationCompositionSchema> ApplySecurity(ApplicationSchemaDefinition schema, IDictionary<string, ApplicationCompositionSchema> originalCompositions, InMemoryUser user) {
             if (user == null) {
                 return originalCompositions;
             }

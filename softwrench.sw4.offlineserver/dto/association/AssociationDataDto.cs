@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softWrench.sW4.Data;
 
@@ -38,6 +39,12 @@ namespace softwrench.sw4.offlineserver.dto.association {
         /// 
         /// </summary>
         public ISet<string> CompleteCacheEntries { get; set; } = new HashSet<string>();
+
+
+        /// <summary>
+        /// Name of the remoteid to be used as an unique index
+        /// </summary>
+        public string RemoteIdFieldName { get; set; }
 
 
         public bool Any() {

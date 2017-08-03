@@ -19,6 +19,7 @@ const localhostDevData = {
 //dev data that should be used only at development mode (Aaaron´s user) User Master password $@$Pass2
 //FS VPN data
 const fsVpnLocalData =  {
+
     //set to true to allow starting the app at the login screen
     showlogin: false,
     username: "fs112894",
@@ -48,4 +49,22 @@ const devLocalData = {
 };
 
 
-window.localdevdata = devLocalData;
+
+
+
+
+const fsVpnProdLocalData = {
+    //set to true to allow starting the app at the login screen
+    showlogin: false,
+    username: "fs112894",
+    password: "$@$Pass2",
+    serverurl: {
+        ripple: "http://10.2.8.65/softwrench/",
+    },
+    debuglogs: ["init"]
+
+
+};
+
+window.localdevdata = localhostDevData;
+

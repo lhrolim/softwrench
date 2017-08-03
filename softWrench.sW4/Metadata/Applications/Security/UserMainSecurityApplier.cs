@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -22,6 +23,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
     public class UserMainSecurityApplier : ISingletonComponent {
 
 
+        [Import]
         public IContextLookuper ContextLookuper { get; set; }
 
 

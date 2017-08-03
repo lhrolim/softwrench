@@ -351,6 +351,17 @@
                 this.removeColumn("CompositionDataEntry", "dateindex03");
             }
         });
+
+
+        migrationGroup.addMigration("add remoteid for associationdata", {
+            up: function () {
+                this.addColumn("AssociationData", "remoteid", "text");
+                this.addIndex("AssociationData", ["application", "remoteid"], true);
+            },
+            down: function () {
+                this.removeColumn("AssociationData", "remoteid");
+            }
+        });
     }]);
 
 })(angular, persistence);

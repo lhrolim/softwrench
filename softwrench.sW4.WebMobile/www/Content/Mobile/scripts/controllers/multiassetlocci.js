@@ -1,9 +1,7 @@
 ﻿(function (softwrench) {
     "use strict";
 
-    softwrench.controller('MultiAssetController', MultiAssetController);
-    function MultiAssetController($log, $scope, $q, crudContextHolderService, offlineAssociationService, inlineCompositionService) {
-        "ngInject";
+    window.MultiAssetController = function ($log, $scope, $q, crudContextHolderService, offlineAssociationService, inlineCompositionService) {
 
         const multiAssetLog = $log.get("multiasset");
 
@@ -21,7 +19,6 @@
         $scope.loaded = false;
 
         function load() {
-
             multiAssetLog.debug("loading multiassets");
             $scope.loaded = false;
             const dm = crudContextHolderService.currentDetailItemDataMap();
@@ -36,6 +33,7 @@
             });
             $q.all(promisses).then(() => $scope.loaded = true).catch((e) => console.log(e));
         }
+
         load();
 
         function loadAsset(parentDatamap, associationDataEntry) {
@@ -49,21 +47,13 @@
             });
         }
 
-        $scope.$on(inlineCompositionService.compositionLoadedEventName(), (event,tabid) => {
-//            if (tabid === "multiasset") {
-                load();    
-//            }
-            
-        });
+        $scope.$on(inlineCompositionService.compositionLoadedEventName(), (event, tabid) => load());
 
-        $scope.toggleProcess = function(multiasset) {
+        $scope.toggleProcess = function (multiasset) {
             multiasset.progress = multiasset.progress ? 0 : 1;
             multiasset["#isDirty"] = "true";
         }
     }
 
-    window.MultiAssetController = MultiAssetController;
+    softwrench.controller("MultiAssetController", ["$log", "$scope", "$q", "crudContextHolderService", "offlineAssociationService", "inlineCompositionService", window.MultiAssetController]);
 })(softwrench);
-
-
-

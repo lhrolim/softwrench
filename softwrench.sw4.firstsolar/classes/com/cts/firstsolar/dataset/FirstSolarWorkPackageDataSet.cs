@@ -503,9 +503,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         public async Task<CompositionFetchResult> GetWoCompositions(string woId, string woNum, string woSite, List<string> compositions) {
             var user = SecurityFacade.CurrentUser();
-            var woApp = MetadataProvider.Application("workorder").ApplyPolicies(FirstSolarWorkPackageCompositionHandler.CompositionSchemaKey, user, ClientPlatform.Web);
+            //TODO: generic solution
+            //using the base default schema, regardless of the logged user
+            var completeApplicationMetadataDefinition = MetadataProvider.Application("workorder");
+            var schema =completeApplicationMetadataDefinition.Schema(FirstSolarWorkPackageCompositionHandler
+                    .CompositionSchemaKey);
+            var appData= ApplicationMetadata.FromSchema(schema);
+
+
             var woData = new JObject { { "workorderid", woId }, { "wonum", woNum }, { "siteid", woSite } };
-            return await base.GetCompositionData(woApp, CompositionHandler.WoCompositionRequest(woId, compositions), woData);
+            return await base.GetCompositionData(appData, CompositionHandler.WoCompositionRequest(woId, compositions), woData);
         }
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,

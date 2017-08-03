@@ -85,7 +85,7 @@ namespace softwrench.sw4.offlineserver.dto.association {
             };
         }
 
-        public void AddIndividualJsonDatamaps(string key, IList<JSONConvertedDatamap> datamaps) {
+        public void AddIndividualJsonDatamaps(string key,string idFieldName, IList<JSONConvertedDatamap> datamaps) {
             if (!AssociationData.ContainsKey(key)) {
                 AssociationData[key] = new AssociationDataDto();
             }
@@ -96,6 +96,7 @@ namespace softwrench.sw4.offlineserver.dto.association {
             }
             //marking as incomplete until otherwise stated at the SyncChunkHandler
             //TODO: create extra flags
+            associationData.RemoteIdFieldName = idFieldName;
             associationData.Incomplete = false;
         }
 
@@ -129,6 +130,7 @@ namespace softwrench.sw4.offlineserver.dto.association {
                 associationDataDto.CompleteCacheEntries.Add(chunk.RealKey);
 
             }
+            associationDataDto.RemoteIdFieldName = redisResult.Schema.IdFieldName;
             AssociationData[redisResult.Schema.ApplicationName] = associationDataDto;
 
             HasMoreData = true;

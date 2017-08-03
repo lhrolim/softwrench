@@ -27,7 +27,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 return securityResult;
             }
 
-            if (application.Name.EqualsIc("workorder")) {
+            if (application.Name.EqualsIc("workorder") || application.Name.Equals("_DailyOutageMeeting")) {
+                //TODO: improve _DailyOutageMeeting verification, but this call is only performed at the DailyOutageTab in first place, this adjustment would be just from a backend standpoint
                 //if the user has access to workpackage, it should be given access to workorders schemas as well, otherwise some lookups would fail
                 return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
             }
