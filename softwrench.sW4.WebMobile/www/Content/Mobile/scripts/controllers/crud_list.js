@@ -2,8 +2,8 @@
     "use strict";
 
     softwrench.controller("CrudListController", ["$log", '$scope', 'crudContextService', 'offlineSchemaService', '$ionicScrollDelegate', '$timeout', '$ionicPopover', 'eventService', "routeConstants",
-        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate", "laborService", 
-        function ($log, $scope, crudContextService, offlineSchemaService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate, laborService) {
+        "synchronizationFacade", "routeService", "crudContextHolderService", "itemActionService", "loadingService", "$ionicSideMenuDelegate", "laborService", "crudSearchService", 
+        function ($log, $scope, crudContextService, offlineSchemaService, $ionicScrollDelegate, $timeout, $ionicPopover, eventService, routeConstants, synchronizationFacade, routeService, crudContextHolderService, itemActionService, loadingService, $ionicSideMenuDelegate, laborService, crudSearchService) {
 
             $scope.crudlist = {
                 items: [],
@@ -120,7 +120,7 @@
             $scope.disableSearch = function (clear) {
                 $scope._searching = false;
                 if (clear) {
-                    crudContextHolderService.clearGridSearchValues();
+                    crudSearchService.clearGridSearchValues();
                     crudContextService.refreshGrid();
                 }
                 $ionicScrollDelegate.scrollTop();

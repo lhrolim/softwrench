@@ -5,11 +5,11 @@
     mobileServices.factory('crudContextService', [
     "$q", "$log", "$rootScope", "$ionicHistory", "swdbDAO", "searchIndexService", "problemService",
     "metadataModelService", "offlineSchemaService", "offlineCompositionService", "expressionService",
-    "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService",
+    "offlineSaveService", "schemaService", "contextService", "routeService", "tabsService", "crudSearchService", 
     "crudFilterContextService", "validationService", "crudContextHolderService", "datamapSanitizationService", "maximoDataService", "menuModelService", "loadingService", "offlineAttachmentService", "offlineEntities", "queryListBuilderService", "swAlertPopup", "eventService",
     function ($q, $log, $rootScope, $ionicHistory, dao, searchIndexService, problemService,
     metadataModelService, offlineSchemaService, offlineCompositionService, expressionService,
-    offlineSaveService, schemaService, contextService, routeService, tabsService,
+    offlineSaveService, schemaService, contextService, routeService, tabsService, crudSearchService, 
     crudFilterContextService, validationService, crudContextHolderService, datamapSanitizationService, maximoDataService, menuModelService, loadingService, offlineAttachmentService, entities, queryListBuilderService, swAlertPopup, eventService) {
 
         let service = {};
@@ -436,6 +436,8 @@
 
 
             loadMorePromise: function () {
+                crudSearchService.initGridSearch();
+
                 var crudContext = crudContextHolderService.getCrudContext();
                 const gridSearch = crudContextHolderService.getGridSearchData();
                 const quickSearch = crudContextHolderService.getQuickSearch();

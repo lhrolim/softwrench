@@ -10,6 +10,7 @@
     <template path="@workflow.xml"/>
     <template path="@relatedrecords.xml"/>
     <template path="@materials.xml"/>
+    <template path="@inventory.xml"/>
     <template path="@item.xml"/>
     <template path="@worklogs.xml"/>
     <template path="@attachments.xml"/>
@@ -1641,6 +1642,42 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="inventory" title="Inventory" entity="inventory">
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum,category,location,storeloc,category"/>
+        <property key="list.offline.create.disabled" value="true"/>
+      </properties>
+
+      <schemas>
+        <schema id="list" stereotype="list" platform="mobile">
+          <filters>
+            <optionfilter attribute="category">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Stocked" value="STK" preselected="true"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Non-stocked" value="NS"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Special Purchase" value="SP"/>
+            </optionfilter>
+          </filters>
+          
+          <field attribute="inventoryid" hidden="true"/>
+          <field attribute="itemnum" label="Item" qualifier="title"/>
+          <field attribute="item_.description" label="Description" qualifier="subtitle"/>
+          <field attribute="location" label="Storeroom" qualifier="excerpt"/>
+          <field attribute="status" label="Status"  qualifier="icon"/>
+          <field attribute="category" label="Category"  qualifier="featured"/>
+        </schema>
+        
+        <schema id="detail" stereotype="detail" platform="mobile">
+          <field attribute="inventoryid" hidden="true"/>
+          <field attribute="itemnum" label="Item" readonly="true"/>
+          <field attribute="item_.description" label="Description" readonly="true"/>
+          <field attribute="location" label="Storeroom" readonly="true"/>
+          <field attribute="status" label="Status" readonly="true"/>
+          <field attribute="category" label="Category" readonly="true"/>
+        </schema>
+      </schemas>
+    </application>
+
 
     <!-- #region: Mobile offline association data -->
 

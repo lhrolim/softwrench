@@ -10,6 +10,10 @@
     <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=WO - Created"/>
   </container>
 
+  <container id="iventory" icon="fa-cube" title="Inventory">
+    <application id="INV" title="Items" ref="inventory" schema="list" icon="fa-cube"/>
+  </container>
+
   <container id="user-section">
     <service id="userprofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>
   </container>
