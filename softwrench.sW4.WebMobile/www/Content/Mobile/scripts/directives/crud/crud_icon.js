@@ -4,7 +4,7 @@
     angular.module("softwrench").directive("crudIcon", [function () {
         const directive = {
             restrict: "E",
-            templateUrl: "Content/Mobile/templates/directives/crud/crud_icon.html",
+            templateUrl: getResourcePath("Content/Mobile/templates/directives/crud/crud_icon.html"),
             transclude: false,
             replace: false,
             scope: {

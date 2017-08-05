@@ -4,7 +4,7 @@
     angular.module("softwrench").directive("singleFileInput", [function () {
         const directive = {
             restrict: "E",
-            templateUrl: "Content/Mobile/templates/directives/singlefileinput.html",
+            templateUrl: getResourcePath("Content/Mobile/templates/directives/singlefileinput.html"),
             replace: false,
             scope: {
                 datamap: "=",

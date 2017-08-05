@@ -54,6 +54,13 @@
             })
             .catch(e => console.error("Failed to drop database", e));
     }
+
+    window.getResourcePath = function (path) {
+        if (!window.lastreleasebuildtime) {
+            return path;
+        }
+        return path + "?" + window.lastreleasebuildtime;
+    }
 })(jQuery, angular, _);
 
 

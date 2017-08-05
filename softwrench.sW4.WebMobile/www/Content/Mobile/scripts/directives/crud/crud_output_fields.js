@@ -10,7 +10,7 @@ softwrench.directive('crudOutputFields', ["$log", "fieldService", "crudContextSe
         replace: false,
         transclude: true,
 
-        templateUrl: 'Content/Mobile/templates/directives/crud/crud_output_fields.html',
+        templateUrl: getResourcePath('Content/Mobile/templates/directives/crud/crud_output_fields.html'),
         scope: {
             displayables: '=',
             datamap:'='

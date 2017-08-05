@@ -131,7 +131,7 @@
                     .finally(() => $scope.modal.remove());
             };
             return $ionicModal
-                .fromTemplateUrl(config.logs.modalTemplateUrl, {
+                .fromTemplateUrl(getResourcePath(config.logs.modalTemplateUrl), {
                     scope: $scope,
                     animation: "slide-in-up",
                     hardwareBackButtonClose: true

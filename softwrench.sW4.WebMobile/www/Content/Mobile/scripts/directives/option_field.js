@@ -13,7 +13,7 @@
                     restrict: 'E',
 
                     /* Our template */
-                    templateUrl: 'Content/Mobile/templates/directives/option_field.html',
+                    templateUrl: getResourcePath('Content/Mobile/templates/directives/option_field.html'),
 
                     /* Attributes to set */
                     scope: {
@@ -107,7 +107,7 @@
                          * 
                          */
                         $ionicModal.fromTemplateUrl(
-                            'Content/Mobile/templates/directives/option_field_item.html',
+                            getResourcePath('Content/Mobile/templates/directives/option_field_item.html'),
                               { 'scope': scope }
                         ).then(function (modal) {
                             scope.modal = modal;

@@ -4,7 +4,7 @@
     angular.module("softwrench").directive("richTextField", [function () {
         const directive = {
             restrict: "E",
-            templateUrl: "Content/Mobile/templates/directives/richtextfield.html",
+            templateUrl: getResourcePath("Content/Mobile/templates/directives/richtextfield.html"),
             replace: false,
             scope: {
                 value: "=",

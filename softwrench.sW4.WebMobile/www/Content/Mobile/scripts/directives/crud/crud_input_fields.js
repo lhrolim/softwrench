@@ -49,7 +49,7 @@
         return {
             restrict: 'E',
             replace: false,
-            templateUrl: 'Content/Mobile/templates/directives/crud/crud_input_fields.html',
+            templateUrl: getResourcePath('Content/Mobile/templates/directives/crud/crud_input_fields.html'),
             scope: {
                 schema: '=',
                 datamap: '=',

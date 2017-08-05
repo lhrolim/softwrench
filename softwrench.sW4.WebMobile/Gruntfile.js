@@ -1,6 +1,8 @@
 /// <binding ProjectOpened='watch:sass, watch:scripts, default' />
 module.exports = function (grunt) {
 
+    const buildtime = new Date().getTime();
+
     // Project configuration.
 
     //#region Scripts
@@ -80,7 +82,8 @@ module.exports = function (grunt) {
     var appBootstrapScripts = [
         "www/scripts/platformOverrides.js",
         "www/Content/Mobile/scripts/mobile_bootstrap.js",
-        "www/Content/Mobile/scripts/utils/mobileconstants.js"
+        "www/Content/Mobile/scripts/utils/mobileconstants.js",
+        "www/Content/Mobile/scripts/utils/mobilelareleasebuiltime.js"
     ];
 
 
@@ -392,7 +395,7 @@ module.exports = function (grunt) {
             // app's js
             buildReleaseScripts: {
                 options: {
-                    scriptTemplate: "<script type=\"text/javascript\" src=\"{{ path }}\"></script>",
+                    scriptTemplate: `<script type="text/javascript" src="{{ path }}?${buildtime}"></script>`,
                     openTag: "<!-- start auto template script tags, grunt will generate it for dev environment, do not remove this -->",
                     closeTag: "<!-- end auto template script tags -->"
                 },
@@ -404,7 +407,7 @@ module.exports = function (grunt) {
             // vendors's js
             buildReleaseVendorScripts: {
                 options: {
-                    scriptTemplate: "<script type=\"text/javascript\" src=\"{{ path }}\"></script>",
+                    scriptTemplate: `<script type="text/javascript" src="{{ path }}?${buildtime}"></script>`,
                     openTag: "<!-- start auto template VENDOR script tags, grunt will generate it for dev environment, do not remove this -->",
                     closeTag: "<!-- end auto template VENDOR script tags -->"
                 },
@@ -416,7 +419,7 @@ module.exports = function (grunt) {
             // app's css
             buildReleaseLinks: {
                 options: {
-                    linkTemplate: "<link rel=\"stylesheet\" type=\"text/css\" href=\"{{ path }}\" />",
+                    linkTemplate: `<link rel="stylesheet" type="text/css" href="{{ path }}?${buildtime}" />`,
                     openTag: "<!-- start auto template style tags, grunt will generate it for dev environment, do not remove this -->",
                     closeTag: "<!-- end auto template style tags -->"
                 },
@@ -428,7 +431,7 @@ module.exports = function (grunt) {
             // vendors's css
             buildReleaseVendorLinks: {
                 options: {
-                    linkTemplate: "<link rel=\"stylesheet\" type=\"text/css\" href=\"{{ path }}\" />",
+                    linkTemplate: `<link rel="stylesheet" type="text/css" href="{{ path }}?${buildtime}" />`,
                     openTag: "<!-- start auto template VENDOR style tags, grunt will generate it for dev environment, do not remove this -->",
                     closeTag: "<!-- end auto template VENDOR style tags -->"
                 },
@@ -438,6 +441,17 @@ module.exports = function (grunt) {
                 dest: "www/layout.html"
             }
             /* END RELEASE */
+        },
+        //#endregion
+
+        //#region creates the file iwth the release build time
+        'file-creator': {
+            "basic": {
+                "www/Content/Mobile/scripts/utils/mobilelareleasebuiltime.js": function (fs, fd, done) {
+                    fs.writeSync(fd, `window.lastreleasebuildtime = "${buildtime}";`);
+                    done();
+                }
+            }
         },
         //#endregion
 
@@ -678,6 +692,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-contrib-watch");
     grunt.loadNpmTasks("grunt-bowercopy");
+    grunt.loadNpmTasks("grunt-file-creator");
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-script-link-tags");
     grunt.loadNpmTasks("grunt-contrib-copy");
@@ -703,6 +718,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask("preparerelease", "prepares the project for release build", [
         "cleanall", // cleans destination folders
+        "file-creator", // creates the file with release build time
         "copy:customerTemplates", // copies customer templates inside the app from the symlinks
         "xmlpoke:bundleid", // update bundleid according to the platform
         "bowercopy:prod", "bowercopy:css", "bowercopy:fontsrelease", // copy bower dependencies to appropriate project folders

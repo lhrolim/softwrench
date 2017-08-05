@@ -213,20 +213,20 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             $stateProvider
                 .state('login', {
                     url: '/login',
-                    templateUrl: 'Content/Mobile/templates/login.html',
+                    templateUrl: getResourcePath('Content/Mobile/templates/login.html'),
                     controller: 'LoginController',
                     params: { message: null }
                 })
                 .state('settings', {
                     url: '/settings',
-                    templateUrl: 'Content/Mobile/templates/settings_nomenu.html',
+                    templateUrl: getResourcePath('Content/Mobile/templates/settings_nomenu.html'),
                     controller: 'SettingsController'
                 })
 
                 // setup an abstract state for the tabs directive
                 .state('main', {
                     url: "/main",
-                    templateUrl: "Content/Mobile/templates/main.html",
+                    templateUrl: getResourcePath("Content/Mobile/templates/main.html"),
                     //abstract: true,
                     controller: 'MainController'
                 })
@@ -235,7 +235,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     cache: false,
                     views: {
                         'main': {
-                            templateUrl: 'Content/Mobile/templates/syncoperation_detail.html',
+                            templateUrl: getResourcePath('Content/Mobile/templates/syncoperation_detail.html'),
                             controller: 'SyncOperationDetailController'
                         }
                     }
@@ -244,7 +244,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: '/syncoperationhistory',
                     views: {
                         'main': {
-                            templateUrl: 'Content/Mobile/templates/syncoperation_list.html',
+                            templateUrl: getResourcePath('Content/Mobile/templates/syncoperation_list.html'),
                             controller: 'SyncOperationHistoryController'
                         }
                     }
@@ -253,7 +253,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: '/syncoperationdetail/{id}',
                     views: {
                         'main': {
-                            templateUrl: 'Content/Mobile/templates/syncoperation_detail.html',
+                            templateUrl: getResourcePath('Content/Mobile/templates/syncoperation_detail.html'),
                             controller: 'SyncOperationDetailController'
                         }
                     }
@@ -262,7 +262,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: '/settings',
                     views: {
                         'main': {
-                            templateUrl: 'Content/Mobile/templates/settings.html',
+                            templateUrl: getResourcePath('Content/Mobile/templates/settings.html'),
                             controller: 'SettingsController'
                         }
                     }
@@ -272,26 +272,26 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/support",
                     views: {
                         'main': {
-                            templateUrl: "Content/Mobile/templates/support.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/support.html"),
                             controller: "SupportController"
                         }
                     }
                 })
-               .state('main.crudlist', {
-                   url: "/crudlist",
-                   cache: false,
-                   views: {
-                       'main': {
-                           templateUrl: "Content/Mobile/templates/crudlist.html",
-                           controller: 'CrudListController'
-                       }
-                   }
-               })
+                .state('main.crudlist', {
+                    url: "/crudlist",
+                    cache: false,
+                    views: {
+                        'main': {
+                            templateUrl: getResourcePath("Content/Mobile/templates/crudlist.html"),
+                            controller: 'CrudListController'
+                        }
+                    }
+                })
                 .state('main.crudlist.search', {
                     url: "/crudlistsearch",
                     views: {
                         'main@main': {
-                            templateUrl: "Content/Mobile/templates/crudlistsearch.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/crudlistsearch.html"),
                             controller: 'CrudListSearchController'
                         }
                     }
@@ -300,7 +300,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/cruddetail",
                     views: {
                         'main': {
-                            templateUrl: "Content/Mobile/templates/crud_detail.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/crud_detail.html"),
                             controller: 'CrudDetailController'
                         }
 
@@ -310,7 +310,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/crudinput",
                     views: {
                         'body': {
-                            templateUrl: "Content/Mobile/templates/crud_input.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/crud_input.html"),
                             controller: 'CrudInputController'
                         }
                     }
@@ -320,7 +320,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     cache: false,
                     views: {
                         'body': {
-                            templateUrl: "Content/Mobile/templates/crud_composition_list.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/crud_composition_list.html"),
                             controller: 'CrudCompositionListController'
                         }
                     }
@@ -329,7 +329,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/crudcompositionoutputdetail",
                     views: {
                         'body': {
-                            templateUrl: "Content/Mobile/templates/crud_composition_detail.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/crud_composition_detail.html"),
                             controller: 'CrudCompositionDetailController'
                         }
                     }
@@ -338,7 +338,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/tab",
                     views: {
                         'body': {
-                            templateUrl: "Content/Mobile/templates/crud_tab.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/crud_tab.html"),
                             controller: "CrudTabController"
                         }
                     }
@@ -348,7 +348,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     cache: false,
                     views: {
                         'body': {
-                            templateUrl: "Content/Customers/firstsolar_offline/templates/fslocationdrilldown.html",
+                            templateUrl: getResourcePath("Content/Customers/firstsolar_offline/templates/fslocationdrilldown.html"),
                             controller: 'FsLocationDrillDownController'
                         }
                     }
@@ -362,7 +362,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/application",
                     views: {
                         'main@main': {
-                            templateUrl: "Content/Mobile/templates/audit/audit.application.select.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/audit/audit.application.select.html"),
                             controller: "AuditApplicationSelectController"
                         }
                     }
@@ -371,7 +371,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/list/{application}",
                     views: {
                         'main@main': {
-                            templateUrl: "Content/Mobile/templates/audit/audit.entry.list.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/audit/audit.entry.list.html"),
                             controller: "AuditEntryListController"
                         }
                     }
@@ -380,7 +380,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
                     url: "/entry/{id}",
                     views: {
                         'main@main': {
-                            templateUrl: "Content/Mobile/templates/audit/audit.entry.detail.html",
+                            templateUrl: getResourcePath("Content/Mobile/templates/audit/audit.entry.detail.html"),
                             controller: "AuditEntryDetailController"
                         }
                     }

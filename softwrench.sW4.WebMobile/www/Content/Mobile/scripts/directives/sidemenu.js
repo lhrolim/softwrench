@@ -4,7 +4,7 @@
     angular.module("softwrench").directive("sideMenu", [ function () {
         const directive = {
             restrict: "E",
-            templateUrl: "Content/Mobile/templates/directives/sidemenu.html",
+            templateUrl: getResourcePath("Content/Mobile/templates/directives/sidemenu.html"),
             scope: {},
 
             controller: [

@@ -18,7 +18,7 @@
                 $timeout(() => $rootScope.areChangeEventsEnabled = true, 0, false);
             }
 
-            $ionicPopover.fromTemplateUrl("Content/Mobile/templates/griditemoptionsmenu.html", { scope: $scope }).then(popover => $scope.optionspopover = popover);
+            $ionicPopover.fromTemplateUrl(getResourcePath("Content/Mobile/templates/griditemoptionsmenu.html"), { scope: $scope }).then(popover => $scope.optionspopover = popover);
 
             function init() {
                 log.get("crud_detail#init").debug("crud detail init");
@@ -41,7 +41,7 @@
 
             }
 
-            $ionicPopover.fromTemplateUrl("Content/Mobile/templates/compositionmenu.html", { scope: $scope })
+            $ionicPopover.fromTemplateUrl(getResourcePath("Content/Mobile/templates/compositionmenu.html"), { scope: $scope })
                 .then(popover => $scope.compositionpopover = popover);
 
 

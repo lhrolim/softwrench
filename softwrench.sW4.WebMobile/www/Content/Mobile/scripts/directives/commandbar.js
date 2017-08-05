@@ -4,7 +4,7 @@
     angular.module("softwrench").directive("commandBar", ["commandBarDelegate", function (commandBarDelegate) {
         const directive = {
             restrict: "E",
-            templateUrl: "Content/Mobile/templates/directives/commandbar.html",
+            templateUrl: getResourcePath("Content/Mobile/templates/directives/commandbar.html"),
             replace: false,
             scope: {
                 position: "@",

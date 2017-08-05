@@ -41,7 +41,7 @@
                 initializeList();
                 $scope._searching = false;
                 //
-                //                $ionicPopover.fromTemplateUrl("Content/Mobile/templates/filteroptionsmenu.html", {
+                //                $ionicPopover.fromTemplateUrl(getResourcePath("Content/Mobile/templates/filteroptionsmenu.html"), {
                 //                    scope: $scope,
                 //                }).then(popover => 
                 //                    $scope.filteroptionspopover = popover
@@ -62,7 +62,7 @@
                 }
             }
 
-            $ionicPopover.fromTemplateUrl("Content/Mobile/templates/griditemoptionsmenu.html", { scope: $scope }).then(popover => $scope.optionspopover = popover);
+            $ionicPopover.fromTemplateUrl(getResourcePath("Content/Mobile/templates/griditemoptionsmenu.html"), { scope: $scope }).then(popover => $scope.optionspopover = popover);
 
             init();
 

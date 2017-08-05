@@ -5,7 +5,7 @@
 
         var directive = {
             restrict: "E",
-            templateUrl: "Content/Mobile/templates/directives/messagesection.html",
+            templateUrl: getResourcePath("Content/Mobile/templates/directives/messagesection.html"),
             scope: {
 
             },
