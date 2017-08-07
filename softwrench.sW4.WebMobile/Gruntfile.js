@@ -175,7 +175,7 @@ module.exports = function (grunt) {
 
     //#endregion
 
-    grunt.initConfig({
+    var config = {
         pkg: grunt.file.readJSON("package.json"),
 
         app: {
@@ -461,9 +461,11 @@ module.exports = function (grunt) {
             appScripts: {
                 options: {
                     separator: ";\n",
+                    sourceMap: true
                 },
                 src: solutionScripts,
                 dest: "tmp/concat/app.js"
+
             },
             vendorScripts: {
                 options: {
@@ -490,10 +492,10 @@ module.exports = function (grunt) {
         //#region babel
         babel: {
             options: {
-                sourceMap: false,
+                sourceMap: true,
                 presets: ["latest"],
                 plugins: ["syntax-async-functions", "transform-regenerator"]
-//                inputSourceMap: grunt.file.readJSON('app.js.map')
+                //                inputSourceMap: grunt.file.readJSON('app.js.map')
             },
             release: { // transpiles result of concat
                 files: {
@@ -566,12 +568,31 @@ module.exports = function (grunt) {
                 mangle: {
                     except: ["jQuery", "angular", "persistence", "constants", "ionic", "_", "LZString"]
                 }
+
+                
+
             },
             release: {
+
+                options: {
+                    sourceMap: true,
+                    "sourceMap.includeSources": true,
+                    sourceMapIn: 'tmp/es6/app.es6.js.map'
+                },
+
                 // uglify the result of es6 transpile
-                files: {
-                    "www/Content/public/app.min.js": "tmp/es6/app.es6.js"
-                }
+//                files: {
+//                    "www/Content/public/app.min.js": "<%= app.tmp %>/tmp/es6/app.es6.js"
+//                }
+
+
+                files: [
+                    {
+                        src: ["tmp/es6/app.es6.js"],
+                        dest: "www/Content/public/app.min.js"
+                    }
+                ]
+
             }
         },
         //#endregion
@@ -683,7 +704,9 @@ module.exports = function (grunt) {
         }
         //#endregion
 
-    });
+    }
+
+    grunt.initConfig(config);
 
     //#region grunt plugins
     grunt.loadNpmTasks("grunt-babel");
@@ -700,6 +723,15 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("grunt-contrib-rename");
     grunt.loadNpmTasks("grunt-karma");
     grunt.loadNpmTasks("grunt-xmlpoke");
+
+    grunt.task.registerTask("configureBabel", "configures babel options", function () {
+        const file = grunt.file.readJSON("tmp/concat/app.js");
+        if (file == null) {
+            throw new Error("fail");
+        }
+        config.babel.options.inputSourceMap = grunt.file.readJSON("tmp/concat/app.js.map");
+    });
+
     //#endregion
 
     //#region dev tasks

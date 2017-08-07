@@ -16,8 +16,7 @@ module.exports = function (grunt) {
         return arr[arr.length - 1];
     }
 
-    grunt.initConfig({
-
+    const config = {
 
 
         //#region global app config
@@ -40,7 +39,8 @@ module.exports = function (grunt) {
         babel: {
             options: {
                 "presets": resolvedPresets,
-                "plugins": [node_modulesPath + "\\babel-plugin-angularjs-annotate"]
+                "plugins": [node_modulesPath + "\\babel-plugin-angularjs-annotate"],
+                sourceMap: true
             },
             dirname: { node_modulesPath },
             dist: {
@@ -117,7 +117,8 @@ module.exports = function (grunt) {
                     "ui-grid.css": "angular-ui-grid/ui-grid.min.css",
                     "ui-grid.ttf": "angular-ui-grid/ui-grid.ttf",
                     "ui-grid.woff": "angular-ui-grid/ui-grid.woff",
-                    "bootstrap-datetimepicker.css": "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
+                    "bootstrap-datetimepicker.css":
+                        "eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css",
                     "selectize.css": "selectize/dist/css/selectize.bootstrap3.css",
                     // font-awesome
                     "font-awesome.css": "font-awesome/css/font-awesome.min.css",
@@ -199,49 +200,55 @@ module.exports = function (grunt) {
                 separator: ";\n"
             },
             app: {
-                files: [{
-                    src: [
-                        // customized angular vendor modules
-                        "<%= app.customVendor %>/scripts/angular/**/*.js",
-                        // modules
-                        "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
-                        "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
-                        // webcommons
-                        "<%= app.webcommons %>/scripts/**/*!(sharedservices_module).js",
-                        // app
-                        "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
-                        "<%= app.content %>/Scripts/client/services/**/*.js",
-                        "<%= app.content %>/Scripts/client/*.js",
-                        "<%= app.content %>/Scripts/client/constants/*.js",
-                        "<%= app.content %>/Scripts/client/controllers/*.js",
-                        "<%= app.content %>/Scripts/client/adminresources/*.js",
-                        "<%= app.content %>/Scripts/client/components/*.js",
-                        "<%= app.content %>/Scripts/client/util/*.js",
-                        "<%= app.content %>/Scripts/client/directives/**/*.js",
-                        "<%= app.content %>/Templates/commands/**/*.js",
-                        "<%= app.content %>/modules/**/*.js",
-                        // Shared
-                        "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
-                        // base otb
-                        "<%= app.content %>/Scripts/customers/otb/*.js",
-                        // customers shared
-                        "<%= app.content %>/Scripts/customers/shared/*.js",
-                        // customers: outer build process guarantees there's only the selected customer in the path
-                        "<%= app.customers %>/**/scripts/**/*.js"
-                    ],//.concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]), // scpecific customer
+                files: [
+                    {
+                        src: [
+                            // customized angular vendor modules
+                            "<%= app.customVendor %>/scripts/angular/**/*.js",
+                            // modules
+                            "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
+                            "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
+                            // webcommons
+                            "<%= app.webcommons %>/scripts/**/*!(sharedservices_module).js",
+                            // app
+                            "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
+                            "<%= app.content %>/Scripts/client/services/**/*.js",
+                            "<%= app.content %>/Scripts/client/*.js",
+                            "<%= app.content %>/Scripts/client/constants/*.js",
+                            "<%= app.content %>/Scripts/client/controllers/*.js",
+                            "<%= app.content %>/Scripts/client/adminresources/*.js",
+                            "<%= app.content %>/Scripts/client/components/*.js",
+                            "<%= app.content %>/Scripts/client/util/*.js",
+                            "<%= app.content %>/Scripts/client/directives/**/*.js",
+                            "<%= app.content %>/Templates/commands/**/*.js",
+                            "<%= app.content %>/modules/**/*.js",
+                            // Shared
+                            "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
+                            // base otb
+                            "<%= app.content %>/Scripts/customers/otb/*.js",
+                            // customers shared
+                            "<%= app.content %>/Scripts/customers/shared/*.js",
+                            // customers: outer build process guarantees there's only the selected customer in the path
+                            "<%= app.customers %>/**/scripts/**/*.js"
+                        ], //.concat(!customer ? [] : ["<%= app.customers %>/" + customer + "/scripts/**/*.js"]), // scpecific customer
 
-                    dest: "<%= app.tmp %>/scripts/app.annotated.js"
-                }]
+                        dest: "<%= app.tmp %>/scripts/app.annotated.js"
+                    }
+                ]
             }
         },
         //#endregion
 
         //#region concat
         concat: {
+
+            //            options: {
+            //                sourceMap: true
+            //            },
             vendorStyles: {
                 src: [
                     "<%= app.tmp %>/css/vendor.min.css",
-//                    "<%= bowercopy.css.options.destPrefix %>/*.css",
+                    //                    "<%= bowercopy.css.options.destPrefix %>/*.css",
                     // TODO: have customVendor be a part of the app's css instead of the vendor's css
                     "<%= app.tmp %>/css/customVendor.min.css",
                     "<%= app.tmp %>/css/app.min.css",
@@ -254,7 +261,7 @@ module.exports = function (grunt) {
                     separator: ";\n",
                 },
                 src: [
-                     // utils
+                    // utils
                     "<%= bowercopy.scripts.options.destPrefix %>/moment.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/moment-tz.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/spin.js",
@@ -273,8 +280,8 @@ module.exports = function (grunt) {
                     "<%= bowercopy.scripts.options.destPrefix %>/dx.chartjs.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/dx.vectormap.usa.js",
                     // angular
-//                    "angular.js": "angular/angular.js",
-//                    "<%= app.content %>/scripts/angular.inst.js",
+                    //                    "angular.js": "angular/angular.js",
+                    //                    "<%= app.content %>/scripts/angular.inst.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-sanitize.js",
                     "<%= bowercopy.scripts.options.destPrefix %>/angular-strap.js",
@@ -319,7 +326,7 @@ module.exports = function (grunt) {
                 options: {
                     separator: ";\n"
                 },
-                src: [ // just now minified custom vendors + already minified custom vendors 
+                src: [// just now minified custom vendors + already minified custom vendors 
                     "<%= app.tmp %>/scripts/customvendor.partial.min.js",
                     "<%= app.customVendor %>/scripts/minified/**/*.js"
                 ],
@@ -328,36 +335,37 @@ module.exports = function (grunt) {
 
             appScripts: {
                 options: {
-                    separator: ";\n"
+                    separator: ";\n",
+                    sourceMap: true
                 },
                 src: [
-                        // customized angular vendor modules
-                        "<%= app.customVendor %>/scripts/angular/**/*.js",
-                        // modules
-                        "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
-                        "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
-                        // webcommons
-                        "<%= app.webcommons %>/scripts/**/*!(sharedservices_module).js",
-                        // app
-                        "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
-                        "<%= app.content %>/Scripts/client/services/**/*.js",
-                        "<%= app.content %>/Scripts/client/*.js",
-                        "<%= app.content %>/Scripts/client/constants/*.js",
-                        "<%= app.content %>/Scripts/client/controllers/*.js",
-                        "<%= app.content %>/Scripts/client/adminresources/*.js",
-                        "<%= app.content %>/Scripts/client/components/*.js",
-                        "<%= app.content %>/Scripts/client/util/*.js",
-                        "<%= app.content %>/Scripts/client/directives/**/*.js",
-                        "<%= app.content %>/Templates/commands/**/*.js",
-                        "<%= app.content %>/modules/**/*.js",
-                        // Shared
-                        "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
-                        // base otb
-                        "<%= app.content %>/Scripts/customers/otb/*.js",
-                        // customers shared
-                        "<%= app.content %>/Scripts/customers/shared/*.js",
-                        // customers: outer build process guarantees there's only the selected customer in the path
-                        "<%= app.customers %>/**/scripts/**/*.js",
+                    // customized angular vendor modules
+                    "<%= app.customVendor %>/scripts/angular/**/*.js",
+                    // modules
+                    "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
+                    "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
+                    // webcommons
+                    "<%= app.webcommons %>/scripts/**/*!(sharedservices_module).js",
+                    // app
+                    "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
+                    "<%= app.content %>/Scripts/client/services/**/*.js",
+                    "<%= app.content %>/Scripts/client/*.js",
+                    "<%= app.content %>/Scripts/client/constants/*.js",
+                    "<%= app.content %>/Scripts/client/controllers/*.js",
+                    "<%= app.content %>/Scripts/client/adminresources/*.js",
+                    "<%= app.content %>/Scripts/client/components/*.js",
+                    "<%= app.content %>/Scripts/client/util/*.js",
+                    "<%= app.content %>/Scripts/client/directives/**/*.js",
+                    "<%= app.content %>/Templates/commands/**/*.js",
+                    "<%= app.content %>/modules/**/*.js",
+                    // Shared
+                    "<%= app.content %>/Shared/{**/*.js, !(webcommons)/**/*.js}",
+                    // base otb
+                    "<%= app.content %>/Scripts/customers/otb/*.js",
+                    // customers shared
+                    "<%= app.content %>/Scripts/customers/shared/*.js",
+                    // customers: outer build process guarantees there's only the selected customer in the path
+                    "<%= app.customers %>/**/scripts/**/*.js",
                 ],
 
                 dest: "<%= app.tmp %>/scripts/app.concat.js"
@@ -368,12 +376,17 @@ module.exports = function (grunt) {
         //#region minify css
         cssmin: {
             app: {
-                files: [{
-                    src: ["<%= app.defaultstyles %>/*.css", "<%= app.defaultstyles %>/application/*.css", "<%= app.defaultstyles %>/media/*.css",
-                        "<%= app.defaultstyles %>/vendor/*.css", "<%= app.shared %>/**/styles/*.css"],
-                    dest: "<%= app.tmp %>/css/app.min.css",
-                    ext: ".min.css"
-                }],
+                files: [
+                    {
+                        src: [
+                            "<%= app.defaultstyles %>/*.css", "<%= app.defaultstyles %>/application/*.css",
+                            "<%= app.defaultstyles %>/media/*.css",
+                            "<%= app.defaultstyles %>/vendor/*.css", "<%= app.shared %>/**/styles/*.css"
+                        ],
+                        dest: "<%= app.tmp %>/css/app.min.css",
+                        ext: ".min.css"
+                    }
+                ],
                 options: {
                     level: {
                         1: {
@@ -385,11 +398,13 @@ module.exports = function (grunt) {
             },
 
             customVendor: {
-                files: [{
-                    src: ["<%= app.customVendor %>/css/*.css"],
-                    dest: "<%= app.tmp %>/css/customVendor.min.css",
-                    ext: ".min.css"
-                }],
+                files: [
+                    {
+                        src: ["<%= app.customVendor %>/css/*.css"],
+                        dest: "<%= app.tmp %>/css/customVendor.min.css",
+                        ext: ".min.css"
+                    }
+                ],
                 options: {
                     level: {
                         1: {
@@ -401,11 +416,13 @@ module.exports = function (grunt) {
             },
 
             vendor: {
-                files: [{
-                    src: ["<%= bowercopy.css.options.destPrefix %>/*.css"],
-                    dest: "<%= app.tmp %>/css/vendor.min.css",
-                    ext: ".min.css"
-                }],
+                files: [
+                    {
+                        src: ["<%= bowercopy.css.options.destPrefix %>/*.css"],
+                        dest: "<%= app.tmp %>/css/vendor.min.css",
+                        ext: ".min.css"
+                    }
+                ],
                 options: {
                     level: {
                         1: {
@@ -422,21 +439,26 @@ module.exports = function (grunt) {
 
         ngtemplates: {
             app: {
-                src: ['<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'],
+                src: [
+                    '<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html',
+                    '<%= app.content %>/Controller/*.html'
+                ],
                 dest: '<%= app.dist %>/scripts/htmltemplates.js',
                 options: {
                     module: "sw_layout",
-                    url: function (url) {
+                    url: function(url) {
                         var idx = url.indexOf("/Content");
                         url = url.replace("/templates", "/Templates")
                         return url.substring(idx);
                     },
-                    templateWrap: function (path, template, index, files) {
+                    templateWrap: function(path, template, index, files) {
                         var fullPath = `contextService.getResourceUrl('${path}')`;
                         return `$templateCache.put(${fullPath},${template})`;
                     },
-                    bootstrap: function (module, script) {
-                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" + script + "\n}]);\n";
+                    bootstrap: function(module, script) {
+                        return "angular.module('sw_layout').run(['$templateCache','contextService', function($templateCache,contextService) {\n" +
+                            script +
+                            "\n}]);\n";
                     }
                 }
             }
@@ -447,7 +469,13 @@ module.exports = function (grunt) {
         uncss: {
             dist: {
                 files: [
-                    { src: ['<%= app.content %>/templates/**/*.html', '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'], dest: 'dist/css/compiled.min.css' }
+                    {
+                        src: [
+                            '<%= app.content %>/templates/**/*.html',
+                            '<%= app.content %>/Shared/**/templates/**/*.html', '<%= app.content %>/Controller/*.html'
+                        ],
+                        dest: 'dist/css/compiled.min.css'
+                    }
                 ]
             },
             options: {
@@ -463,34 +491,47 @@ module.exports = function (grunt) {
                         "jQuery", "angular", "tableau", "LZString", "moment", "Moment", "Modernizr",
                         "app", "modules", "tinyMCE", "tinymce", "Prism"
                     ]
-                }
+                },
+                
             },
             rawVendors: {
-                files: [{
-                    src: [
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/moment-locale-de.js",
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/moment-locale-es.js",
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-style.js",
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-download.js",
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-upload.js",
-                        "<%= bowercopy.scripts.options.destPrefix %>/raw/pdf.combined.js"
-                    ],
-                    dest: "<%= app.tmp %>/scripts/rawVendor.min.js"
-                }]
+                files: [
+                    {
+                        src: [
+                            "<%= bowercopy.scripts.options.destPrefix %>/raw/moment-locale-de.js",
+                            "<%= bowercopy.scripts.options.destPrefix %>/raw/moment-locale-es.js",
+                            "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-style.js",
+                            "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-download.js",
+                            "<%= bowercopy.scripts.options.destPrefix %>/raw/jquery-file-upload.js",
+                            "<%= bowercopy.scripts.options.destPrefix %>/raw/pdf.combined.js"
+                        ],
+                        dest: "<%= app.tmp %>/scripts/rawVendor.min.js"
+                    }
+                ]
             },
 
             customVendors: {
-                files: [{
-                    src: ["<%= concat.customVendorScripts.dest %>"],
-                    dest: "<%= app.tmp %>/scripts/customvendor.partial.min.js"
-                }]
+                files: [
+                    {
+                        src: ["<%= concat.customVendorScripts.dest %>"],
+                        dest: "<%= app.tmp %>/scripts/customvendor.partial.min.js"
+                    }
+                ]
             },
 
             app: {
-                files: [{
-                    src: ["<%= app.tmp %>/scripts/app.es6.js"],
-                    dest: "<%= app.dist %>/scripts/app.js"
-                }]
+                options: {
+                    sourceMap: true,
+                    "sourceMap.includeSources": true,
+                    sourceMapIn: '<%= app.tmp %>/scripts/app.es6.js.map'
+                },
+
+                files: [
+                    {
+                        src: ["<%= app.tmp %>/scripts/app.es6.js"],
+                        dest: "<%= app.dist %>/scripts/app.js"
+                    }
+                ]
             }
         },
         //#endregion
@@ -545,7 +586,9 @@ module.exports = function (grunt) {
             target: {}
         },
         //#endregion
-    });
+    };
+
+    grunt.initConfig(config);
 
     //#region load npm tasks
     grunt.loadNpmTasks("grunt-sass");
@@ -559,6 +602,16 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-angular-templates');
     grunt.loadNpmTasks("grunt-karma");
     require("load-grunt-tasks")(grunt);
+
+
+    grunt.task.registerTask("configureBabel", "configures babel options", function () {
+        const file = grunt.file.readJSON(fullPath + "/Content/temp/scripts/app.concat.js.map");
+        if (file == null) {
+            throw new Error("fail");
+        }
+        config.babel.options.inputSourceMap = grunt.file.readJSON(fullPath + "/Content/temp/scripts/app.concat.js.map");
+    });
+
 
     //#endregion
 
@@ -581,6 +634,7 @@ module.exports = function (grunt) {
         //"ngAnnotate:app", // ng-annotates app's scripts
         "concat:appScripts", // concat app's (customized from vendor's + ng-annotated + customer's)
         "uglify:customVendors", "concat:finalCustomVendorScripts", // distributes 'scripts/customvendor.js'
+        "configureBabel",
         "babel",// uses babeljs to convert brandnew ES6 javascript into ES5 allowing for old browsers
         "uglify:app" // minify app script and distribute as 'scripts/app.js'
         // "clean:vendor", "clean:tmp" // clean temporary folders 
