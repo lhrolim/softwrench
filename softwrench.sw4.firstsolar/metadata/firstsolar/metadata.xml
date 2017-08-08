@@ -1047,6 +1047,7 @@
         <componentdisplayable id="detailhiddensoffline">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid" hidden="true" />
+          <field attribute="schedstart" hidden="true" />
           <field attribute="siteid" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="hasfollowupwork" hidden="true"/>

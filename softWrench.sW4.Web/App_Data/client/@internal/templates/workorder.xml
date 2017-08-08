@@ -265,6 +265,7 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
           <field attribute="hasfollowupwork" hidden="true"/>
+          <field attribute="schedstart" hidden="true" />
           <field attribute="origrecordid" hidden="true"/>
           <field attribute="origrecordclass" hidden="true"/>
           <field attribute="wonum" hidden="true" />
