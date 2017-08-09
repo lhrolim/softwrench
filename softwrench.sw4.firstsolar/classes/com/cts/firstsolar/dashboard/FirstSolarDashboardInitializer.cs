@@ -39,6 +39,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         [Import]
         public ISWDBHibernateDAO Dao { get; set; }
 
+        [Import]
+        public FirstSolarDashboardWcBuilder FSDashboardWcBuilder { get; set; }
+
         [Transactional(DBType.Swdb)]
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
 
@@ -103,8 +106,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
 
 
             DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashQuery", "WoMaintenananceIncoming", "dashboard:" + IncomingPanelAlias);
-            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashMixedQuery", "WoMaintenananceBuild", "dashboard:" + BuildPanelAlias);
-            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashMixedQuery", "WoMaintenananceBuild290", "dashboard:" + BuildPanelAlias290);
+            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild30PQuery(), "WoMaintenananceBuild", "dashboard:" + BuildPanelAlias);
+            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290Query(), "WoMaintenananceBuild290", "dashboard:" + BuildPanelAlias290);
             DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceCmDashQuery", "WoMaintenananceCmIncoming", "dashboard:" + IncomingPanelCmAlias);
             DashboardInitializationService.AddPanelsToDashboard(maintenanceDash, panels);
 

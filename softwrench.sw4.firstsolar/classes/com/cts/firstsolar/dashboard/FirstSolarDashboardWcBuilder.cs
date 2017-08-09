@@ -30,13 +30,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                 return MaintenanceIncomingQuery();
             }
 
-            if (FirstSolarDashboardInitializer.BuildPanelSchemaId.Equals(searchDto.Key.SchemaId)) {
-                return MaintenanceBuildQuery();
-            }
-
-            if (FirstSolarDashboardInitializer.BuildPanel290SchemaId.Equals(searchDto.Key.SchemaId)) {
-                return MaintenanceBuild290Query();
-            }
+            //            if (FirstSolarDashboardInitializer.BuildPanelSchemaId.Equals(searchDto.Key.SchemaId)) {
+            //                return MaintenanceBuildQuery();
+            //            }
+            //
+            //            if (FirstSolarDashboardInitializer.BuildPanel290SchemaId.Equals(searchDto.Key.SchemaId)) {
+            //                return MaintenanceBuild290Query();
+            //            }
 
             return "1=1";
         }
@@ -49,18 +49,35 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         }
 
         public virtual string MaintenanceDashQuery() {
-            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' ) " : "";
-            return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'PM' and workorder.outreq = 1" + siteClause;
+            return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'PM' and workorder.outreq = 1" + SiteClause();
+        }
+
+        private static string SiteClause() {
+            return (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' ) " : "";
         }
 
         public virtual string MaintenanceDashMixedQuery() {
-            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' ) " : "";
-            return "workorder.status in ('APPR','INPRG') and workorder.worktype in ('PM','WO') and workorder.outreq = 1" + siteClause;
+            return "workorder.status in ('APPR','INPRG') and workorder.worktype in ('PM','WO') and workorder.outreq = 1" + SiteClause();
+        }
+
+        public virtual string MaintenanceDashBuild30PQuery() {
+            return @"workorder.status in ('APPR','INPRG') {0} and workorder.outreq = 1
+                    and
+                    workorder.worktype = 'PM'  and workorder.reportdate >= @past(30days )
+                    ".Fmt(SiteClause());
+        }
+
+        public virtual string MaintenanceDashBuild290Query() {
+            return @"workorder.status in ('APPR','INPRG') {0} and workorder.outreq = 1
+                    and
+                    ( workorder.worktype = 'PM'  and workorder.reportdate < @past(30days))
+                        or
+                    (workorder.worktype = 'WO')
+                    ".Fmt(SiteClause());
         }
 
         public virtual string MaintenanceCmDashQuery() {
-            var siteClause = (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) ? " and workorder.siteid in ('1801','1803','1808','6801' )" : "";
-            return "workorder.status in ('APPR','INPRG') and workorder.worktype = 'wo' and workorder.outreq = 1" + siteClause;
+            return "workorder.status in ('APPR','INPRG') and workorder.worktype != 'pm' and workorder.outreq = 1" + SiteClause();
         }
 
         protected virtual string MaintenanceIncomingQuery() {
