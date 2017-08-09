@@ -36,7 +36,7 @@
             <field attribute="meetingtime" label="Meeting Time" requiredexpression="true" default="@now">
               <renderer type="datetime"/>
             </field>
-            <field attribute="sendnow" label="Send Email Now">
+            <field attribute="sendnow" label="Send Email Upon Save">
               <renderer type="checkbox" params="inputsize=3;layout=left"/>
             </field>
           </section>
