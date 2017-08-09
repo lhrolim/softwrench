@@ -9,7 +9,7 @@ namespace cts.commons.portable.Util {
 
         // added additional acceptance format 
         //TODO: modify this solution, as dd/mmy/yyyy and mm/dd/yyyy should need to be choosen based upon a locale rule (03/10/2016 could be parsed, both ways)
-        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "yyyy/MM/dd hh:mm tt", "MM/dd/yyyy hh:mm", "MM/dd/yyyy hh:mm tt", "MM/dd/yyyy hh:mm:ss", "MM/dd/yy hh:mm:ss", "MM/dd/yyyy HH:mm:ss", "MM/dd/yy HH:mm:ss", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "dd/MM/yyyy", "d/M/yyyy", "MM/dd/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d", "yyyy-MM-dd HH:mm:ss.FFF", "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFK" };
+        public static readonly string[] FormatOptions = { "yyyy/MM/dd", "yyyy/MM/dd hh:mm", "yyyy/MM/dd HH:mm", "yyyy/MM/dd hh:mm tt", "MM/dd/yyyy hh:mm", "MM/dd/yyyy hh:mm tt", "MM/dd/yyyy hh:mm:ss", "MM/dd/yy hh:mm:ss", "MM/dd/yyyy HH:mm:ss", "MM/dd/yy HH:mm:ss", "dd/MM/yyyy hh:mm", "d/M/yyyy hh:mm", "MM/dd/yyyy HH:mm", "M/d/yyyy hh:mm", "MM/dd/yyyy", "dd/MM/yyyy", "d/M/yyyy", "M/d/yyy/", "yyyy-MM-dd", "yyyy-MM-dd hh:mm", "yyyy-MM-dd HH:mm", "yyyy-M-d", "yyyy-MM-dd HH:mm:ss.FFF", "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFK" };
 
         public const string MaximoDefaultIntegrationFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFK";
 

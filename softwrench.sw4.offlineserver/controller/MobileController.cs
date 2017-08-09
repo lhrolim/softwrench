@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
+using cts.commons.web.Attributes;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -31,6 +32,7 @@ using softWrench.sW4.Metadata.Menu;
 using softWrench.sW4.Metadata.Menu.Containers;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.SPF;
 
 namespace softwrench.sw4.offlineserver.controller {
 
@@ -43,6 +45,7 @@ namespace softwrench.sw4.offlineserver.controller {
     /// 
     /// </summary>
     [Authorize]
+    [SWControllerConfiguration]
     public class MobileController : ApiController {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));

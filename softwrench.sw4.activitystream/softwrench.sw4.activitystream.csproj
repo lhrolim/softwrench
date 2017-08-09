@@ -42,9 +42,8 @@
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.6156.25815, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.6156.25815\lib\net46\cts.commons.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="cts.commons, Version=1.2.6429.37158, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.2.6429.37158\lib\net46\cts.commons.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.persistence, Version=1.3.6388.37081, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.persistence.1.3.6388.37081\lib\net46\cts.commons.persistence.dll</HintPath>

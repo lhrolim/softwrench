@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Data;
+using softWrench.sW4.Web.Formatting;
 
 namespace softwrench.sw4.offlineserver.dto {
     public class JSONConvertedDatamap : DataMap {
@@ -35,7 +36,9 @@ namespace softwrench.sw4.offlineserver.dto {
         public JSONConvertedDatamap(DataMap datamap, bool rowstampsHandled = false) : base(datamap.Application, datamap.Fields, null, rowstampsHandled) {
             var st = JsonConvert.SerializeObject(this, Formatting.None,
              new JsonSerializerSettings {
-                 ContractResolver = new CamelCasePropertyNamesContractResolver()
+                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                 Converters = new List<JsonConverter>() { new JsonDateTimeConverter() }
+
              });
             Clear();
             this["JSONFields"] = st;
