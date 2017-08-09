@@ -81,7 +81,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             emailStatus = new WorkPackageEmailStatus {
                 Email = toEmail,
                 Operation = OperationConstants.CRUD_CREATE,
-                Qualifier = "interconnecteddocs",
+                Qualifier = "workpackagecreation",
+                Cc = cc,
                 SendDate = DateTime.Now
             };
 

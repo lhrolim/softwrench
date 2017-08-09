@@ -58,6 +58,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 Operation = softWrench.sW4.Data.Persistence.Operation.OperationConstants.CRUD_UPDATE,
                 Qualifier = "dailyoutagemeeting",
                 SendDate = DateTime.Now,
+                Cc = emailData.Cc,
                 WorkPackage = package
             };
 

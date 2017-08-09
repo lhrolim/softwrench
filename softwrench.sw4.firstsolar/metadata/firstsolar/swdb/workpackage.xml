@@ -9,7 +9,7 @@
   </templates>
 
   <entities>
-    <entity name="WorkPackage" idAttribute="id">
+    <entity name="WorkPackage" idAttribute="id" whereclause="deleted != 1">
       <relationships>
 
         <relationship to="workorder">
@@ -565,6 +565,7 @@
         <schema id="list" stereotype="compositionlist">
           <field attribute="id" hidden="true"/>
           <field attribute="email" label="Email"/>
+          <field attribute="cc" label="Cc"/>
           <field attribute="status" label="Status"/>
           <field attribute="qualifier" label="qualifier"/>
           <field attribute="senddate" label="Send Date">

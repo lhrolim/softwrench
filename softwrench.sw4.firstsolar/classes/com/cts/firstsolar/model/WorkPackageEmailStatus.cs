@@ -29,6 +29,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property(Column = "email")]
         public string Email { get; set; }
 
+        [Property(Column = "cc")]
+        public string Cc { get; set; }
+
         /// <summary>
         /// The operation on the main workpackage in which the Email was sent, either creation, update, deletion, or a custom one
         /// </summary>
