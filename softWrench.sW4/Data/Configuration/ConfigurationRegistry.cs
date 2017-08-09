@@ -177,48 +177,48 @@ namespace softWrench.sW4.Data.Configuration {
 
             #region maximoConfig
 
-            facade.Register(ConfigurationConstants.Maximo.WsdlPath, new PropertyDefinition {
+            facade.Register(ctes.Maximo.WsdlPath, new PropertyDefinition {
                 Description = "the base wsdlpath for all soap webservice invocations",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("basewsURL")
             });
 
-            facade.Register(ConfigurationConstants.Maximo.IgnoreCertErrors, new PropertyDefinition {
+            facade.Register(ctes.Maximo.IgnoreCertErrors, new PropertyDefinition {
                 Description = "If true, any certificate issues will be ignored",
                 PropertyDataType = PropertyDataType.BOOLEAN,
                 DefaultValue = "true"
             });
 
-            facade.Register(ConfigurationConstants.Maximo.WsProvider, new PropertyDefinition {
+            facade.Register(ctes.Maximo.WsProvider, new PropertyDefinition {
                 Description = "the name of the provider, between mif and mea",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = "mif"
             });
-            facade.Register(ConfigurationConstants.Maximo.MifUser, new PropertyDefinition {
+            facade.Register(ctes.Maximo.MifUser, new PropertyDefinition {
                 Description = "the mif username used for all soap invocations. Leave it blank to rely on default username credentials",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("mifcredentials.user")
             });
 
-            facade.Register(ConfigurationConstants.Maximo.MifPassword, new PropertyDefinition {
+            facade.Register(ctes.Maximo.MifPassword, new PropertyDefinition {
                 Description = "the mif password used for all soap invocations. Leave it blank to rely on default username credentials",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("mifcredentials.password")
             });
 
-            facade.Register(ConfigurationConstants.Maximo.DefaultOrgId, new PropertyDefinition {
+            facade.Register(ctes.Maximo.DefaultOrgId, new PropertyDefinition {
                 Description = "Default OrgID used for registering new users",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("defaultOrgId")
             });
 
-            facade.Register(ConfigurationConstants.Maximo.DefaultSiteId, new PropertyDefinition {
+            facade.Register(ctes.Maximo.DefaultSiteId, new PropertyDefinition {
                 Description = "Default SiteId used for registering new users",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("defaultSiteId")
             });
 
-            facade.Register(ConfigurationConstants.Maximo.DefaultStoreLoc, new PropertyDefinition {
+            facade.Register(ctes.Maximo.DefaultStoreLoc, new PropertyDefinition {
                 Description = "Default StoreLoc used for registering new users",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("defaultStoreloc")
@@ -228,52 +228,52 @@ namespace softWrench.sW4.Data.Configuration {
 
             #region EmailConfig
 
-            facade.Register(ConfigurationConstants.Email.Enabled, new PropertyDefinition {
+            facade.Register(ctes.Email.Enabled, new PropertyDefinition {
                 Description = "whether the smtp email server is enabled. Setting to false will skip all emails regardless of the other parameters",
                 PropertyDataType = PropertyDataType.BOOLEAN,
                 DefaultValue = "true"
             });
 
-            facade.Register(ConfigurationConstants.Email.Host, new PropertyDefinition {
+            facade.Register(ctes.Email.Host, new PropertyDefinition {
                 Description = "the ip of the smtp email host. No HTTP/HTTPS required",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("email.smtp.host")
             });
 
-            facade.Register(ConfigurationConstants.Email.EnableSSL, new PropertyDefinition {
+            facade.Register(ctes.Email.EnableSSL, new PropertyDefinition {
                 Description = "whether or not to use a SSL protocol",
                 PropertyDataType = PropertyDataType.BOOLEAN,
                 DefaultValue = "false"
             });
 
-            facade.Register(ConfigurationConstants.Email.Port, new PropertyDefinition {
+            facade.Register(ctes.Email.Port, new PropertyDefinition {
                 Description = "port to use for smtp access. Leave blank for default",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("email.smtp.port")
             });
 
-            facade.Register(ConfigurationConstants.Email.Timeout, new PropertyDefinition {
+            facade.Register(ctes.Email.Timeout, new PropertyDefinition {
                 Description = "timeout value on smtp calls. Defaults to 100000 (100 seconds)",
                 PropertyDataType = PropertyDataType.INT,
                 DefaultValue = MetadataProvider.GlobalProperty("email.smtp.timeout")
             });
 
-            facade.Register(ConfigurationConstants.Email.UserName, new PropertyDefinition {
+            facade.Register(ctes.Email.UserName, new PropertyDefinition {
                 Description = "username for smtp calls. Leave blank to rely on default network credentials",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("email.smtp.username")
             });
 
-            facade.Register(ConfigurationConstants.Email.Password, new PropertyDefinition {
+            facade.Register(ctes.Email.Password, new PropertyDefinition {
                 Description = "password for smtp calls. Leave blank to rely on default network credentials",
                 PropertyDataType = PropertyDataType.STRING,
                 DefaultValue = MetadataProvider.GlobalProperty("email.smtp.password")
             });
 
-            facade.Register(ConfigurationConstants.Email.DefaultFromEmail, new PropertyDefinition {
+            facade.Register(ctes.Email.DefaultFromEmail, new PropertyDefinition {
                 Description = "Default From Email to all commlog outbound messages",
                 PropertyDataType = PropertyDataType.STRING,
-                DefaultValue = MetadataProvider.GlobalProperty("defaultEmail")
+                DefaultValue = MetadataProvider.GlobalProperty("defaultEmail")?? "noreply@controltechnologysolutions.com"
             });
 
 
@@ -353,7 +353,7 @@ namespace softWrench.sW4.Data.Configuration {
             });
 
 
-            facade.Register(ConfigurationConstants.Maximo.MaximoTimeZone, new PropertyDefinition {
+            facade.Register(ctes.Maximo.MaximoTimeZone, new PropertyDefinition {
                 Description = "The timezone where the maximo server is located (either the name of the zone or a number indicating the amount of hours)",
                 PropertyDataType = PropertyDataType.STRING,
                 StringValue = "false",
@@ -388,7 +388,7 @@ namespace softWrench.sW4.Data.Configuration {
 
 
             #region cache
-            facade.Register(ConfigurationConstants.Cache.RedisURL, new PropertyDefinition {
+            facade.Register(ctes.Cache.RedisURL, new PropertyDefinition {
                 Description = "url for redis setup (ex: localhost:6379)",
                 StringValue = "",
                 PropertyDataType = PropertyDataType.STRING,
@@ -397,13 +397,13 @@ namespace softWrench.sW4.Data.Configuration {
 
 
             #region user
-            facade.RegisterAsync(ConfigurationConstants.User.HideForgotPassword, new PropertyDefinition {
+            facade.RegisterAsync(ctes.User.HideForgotPassword, new PropertyDefinition {
                 Description = "Hide forgot password from login page",
                 DefaultValue = "false",
                 PropertyDataType = PropertyDataType.BOOLEAN
             });
 
-            facade.RegisterAsync(ConfigurationConstants.User.HideNewUserRegistration, new PropertyDefinition {
+            facade.RegisterAsync(ctes.User.HideNewUserRegistration, new PropertyDefinition {
                 Description = "Hide new user registration from login page",
                 DefaultValue = "false",
                 PropertyDataType = PropertyDataType.BOOLEAN
