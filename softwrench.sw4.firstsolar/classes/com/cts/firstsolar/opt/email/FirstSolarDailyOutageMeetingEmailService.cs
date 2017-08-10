@@ -87,7 +87,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             // 'to' not set on config on prod load the emails from gfed
             if (string.IsNullOrEmpty(to)) {
-                to = AsyncHelper.RunSync(() => GFedService.BuildToFromGfed(dom, package));
+                to = AsyncHelper.RunSync(() => GFedService.BuildToFromGfed(package));
             }
 
             var isNew = dom.ActualSendTime == null;
@@ -104,7 +104,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             }
             attachs.Add(BuildPdfReport(hash));
 
-            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs) { Cc = dom.Cc };
+            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs) { Cc = dom.Cc, BCc = "support@controltechnologysolutions.com" };
             return emailData;
         }
 

@@ -122,7 +122,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AddFacilityData(row, callout);
         }
 
-        public async Task<string> BuildToFromGfed(DailyOutageMeeting dom, WorkPackage package) {
+        public async Task<string> BuildToFromGfed(WorkPackage package) {
             var toList = new List<string>();
             var qryResult = await _maxDao.FindByNativeQueryAsync(GFedEmailQuery, package.WorkorderId);
             if (qryResult != null && qryResult.Any()) {
@@ -135,8 +135,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
             toList.Add("fsocoperators@firstsolar.com");
             toList.Add("fsocleadership@firstsolar.com");
+            toList.Add("omengineering@firstsolar.com");
             toList.Add("brent.galyon@firstsolar.com");
-            toList.Add("support@controltechnologysolutions.com");
+//            toList.Add("support@controltechnologysolutions.com");
             return string.Join("; ", toList);
         }
 

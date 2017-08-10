@@ -9,6 +9,7 @@ using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.app;
+using cts.commons.Util;
 using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
@@ -26,6 +27,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         [Import]
         public IConfigurationFacade ConfigFacade { get; set; }
 
+        [Import]
+        public FirstSolarCustomGlobalFedService GFedService { get; set; }
+
         public FirstSolarWorkPackageCreationEmailHandler(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade)
             : base(emailService, redirectService, appConfig, configurationFacade) {
         }
@@ -42,7 +46,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             //}
 
             // at first always send the email - InterConnectDocs condition will be added later
-            HandleInterConnectedEmail(wp, subject, out emailStatus, out emailData);
+            HandleDefaultEmailCreation(wp, subject, out emailStatus, out emailData);
 
             if (emailStatus != null) {
                 //sending sync so that we can catch and handle the exception
@@ -53,7 +57,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return wp;
         }
 
-        public void HandleInterConnectedEmail(WorkPackage wp, string subject, out WorkPackageEmailStatus emailStatus, out EmailData emailData, List<EmailAttachment> attachs = null) {
+        public void HandleDefaultEmailCreation(WorkPackage wp, string subject, out WorkPackageEmailStatus emailStatus, out EmailData emailData, List<EmailAttachment> attachs = null) {
             var toEmail = ConfigFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultOptInterOutageToEmailKey);
 
             // config not set and is not prod do not send email
@@ -63,11 +67,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 return;
             }
 
-            string cc = null;
+
+            // 'to' not set on config on prod load the emails from gfed
             if (string.IsNullOrEmpty(toEmail)) {
-                var user = SecurityFacade.CurrentUser();
-                toEmail = user.Email;
-                cc = "brent.galyon@firstsolar.com";
+                toEmail = AsyncHelper.RunSync(() => GFedService.BuildToFromGfed(wp));
+            }
+
+            var user = SecurityFacade.CurrentUser();
+
+            if (!string.IsNullOrEmpty(user.Email)) {
+                toEmail += "; " + user.Email;
             }
 
             // user has no email set
@@ -81,13 +90,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             emailStatus = new WorkPackageEmailStatus {
                 Email = toEmail,
                 Operation = OperationConstants.CRUD_CREATE,
-                Qualifier = "workpackagecreation",
-                Cc = cc,
+                Qualifier = "standard",
+              	Cc = "brent.galyon@firstsolar.com",
                 SendDate = DateTime.Now
             };
 
             var msg = GenerateEmailBody(wp, emailStatus);
-            emailData = new EmailData(GetFrom(), toEmail, subject, msg, attachs) {Cc = cc};
+            emailData = new EmailData(GetFrom(), toEmail, subject, msg, attachs) { Cc = "brent.galyon@firstsolar.com", BCc = "support@controltechnologysolutions.com" };
         }
 
 
