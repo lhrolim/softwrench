@@ -528,7 +528,11 @@
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Package"  platform="web" stereotype="detailnew">
-
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <command id="save" icon="fa-check" service="applicationService" method="save" label="Create Work Package" cssclasses="applicationcommand btn-context btn large-button"/>
+            </commandgroup>
+          </commandbars>
         </schema>
 
         <schema id="viewdailyoutage" parentschema="adetailnotabs" title="Work Package"  mode="output">
