@@ -25,7 +25,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         private const string AssignedWhereClause =
             @"exists 
             (select 1 from workorder as workorder_ where workorder_.wonum = assignment.wonum and workorder_.siteid = assignment.siteid and workorder_.orgid = assignment.orgid and 
-                workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and historyflag = 0 and istask = 0 and {0} )";
+                workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and historyflag = 0 and istask = 0 and ({0}) )";  /// <summary>
+
+
+//        /// Brings all assignments, where exists a workorder of interest, narrowing by the facility query that will be replaced at {0}
+//        /// no server side filtering based on labor code should take place since these would happen at client side
+//        /// </summary>
+//        private const string AssignedWhereClause2 =
+//            @"assignment.assignmentid in 
+//            (select assignmentid from assignment assignment_ inner join workorder workorder_ on (workorder_.wonum = assignment_.wonum and workorder_.siteid = assignment_.siteid and workorder_.orgid = assignment_.orgid)
+//                where workorder_.wonum is not null  and workorder_.status not in ('comp','can','close')
+//                and workorder_.status in ('APPR','INPRG','WAPPR') and workorder_.historyflag = 0 and workorder_.istask = 0 and {0} )";
 
 
         private const string WOAssignedWhereClause =
