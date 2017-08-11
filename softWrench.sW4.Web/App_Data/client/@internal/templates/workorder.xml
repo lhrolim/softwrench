@@ -410,6 +410,12 @@
           <field attribute="siteid"/>
         </schema>
 
+        <schema id="wonumlookupwithwtype" title="item" stereotype="list" platform="web">
+          <field attribute="wonum" label="Workorder"/>
+          <field attribute="description" label="description"/>
+          <field attribute="worktype" label="Work Type"/>
+        </schema>
+
         <schema id="locationwolist" title="Work Orders" stereotype="compositionlist" platform="web">
           <properties>
             <property key="list.click.event" value="workorderService.goToDetail"/>
