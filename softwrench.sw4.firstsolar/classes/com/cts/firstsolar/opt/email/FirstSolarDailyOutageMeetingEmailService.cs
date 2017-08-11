@@ -87,7 +87,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             // 'to' not set on config on prod load the emails from gfed
             if (string.IsNullOrEmpty(to)) {
-                to = AsyncHelper.RunSync(() => GFedService.BuildToFromGfed(package));
+                to = dom.Email;
             }
 
             var isNew = dom.ActualSendTime == null;
@@ -116,27 +116,39 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         private EmailAttachment BuildPdfReport(Hash hash) {
             var pdfTemplate = BuildTemplate(PdfTemplate);
             var pdfHtml = pdfTemplate.Render(hash);
-            return EmailService.CreateAttachment(PdfService.HtmlToPdf(pdfHtml, "Daily Outage Meeting Report"), "DailyOutageMeetingReport.pdf");
+            var title = "Daily Outage Meeting - " + hash["facilityname"] + " - " + hash["today"];
+            var rodayWithDashes = DateTime.Now.ToString("MM-dd-yy", new CultureInfo("en-US"));
+            var fileName = "DailyOutageMeeting_" + hash["facilityname"] + "_" + rodayWithDashes + ".pdf";
+            return EmailService.CreateAttachment(PdfService.HtmlToPdf(pdfHtml, title), fileName);
         }
 
         private Hash BuildTemplateHash(DailyOutageMeeting dom, WorkPackage package) {
+            var woData = GetWoData(package);
+
             return Hash.FromAnonymousObject(new {
-                outagestartdate = FmtDate(package.CreatedDate),
-                estimatedcompletiondate = FmtDate(package.EstimatedCompDate),
-                actualcompletiondate = FmtDate(package.ActualCompDate),
-                mwhlosttotal = package.MwhLostTotal,
-                expectedmwhlost = package.ExpectedMwhLost,
-                mwhlostperday = package.MwhLostPerDay,
-                problemstatement = package.ProblemStatement,
-                meetingtime = FmtDate(dom.MeetingTime),
-                mwhlost = dom.MWHLostYesterday.ToString("0", new CultureInfo("en-US")),
-                criticalpath = dom.CriticalPath,
-                openactionitems = dom.OpenActionItems,
-                completedactionitems = dom.CompletedActionItems,
-                meetingsummary = dom.Summary,
-                wpnum = package.Wpnum,
-                workpackageurl = RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token))
+                today = SafePlaceholder(FmtDate(DateTime.Now)),
+                facilityname = SafePlaceholder(package.FacilityName),
+                wosummary = SafePlaceholder(woData.GetStringAttribute("description")),
+                outagestartdate = SafePlaceholder(FmtDateTime(package.CreatedDate)),
+                estimatedcompletiondate = SafePlaceholder(FmtDateTime(package.EstimatedCompDate)),
+                actualcompletiondate = SafePlaceholder(FmtDateTime(package.ActualCompDate)),
+                mwhlosttotal = SafePlaceholder(package.MwhLostTotal),
+                expectedmwhlost = SafePlaceholder(package.ExpectedMwhLost),
+                mwhlostperday = SafePlaceholder(package.MwhLostPerDay),
+                problemstatement = SafePlaceholder(package.ProblemStatement),
+                meetingtime = SafePlaceholder(FmtDateTime(dom.MeetingTime)),
+                mwhlost = SafePlaceholder(dom.MWHLostYesterday.ToString("0", new CultureInfo("en-US"))),
+                criticalpath = SafePlaceholder(dom.CriticalPath),
+                openactionitems = SafePlaceholder(dom.OpenActionItems),
+                completedactionitems = SafePlaceholder(dom.CompletedActionItems),
+                meetingsummary = SafePlaceholder(dom.Summary),
+                wpnum = SafePlaceholder(package.Wpnum),
+                workpackageurl = SafePlaceholder(RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token)))
             });
+        }
+
+        private static string SafePlaceholder(string value) {
+            return string.IsNullOrEmpty(value) ? "&nbsp;" : value.Replace("\n", "<br/>");
         }
     }
 }

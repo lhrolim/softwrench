@@ -40,7 +40,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             var me = request as MaintenanceEngineering;
             var subject = me == null ? "[First Solar] Maintenance Engineering Request" :
-                "[First Solar] Maintenance Engineering Request ({0}, {1})".Fmt(FmtDate(package.CreatedDate), siteId);
+                "[First Solar] Maintenance Engineering Request ({0}, {1})".Fmt(FmtDateTime(package.CreatedDate), siteId);
 
             var woData = GetWoData(package);
             var msg = GenerateEmailBody(request, package, siteId, woData);
@@ -76,7 +76,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             }
 
             var siteId = woData.GetStringAttribute("siteid");
-            var subject = "[First Solar] Maintenance Engineering Request Rejected ({0}, {1})".Fmt(FmtDate(package.CreatedDate), siteId);
+            var subject = "[First Solar] Maintenance Engineering Request Rejected ({0}, {1})".Fmt(FmtDateTime(package.CreatedDate), siteId);
             var msg = GenerateRejectEmailBody(me, package, siteId, woData);
             var emailData = new EmailData(GetFrom(), to, subject, msg);
             EmailService.SendEmail(emailData);
@@ -163,7 +163,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 description = woData.GetAttribute("ld_.ldtext"),
                 worktype = woData.GetAttribute("worktype"),
                 siteid = siteId,
-                schedstart = FmtDate(woData.GetAttribute("schedstart") as DateTime?),
+                schedstart = FmtDateTime(woData.GetAttribute("schedstart") as DateTime?),
                 tier,
                 outagereq,
                 outagetype,
@@ -179,13 +179,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var engRequest = request as MaintenanceEngineering;
             BuildTemplate();
             return Template.Render(GenerateEmailHash(engRequest, package, siteId, woData));
-        }
-
-        private static DataMap GetWoData(WorkPackage package) {
-            var user = SecurityFacade.CurrentUser();
-            var woId = package.WorkorderId;
-            var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
-            return AsyncHelper.RunSync(() => dataset.GetWorkorderRelatedData(user, woId));
         }
 
         private string GetSupervisorEmail(AttributeHolder woData) {

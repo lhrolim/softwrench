@@ -592,7 +592,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
         private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
-            await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedData(package, calloutsToSend?.ToList());
+            var gfedService = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>();
+            await gfedService.LoadGfedData(package, calloutsToSend?.ToList());
+            await gfedService.LoadGfedData(package, domsToSend?.ToList());
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
             await DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);

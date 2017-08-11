@@ -122,11 +122,38 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AddFacilityData(row, callout);
         }
 
+        public async Task LoadGfedData(WorkPackage package, List<DailyOutageMeeting> doms) {
+            if (doms == null || !doms.Any()) {
+                return;
+            }
+            var row = await LoadGfedData(package.WorkorderId);
+            if (row == null) {
+                doms.ForEach(dom => {
+                    dom.Email = BuildToFromGfed((Dictionary<string, string>)null);
+                });
+                return;
+            }
+            if (row.ContainsKey(FacilityTitleColumn)) {
+                package.FacilityName = row[FacilityTitleColumn];
+            }
+
+            var to = BuildToFromGfed(row);
+            doms.ForEach(dom => {
+                dom.Email = to;
+            });
+        }
+
         public async Task<string> BuildToFromGfed(WorkPackage package) {
-            var toList = new List<string>();
             var qryResult = await _maxDao.FindByNativeQueryAsync(GFedEmailQuery, package.WorkorderId);
             if (qryResult != null && qryResult.Any()) {
-                var row = qryResult.First();
+                return BuildToFromGfed(qryResult.First());
+            }
+            return BuildToFromGfed((Dictionary<string, string>)null);
+        }
+
+        private static string BuildToFromGfed(Dictionary<string, string> row) {
+            var toList = new List<string>();
+            if (row != null) {
                 AddEmail(row, toList, PlannerEmailColumn);
                 AddEmail(row, toList, RegionalManagerEmailColumn);
                 AddEmail(row, toList, SupervisorEmailColumn);
@@ -137,7 +164,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             toList.Add("fsocleadership@firstsolar.com");
             toList.Add("omengineering@firstsolar.com");
             toList.Add("brent.galyon@firstsolar.com");
-//            toList.Add("support@controltechnologysolutions.com");
+            //            toList.Add("support@controltechnologysolutions.com");
             return string.Join("; ", toList);
         }
 

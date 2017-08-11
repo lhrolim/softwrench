@@ -203,6 +203,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [OneToMany(2, ClassType = typeof(WorkPackageEmailStatus))]
         public virtual IList<WorkPackageEmailStatus> EmailStatuses { get; set; } = new List<WorkPackageEmailStatus>();
 
+        public string FacilityName { get; set; }
 
 
         public override string ToString() {

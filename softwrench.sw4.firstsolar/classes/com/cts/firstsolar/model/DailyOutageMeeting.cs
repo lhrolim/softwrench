@@ -68,8 +68,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
             return true;
         }
 
+        public string Email { get; set; } // gfed emails are set here
+
         // Not used
-        public string Email { get; set; }
         public string Notes { get; set; }
     }
 }

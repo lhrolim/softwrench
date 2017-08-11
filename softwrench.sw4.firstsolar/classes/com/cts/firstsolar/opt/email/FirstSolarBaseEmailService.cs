@@ -15,9 +15,12 @@ using Common.Logging;
 using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data;
+using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
     public abstract class FirstSolarBaseEmailService <T> : ISingletonComponent{
@@ -100,17 +103,31 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         public abstract string RequestI18N();
         protected abstract EmailData BuildEmailData(T request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null);
 
+        public string FmtDateTime(DateTime? date) {
+            return BaseFmtDate(date, "G");
+        }
+
         public string FmtDate(DateTime? date) {
+            return BaseFmtDate(date, "MM/dd/yy");
+        }
+
+        private static string BaseFmtDate(DateTime? date, string format) {
             if (date == null) {
                 return "";
             }
             var culture = new CultureInfo("en-US");
-            return date.Value.ToString("G", culture);
+            return date.Value.ToString(format, culture);
         }
 
         protected string GetFrom() {
             return ConfigurationFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultFromEmailKey);
         }
 
+        protected static DataMap GetWoData(WorkPackage package) {
+            var user = SecurityFacade.CurrentUser();
+            var woId = package.WorkorderId;
+            var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
+            return AsyncHelper.RunSync(() => dataset.GetWorkorderRelatedData(user, woId));
+        }
     }
 }

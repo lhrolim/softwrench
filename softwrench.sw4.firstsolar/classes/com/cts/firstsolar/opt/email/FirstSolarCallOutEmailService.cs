@@ -26,7 +26,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
         protected override EmailData BuildEmailData(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
             var callout = request as CallOut;
-            var subject = callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDate(callout.ContractorStartDate), callout.FacilityName);
+            var subject = callout == null ? "[First Solar] Callout Request" : "[First Solar] Callout Request ({0}, {1})".Fmt(FmtDateTime(callout.ContractorStartDate), callout.FacilityName);
 
             var msg = GenerateEmailBody(request, package, siteId);
             var emailData = new EmailData(GetFrom(), request.Email, subject, msg, attachs) {Cc = request.Cc};
@@ -61,8 +61,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     rejectUrl,
                     pendingUrl,
                     subcontractor = callout.SubContractorName == null ? "" : callout.SubContractorName,
-                    expirationdate = FmtDate(callout.ExpirationDate),
-                    contractorstartdate = FmtDate(callout.ContractorStartDate),
+                    expirationdate = FmtDateTime(callout.ExpirationDate),
+                    contractorstartdate = FmtDateTime(callout.ContractorStartDate),
                     ponumber = callout.PoNumber,
                     tonumber = callout.ToNumber,
                     site = callout.FacilityName,
