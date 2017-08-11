@@ -9,7 +9,7 @@
   </templates>
 
   <entities>
-    <entity name="WorkPackage" idAttribute="id" whereclause="deleted != 1">
+    <entity name="WorkPackage" idAttribute="id" whereclause="deleted is null or deleted != 1">
       <relationships>
 
         <relationship to="workorder">
