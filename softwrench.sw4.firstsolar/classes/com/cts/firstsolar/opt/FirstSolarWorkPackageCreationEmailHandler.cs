@@ -86,12 +86,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 return;
             }
 
+            var isProdOrUat = ApplicationConfiguration.IsUat() || ApplicationConfiguration.IsProd();
 
             emailStatus = new WorkPackageEmailStatus {
                 Email = toEmail,
                 Operation = OperationConstants.CRUD_CREATE,
                 Qualifier = "standard",
-              	Cc = "brent.galyon@firstsolar.com",
+              	Cc = isProdOrUat ? "brent.galyon@firstsolar.com" : null,
                 SendDate = DateTime.Now
             };
 

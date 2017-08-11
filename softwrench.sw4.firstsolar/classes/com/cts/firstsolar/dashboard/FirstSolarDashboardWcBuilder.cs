@@ -70,9 +70,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public virtual string MaintenanceDashBuild290Query() {
             return @"workorder.status in ('APPR','INPRG') {0} and workorder.outreq = 1
                     and
-                    ( workorder.worktype = 'PM'  and workorder.reportdate < @past(30days))
+                    (( workorder.worktype = 'PM'  and workorder.reportdate < @past(30days))
                         or
-                    (workorder.worktype = 'WO')
+                    (workorder.worktype = 'WO'))
                     ".Fmt(SiteClause());
         }
 
