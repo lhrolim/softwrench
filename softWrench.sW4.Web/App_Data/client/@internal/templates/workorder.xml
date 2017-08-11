@@ -411,7 +411,7 @@
         </schema>
 
         <schema id="wonumlookupwithwtype" title="item" stereotype="list" platform="web">
-          <field attribute="wonum" label="Workorder"/>
+          <field attribute="wonum" label="Work Order"/>
           <field attribute="description" label="description"/>
           <field attribute="worktype" label="Work Type"/>
         </schema>
