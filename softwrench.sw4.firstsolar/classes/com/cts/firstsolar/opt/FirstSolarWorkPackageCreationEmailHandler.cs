@@ -87,17 +87,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
 
             var isProdOrUat = ApplicationConfiguration.IsUat() || ApplicationConfiguration.IsProd();
+            var ccEmail = isProdOrUat ? "brent.galyon@firstsolar.com" : null;
 
             emailStatus = new WorkPackageEmailStatus {
                 Email = toEmail,
                 Operation = OperationConstants.CRUD_CREATE,
                 Qualifier = "standard",
-              	Cc = isProdOrUat ? "brent.galyon@firstsolar.com" : null,
+              	Cc = ccEmail,
                 SendDate = DateTime.Now
             };
 
             var msg = GenerateEmailBody(wp, emailStatus);
-            emailData = new EmailData(GetFrom(), toEmail, subject, msg, attachs) { Cc = "brent.galyon@firstsolar.com", BCc = "support@controltechnologysolutions.com" };
+            emailData = new EmailData(GetFrom(), toEmail, subject, msg, attachs) { Cc = ccEmail, BCc = "support@controltechnologysolutions.com" };
         }
 
 
