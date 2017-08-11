@@ -99,7 +99,7 @@
 
     </label>
     <div ng-if="field.type === 'ApplicationCompositionDefinition'" class="item item-input" style="display: block">
-        <span class="input-label"><span ng-class="{'is-required' : isFieldRequired(field.requiredExpression)}" class="requiredfieldmark">* </span>{{field.label}}</span>
+        <span class="input-label" ng-if="field.label"><span ng-class="{'is-required' : isFieldRequired(field.requiredExpression)}" class="requiredfieldmark">* </span>{{field.label}}</span>
         <div ng-include="field.schema.renderer.parameters['inline.composition.offline.template']"></div>
     </div>
 </div>

@@ -9,7 +9,7 @@
         const multiAssetTab = crudContext.composition.currentTab;
 
         angular.forEach(multiAssetTab.displayables, function (d) {
-            if (d.attribute === "multiassetlocci") {
+            if (d.relationship === "multiassetlocci_") {
                 $scope.fieldMetadata = d;
             }
         });
@@ -18,9 +18,15 @@
         $scope.associationData = {};
         $scope.loaded = false;
 
+        function setIonicPaneDivHeight(height) {
+            const fullheight = (height + 13) + "px"; // 13 = margins, paddings and borders
+            $("[state='main.cruddetail.tab']").css("height", fullheight);
+        }
+
         function load() {
             multiAssetLog.debug("loading multiassets");
             $scope.loaded = false;
+            setIonicPaneDivHeight(100); // 100 = loading height
             const dm = crudContextHolderService.currentDetailItemDataMap();
             $scope.multiassets = dm["multiassetlocci_"] || [];
             $scope.associationData = {};
@@ -31,7 +37,14 @@
                 associationDataEntry["offlinelocation_"] = multiasset["location"];
                 $scope.associationData[multiasset["multiid"]] = associationDataEntry;
             });
-            $q.all(promisses).then(() => $scope.loaded = true).catch((e) => console.log(e));
+            $q.all(promisses).then(() => {
+                if ($scope.multiassets && $scope.multiassets.length > 0) {
+                    setIonicPaneDivHeight(75 * $scope.multiassets.length); // 75 = row height
+                } else {
+                    setIonicPaneDivHeight(16); // 16 = no records message height
+                }
+                $scope.loaded = true;
+            }).catch((e) => console.log(e));
         }
 
         load();
