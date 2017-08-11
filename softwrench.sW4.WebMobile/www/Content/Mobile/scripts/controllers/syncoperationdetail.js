@@ -99,10 +99,15 @@
                         return loadData();
                     })
                     .catch(function (error) {
-                        swAlertPopup.show({
-                            title: "Error Synchronizing Data",
-                            template: !!error && !!error.message ? error.message : ""
-                        });
+//                        swAlertPopup.show({
+//                            title: "Error Synchronizing Data",
+//                            template: !!error && !!error.message ? error.message : ""
+//                        });
+
+                        var e = new Error(!!error && !!error.message ? error.message : "");
+                        e.title = "Error Synchronizing Data";
+
+                        throw e;
                     })
                     .finally(function () {
                         $scope.data.isSynching = false;

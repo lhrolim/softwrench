@@ -55,7 +55,12 @@
                 // alerting log file location for support
                 // if (shouldAlertExceptionLogged(exception)) alertLogLocation();
                 supportService = lazyInstance(supportService, "supportService");
-                supportService.requestLogReporting({ subject:  "Unexpected Error" });
+                const logReportObject = { subject: "Unexpected Error" };
+                if (!!exception && !!exception.title) {
+                    logReportObject.title = exception.title;
+                }
+
+                supportService.requestLogReporting(logReportObject);
             };
 
         }]);

@@ -15,13 +15,17 @@ namespace softWrench.sW4.Web.Models {
         public const string LastErrorKey = "SwError";
 
         public static void Handle(HttpContext context, Exception ex) {
-            // Only handles custom errors from non ajax requests of http codes 400 or higher
+            // Only handles custom errors from non ajax requests and non mobile of http codes 400 or higher
             // Ajax exceptions are handled on GenericExceptionFilter
-            if (context.Response.StatusCode >= 400 && !"true".Equals(context.Request.Headers["isajax"])) {
+            if (context.Response.StatusCode >= 400 && !"true".Equals(context.Request.Headers["isajax"]) && !IsMobile(context.Request)) {
                 Show(context, context.Response.StatusCode, ex);
             } else {
                 SetLastError(null);
             }
+        }
+
+        private static bool IsMobile(HttpRequest request) {
+            return request.Path.Contains("/Mobile");
         }
 
         public static ErrorDto GetLastError() {
