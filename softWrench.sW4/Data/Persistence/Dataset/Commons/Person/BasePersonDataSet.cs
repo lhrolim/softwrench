@@ -95,11 +95,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // get is active for each of the users
             var result = await base.GetList(application, searchDto);
 
-            var usernames = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
-            if (!usernames.Any()) {
+            var personIds = result.ResultObject.Select(str => str.GetAttribute("personid").ToString()).ToList();
+            if (!personIds.Any()) {
                 return result;
             }
-            var swusers = UserManager.GetUsersByUsername(usernames);
+            var swusers = UserManager.GetUserByPersonIds(personIds);
             foreach (var record in result.ResultObject) {
                 var swuser = swusers.SingleOrDefault(user => user.UserName.EqualsIc(record.GetAttribute("personid").ToString()));
                 if (swuser == null) {
