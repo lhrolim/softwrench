@@ -238,7 +238,7 @@
         //#endregion
 
         //#region Menu whereclauses
-        // `assignment_`.dateindex02 = scheduled date
+        // `assignment_`.dateindex01 = scheduled date without time
         getTodayWosWhereClause() {
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
@@ -246,14 +246,14 @@
             return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime}`;
         }
 
-        // `assignment_`.dateindex02 = scheduled date
+        // `assignment_`.dateindex01 = scheduled date without time
         getPastWosWhereClause() {
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
             return `assignment_.dateindex01 < ${todayTime}`;
         }
 
-        // `assignment_`.dateindex02 = scheduled date
+        // `assignment_`.dateindex01 = scheduled date without time
         getFutureWosWhereClause() {
             const now = new Date();
             const tomorrowTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime() + day;

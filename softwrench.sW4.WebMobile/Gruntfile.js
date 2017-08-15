@@ -108,7 +108,8 @@ module.exports = function (grunt) {
     //if (customer) {
     customerScripts = [
         "www/Content/Customers/pae_offline/scripts/**/*.mobile.js",
-        "www/Content/Customers/firstsolar_offline/scripts/**/*.mobile.js"
+        "www/Content/Customers/firstsolar_offline/scripts/**/*.mobile.js",
+        "www/Content/Customers/gric_offline/scripts/**/*.mobile.js"
     ];
     //}
 

@@ -49,6 +49,11 @@
 
   <applications>
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,asset_.description,status,description"/>
+        <property key="list.offline.date.indexlist" value="schedstart"/>
+      </properties>
+
       <schemas>
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
@@ -96,6 +101,9 @@
           <field attribute="description" label="Description" />
           <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
+          </field>
+          <field label="Scheduled Start Date" attribute="schedstart" readonly="true">
+            <renderer type="date"/>
           </field>
 
           <composition relationship="labtrans" label="Labor">

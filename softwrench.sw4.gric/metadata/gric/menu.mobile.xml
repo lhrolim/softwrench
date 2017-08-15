@@ -1,4 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata"  mainmenudisplacement="vertical" indexitem="WO">
-  <application id="WO" title="Work Order" ref="workorder" schema="list" icon="fa-wrench"/>
+
+  <container id="workorder" icon="fa-wrench" title="Work Orders">
+    <application id="PWO" title="Past Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=gricWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=Past Assignments"/>
+    <application id="TWO" title="Current Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=gricWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=Current Assignments"/>
+    <application id="FWO" title="Future Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=gricWorkorderOfflineService.getFutureWosWhereClause;offlinegridtitle=Future Assignments"/>
+    <application id="AWO" title="All Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinegridtitle=All Assignments"/>
+  </container>
 </Menu>

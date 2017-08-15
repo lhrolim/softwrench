@@ -1284,6 +1284,10 @@
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
       <Name>softwrench.sw4.firstsolar</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.gric\softwrench.sw4.gric.csproj">
+      <Project>{3b4ed6c6-ba78-45cd-8af9-964f3dc409e6}</Project>
+      <Name>softwrench.sw4.gric</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.kongsberg\softwrench.sw4.kongsberg.csproj">
       <Project>{9b568df3-6a78-4a01-b080-8e88c8dab0f7}</Project>
       <Name>softwrench.sw4.kongsberg</Name>
