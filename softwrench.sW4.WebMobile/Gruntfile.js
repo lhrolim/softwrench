@@ -760,7 +760,7 @@ module.exports = function (grunt) {
         "babel:release", // transpiles es6 app scripts
         "minify", // uglyfies scripts and minifies stylesheets
         "tagsrelease", // generates import tags for the prepared files in main template file (layout.html)
-        "clean:temp"
+//        "clean:temp"
     ]);
     //#endregion
 
