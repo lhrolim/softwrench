@@ -49,7 +49,21 @@ const devLocalData = {
 };
 
 
-
+//dev data pointing to dev --> using dev.softwrench.net tcottier/password
+//FS VPN data
+const qaLocalData = {
+    //set to true to allow starting the app at the login screen
+    showlogin: false,
+    //    username: "fs112894",
+    username: "tcottier",
+    password: "password",
+    //    password: "$@$Pass2",
+    serverurl: {
+        ripple: "http://qa.softwrench.net/firstsolar",
+        device: "http://qa.softwrench.net/firstsolar"
+    },
+    debuglogs: ["init"]
+};
 
 
 
@@ -66,5 +80,5 @@ const fsVpnProdLocalData = {
 
 };
 
-window.localdevdata = localhostDevData;
+window.localdevdata = qaLocalData;
 

@@ -176,7 +176,14 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
 
         function hideSplashScreen() {
             return $timeout(() => {
-                if ($cordovaSplashscreen && angular.isFunction($cordovaSplashscreen.hide)) $cordovaSplashscreen.hide();
+                if ($cordovaSplashscreen && angular.isFunction($cordovaSplashscreen.hide)) {
+                    try {
+                        $cordovaSplashscreen.hide();
+                    } catch (err) {
+                        //SWWEB-3102 --> at remote ripple this is not working properly, but not a big deal
+                    }
+                     
+                }
             }, 1000);
         }
 
