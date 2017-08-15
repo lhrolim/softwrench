@@ -85,7 +85,7 @@ var softwrench = angular.module('softwrench', ['ionic', 'ion-autocomplete', 'ngC
             if (isRippleEmulator()) $timeout(disableRipplePopup);
 
             // Show/Hide keyboard accessory bar
-            if (window.cordova && window.cordova.plugins.Keyboard) {
+            if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
                 cordova.plugins.Keyboard.hideKeyboardAccessoryBar(ionic.Platform.isAndroid());
             }
             // necessary to set fullscreen on Android in order for android:softinput=adjustPan to work
