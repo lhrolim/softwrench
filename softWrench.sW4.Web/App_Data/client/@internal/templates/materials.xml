@@ -144,6 +144,8 @@
         </schema>
       </schemas>
     </application>
+    
+    
 
     <application entity="item" name="itemlookup" title="itemlookup">
       <schemas>
@@ -195,7 +197,7 @@
         <property key ="add.button.label" value="Add Material"/>
       </properties>
       <schemas>
-        <list stereotype="compositionlist">
+        <list stereotype="compositionlist" platform="web">
           <field attribute="matusetransid" hidden="true" />
           <field attribute="itemnum" label="Item#" qualifier="title"/>
           <field attribute="description" label="Description" qualifier="subtitle"/>
@@ -205,7 +207,7 @@
           <field attribute="qtyrequested" label="Quantity" qualifier="subtitle"/>
         </list>
 
-        <schema id="detail" stereotype="detail" title="Material Details">
+        <schema id="detail" stereotype="detail" title="Material Details" platform="web">
           <event type="onload" service="scannerdetectionService" method="initMaterialScanningListener" />
           <field attribute="matusetransid" hidden="true" />
           <field attribute="orgid" defaultexpression="$.parentdata['orgid']" hidden="true" />
@@ -266,6 +268,8 @@
             <renderer type="lookup"/>
           </association>
         </schema>
+
+        
       </schemas>
     </application>
   </applications>

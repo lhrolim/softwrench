@@ -45,6 +45,33 @@
     </entity>
     <entity name="person" idAttribute="personuid" useridAttribute="personid" whereclause="!@locationsite = 'DRSSITE'">
     </entity>
+    <entity name="matusetrans" idAttribute="matusetransid">
+      <attributes>
+        <attribute name="warranty" type="varchar"/>
+      </attributes>
+      <relationships>
+        <relationship to="inventory" qualifier="offlineinventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE"/>
+        </relationship>
+        <relationship to="item" qualifier="offlineitem">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="location" qualifier="offlinelocation">
+          <relationshipAttribute from ="storeloc" to="location" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+          <relationshipAttribute to="status" literal="OPERATING" quoteLiteral="true" />
+        </relationship>
+<!--        <relationship to="warranty">-->
+<!--          <relationshipAttribute from="warranty" to="value" primary="true"/>-->
+<!--          <relationshipAttribute to="domainid" literal="WARRANTY" quoteLiteral="true" />-->
+<!--        </relationship>-->
+      </relationships>
+    </entity>
   </entities>
 
   <applications>
@@ -115,6 +142,11 @@
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
 
+          <composition relationship="matusetrans" label="Materials" >
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
+          </composition>
+
+
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab" removeundeclared="false">
               <container id="detail.container" icon="fa-bolt">
@@ -141,5 +173,94 @@
         </detail>
       </schemas>
     </application>
+
+
+    <application name="matusetrans" entity="matusetrans" title="Material">
+      <schemas>
+        <!-- #region: mobile -->
+        <list stereotype="compositionlist" platform="mobile">
+          <field attribute="itemnum" label="Item#" />
+          <field attribute="description" label="Description" />
+          <field attribute="linetype" label="Type" />
+          <field attribute="storeloc" label="Storeroom" />
+          <field attribute="qtyrequested" label="Quantity" />
+          <field attribute="unitcost" showexpression="@linetype==='MATERIAL'" label="Unit Cost">
+            <renderer type="default" params="formatter=money"/>
+          </field>
+          <field attribute="transdate" label="Created Date" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+          </field>
+        </list>
+
+        <detail stereotype="compositiondetail" platform="mobile">
+          <!-- declared just so it can be fetched in sync -->
+          <association target="#inventory" labelfield="offlineinventory.itemnum"
+                       showexpression="false" enableexpression="false"
+                       label="#inventory" />
+
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true" />
+          <field attribute="siteid" defaultexpression="$.parentdata.fields.siteid" hidden="true" />
+
+          <field attribute="transdate" hidden="true" defaultexpression="@now" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+          </field>
+
+          <optionfield attribute="linetype" label="Type" default="ITEM">
+            <event type="afterchange" service="materialService" method="lineSelected"/>
+            <option label="ITEM" value="ITEM"/>
+            <option label="MATERIAL" value="MATERIAL"/>
+          </optionfield>
+
+          <association target="storeloc" labelfield="offlinelocation_.location"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
+                       label="Storeroom">
+            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
+            <event type="afterchange" service="materialService" method="storeRoomSelected"/>
+          </association>
+
+          <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
+                       label="Item" >
+            <dataprovider whereClause="@materialService.getAvailableItemsWhereClause"/>
+            <event type="afterchange" service="materialService" method="itemSelected"/>
+          </association>
+
+<!--          <association target="warranty" labelfield="warranty_.description" requiredexpression="true" label="Warranty">-->
+<!--            <renderer type="lookup" params="showCode=false"/>-->
+<!--          </association>-->
+
+          <field attribute="description" label="Material Description" requiredexpression="true" showexpression="@linetype==='MATERIAL'"/>
+          <field attribute="unitcost" label="Unit Cost" qualifier="quantity" requiredexpression="@linetype==='MATERIAL'" showexpression="@linetype==='MATERIAL'">
+            <renderer type="numericinput" params="min=0;step=0.01" />
+          </field>
+
+          <field attribute="qtyrequested" label="Quantity" requiredexpression="true" qualifier="quantity" default="1">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0;step=1"/>
+          </field>
+
+        </detail>
+        <!-- #endregion -->
+      </schemas>
+    </application>
+
+
+    <application name="offlineitem" entity="item" title="Item">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="itemnum" label="Item" />
+          <field attribute="description" label="Description"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="itemtype" label="Type"/>
+          <field attribute="rotating" label="Rotating"/>
+          <field attribute="commoditygroup" label="Commodity Group"/>
+        </list>
+      </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum"/>
+      </properties>
+    </application>
+
   </applications>
 </metadata>

@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 
 namespace softWrench.sW4.Util {
     public static class DictionaryExtensions {
@@ -18,6 +21,18 @@ namespace softWrench.sW4.Util {
             return dictionary;
         }
 
+        public static void AddE<TKey, TValue>(this IDictionary<TKey, TValue> map, TKey key, TValue value, string contextInfo = null) {
+            try {
+                map.Add(key, value);
+            } catch (Exception e) {
+                if (contextInfo == null) {
+                    contextInfo = "";
+                }
+                //                LoggingUtil.DefaultLog.Error("key {0} already exists at dict".Fmt(key), e);
+                throw new InvalidOperationException("key {0} already exists at dict {1}".Fmt(key, contextInfo), e);
+            }
+
+        }
 
         public static ExpandoObject ToExpando(this IDictionary<string, string> dictionary) {
             var tempDict = dictionary.ToObjectDir();

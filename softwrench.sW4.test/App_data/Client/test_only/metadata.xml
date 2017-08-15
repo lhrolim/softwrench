@@ -531,7 +531,7 @@
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
           <association label="Status" target="status" labelfield="synstatus_.description" />
           <composition relationship="worklog" label="Work Logs" />
-          <composition relationship="matusetrans" label="Materials" />
+<!--          <composition relationship="matusetrans" label="Materials" />-->
           <composition relationship="labtrans" label="Labors">
             <collectionproperties listschema="compositionlist"/>
           </composition>

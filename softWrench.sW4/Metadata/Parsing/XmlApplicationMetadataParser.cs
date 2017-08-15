@@ -617,10 +617,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
 
             var key = new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr);
-            resultDictionary.Add(key,
-                ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
-                    isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
-                    userIdFieldName, unionSchema, ParseEvents(xElement, id)));
+            var schema = ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
+                isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
+                userIdFieldName, unionSchema, ParseEvents(xElement, id));
+            resultDictionary.AddE(key,schema, "application:{0} templateparsing:{1}".Fmt(schema.ApplicationName,_isTemplateParsing));
         }
 
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,

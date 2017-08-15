@@ -310,6 +310,24 @@
         </schema>
       </schemas>
     </application>
+
+    <application name="offlinelocation" entity="location" title="Location">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="location" label="Location" />
+          <field attribute="description" label="Description"/>
+          <field attribute="type" label="Type" />
+          <field attribute="status" label="Status" />
+          <field attribute="parent" hidden="true" />
+          <field attribute="hierarchy" hidden="true" />
+        </list>
+      </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="location,type,status,hierarchy"/>
+      </properties>
+    </application>
+    
   </applications>
 
 

@@ -749,6 +749,17 @@
     </application>
 
 
+    <application name="offlineinventory" entity="inventory" title="Inventory">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="location" label="Location" />
+          <field attribute="itemnum" label="Item" />
+        </list>
+      </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum,location"/>
+      </properties>
+    </application>
 
     <application entity="invcost" name="invcost" title="invcost">
       <schemas>

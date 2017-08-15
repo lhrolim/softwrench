@@ -1698,17 +1698,17 @@
       </properties>
     </application>
 
-    <application name="offlineinventory" entity="inventory" title="Inventory">
-      <schemas>
-        <list platform="mobile">
-          <field attribute="location" label="Location" />
-          <field attribute="itemnum" label="Item" />
-        </list>
-      </schemas>
-      <properties>
-        <property key="list.offline.text.indexlist" value="itemnum,location"/>
-      </properties>
-    </application>
+<!--    <application name="offlineinventory" entity="inventory" title="Inventory">-->
+<!--      <schemas>-->
+<!--        <list platform="mobile">-->
+<!--          <field attribute="location" label="Location" />-->
+<!--          <field attribute="itemnum" label="Item" />-->
+<!--        </list>-->
+<!--      </schemas>-->
+<!--      <properties>-->
+<!--        <property key="list.offline.text.indexlist" value="itemnum,location"/>-->
+<!--      </properties>-->
+<!--    </application>-->
 
     <application name="classstructure" title="Class Structure" entity="classstructure">
       <schemas>
@@ -1796,22 +1796,7 @@
       </properties>
     </application>
 
-    <application name="offlinelocation" entity="location" title="Location">
-      <schemas>
-        <list platform="mobile">
-          <field attribute="location" label="Location" />
-          <field attribute="description" label="Description"/>
-          <field attribute="type" label="Type" />
-          <field attribute="status" label="Status" />
-          <field attribute="parent" hidden="true" />
-          <field attribute="hierarchy" hidden="true" />
-        </list>
-      </schemas>
-
-      <properties>
-        <property key="list.offline.text.indexlist" value="location,type,status,hierarchy"/>
-      </properties>
-    </application>
+ 
 
     <application name="offlineasset" entity="asset" title="Asset">
       <schemas>
