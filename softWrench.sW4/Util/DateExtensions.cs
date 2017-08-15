@@ -4,6 +4,7 @@ using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
 using System;
+using System.Globalization;
 using cts.commons.simpleinjector;
 using log4net;
 using softWrench.sW4.Configuration.Services.Api;
@@ -201,7 +202,12 @@ namespace softWrench.sW4.Util {
                 offset = -1 * offset;
             }
             Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
-            date = date.AddMinutes(offset);
+            try {
+                date = date.AddMinutes(offset);
+            } catch (Exception e) {
+                Log.Error("error when trying to convert the date {0} to offset {1}. Maximo Off:{2} User Off:{3}".Fmt(date.ToString(CultureInfo.InvariantCulture),offSet, maximoOffset, clientOffset),e);
+            }
+
             if (WsUtil.Is75OrNewer()) {
                 //TODO: is this ever needed again?
                 date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
