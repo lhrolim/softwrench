@@ -24,9 +24,18 @@ namespace softWrench.sW4.Web.Formatting {
         }
 
         private static void DoWriteJson(JsonWriter writer, object value) {
+            var user = SecurityFacade.CurrentUser();
+            // Chrome converts times without offsets as if they are UTC. Instead of sending the time 
+            // without an offset, send the time with the users current off set so no conversion occurs.
+            var userOffsetVal = 0;
+
             if (value is DateTimeOffset) {
                 var dto = (DateTimeOffset)value;
-                writer.WriteValue(dto.DateTime);
+                if (user.TimezoneOffset != null) {
+                    userOffsetVal = user.TimezoneOffset.Value;
+                }
+                var dateTimeOffset = new DateTimeOffset(dto.DateTime, TimeSpan.FromMinutes(userOffsetVal * -1));
+                writer.WriteValue(dateTimeOffset.ToString());
                 return;
             }
 
@@ -35,10 +44,8 @@ namespace softWrench.sW4.Web.Formatting {
                 return;
             }
             var date = ((DateTime)value);
-            var user = SecurityFacade.CurrentUser();
-            // Chrome converts times without offsets as if they are UTC. Instead of sending the time 
-            // without an offset, send the time with the users current off set so no conversion occurs.
-            var userOffsetVal = 0;
+           
+            
 
             if (user.TimezoneOffset != null) {
                 userOffsetVal = user.TimezoneOffset.Value;
