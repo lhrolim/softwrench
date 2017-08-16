@@ -5,6 +5,8 @@ using softWrench.sW4.Metadata.Applications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
+using softWrench.sW4.Metadata.Entities.Sliced;
 
 namespace softWrench.sW4.Data {
     public class DataMap : DataMapDefinition {
@@ -59,32 +61,56 @@ namespace softWrench.sW4.Data {
         }
 
         [NotNull]
-        public static DataMap Populate(ApplicationMetadata applicationMetadata,
-                                       IEnumerable<KeyValuePair<string, object>> row) {
+        public static DataMap Populate(ApplicationMetadata applicationMetadata, SlicedEntityMetadata entityMetadata, IEnumerable<KeyValuePair<string, object>> row) {
             IDictionary<string, object> attributes = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
             foreach (var pair in row) {
-                object value;
-                if (pair.Key == RowStampUtil.RowstampColumnName || pair.Key.Contains("." + RowStampUtil.RowstampColumnName)) {
-                    value = RowStampUtil.Convert(pair.Value);
-                } else if (pair.Value is decimal) {
-                    // workaround to remove the trailing zeros after the '.' on decimal values
-                    if (pair.Value == null) {
-                        value = null;
-                    } else {
-                        var stringValue = Convert.ToString(pair.Value);
-                        stringValue = stringValue.Contains(".") ? stringValue.TrimEnd('0').TrimEnd('.') : stringValue;
-                        value = stringValue.Contains(",") ? stringValue.TrimEnd('0').TrimEnd(',') : stringValue;
-                    }
-                } else {
-                    // let the serializer take care of date convertion
-                    value = pair.Value == null ? null : (pair.Value is DateTime ? pair.Value : Convert.ToString(pair.Value));
-                }
+                object value = GetValue(entityMetadata, pair);
                 attributes[pair.Key] = value;
             }
             //true: avoid double rows interation for rowstamp handling
             return new DataMap(applicationMetadata.Name, attributes, null, true) {
                 Id = attributes[applicationMetadata.Schema.IdFieldName].ToString()
             };
+        }
+
+        private static object GetValue(SlicedEntityMetadata entityMetadata, KeyValuePair<string, object> pair) {
+            object value;
+            if (pair.Key == RowStampUtil.RowstampColumnName || pair.Key.Contains("." + RowStampUtil.RowstampColumnName)) {
+                value = RowStampUtil.Convert(pair.Value);
+            } else if (pair.Value is decimal) {
+                // workaround to remove the trailing zeros after the '.' on decimal values
+                if (pair.Value == null) {
+                    value = null;
+                } else {
+                    var stringValue = Convert.ToString(pair.Value);
+                    stringValue = stringValue.Contains(".") ? stringValue.TrimEnd('0').TrimEnd('.') : stringValue;
+                    value = stringValue.Contains(",") ? stringValue.TrimEnd('0').TrimEnd(',') : stringValue;
+                }
+            } else if (pair.Value == null) {
+                // let the serializer take care of date convertion
+                value = null;
+            } else {
+                if (pair.Value is DateTime) {
+                    var attributeDeclaration = entityMetadata.Schema.Attributes.FirstOrDefault(f => f.Name.EqualsIc(pair.Key));
+                    if (attributeDeclaration == null) {
+                        value = pair.Value;
+                    } else {
+                        if (attributeDeclaration.ConnectorParameters.Parameters.ContainsKey("utcdate")) {
+                            var date = (DateTime)pair.Value;
+                            date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+                            return date;
+                        }
+                        if (attributeDeclaration.ConnectorParameters.Parameters.ContainsKey("offset")) {
+                            var date = (DateTime)pair.Value;
+                            return new DateTimeOffset(date);
+                        }
+                        value = pair.Value;
+                    }
+                } else {
+                    value = Convert.ToString(pair.Value);
+                }
+            }
+            return value;
         }
 
         public static DataMap GetInstanceFromStringDictionary(string application, IDictionary<string, string> fields) {

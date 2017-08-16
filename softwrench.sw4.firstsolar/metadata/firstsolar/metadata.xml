@@ -49,7 +49,11 @@
         <attribute name="apptrequired" type="smallint" required="true" />
         <attribute name="appointment" type="smallint" required="true" />
         <attribute name="worklog" type="smallint" required="true" />
-        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0)" type="date"/>
+        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0)" type="date">
+          <connectorParameters>
+            <connectorParameter key="offset" value="true" />
+          </connectorParameters>
+        </attribute>
       </attributes>
 
       <connectorParameters>

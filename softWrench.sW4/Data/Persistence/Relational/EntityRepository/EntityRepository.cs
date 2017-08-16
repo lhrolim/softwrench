@@ -105,6 +105,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
                 date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
                 return date;
             }
+            if (attributeDeclaration.ConnectorParameters.Parameters.ContainsKey("offset")) {
+                var date = (DateTime)value;
+                return new DateTimeOffset(date);
+            }
             if (entityMetadata.SWEntity()) {
                 var date = (DateTime)value;
                 date = DateTime.SpecifyKind(date, DateTimeKind.Local);

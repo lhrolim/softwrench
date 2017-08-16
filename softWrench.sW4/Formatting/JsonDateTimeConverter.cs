@@ -24,6 +24,12 @@ namespace softWrench.sW4.Web.Formatting {
         }
 
         private static void DoWriteJson(JsonWriter writer, object value) {
+            if (value is DateTimeOffset) {
+                var dto = (DateTimeOffset)value;
+                writer.WriteValue(dto.DateTime);
+                return;
+            }
+
             if (!(value is DateTime)) {
                 writer.WriteValue((string)null);
                 return;
@@ -41,6 +47,7 @@ namespace softWrench.sW4.Web.Formatting {
             //https://controltechnologysolutions.atlassian.net/browse/SWWEB-1688
             var isAlreadyOnUtc = DateTimeKind.Utc.Equals(date.Kind);
             var isAlreadyLocal = DateTimeKind.Local.Equals(date.Kind);
+
 
             DateTime dateConverted;
 

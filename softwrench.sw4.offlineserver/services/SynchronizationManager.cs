@@ -586,7 +586,7 @@ namespace softwrench.sw4.offlineserver.services {
             }
             var dataMaps = new List<JSONConvertedDatamap>();
             foreach (var row in enumerable) {
-                var dataMap = DataMap.Populate(appMetadata, row);
+                var dataMap = DataMap.Populate(appMetadata, entityMetadata, row);
                 dataMaps.Add(new JSONConvertedDatamap(dataMap));
             }
             if (isAssociationData && !"true".Equals(appMetadata.Schema.GetProperty(OfflineConstants.AvoidCaching))) {

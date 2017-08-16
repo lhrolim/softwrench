@@ -136,6 +136,21 @@
   </complexType>
 
   <complexType name="Attribute">
+    <choice>
+      <element name="connectorParameters" maxOccurs="1"
+               minOccurs="0">
+        <complexType>
+          <sequence>
+            <element name="connectorParameter"
+                     type="tns:Parameter" maxOccurs="unbounded" minOccurs="1">
+            </element>
+          </sequence>
+          <attribute name="excludeundeclared"
+                     type="boolean">
+          </attribute>
+        </complexType>
+      </element>
+    </choice>
     <attribute name="name" type="string" use="required"></attribute>
     <attribute name="required" type="string"></attribute>
     <attribute name="type" type="string" use="required"></attribute>
@@ -161,6 +176,9 @@
         </documentation>
       </annotation>
     </attribute>
+    
+    
+
   </complexType>
 
   <complexType name="Relationship">
