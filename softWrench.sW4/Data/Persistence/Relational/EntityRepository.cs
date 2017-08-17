@@ -154,7 +154,10 @@ namespace softWrench.sW4.Data.Persistence.Relational {
                     item["hmachash"] = AuthUtils.HmacShaEncode(item["relatedreckey"].ToString());
                 } else if (entityMetadata.Name == "ticket" || entityMetadata.Name == "imac") {
                     item["hmachash"] = AuthUtils.HmacShaEncode(item["ticketid"].ToString());
-                } 
+                } else if (entityMetadata.IdFieldName != null) {
+                    //for compositions in general
+                    item["hmachash"] = AuthUtils.HmacShaEncode(item[entityMetadata.IdFieldName].ToString());
+                }
 
                 list.Add(item);
             }

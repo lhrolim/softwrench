@@ -326,6 +326,7 @@ app.directive('compositionList', function (contextService, spinService) {
                 var key = {};
                 parameters.request = request;
                 request.id = compositionId;
+                request.hmachash = item["hmachash"];
                 request.key = key;
                 key.schemaId = compositiondetailschema.schemaId;
                 key.mode = compositiondetailschema.mode;
