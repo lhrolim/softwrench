@@ -4,9 +4,9 @@ using System.Text;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Metadata.Entities.Schema;
 
 namespace softWrench.sW4.Data.Persistence.Relational {

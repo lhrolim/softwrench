@@ -27,18 +27,20 @@ namespace softwrench.sW4.test.Util {
             }
         }
 
-        public static Mock<T> CreateMock<T>() where T : class {
+        public static Mock<T> CreateMock<T>(bool useStrict=false) where T : class {
             var mockType = typeof(T);
+            var behavior = useStrict ? MockBehavior.Strict : MockBehavior.Default;
+
             if (mockType.IsInterface || mockType.IsAbstract) {
                 //parameterless
-                return new Mock<T>();
+                return new Mock<T>(behavior);
             }
 
             var constructors = mockType.GetConstructors();
             var constructor = mockType.GetConstructor(Type.EmptyTypes);
             if (constructor != null) {
                 //parameterless
-                return new Mock<T>();
+                return new Mock<T>(behavior);
             }
             var firstConstructor = constructors[0];
             var parameterInfos = firstConstructor.GetParameters();

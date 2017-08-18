@@ -15,7 +15,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Api {
 
         public long MaxRowstamp { get; set; }
 
-        public ISet<string> ChunksAlreadyChecked { get; set; } = new HashSet<string>();
+        public IDictionary<string,CacheRoundtripStatus> ChunksAlreadyChecked { get; set; } = new Dictionary<string, CacheRoundtripStatus>();
 
         public ISet<string> ChunksIgnored { get; set; } = new HashSet<string>();
 

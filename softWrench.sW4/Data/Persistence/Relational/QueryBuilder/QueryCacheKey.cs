@@ -1,4 +1,4 @@
-﻿using softWrench.sW4.Data.Sync;
+﻿using softWrench.sW4.Data.Offline;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
     public class QueryCacheKey {

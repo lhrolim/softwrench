@@ -404,6 +404,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderToolTransDataSet.cs" />
     <Compile Include="Data\Persistence\Engine\Exception\AfterCreationException.cs" />
+    <Compile Include="Data\Persistence\Relational\Cache\Api\CacheRoundtripStatus.cs" />
     <Compile Include="Data\Persistence\Relational\Cache\Api\IRedisManager.cs" />
     <Compile Include="Data\Persistence\Relational\Cache\Api\RedisLookupResult.cs" />
     <Compile Include="Data\Persistence\Relational\Cache\Core\CustomJSONSerializer.cs" />

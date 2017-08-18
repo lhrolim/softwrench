@@ -80,7 +80,7 @@
 
                         const params = {};
                         
-                        return rowstampService.generateAssociationRowstampMap(applicationsToFetch).then(rowstampMap => {
+                        return rowstampService.generateAssociationRowstampMap(applicationsToFetch, firstTime).then(rowstampMap => {
                             const payload = { rowstampMap };
                             const current = securityService.currentFullUser();
                             if (current.meta && current.meta.changed) {

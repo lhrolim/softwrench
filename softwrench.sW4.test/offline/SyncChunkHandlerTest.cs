@@ -9,6 +9,7 @@ using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.test.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 
 namespace softwrench.sW4.test.offline {
 
@@ -35,7 +36,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results, true);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(5, newResult.AssociationData["asset"].Count);
@@ -64,7 +65,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results,true);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("location"));
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
@@ -90,7 +91,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results,true);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(10, newResult.AssociationData["asset"].Count);
@@ -104,6 +105,87 @@ namespace softwrench.sW4.test.offline {
             Assert.IsTrue(newResult.IncompleteAssociations.Contains("location"));
             Assert.IsTrue(newResult.IncompleteAssociations.Contains("asset"));
             Assert.IsTrue(newResult.IncompleteAssociations.Contains("syndomain"));
+
+
+            TestUtil.VerifyMocks(_configMock);
+
+        }
+
+
+        [TestMethod]
+        public async Task TestSyncLimitMultipleKeys() {
+            var results = new AssociationSynchronizationResultDto(10);
+            results.AssociationData["asset"] = BlankInstances("asset", 7);
+            results.AssociationData["location"] = BlankInstances("location", 10);
+            var locationData = results.AssociationData["location"];
+            locationData.CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus>{
+                {"1", new CacheRoundtripStatus {TransientPosition = 2, Position = 4}},
+                {"2", new CacheRoundtripStatus {TransientPosition = 5}},
+                {"3", new CacheRoundtripStatus {TransientPosition = 5}},
+            };
+
+
+            _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
+
+
+            var newResult = await _syncChunkHandler.HandleMaxSize(results, true);
+            Assert.IsTrue(newResult.HasMoreData);
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
+            Assert.AreEqual(7, newResult.AssociationData["asset"].Count);
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("location"));
+            Assert.AreEqual(3, newResult.AssociationData["location"].Count);
+
+            //location is incomplete
+            Assert.AreEqual(1, newResult.IncompleteAssociations.Count);
+            Assert.IsTrue(newResult.IncompleteAssociations.Contains("location"));
+
+            Assert.IsTrue(newResult.CompleteCacheEntries["1"].Complete);
+            Assert.IsFalse(newResult.CompleteCacheEntries["2"].Complete);
+            Assert.IsFalse(newResult.CompleteCacheEntries["3"].Complete);
+
+            Assert.AreEqual(newResult.CompleteCacheEntries["1"].Position,6);
+            Assert.AreEqual(newResult.CompleteCacheEntries["2"].Position,1);
+            Assert.AreEqual(newResult.CompleteCacheEntries["3"].Position,0);
+
+
+            TestUtil.VerifyMocks(_configMock);
+
+        }
+
+        [TestMethod]
+        public async Task TestSyncLimitMultipleKeys2() {
+            var results = new AssociationSynchronizationResultDto(10);
+            results.AssociationData["asset"] = BlankInstances("asset", 7);
+            results.AssociationData["location"] = BlankInstances("location", 10);
+            var locationData = results.AssociationData["location"];
+            locationData.CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus>{
+                {"1", new CacheRoundtripStatus {Position = 4, Complete = true}},
+                {"2", new CacheRoundtripStatus {TransientPosition = 5}},
+                {"3", new CacheRoundtripStatus {TransientPosition = 5}},
+            };
+
+
+            _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
+
+
+            var newResult = await _syncChunkHandler.HandleMaxSize(results, true);
+            Assert.IsTrue(newResult.HasMoreData);
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
+            Assert.AreEqual(7, newResult.AssociationData["asset"].Count);
+            Assert.IsTrue(newResult.AssociationData.ContainsKey("location"));
+            Assert.AreEqual(3, newResult.AssociationData["location"].Count);
+
+            //location is incomplete
+            Assert.AreEqual(1, newResult.IncompleteAssociations.Count);
+            Assert.IsTrue(newResult.IncompleteAssociations.Contains("location"));
+
+            Assert.IsTrue(newResult.CompleteCacheEntries["1"].Complete);
+            Assert.IsFalse(newResult.CompleteCacheEntries["2"].Complete);
+            Assert.IsFalse(newResult.CompleteCacheEntries["3"].Complete);
+
+            Assert.AreEqual(newResult.CompleteCacheEntries["1"].Position, 4);
+            Assert.AreEqual(newResult.CompleteCacheEntries["2"].Position, 3);
+            Assert.AreEqual(newResult.CompleteCacheEntries["3"].Position, 0);
 
 
             TestUtil.VerifyMocks(_configMock);

@@ -34,7 +34,7 @@
         });
 
         spyOn(swdbDAO, 'findByQuery').and.callFake(function () {
-            return $q.when([{datamap:'aaa', rowstamp:"20000" }]);
+            return $q.when([{ datamap: 'aaa', rowstamp: "20000" }]);
         });
 
         rowStampService.generateRowstampMap("asset").then(function (result) {
@@ -63,6 +63,31 @@
             expect(result).toEqual({ items: [{ id: '10', rowstamp: '100' }, { id: '20', rowstamp: '200' }] });
             expect(swdbDAO.countByQuery).toHaveBeenCalledWith('DataEntry', "application ='asset'");
             expect(swdbDAO.findByQuery).toHaveBeenCalledWith('DataEntry', "application ='asset'", { projectionFields: ["remoteId", "rowstamp"] });
+        }).finally(done);
+
+        //this is needed to trigger the promises resolutions!
+        $rootScope.$digest();
+
+    });
+
+    //use this done function to avoid the tests to finish before the promises were resolved
+    it("Testing Association Initial Load --> Bring uid instead of rowstamp", function (done) {
+
+        spyOn(swdbDAO, 'findByQuery').and.callFake(function () {
+            return $q.when([{ remoteid: '10', application: 'asset' }, { remoteid: '20', application: 'location' }]);
+        });
+
+        rowStampService.generateAssociationRowstampMap([], true).then(function (result) {
+
+            const expectation = {
+                associationmap: {
+                    "asset": { "maximouid": '10' },
+                    "location": { "maximouid": '20' }
+                }
+            };
+
+            expect(result).toEqual(expectation);
+            expect(swdbDAO.findByQuery).toHaveBeenCalledWith('AssociationData', null, { fullquery: entities.AssociationData.maxRemoteIdQueries });
         }).finally(done);
 
         //this is needed to trigger the promises resolutions!

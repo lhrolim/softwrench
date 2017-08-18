@@ -64,10 +64,21 @@ namespace softwrench.sw4.offlineserver.services.util {
             //Loop over the array
             foreach (dynamic row in obj.associationmap) {
                 var application = row.Name;
-                var maxRowstamp = row.Value.maximorowstamp.Value;
+                var value = row.Value;
+                object maxRowstamp = null;
+                if (value.maximorowstamp != null) {
+                    maxRowstamp = value.maximorowstamp.Value;
+                }
+
+                object maxuid = null;
+                if (value.maximouid != null) {
+                    maxuid = value.maximouid.Value;
+                }
+
                 //TODO: implement other fields
                 result.Add(application, new ClientAssociationCacheEntry() {
-                    MaxRowstamp = "" + maxRowstamp
+                    MaxRowstamp = "" + maxRowstamp,
+                    MaxUid = "" + maxuid
                 });
             }
             return result;

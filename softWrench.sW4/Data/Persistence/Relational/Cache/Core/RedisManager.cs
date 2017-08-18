@@ -62,7 +62,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
         }
 
 
-        public bool IsAvailable() {
+        public virtual bool IsAvailable() {
             return ServiceAvailable;
         }
 
@@ -104,12 +104,17 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             var result = new RedisLookupResult<T> {
                 Chunks = results,
                 Schema = lookupDTO.Schema,
-                ChunksAlreadyChecked = lookupDTO.CacheEntriesToAvoid,
+                ChunksAlreadyChecked = lookupDTO.CacheRoundtripStatuses,
             };
 
             var cacheLimit = 0;
 
+
+            //            var hasMultipleKeys = keys.Count > 1;
+
+            var first = true;
             //usually just one key will be present
+
             foreach (var key in keys) {
 
                 if (cacheLimit > lookupDTO.GlobalLimit) {
@@ -128,6 +133,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                     //therefore it might be null quite often.
                     // other keys will be the linear combination for these scenarios.
                     _log.DebugFormat("cache entry {0} not found", key);
+                    first = false;
                     continue;
                 }
 
@@ -147,7 +153,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                         continue;
                     }
 
-                    if (lookupDTO.CacheEntriesToAvoid.Contains(entry.RealKey)) {
+                    if (lookupDTO.CacheRoundtripStatuses.ContainsKey(entry.RealKey) && lookupDTO.CacheRoundtripStatuses[entry.RealKey].Complete) {
                         _log.DebugFormat("ignoring cache entry {0} cause it was already handled", entry.RealKey);
                         continue;
                     }
@@ -157,12 +163,25 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                     }
 
                     var cacheResult = await CacheClient.GetAsync<IList<T>>(entry.RealKey);
+                    var count = entry.Count;
+                    if (lookupDTO.CacheRoundtripStatuses.ContainsKey(entry.RealKey)) {
+                        var offSetPosition = lookupDTO.CacheRoundtripStatuses[entry.RealKey].Position;
+                        _log.DebugFormat("skipping {0} entries from cache {1} since they were already downloaded at another roundtrup", offSetPosition, key);
+                        cacheResult = new List<T>(cacheResult.Skip(offSetPosition));
+                    }
 
                     results.Add(new RedisResultDTO<T>(
                         entry.RealKey, cacheResult
                     ));
-                    cacheLimit += entry.Count;
+                    cacheLimit += count;
                 }
+
+                if (first) {
+                    //if multiple keys were found, the first one will be the linear combination of them all.
+                    //thus, returning it (case it is found) should be enough
+                    break;
+                }
+
             }
 
             return result;

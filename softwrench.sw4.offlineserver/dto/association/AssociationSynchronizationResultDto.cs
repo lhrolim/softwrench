@@ -24,8 +24,14 @@ namespace softwrench.sw4.offlineserver.dto.association {
             get { return new HashSet<string>(AssociationData.Where(a => a.Value.IndividualItems.Any()).Select(k => k.Key)); }
         }
 
-        public ISet<string> CompleteCacheEntries {
-            get { return new HashSet<string>(AssociationData.Values.SelectMany(v => v.CompleteCacheEntries)); }
+        public IDictionary<string, CacheRoundtripStatus> CompleteCacheEntries {
+            get {
+                var result = new Dictionary<string, CacheRoundtripStatus>();
+                foreach (var roundTripStatus in AssociationData.Values.SelectMany(v => v.CompleteCacheEntries)) {
+                    result.AddE(roundTripStatus.Key, roundTripStatus.Value, "completeCacheEntries");
+                }
+                return result;
+            }
         }
 
         [JsonIgnore]
@@ -41,6 +47,9 @@ namespace softwrench.sw4.offlineserver.dto.association {
             }
         }
 
+        /// <summary>
+        /// Applications which are limited by a metadata property
+        /// </summary>
         [JsonIgnore]
         public IDictionary<string, bool> LimitedAssociations { get; set; } = new ConcurrentDictionary<string, bool>();
 
@@ -85,7 +94,7 @@ namespace softwrench.sw4.offlineserver.dto.association {
             };
         }
 
-        public void AddIndividualJsonDatamaps(string key,string idFieldName, IList<JSONConvertedDatamap> datamaps) {
+        public void AddIndividualJsonDatamaps(string key, string idFieldName, IList<JSONConvertedDatamap> datamaps) {
             if (!AssociationData.ContainsKey(key)) {
                 AssociationData[key] = new AssociationDataDto();
             }
@@ -107,14 +116,20 @@ namespace softwrench.sw4.offlineserver.dto.association {
 
         public void AddJsonFromRedisResult<T>(RedisLookupResult<T> redisResult, bool shouldCheckDB) where T : DataMap {
             if (!redisResult.Chunks.Any()) {
-                AssociationData[redisResult.Schema.ApplicationName] = new AssociationDataDto { Incomplete = true };
+                AssociationData[redisResult.Schema.ApplicationName] = new AssociationDataDto { Incomplete = true, CacheMiss = true};
                 return;
             }
 
 
             var associationDataDto = new AssociationDataDto();
             //these were already downloaded on other chunks
-            associationDataDto.CompleteCacheEntries.AddAll(redisResult.ChunksAlreadyChecked);
+
+            foreach (var checkedChunk in redisResult.ChunksAlreadyChecked) {
+                if (checkedChunk.Value.Application.Equals(redisResult.Schema.ApplicationName)) {
+                    associationDataDto.CompleteCacheEntries.Add(checkedChunk);
+                }
+            }
+
             associationDataDto.HasMoreCachedEntries = redisResult.HasMoreChunks;
 
             //marking entries as incomplete to force a database synchronization based on the maxrowstamp
@@ -126,8 +141,13 @@ namespace softwrench.sw4.offlineserver.dto.association {
                 foreach (var dm in chunk.Results) {
                     associationDataDto.IndividualItems.Add(dm);
                 }
+                if (associationDataDto.CompleteCacheEntries.ContainsKey(chunk.RealKey)) {
+                    associationDataDto.CompleteCacheEntries[chunk.RealKey].TransientPosition = chunk.Results.Count;
+                } else {
+                    associationDataDto.CompleteCacheEntries.Add(chunk.RealKey, new CacheRoundtripStatus { TransientPosition = chunk.Results.Count, Application = redisResult.Schema.ApplicationName });
+                }
 
-                associationDataDto.CompleteCacheEntries.Add(chunk.RealKey);
+
 
             }
             associationDataDto.RemoteIdFieldName = redisResult.Schema.IdFieldName;
@@ -143,13 +163,30 @@ namespace softwrench.sw4.offlineserver.dto.association {
             return $"{nameof(AssociationData)}: {AssociationData.Count + ":" + TotalCount}, {nameof(HasMoreData)}: {HasMoreData}, {nameof(IsEmpty)}: {IsEmpty}";
         }
 
+        /// <summary>
+        /// Whether this application has finished collecting all of its cache data
+        /// </summary>
+        /// <param name="applicationName"></param>
+        /// <returns></returns>
         public bool HasFinishedCollectingCache(string applicationName) {
             if (!AssociationData.ContainsKey(applicationName)) {
                 return false;
             }
 
             var associationData = AssociationData[applicationName];
-            return associationData.CompleteCacheEntries.Any() && !associationData.HasMoreCachedEntries;
+
+            // TODO: analize the necessity of this cachemiss or if its better change the Incomplete flag to an enum
+            return (associationData.CompleteCacheEntries.Any() || associationData.CacheMiss) && !associationData.HasMoreCachedEntries;
+        }
+
+        public bool CacheMiss(string applicationName) {
+            if (!AssociationData.ContainsKey(applicationName)) {
+                return false;
+            }
+
+            var associationData = AssociationData[applicationName];
+            // TODO: analize the necessity of this cachemiss or if its better change the Incomplete flag to an enum
+            return associationData.CacheMiss;
         }
     }
 }

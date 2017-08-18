@@ -8,7 +8,6 @@ using JetBrains.Annotations;
 using log4net;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softwrench.sW4.Shared2.Data;

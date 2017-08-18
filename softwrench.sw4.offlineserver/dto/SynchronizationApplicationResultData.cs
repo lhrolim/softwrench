@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sw4.offlineserver.dto {

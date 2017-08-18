@@ -17,7 +17,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
 
         private readonly RedisManager _redisManager = new RedisManager(null);
 
-        private readonly Mock<ICacheClient> _cacheClient = TestUtil.CreateMock<ICacheClient>();
+        private readonly Mock<ICacheClient> _cacheClient = TestUtil.CreateMock<ICacheClient>(true);
 
 
 
@@ -379,7 +379,8 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             var lookupDTO = new RedisLookupDTO {
                 Schema = schema,
                 GlobalLimit = 10,
-                CacheEntriesToAvoid = new HashSet<string> { "application=location;schemaid=list;chunk:1", "application=location;schemaid=list;chunk:2" }
+                CacheRoundtripStatuses = new Dictionary<string, CacheRoundtripStatus>{ { "application=location;schemaid=list;chunk:1", new CacheRoundtripStatus(){Complete = true}}
+                    , {"application=location;schemaid=list;chunk:2", new CacheRoundtripStatus(){Complete = true} }}
             };
 
 
@@ -396,7 +397,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
 
             _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;schemaid=list")).ReturnsAsync(descriptor);
             _cacheClient.Setup(c => c.GetAsync<IList<JSONConvertedDatamap>>("application=location;schemaid=list;chunk:3")).ReturnsAsync(list);
-//            _cacheClient.Setup(c => c.GetAsync<IList<DataMap>>("application=location;schemaid=list;chunk:4")).ReturnsAsync(list);
+            //            _cacheClient.Setup(c => c.GetAsync<IList<DataMap>>("application=location;schemaid=list;chunk:4")).ReturnsAsync(list);
 
             var results = await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
             Assert.AreEqual(1, results.Chunks.Count);
@@ -448,6 +449,127 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
             Assert.AreEqual(list, results.Chunks[0].Results);
             Assert.AreEqual(10, results.Chunks[0].Results.Count);
             Assert.IsTrue(results.HasMoreChunks);
+
+            TestUtil.VerifyMocks(_cacheClient);
+        }
+
+
+        [TestMethod]
+        public async Task TestMultipleKeysFoundFirstBringOnlyExact() {
+
+            var schema = new ApplicationSchemaDefinition {
+                SchemaId = "list",
+                ApplicationName = "location"
+            };
+
+            var facilities = new List<string> { "aes", "acs", "tpz" };
+
+            var lookupDTO = new RedisLookupDTO {
+                Schema = schema,
+                GlobalLimit = 100000,
+                ExtraKeys = new Dictionary<string, object> { { "facilities", facilities } }
+            };
+
+
+            var descriptor1 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var descriptor2 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var descriptor3 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var descriptor4 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var list = GenerateListOfDataMaps(10);
+
+            descriptor1.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=acs,aes,tpz;schemaid=list;chunk:1", Count = 10 });
+            descriptor2.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=acs;schemaid=list;chunk:1", Count = 10 });
+            descriptor3.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=aes;schemaid=list;chunk:1", Count = 10 });
+            descriptor4.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=tpz;schemaid=list;chunk:1", Count = 10 });
+
+
+            _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;facilities=acs,aes,tpz;schemaid=list")).ReturnsAsync(descriptor1);
+            _cacheClient.Setup(c => c.GetAsync<IList<JSONConvertedDatamap>>("application=location;facilities=acs,aes,tpz;schemaid=list;chunk:1")).ReturnsAsync(list);
+
+            var results = await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
+            Assert.AreEqual(1, results.Chunks.Count);
+            Assert.AreEqual(0, results.ChunksAlreadyChecked.Count);
+            Assert.AreEqual(0, results.ChunksIgnored.Count);
+            Assert.AreEqual(100L, descriptor1.MaxRowstamp);
+            Assert.AreEqual(list, results.Chunks[0].Results);
+            Assert.AreEqual(10, results.Chunks[0].Results.Count);
+            Assert.IsFalse(results.HasMoreChunks);
+
+
+            TestUtil.VerifyMocks(_cacheClient);
+        }
+
+
+        [TestMethod]
+        public async Task TestMultipleKeysFirstNotFoundBringOthers() {
+
+            var schema = new ApplicationSchemaDefinition {
+                SchemaId = "list",
+                ApplicationName = "location"
+            };
+
+            var facilities = new List<string> { "aes", "acs" };
+
+            var lookupDTO = new RedisLookupDTO {
+                Schema = schema,
+                GlobalLimit = 100000,
+                ExtraKeys = new Dictionary<string, object> { { "facilities", facilities } }
+            };
+
+
+            var descriptor1 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var descriptor2 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var descriptor3 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var descriptor4 = new RedisChunkMetadataDescriptor {
+                MaxRowstamp = 100L
+            };
+
+            var list = GenerateListOfDataMaps(10);
+
+//            descriptor1.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=acs,aes;schemaid=list;chunk:1", Count = 10 });
+            descriptor2.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=acs;schemaid=list;chunk:1", Count = 10 });
+            descriptor3.Chunks.Add(new RedisLookupRowstampChunkHash { RealKey = "application=location;facilities=aes;schemaid=list;chunk:1", Count = 10 });
+
+
+            _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;facilities=acs,aes;schemaid=list")).ReturnsAsync(null);
+            _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;facilities=acs;schemaid=list")).ReturnsAsync(descriptor2);
+            _cacheClient.Setup(c => c.GetAsync<RedisChunkMetadataDescriptor>("application=location;facilities=aes;schemaid=list")).ReturnsAsync(descriptor3);
+
+            _cacheClient.Setup(c => c.GetAsync<IList<JSONConvertedDatamap>>("application=location;facilities=acs;schemaid=list;chunk:1")).ReturnsAsync(list);
+            _cacheClient.Setup(c => c.GetAsync<IList<JSONConvertedDatamap>>("application=location;facilities=aes;schemaid=list;chunk:1")).ReturnsAsync(list);
+
+
+
+            var results = await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
+            Assert.AreEqual(2, results.Chunks.Count);
+            Assert.AreEqual(0, results.ChunksAlreadyChecked.Count);
+            Assert.AreEqual(0, results.ChunksIgnored.Count);
+            Assert.AreEqual(100L, descriptor1.MaxRowstamp);
+            Assert.AreEqual(list, results.Chunks[0].Results);
+            Assert.AreEqual(10, results.Chunks[0].Results.Count);
+            Assert.IsFalse(results.HasMoreChunks);
+
 
             TestUtil.VerifyMocks(_cacheClient);
         }

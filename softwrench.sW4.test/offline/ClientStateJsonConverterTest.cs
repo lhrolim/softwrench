@@ -43,6 +43,23 @@ namespace softwrench.sW4.test.offline {
                 }
             }";
 
+
+        public static string AssociationMapUidJson = @"{
+                'associationmap': {
+                    'asset': {
+                        'maximouid': 12500,
+                        'whereclausehash': 'hashoflatestappliedwhereclause',
+                        'syncschemahash': 'baadfasdfasdfa'
+                    },
+
+                    'problem': {
+                        'maximouid': 12000,
+                        'whereclausehash': 'hashoflatestappliedwhereclause',
+                        'syncschemahash': 'baadfasdfasdfa'
+                    }
+                }
+            }";
+
         [TestMethod]
         public void TestJsonConversion() {
             var ob = JObject.Parse(RowstampMapJson);
@@ -70,6 +87,17 @@ namespace softwrench.sW4.test.offline {
             Assert.IsTrue(result.ContainsKey("problem"));
             var assetMap = result["asset"];
             Assert.AreEqual("12500", assetMap.MaxRowstamp);
+        }
+
+        [TestMethod]
+        public void TestAssociationConversionUid() {
+            var ob = JObject.Parse(AssociationMapUidJson);
+            var result = ClientStateJsonConverter.GetAssociationRowstampDict(ob);
+            Assert.AreEqual(2, result.Count);
+            Assert.IsTrue(result.ContainsKey("asset"));
+            Assert.IsTrue(result.ContainsKey("problem"));
+            var assetMap = result["asset"];
+            Assert.AreEqual("12500", assetMap.MaxUid);
         }
     }
 }

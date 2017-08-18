@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
-using softWrench.sW4.Data.Sync;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Util;
 

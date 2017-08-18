@@ -3,7 +3,6 @@ using log4net;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using cts.commons.simpleinjector;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Linq;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational {

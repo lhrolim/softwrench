@@ -3,7 +3,6 @@ using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.API;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Context;
 using System;
@@ -13,6 +12,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using NHibernate.Util;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Search.QuickSearch;
 
 namespace softWrench.sW4.Data.Search {

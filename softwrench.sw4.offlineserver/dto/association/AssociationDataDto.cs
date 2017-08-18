@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 
 namespace softwrench.sw4.offlineserver.dto.association {
     public class AssociationDataDto {
@@ -23,7 +24,7 @@ namespace softwrench.sw4.offlineserver.dto.association {
         [JsonIgnore]
         public bool HasMoreCachedEntries { get; set; }
 
-        
+
         /// <summary>
         /// There´s still more data available to be downloaded, either from the RedisCache or from the Database.
         /// 
@@ -37,8 +38,26 @@ namespace softwrench.sw4.offlineserver.dto.association {
         /// 
         /// This avoids an eventual deserialization cost that would take place to limit the chunk of the json data that lies on the in memory caches
         /// 
+        ///  k = cache key
+        ///  v (bool) = true if this cache entry was already checked on a previous roundtrip sync, false otherwise (i.e subject of this roundtrip check)
+        /// 
         /// </summary>
-        public ISet<string> CompleteCacheEntries { get; set; } = new HashSet<string>();
+        public IDictionary<string, CacheRoundtripStatus> CompleteCacheEntries { get; set; } = new Dictionary<string, CacheRoundtripStatus>();
+
+
+        //        /// <summary>
+        //        /// The ids of the cache entries that were already checked and returned, and hence do not need to be looked up again;
+        //        /// 
+        //        /// This avoids an eventual deserialization cost that would take place to limit the chunk of the json data that lies on the in memory caches
+        //        /// 
+        //        /// </summary>
+        //        public ISet<string> ThisRoundTripCompleteCacheEntries { get; set; } = new HashSet<string>();
+
+        /// <summary>
+        /// Set true when no results/chunks were found for the association on cache
+        /// TODO: analize the necessity of this cachemiss or if its better change the Incomplete flag to an enum
+        /// </summary>
+        public bool CacheMiss { get; set; }
 
 
         /// <summary>
@@ -66,6 +85,15 @@ namespace softwrench.sw4.offlineserver.dto.association {
 
         public void Clear() {
             IndividualItems.Clear();
+            foreach (var cacheEntry in CompleteCacheEntries) {
+                if (!cacheEntry.Value.Complete){
+                    cacheEntry.Value.TransientPosition = 0;
+                }
+            }
+        }
+
+        public override string ToString() {
+            return $"{nameof(HasMoreCachedEntries)}: {HasMoreCachedEntries}, {nameof(Count)}: {Count}";
         }
     }
 }

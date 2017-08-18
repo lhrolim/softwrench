@@ -52,7 +52,7 @@ namespace softwrench.sW4.test.offline {
             _configFacade.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(100);
             _configFacade.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxAssociationThreads, null)).ReturnsAsync(4);
             _user.Genericproperties[FirstSolarConstants.FacilitiesProp] = new List<string> { "ACS", "AES" };
-
+            _redisManager.Setup(r => r.IsAvailable()).Returns(true);
         }
 
         //        [TestMethod]
@@ -62,8 +62,8 @@ namespace softwrench.sW4.test.offline {
 
             var locationSyncSchema = MetadataProvider.Application("location").Schemas()[new ApplicationMetadataSchemaKey("@sync")];
 
-            var lookupDTO = new RedisLookupDTO() { Schema = locationSyncSchema, GlobalLimit = 100 };
-            var result = new RedisLookupResult<DataMap>() { Schema = locationSyncSchema };
+            var lookupDTO = new RedisLookupDTO { Schema = locationSyncSchema, GlobalLimit = 100 };
+            var result = new RedisLookupResult<DataMap> { Schema = locationSyncSchema };
             result.Chunks.Add(new RedisResultDTO<DataMap>(lookupDTO.BuildKeys().First() + ";chunk:1", GenerateListOfDataMaps("location", "locationuid", 100)));
             _redisManager.Setup(r => r.Lookup<DataMap>(lookupDTO)).ReturnsAsync(result);
 
@@ -83,7 +83,7 @@ namespace softwrench.sW4.test.offline {
                     dto.AssociationData[app.ApplicationName] =
                         new sw4.offlineserver.dto.association.AssociationDataDto {
                             HasMoreCachedEntries = false,
-                            CompleteCacheEntries = new HashSet<string> { "fakecache" }
+                            CompleteCacheEntries = new Dictionary<string,CacheRoundtripStatus> { {"fakecache",new CacheRoundtripStatus {Complete = true} }}
                         };
                 }
             }
@@ -106,7 +106,7 @@ namespace softwrench.sW4.test.offline {
                     dto.AssociationData[app.ApplicationName] =
                         new sw4.offlineserver.dto.association.AssociationDataDto {
                             HasMoreCachedEntries = false,
-                            CompleteCacheEntries = new HashSet<string> { "fakecache" }
+                            CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus> { { "fakecache" + app.ApplicationName, new CacheRoundtripStatus { Complete = true } } }
                         };
                 }
             }
@@ -114,6 +114,37 @@ namespace softwrench.sW4.test.offline {
             var completeApplicationMetadataDefinitions = results as IList<CompleteApplicationMetadataDefinition> ?? results.ToList();
 
             Assert.AreEqual(1, completeApplicationMetadataDefinitions.Count());
+        }
+
+
+        [TestMethod]
+        public void CacheMissNonOverFlowScenario() {
+            var apps = OffLineMetadataProvider.FetchAssociationApps(_user, true);
+
+            var dto = new sw4.offlineserver.dto.association.AssociationSynchronizationResultDto(1000);
+            foreach (var app in apps) {
+                if (app.ApplicationName == "offlineasset"){
+                    dto.AssociationData[app.ApplicationName] =
+                        new sw4.offlineserver.dto.association.AssociationDataDto {
+                            HasMoreCachedEntries = false,
+                            CacheMiss = true,
+                            CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus> { { "fakecache" + app.ApplicationName, new CacheRoundtripStatus { Complete = true } } }
+                        };
+                }
+
+                else if (app.ApplicationName != "assignment") {
+                    dto.AssociationData[app.ApplicationName] =
+                        new sw4.offlineserver.dto.association.AssociationDataDto {
+                            HasMoreCachedEntries = false,
+                            CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus> { { "fakecache" + app.ApplicationName, new CacheRoundtripStatus { Complete = true } } }
+                        };
+                }
+            }
+            var results = _syncManager.DatabaseApplicationsToCollect(true, dto, apps, false);
+            var completeApplicationMetadataDefinitions = results as IList<CompleteApplicationMetadataDefinition> ?? results.ToList();
+
+            Assert.IsTrue(completeApplicationMetadataDefinitions.Any(a=> a.ApplicationName.Equals("offlineasset")));
+            Assert.IsTrue(completeApplicationMetadataDefinitions.Any(a=> a.ApplicationName.Equals("assignment")));
         }
 
 

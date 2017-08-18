@@ -63,27 +63,38 @@
                 return deferred.promise;
             },
 
-            generateAssociationRowstampMap: function (apps) {
+            generateAssociationRowstampMap: function (apps, initialLoad) {
                 var log = $log.get("rowstampService#generateAssociationRowstampMap", ["sync","association"]);
                 var deferred = $q.defer();
                 var start = new Date().getTime();
                 //either for query for a single app, or for all of them
                 //TODO: use AssociationCache in the future
                 var formattedApps = null;
-                var hasApps = !!apps && apps.length > 0;
+                const hasApps = !!apps && apps.length > 0;
 
                 if (hasApps) {
                     formattedApps = "'" + apps.join("','") + "'";
                 }
+                let query;
+                if (initialLoad) {
+                    query = hasApps ? entities.AssociationData.maxRemoteIdQueryByApps.format(formattedApps) : entities.AssociationData.maxRemoteIdQueries;    
+                } else {
+                    query = hasApps ? entities.AssociationData.maxRowstampQueryByApps.format(formattedApps) : entities.AssociationData.maxRowstampQueries;    
+                }
 
-                const query = hasApps ? entities.AssociationData.maxRowstampQueryByApps.format(formattedApps) : entities.AssociationData.maxRowstampQueries;
+                
                 swdbDAO.findByQuery('AssociationData', null, { fullquery: query })
                     .then(function (queryResults) {
                         const result = {};
                         const associationmap = {};
                         for (let i = 0; i < queryResults.length; i++) {
                             const item = queryResults[i];
-                            associationmap[item.application] = { "maximorowstamp": item.rowstamp }
+                            if (initialLoad) {
+                                associationmap[item.application] = { "maximouid": item.remoteid }
+                            } else {
+                                associationmap[item.application] = { "maximorowstamp": item.rowstamp }
+                            }
+                            
                         }
                         const end = new Date().getTime();
                         log.debug("generated rowstampmap for associations. Ellapsed {0} ms".format(end - start));

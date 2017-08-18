@@ -30,7 +30,7 @@
             application: 'TEXT',
             datamap: 'JSON',
             rowstamp: 'INT',
-            remoteid: 'TEXT',
+            remoteid: 'NUMERIC',
             // index for use on searches
             textindex01: "TEXT",
             textindex02: "TEXT",
@@ -81,7 +81,11 @@
 
         entities.AssociationData.maxRowstampQueries = "select max(rowstamp) as rowstamp,application,id from AssociationData group by application";
 
+        entities.AssociationData.maxRemoteIdQueries = "select max(CAST(remoteid as int)) as remoteid,application,id from AssociationData group by application";
+
         entities.AssociationData.maxRowstampQueryByApps = "select max(rowstamp) as rowstamp,application,id from AssociationData where application in ({0}) group by application";
+
+        entities.AssociationData.maxRemoteIdQueryByApps = "select max(CAST(remoteid as int)) as remoteid,application,id from AssociationData where application in ({0}) group by application";
 
         //#endregion
 

@@ -15,7 +15,6 @@ using log4net;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
-using softWrench.sW4.Data.Sync;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities.Sliced;
@@ -30,6 +29,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -133,7 +133,7 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
         protected virtual async Task<AssociationSynchronizationResultDto> DoGetAssociationData(IEnumerable<CompleteApplicationMetadataDefinition> applicationsToFetch,
-            [NotNull] IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user, ISet<string> completeCacheEntries, bool initialLoad) {
+            [NotNull] IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user, IDictionary<string, CacheRoundtripStatus> completeCacheEntries, bool initialLoad) {
             var applicationsArray = applicationsToFetch.ToArray();
             var completeApplicationMetadataDefinitions = applicationsToFetch as CompleteApplicationMetadataDefinition[] ?? applicationsArray;
 
@@ -160,7 +160,7 @@ namespace softwrench.sw4.offlineserver.services {
             var watch = Stopwatch.StartNew();
             await HandleDatabase(initialLoad, rowstampMap, user, results, completeApplicationMetadataDefinitions, maxThreads);
 
-            results = await _syncChunkHandler.HandleMaxSize(results);
+            results = await _syncChunkHandler.HandleMaxSize(results, initialLoad);
 
             if (!results.IncompleteAssociations.Any()) {
                 results.HasMoreData = false;
@@ -177,7 +177,13 @@ namespace softwrench.sw4.offlineserver.services {
             Rowstamps rowstamp = null;
             if (rowstampMap.ContainsKey(association.ApplicationName)) {
                 var currentRowStamp = rowstampMap[association.ApplicationName].MaxRowstamp;
+                var maxUid = rowstampMap[association.ApplicationName].MaxUid;
                 rowstamp = new Rowstamps(currentRowStamp, null);
+                if (!string.IsNullOrEmpty(maxUid)) {
+                    rowstamp.LowerUid = maxUid;
+                    rowstamp.Lowerlimit = null;
+                }
+
             } else if (results.AssociationData.ContainsKey(association.ApplicationName) && results
                            .AssociationData[association.ApplicationName]
                            .CachedMaxRowstamp.HasValue) {
@@ -240,7 +246,8 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
         //either all the incomplete applications, or, if the chunk limit was reached, only those where the cache lookup has exhausted
-        internal virtual ISet<CompleteApplicationMetadataDefinition> DatabaseApplicationsToCollect(bool initialLoad, AssociationSynchronizationResultDto resultDTO, IEnumerable<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, bool hasOverFlownOnCacheOperation) {
+        internal virtual ISet<CompleteApplicationMetadataDefinition> DatabaseApplicationsToCollect(bool initialLoad, AssociationSynchronizationResultDto resultDTO, 
+            IEnumerable<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, bool hasOverFlownOnCacheOperation) {
 
             var results = new HashSet<CompleteApplicationMetadataDefinition>();
 
@@ -249,6 +256,7 @@ namespace softwrench.sw4.offlineserver.services {
 
             if (!initialLoad) {
                 if (!_redisManager.IsAvailable()) {
+                    //cache is no longer available for some reason, we should ensure to bring it all via the database
                     return new LinkedHashSet<CompleteApplicationMetadataDefinition>(definitions);
                 }
 
@@ -262,6 +270,7 @@ namespace softwrench.sw4.offlineserver.services {
 
             if (!hasOverFlownOnCacheOperation) {
                 results.AddAll(nonCacheable);
+                results.AddAll(definitions.Where(c => resultDTO.CacheMiss(c.ApplicationName)));
             }
 
             //small datasets shall also be added, regardless of the main downloadchunk limit being overflown or not
@@ -275,9 +284,15 @@ namespace softwrench.sw4.offlineserver.services {
                     c => resultDTO.HasFinishedCollectingCache(c.ApplicationName) &&
                          ShouldCheckDatabaseAfterCache(c)));
             } else if (!resultDTO.HasMoreCacheData) {
+                if (!_redisManager.IsAvailable()) {
+                    return new LinkedHashSet<CompleteApplicationMetadataDefinition>(definitions);
+                }
+
                 //there´s still space on the downloadchunk, and there are no more cache entries to check--> let´s fetch all the database entries 
-                //for the apps which were not taken already from the cache
-                results.AddAll(definitions.Where(c => !(resultDTO.HasFinishedCollectingCache(c.ApplicationName))));
+                //for the apps which were NOT taken already from the cache, or for the ones that had a cache miss
+                // The not idea is to avoid doing/bringing useless database queries for things that were already fetched from the cache on the initial load
+                //i.e if I´m already bringing all the locations from the cache why bothering querying for it again at this point, even when we know there´s space left
+                results.AddAll(definitions.Where(c => (!resultDTO.HasFinishedCollectingCache(c.ApplicationName) || resultDTO.CacheMiss(c.ApplicationName))));
             }
 
             return results;
@@ -288,9 +303,7 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
 
-        protected virtual async Task HandleCacheLookup(InMemoryUser user, ISet<string> completeCacheEntries,
-            IList<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, int maxThreads,
-            AssociationSynchronizationResultDto results) {
+        protected virtual async Task HandleCacheLookup(InMemoryUser user, IDictionary<string, CacheRoundtripStatus> completeCacheEntries, IList<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, int maxThreads, AssociationSynchronizationResultDto results) {
 
             if (!_redisManager.IsAvailable()) {
                 return;
@@ -347,7 +360,8 @@ namespace softwrench.sw4.offlineserver.services {
             results.LimitedAssociations.Add(userAppMetadata.Name, isLimited);
 
             var datamaps = await FetchData(true, entityMetadata, userAppMetadata, rowstamp, null, isLimited);
-            results.AddIndividualJsonDatamaps(association.ApplicationName, association.IdFieldName,datamaps);
+
+            results.AddIndividualJsonDatamaps(association.ApplicationName, association.IdFieldName, datamaps);
         }
 
         protected virtual async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
@@ -554,9 +568,14 @@ namespace softwrench.sw4.offlineserver.services {
                 }
             };
 
-            if (isAssociationData && rowstamps == null) {
+            if (isAssociationData && (rowstamps == null || rowstamps.LowerUid != null)) {
                 //initial asociation download, using uid ascending, so that we can cache the results if needed be
                 searchDto.SearchSort = "{0} {1}".Fmt(appMetadata.Schema.IdFieldName, isLimited ? "desc" : "asc");
+                if (rowstamps != null && rowstamps.LowerUid != null) {
+                    //TODO: move to inner framework at SearchUtils,perhaps, based on rowstamps
+                    searchDto.AppendWhereClauseFormat(" {0} > {1} ", appMetadata.Schema.IdFieldName, rowstamps.LowerUid);
+                }
+
             }
 
             if (rowstamps == null) {
@@ -604,7 +623,7 @@ namespace softwrench.sw4.offlineserver.services {
             return dataMaps;
         }
 
-        protected virtual async Task<RedisLookupDTO> BuildRedisDTO(ApplicationMetadata appMetadata, ISet<string> completeCacheEntries) {
+        protected virtual async Task<RedisLookupDTO> BuildRedisDTO(ApplicationMetadata appMetadata, IDictionary<string, CacheRoundtripStatus> completeCacheEntries) {
 
             var maxSize = await _configFacade.LookupAsync<int>(OfflineConstants.MaxDownloadSize);
             var user = SecurityFacade.CurrentUser();
@@ -613,7 +632,7 @@ namespace softwrench.sw4.offlineserver.services {
                 Schema = appMetadata.Schema,
                 IsOffline = true,
                 GlobalLimit = maxSize,
-                CacheEntriesToAvoid = completeCacheEntries
+                CacheRoundtripStatuses = completeCacheEntries
             };
             lookupDTO.ExtraKeys.Add("siteid", user.SiteId);
             lookupDTO.ExtraKeys.Add("orgid", user.OrgId);
