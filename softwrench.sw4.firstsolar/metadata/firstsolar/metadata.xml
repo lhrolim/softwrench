@@ -246,6 +246,9 @@
         </relationship>
       </relationships>
     </entity>
+
+    <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE'">
+    </entity>
   </entities>
 
   <applications>
@@ -1558,18 +1561,22 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
-          <association target="storeloc" labelfield="offlinelocation_.location"
-                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
-                       label="Storeroom">
-            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
-            <event type="afterchange" service="materialService" method="storeRoomSelected"/>
-          </association>
+          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'">
+            <event type="afterchange" service="materialService" method="categorySelected"/>
+            <option label="Stocked" value="STK"/>
+            <option label="Non-stocked" value="NS"/>
+            <option label="Special Purchase" value="SP"/>
+          </optionfield>
 
           <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
                        showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
-                       label="Item" >
+                       label="Item" enableexpression="@category != null">
             <dataprovider whereClause="@materialService.getAvailableItemsWhereClause"/>
             <event type="afterchange" service="materialService" method="itemSelected"/>
+          </association>
+
+          <association target="storeloc" labelfield="offlinelocation_.location" showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" label="Storeroom" enableexpression="@itemnum != null">
+            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
           </association>
 
           <association target="warranty" labelfield="warranty_.description" requiredexpression="true" label="Warranty">
@@ -1648,42 +1655,6 @@
       </schemas>
     </application>
 
-    <application name="inventory" title="Inventory" entity="inventory">
-      <properties>
-        <property key="list.offline.text.indexlist" value="itemnum,category,location,storeloc,category"/>
-        <property key="list.offline.create.disabled" value="true"/>
-      </properties>
-
-      <schemas>
-        <schema id="list" stereotype="list" platform="mobile">
-          <filters>
-            <optionfilter attribute="category">
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Stocked" value="STK" preselected="true"/>
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Non-stocked" value="NS"/>
-              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Special Purchase" value="SP"/>
-            </optionfilter>
-          </filters>
-          
-          <field attribute="inventoryid" hidden="true"/>
-          <field attribute="itemnum" label="Item" qualifier="title"/>
-          <field attribute="item_.description" label="Description" qualifier="subtitle"/>
-          <field attribute="location" label="Storeroom" qualifier="excerpt"/>
-          <field attribute="status" label="Status"  qualifier="icon"/>
-          <field attribute="category" label="Category"  qualifier="featured"/>
-        </schema>
-        
-        <schema id="detail" stereotype="detail" platform="mobile">
-          <field attribute="inventoryid" hidden="true"/>
-          <field attribute="itemnum" label="Item" readonly="true"/>
-          <field attribute="item_.description" label="Description" readonly="true"/>
-          <field attribute="location" label="Storeroom" readonly="true"/>
-          <field attribute="status" label="Status" readonly="true"/>
-          <field attribute="category" label="Category" readonly="true"/>
-        </schema>
-      </schemas>
-    </application>
-
-
     <!-- #region: Mobile offline association data -->
 
     <application name="offlineitem" entity="offlineitem" title="Item">
@@ -1702,17 +1673,19 @@
       </properties>
     </application>
 
-<!--    <application name="offlineinventory" entity="inventory" title="Inventory">-->
-<!--      <schemas>-->
-<!--        <list platform="mobile">-->
-<!--          <field attribute="location" label="Location" />-->
-<!--          <field attribute="itemnum" label="Item" />-->
-<!--        </list>-->
-<!--      </schemas>-->
-<!--      <properties>-->
-<!--        <property key="list.offline.text.indexlist" value="itemnum,location"/>-->
-<!--      </properties>-->
-<!--    </application>-->
+    <application name="offlineinventory" entity="inventory" title="Inventory">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="location" label="Location" />
+          <field attribute="itemnum" label="Item" />
+          <field attribute="category" label="Category" />
+        </list>
+      </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum,location,category"/>
+        <property key="offline.sync.avoidcaching" value="true"/>
+      </properties>
+    </application>
 
     <application name="classstructure" title="Class Structure" entity="classstructure">
       <schemas>
@@ -1800,7 +1773,22 @@
       </properties>
     </application>
 
- 
+    <application name="offlinelocation" entity="location" title="Location">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="location" label="Location" />
+          <field attribute="description" label="Description"/>
+          <field attribute="type" label="Type" />
+          <field attribute="status" label="Status" />
+          <field attribute="parent" hidden="true" />
+          <field attribute="hierarchy" hidden="true" />
+        </list>
+      </schemas>
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="location,type,status,hierarchy"/>
+      </properties>
+    </application>
 
     <application name="offlineasset" entity="asset" title="Asset">
       <schemas>
