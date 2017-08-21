@@ -62,7 +62,7 @@ angular.module('sw_layout')
             }
 
             $scope.$on(DashboardEventConstants.RefreshPanel, (evt, id) => {
-                if ($scope.paneldatasource.id === id) {
+                if ($scope.paneldatasource.panel.id === id) {
                     searchService.refreshGrid({}, null, {
                         panelid: $scope.paneldatasource.id,
                         metadataid: $scope.metadataid,
