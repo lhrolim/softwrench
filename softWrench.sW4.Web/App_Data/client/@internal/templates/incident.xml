@@ -231,6 +231,7 @@
             <field attribute="reportedby" label="Reported By" default="@personid" readonly="true"/>
             <association label="Affected Person" target="affectedperson" labelfield="person_.displayname" default="@personid">
               <renderer type="lookup"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeAffectedBy"/>
             </association>
             <association label="Owner"  target="owner" labelfield="ownerperson_.displayname" enableexpression="@ownergroup==null">
               <renderer type="lookup"/>

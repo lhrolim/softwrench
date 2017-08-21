@@ -983,11 +983,13 @@
           <section>
             <header displacement="ontop" label="User Information" params="fieldset=true"/>
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc">
+            <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" extraprojectionvalues="">
               <renderer type="lookup" params="columnlabel=Name" />
+              <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
             </association>
             <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" orderbyfield="personid asc">
               <renderer type="lookup" params="columnlabel=Name" />
+              <event type="afterchange" service="genericTicketService" method="afterChangeAffectedBy"/>
             </association>
           </section>
 
@@ -1279,10 +1281,12 @@
 
             <association label="Reported By:" target="reportedby" labelfield="reportedbyperson_.displayname" default="@username" orderbyfield="personid asc" hideDescription="false">
               <renderer type="lookup" params="columnlabel=Name;inputsize=medium"/>
+              <event type="afterchange" service="genericTicketService" method="afterChangeReportedBy"/>
             </association>
 
             <association label="Affected By:" target="affectedperson" labelfield="person_.displayname" default="@username" hideDescription="false">
               <renderer type="lookup" params="inputsize=medium" />
+              <event type="afterchange" service="genericTicketService" method="afterChangeAffectedBy"/>
             </association>
           </section>
           <section>

@@ -208,6 +208,7 @@
 
                     //afterchange
                     afterChangeReportedBy: function (event) {
+                        const log = $log.get("genericticketservice#afterChangeReportedBy", ["detail", "ticket"]);
                         var datamap = event.fields;
                         const searchData = {
                             personid: datamap['reportedby'],
@@ -217,15 +218,41 @@
                             const data = response.data;
                             const resultObject = data.resultObject[0];
                             datamap['reportedemail'] = resultObject ? resultObject['emailaddress'] : '';
+                            log.debug(`updated reportedemail to ${datamap['reportedemail']}`);
                         });
                         const p2 = searchService.searchWithData("phone", searchData, "list").then(function (response) {
                             const data = response.data;
                             const resultObject = data.resultObject[0];
                             datamap['reportedphone'] = resultObject ? resultObject['phonenum'] : '';
-                            return $q.when();
+                            log.debug(`updated reportedphone to ${datamap['reportedphone']}`);
                         });
-                        return $q.all([p1, p2]).catch(err=>console.log(err));
+                        return $q.all([p1, p2]).catch(err => console.log(err));
                     },
+
+
+                    //afterchange
+                    afterChangeAffectedBy: function (event) {
+                        var datamap = event.fields;
+                        const log = $log.get("genericticketservice#afterChangeAffectedBy", ["detail", "ticket"]);
+                        const searchData = {
+                            personid: datamap['affectedperson'],
+                            isprimary: '1'
+                        };
+                        const p1 = searchService.searchWithData("email", searchData, "list").then(response => {
+                            const data = response.data;
+                            const resultObject = data.resultObject[0];
+                            datamap['affectedemail'] = resultObject ? resultObject['emailaddress'] : '';
+                            log.debug(`updated affectedemail to ${datamap['affectedemail']}`);
+                        });
+                        const p2 = searchService.searchWithData("phone", searchData, "list").then(function (response) {
+                            const data = response.data;
+                            const resultObject = data.resultObject[0];
+                            datamap['affectedphone'] = resultObject ? resultObject['phonenum'] : '';
+                            log.debug(`updated affectedphone to ${datamap['affectedphone']}`);
+                        });
+                        return $q.all([p1, p2]).catch(err => console.log(err));
+                    },
+
 
                     isDeleteAllowed: function (datamap, schema) {
                         return datamap['status'] === 'NEW' && datamap['reportedby'] === userService.getPersonId().toUpperCase();
@@ -260,12 +287,12 @@
                         const hasDifferentStatus = differentStatus.length > 1;
 
                         if (hasDifferentStatus) {
-                            const statusForMessage = differentStatus.map(s =>  `'${s}'`).join(", ");
+                            const statusForMessage = differentStatus.map(s => `'${s}'`).join(", ");
                             alertService.alert(
                                 "You selected entries with status values of {0}.".format(statusForMessage) +
                                 "<br>" +
                                 "Please select entries with the same status to proceed."
-                                );
+                            );
                             return false;
                         }
 
