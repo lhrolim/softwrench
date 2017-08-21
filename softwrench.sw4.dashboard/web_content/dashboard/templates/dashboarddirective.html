@@ -17,14 +17,19 @@
                 <div class="panel" ng-class="panelDataSource.panel.type">
                     <div class="header">
                         <span>{{panelDataSource.panel.title}}&nbsp;</span>
+                        
+                        <span class="panel-command" rel="tooltip" data-original-title="Refresh"
+                              ng-click="refreshPanel(panelDataSource.panel)" style="cursor: pointer">
+                            <i class="fa fa-refresh"></i>
+                        </span>
 
                         <div class="panel-commands" ng-show="canEdit">
                             <span class="panel-command" rel="tooltip" data-original-title="Edit Widget"
-                                  ng-click="editPanel(panelDataSource.panel)">
+                                  ng-click="editPanel(panelDataSource.panel)" style="cursor: pointer">
                                 <i class="fa fa-pencil"></i>
                             </span>
                             <span class="panel-command" rel="tooltip" data-original-title="Remove Widget"
-                                  ng-click="removePanel(panelDataSource)">
+                                  ng-click="removePanel(panelDataSource)" style="cursor: pointer">
                                 <i class="fa fa-times"></i>
                             </span>
                         </div>

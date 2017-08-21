@@ -22,6 +22,10 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
                 return !!panelDataSource && !!panelDataSource.panel && !!panelDataSource.panel.visible;
             };
 
+            $scope.refreshPanel = function(panel) {
+                $scope.$broadcast(DashboardEventConstants.RefreshPanel, panel.id);
+            }
+
             $scope.editPanel = function(panel) {
                 return $scope.onPanelEdit({ panel: panel, dashboard: $scope.dashboard });
             };

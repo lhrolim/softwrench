@@ -61,6 +61,12 @@
                         }, 0, false);
                     });
 
+                    $scope.$on(DashboardEventConstants.RefreshPanel, (evt, id) => {
+                       if ($scope.panel.id === id) {
+                           $scope.reloadGraphic();
+                       } 
+                    });
+
                     $scope.reloadGraphic = $window.debounce(()=> {
                         $($scope.data.container).empty();
                         $scope.loadGraphic();

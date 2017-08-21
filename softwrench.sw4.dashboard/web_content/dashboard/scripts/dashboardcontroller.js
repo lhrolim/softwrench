@@ -255,6 +255,11 @@
                     });
                 });
                 fixHeaderService.callWindowResize();
+                const activeDashboard = contextService.get("activedashboard",false);
+                if (activeDashboard) {
+                    redirectService.redirectToTab(activeDashboard);
+                }
+
             }, 0, false);
         });
 
@@ -288,6 +293,7 @@
             $scope.$broadcast("sw:dashboard:selected", id);
             const log = $log.getInstance("dashboardrendered", ["dashboard"]);
             log.trace("lazy loading dashboard {0}".format(id));
+            contextService.set("activedashboard", id);
         };
 
         $scope.createNewDashboard = function () {

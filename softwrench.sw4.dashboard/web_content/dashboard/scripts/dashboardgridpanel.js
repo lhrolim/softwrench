@@ -61,6 +61,19 @@ angular.module('sw_layout')
                 return "dashboard:" + paneldatasource.panel.alias;
             }
 
+            $scope.$on(DashboardEventConstants.RefreshPanel, (evt, id) => {
+                if ($scope.paneldatasource.id === id) {
+                    searchService.refreshGrid({}, null, {
+                        panelid: $scope.paneldatasource.id,
+                        metadataid: $scope.metadataid,
+                        pageSize: $scope.paneldatasource.panel['limit'],
+                        searchSort: $scope.paneldatasource.panel['defaultSortField'],
+                        fieldstodisplay: $scope.paneldatasource.panel['appFields'],
+                        multiSort: $scope.multiSort
+                    });
+                }
+            });
+
         }],
 
         link: function (scope, element, attrs) {
