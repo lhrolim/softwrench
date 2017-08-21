@@ -19,5 +19,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Api {
 
         public ISet<string> ChunksIgnored { get; set; } = new HashSet<string>();
 
+        public ISet<string> NotFoundDescriptors { get; set; } = new HashSet<string>();
+
+
     }
 }

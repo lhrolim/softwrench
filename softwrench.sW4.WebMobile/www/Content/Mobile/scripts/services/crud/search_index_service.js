@@ -272,19 +272,22 @@
             return " order by \`root\`.isDirty desc, \`root\`.rowstamp is null desc, \`root\`.rowstamp desc ";
         }
 
-        const parseWhereClause = function (whereClause, datamap) {
-            const parameterRegex = /@[\w]+/g;
-            const parameters = parameterRegex.exec(whereClause);
-            if (!parameters) {
-                return whereClause;
-            }
-
+        const innerParseWhereClause = function (whereClause, datamap, parameters) {
             angular.forEach(parameters, parameter => {
                 const parameterName = parameter.substring(1);
                 const value = datamap[parameterName] || "";
                 whereClause = whereClause.replace(new RegExp(parameter, "g"), `'${value}'`);
             });
+            return whereClause;
+        }
 
+        const parseWhereClause = function (whereClause, datamap) {
+            const parameterRegex = /@[\w]+/g;
+            let parameters = parameterRegex.exec(whereClause);
+            while (parameters) {
+                whereClause = innerParseWhereClause(whereClause, datamap, parameters);
+                parameters = parameterRegex.exec(whereClause);
+            }
             return whereClause;
         }
 

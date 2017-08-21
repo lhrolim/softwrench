@@ -115,20 +115,36 @@ namespace softwrench.sw4.offlineserver.dto.association {
         }
 
         public void AddJsonFromRedisResult<T>(RedisLookupResult<T> redisResult, bool shouldCheckDB) where T : DataMap {
-            if (!redisResult.Chunks.Any()) {
-                AssociationData[redisResult.Schema.ApplicationName] = new AssociationDataDto { Incomplete = true, CacheMiss = true};
-                return;
-            }
-
 
             var associationDataDto = new AssociationDataDto();
-            //these were already downloaded on other chunks
+            AssociationData[redisResult.Schema.ApplicationName] = associationDataDto;
 
+            //these were already downloaded on other chunks
             foreach (var checkedChunk in redisResult.ChunksAlreadyChecked) {
                 if (checkedChunk.Value.Application.Equals(redisResult.Schema.ApplicationName)) {
                     associationDataDto.CompleteCacheEntries.Add(checkedChunk);
                 }
             }
+
+            if (!redisResult.Chunks.Any()) {
+
+                AssociationData[redisResult.Schema.ApplicationName].Incomplete = true;
+                AssociationData[redisResult.Schema.ApplicationName].CacheMiss = true;
+
+                foreach (var key in redisResult.NotFoundDescriptors) {
+                    //adding a complete cache entry so that we do not try to fetch from a recent populated cache on the next roundtrip check
+                    if (!AssociationData[redisResult.Schema.ApplicationName].CompleteCacheEntries.ContainsKey(key)) {
+                        AssociationData[redisResult.Schema.ApplicationName].CompleteCacheEntries.Add(key, new CacheRoundtripStatus { Complete = true, Application = redisResult.Schema.ApplicationName });
+                    }
+                }
+                return;
+            }
+
+
+
+
+
+
 
             associationDataDto.HasMoreCachedEntries = redisResult.HasMoreChunks;
 
@@ -151,7 +167,7 @@ namespace softwrench.sw4.offlineserver.dto.association {
 
             }
             associationDataDto.RemoteIdFieldName = redisResult.Schema.IdFieldName;
-            AssociationData[redisResult.Schema.ApplicationName] = associationDataDto;
+
 
             HasMoreData = true;
 

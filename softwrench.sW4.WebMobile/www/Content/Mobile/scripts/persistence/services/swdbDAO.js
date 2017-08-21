@@ -288,7 +288,7 @@
             const optionsToUse = !!options ? angular.copy(options) : {};
             optionsToUse.pagesize = 1;
             optionsToUse.pageNumber = 1;
-            return this.findByQuery(entity, query, options).then(results => !results || results.length <= 0 ? null : results[0]);
+            return this.findByQuery(entity, query, optionsToUse).then(results => !results || results.length <= 0 ? null : results[0]);
         };
 
         /**

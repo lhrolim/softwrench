@@ -124,6 +124,12 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
                 _log.DebugFormat("looking for cache entry {0}", key);
 
+                if (lookupDTO.CacheRoundtripStatuses.ContainsKey(key) && lookupDTO.CacheRoundtripStatuses[key].Complete) {
+                    //scenario where the cache is refreshed while the roundtrip download is being performed
+                    _log.DebugFormat("ignoring the whole descriptor since the cache is just being populated for this given roundtrip", key);
+                    continue;
+                }
+
                 //list of chunks of cached data
                 var metadataDescriptor = await CacheClient.GetAsync<RedisChunkMetadataDescriptor>(key);
 
@@ -133,6 +139,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                     //therefore it might be null quite often.
                     // other keys will be the linear combination for these scenarios.
                     _log.DebugFormat("cache entry {0} not found", key);
+                    result.NotFoundDescriptors.Add(key);
                     first = false;
                     continue;
                 }
