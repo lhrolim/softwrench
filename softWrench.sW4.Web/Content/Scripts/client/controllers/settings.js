@@ -9,6 +9,7 @@
         const EditStatucColor = "statuscolors.json";
         const EditClassificationColor = "classificationcolors.json";
         const EditMetaData = "metadata.xml";
+        const EditSwdbMetaData = "swdbmetadata.xml";
         const EditPropertiesFile = 'properties.xml';
 
         $scope.templates = [];
@@ -178,6 +179,9 @@
                 case EditMetaData:
                     urlToUse = "/api/generic/EntityMetadata/SaveMetadataEditor";
                     break;
+                case EditSwdbMetaData:
+                    urlToUse = "/api/generic/EntityMetadata/SaveSwdbMetadataEditor";
+                    break;
                 case EditPropertiesFile:
                     urlToUse = "/api/generic/EntityMetadata/SavePropertiesFile";
                     break;
@@ -204,7 +208,7 @@
                 return element.id === 99999;
             });
 
-            if (EditMetaData.equalIc($scope.type) || (EditStatucColor.equalIc($scope.type) && dynAdminRole)) {
+            if (EditMetaData.equalIc($scope.type) || EditSwdbMetaData.equalIc($scope.type) || (EditStatucColor.equalIc($scope.type) && dynAdminRole)) {
                 //Fetch the templates
                 $scope.getTemplates();
             }

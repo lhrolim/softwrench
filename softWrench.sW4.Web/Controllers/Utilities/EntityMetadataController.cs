@@ -70,6 +70,15 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpGet]
+        [SPFRedirect("SW Metadata Editor", "_headermenu.swdbmetadataeditor", "EntityMetadataEditor")]
+        public IGenericResponseResult SwdbEditor() {
+            using (var reader = new MetadataProvider().GetStream(MetadataProvider.SWDB_METADATA_FILE)) {
+                var result = reader.ReadToEnd();
+                return new GenericResponseResult<EntityMetadataEditorResult>(new EntityMetadataEditorResult(result, MetadataProvider.SWDB_METADATA_FILE));
+            }
+        }
+
+        [HttpGet]
         public IGenericResponseResult ReadOriginalBackup(string file) { 
             using (var reader = new MetadataProvider().GetStream(string.Format("{0}.orig",file))) {
                 var result = reader != null ? reader.ReadToEnd() : string.Empty;
@@ -96,7 +105,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
 
         [HttpGet]
         public List<dynamic> GetTemplateFiles(string type) {            
-            var templates = new List<dynamic>();
+            var templates = new HashSet<dynamic>();
 
             switch (type) {
                 case MetadataProvider.METADATA_FILE:
@@ -110,7 +119,16 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                         templates.Add(new { path = file, name = Path.GetFileName(file) });
                     }
                     break;
+                case MetadataProvider.SWDB_METADATA_FILE:
+                    //add the metadata
+                    var swdbMetadataPath = MetadataParsingUtils.GetPath(MetadataProvider.SWDB_METADATA_FILE);
+                    templates.Add(new { path = swdbMetadataPath, name = MetadataProvider.SWDB_METADATA_FILE });
 
+                    //add the templates
+                    foreach (var file in MetadataParsingUtils.GetSwdbTemplateFileNames()) {
+                        templates.Add(new { path = file, name = Path.GetFileName(file) });
+                    }
+                    break;
                 case MetadataProvider.STATUS_COLOR_FILE:
                     templates.Add(new { path = MetadataParsingUtils.GetPath(MetadataProvider.STATUS_COLOR_FILE), name = "statuscolors.json" });
 
@@ -123,7 +141,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                     break;
             }
             
-            return templates;
+            return templates.ToList();
         }
 
         [HttpGet]
@@ -194,9 +212,18 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
             task.Wait();
             new MetadataProvider().Save(task.Result);
         }
-        
+
         [HttpPut]
         public void SaveMetadataEditor(HttpRequestMessage request) {
+            SaveMetadataBase(request);
+        }
+
+        [HttpPut]
+        public void SaveSwdbMetadataEditor(HttpRequestMessage request) {
+            SaveMetadataBase(request, true);
+        }
+
+        public void SaveMetadataBase(HttpRequestMessage request, bool isSwdb = false) {
             var content = request.Content;
             var json = JObject.Parse(content.ReadAsStringAsync().Result);
             var comments = json.StringValue("Comments");
@@ -220,16 +247,18 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
                 Path = filePath,
                 IPAddress = ipAddress
             };
-            
+
             swdbDao.Save(newMetadataEntry);
-            
-            new MetadataProvider().Save(metadata, false, filePath);
-            
+
+            new MetadataProvider().Save(metadata, false, filePath, isSwdb);
+
+            var subjectPatern = isSwdb ? "[softWrench {0} - {1}] SWDB Metadata file updated" : "[softWrench {0} - {1}] Metadata file updated";
+
             this.SendMetadataChangeEmail(
-                MetadataProvider.STATUS_COLOR_FILE,
+                fileName,
                 newFileContent,
                 oldFileContent,
-                string.Format("[softWrench {0} - {1}] Metadata file updated", appConfig.GetClientKey(), ApplicationConfiguration.Profile),
+                string.Format(subjectPatern, appConfig.GetClientKey(), ApplicationConfiguration.Profile),
                 comments,
                 ipAddress,
                 userFullName

@@ -81,6 +81,7 @@ namespace softWrench.sW4.Metadata {
         }
 
         public const string METADATA_FILE = "metadata.xml";
+        public const string SWDB_METADATA_FILE = "swdbmetadata.xml";
         public const string STATUS_COLOR_FILE = "statuscolors.json";
         public const string CLASSIFICATION_COLOR_FILE = "classificationcolors.json";
         public const string MENU_WEB_FILE = "menu.web.xml";
@@ -504,10 +505,10 @@ namespace softWrench.sW4.Metadata {
             return MetadataParsingUtils.DoGetStream(path, true);
         }
 
-        public void Save([NotNull] string data, bool internalFramework = false, string path = null) {
+        public void Save([NotNull] string data, bool internalFramework = false, string path = null, bool isSwdb = false) {
             try {
                 using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(data))) {
-                    Save(memoryStream, internalFramework, path);
+                    Save(memoryStream, internalFramework, path, isSwdb);
                 }
             } catch (Exception e) {
                 Log.Error("error saving metadata", e);
@@ -516,12 +517,17 @@ namespace softWrench.sW4.Metadata {
             }
         }
 
-        public void Save([NotNull] Stream data, bool internalFramework = false, string path = null) {
+        public void Save([NotNull] Stream data, bool internalFramework = false, string path = null, bool isSwdb = false) {
             try {
                 _metadataXmlInitializer = new MetadataXmlSourceInitializer();
-                _metadataXmlInitializer.Validate(_commandBars, data);
                 _swdbmetadataXmlInitializer = new SWDBMetadataXmlSourceInitializer();
-                _swdbmetadataXmlInitializer.Validate(_commandBars);
+                if (isSwdb) {
+                    _metadataXmlInitializer.Validate(_commandBars);
+                    _swdbmetadataXmlInitializer.Validate(_commandBars, data);
+                } else {
+                    _metadataXmlInitializer.Validate(_commandBars, data);
+                    _swdbmetadataXmlInitializer.Validate(_commandBars);
+                }
 
                 var metadataPath = string.IsNullOrWhiteSpace(path) ? MetadataParsingUtils.GetPath(METADATA_FILE, internalFramework) : path;
 
