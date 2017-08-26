@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using cts.commons.portable.Util;
 using log4net;
@@ -34,7 +35,8 @@ namespace softWrench.sW4.Metadata.Validator {
                 clientName = "@internal";
             }
             var pattern = ApplicationConfiguration.IsUnitTest ? TestMetadataPath : ClientMetadataPattern;
-            return @"" + (baseDirectory + String.Format(pattern, clientName) + resource);
+            var swdbPrefix = MetadataProvider.SWDB_METADATA_FILE.Equals(resource) ? "swdb\\" : "";
+            return @"" + (baseDirectory + String.Format(pattern, clientName) + swdbPrefix + resource);
         }
 
         public static string GetPathForUnitTestModule(string resource, bool internalFramework = false, bool otbpath = false) {
@@ -56,7 +58,20 @@ namespace softWrench.sW4.Metadata.Validator {
             var path = string.Format("{0}{1}", AppDomain.CurrentDomain.BaseDirectory, string.Format(TemplatesInternalPath, string.Empty));
             return Directory.GetFiles(path);
         }
-        
+
+        public static List<string> GetSwdbTemplateFileNames() {
+            var files = new List<string>();
+            var path = $"{AppDomain.CurrentDomain.BaseDirectory}{string.Format(TemplatesSWDBInternalPath, string.Empty)}";
+            files.AddRange(Directory.GetFiles(path));
+            if (!string.IsNullOrEmpty(ApplicationConfiguration.ClientName) && !"otb".Equals(ApplicationConfiguration.ClientName)) {
+                path = $"{AppDomain.CurrentDomain.BaseDirectory}{string.Format(ClientMetadataPattern, ApplicationConfiguration.ClientName)}swdb";
+                if (Directory.Exists(path)) {
+                    files.AddRange(Directory.GetFiles(path));
+                }
+            }
+            return files;
+        }
+
         public static string GetTemplateInternalPath(string resource, bool isSWDB) {
 
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
