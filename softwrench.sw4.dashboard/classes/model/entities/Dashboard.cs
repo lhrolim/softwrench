@@ -11,8 +11,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
     [Class(Table = "DASH_DASHBOARD", Lazy = false)]
     public class Dashboard : IBaseAuditEntity {
 
-        private const string BY_USER_PROFILES_APPLICATIONS_TEMPLATE = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null or {0}) and (application is null or application in (:p1))";
-        private const string BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE = BY_USER_PROFILES_APPLICATIONS_TEMPLATE + " and active is true";
+        private const string BY_USER_PROFILES_APPLICATIONS_TEMPLATE = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null or {0}) and (application is null or application in (:p1)) order by preferredorder";
+        private const string BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE = BY_USER_PROFILES_APPLICATIONS_TEMPLATE + " and active is true order by preferredorder";
 
         public static string ByUserAndApplications(IEnumerable<int?> profiles, bool includeInactive = false) {
             return includeInactive
@@ -20,9 +20,9 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
                 : string.Format(BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE, DashboardFilter.GetUserProfileString(profiles));
         }
 
-        public const string ByUserAndApplicationsNoProfile = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null) and (application is null or application in (:p1)) and active is true";
+        public const string ByUserAndApplicationsNoProfile = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null) and (application is null or application in (:p1)) and active is true order by preferredorder";
 
-        public const string SwAdminQuery = "from Dashboard where active is true";
+        public const string SwAdminQuery = "from Dashboard where active is true order by preferredorder";
 
 
         [Id(0, Name = "Id")]

@@ -62,7 +62,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
         }
 
         private IEnumerable<DashboardPanelRelationship> BuildRelationShips(ICollection<DashboardBasePanel> panels, int initialPosition = 0) {
-            return panels.Select(p => new DashboardPanelRelationship() {
+            return panels.Select(p => new DashboardPanelRelationship {
                 Position = initialPosition++,
                 Panel = p
             }).ToList();
@@ -94,7 +94,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
             return _dao.BulkSave(panels).ToList();
         }
 
-        public Dashboard CreateDashboard(string title, string alias, ICollection<DashboardBasePanel> panels) {
+        public Dashboard CreateDashboard(string title, string alias, ICollection<DashboardBasePanel> panels, int preferredOrder = 0) {
 
             // save panels and replace references by hibernate-managed ones
             panels = MergePanels(null, panels);
@@ -104,7 +104,7 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
             // create dashboard
             var now = DateTime.Now;
-            var dashboard = new Dashboard() {
+            var dashboard = new Dashboard {
                 Filter = new DashboardFilter(),
                 CreationDate = now,
                 UpdateDate = now,
@@ -113,17 +113,22 @@ namespace softwrench.sw4.dashboard.classes.startup {
                 Application = alias,
                 Title = title,
                 Panels = panelRelationships.ToList(),
-                Active = true
+                Active = true,
+                PreferredOrder = preferredOrder
             };
 
             return _dao.Save(dashboard);
         }
 
+        public void Inactivate(string alias) {
+            _dao.ExecuteSql("update DASH_DASHBOARD set active = 0 where alias = '{0}'".Fmt(alias));
+        }
+
         [Transactional(DBType.Swdb)]
         public virtual void RegisterWhereClause(string application, string query, string alias, string metadataId) {
-            var lookupContext = new ApplicationLookupContext() { MetadataId = metadataId };
+            var lookupContext = new ApplicationLookupContext { MetadataId = metadataId };
 
-          _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition {
+            _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition {
                 Alias = alias,
                 AppContext = lookupContext
             });

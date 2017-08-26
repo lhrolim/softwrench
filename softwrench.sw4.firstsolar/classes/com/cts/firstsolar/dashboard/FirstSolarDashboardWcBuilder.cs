@@ -67,13 +67,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     ".Fmt(SiteClause());
         }
 
-        public virtual string MaintenanceDashBuild290Query() {
+        public virtual string MaintenanceDashBuild290PMQuery() {
             return @"workorder.status in ('APPR','INPRG') {0} and workorder.outreq = 1
                     and
-                    (( workorder.worktype = 'PM'  and workorder.reportdate < @past(30days))
-                        or
-                    (workorder.worktype = 'WO'))
-                    ".Fmt(SiteClause());
+                    (workorder.worktype = 'PM'  and workorder.reportdate < @past(30days))".Fmt(SiteClause());
+        }
+
+        public virtual string MaintenanceDashBuild290CMQuery() {
+            return @"workorder.status in ('APPR','INPRG') {0} and workorder.outreq = 1
+                    and        
+                    (workorder.worktype = 'WO')".Fmt(SiteClause());
         }
 
         public virtual string MaintenanceCmDashQuery() {

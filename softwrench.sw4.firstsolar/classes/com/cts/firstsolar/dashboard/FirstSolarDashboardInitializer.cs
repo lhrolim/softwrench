@@ -13,7 +13,11 @@ using softWrench.sW4.Configuration.Services.Api;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
     public class FirstSolarDashboardInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
-        public const string MaintenanceDashAlias = "fs.maintenance";
+        public const string CorrectiveMaintenanceDashAlias = "fs.cmmaintenance";
+
+        public const string PreventiveMaintenanceDashAlias = "fs.pmmaintenance";
+
+
         public const string MaintenanceDashCmAlias = "fs.maintenancecm";
 
         public const string IncomingPanelAlias = "fs.maintenance.incoming";
@@ -23,7 +27,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public const string IncomingCmPanelSchemaId = "workpackageincomingcmdash";
 
         public const string BuildPanelAlias = "fs.maintenance.build";
-        public const string BuildPanelAlias290 = "fs.maintenance.290";
+        public const string BuildPanelAlias290PM = "fs.maintenance.290pm";
+        public const string BuildPanelAlias290CM = "fs.maintenance.290cm";
+
         public const string BuildPanelSchemaId = "workpackagebuilddash";
         public const string BuildPanel290SchemaId = "workpackagebuild290dash";
 
@@ -47,18 +53,56 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
 
             Log.Info("initing fs dashboard registry");
 
-            var maintenanceDash = DashboardInitializationService.FindByAlias(MaintenanceDashAlias) ??
-                                  DashboardInitializationService.CreateDashboard("Maintenance Queues", MaintenanceDashAlias, new List<DashboardBasePanel>());
-            maintenanceDash.Application = "_WorkPackage";
+            DashboardInitializationService.Inactivate("fs.maintenance");
+
+            var cmDash = DashboardInitializationService.FindByAlias(CorrectiveMaintenanceDashAlias) ??
+                DashboardInitializationService.CreateDashboard("Corrective Maintenance", CorrectiveMaintenanceDashAlias, new List<DashboardBasePanel>());
+
+            var pmDash = DashboardInitializationService.FindByAlias(PreventiveMaintenanceDashAlias) ??
+                                  DashboardInitializationService.CreateDashboard("Preventive Maintenance", PreventiveMaintenanceDashAlias, new List<DashboardBasePanel>(),1);
+
+            cmDash.Application = "_WorkPackage";
+            pmDash.Application = "_WorkPackage";
+            pmDash.PreferredOrder = 1;
 
 
-            Dao.Save(maintenanceDash);
+            Dao.Save(cmDash);
+            Dao.Save(pmDash);
 
 
-            var panels = new List<DashboardBasePanel> {
+            var panelsCM = new List<DashboardBasePanel> {
                 new DashboardGridPanel
                 {
-                    Alias = BuildPanelAlias290,
+                    Alias = BuildPanelAlias290CM,
+                    Title = "Work Package Queue",
+                    Application = "workorder",
+                    AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,#buildcomplete,#colorcode",
+                    DefaultSortField = "reportdate desc",
+                    SchemaRef = BuildPanel290SchemaId,
+                    Limit = 10,
+                    Size = 12
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = IncomingPanelCmAlias,
+                    Title = "Incoming Maximo Work Order Queue",
+                    Application = "workorder",
+                    AppFields = "wonum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart",
+                    DefaultSortField = "schedstart",
+                    SchemaRef = IncomingCmPanelSchemaId,
+                    Limit = 10,
+                    Size = 12
+                },
+            };
+
+
+            var panelsPM = new List<DashboardBasePanel> {
+
+
+                new DashboardGridPanel
+                {
+                    Alias = BuildPanelAlias290PM,
                     Title = "29-0 Days Queue",
                     Application = "workorder",
                     AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,daysleft,#buildcomplete,#colorcode",
@@ -88,28 +132,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     SchemaRef = IncomingPanelSchemaId,
                     Limit = 10,
                     Size = 12
-                },
-
-                new DashboardGridPanel
-                {
-                    Alias = IncomingPanelCmAlias,
-                    Title = "Incoming Queue CM",
-                    Application = "workorder",
-                    AppFields = "wonum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart",
-                    DefaultSortField = "schedstart",
-                    SchemaRef = IncomingCmPanelSchemaId,
-                    Limit = 10,
-                    Size = 12
                 }
-
+             
             };
 
-
-            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashQuery", "WoMaintenananceIncoming", "dashboard:" + IncomingPanelAlias);
-            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild30PQuery(), "WoMaintenananceBuild", "dashboard:" + BuildPanelAlias);
-            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290Query(), "WoMaintenananceBuild290", "dashboard:" + BuildPanelAlias290);
+            #region CM
+            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290CMQuery(), "WoMaintenananceBuild290CM", "dashboard:" + BuildPanelAlias290CM);
             DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceCmDashQuery", "WoMaintenananceCmIncoming", "dashboard:" + IncomingPanelCmAlias);
-            DashboardInitializationService.AddPanelsToDashboard(maintenanceDash, panels);
+            #endregion
+
+            #region PM
+            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290PMQuery(), "WoMaintenananceBuild290PM", "dashboard:" + BuildPanelAlias290PM);
+            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild30PQuery(), "WoMaintenananceBuild", "dashboard:" + BuildPanelAlias);
+            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashQuery", "WoMaintenananceIncoming", "dashboard:" + IncomingPanelAlias);
+            #endregion
+
+            DashboardInitializationService.AddPanelsToDashboard(cmDash, panelsCM);
+            DashboardInitializationService.AddPanelsToDashboard(pmDash, panelsPM);
 
             Log.Info("finishing dashboard registry");
         }
