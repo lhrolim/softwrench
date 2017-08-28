@@ -9,6 +9,7 @@ using System.Net;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
+using softWrench.sW4.Data.Persistence.WS.API;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Util.DeployValidation;
 using r = softWrench.sW4.Util.ReflectionUtil;
@@ -94,7 +95,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             return null;
         }
 
-        protected override object DoProxyInvocation() {
+        protected override TargetResult DoProxyInvocation() {
             //            if (ApplicationConfiguration.IgnoreWsCertErrors) {
             //                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             //                ServicePointManager.Expect100Continue = true;
@@ -103,11 +104,17 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             //                    | SecurityProtocolType.Tls12
             //                    | SecurityProtocolType.Ssl3;
             //            }
+
+            string xml = null;
+
             if (Log.IsDebugEnabled) {
-                Log.Debug("sending content to mif :\n " + SerializeIntegrationObject());
+                xml = SerializeIntegrationObject();
+                Log.Debug("sending content to mif :\n " + xml);
             } else if (ApplicationConfiguration.IsLocal() || Log.IsInfoEnabled) {
-                Log.Info("sending content to mif :\n " + SerializeIntegrationObject());
+                Log.Info("sending content to mif :\n " + xml);
             }
+
+
 
             var parameterList = MifUtils.GetParameterList(RootInterfaceObject);
             var types = new Type[parameterList.Length];
@@ -120,7 +127,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             if (!DeployValidationService.MockProxyInvocation()) {
                 result = Proxy.CallMethod(MethodName(), types, parameterList);
             }
-            return result;
+            var targetResult = CreateResultData(result);
+
+            if (ShouldAudit()) {
+                xml = SerializeIntegrationObject();
+                AuditXml(xml, targetResult);
+
+            }
+
+            return targetResult;
         }
 
         internal void CheckCredentials(DynamicObject proxy) {

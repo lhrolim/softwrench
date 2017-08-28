@@ -143,6 +143,14 @@
             });
         }
 
+        function getServerDeviceData() {
+            return this.getStates(["configs", "device"]).then(state => {
+                const deviceData = state.device;
+                deviceData["clientVersion"] = state.configs.client.version;
+                return deviceData;
+            });
+        }
+
         /**
          * Resolves all possible states of the app
          * @see #getStates
@@ -159,6 +167,7 @@
             currentApplicationsState,
             getAppConfig,
             getStates,
+            getServerDeviceData,
             getFullState
         };
         return service;

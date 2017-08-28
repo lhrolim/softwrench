@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Security;
-using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using SimpleInjector;
 using softwrench.sw4.api.classes;
@@ -16,7 +15,6 @@ using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Home;
 using softWrench.sW4.Web.Security;
 using softwrench.sw4.user.classes.entities;
-using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Data.Configuration;
 

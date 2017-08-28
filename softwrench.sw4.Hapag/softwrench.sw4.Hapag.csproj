@@ -167,6 +167,10 @@
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.audit\softwrench.sw4.audit.csproj">
+      <Project>{a5e4cb59-33c1-4072-8d97-2cee10c4f964}</Project>
+      <Name>softwrench.sw4.audit</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>

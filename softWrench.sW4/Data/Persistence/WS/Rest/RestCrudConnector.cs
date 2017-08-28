@@ -26,7 +26,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
 
         public override void DoCreate(MaximoOperationExecutionContext maximoTemplateData) {
 
-            var resultData = maximoTemplateData.InvokeProxy();
+            var resultData = maximoTemplateData.InnerDoInvoke();
 
             maximoTemplateData.ResultObject = ParseResult(maximoTemplateData.Metadata, (string)resultData);
 

@@ -9,8 +9,7 @@ using cts.commons.portable.Util;
 using log4net;
 
 namespace cts.commons.Util {
-    public class LoggingUtil
-    {
+    public class LoggingUtil {
 
 
         public static ILog DefaultLog = LogManager.GetLogger("DEFAULT_LOG");
@@ -33,8 +32,7 @@ namespace cts.commons.Util {
             return String.Format(msg, parameters) + "| Time ellapsed: " + MsDelta(before);
         }
 
-        public static string QueryStringForLogging(string queryst,string queryAlias, params object[] parameters) {
-
+        public static string ReplaceParameters(string queryst, params object[] parameters) {
             if (parameters == null || !parameters.Any()) {
                 return queryst + " ";
             }
@@ -60,7 +58,12 @@ namespace cts.commons.Util {
                     queryst = queryst.ReplaceFirstOccurrence("?", "'" + parameter + "'");
                 }
             }
-            return queryAlias == null ? queryst : queryAlias +": " + queryst;
+            return queryst;
+        }
+
+        public static string QueryStringForLogging(string queryst, string queryAlias, params object[] parameters) {
+            queryst = ReplaceParameters(queryst, parameters);
+            return queryAlias == null ? queryst : queryAlias + ": " + queryst;
         }
 
 

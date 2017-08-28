@@ -118,7 +118,7 @@
          * 
          * @returns Promise: resolved with created SyncOperation; rejected with HTTP or Database error 
          */
-        function fullDownload() {
+        function fullDownload(clientOperationId = persistence.createUUID()) {
             if (networkConnectionService.isOffline()) {
                 return $q.reject({ message: "Cannot synchronize application without internet connection" });
             }
@@ -129,11 +129,13 @@
             const currentApps = metadataModelService.getApplicationNames();
             const firstTime = currentApps.length === 0;
 
+//            const clientOperationId = persistence.createUUID();
+
             const httpPromises = [
-                metadataSynchronizationService.syncData("1.0"),
+                metadataSynchronizationService.syncData("1.0", clientOperationId),
                 scriptsSynchronizationService.syncData(),
-                associationDataSynchronizationService.syncData(firstTime)
-            ].concat(dataSynchronizationService.syncData());
+                associationDataSynchronizationService.syncData(firstTime, clientOperationId)
+            ].concat(dataSynchronizationService.syncData(clientOperationId));
 
             return $q.all(httpPromises)
                 .then(results => {
@@ -145,7 +147,7 @@
                     const dataDownloadedResult = results.subarray(3);
                     const totalNumber = getDownloadDataCount(dataDownloadedResult);
 
-                    return synchronizationOperationService.createNonBatchOperation(start, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
+                    return synchronizationOperationService.createNonBatchOperation(start, clientOperationId, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
                 });
         }
 
@@ -167,6 +169,7 @@
                 return $q.reject({message:"Cannot synchronize application without internet connection"});
             }
 
+            const clientOperationId = persistence.createUUID();
             const start = new Date().getTime();
             const dbapplications = metadataModelService.getMetadatas();
 
@@ -178,11 +181,11 @@
                     // no batches created: full download instead of full sync
                     if (!batches || batches.length <= 0 || !batches.some(s=> s != null)) {
                         log.info("No batches created: Executing full download instead of full sync.");
-                        return fullDownload();
+                        return fullDownload(clientOperationId);
                     }
                     // batches created: submit to server
                     log.info("Batches created locally: submitting to server.");
-                    return batchService.submitBatches(batches).then(batchResults => {
+                    return batchService.submitBatches(batches, clientOperationId).then(batchResults => {
                         // check for synchronous or asynchronous case
                         var asyncBatches = batchResults.filter(batch => batch.status !== "COMPLETE");
                         // async case
@@ -199,13 +202,13 @@
                         return handleDeletableDataEntries(batchResults)
                             .then(() => problemService.updateHasProblemToDataEntries(batchResults))
                             .then(() =>{
-                                var httpPromises = [associationDataSynchronizationService.syncData(), dataSynchronizationService.syncData()];
+                                var httpPromises = [associationDataSynchronizationService.syncData(false,clientOperationId), dataSynchronizationService.syncData(clientOperationId)];
                                 return $q.all(httpPromises);
                             })
                             .then(downloadResults => {
                                 log.debug("Batch returned synchronously --> performing download");
                                 var dataCount = getDownloadDataCount(downloadResults[1]);
-                                return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                                return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
                             });
                     });
                 })
@@ -219,31 +222,32 @@
             const log = $log.get("synchronizationFacade#syncItem", ["sync"]);
             log.info("init quick sync process");
             tracking.trackFullState("synchornizationFacace#syncItem pre-quicksync");
+            const clientOperationId = persistence.createUUID();
 
             const dbapplication = metadataModelService.getMetadatas().find(a => a.application === item.application);
             const start = new Date().getTime();
             loadingService.showDefault();
             // one Batch per application
             return batchService.createBatch(dbapplication, item)
-                    .then(batch => batchService.submitBatches([batch]))
+                .then(batch => batchService.submitBatches([batch], clientOperationId))
                     .then(batchResults => {
                         return handleDeletableDataEntries(batchResults)
                             .then(() => problemService.updateHasProblemToDataEntries(batchResults, item))
                             .then(() => {
                                 var httpPromises = [];
-                                httpPromises.push(associationDataSynchronizationService.syncData());
+                                httpPromises.push(associationDataSynchronizationService.syncData(false, clientOperationId));
                                 if (!!item.remoteId) {
-                                    httpPromises.push(dataSynchronizationService.syncSingleItem(item));
+                                    httpPromises.push(dataSynchronizationService.syncSingleItem(item, clientOperationId));
                                 } else {
                                     //TODO: return the remoteid on the operation
                                     //for creations since we don´t have the remote id yet
-                                    httpPromises.push(dataSynchronizationService.syncData());
+                                    httpPromises.push(dataSynchronizationService.syncData(clientOperationId));
                                 }
                                 return $q.all(httpPromises);
                             })
                             .then(downloadResults => {
                                 var dataCount = getDownloadDataCount(downloadResults[1]);
-                                return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batchResults);
+                                return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
                             }).then(r => {
                                 $rootScope.$broadcast("sw.sync.quicksyncfinished");
                                 return r;

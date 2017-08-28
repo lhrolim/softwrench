@@ -54,11 +54,11 @@ namespace softwrench.sw4.offlineserver.services {
         private readonly ISWDBHibernateDAO _swdbDAO;
         private readonly SyncChunkHandler _syncChunkHandler;
         private readonly IConfigurationFacade _configFacade;
-        private readonly IRedisManager _redisManager;
+        private readonly IDatamapRedisManager _redisManager;
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(SynchronizationManager));
 
-        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO, SyncChunkHandler syncChunkHandler, IConfigurationFacade configFacade, IRedisManager redisManager) {
+        public SynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher, ISWDBHibernateDAO swdbDAO, SyncChunkHandler syncChunkHandler, IConfigurationFacade configFacade, IDatamapRedisManager redisManager) {
             _resolver = resolver;
             _repository = respository;
             _lookuper = lookuper;

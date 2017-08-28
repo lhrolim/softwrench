@@ -1,5 +1,4 @@
 ﻿using cts.commons.simpleinjector;
-using softWrench.sW4.Audit;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;

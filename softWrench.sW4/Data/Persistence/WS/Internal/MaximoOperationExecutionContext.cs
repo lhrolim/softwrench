@@ -5,7 +5,10 @@ using System.IO;
 using System.Xml.Serialization;
 using cts.commons.simpleinjector;
 using log4net;
-using softwrench.sw4.problem.classes;
+using softwrench.sW4.audit.classes.Model;
+using softwrench.sW4.audit.Interfaces;
+using softWrench.sW4.Configuration.Services;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.WS.API;
 using WcfSamples.DynamicProxy;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -25,6 +28,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         protected const string WsInputLog = "WS_CALL_LOGS";
 
         protected static readonly ILog Log = LogManager.GetLogger(WsInputLog);
+
+        private readonly IAuditManager _auditManager = SimpleInjectorGenericFactory.Instance.GetObject<IAuditManager>();
+
+        private readonly ConfigurationFacade _configurationFacade = SimpleInjectorGenericFactory.Instance.GetObject<ConfigurationFacade>();
 
         protected MaximoOperationExecutionContext(IOperationData operationData) {
             OperationData = operationData;
@@ -58,13 +65,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
         public IDictionary<string, object> Properties { get; set; } = new Dictionary<string, object>();
 
-        public virtual object InvokeProxy() {
+        public virtual TargetResult InvokeProxy() {
             var before = Stopwatch.StartNew();
             try {
                 return DoProxyInvocation();
             } catch (Exception e) {
-              
-
                 throw HandleProxyInvocationError(e);
             } finally {
                 OnProxyInvocationComplete(before);
@@ -92,16 +97,46 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         /// Executes the invocation on the Proxy to MAXIMO's Web Service
         /// </summary>
         /// <returns></returns>
-        protected virtual object DoProxyInvocation() {
-            if (Log.IsDebugEnabled) {
-                Log.Debug(SerializeIntegrationObject());
-            } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
-                Log.Info(SerializeIntegrationObject());
+        protected virtual TargetResult DoProxyInvocation() {
+            string xml = null;
+            var result = InnerDoInvoke();
+
+            var targetResult = CreateResultData(result);
+
+
+            if (ShouldAudit()) {
+                xml = SerializeIntegrationObject();
+                AuditXml(xml, targetResult);
+
             }
+
+
+            return targetResult;
+
+        }
+
+        public object InnerDoInvoke() {
+            string xml;
+            if (Log.IsDebugEnabled) {
+                xml = SerializeIntegrationObject();
+                Log.Debug(xml);
+            } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
+                xml = SerializeIntegrationObject();
+                Log.Info(xml);
+            }
+
             var result = Proxy.CallMethod(MethodName(),
-                                      new[] { RootInterfaceObject.GetType() },
-                                      new[] { RootInterfaceObject });
+                new[] { RootInterfaceObject.GetType() },
+                new[] { RootInterfaceObject });
             return result;
+        }
+
+        protected void AuditXml(string xml, TargetResult targetResult) {
+            _auditManager.AppendToCurrentTrail(OperationData.OperationType.ToString(), ApplicationMetadata.Name, targetResult.Id, targetResult.UserId, xml);
+        }
+
+        protected bool ShouldAudit() {
+            return _configurationFacade.Lookup<bool>(AuditConstants.AuditEnabled);
         }
 
         /// <summary>
@@ -126,6 +161,40 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         /// </summary>
         /// <param name="beforeInvocation">stopwatch started before the invocation</param>
         protected virtual void OnProxyInvocationComplete(Stopwatch beforeInvocation) {
+        }
+
+
+        protected TargetResult CreateResultData(object resultData) {
+            if (OperationData.Id != null) {
+                //update scenario
+                return new TargetResult(OperationData.Id, OperationData.UserId, resultData);
+            }
+
+            var idProperty = Metadata.Schema.IdAttribute.Name;
+            var siteIdAttribute = Metadata.Schema.SiteIdAttribute;
+            var userIdProperty = Metadata.Schema.UserIdAttribute.Name;
+            var resultOb = (Array)resultData;
+            var firstOb = resultOb?.GetValue(0);
+            var id = firstOb == null ? null : WsUtil.GetRealValue(firstOb, idProperty);
+            var userId = firstOb == null ? null : WsUtil.GetRealValue(firstOb, userIdProperty);
+            string siteId = null;
+            if (siteIdAttribute != null && firstOb != null) {
+                //not all entities will have a siteid...
+                siteId = WsUtil.GetRealValue(firstOb, siteIdAttribute.Name) as string;
+            }
+            if (!idProperty.Equals(userIdProperty) && userId == null) {
+                Log.WarnFormat("User Identifier {0} not received after creating object in Maximo.", idProperty);
+                return new TargetResult(null, null, resultData, null, siteId);
+            }
+            if (id == null && userId == null) {
+                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
+                return new TargetResult(null, null, resultData, null, siteId);
+            }
+            if (id == null) {
+                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
+                return new TargetResult(null, userId.ToString(), resultData, null, siteId);
+            }
+            return new TargetResult(id.ToString(), userId.ToString(), resultData, null, siteId);
         }
 
     }

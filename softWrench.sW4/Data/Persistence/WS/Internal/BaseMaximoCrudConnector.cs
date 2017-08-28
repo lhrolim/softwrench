@@ -88,36 +88,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
         public virtual void DoCreate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
-            var idProperty = maximoTemplateData.Metadata.Schema.IdAttribute.Name;
-            var siteIdAttribute = maximoTemplateData.Metadata.Schema.SiteIdAttribute;
-            var userIdProperty = maximoTemplateData.Metadata.Schema.UserIdAttribute.Name;
-            var resultOb = resultData == null ? null : (Array)resultData;
-            var firstOb = resultOb == null ? null : resultOb.GetValue(0);
-            var id = firstOb == null ? null : WsUtil.GetRealValue(firstOb, idProperty);
-            var userId = firstOb == null ? null : WsUtil.GetRealValue(firstOb, userIdProperty);
-            string siteId = null;
-            if (siteIdAttribute != null && firstOb != null) {
-                //not all entities will have a siteid...
-                siteId = WsUtil.GetRealValue(firstOb, siteIdAttribute.Name) as string;
-            }
-            if (!idProperty.Equals(userIdProperty) && userId == null) {
-                Log.WarnFormat("User Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
-                return;
-            }
-            if (id == null && userId == null) {
-                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new TargetResult(null, null, resultData, null, siteId);
-                return;
-            }
-            if (id == null) {
-                Log.WarnFormat("Identifier {0} not received after creating object in Maximo.", idProperty);
-                maximoTemplateData.ResultObject = new TargetResult(null, userId.ToString(), resultData, null, siteId);
-                return;
-            }
-            maximoTemplateData.ResultObject = new TargetResult(id.ToString(), userId.ToString(), resultData, null, siteId);
-
+            maximoTemplateData.ResultObject = resultData;
         }
+
+     
+
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP
         }
@@ -142,7 +117,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
         public virtual void DoUpdate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
-            maximoTemplateData.ResultObject = new TargetResult(maximoTemplateData.OperationData.Id, maximoTemplateData.OperationData.UserId, resultData);
+            maximoTemplateData.ResultObject = resultData;
         }
         public void AfterUpdate(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP

@@ -1,7 +1,7 @@
 ﻿using System;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.Hapag.Data.WS.Ism.Base;
-using softWrench.sW4.Audit;
+using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sw4.Hapag.Data {

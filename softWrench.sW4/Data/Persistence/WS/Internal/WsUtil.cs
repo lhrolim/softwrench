@@ -33,7 +33,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             } else {
                 prop = MetadataProvider.GlobalProperty("wsprovider", true);
             }
-            
+
             if (prop != null) {
                 WsProvider val;
                 Enum.TryParse(prop, true, out val);
@@ -294,10 +294,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public static void CloneSingle(CrudOperationData crudOperationData, object integrationObject, string propertyName, Action<object, CrudOperationData> itemHandlerDelegate = null) {
             var element = ReflectionUtil.InstantiateSingleElementFromArray(integrationObject, propertyName);
             var cloneFromEntity = WsUtil.CloneFromEntity(element, crudOperationData);
-            if (itemHandlerDelegate != null) {
-                itemHandlerDelegate(cloneFromEntity, crudOperationData);
-            }
+            itemHandlerDelegate?.Invoke(cloneFromEntity, crudOperationData);
         }
+
+
+
 
     }
 }

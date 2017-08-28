@@ -26,6 +26,7 @@ namespace cts.commons.persistence {
             });
         }
 
+        
 
         public ICollection<T> BulkSave<T>(IEnumerable<T> items) where T : class {
             return AsyncHelper.RunSync(() => BulkSaveAsync<T>(items));
@@ -48,6 +49,8 @@ namespace cts.commons.persistence {
             });
             return result;
         }
+
+      
 
 
         private async Task<T> DoSave<T>(T ob, ISession session) where T : class {

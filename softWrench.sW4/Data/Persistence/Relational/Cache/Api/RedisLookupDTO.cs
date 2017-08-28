@@ -10,8 +10,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Api {
 
         public IDictionary<string, object> ExtraKeys { get; set; } = new SortedDictionary<string, object>();
 
-        public long? MaxUid { get; set; }
-
         /// <summary>
         /// The status of the cache fetching process, assuming several consective fetches from client to server
         /// </summary>
@@ -100,7 +98,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Api {
         }
 
         protected bool Equals(RedisLookupDTO other) {
-            return Equals(Schema, other.Schema) && Equals(ExtraKeys, other.ExtraKeys) && MaxUid == other.MaxUid && Equals(CacheRoundtripStatuses, other.CacheRoundtripStatuses) && IsOffline == other.IsOffline && GlobalLimit == other.GlobalLimit;
+            return Equals(Schema, other.Schema) && Equals(ExtraKeys, other.ExtraKeys) && Equals(CacheRoundtripStatuses, other.CacheRoundtripStatuses) && IsOffline == other.IsOffline && GlobalLimit == other.GlobalLimit;
         }
 
         public override bool Equals(object obj) {
@@ -114,7 +112,6 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Api {
             unchecked {
                 var hashCode = (Schema != null ? Schema.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ (ExtraKeys != null ? ExtraKeys.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ MaxUid.GetHashCode();
                 hashCode = (hashCode * 397) ^ (CacheRoundtripStatuses != null ? CacheRoundtripStatuses.GetHashCode() : 0);
                 hashCode = (hashCode * 397) ^ IsOffline.GetHashCode();
                 hashCode = (hashCode * 397) ^ GlobalLimit;

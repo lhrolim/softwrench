@@ -22,12 +22,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         private const string FacilitiesQuery = @"select location, siteid, orgid from omworkgroup";
 
         private readonly IMaximoHibernateDAO _dao;
-        private readonly IRedisManager _redisManager;
+        private readonly IDatamapRedisManager _redisManager;
         private readonly EntityRepository _repository;
         private readonly IConfigurationFacade _configFacade;
         private readonly ILog _log = LogManager.GetLogger(typeof(FirstSolarLocationCacheJob));
 
-        public FirstSolarLocationCacheJob(IMaximoHibernateDAO dao, IRedisManager redisManager, EntityRepository repository, IConfigurationFacade configFacade) {
+        public FirstSolarLocationCacheJob(IMaximoHibernateDAO dao, IDatamapRedisManager redisManager, EntityRepository repository, IConfigurationFacade configFacade) {
             _dao = dao;
             _redisManager = redisManager;
             _repository = repository;

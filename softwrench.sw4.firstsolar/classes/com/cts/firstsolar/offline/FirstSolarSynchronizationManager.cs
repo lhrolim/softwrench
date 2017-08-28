@@ -19,7 +19,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
     public class FirstSolarSynchronizationManager : SynchronizationManager {
 
         public FirstSolarSynchronizationManager(OffLineCollectionResolver resolver, EntityRepository respository, IContextLookuper lookuper, IEventDispatcher iEventDispatcher,
-            ISWDBHibernateDAO swdbDAO, SyncChunkHandler syncChunkHandler, IConfigurationFacade configFacade, RedisManager redisManager)
+            ISWDBHibernateDAO swdbDAO, SyncChunkHandler syncChunkHandler, IConfigurationFacade configFacade, DatamapRedisManager redisManager)
             : base(resolver, respository, lookuper, iEventDispatcher, swdbDAO, syncChunkHandler, configFacade, redisManager) {
         }
 

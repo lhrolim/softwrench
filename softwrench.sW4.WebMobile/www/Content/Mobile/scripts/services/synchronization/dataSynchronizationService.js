@@ -8,7 +8,7 @@
         });
         return ids;
     };
-    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService) {
+    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService, applicationStateService) {
 
         var errorHandlePromise = function (error) {
             if (!error) {
@@ -75,7 +75,7 @@
 
                 if (deletedIds.length > 0) {
                     const fnName = isRippleEmulator() ? "push" : "unshift";
-                    const deleteQuery = { query: entities.DataEntry.deleteQueryPattern.format(buildIdsString(deletedIds), application.applicationName)};
+                    const deleteQuery = { query: entities.DataEntry.deleteQueryPattern.format(buildIdsString(deletedIds), application.applicationName) };
                     queryArray[fnName](deleteQuery);
                     //TODO: treat the case where AuditEntries that have no refId shouldn't be deleted (e.g. crud_create operations)
                     const deleteAuditQuery = {
@@ -91,7 +91,7 @@
             return offlineCompositionService.generateSyncQueryArrays(compositionData)
                 .then(compositionQueriesToAppend => queryArray.concat(compositionQueriesToAppend))
                 .then(queryArray => swdbDAO.executeQueries(queryArray))
-                .then(() =>  $q.when(numberOfDownloadedItems));
+                .then(() => $q.when(numberOfDownloadedItems));
         };
 
         function userDataIfChanged() {
@@ -99,7 +99,7 @@
             return current.meta && current.meta.changed ? current : null;
         }
 
-        function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap) {
+        function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap, clientOperationId) {
             var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
             return rowstampService.generateRowstampMap(app)
@@ -111,6 +111,7 @@
                         applicationName: app,
                         clientCurrentTopLevelApps: currentApps,
                         returnNewApps: firstInLoop,
+                        clientOperationId,
                         userData: userDataIfChanged(),
                         rowstampMap
                     };
@@ -118,9 +119,9 @@
                 }).then(resultHandlePromise);
         };
 
-        function syncSingleItem(item) {
+        function syncSingleItem(item, clientOperationId) {
             const app = item.application;
-            
+
             return rowstampService.generateCompositionRowstampMap().then(compositionMap => {
                 const rowstampMap = {
                     compositionmap: compositionMap
@@ -129,7 +130,8 @@
                     applicationName: app,
                     itemsToDownload: [item.remoteId],
                     userData: userDataIfChanged(),
-                    rowstampMap
+                    rowstampMap,
+                    clientOperationId
                 };
                 var promise = restService.post("Mobile", "PullNewData", null, payload).then(resultHandlePromise).catch(errorHandlePromise);
                 return $q.all([promise]);
@@ -138,31 +140,42 @@
 
         }
 
-        function syncData() {
-            var currentApps = metadataModelService.getApplicationNames();
-            const firstTime = currentApps.length === 0;
-            var payload;
-            if (firstTime) {
-                //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
-                payload = {
-                    clientCurrentTopLevelApps: currentApps,
-                    returnNewApps: true,
-                    userData: userDataIfChanged()
-                };
-                //single server call
-                return restService.post("Mobile", "PullNewData", null, payload)
-                    .then(resultHandlePromise)
-                    .catch(errorHandlePromise);
-            }
-            return rowstampService.generateCompositionRowstampMap()
-                 .then(function (compositionMap) {
-                    const httpPromises = [];
-                    for (let i = 0; i < currentApps.length; i++) {
-                        const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap).catch(errorHandlePromise);
-                        httpPromises.push(promise);
+        function syncData(clientOperationId) {
+
+
+
+            return applicationStateService.getServerDeviceData()
+                .then(deviceData => {
+                    var currentApps = metadataModelService.getApplicationNames();
+                    const firstTime = currentApps.length === 0;
+                    var payload;
+                    if (firstTime) {
+                        //upon first synchronization let's just bring them all, since we don´t even know what are the metadatas
+                        payload = {
+                            clientCurrentTopLevelApps: currentApps,
+                            returnNewApps: true,
+                            clientOperationId,
+                            deviceData,
+                            userData: userDataIfChanged()
+                        };
+                        //single server call
+                        return restService.post("Mobile", "PullNewData", null, payload)
+                            .then(resultHandlePromise)
+                            .catch(errorHandlePromise);
                     }
-                    return $q.all(httpPromises);
+                    return rowstampService.generateCompositionRowstampMap()
+                        .then(function (compositionMap) {
+                            const httpPromises = [];
+                            for (let i = 0; i < currentApps.length; i++) {
+                                const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap, clientOperationId)
+                                    .catch(errorHandlePromise);
+                                httpPromises.push(promise);
+                            }
+                            return $q.all(httpPromises);
+                        });
                 });
+
+
         };
 
         const api = {
@@ -172,7 +185,7 @@
 
         return api;
     };
-    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService"];
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService"];
 
     mobileServices.factory('dataSynchronizationService', service);
 

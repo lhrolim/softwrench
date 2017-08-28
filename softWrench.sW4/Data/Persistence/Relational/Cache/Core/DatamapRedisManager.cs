@@ -13,58 +13,14 @@ using StackExchange.Redis.Extensions.Core;
 
 namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
 
-    public class RedisManager : IRedisManager, ISWEventListener<ConfigurationChangedEvent> {
+    public class DatamapRedisManager : BaseRedisManager, IDatamapRedisManager {
 
-        private readonly ILog _log = LogManager.GetLogger(typeof(RedisManager));
+        private readonly ILog _log = LogManager.GetLogger(typeof(DatamapRedisManager));
 
-
-        //internal for mocking on tests
-        internal ICacheClient CacheClient;
-
-        public bool ServiceAvailable { get; set; }
-
-        private readonly IConfigurationFacade _configFacade;
-        //not using Newtonsoft due to conflicts in version 5.0.8 --> 10.0.2
-        //many breaking changes, for instance (Configuration Screen)
-
-        private readonly ISerializer _serializer = new CustomJSONSerializer();
-
-        public ConnectionMultiplexer Multiplexer {
-            get; set;
-        }
-
-        public RedisManager(IConfigurationFacade configFacade) {
-            _configFacade = configFacade;
-
-
-            if (configFacade == null) {
-                //to easen the burden for unit tests
-                return;
-            }
-
-
-            DoInit();
-        }
-
-        private void DoInit() {
-            try {
-                var redisUrl = _configFacade.Lookup<string>(ConfigurationConstants.Cache.RedisURL);
-                if (redisUrl != null) {
-                    Multiplexer = ConnectionMultiplexer.Connect(redisUrl);
-                    CacheClient = new StackExchangeRedisCacheClient(Multiplexer, _serializer);
-                    ServiceAvailable = true;
-                }
-            } catch (Exception) {
-                ServiceAvailable = false;
-                CacheClient = null;
-                _log.WarnFormat("Redis is not available, or not properly configured. Cache will be ignored");
-            }
+        public DatamapRedisManager(IConfigurationFacade configFacade) : base(configFacade) {
         }
 
 
-        public virtual bool IsAvailable() {
-            return ServiceAvailable;
-        }
 
         public async Task<List<RedisChunkMetadataDescriptor>> GetDescriptors(RedisLookupDTO lookupDTO) {
             var descriptors = new List<RedisChunkMetadataDescriptor>();
@@ -165,9 +121,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
                         continue;
                     }
 
-                    if (lookupDTO.MaxUid.HasValue && (lookupDTO.MaxUid >= entry.MaxUid)) {
-                        continue;
-                    }
+                    //                    if (lookupDTO.MaxUid.HasValue && (lookupDTO.MaxUid >= entry.MaxUid)) {
+                    //                        continue;
+                    //                    }
 
                     var cacheResult = await CacheClient.GetAsync<IList<T>>(entry.RealKey);
                     var count = entry.Count;
@@ -491,10 +447,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Cache.Core {
             return new FirstTimeInsertResult(resultChunksDescriptors, maxRowstamp);
         }
 
-        public void HandleEvent(ConfigurationChangedEvent eventDispatched) {
-            if (eventDispatched.ConfigKey.Equals(ConfigurationConstants.Cache.RedisURL)) {
-                DoInit();
-            }
-        }
+        
+
+
     }
 }

@@ -2,6 +2,7 @@
 using softWrench.sW4.Configuration.Services.Api;
 using cts.commons.simpleinjector;
 using softwrench.sw4.user.classes.config;
+using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Metadata;
 using ctes = softWrench.sW4.Data.Configuration.ConfigurationConstants;
 
@@ -173,6 +174,28 @@ namespace softWrench.sW4.Data.Configuration {
                 StringValue = "false",
                 PropertyDataType = PropertyDataType.BOOLEAN,
                 CachedOnClient = true
+            });
+
+
+            facade.Register(AuditConstants.AuditEnabled, new PropertyDefinition() {
+                Description = "whether auditing should be globally enabled for all maximo operations",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                StringValue = "true",
+                DefaultValue = "true"
+            });
+
+//            facade.Register(AuditConstants.AuditCompress, new PropertyDefinition() {
+//                Description = "whether or not to compress audit entry operations",
+//                PropertyDataType = PropertyDataType.BOOLEAN,
+//                StringValue = "true",
+//                DefaultValue = "true"
+//            });
+
+
+            facade.Register(AuditConstants.AuditQueryEnabled, new PropertyDefinition {
+                Description = "whether the queries should be stored at the database, besides regular logging",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                DefaultValue = "false"
             });
 
             #region maximoConfig

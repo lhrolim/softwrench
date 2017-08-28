@@ -2,10 +2,10 @@
     'use strict';
 
     //#region Service registration
-    mobileServices.factory('batchService', ['$q', 'offlineRestService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', "attachmentDataSynchronizationService", service]);
+    mobileServices.factory('batchService', ['$q', 'offlineRestService', 'swdbDAO', '$log', 'schemaService', 'offlineSchemaService', 'operationService', 'dispatcherService', 'offlineEntities', "attachmentDataSynchronizationService", "applicationStateService", service]);
     //#endregion
 
-    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService, entities, attachmentDataSynchronizationService) {
+    function service($q, restService, swdbDAO, $log, schemaService, offlineSchemaService, operationService, dispatcherService, entities, attachmentDataSynchronizationService, applicationStateService) {
 
         //#region Utils
 
@@ -38,7 +38,7 @@
             const log = $log.get("BatchService#rollback");
             if (angular.isArray(dataentry)) {
                 logIdsIfEnabled(log, "debug", dataentry, "marking DataEntries {0} to rollback");
-                angular.forEach(dataentry, function(e) {
+                angular.forEach(dataentry, function (e) {
                     rollbackContext.submittingEntries.push(e);
                 });
             } else {
@@ -82,7 +82,7 @@
          * (?) Maybe do a per-entry eviction: only remove those passed as arguments. 
          * Useful if we decide to maintain the entries in the context if their rollback fail (?)
          */
-        var evictRollBackContext = function() {
+        var evictRollBackContext = function () {
             rollbackContext.submittingEntries = [];
         };
 
@@ -98,7 +98,7 @@
 
         //#region Post-Batch Handlers
         var postBatchHandlers = [];
-        
+
         /**
          * Adds a handler callback to be executed before a Batch submit request.
          * The callback function receives the just created Batch, the request parameters and the request payload 
@@ -128,11 +128,11 @@
             var promise = null;
             var payloadToUse = angular.copy(payload);
             // sequentially promise chaining
-            angular.forEach(postBatchHandlers, function(handler) {
+            angular.forEach(postBatchHandlers, function (handler) {
                 if (!promise) {
                     promise = $q.when(handler(batch, params, payloadToUse));
                 } else {
-                    promise = promise.then(function(result) {
+                    promise = promise.then(function (result) {
                         payloadToUse = !!result ? result : payloadToUse;
                         return handler(batch, params, payloadToUse);
                     });
@@ -232,7 +232,7 @@
                 problemEntities.push(problemEntity);
             }
             const successItems = remoteBatch.successItems;
-            angular.forEach(successItems, function(successId) {
+            angular.forEach(successItems, function (successId) {
                 const successItem = indexedItems[successId.toUpperCase()]; // uppercasing in case the server camelcased the keys
                 if (successItem.problem) successItem.problem = null; // problem shouldn't be deleted for history purposes
             });
@@ -258,28 +258,37 @@
          * @param [Object] items to be sent as payload
          * @returns Promise: resolved with updated Batch; rejected with Http or Database error 
          */
-        function doSubmitBatch(batch, items) {
-            var log = $log.getInstance('batchService#doSubmitBatch');
-            // preparing the request
-            var batchParams = {
-                application: batch.application,
-                remoteId: batch.id,
-                downloadImmediately: batch.forcedownload || false //used for quick sync
-            }
-            var objectToSend = { items: items };
-            // execute all handlers and send the result
-            return executePostBatchHandlers(batch, batchParams, objectToSend)
-                .then(function (result) {
-                    const jsonToSend = !!result ? angular.toJson(result) : angular.toJson(objectToSend); // performing the request
-                    log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
-                    return restService.post("Mobile", "SubmitBatch", batchParams, jsonToSend);
-                }).then(function (response) {
-                    const returnedBatch = response.data;
-                    return updateBatch(batch, returnedBatch);;
-                });;
+        function doSubmitBatch(batch, items, clientOperationId) {
+            var log = $log.getInstance('batchService#doSubmitBatch', ["batch", ["sync"]]);
+
+            return applicationStateService.getServerDeviceData()
+                .then(deviceData => {
+                    // preparing the request
+                    var batchParams = {
+                        application: batch.application,
+                        remoteId: batch.id,
+                        clientOperationId,
+                        deviceData,
+                        downloadImmediately: batch.forcedownload || false //used for quick sync
+                    }
+
+                    var objectToSend = { items: items };
+                    // execute all handlers and send the result
+                    return executePostBatchHandlers(batch, batchParams, objectToSend)
+                        .then(function (result) {
+                            const jsonToSend =
+                                !!result ? angular.toJson(result) : angular.toJson(objectToSend); // performing the request
+                            log.info("Submitting a Batch (id='{0}') to the server.".format(batch.id));
+                            return restService.post("Mobile", "SubmitBatch", batchParams, jsonToSend);
+                        }).then(function (response) {
+                            const returnedBatch = response.data;
+                            return updateBatch(batch, returnedBatch);;
+                        });;
+                });
+
         };
 
-        function submitBatches(batches) {
+        function submitBatches(batches, clientOperationId) {
             const log = $log.getInstance('batchService#submitBatches');
             var promises = []; // parallel requests promises
             batches.forEach(function (batch) {
@@ -298,7 +307,7 @@
                         additionaldata: {}
                     };
                 }); // put the batch submission promise in the array
-                promises.push(doSubmitBatch(batch, items));
+                promises.push(doSubmitBatch(batch, items, clientOperationId));
             });
 
             // no batches were submitted: reject it
@@ -331,7 +340,7 @@
          */
         function createBatch(dbapplication, dataEntryToSync) {
             var applicationName = dbapplication.application;
-            const log = $log.getInstance('batchService#createBatch',["sync","batch"]);
+            const log = $log.getInstance('batchService#createBatch', ["sync", "batch"]);
             const detailSchema = offlineSchemaService.locateSchemaByStereotype(dbapplication, "detail");
             const queryToUse = "isDirty=1 and pending=0 and application='{0}'".format(applicationName);
             const isQuickSync = dataEntryToSync != null;
@@ -342,7 +351,7 @@
                 promiseToUse = swdbDAO.findByQuery('DataEntry', queryToUse);
             }
             return promiseToUse
-                .then(dataEntries => attachmentDataSynchronizationService.mergeAttachmentData(applicationName,dataEntries))
+                .then(dataEntries => attachmentDataSynchronizationService.mergeAttachmentData(applicationName, dataEntries))
                 .then(dataEntries => {
 
                     if (!dataEntries || dataEntries.length <= 0) {
@@ -352,7 +361,7 @@
 
                     var batchItemPromises = [];
 
-                    angular.forEach(dataEntries, function(entry) {
+                    angular.forEach(dataEntries, function (entry) {
                         // execute per application registered pre-sync service
                         const mobilePresyncserviceName = dbapplication.data.parameters["mobile.presyncservice"];
                         if (!!mobilePresyncserviceName) {
@@ -363,7 +372,7 @@
                         entry.pending = true;
                         addToRollbackContext(entry);
 
-                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function(dataEntry, batchItem) {
+                        batchItemPromises.push(swdbDAO.instantiate('BatchItem', entry, function (dataEntry, batchItem) {
                             batchItem.dataentry = dataEntry;
                             batchItem.status = 'pending';
                             batchItem.label = schemaService.getTitle(detailSchema, dataEntry.datamap, true);
@@ -378,7 +387,7 @@
                     dbPromises.push($q.when(dataEntries));
                     dbPromises = dbPromises.concat(batchItemPromises);
                     return $q.all(dbPromises);
-                }).then(function(items) {
+                }).then(function (items) {
                     if (!items) {
                         return items;
                     }
@@ -399,7 +408,7 @@
         }
 
         //#endregion
-        
+
         //#region Service instance
         const api = {
             getIdsFromBatch,
@@ -414,8 +423,8 @@
 
         //#endregion
     };
-    
-  
+
+
 
 })(mobileServices, angular, persistence);
 

@@ -15,7 +15,6 @@ using softwrench.sw4.Shared2.Metadata.Modules;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.SPF;
 using softWrench.sW4.Util;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;

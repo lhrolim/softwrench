@@ -362,6 +362,14 @@
                 this.removeColumn("AssociationData", "remoteid");
             }
         });
+
+
+        migrationGroup.addMigration("add clientopreationid for syncoperation", {
+            up: function () {
+                this.addColumn("SyncOperation", "clientoperationid", "text");
+            }
+        });
+
     }]);
 
 })(angular, persistence);

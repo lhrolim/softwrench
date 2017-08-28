@@ -15,5 +15,6 @@ namespace softwrench.sw4.offlineserver.dto.association {
 
         public bool InitialLoad { get; set; }
 
+
     }
 }

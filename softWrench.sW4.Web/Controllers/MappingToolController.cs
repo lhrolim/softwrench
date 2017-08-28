@@ -5,7 +5,6 @@ using System.Web.Http;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using cts.commons.web.Attributes;
-using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Mapping;
 

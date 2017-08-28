@@ -2,8 +2,8 @@
     "use strict";
 
     mobileServices.factory("associationDataSynchronizationService",
-        ["$http", "$log", "$q", "swdbDAO", "metadataModelService", "offlineRestService", "rowstampService", "offlineEntities", "searchIndexService", "securityService",
-            function ($http, $log, $q, swdbDAO, metadataModelService, restService, rowstampService, offlineEntities, searchIndexService, securityService) {
+        ["$http", "$log", "$q", "swdbDAO", "metadataModelService", "offlineRestService", "rowstampService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService",
+            function ($http, $log, $q, swdbDAO, metadataModelService, restService, rowstampService, offlineEntities, searchIndexService, securityService, applicationStateService) {
 
                 return {
 
@@ -69,53 +69,58 @@
                     /// </summary>
                     /// <param name="applicationToFetch">a single application to fetch. If not provided, all the applications would be fetched</param>
                     /// <returns type=""></returns>
-                    syncData: function (firstTime,applicationsToFetch =[], chunkRound =1, totalCount =0, completeCacheEntries =[]) {
-                        const log = $log.get("associationDataSynchronizationService#syncData", ["association", "sync"]);
+                    syncData: function (firstTime, clientOperationId, applicationsToFetch = [], chunkRound = 1, totalCount = 0, completeCacheEntries = []) {
 
-                        log.info("bringing server side data to apply based on rowstampmap");
+                        return applicationStateService.getServerDeviceData()
+                            .then(deviceData => {
+                                const log = $log.get("associationDataSynchronizationService#syncData", ["association", "sync"]);
 
-                        const syncDataFn = this.syncData.bind(this);
-                        
-                        const doInsertFn = this.doInsertRecursively.bind(this);
+                                log.info("bringing server side data to apply based on rowstampmap");
 
-                        const params = {};
-                        
-                        return rowstampService.generateAssociationRowstampMap(applicationsToFetch, firstTime).then(rowstampMap => {
-                            const payload = { rowstampMap };
-                            const current = securityService.currentFullUser();
-                            if (current.meta && current.meta.changed) {
-                                payload.userData = current;
-                            }
-                            payload.applicationsToFetch = applicationsToFetch;
-                            payload.initialLoad = firstTime;
-                            payload.completeCacheEntries = completeCacheEntries;
-                            return restService.post("Mobile", "PullAssociationData", params, payload);
-                        }).then(result => {
-                            const associationData = result.data.associationData;
+                                const syncDataFn = this.syncData.bind(this);
 
-                            if (result.data.isEmpty) {
-                                return totalCount;
-                            }
+                                const doInsertFn = this.doInsertRecursively.bind(this);
 
-                            //for first time, let´s not use the replace keyword in order to make the query faster (we know for sure they are all insertions)
-                            //TODO: check possibility of having different arrays
-                            const queryToUse = firstTime ? offlineEntities.AssociationData.InsertionPattern.format("") : offlineEntities.AssociationData.InsertionPattern.format(" or REPLACE ");
+                                const params = {};
 
-                            const apps = Object.keys(associationData);
-                            return doInsertFn(queryToUse, result, apps, apps.length, 0, 0).then(r => {
-                                totalCount += r;
-                                if (result.data.hasMoreData) {
-                                    var appsforLog = result.data.incompleteAssociations.join(",");
-                                    log.info(`bringing next round of chunked data (${++chunkRound}) for applications ${appsforLog}`);
-                                    return syncDataFn(firstTime,result.data.incompleteAssociations, chunkRound, totalCount, result.data.completeCacheEntries);
-                                }
-                                return totalCount;
-                            });
-                        }).catch(err =>
-                            !err
-                                ? $q.when(0) // normal interruption 
-                                : $q.reject(err)
-                            );
+                                return rowstampService.generateAssociationRowstampMap(applicationsToFetch, firstTime).then(rowstampMap => {
+                                    const payload = { rowstampMap, clientOperationId, deviceData };
+                                    const current = securityService.currentFullUser();
+                                    if (current.meta && current.meta.changed) {
+                                        payload.userData = current;
+                                    }
+                                    payload.applicationsToFetch = applicationsToFetch;
+                                    payload.initialLoad = firstTime;
+                                    payload.completeCacheEntries = completeCacheEntries;
+
+                                    return restService.post("Mobile", "PullAssociationData", params, payload);
+                                }).then(result => {
+                                    const associationData = result.data.associationData;
+
+                                    if (result.data.isEmpty) {
+                                        return totalCount;
+                                    }
+
+                                    //for first time, let´s not use the replace keyword in order to make the query faster (we know for sure they are all insertions)
+                                    //TODO: check possibility of having different arrays
+                                    const queryToUse = firstTime ? offlineEntities.AssociationData.InsertionPattern.format("") : offlineEntities.AssociationData.InsertionPattern.format(" or REPLACE ");
+
+                                    const apps = Object.keys(associationData);
+                                    return doInsertFn(queryToUse, result, apps, apps.length, 0, 0).then(r => {
+                                        totalCount += r;
+                                        if (result.data.hasMoreData) {
+                                            var appsforLog = result.data.incompleteAssociations.join(",");
+                                            log.info(`bringing next round of chunked data (${++chunkRound}) for applications ${appsforLog}`);
+                                            return syncDataFn(firstTime, clientOperationId, result.data.incompleteAssociations, chunkRound, totalCount, result.data.completeCacheEntries);
+                                        }
+                                        return totalCount;
+                                    });
+                                }).catch(err =>
+                                    !err
+                                        ? $q.when(0) // normal interruption 
+                                        : $q.reject(err)
+                                    );
+                            })
 
 
                     }

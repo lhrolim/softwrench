@@ -3,7 +3,6 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using cts.commons.simpleinjector;
-using softwrench.sw4.api.classes.application;
 using softwrench.sw4.api.classes.integration;
 using softwrench.sW4.Shared2.Data;
 

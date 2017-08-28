@@ -13,10 +13,12 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using NHibernate.Util;
 using softwrench.sw4.batch.api.entities;
+using softwrench.sw4.offlineserver.audit;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.model;
 using softwrench.sw4.offlineserver.services;
 using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
@@ -66,12 +68,15 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly IApplicationConfiguration _applicationConfiguration;
 
+        private readonly OfflineAuditManager _offlineAuditManager;
+
         private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
-            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService, IApplicationConfiguration applicationConfiguration) {
+            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService, IApplicationConfiguration applicationConfiguration,
+            OfflineAuditManager offlineAuditManager) {
             _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
@@ -79,6 +84,7 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper = contextLookuper;
             _jsService = jsService;
             _applicationConfiguration = applicationConfiguration;
+            _offlineAuditManager = offlineAuditManager;
         }
 
 
@@ -120,9 +126,10 @@ namespace softwrench.sw4.offlineserver.controller {
         /// 
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
-        public MobileMetadataDownloadResponseDefinition DownloadMetadatas() {
+        [HttpPost]
+        public MobileMetadataDownloadResponseDefinition DownloadMetadatas(MetadataDownloadDto metadataDto) {
             var watch = Stopwatch.StartNew();
+            _offlineAuditManager.MarkSyncOperationBegin(metadataDto.ClientOperationId, metadataDto.DeviceData, OfflineAuditManager.OfflineAuditMode.Metadata);
             var user = SecurityFacade.CurrentUser();
             var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
@@ -150,12 +157,18 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpPost]
         public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
-            return await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
+             _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+            var synchronizationResultDto = await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
+            _offlineAuditManager.PopulateSyncOperationWithTopData(synchronizationRequest.ClientOperationId, synchronizationResultDto);
+            return synchronizationResultDto;
         }
 
         [HttpPost]
         public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
-            return await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
+            _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId,request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+            var associationResult = await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
+            _offlineAuditManager.PopulateSyncOperationWithAssociationData(request.ClientOperationId, associationResult);
+            return associationResult;
         }
 
         [HttpPost]
@@ -168,20 +181,23 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
 
-
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="application">Name of the application of this batch</param>
         /// <param name="remoteId">Id of the batch on the remote end</param>
+        /// <param name="clientOperationId">Id of the whole syncoperation on the remote end</param>
+        /// <param name="deviceData"></param>
         /// <param name="batchContent">The </param>
         /// <returns></returns>
         [HttpPost]
-        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent) {
+        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, [FromUri]string clientOperationId, [FromUri]DeviceData deviceData, JObject batchContent) {
+            var operation =_offlineAuditManager.MarkSyncOperationBegin(clientOperationId, deviceData, OfflineAuditManager.OfflineAuditMode.Batch);
             Log.InfoFormat("Creating batch for application {0}", application);
             // return the generated Batch to be serialized
-            var batch = _offLineBatchService.SubmitBatch(application, remoteId, batchContent);
+            var batch = _offLineBatchService.SubmitBatch(application, remoteId, operation, batchContent);
+            
+
             return batch;
         }
 
@@ -205,7 +221,7 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper.AddContext(context);
 
             var watch = Stopwatch.StartNew();
-            
+
             var appData = await _syncManager.GetData(req, user);
             watch.Stop();
             var appEllapsed = watch.ElapsedMilliseconds;

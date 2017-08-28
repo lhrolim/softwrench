@@ -37,7 +37,7 @@ namespace softwrench.sW4.test.offline {
         private readonly Mock<IEventDispatcher> _eventDispatcher = TestUtil.CreateMock<IEventDispatcher>();
         private readonly Mock<SyncChunkHandler> _syncChunkManager = TestUtil.CreateMock<SyncChunkHandler>();
         private readonly Mock<IConfigurationFacade> _configFacade = TestUtil.CreateMock<IConfigurationFacade>();
-        private readonly Mock<RedisManager> _redisManager = TestUtil.CreateMock<RedisManager>();
+        private readonly Mock<DatamapRedisManager> _redisManager = TestUtil.CreateMock<DatamapRedisManager>();
 
         [TestInitialize]
         public override void Init() {

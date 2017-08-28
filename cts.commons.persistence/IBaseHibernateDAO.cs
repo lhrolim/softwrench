@@ -37,6 +37,8 @@ namespace cts.commons.persistence {
 
         Task<int> ExecuteSqlAsync(string sql, params object[] parameters);
 
+        void RegisterQueryObserver(IQueryObserver observer);
+
         ISession GetSession();
         Task<ITransaction> BeginTransactionAsync(ISession session);
     }

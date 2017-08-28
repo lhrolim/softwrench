@@ -7,6 +7,7 @@ using System.Xml;
 using cts.commons.Util;
 using log4net;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Metadata;
@@ -44,7 +45,7 @@ namespace softwrench.sw4.Hapag.Data.WS.Ism.Base {
             throw new NotSupportedException(String.Format("entity {0} is not supported", entityMetadata.Name));
         }
 
-        protected override object DoProxyInvocation() {
+        protected override TargetResult DoProxyInvocation() {
             var arg0 = SerializeIntegrationObject();
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
 
@@ -78,7 +79,7 @@ namespace softwrench.sw4.Hapag.Data.WS.Ism.Base {
                 }
             }
 
-            return result;
+            return CreateResultData(result);
         }
 
         protected override Exception HandleProxyInvocationError(Exception e) {

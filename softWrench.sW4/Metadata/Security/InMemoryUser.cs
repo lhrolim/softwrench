@@ -287,7 +287,7 @@ namespace softWrench.sW4.Metadata.Security {
             }
         }
 
-        public int SessionAuditId {
+        public int? SessionAuditId {
             get; set;
         }
 

@@ -16,6 +16,8 @@ namespace softwrench.sw4.offlineserver.services.util {
 
         public const string SupportContactEmail = "/Offline/Support/Email";
 
+        public const string EnableAudit = "/Global/Offline/Sync/Audit";
+
 
         #region metadataproperties
         /// <summary>

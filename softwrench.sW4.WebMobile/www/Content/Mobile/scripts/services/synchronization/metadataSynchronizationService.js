@@ -2,8 +2,8 @@
     "use strict";
 
     mobileServices.factory("metadataSynchronizationService",
-        ["$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService", "securityService","searchIndexService",
-            function ( $q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService, securityService, searchIndexService) {
+        ["$q", "offlineRestService", "menuModelService", "metadataModelService", "configurationService", "offlineCommandService", "securityService","searchIndexService","applicationStateService",
+            function ($q, restService, menuModelService, metadataModelService, configurationService, offlineCommandService, securityService, searchIndexService, applicationStateService) {
 
     var toConfigurationArray = function (configuration) {
         const configArray = Object.keys(configuration).map(k => ({ key: k, value: configuration[k] }));
@@ -11,9 +11,12 @@
     };
 
     return {
-        syncData: function (currentServerVersion) {
+        syncData: function (currentServerVersion, clientOperationId) {
 
-            return restService.get("Mobile", "DownloadMetadatas", {}).then(function (metadatasResult) {
+            return applicationStateService.getServerDeviceData()
+                .then(deviceData => {
+                    return restService.post("Mobile", "DownloadMetadatas",null, { clientOperationId, deviceData });
+                }).then(metadatasResult => {
 
                 searchIndexService.refreshIndexCaches();
 

@@ -38,7 +38,14 @@ namespace softwrench.sw4.offlineserver.services.util {
                 Description = "Support email the offline app should contact",
                 PropertyDataType = PropertyDataType.STRING,
                 StringValue = "lrolim@controltechnologysolutions.com",
-                DefaultValue = "lrolim@controltechnologysolutions.com"
+                DefaultValue = "devteam@controltechnologysolutions.com"
+            });
+
+            _configFacade.Register(OfflineConstants.EnableAudit, new PropertyDefinition() {
+                Description = "whether auditing should be enabled for all performed syncs, even the ones with no maximo uploads",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                StringValue = "true",
+                DefaultValue = "true"
             });
         }
     }

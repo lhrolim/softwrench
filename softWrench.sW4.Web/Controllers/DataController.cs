@@ -26,10 +26,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
+using softwrench.sW4.audit.classes.Model;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Web.Util;
-using softWrench.sW4.Data.Entities.Audit;
 using softWrench.sW4.Metadata.Applications.Security;
 using softWrench.sW4.Util.TransactionStatistics;
 
@@ -51,6 +51,7 @@ namespace softWrench.sW4.Web.Controllers {
         private readonly UserMainSecurityApplier _mainSecurityApplier;
 
         private readonly TransactionStatisticsService txService;
+
 
         public DataController(I18NResolver i18NResolver, IContextLookuper contextLookuper, CompositionExpander expander, IAuditManager auditManager, TransactionStatisticsService txService, UserMainSecurityApplier mainSecurityApplier) {
             _i18NResolver = i18NResolver;
@@ -79,12 +80,13 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
-            var securityModeCheckResult = _mainSecurityApplier.VerifyMainSecurityMode(user,applicationMetadata, request);
+            var securityModeCheckResult = _mainSecurityApplier.VerifyMainSecurityMode(user, applicationMetadata, request);
 
             if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
                 throw new SecurityException("You do not have permission to access this application. Please contact your administrator");
             }
 
+            _auditManager.InitThreadTrail(new AuditTrail(application, $"{application}:get", user.SessionAuditId));
 
             ContextLookuper.FillContext(request.Key);
             var response = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
@@ -100,6 +102,8 @@ namespace softWrench.sW4.Web.Controllers {
                 response.Mode = "output";
             }
 
+            //TODO: filter/interceptor
+            _auditManager.SaveThreadTrail();
             return response;
         }
 
@@ -195,6 +199,13 @@ namespace softWrench.sW4.Web.Controllers {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
 
+            var mockMaximo = operationDataRequest.MockMaximo;
+
+            if (!mockMaximo) {
+                _auditManager.InitThreadTrail(new AuditTrail(operationDataRequest.ApplicationName, $"{operationDataRequest.ApplicationName}:{operationDataRequest.Operation}", user.SessionAuditId));
+            }
+
+
             if (Log.IsDebugEnabled) {
                 Log.Debug(json.ToString(Newtonsoft.Json.Formatting.Indented, new StringEnumConverter()));
             }
@@ -210,7 +221,7 @@ namespace softWrench.sW4.Web.Controllers {
             var application = operationDataRequest.ApplicationName;
 
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
-            var mockMaximo = operationDataRequest.MockMaximo;
+
 
             //mocked instance by default
             var maximoResult = new TargetResult(null, null, null);
@@ -218,17 +229,14 @@ namespace softWrench.sW4.Web.Controllers {
 
             if (!mockMaximo) {
                 //TODO : move this to the crud connector.
-                DateTime transactionStart, transactionEnd;
-
-                transactionStart = DateTime.UtcNow;
 
                 maximoResult = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
                     .Execute(applicationMetadata, json, operationDataRequest);
 
-                transactionEnd = DateTime.UtcNow;
+                _auditManager.SaveThreadTrail();
 
-                this.txService.AuditTransaction(operationDataRequest.ApplicationName,
-                    $"{operationDataRequest.ApplicationName}:{operationDataRequest.Operation}", transactionStart, transactionEnd);
+//                this.txService.AuditTransaction(operationDataRequest.ApplicationName,
+//                    $"{operationDataRequest.ApplicationName}:{operationDataRequest.Operation}", transactionStart, transactionEnd);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

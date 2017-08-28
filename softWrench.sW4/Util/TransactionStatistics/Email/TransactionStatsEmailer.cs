@@ -6,12 +6,8 @@ using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace softWrench.sW4.Util.TransactionStatistics.Email {
     public class TransactionStatsEmailer : ISingletonComponent {

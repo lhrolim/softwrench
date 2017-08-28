@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
+using softwrench.sw4.api.classes.configuration;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Scheduler.Interfaces;
 

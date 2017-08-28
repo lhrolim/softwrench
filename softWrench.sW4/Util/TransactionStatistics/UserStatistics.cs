@@ -1,10 +1,5 @@
-﻿using softWrench.sW4.Audit;
-using softWrench.sW4.Data.Entities.Audit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using softwrench.sW4.audit.classes.Model;
 
 namespace softWrench.sW4.Util.TransactionStatistics {
     public class UserStatistics {

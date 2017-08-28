@@ -15,10 +15,12 @@ using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
+using softwrench.sw4.api.classes.user;
 using softwrench.sw4.user.classes.config;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.services;
 using softwrench.sw4.user.classes.services.setup;
+using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
@@ -30,7 +32,7 @@ using LogicalThreadContext = Quartz.Util.LogicalThreadContext;
 using softWrench.sW4.Util.TransactionStatistics;
 
 namespace softWrench.sW4.Security.Services {
-    public class SecurityFacade : ISingletonComponent, ISWEventListener<UserSavedEvent> {
+    public class SecurityFacade : ISWEventListener<UserSavedEvent>, ISecurityFacade {
         private const string LoginQuery = "from User where userName =? and IsActive=1";
 
 
@@ -52,15 +54,16 @@ namespace softWrench.sW4.Security.Services {
 
         private static readonly IDictionary<string, InMemoryUser> Users = new ConcurrentDictionary<string, InMemoryUser>();
 
-        
-//        cache.Add("bar", "baz", DateTime.Now.AddSeconds(5));
+        public static ISWDBHibernateDAO Dao;
+
+
+        //        cache.Add("bar", "baz", DateTime.Now.AddSeconds(5));
 
         [Import]
         public UserPasswordService UserPasswordService { get; set; }
 
-        public static SecurityFacade GetInstance()
-        {
-            
+        public static SecurityFacade GetInstance() {
+
             return SimpleInjectorGenericFactory.Instance.GetObject<SecurityFacade>(typeof(SecurityFacade));
         }
 
@@ -72,6 +75,12 @@ namespace softWrench.sW4.Security.Services {
             _userSyncManager = userSyncManager;
             _userManager = userManager;
             _transStatisticsService = transStatisticsService;
+            if (!ApplicationConfiguration.IsUnitTest) {
+                Dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>();
+            } else {
+                Dao = SWDBHibernateDAO.GetInstance();
+            }
+
         }
 
         [CanBeNull]
@@ -115,7 +124,7 @@ namespace softWrench.sW4.Security.Services {
         }
 
 
-    
+
 
         public static InMemoryUser UpdateUserCacheStatic(User dbUser, string userTimezoneOffset) {
             int? userTimezoneOffsetInt = null;
@@ -164,12 +173,16 @@ namespace softWrench.sW4.Security.Services {
                     ));
             }
 
+
+            return inMemoryUser;
+        }
+
+        public static void HandleUserSession(InMemoryUser inMemoryUser, string cookie, int userTimezoneOffset) {
             if (inMemoryUser.UserId.HasValue) {
-                _transStatisticsService.AddSessionAudit(inMemoryUser);
+                _transStatisticsService.AddSessionAudit(inMemoryUser, cookie, userTimezoneOffset);
             }
 
-            _statisticsService.UpdateStatistcsAsync(dbUser);
-            return inMemoryUser;
+            _statisticsService.UpdateStatistcsAsync(inMemoryUser.DBUser);
         }
 
         [Transactional(DBType.Swdb)]
@@ -200,6 +213,12 @@ namespace softWrench.sW4.Security.Services {
                 return CurrentPrincipal.Identity.Name;
             }
         }
+
+
+        public ISWUser Current(Boolean fetchFromDB = true) {
+            return CurrentUser(fetchFromDB);
+        }
+
         /// <summary>
         /// <para>
         /// Finds the currently authenticated user.
@@ -212,8 +231,9 @@ namespace softWrench.sW4.Security.Services {
         /// </para>
         /// </summary>
         /// <param name="fetchFromDB"></param>
+        /// <param name="authCookie"></param>
         /// <returns>current autheticated user</returns>
-        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true) {
+        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true, string authCookie = null) {
             if (ApplicationConfiguration.IsUnitTest) {
                 return InMemoryUser.TestInstance("test");
             }
@@ -237,12 +257,17 @@ namespace softWrench.sW4.Security.Services {
                 Log.DebugFormat("retrieving user {0} from cache", inMemoryUser.Login);
                 return inMemoryUser;
             }
+
+
             //cookie authenticated already 
             //TODO: remove this in prod?
-            var swUser = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, currLogin);
+            var swUser = Dao.FindSingleByQuery<User>(User.UserByUserName, currLogin);
             if (swUser == null) {
                 throw UnauthorizedException.UserNotFound(currLogin);
             }
+
+
+
             var fullUser = new User();
             CallContext.LogicalSetData("executinglogin", "true");
             if (!swUser.Systemuser && swUser.MaximoPersonId != null) {
@@ -266,6 +291,17 @@ namespace softWrench.sW4.Security.Services {
             if (currentUser == null) {
                 throw UnauthorizedException.NotAuthenticated(currLogin);
             }
+
+            if (authCookie != null) {
+                var session = Dao.FindSingleByQuery<AuditSession>(AuditSession.ByUserIdAndCookie, swUser.Id, AuditSession.HashCookie(authCookie));
+                if (session != null) {
+                    currentUser.TimezoneOffset = session.TimezoneOffSet;
+                    currentUser.SessionAuditId = session.Id;
+                } else {
+                    _transStatisticsService.AddSessionAudit(currentUser, authCookie, currentUser.TimezoneOffset, false);
+                }
+            }
+
             return currentUser;
         }
 

@@ -8,7 +8,6 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Util;
-using softWrench.sW4.Data.Persistence.SWDB;
 
 namespace softWrench.sW4.Web.Controllers {
     public class SignoutController : Controller {

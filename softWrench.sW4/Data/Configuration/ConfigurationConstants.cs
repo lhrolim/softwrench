@@ -6,6 +6,8 @@
         public const string PersonGroupAssociationRowstampKey = "/Global/Rowstamps/PersonGroupAssociation";
         public const string MainIconKey = "/Global/Icons/Main";
 
+        
+
         public class Maximo {
             public const string WsdlPath = "/Global/Maximo/WS/WsdlBasePath";
             public const string IgnoreCertErrors = "/Global/Maximo/WS/IgnoreCertErrors";

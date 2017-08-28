@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using softwrench.sw4.offlineserver.model;
 
 namespace softwrench.sw4.offlineserver.dto {
     public class SynchronizationRequestDto : BaseSynchronizationRequestDto {
@@ -22,5 +23,9 @@ namespace softwrench.sw4.offlineserver.dto {
         public List<string> ClientCurrentTopLevelApps { get; set; }
 
         public bool ReturnNewApps { get; set; }
+
+        
+
+        
     }
 }

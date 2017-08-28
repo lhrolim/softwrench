@@ -1,5 +1,5 @@
-﻿using JetBrains.Annotations;
-using softWrench.sW4.AUTH;
+﻿using System;
+using JetBrains.Annotations;
 using softWrench.sW4.Data.Entities.SyncManagers;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Metadata;
@@ -17,14 +17,11 @@ using System.Web.Security;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Web.Controllers.Security;
-using softWrench.sW4.Data.Entities.Audit;
-using System;
-using softwrench.sw4.user.classes.exceptions;
 using softwrench.sw4.user.classes.ldap;
 using softwrench.sw4.user.classes.services;
+using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
-using softWrench.sW4.Exceptions;
 using softWrench.sW4.Web.Models;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -85,7 +82,14 @@ namespace softWrench.sW4.Web.Controllers {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
 
-            AuthenticationCookie.SetPersistentCookie(userName, userTimezoneOffset, Response);
+            var cookie = AuthenticationCookie.SetPersistentCookie(userName, userTimezoneOffset, Response);
+
+            SecurityFacade.HandleUserSession(user,cookie, int.Parse(userTimezoneOffset));
+
+            //            var session = await _dao.SaveAsync(new AuditSession() {StartDate = DateTime.Now, UserId = user.UserId});
+            //            user.SessionAuditId = session.Id.Value;
+
+            
 
             return Json(new UserSyncData(user));
         }
@@ -100,7 +104,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
 
             var error = ErrorConfig.GetLastError();
-            if (error != null){
+            if (error != null) {
                 var model = BuildLoginHandlerModel();
                 model.Error = error;
                 return View(model);
@@ -142,7 +146,7 @@ namespace softWrench.sW4.Web.Controllers {
                 }
 
                 //if this flag is true, we will create the user on the fly
-                var ldapResult = await _ldapManager.LdapAuth(userName, password,false);
+                var ldapResult = await _ldapManager.LdapAuth(userName, password, false);
                 if (ldapResult.Success) {
                     userAux = await _userManager.CreateMissingDBUser(userName);
                     if (userAux == null) {
@@ -209,13 +213,14 @@ namespace softWrench.sW4.Web.Controllers {
             if (syncEveryTime) {
                 user.DBUser = await _userManager.SyncLdapUser(user.DBUser, await _ldapManager.IsLdapSetup());
             }
-            AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
+            var cookie = AuthenticationCookie.SetSessionCookie(userName, userTimezoneOffset, Response);
 
             System.Threading.Thread.CurrentPrincipal = user;
             if (await _userManager.VerifyChangePassword(user)) {
                 Response.Redirect("~/UserSetup/ChangePassword");
                 return null;
             }
+            SecurityFacade.HandleUserSession(user, cookie, int.Parse(userTimezoneOffset));
             System.Web.HttpContext.Current = context; // needed due to the possible change of thread by async/await
             Response.Redirect(FormsAuthentication.GetRedirectUrl(userName, false));
             return null;

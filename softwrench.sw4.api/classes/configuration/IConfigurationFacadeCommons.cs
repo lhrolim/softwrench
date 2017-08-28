@@ -7,6 +7,8 @@ namespace softwrench.sw4.api.classes.configuration {
 
         Task<T> LookupAsync<T>([NotNull]string configKey, string propertyXmlKey = null);
 
+        T Lookup<T>([NotNull]string configKey, string propertyXmlKey = null);
+
         Task RegisterAsync([NotNull]string configKey, [NotNull]PropertyDefinitionRegistry definition);
 
     }

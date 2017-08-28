@@ -15,7 +15,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
     [TestClass]
     public class RedisManagerUnitTest {
 
-        private readonly RedisManager _redisManager = new RedisManager(null);
+        private readonly DatamapRedisManager _redisManager = new DatamapRedisManager(null);
 
         private readonly Mock<ICacheClient> _cacheClient = TestUtil.CreateMock<ICacheClient>(true);
 
@@ -261,7 +261,7 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Cache {
 
         }
 
-        private static void BaseAssertions(IList<RedisManager.GrouppedDatamaps<JSONConvertedDatamap>> items) {
+        private static void BaseAssertions(IList<DatamapRedisManager.GrouppedDatamaps<JSONConvertedDatamap>> items) {
             for (var i = 0; i < items.Count; i++) {
                 var item = items[i];
                 Assert.IsNotNull(item.Metadata);

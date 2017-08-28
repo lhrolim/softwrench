@@ -1,11 +1,9 @@
 ﻿using System;
-using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Data.Persistence.WS.Mea;
 using softWrench.sW4.Data.Persistence.WS.Mif;
 using softWrench.sW4.Data.Persistence.WS.Rest;
-using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 

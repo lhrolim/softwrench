@@ -81,8 +81,11 @@
     <Reference Include="Common.Logging">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons, Version=1.2.6429.37158, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.2.6429.37158\lib\net46\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.3.6448.37938, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.3.6448.37938\lib\net46\cts.commons.dll</HintPath>
+    </Reference>
+    <Reference Include="cts.commons.persistence, Version=1.4.6448.38102, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.4.6448.38102\lib\net46\cts.commons.persistence.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.3.6383.35639, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.3.6383.35639\lib\net46\cts.commons.simpleinjector.dll</HintPath>
@@ -186,19 +189,14 @@
       <HintPath>..\packages\slf4net.0.1.32.1\lib\net35\slf4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.activitystream, Version=1.2.6295.23782, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6295.23782\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="softwrench.sw4.activitystream, Version=1.2.6448.38615, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6448.38615\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sW4.audit, Version=1.1.6352.20788, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.audit.1.1.6352.20788\lib\net46\softwrench.sW4.audit.dll</HintPath>
+    <Reference Include="softwrench.sW4.audit, Version=2.0.6448.38234, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.audit.2.0.6448.38234\lib\net46\softwrench.sW4.audit.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.34730, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
-    </Reference>
-    <Reference Include="softwrench.sW4.batches, Version=1.3.6388.37187, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.batches.1.3.6388.37187\lib\net46\softwrench.sW4.batches.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6447.35027, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6447.35027\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6447.35027, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6447.35027\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
@@ -1263,10 +1261,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
-      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
-      <Name>cts.commons.persistence</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.apachegold\softwrench.sw4.apachegold.csproj">
       <Project>{cbf64ea8-97df-43b4-97cb-477769f9941c}</Project>
       <Name>softwrench.sw4.apachegold</Name>
@@ -1274,6 +1268,14 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
+      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
+      <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
       <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>

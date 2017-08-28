@@ -62,28 +62,34 @@
             return saveBatchOperation(operation, relatedBatches);
         };
 
-        this.createSynchronousBatchOperation = function (startdate, numberofdownloadeditems, relatedBatches) {
+        this.createSynchronousBatchOperation = function (startdate,clientOperationId, numberofdownloadeditems, relatedBatches) {
             //if every batch returned as complete than we have a synchronous case and can close the sync operation
             const hasProblem = relatedBatches.some(result => result.hasProblems);
+            if (!clientOperationId) {
+                clientOperationId = persistence.createUUID();
+            }
+
 
             const operation = {
-                startdate: startdate,
-                numberofdownloadeditems: numberofdownloadeditems,
+                startdate,
+                numberofdownloadeditems,
                 numberofdownloadedsupportdata: 0,
                 hasProblems: hasProblem,
+                clientOperationId,
                 enddate: new Date()
             };
             return saveBatchOperation(operation, relatedBatches);
         };
         
-        this.createNonBatchOperation = function(startdate, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange) {
+        this.createNonBatchOperation = function (startdate, clientOperationId, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange) {
             const operation = {
-                startdate: startdate,
-                enddate: enddate,
+                clientOperationId,
+                startdate,
+                enddate,
                 status: "COMPLETE",
-                numberofdownloadeditems: numberofdownloadeditems,
-                numberofdownloadedsupportdata: numberofdownloadedsupportdata,
-                metadatachange: metadatachange
+                numberofdownloadeditems,
+                numberofdownloadedsupportdata,
+                metadatachange
             };
             return swdbDAO.instantiate("SyncOperation", operation).then(item => swdbDAO.save(item));
         }

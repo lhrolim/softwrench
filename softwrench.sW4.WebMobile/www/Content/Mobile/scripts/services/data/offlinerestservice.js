@@ -7,7 +7,7 @@
             action =  action || "get";
             var params = parameters || {};
             return settingsService.getServerUrl().then(function(url) {
-                return `${url}/api/generic/${controller}/${action}?${$.param(params, true)}`;
+                return `${url}/api/generic/${controller}/${action}?${$.param(params)}`;
             });
         }
         //#endregion

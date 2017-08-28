@@ -64,7 +64,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
             throw new NotImplementedException();
         }
 
-        protected override object DoProxyInvocation() {
+        protected override TargetResult DoProxyInvocation() {
             //            if (ApplicationConfiguration.IgnoreWsCertErrors) {
             //                ServicePointManager.ServerCertificateValidationCallback = delegate {
             //                    return true;
@@ -83,7 +83,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Rest {
                 Log.DebugFormat("invoking web service at {0} with headers {1} and payload {2}", _baseRestURL, headers, payLoad);
             }
 
-            return RestUtil.CallRestApiSync(_baseRestURL, MethodName(), headers, payLoad);
+            var resultData = RestUtil.CallRestApiSync(_baseRestURL, MethodName(), headers, payLoad);
+            return CreateResultData(resultData);
         }
 
 

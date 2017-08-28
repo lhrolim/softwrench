@@ -19,6 +19,7 @@ using cts.commons.persistence.Util;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.app;
 using cts.commons.Util;
+using Castle.Core.Internal;
 using JetBrains.Annotations;
 using FlushMode = NHibernate.FlushMode;
 
@@ -28,6 +29,8 @@ namespace cts.commons.persistence {
     public abstract class BaseHibernateDAO : IBaseHibernateDAO, ISingletonComponent, ISWEventListener<RestartDBEvent> {
 
         private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
+
+        public IList<IQueryObserver> Observers = new List<IQueryObserver>();
 
         private readonly IApplicationConfiguration _applicationConfiguration;
         private readonly ISessionManager _sessionManager;
@@ -178,6 +181,9 @@ namespace cts.commons.persistence {
             return query;
         }
 
+        public void RegisterQueryObserver(IQueryObserver observer) {
+            Observers.Add(observer);
+        }
 
         [NotNull]
         public List<Dictionary<string, string>> FindByNativeQuery(string queryst, params object[] parameters) {
@@ -209,10 +215,20 @@ namespace cts.commons.persistence {
             var before = Stopwatch.StartNew();
 
             return await RunTransactionalAsync(async (p) => {
-                var query = BuildQuery(queryst, parameters, p.Session, true, paginationData);
+                var guid = Guid.NewGuid();
+                if (queryAlias == null) {
+                    queryAlias = "";
+                }
+                queryAlias = "[" + guid + "]" + queryAlias;
+
+                var query = BuildQuery(queryst, parameters, p.Session, true, paginationData, queryAlias);
                 query.SetResultTransformer(NhTransformers.ExpandoObject);
                 var result = await query.ListAsync<dynamic>();
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
+                if (queryAlias != null) {
+                    Observers.Where(o => o.IsTurnedOn()).ForEach(o => o.MarkQueryResolution(queryAlias, before.ElapsedMilliseconds));
+                }
+
                 return result;
             });
         }
@@ -323,9 +339,20 @@ namespace cts.commons.persistence {
         public async Task<int> CountByNativeQueryAsync(string queryst, ExpandoObject parameters, string queryAlias = null) {
             var before = Stopwatch.StartNew();
             return await RunTransactionalAsync(async (p) => {
+                var guid = Guid.NewGuid();
+                if (queryAlias == null) {
+                    queryAlias = "";
+                }
+                queryAlias = "["+ guid + "]" + queryAlias;
+
                 var query = BuildQuery(queryst, parameters, p.Session, true, null, queryAlias);
                 var result = Convert.ToInt32(await query.UniqueResultAsync());
-                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
+
+                GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query. found {1} entries".Fmt(queryAlias ?? "", result)));
+                if (queryAlias != null) {
+                    Observers.Where(o => o.IsTurnedOn()).ForEach(o => o.MarkQueryResolution(queryAlias, before.ElapsedMilliseconds, result));
+                }
+
                 return result;
             });
         }
@@ -361,16 +388,24 @@ namespace cts.commons.persistence {
 
 
         private void LogQuery(string queryst, string queryAlias, params object[] parameters) {
-            if (!GetLog().IsDebugEnabled) {
+            var anyObserver = Observers.Any(o => o.IsTurnedOn());
+
+            if (!GetLog().IsDebugEnabled && !anyObserver) {
                 return;
             }
-            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias, parameters));
+            var query = LoggingUtil.ReplaceParameters(queryst, parameters);
+            var logQuery = LoggingUtil.QueryStringForLogging(query, queryAlias);
+            GetLog().Debug(logQuery);
+            foreach (var observer in Observers.Where(o => o.IsTurnedOn())) {
+                observer.OnQueryExecution(query, queryAlias);
+            }
         }
 
         private void LogPaginationQuery(string queryst, string queryAlias, params object[] parameters) {
             if (!HibernateLog.IsDebugEnabled) {
                 return;
             }
+            var query = LoggingUtil.QueryStringForLogging(queryst, queryAlias, parameters);
             HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias, parameters));
         }
 

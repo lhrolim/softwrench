@@ -45,12 +45,17 @@ namespace softwrench.sw4.batch.api.entities {
         }
 
         [Property]
-        public String RemoteId {
+        public string RemoteId {
             get; set;
         }
 
         [Property]
-        public String Application {
+        public string ClientOperationId {
+            get; set;
+        }
+
+        [Property]
+        public string Application {
             get; set;
         }
 
@@ -89,7 +94,7 @@ namespace softwrench.sw4.batch.api.entities {
         public ClientPlatform? Platform { get; set; }
 
         public static Batch TransientInstance(string application, ISWUser user) {
-            return new Batch() {
+            return new Batch {
                 CreationDate = DateTime.Now,
                 CreatedBy = user.UserId,
                 Status = BatchStatus.SUBMITTING,

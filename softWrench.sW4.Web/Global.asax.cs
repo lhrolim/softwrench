@@ -258,7 +258,7 @@ namespace softWrench.sW4.Web {
         protected void Application_PostAuthenticateRequest(object sender, EventArgs e) {
             HttpCookie authCookie = Request.Cookies[FormsAuthentication.FormsCookieName];
             if (authCookie != null) {
-                var inMemoryUser = SecurityFacade.CurrentUser();
+                var inMemoryUser = SecurityFacade.CurrentUser(true, authCookie.Value);
                 HttpContext.Current.User = inMemoryUser;
 
             }

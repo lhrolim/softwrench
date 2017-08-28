@@ -21,7 +21,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         /// <param name="userName">The username authenticated.</param>
         /// <param name="userTimezoneOffset">The user time zone offset</param>
         /// <param name="response">Response object</param>
-        public static void SetSessionCookie(string userName, string userTimezoneOffset, HttpResponseBase response) {
+        public static string SetSessionCookie(string userName, string userTimezoneOffset, HttpResponseBase response) {
 //            FormsAuthentication.SetAuthCookie(userName, false);
 
             var strb = new StringBuilder();
@@ -49,6 +49,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             cookie.Value = encTicket;
 
             response.Cookies.Add(cookie);
+            return encTicket;
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         /// </summary>
         /// <param name="userName">The username authenticated.</param>
         /// <param name="response">The HTTP response to inject the cookie into.</param>
-        public static void SetPersistentCookie(string userName, string userTimezoneOffset, HttpResponseBase response) {
+        public static string SetPersistentCookie(string userName, string userTimezoneOffset, HttpResponseBase response) {
             // TODO: set userTimezoneOffset
             var ticket = new FormsAuthenticationTicket(userName.ToLower(), true, (int)TimeSpan.FromDays(PersistentCookieTimeoutDays).TotalMinutes);
             var encryptedData = FormsAuthentication.Encrypt(ticket);
@@ -69,6 +70,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
 
             response.Cookies.Add(cookie);
+
+            return cookie.Value;
         }
     }
 }

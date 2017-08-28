@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using softwrench.sw4.api.classes.audit;
 using softwrench.sW4.audit.classes.Model;
@@ -18,6 +19,9 @@ namespace softwrench.sW4.audit.Interfaces {
         /// <param name="createdDate"></param>
         /// <returns>AuditEntry</returns>
         AuditEntry CreateAuditEntry(string action, string refApplication, string refId, string refUserId, string data, DateTime createdDate);
+
+
+
         /// <summary>
         /// Saves an AuditEntry to the SWDB
         /// </summary>
@@ -38,5 +42,17 @@ namespace softwrench.sW4.audit.Interfaces {
         /// <param name="entries"></param>
         /// <returns></returns>
         ICollection<AuditEntry> SaveAuditEntries(ICollection<AuditEntry> entries);
+
+        void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string data);
+
+        void AppendToCurrentTrail(AuditEntry entry);
+
+        void AppendToCurrentTrail(AuditQuery query);
+
+        AuditTrail CurrentTrail();
+
+        void InitThreadTrail(AuditTrail trail);
+
+        void SaveThreadTrail(bool async = true);
     }
 }

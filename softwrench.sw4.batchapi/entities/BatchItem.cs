@@ -30,7 +30,7 @@ namespace softwrench.sw4.batch.api.entities {
         }
 
         [Property]
-        public String Application {
+        public string Application {
             get; set;
         }
 
@@ -38,28 +38,34 @@ namespace softwrench.sw4.batch.api.entities {
         /// The id of the item in Maximo
         /// </summary>
         [Property]
-        public String ItemId {
+        public string ItemId {
             get; set;
         }
 
         [Property(Column = "schema_")]
-        public String Schema {
+        public string Schema {
             get; set;
         }
 
         [Property]
-        public String Operation {
+        public string Operation {
             get; set;
         }
 
         [Property]
-        public String RemoteId {
+        public string RemoteId {
             get; set;
         }
 
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
         public virtual byte[] DataMapJson {
+            get; set;
+        }
+
+        [Property(Type = "BinaryBlob")]
+        [JsonIgnore]
+        public virtual byte[] SentXml {
             get; set;
         }
 
@@ -85,6 +91,15 @@ namespace softwrench.sw4.batch.api.entities {
             }
             set {
                 DataMapJson = CompressionUtil.Compress(value.GetBytes());
+            }
+        }
+
+        public virtual string SentXmlAsString {
+            get {
+                return SentXml == null ? null : StringExtensions.GetString(CompressionUtil.Decompress(SentXml));
+            }
+            set {
+                SentXml = CompressionUtil.Compress(value.GetBytes());
             }
         }
 

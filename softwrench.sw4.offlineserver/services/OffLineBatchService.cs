@@ -6,6 +6,8 @@ using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batch.api;
 using softwrench.sw4.batch.api.entities;
+using softwrench.sw4.offlineserver.audit;
+using softwrench.sw4.offlineserver.model;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softWrench.sW4.Configuration.Services.Api;
 using softwrench.sw4.offlineserver.services.util;
@@ -21,15 +23,18 @@ namespace softwrench.sw4.offlineserver.services {
 
         private readonly BatchItemSubmissionService _batchItemSubmissionService;
 
-        public OffLineBatchService(ISWDBHibernateDAO swdbHibernateDAO, IConfigurationFacade configurationFacade, BatchItemSubmissionService batchItemSubmissionService) {
+        private readonly OfflineAuditManager _offlineAuditManager;
+
+        public OffLineBatchService(ISWDBHibernateDAO swdbHibernateDAO, IConfigurationFacade configurationFacade, BatchItemSubmissionService batchItemSubmissionService, OfflineAuditManager offlineAuditManager) {
             _swdbHibernateDAO = swdbHibernateDAO;
             _configurationFacade = configurationFacade;
             _batchItemSubmissionService = batchItemSubmissionService;
+            _offlineAuditManager = offlineAuditManager;
             Log.DebugFormat("init sync log");
         }
 
 
-        public Batch SubmitBatch(string application, string remoteId, JObject batchContent) {
+        public Batch SubmitBatch(string application, string remoteId, SyncOperation operation, JObject batchContent) {
 
             var minSize = _configurationFacade.Lookup<int>(OfflineConstants.AsyncBatchMinSize);
 
@@ -48,7 +53,9 @@ namespace softwrench.sw4.offlineserver.services {
             };
 
             if (isSynchronous) {
-                return _batchItemSubmissionService.Submit(batch, batchOptions);
+                var batchResult = _batchItemSubmissionService.Submit(batch, batchOptions);
+                _offlineAuditManager.MarkBatchCompleted(operation);
+                return batchResult;
             }
             _swdbHibernateDAO.Save(batch);
             //TODO: replace with rabbitMQ

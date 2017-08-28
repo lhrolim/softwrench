@@ -303,6 +303,7 @@
             status: 'TEXT',
             numberofdownloadeditems: "INT",
             numberofdownloadedsupportdata: "INT",
+            clientOperationId: "INT",
             hasProblems: "BOOL",
             metadatachange: "BOOL",
             items: "INT" // batches.items.length

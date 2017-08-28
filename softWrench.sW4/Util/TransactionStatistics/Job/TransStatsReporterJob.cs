@@ -1,13 +1,7 @@
-﻿using Common.Logging;
-using softWrench.sW4.Configuration.Services.Api;
+﻿using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Scheduler;
-using softWrench.sW4.Scheduler.Jobs;
 using softWrench.sW4.Util.TransactionStatistics.Email;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace softWrench.sW4.Util.TransactionStatistics.Job {
