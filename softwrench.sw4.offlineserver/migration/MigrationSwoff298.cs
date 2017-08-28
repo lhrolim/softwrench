@@ -54,8 +54,7 @@ namespace softwrench.sw4.offlineserver.migration {
     [Migration(201708251205)]
     public class MigrationSwoff298_1 : Migration {
 
-        public override void Up()
-        {
+        public override void Up() {
             Create.Table("AUD_QUERY").WithIdColumn(true)
                 .WithColumn("ellapsedmillis").AsInt64().Nullable()
                 .WithColumn("countResult").AsInt32()
@@ -63,6 +62,18 @@ namespace softwrench.sw4.offlineserver.migration {
                 .WithColumn("query").AsString(MigrationUtil.StringMax).NotNullable()
                 .WithColumn("qualifier").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("trail_id").AsInt32().ForeignKey("sw_audq_at", "AUDI_TRAIL", "id").NotNullable();
+        }
+
+        public override void Down() {
+        }
+    }
+
+
+    [Migration(201708281425)]
+    public class MigrationSwoff298_2 : Migration {
+
+        public override void Up() {
+            Alter.Table("audit_entry").AlterColumn("data").AsBinary(int.MaxValue);
         }
 
         public override void Down() {
