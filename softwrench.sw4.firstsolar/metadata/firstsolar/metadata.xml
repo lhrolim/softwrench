@@ -1388,10 +1388,27 @@
 
       <schemas>
         <schema id="detail" redeclaring="false">
+          <customization position="personid">
+            <field attribute="maxuser_.userid" label="FS Id" readonly="true"/>
+            <field attribute="personid" label="Person Id" requiredexpression="true" readonly="true"/>
+          </customization>
+          
           <customization position="location">
             <reference id="facilities"/>
           </customization>
         </schema>
+
+        <schema id="list" redeclaring="false">
+          <customization position="personid">
+            <field attribute="maxuser_.userid" label="FS Id"/>
+            <field attribute="personid" label="Person Id"/>
+          </customization>
+          
+        </schema>
+        
+        
+        
+        
 
         <schema id="myprofiledetail" redeclaring="false">
           <customization position="location">

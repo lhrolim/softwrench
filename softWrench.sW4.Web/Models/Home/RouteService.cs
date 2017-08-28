@@ -26,9 +26,10 @@ namespace softWrench.sW4.Web.Models.Home {
             {"error", "_SoftwrenchError"}
         };
 
-        private static readonly Dictionary<string, string> CustonPathDict = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> CustomPathDict = new Dictionary<string, string>
         {
-            {"about", "api/generic/Configuration/About"}
+            {"about", "api/generic/Configuration/About"},
+            {"dashboard", "api/generic/DashBoard/LoadPreferred"}
         };
 
         private const string MyProfileBaseURL = "api/data/person?userid={0}&applicationName=person&key[schemaId]=myprofiledetail&key[mode]=input&key[platform]=web&currentSchemaKey=myprofiledetail";
@@ -89,11 +90,11 @@ namespace softWrench.sW4.Web.Models.Home {
         }
 
         public virtual string CustomPath(string application, InMemoryUser user) {
-            var dict = GetCustonPathDict();
+            var dict = GetCustomPathDict();
             if ("myprofile".Equals(application)) {
                 return string.Format(MyProfileBaseURL, user.Login);
             }
-            return dict.ContainsKey(application) ? dict[application] : null;
+            return dict.ContainsKey(application.ToLowerInvariant()) ? dict[application.ToLowerInvariant()] : null;
         }
 
         // to enable child classes alter the dict
@@ -102,8 +103,8 @@ namespace softWrench.sW4.Web.Models.Home {
         }
 
         // to enable child classes alter the dict
-        protected virtual Dictionary<string, string> GetCustonPathDict() {
-            return CustonPathDict;
+        protected virtual Dictionary<string, string> GetCustomPathDict() {
+            return CustomPathDict;
         }
 
         protected virtual RouteInfo InnerGetRouteInfo() {
@@ -115,7 +116,7 @@ namespace softWrench.sW4.Web.Models.Home {
                 return _routeInfo;
             }
 
-            var routeInfo = new RouteInfo { schemaInfo = new Dictionary<string, SchemaInfo>() };
+            var routeInfo = new RouteInfo { schemaInfo = new Dictionary<string, SchemaInfo>(StringComparer.OrdinalIgnoreCase) };
             MetadataProvider.Applications(true).Where(a => a.IsSupportedOnPlatform(ClientPlatform.Web)).ForEach(app => {
                 var listSchema = app.MainListSchema ?? GetSchema(app, SchemaStereotype.List, "list");
                 var newDetailSchema = app.MainNewDetailSchema ?? GetSchema(app, SchemaStereotype.DetailNew, "newdetail");
@@ -125,7 +126,7 @@ namespace softWrench.sW4.Web.Models.Home {
                     newDetailSchema = newDetailSchema != null ? newDetailSchema.SchemaId : null,
                     detailSchema = detailSchema != null ? detailSchema.SchemaId : null,
                 };
-                routeInfo.schemaInfo.Add(app.ApplicationName, mainSchemaInfo);
+                routeInfo.schemaInfo.Add(app.ApplicationName.ToLowerInvariant(), mainSchemaInfo);
             });
             routeInfo.contextPath = GetContextPath();
 

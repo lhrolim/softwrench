@@ -7,8 +7,6 @@ namespace softwrench.sW4.audit.classes.Model {
     [Class(Table = "AUD_SESSION", Lazy = false)]
     public class AuditSession {
 
-        private string Key = "sw4CookieSigninKey";
-
         public static string ByUserIdAndCookie = "from AuditSession where UserId =? and Cookie = ?";
 
         public static string HashCookie(string cookie) {

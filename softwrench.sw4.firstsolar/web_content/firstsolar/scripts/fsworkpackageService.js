@@ -623,7 +623,7 @@
 
             const dailyOutageMeeting = datamap["dailyOutageMeetings_"];
             const dailyOutageMeetingCount = dailyOutageMeeting ? dailyOutageMeeting.length : 0;
-            this.crudContextHolderService.setTabRecordCount("daulyoutage", null, dailyOutageMeetingCount);
+            this.crudContextHolderService.setTabRecordCount("dailyoutage", null, dailyOutageMeetingCount);
 
             if (worklogComp != null) {
                 //might be null due to security policies

@@ -103,6 +103,7 @@
                 }
                 const tab = $('a[href="#' + tabId + '"]');
                 tab.trigger('click');
+//                $location.hash("tabid=" + tabId);
             }, 0, false);
         };
 
