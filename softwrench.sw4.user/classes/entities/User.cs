@@ -18,6 +18,8 @@ namespace softwrench.sw4.user.classes.entities {
 
         private bool? _locked;
 
+        public const string ActivePersons = "select MaximoPersonId from User where IsActive = 1";
+        public const string LockedPersons = "select MaximoPersonId from User where Locked = 1";
 
         public const string ActiveUserByUserName = "from User where lower(UserName) = lower(?) and IsActive = true";
         public const string UserByUserName = "from User where lower(UserName) = lower(?)";
@@ -337,6 +339,8 @@ namespace softwrench.sw4.user.classes.entities {
                 return Person.FirstName + " " + Person.LastName;
             }
         }
+
+        
 
         private bool Equals(User other) {
             return Id == other.Id;

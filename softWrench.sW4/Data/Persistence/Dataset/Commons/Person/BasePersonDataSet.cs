@@ -194,6 +194,28 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             dataMap.SetAttribute("#signature", signature);
         }
 
+        public virtual string SwActive(FilterWhereClauseParameters parameters) {
+            var active = parameters.InputString.Equals("%1%");
+            var maximoIds = _swdbDAO.FindByQuery<string>(User.ActivePersons);
+            if (!maximoIds.Any()) {
+                return active ? "1=0" : null;
+            }
+
+            var inQuery = BaseQueryUtil.GenerateInString(maximoIds);
+            return active ? "person.personid in ({0})".Fmt(inQuery) : "person.personid not in ({0})".Fmt(inQuery);
+        }
+
+
+        public virtual string SwLocked(FilterWhereClauseParameters parameters) {
+            var locked = parameters.InputString.Equals("%1%");
+            var maximoIds = _swdbDAO.FindByQuery<string>(User.LockedPersons);
+            if (!maximoIds.Any()) {
+                return locked ? "1=0" : null;
+            }
+            var inQuery = BaseQueryUtil.GenerateInString(maximoIds);
+            return locked ? "person.personid in ({0})".Fmt(inQuery) : "person.personid not in ({0})".Fmt(inQuery);
+        }
+
         /// <summary>
         /// Users are saved on SWDB but the person data come from Maximo, so we need to make sure to update both places.
         /// </summary>
@@ -251,7 +273,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             if (isCreation && isactive && !isLocked) {
 
-                _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
+                await _userSetupEmailService.SendActivationEmail(user, primaryEmail, passwordString);
             }
 
             if (ApplicationConfiguration.IsUnitTest) {

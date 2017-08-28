@@ -119,6 +119,8 @@
 
       <filters>
         <booleanfilter attribute="maxuser_.active" truelabel="Active" falselabel="Inactive"></booleanfilter>
+        <booleanfilter attribute="isactive" truelabel="Active" falselabel="Inactive" whereclause="@SwActive"/>
+        <booleanfilter attribute="locked" truelabel="Locked" falselabel="Not Locked" whereclause="@SwLocked"/>
         <quicksearchfilter id="unregistered" label="Unregistered Users" whereclause="@UnregisteredUsers"/>
       </filters>
 
@@ -140,14 +142,14 @@
           <field attribute="firstname" label="First Name"/>
           <field attribute="lastname" label="Last Name"/>
           <field attribute="isactive" label="Active (softWrench)" enableexpression="false" readonly="true">
-            <renderer type="checkbox"/>
+            <renderer type="checkbox" params="showsort=false"/>
           </field>
           <field attribute="maxuser_.active" label="Active (MAXIMO)" readonly="true" enableexpression="false">
             <renderer type="checkbox" />
           </field>
 
           <field attribute="locked" label="Locked" readonly="true" enableexpression="false">
-            <renderer type="checkbox" />
+            <renderer type="checkbox" params="showsort=false"/>
           </field>
 
           <field attribute="creationdate" label="Creation Date">

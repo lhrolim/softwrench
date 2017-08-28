@@ -87,7 +87,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
 
             var resultObj = new TargetResult("150", "SWADMIN", null);
 
-            _userSetupService.Setup(x => x.SendActivationEmail(It.Is(userComparison), "test@a.com", "test"));
+            _userSetupService.Setup(x => x.SendActivationEmail(It.Is(userComparison), "test@a.com", "test")).Returns(Task.CompletedTask);
 
             _passwordHistoryService.Setup(s => s.HandlePasswordHistory(It.IsAny<User>(), It.IsAny<string>())).Returns(Task.CompletedTask);
 
