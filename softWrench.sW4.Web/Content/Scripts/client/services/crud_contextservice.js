@@ -4,9 +4,10 @@
 
     class crudContextHolderService{
 
-        constructor($rootScope, $log, $injector,contextService, schemaCacheService) {
+        constructor($rootScope, $log,$location, $injector,contextService, schemaCacheService) {
             this.$rootScope = $rootScope;
             this.$log = $log;
+            this.$location = $location;
             this.$injector = $injector;
             this.contextService = contextService;
             this.schemaCacheService = schemaCacheService;
@@ -163,6 +164,12 @@
 
         setActiveTab(tabId) {
             this.contextService.setActiveTab(tabId);
+            if (!!tabId) {
+                this.$location.hash("tabid=" + tabId);
+            } else {
+                this.$location.hash(null);
+                this.$location.url(this.$location.path());
+            }
         }
 
         currentApplicationName(panelid) {
@@ -326,6 +333,7 @@
         clearCrudContext(panelid) {
             if (!panelid) {
                 this._crudContext = angular.copy(this._originalContext);
+                this.setActiveTab(null);
                 return this._crudContext;
             }
             this._crudContexts[panelid] = angular.copy(this._originalContext);
@@ -348,8 +356,7 @@
         }
 
         gridLoaded(applicationListResult, panelid) {
-            this.disposeDetail(panelid, true);
-            this.setActiveTab(null, panelid);
+            this.disposeDetail(panelid, panelid==null);
             const context = this.getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
@@ -372,7 +379,7 @@
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
             if (!!clearTab) {
-                this.contextService.setActiveTab(null);
+                this.setActiveTab(null);
             }
             context.compositionLoadEventQueue = {};
         }
@@ -724,7 +731,7 @@
 
     }
 
-    crudContextHolderService.$inject = ["$rootScope", "$log", "$injector", "contextService", "schemaCacheService"];
+    crudContextHolderService.$inject = ["$rootScope", "$log", "$location", "$injector", "contextService", "schemaCacheService"];
 
     angular.module("sw_layout").service("crudContextHolderService", crudContextHolderService);
 

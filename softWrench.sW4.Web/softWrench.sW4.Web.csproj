@@ -189,11 +189,8 @@
       <HintPath>..\packages\slf4net.0.1.32.1\lib\net35\slf4net.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sw4.activitystream, Version=1.2.6448.38615, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6448.38615\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
-    </Reference>
-    <Reference Include="softwrench.sW4.audit, Version=2.0.6448.38234, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.audit.2.0.6448.38234\lib\net46\softwrench.sW4.audit.dll</HintPath>
+    <Reference Include="softwrench.sw4.activitystream, Version=1.2.6449.32979, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6449.32979\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6449.16347, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6449.16347\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
@@ -1262,6 +1259,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.audit\softwrench.sw4.audit.csproj">
+      <Project>{a5e4cb59-33c1-4072-8d97-2cee10c4f964}</Project>
+      <Name>softwrench.sw4.audit</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
       <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>

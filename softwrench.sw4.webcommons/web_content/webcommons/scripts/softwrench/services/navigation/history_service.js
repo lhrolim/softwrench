@@ -18,7 +18,8 @@
         }
 
         const customPathObject = {
-            "/api/generic/Configuration/About": "/web/about"
+            "/api/generic/Configuration/About": "/web/about",
+            "/api/generic/DashBoard": "/web/dashboard"
         }
 
         const myProfileBaseUrl = "/api/data/person?userid=";
@@ -122,6 +123,12 @@
             } else {
                 $location.search({});
             }
+            const hash = $location.hash();
+            if (!!hash && hash.startsWith("tabid")) {
+                contextService.setActiveTab(hash.substring("tabid=".length));
+            }
+
+            
         }
 
         function doUpdatePath(stateUrl, routeInfo) {
@@ -137,6 +144,7 @@
             }
 
             const dataPrefix = contextPath + "/api/data/";
+
             const dataPrefixUpper = contextPath + "/api/Data/";
             const isPrefixed = stateUrl.startsWith(dataPrefix);
             const isPrefixedUpper = stateUrl.startsWith(dataPrefixUpper);
@@ -154,10 +162,11 @@
                 return changePath(contextPath);
             }
 
-            const application = path.substring(realPrefix.length).split("/")[0];
+            let application = path.substring(realPrefix.length).split("/")[0];
             if (!application) {
                 return changePath(contextPath);
             }
+            application = application.toLowerCase();
 
             const params = JSON.parse(`{"${paramsStr.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"')}"}`);
 
@@ -212,7 +221,7 @@
 
         function updateState(state) {
             const hash = `state=${Base64.encode(JSON.stringify(state))}`;
-            $location.hash(hash);
+//            $location.hash(hash);
         }
 
         function getLocationState() {

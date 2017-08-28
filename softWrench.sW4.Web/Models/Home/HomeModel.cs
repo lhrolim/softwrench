@@ -96,6 +96,7 @@ namespace softWrench.sW4.Web.Models.Home {
     }
 
     public class RouteInfo {
+        //Keep lowercase to prevent issues on json serialization on the historyService... for some reason SchemaInfo is not appying camelcase styling
         public Dictionary<string, SchemaInfo> schemaInfo { get; set; }
         public string contextPath { get; set; }
     }
