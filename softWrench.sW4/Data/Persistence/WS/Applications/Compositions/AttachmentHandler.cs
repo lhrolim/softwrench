@@ -40,13 +40,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
         private readonly DataSetProvider _dataSetProvider;
-        private readonly AttachmentDao _attachmentDao;
 
-        public AttachmentDao AttachmentDao {
-            get {
-                return _attachmentDao;
-            }
-        }
+        public AttachmentDao AttachmentDao { get; }
 
         /// <summary>
         /// url specifying where the attachments could be downloaded from maximo in the http mode
@@ -62,7 +57,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider, AttachmentDao attachmentDao) {
             _maxDAO = maxDAO;
             _dataSetProvider = dataSetProvider;
-            _attachmentDao = attachmentDao;
+            AttachmentDao = attachmentDao;
         }
 
 
@@ -195,7 +190,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 //for fs workpackage solution
                 w.SetValue(docLink, "URLPARAM1", attachment.Filter);
             }
-            w.SetValue(docLink, "DOCUMENT", attachment.Title ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
+            w.SetValue(docLink, "DOCUMENT", FileUtils.Truncate(attachment.Title, GetMaximoLength()) ?? FileUtils.GetNameFromPath(attachment.Path, GetMaximoLength()));
             w.SetValue(docLink, "DESCRIPTION", attachment.Description ?? string.Empty);
 
             if (attachment.DocumentInfoId != null) {

@@ -194,6 +194,7 @@
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FirstSolarUserFacilityBuilder.cs" />
     <Compile Include="classes\com\cts\firstsolar\configuration\FSUserMainSecurityApplier.cs" />
+    <Compile Include="classes\com\cts\firstsolar\connector\FirstSolarAttachmentHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\connector\FirstSolarWorkorderCrudConnector.cs" />
     <Compile Include="classes\com\cts\firstsolar\dashboard\FirstSolarDashboardInitializer.cs" />
     <Compile Include="classes\com\cts\firstsolar\dashboard\FirstSolarDashboardWcBuilder.cs" />

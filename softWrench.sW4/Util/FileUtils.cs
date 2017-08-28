@@ -32,6 +32,16 @@ namespace softWrench.sW4.Util {
             var filename = lastIndexOf != -1 ? attachmentPath.Substring(lastIndexOf + 1) : attachmentPath;
 
 
+            return Truncate(filename, maxChars);
+
+        }
+
+        public static string Truncate(string filename, int maxChars) {
+            if (filename == null) {
+                return null;
+            }
+
+            int lastIndexOf;
             if (filename.Length > maxChars) {
                 // extract file name, truncking the name without extension
                 lastIndexOf = filename.LastIndexOf(".", System.StringComparison.Ordinal);
@@ -41,7 +51,6 @@ namespace softWrench.sW4.Util {
                           filename.Substring(lastIndexOf)
                         : filename.Substring(0, maxChars);
             }
-
             return filename;
         }
 
