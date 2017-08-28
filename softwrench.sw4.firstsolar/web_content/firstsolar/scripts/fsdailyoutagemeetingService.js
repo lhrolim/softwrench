@@ -33,6 +33,7 @@
             fsrequestService.addAttachments(item, "#domfileexplorer_");
 
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "detail").then((schema) => {
+                item["sendnow"] = 0;
                 modalService.show(schema, item, fsrequestService.requestModalProps(), (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback).then(r => {
                         return r;
