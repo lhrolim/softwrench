@@ -29,6 +29,7 @@ namespace softwrench.sw4.user.classes.services.setup {
         private readonly IApplicationConfiguration _appConfig;
         private LdapManager _ldapManager;
 
+
         private static readonly ILog Log = LogManager.GetLogger(typeof(UserSetupEmailService));
 
         private readonly string _automaticTemplatePath;
@@ -76,10 +77,14 @@ namespace softwrench.sw4.user.classes.services.setup {
             Validate.NotNull(user, "user");
             var automaticMode = openPassword == null;
             var isLdap = await _ldapManager.IsLdapSetup();
+            var ldapMessage = "When prompted use your regular Maximo ID and Password";
 
             string templateToUse;
             string linkUrl;
             if (isLdap) {
+                if (_appConfig.GetClientKey().Equals("firstsolar")) {
+                    ldapMessage = "When prompted use your regular First Solar ID and Password";
+                }
                 templateToUse = _ldapPasswordTemplatePath;
                 linkUrl = _redirectService.GetRootUrl();
             } else if (automaticMode) {
@@ -100,6 +105,7 @@ namespace softwrench.sw4.user.classes.services.setup {
                         headerurl = _redirectService.GetRootUrl() + _headerImageUrl,
                         name = user.FullName,
                         link = linkUrl,
+                        ldapmessage = ldapMessage,
                         //password won´t be used for automatic template, but let´s put it here anyway
                         password = openPassword
                     }));
