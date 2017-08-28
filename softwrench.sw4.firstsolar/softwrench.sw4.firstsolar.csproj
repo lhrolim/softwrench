@@ -118,8 +118,8 @@
     <Reference Include="softwrench.sW4.batches, Version=1.3.6388.37187, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.batches.1.3.6388.37187\lib\net46\softwrench.sW4.batches.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6448.42743, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6448.42743\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6449.16347, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6449.16347\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
