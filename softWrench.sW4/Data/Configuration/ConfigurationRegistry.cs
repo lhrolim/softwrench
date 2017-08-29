@@ -247,6 +247,12 @@ namespace softWrench.sW4.Data.Configuration {
                 DefaultValue = MetadataProvider.GlobalProperty("defaultStoreloc")
             });
 
+            facade.Register(ctes.Maximo.MaxFileNameLength, new PropertyDefinition {
+                Description = "Max filename length of doclinks in maximo",
+                PropertyDataType = PropertyDataType.INT,
+                DefaultValue = "20"
+            });
+
             #endregion
 
             #region EmailConfig

@@ -17,6 +17,8 @@ using Newtonsoft.Json.Linq;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
@@ -43,6 +45,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         public AttachmentDao AttachmentDao { get; }
 
+        private readonly IConfigurationFacade _facade;
+
         /// <summary>
         /// url specifying where the attachments could be downloaded from maximo in the http mode
         /// </summary>
@@ -54,10 +58,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private readonly MaximoHibernateDAO _maxDAO;
 
-        public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider, AttachmentDao attachmentDao) {
+        public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider, AttachmentDao attachmentDao, IConfigurationFacade facade) {
             _maxDAO = maxDAO;
             _dataSetProvider = dataSetProvider;
             AttachmentDao = attachmentDao;
+            _facade = facade;
         }
 
 
@@ -241,7 +246,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
         protected virtual int GetMaximoLength() {
-            return 100;
+            return _facade.Lookup<int>(ConfigurationConstants.Maximo.MaxFileNameLength);
         }
 
         [NotNull]

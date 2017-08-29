@@ -23,7 +23,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Applications.Compositions {
 
         [TestMethod]
         public void TestSingleAttachmentOffline() {
-            var dtos = new AttachmentHandler(null, null, null).BuildAttachments(FileName, BaseOffline64Data, FileName,null, "hash");
+            var dtos = new AttachmentHandler(null, null, null,null).BuildAttachments(FileName, BaseOffline64Data, FileName,null, "hash");
             Assert.AreEqual(1, dtos.Count);
             var dto = dtos[0];
             Assert.AreEqual("hash",dto.OffLineHash);
@@ -33,7 +33,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Applications.Compositions {
 
         [TestMethod]
         public void TestSingleAttachmentOnline() {
-            var dtos = new AttachmentHandler(null, null, null).BuildAttachments(FileName, BaseOnline64Data, FileName);
+            var dtos = new AttachmentHandler(null, null, null, null).BuildAttachments(FileName, BaseOnline64Data, FileName);
             Assert.AreEqual(1, dtos.Count);
             var dto = dtos[0];
             Assert.AreEqual(BaseOnline64Data, dto.Data);
@@ -42,7 +42,7 @@ namespace softwrench.sW4.test.Data.Persistence.WS.Applications.Compositions {
 
         [TestMethod]
         public void TestMultiplesAttachmentOnline() {
-            var dtos = new AttachmentHandler(null, null, null).BuildAttachments(MultipleFileNames, BaseOnline64MultipleData, MultipleFileNames);
+            var dtos = new AttachmentHandler(null, null, null, null).BuildAttachments(MultipleFileNames, BaseOnline64MultipleData, MultipleFileNames);
             Assert.AreEqual(2, dtos.Count);
         }
     }
