@@ -129,5 +129,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
             return AsyncHelper.RunSync(() => dataset.GetWorkorderRelatedData(user, woId));
         }
+
+        protected static string SafePlaceholder(string value) {
+            return string.IsNullOrEmpty(value) ? "&nbsp;" : value.Replace("\n", "<br/>");
+        }
     }
 }

@@ -10,6 +10,9 @@ namespace softwrench.sw4.api.classes.fwk.context {
         private const string ApplicationUrlTemplate =
            "{0}/Home/RedirectToAction?application={1}&querystring=id${2}@key%5BschemaId%5D${3}@key%5Bmode%5D$@{4}key%5Bplatform%5D$web";
 
+        private const string ApplicationUrlTemplateNew =
+            "{0}/web/{1}/uid/{2}";
+
         private const string ActionUrlTemplate = "{0}/{1}/{2}";
 
 
@@ -20,6 +23,15 @@ namespace softwrench.sw4.api.classes.fwk.context {
         public string GetApplicationUrl(string application, string schemaId, String mode, String id) {
             var fullContext = _lookuper.GetFromMemoryContext<SwHttpContext>("httpcontext");
             return ApplicationUrlTemplate.Fmt(fullContext, application, id, schemaId, mode);
+        }
+
+        public string GetApplicationUrlRoute(string application, int id, string tab = null) {
+            var fullContext = _lookuper.GetFromMemoryContext<SwHttpContext>("httpcontext");
+            var baseUrl = ApplicationUrlTemplateNew.Fmt(fullContext, application, id);
+            if (tab != null) {
+                baseUrl = baseUrl + "#tabid={0}".Fmt(tab);
+            }
+            return baseUrl;
         }
 
         public string GetActionUrl(string controller, string action, string queryString) {

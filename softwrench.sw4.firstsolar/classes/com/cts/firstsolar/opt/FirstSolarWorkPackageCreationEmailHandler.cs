@@ -111,7 +111,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             emailStatus.WorkPackage = package;
             emailStatus = Dao.Save(emailStatus);
 
-            var workpackageurl = RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "Ack", "token={0}&emailStatusId={1}".Fmt(package.AccessToken, emailStatus.Id));
+//            var workpackageurl = RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "Ack", "token={0}&emailStatusId={1}".Fmt(package.AccessToken, emailStatus.Id));
+            var workpackageurl = SafePlaceholder(RedirectService.GetApplicationUrlRoute("_workpackage", package.Id.Value));
             var wpnum = package.Wpnum;
 
 

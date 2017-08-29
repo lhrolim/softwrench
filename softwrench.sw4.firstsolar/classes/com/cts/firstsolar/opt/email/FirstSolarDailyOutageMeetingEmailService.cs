@@ -143,12 +143,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 completedactionitems = SafePlaceholder(dom.CompletedActionItems),
                 meetingsummary = SafePlaceholder(dom.Summary),
                 wpnum = SafePlaceholder(package.Wpnum),
-                workpackageurl = SafePlaceholder(RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token)))
+//                workpackageurl = SafePlaceholder(RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token)))
+                workpackageurl = SafePlaceholder(RedirectService.GetApplicationUrlRoute("_workpackage", dom.WorkPackage.Id.Value, "dailyoutage"))
             });
         }
 
-        private static string SafePlaceholder(string value) {
-            return string.IsNullOrEmpty(value) ? "&nbsp;" : value.Replace("\n", "<br/>");
-        }
+      
     }
 }
