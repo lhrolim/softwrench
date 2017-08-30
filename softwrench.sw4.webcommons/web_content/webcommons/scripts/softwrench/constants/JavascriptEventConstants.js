@@ -141,6 +141,7 @@ const ClearAutoCompleteCache = "sw.crud.association.clearautocompletecache";
 
 const COMPOSITION_RESOLVED = "sw.crud.composition.dataresolved";
 const COMPOSITION_EDIT = "sw.crud.composition.edit";
+const COMPOSITION_REFRESH_PAGE = "sw.crud.composition.refreshpage";
 
 
 //#endregion
@@ -368,6 +369,10 @@ class JavascriptEventConstants {
 
     static get CompositionEdit() {
         return COMPOSITION_EDIT;
+    }
+
+    static get CompositionRefreshPage() {
+        return COMPOSITION_REFRESH_PAGE;
     }
 
     //#endregion

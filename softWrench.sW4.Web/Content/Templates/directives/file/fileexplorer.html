@@ -26,6 +26,7 @@
             <a class="thumbnail thumbnailiconset text-center" ng-click="fileClick(file)">
                 <div class="item-icon">
                     <i class="fa fa-file item-extension" data-ext="{{file.extension}}" style="position: relative; top: 1px"/>
+                    <i class="fa fa-times item-delete" ng-if="!!file.persisted"  ng-click="deleteFile($event,file)"/>
                     <i class="fa fa-refresh item-refresh" ng-if="!file.persisted"/>
                 </div>
                 {{file.label}}

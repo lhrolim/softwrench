@@ -31,7 +31,7 @@
         }
 
         $scope.nonHiddenDisplayables = function () {
-            
+
             if (!$scope.compositionlistschema) {
                 return blankArr;
             }
@@ -125,7 +125,7 @@
         }
 
         $scope.hideRemoveBatchItem = function (compositionitem, rowindex) {
-            return (compositionitem[$scope.compositionlistschema.idFieldName] > 0 && !batchForceShowRemove) || ($scope.compositionData().length === 1 && isCompositionRequired());
+            return !$scope.isBatch() || (compositionitem[$scope.compositionlistschema.idFieldName] > 0 && !batchForceShowRemove) || ($scope.compositionData().length === 1 && isCompositionRequired());
         }
 
         $scope.isCompositionItemFieldHidden = function (application, fieldMetadata, item) {
@@ -330,7 +330,11 @@
             $scope.clearNewCompositionDataForBatches();
         });
 
-        $scope.clearCompositionData = function() {
+        $scope.$on(JavascriptEventConstants.CompositionRefreshPage, (evt, data, fullrefresh, forceReloadFirstPage) => {
+            $scope.onAfterSave(data, fullrefresh, forceReloadFirstPage);
+        });
+
+        $scope.clearCompositionData = function () {
             $scope.compositiondata = [];
         }
 
@@ -638,7 +642,7 @@
                     $scope.detailData[editedItem.id].data = formatService.doContentStringConversion(jQuery.extend(true, {}, editedItem));
                 }
             }
-            
+
             const editRollback = () => {
                 $scope.compositionData()[rowIndex] = originalItem;
                 if ($scope.detailData[originalItem.id]) {
@@ -789,10 +793,24 @@
         $scope.delete = function (item, column, $event, rowIndex) {
             return alertService.confirm("Are you sure you want to delete this entry").then(() => {
                 const compositionId = item[$scope.compositionlistschema.idFieldName];
+                const deletefunction = $scope.compositionschemadefinition.rendererParameters["deletefunction"];
+                if (!!deletefunction) {
+                    return dispatcherService.invokeServiceByString(deletefunction, [item]).then(shouldRefresh => {
+                        if (shouldRefresh) {
+                            //TODO: make this more generic
+                            $scope.onAfterSave({}, false);    
+                        }
+                    });
+                }
+
                 return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
                     .then((result) => {
                         //TODO: generate composition deletion method
                         var compositionItem = result.resultObject;
+                        if (!compositionItem) {
+                            throw new Error("could not delete entry. Please contact support");
+                        }
+
                         return eventService.onremoval_validation(compositionItem, $scope.compositionlistschema).then(() => {
                             compositionItem[CompositionConstants.Deleted] = 1;
                             return $scope.save(compositionItem, "crud_delete");
@@ -822,7 +840,7 @@
         //#region ***************Batch functions **************************************/
 
         $scope.addItem = function () {
-           
+
 
             const idx = $scope.compositionData().length;
 
@@ -853,7 +871,7 @@
 
                 dispatcherService.invokeServiceByString(addFunction, [newItem, addCallback, addRollback, $scope.onAfterSave, $scope.relationship]);
                 return;
-            }else if (!$scope.isBatch()) {
+            } else if (!$scope.isBatch()) {
                 $scope.isUpdate = true;
                 const datamap = {
                     _iscreation: true
@@ -1040,6 +1058,8 @@
             return $q.reject(data);
         };
 
+        
+
         $scope.onAfterSave = function (data, alwaysrefresh, forceReloadFirstPage) {
             if (alwaysrefresh) {
                 window.location.href = window.location.href;
@@ -1081,13 +1101,13 @@
 
         //#endregion
 
-        
+
 
         $scope.clearNewCompositionDataForBatches = function () {
 
-            
 
-            
+
+
 
             const rootDatamap = crudContextHolderService.rootDataMap();
             const updatedCompositionData = rootDatamap[$scope.relationship];
@@ -1266,11 +1286,11 @@
         }
 
 
-//        if (shouldEagerInit()) {
-            
+        //        if (shouldEagerInit()) {
 
-            $scope.init();
-//        }
+
+        $scope.init();
+        //        }
 
     };
 

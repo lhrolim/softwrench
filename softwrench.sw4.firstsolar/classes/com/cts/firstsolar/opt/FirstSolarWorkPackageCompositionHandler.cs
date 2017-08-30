@@ -94,7 +94,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             allAttachs.ResultList.ForEach(attach => {
                 attach["#attachdocument"] = attach["docinfo_.description"];
                 attach["#attachcreateddate"] = attach["createdate"];
-                attach["id"] = 0; // workaround to show expand button
+                attach["id"] = attach["doclinksid"]; // workaround to show expand button
 
 
                 var baseFilter = attach["docinfo_.urlparam1"];

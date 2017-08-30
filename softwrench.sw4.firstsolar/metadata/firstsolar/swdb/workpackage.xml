@@ -290,10 +290,10 @@
 
             <section orientation="horizontal">
               <composition inline="true" relationship="#interconnectfileexplorer_" label="Interconnect Documents" detailschema="">
-                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
               </composition>
               <composition inline="true" relationship="#operationprocfileexplorer_" label="Operation Procedures Files" detailschema="">
-                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
               </composition>
             </section>
           </section>
@@ -348,7 +348,7 @@
 
 
               <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files and Walk Down Photos" detailschema="">
-                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile"/>
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
               </composition>
 
               <composition inline="true" relationship="#relayeventevaluations_" label="Engineering Evaluation - Event File" detailschema="worklog.workpackageview" printschema="">
@@ -512,7 +512,8 @@
 
             <tab label="Attachments" icon="fa-paperclip" id="attachments" enableexpression="@id!=null" countrelationship="#allattachments_">
               <composition inline="true" relationship="#allattachments_" label="" detailschema="attachmentdetail">
-                <collectionproperties allowcreation="false" allowremoval="false" allowupdate="false" listschema="attachmentlist"/>
+                <collectionproperties allowcreation="false" allowremoval="true" allowupdate="false" listschema="attachmentlist" />
+                <renderer type="table" params="deletefunction=fsworkpackagefilesService.deleteFile"/>
               </composition>
             </tab>
 

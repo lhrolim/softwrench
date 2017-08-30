@@ -256,7 +256,8 @@
                     renderer: {
                         type: 'fileexplorer',
                         params: {
-                            acceptedFileExtensions: "sw_all_types"
+                            acceptedFileExtensions: "sw_all_types",
+                            deletefunction:"fsworkpackagefilesService.deleteFile"
                         }
                     },
                     rendererType: 'fileexplorer'

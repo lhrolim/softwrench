@@ -368,6 +368,15 @@ fieldset {
     color: gray;
 }
 
+.item-delete {
+    position: relative;
+    top: -20px;
+    right: -20px;
+    font-size: 14px;
+    color: gray;
+    cursor:initial !important;
+}
+
 .optionfieldheader{
     padding-bottom: 10px;
     padding-left: 10px;

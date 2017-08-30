@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     'use strict';
     
-    function fsworkpackagefilesService($http, $q, schemaCacheService, crudContextHolderService, submitService, compositionService, searchService) {
+    function fsworkpackagefilesService($http, $q, schemaCacheService, crudContextHolderService, submitService, compositionService) {
 
         const woDetailSchema = "workpackagesimplecomposition";
 
@@ -51,15 +51,47 @@
                     successMessage: "File successfully saved."
                 }
                 return submitService.submit(results[0], woDatamap, params).then(data => {
-                    file.persisted = true;
                     const packageDatamap = crudContextHolderService.rootDataMap();
                     const packageSchema = crudContextHolderService.currentSchema();
+                    return compositionService.populateWithCompositionData(packageSchema, packageDatamap).then(d => {
+                        file.persisted = true;
+                        return true;
+                    });
+                });
+            });
+        }
+
+        function deleteFile(compositionItem) {
+            const woId = crudContextHolderService.rootDataMap()["#workorder_.workorderid"];
+            const promises = [];
+            promises.push(getWoSchema());
+            promises.push(getWoDatamap(woId));
+
+            return $q.all(promises).then((results) => {
+                const woDatamap = results[1];
+
+                compositionItem["#deleted"] = 1;
+                woDatamap["attachment_"] = [compositionItem];
+
+                const params = {
+                    compositionData: new CompositionOperation("crud_delete", "attachment_", compositionItem,compositionItem["doclinksid"]),
+                    dispatchedByModal: false,
+                    originalDatamap: woDatamap,
+                    refresh: true,
+                    successMessage: "File successfully deleted."
+                }
+                return submitService.submit(results[0], woDatamap, params).then(data => {
+                    const packageDatamap = crudContextHolderService.rootDataMap();
+                    const packageSchema = crudContextHolderService.currentSchema();
+                    //do now wait for this promise, so that the file is removed from the screen quickier
                     compositionService.populateWithCompositionData(packageSchema, packageDatamap);
+                    return true;
                 });
             });
         }
 
         const service = {
+            deleteFile,
             saveFile
         };
         return service;
@@ -67,5 +99,5 @@
 
     angular
     .module("firstsolar")
-        .clientfactory("fsworkpackagefilesService", ["$http", "$q", "schemaCacheService", "crudContextHolderService", "submitService", "compositionService", "searchService", fsworkpackagefilesService]);
+        .clientfactory("fsworkpackagefilesService", ["$http", "$q", "schemaCacheService", "crudContextHolderService", "submitService", "compositionService", fsworkpackagefilesService]);
 })(angular);
