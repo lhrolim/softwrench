@@ -73,7 +73,7 @@ namespace softwrench.sw4.offlineserver.migration {
     public class MigrationSwoff298_2 : Migration {
 
         public override void Up() {
-            Alter.Table("audit_entry").AlterColumn("data").AsBinary(int.MaxValue);
+            Alter.Table("audit_entry").AlterColumn("data").AsBinary(int.MaxValue).Nullable();
         }
 
         public override void Down() {
