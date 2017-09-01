@@ -159,6 +159,9 @@
         <relationship to="DOCINFO" qualifier="docinfo">
           <relationshipAttribute from="docinfoid" to="docinfoid" primary="true"/>
         </relationship>
+        <relationship to="person" qualifier="creator">
+          <relationshipAttribute from="createby" to="personid" primary="true"/>
+        </relationship>
       </relationships>
       <connectorParameters>
         <connectorParameter key="dbtable" value="DOCLINKS" />

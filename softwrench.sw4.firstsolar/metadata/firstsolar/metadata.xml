@@ -1636,7 +1636,7 @@
           <field attribute="modifydate" hidden="true"/>
           <field attribute="description" hidden="true"/>
           <field attribute="wld_.ldtext" hidden="true"/>
-          <field attribute="createby" label="Engineer" />
+          <field attribute="createdbyperson_.displayname" label="Engineer" />
           <field attribute="createdate" label="Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss"/>
           </field>
@@ -1682,7 +1682,7 @@
           <field attribute="document" hidden="true"/>
           <field attribute="doctype" hidden="true"/>
           <field attribute="createdate" label="Created Date"/>
-          <field attribute="createby" label="Created By"/>
+          <field attribute="creator_.displayname" label="Created By"/>
         </schema>
       </schemas>
     </application>
