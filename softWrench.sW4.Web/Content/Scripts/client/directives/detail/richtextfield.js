@@ -11,7 +11,8 @@
             scope: {
                 content: "=",
                 readonly: "=",
-                forprint: "="
+                forprint: "=",
+                height: "@"
             },
 
             controller: ["$scope", "$element", "richTextService", function ($scope, $element, richTextService) {
@@ -23,6 +24,8 @@
                     $scope.printDefered = $q.defer();
                     printAwaitableService.registerAwaitable($scope.printDefered.promise);
                 }
+
+                const height = !!$scope.height ? $scope.height:250;
 
                 $scope.richtext = {
                     config: {
@@ -36,7 +39,10 @@
                         ],
 
                         skin_url: url("Content/customVendor/css/tinymce/skins/lightgray"),
-                        height: 250,
+                        
+
+                        height: height,
+                        resize: true,
 
                         paste_data_images: true, // paste SS
                         paste_retain_style_properties: "color font-size",

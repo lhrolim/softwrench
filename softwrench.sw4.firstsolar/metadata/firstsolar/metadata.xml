@@ -1656,8 +1656,8 @@
           <field attribute="modifydate" hidden="true"/>
           <field attribute="createby" hidden="true"/>
           <field attribute="createdate" hidden="true"/>
-          <field attribute="wld_.ldtext" label="Evaluation" requiredexpression="true">
-            <renderer type="richtext"/>
+          <field attribute="wld_.ldtext" label="Evaluation" requiredexpression="true" >
+            <renderer type="richtext" params="height=600"/>
           </field>
         </schema>
 

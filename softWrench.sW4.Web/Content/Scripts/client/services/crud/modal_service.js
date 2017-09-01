@@ -28,9 +28,12 @@
                 /// 
                 ///     title: the title to display on the modal
                 ///     cssclass: an extra class to add to the modal, making it possible to customize it via css later
+                ///     removecrudmodalclass: a boolean indicating whether the crud-lookup-modal class should be removed
                 ///     onloadfn: a function to be called when the modal loads, which would receive the modal scope as a parameter (function onload(modalscope))
                 ///     useavailableheight: if true will force the scroll to pre-dimension with all available data
+                ///     resizableElements: list of jquery selector elements to be resized with the main modal
                 ///     savefn: a save fn to be called
+                ///     resizable: boolean indicating whther the modal should be resizable. defaults to false
                 ///     listResult: 
                 /// 
                 /// </param>
@@ -45,7 +48,7 @@
                 /// </param>
                 /// <param name="parentdata">holds the parent datamap</param>
                 /// <param name="parentschema">holds the parent schema</param>
-                show: function (schemaorModalData, datamap, properties, savefn, cancelfn, parentdata, parentschema) {
+                show: function (schemaorModalData, datamap ={}, properties ={}, savefn, cancelfn, parentdata, parentschema) {
                     if (schemaorModalData.schema) {
                         //this happens if the directive was compiled after the event was thrown, i.e, the first time the modal is being included on the screen
                         //later calls won´t come here
@@ -53,15 +56,16 @@
                         return;
                     }
 
-                    properties = properties || {};
-                    datamap = datamap || {};
                     var appResponseData = null;
                     savefn = savefn || properties.savefn;
 
                     if (!properties.cssclass) {
                         properties.cssclass = "crud-lookup-modal";
                     } else {
-                        properties.cssclass += " crud-lookup-modal";
+                        if (!properties.removecrudmodalclass) {
+                            properties.cssclass += " crud-lookup-modal";    
+                        }
+                        
                     }
 
                     if (!properties.title) {
@@ -90,7 +94,9 @@
                         onloadfn: properties.onloadfn,
                         closeAfterSave: properties.closeAfterSave,
                         cancelOnClickOutside: properties.cancelOnClickOutside,
-                        useavailableheight: properties.useavailableheight
+                        useavailableheight: properties.useavailableheight,
+                        resizable: properties.resizable,
+                        resizableElements: properties.resizableElements
                     };
 
 

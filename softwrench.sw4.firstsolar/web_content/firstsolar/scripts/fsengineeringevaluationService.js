@@ -1,7 +1,7 @@
-﻿(function (angular) {
+﻿(function (angular, $) {
     'use strict';
-    
-    function fsengineeringevaluationService($rootScope, $http, $q, modalService, schemaCacheService, crudContextHolderService, submitService) {
+
+    function fsengineeringevaluationService($rootScope, $http, $q, $timeout, modalService, schemaCacheService, crudContextHolderService, submitService) {
 
         const woDetailSchema = "workpackagesimplecomposition";
 
@@ -62,24 +62,32 @@
         function openModalNew(item, callbackAdd, rollbackAdd, callbackSave, relationship) {
             schemaCacheService.fetchSchema("worklog", "workpackagenewdetail").then((schema) => {
                 const datamap = buildDatamap(schema);
-                modalService.show(schema, datamap, {}, (saveDatamap) => {
-                    saveDatamap["_iscreation"] = true;
-                    saveDatamap["clientviewable"] = 0;
-                    saveDatamap["description"] = `swwpkg:${relationship.substr(1, relationship.length - 3)}`;
-                    saveDatamap["logtype"] = "CLIENTNOTE";
-                    saveDatamap["worklogid"] = undefined;
-                    submit(saveDatamap, "Evaluation successfully created.").then(data => {
-                        modalService.hide();
-                        callbackSave(data, false, true);
+                modalService.show(schema, datamap,{
+                        cssclass: 'largemodal',
+                        removecrudmodalclass: true,
+                        resizable: true,
+                        resizableElements: ' #crudmodal iframe '
+                    }, (saveDatamap) => {
+
+
+                        saveDatamap["_iscreation"] = true;
+                        saveDatamap["clientviewable"] = 0;
+                        saveDatamap["description"] = `swwpkg:${relationship.substr(1, relationship.length - 3)}`;
+                        saveDatamap["logtype"] = "CLIENTNOTE";
+                        saveDatamap["worklogid"] = undefined;
+                        submit(saveDatamap, "Evaluation successfully created.").then(data => {
+                            modalService.hide();
+                            callbackSave(data, false, true);
+                        });
                     });
-                });
             });
         }
 
         function openModalEdit(item, callbackAdd, rollbackAdd, callbackSave, relationship) {
             schemaCacheService.fetchSchema("worklog", "workpackagedetail").then((schema) => {
                 const datamap = angular.copy(item);
-                modalService.show(schema, datamap, {}, (saveDatamap) => {
+                modalService.show(schema, datamap, { cssclass: 'largemodal', removecrudmodalclass: true, resizable: true, resizableElements: ' #crudmodal iframe ' }, (saveDatamap) => {
+                    $("#crudmodal iframe").height('800px');
                     submit(saveDatamap, "Evaluation successfully updated.").then(data => {
                         modalService.hide();
                         callbackSave(data, false, true);
@@ -96,6 +104,6 @@
     }
 
     angular
-    .module("firstsolar")
-        .clientfactory("fsengineeringevaluationService", ["$rootScope", "$http", "$q", "modalService", "schemaCacheService", "crudContextHolderService", "submitService", fsengineeringevaluationService]);
-})(angular);
+        .module("firstsolar")
+        .clientfactory("fsengineeringevaluationService", ["$rootScope", "$http", "$q", "$timeout", "modalService", "schemaCacheService", "crudContextHolderService", "submitService", fsengineeringevaluationService]);
+})(angular, jQuery);

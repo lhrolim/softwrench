@@ -31,8 +31,17 @@
 
         $scope.closeModal = function () {
             $scope.modalshown = false;
-            $('#crudmodal').modal("hide");
-            $('#crudmodal').unbind("keypress");
+            const modal = $('#crudmodal');
+
+            modal.modal("hide");
+            modal.unbind("keypress");
+            
+            if ($scope.resizable) {
+                $(".modal-content").removeAttr('style');    
+                $('.modal-content').resizable('destroy');
+            }
+            
+            modal.height($scope.originalHeight);
             $rootScope.$broadcast(JavascriptEventConstants.HideModal, true);
 
             $('.no-touch [rel=tooltip]').tooltip({ container: 'body', trigger: 'hover' });
@@ -114,6 +123,7 @@
             $scope.isDetail = schemaService.isDetail(schema, true);
             $scope.isList = schemaService.isList(schema);
             $scope.useavailableheight = modaldata.useavailableheight || false;
+            
 
             $scope.datamap = datamap;
             const datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
@@ -122,8 +132,30 @@
             fieldService.fillDefaultValues(schema.displayables, datamap, { parentdata: modaldata.previousdata, parentschema: modaldata.previousschema });
             $scope.registerModalGlobalFunction(modaldata);
             $scope.setJQueryListeners();
+            const modal = $('#crudmodal');
 
-            $('#crudmodal').modal('show');
+            modal.modal('show');
+            const originalHeight = modal.height();
+            $scope.originalHeight = originalHeight;
+            if (!!modaldata.resizable) {
+                $scope.resizable = true;
+                let elements = "#crudmodal .jspContainer, modal-footer";
+                if (!!modaldata.resizableElements) {
+                    elements += ","+ modaldata.resizableElements;
+                }
+
+                $(".modal-content").resizable({
+                    alsoResize: elements,
+                    handles: 'n, s',
+                    resize: function (event, ui) {
+                        //TODO: it seems like there´s a bug on the resize whereas a vertical scroll would change the width from 100% to a calcualted value which in turn breaks the screen
+                        $("#crudmodal iframe").width(100 + '%');
+                    }
+                });    
+            }
+            
+
+
 
             //TODO: review this decision here it might not be suitable for all the scenarios
             crudContextHolderService.modalLoaded(datamapToUse, schema);

@@ -124,7 +124,8 @@ module.exports = function (grunt) {
                     "font-awesome.css": "font-awesome/css/font-awesome.min.css",
                     // angular
                     "textAngular.css": "textAngular/dist/textAngular.css",
-                    "angular-ui-select.css": "ui-select/dist/select.min.css"
+                    "angular-ui-select.css": "ui-select/dist/select.min.css",
+                    "jquery-ui.css": "jquery-ui/themes/base/jquery-ui.min.css"
                 }
             },
             fonts: {
@@ -145,7 +146,7 @@ module.exports = function (grunt) {
                 files: {
                     // jquery
                     "jquery.js": "jquery/dist/jquery.min.js",
-                    "jquery-ui.js": "jquery-ui/ui/minified/jquery-ui.min.js",
+                    "jquery-ui.js": "jquery-ui/jquery-ui.min.js",
                     // angular
                     "angular.js": "angular/angular.min.js",
                     "angular-sanitize.js": "angular-sanitize/angular-sanitize.min.js",

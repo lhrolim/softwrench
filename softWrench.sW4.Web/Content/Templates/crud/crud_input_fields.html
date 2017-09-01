@@ -107,9 +107,11 @@
                         <img ng-src="{{ datamap[fieldMetadata.attribute] }}" />
                     </div>
 
-                    <div ng-switch-when="richtext">
+                    <div ng-switch-when="richtext" id="richtext">
                         <richtext-field data-content="datamap[fieldMetadata.attribute]"
-                                        data-readonly="true">
+                                        data-readonly="true"
+                                        height="{{fieldMetadata.rendererParameters['height']}}"
+                                        >
                         </richtext-field>
                     </div>
 
@@ -311,6 +313,7 @@
                     </div>
                     <div ng-switch-when="richtext">
                         <richtext-field data-content="datamap[fieldMetadata.attribute]"
+                                        height="{{fieldMetadata.rendererParameters['height']}}"
                                         data-readonly="!isModifiableEnabled(fieldMetadata)">
                         </richtext-field>
 

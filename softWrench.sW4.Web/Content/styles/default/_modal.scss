@@ -75,6 +75,26 @@
     width: 500px;
 }
 
+.largemodal {
+    width: 1500px !important;
+
+    @media (max-width: 500px) {
+        width: 350px !important;
+    }
+
+    @media (max-width: 800px) {
+        width: 600px !important;
+    }
+
+    @media (max-width: 1200px) {
+        width: 900px !important;
+    }
+
+    @media (max-width: 1400px) {
+        width: 1200px !important;
+    }
+}
+
 .smallmodal, .mediummodal {
     top: 20%;
     margin: 0 auto;

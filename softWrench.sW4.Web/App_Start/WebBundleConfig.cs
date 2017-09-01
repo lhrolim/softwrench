@@ -31,6 +31,7 @@ namespace softWrench.sW4.Web {
                 // angular
                 .IncludeDirectory("~/Content/vendor/css/angular/", "*.css")
                 .Include("~/Content/vendor/css/angular/angular-ui-select.css")
+                .Include("~/Content/vendor/css/jquery-ui/jquery-ui.css")
                 .Include("~/Content/vendor/css/angular/textAngular.css")
                 .Include("~/Content/vendor/css/angular-ui-grid/ui-grid.css");
             vendorBundle.Orderer = new PassthroughBundleOrderer();

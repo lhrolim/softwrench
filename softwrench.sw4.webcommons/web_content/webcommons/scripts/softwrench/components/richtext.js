@@ -145,9 +145,9 @@
         }
 
         const service = {
-            getDecodedValue: getDecodedValue,
-            replaceInvalidTags: replaceInvalidTags,
-            getDisplayableValue: getDisplayableValue
+            getDecodedValue,
+            replaceInvalidTags,
+            getDisplayableValue
         };
         init();
         return service;

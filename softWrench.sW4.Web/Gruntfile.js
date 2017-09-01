@@ -69,6 +69,7 @@ module.exports = function (grunt) {
                     // angular
                     "angular/textAngular.css": "textAngular/dist/textAngular.css",
                     "angular/angular-ui-select.css": "ui-select/dist/select.min.css",
+                    "jquery-ui/jquery-ui.css": "jquery-ui/themes/base/jquery-ui.min.css"
                 }
             },
             fonts: {
@@ -89,7 +90,7 @@ module.exports = function (grunt) {
                 files: {
                     // jquery
                     "jquery/jquery.js": "jquery/dist/jquery.js",
-                    "jquery/jquery-ui.js": "jquery-ui/ui/jquery-ui.js",
+                    "jquery/jquery-ui.js": "jquery-ui/jquery-ui.js",
                     "jquery/jquery-file-style.js": "jquery.filestyle/jquery.filestyle.js",
                     "jquery/jquery-file-download.js": "jquery-file-download/src/Scripts/jquery.fileDownload.js",
                     "jquery/jquery-file-upload.js": "blueimp-file-upload/js/jquery.fileupload.js",
