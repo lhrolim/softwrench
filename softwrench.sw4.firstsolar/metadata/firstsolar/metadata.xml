@@ -80,6 +80,7 @@
         <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
+        <attribute name="daysleftcm" query="(DATEDIFF(day,GETDATE(),!@reportdate))" type="smallint"/>
         <attribute name="outreq" type="boolean"/>
         <attribute name="planner" type="varchar" query="@firstSolarCustomGlobalFedService.PlannerQuery"/>
       </attributes>
@@ -477,7 +478,7 @@
         </schema>
         
         
-        <schema id="workpackagebuilddash" stereotype="list" platform="web">
+        <schema id="workpackagebuilddash" stereotype="list" platform="web" abstract="true">
           <filters>
             <filter attribute="#wpnum" style="width:300px" whereclause="wpnum like !@#value" />
             <booleanfilter attribute="#buildcomplete"  whereclause="buildcomplete = !@#value" />
@@ -508,9 +509,8 @@
           <field attribute="schedstart" label="Scheduled Start Date">
             <renderer type="datetime" params="width=15%" />
           </field>
-          <field attribute="daysleft" label="Days Left">
-            <renderer type="numericinput" params="width=8%" />
-          </field>
+          <section id="daysleft"/>
+          
 
           <properties>
             <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
@@ -518,7 +518,22 @@
           </properties>
         </schema>
 
-        <schema id="workpackagebuild290dash" parentschema="workpackagebuilddash"></schema>
+        <schema id="workpackagebuild290dash" parentschema="workpackagebuilddash">
+          <section id="daysleft">
+            <field attribute="daysleft" label="Days Left">
+              <renderer type="numericinput" params="width=8%" />
+            </field>
+          </section>
+        </schema>
+
+
+        <schema id="workpackagebuild290CMdash" parentschema="workpackagebuilddash">
+          <section id="daysleft">
+            <field attribute="daysleftcm" label="Days Left">
+              <renderer type="numericinput" params="width=8%" />
+            </field>
+          </section>
+        </schema>
         
         <!--#endregion-->
 

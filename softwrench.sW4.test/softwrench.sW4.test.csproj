@@ -142,6 +142,9 @@
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="softwrench.sw4.Hapag, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.Hapag.1.0.0\lib\net46\softwrench.sw4.Hapag.dll</HintPath>
+    </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
       <Private>True</Private>
@@ -209,6 +212,9 @@
     <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="WcfSamples.DynamicProxy, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WcfSamples.DynamicProxy.1.0.0.0\lib\net45\WcfSamples.DynamicProxy.dll</HintPath>
     </Reference>
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
@@ -475,10 +481,6 @@
     <ProjectReference Include="..\softwrench.sw4.firstsolar\softwrench.sw4.firstsolar.csproj">
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
       <Name>softwrench.sw4.firstsolar</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.Hapag\softwrench.sw4.Hapag.csproj">
-      <Project>{22d901fc-310e-4f14-9506-d9433cf192cf}</Project>
-      <Name>softwrench.sw4.Hapag</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.kongsberg\softwrench.sw4.kongsberg.csproj">
       <Project>{9b568df3-6a78-4a01-b080-8e88c8dab0f7}</Project>

@@ -107,7 +107,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         #region maintenance dash
         private bool IsMaintenanceBuildDash() {
             var context = ContextLookuper.LookupContext();
-            return context?.ApplicationLookupContext != null && (FirstSolarDashboardInitializer.BuildPanelSchemaId.Equals(context.ApplicationLookupContext.Schema) || FirstSolarDashboardInitializer.BuildPanel290SchemaId.Equals(context.ApplicationLookupContext.Schema));
+            return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny(FirstSolarDashboardInitializer.BuildPanelSchemaId, FirstSolarDashboardInitializer.BuildPanel290SchemaId, FirstSolarDashboardInitializer.BuildPanel290CMSchemaId);
         }
 
         private async Task<ApplicationListResult> InnerGetMaintenanceBuildDashList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {

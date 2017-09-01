@@ -32,6 +32,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
 
         public const string BuildPanelSchemaId = "workpackagebuilddash";
         public const string BuildPanel290SchemaId = "workpackagebuild290dash";
+        public const string BuildPanel290CMSchemaId = "workpackagebuild290CMdash";
 
 
         private ILog Log = LogManager.GetLogger(typeof(FirstSolarDashboardInitializer));
@@ -76,9 +77,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = BuildPanelAlias290CM,
                     Title = "Work Package Queue",
                     Application = "workorder",
-                    AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,#buildcomplete,#colorcode",
+                    AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,daysleftcm,#buildcomplete,#colorcode",
                     DefaultSortField = "reportdate desc",
-                    SchemaRef = BuildPanel290SchemaId,
+                    SchemaRef = BuildPanel290CMSchemaId,
                     Limit = 10,
                     Size = 12
                 },
