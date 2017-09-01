@@ -21,6 +21,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public string Action { get; set; }
 
         [Property]
+        public string Assignee { get; set; }
+
+        [Property]
+        public string AssigneeLabel { get; set; }
+
+        [Property]
         public string Completed { get; set; }
 
         [Property]

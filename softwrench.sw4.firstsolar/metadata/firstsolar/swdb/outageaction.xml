@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
+  <entities>
+    <entity name="OutageAction" idAttribute="id" useridAttribute="id">
+      <relationships>
+        <relationship to="person" qualifier="assignee">
+          <relationshipAttribute from="assignee" to="personid" primary="true"/>
+<!--          <relationshipAttribute from="orgid" to="locationorg"/>-->
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+  
   <applications>
     <application entity="OutageAction" name="OutageAction" title="Outage Action">
       <schemas>
@@ -8,8 +20,8 @@
           <field attribute="actiontime" label="Action Time" readonly="true">
             <renderer type="datetime"/>
           </field>
-
           <field attribute="action" label="Action" />
+          <field attribute="assigneelabel" label="Assignee" />
           <field attribute="completed" label="Completed" >
             <renderer type="checkbox"/>
           </field>
@@ -18,6 +30,11 @@
         <schema id="detail" stereotype="detail" platform="web" title="Outage Action">
           <field attribute="actiontime" hidden="true"/>
           <field attribute="action" label="Action" />
+          <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true"/>
+          <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname" >
+            <renderer type="lookup" />
+          </association>
+          
           <field attribute="completed" label="Completed" >
             <renderer type="checkbox"/>
           </field>

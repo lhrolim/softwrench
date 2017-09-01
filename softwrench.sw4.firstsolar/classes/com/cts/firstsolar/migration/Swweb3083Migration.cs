@@ -1,4 +1,5 @@
-﻿using FluentMigrator;
+﻿using cts.commons.persistence.Util;
+using FluentMigrator;
 using softWrench.sW4.Extension;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
@@ -16,6 +17,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
             Create.ForeignKey("fk_dom_wp").FromTable("OPT_DAILY_OUTAGE_MEETING").ForeignColumn("workpackageid").ToTable("OPT_WORKPACKAGE").PrimaryColumn("id");
             Create.ForeignKey("fk_cal_wp").FromTable("OPT_CALLOUT").ForeignColumn("workpackageid").ToTable("OPT_WORKPACKAGE").PrimaryColumn("id");
             Create.ForeignKey("fk_meg_wp").FromTable("OPT_MAINTENANCE_ENG").ForeignColumn("workpackageid").ToTable("OPT_WORKPACKAGE").PrimaryColumn("id");
+
+        }
+
+        public override void Down() {
+        }
+    }
+
+    [Migration(201708301045)]
+    public class Swweb3147Migration : FluentMigrator.Migration {
+
+        public override void Up()
+        {
+            Alter.Table("OPT_DAILY_OUTAGE_ACTION").AddColumn("assignee").AsString(MigrationUtil.StringMedium).NotNullable();
+            Alter.Table("OPT_DAILY_OUTAGE_ACTION").AddColumn("assigneelabel").AsString(MigrationUtil.StringMedium).NotNullable();
 
         }
 

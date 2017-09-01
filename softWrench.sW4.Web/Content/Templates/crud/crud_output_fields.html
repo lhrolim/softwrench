@@ -86,6 +86,7 @@
                                     </td>
                                 </tr>
                             </table>
+
                         </div>
                         
                         <div ng-switch-when="radio">
@@ -185,11 +186,8 @@
                                 </div>
 
                                 <div ng-switch-when="checkbox">
-                                    
-                                   
-                                    
                                     <div ng-if="fieldMetadata.type !== 'OptionField'">
-                                        <i class="fa {{getBooleanClass(datamap,fieldMetadata.attribute)}}"></i>{{fieldMetadata.label}}
+                                        <i class="fa {{getBooleanClass(datamap,fieldMetadata.attribute)}}"></i>
                                     </div>
                                 </div>
                                 

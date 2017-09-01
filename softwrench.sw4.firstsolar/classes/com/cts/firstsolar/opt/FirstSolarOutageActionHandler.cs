@@ -56,6 +56,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                         doa.ActionTime = DateTime.Now;
                         anyNewDoa = true;
                     }
+                    doa.AssigneeLabel = data.GetStringAttribute("assignee_.displayname");
 
                     package.OutageActions.Add(doa);
 
