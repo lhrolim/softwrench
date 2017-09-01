@@ -347,7 +347,11 @@
             <tab label="Maintenance Engineering Testing Page" icon="fa-wrench" id="engineering" enableexpression="@id!=null" countrelationship="">
 
 
-              <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files and Walk Down Photos" detailschema="">
+              <composition inline="true" relationship="#relayeventfileexplorer_" label="Relay Event Files" detailschema="">
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+              </composition>
+
+              <composition inline="true" relationship="#walkdownfileexplorer_" label="Walk Down Photos" detailschema="">
                 <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
               </composition>
 

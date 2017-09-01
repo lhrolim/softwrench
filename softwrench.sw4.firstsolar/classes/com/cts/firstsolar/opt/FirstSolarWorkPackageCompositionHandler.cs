@@ -18,6 +18,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         private const string UnknownSource = "Unknown";
         private const string RelayEventAttachmentSource = "Relay Event File";
+        private const string WalkDownPhotoAttachmentSource = "Walk Down Photo";
         private const string CallOutEmailAttachmentSource = "Subcontractor Email Attachment";
         private const string MaintenanceEngEmailAttachmentSource = "Maintenance Engineering Email Attachment";
         private const string DomEmailAttachmentSource = "Daily Outage Meeting Email Attachment";
@@ -110,6 +111,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
                     if ("relayevent".Equals(test)) {
                         attach["#attachsource"] = RelayEventAttachmentSource;
+                    } else if ("walkdown".Equals(test)) {
+                        attach["#attachsource"] = WalkDownPhotoAttachmentSource;
                     } else if ("interconnect".Equals(test)) {
                         attach["#attachsource"] = InterconnectDocsAttachmentSource;
                     } else if ("operationproc".Equals(test)) {
