@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
@@ -9,6 +10,7 @@ using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using NHibernate.Util;
 using softwrench.sw4.offlineserver.dto;
 using softwrench.sw4.offlineserver.dto.association;
 using softwrench.sw4.offlineserver.model;
@@ -58,12 +60,23 @@ namespace softwrench.sw4.offlineserver.audit {
                 if (operation == null) {
                     _log.WarnFormat("could not locate audit sync operation for {0}", key);
                 } else {
-                    var topCountData = synchronizationResultDto.TopApplicationData.OrderBy(a => a.ApplicationName)
-                        .ToDictionary(applicationData => applicationData.ApplicationName,
-                            applicationData => applicationData.NewCount);
-                    var compositionCounts = synchronizationResultDto.CompositionData.OrderBy(a => a.ApplicationName)
-                        .ToDictionary(applicationData => applicationData.ApplicationName,
-                            applicationData => applicationData.NewCount);
+                    var topCountData = new Dictionary<string, int>();
+                    synchronizationResultDto.TopApplicationData.OrderBy(a => a.ApplicationName).ForEach(applicationData => {
+                        if (!topCountData.ContainsKey(applicationData.ApplicationName)) {
+                            topCountData.Add(applicationData.ApplicationName, applicationData.NewCount);
+                        } else {
+                            topCountData[applicationData.ApplicationName] = topCountData[applicationData.ApplicationName] + applicationData.NewCount;
+                        }
+                    });
+
+                    var compositionCounts = new Dictionary<string, int>();
+                    synchronizationResultDto.CompositionData.OrderBy(a => a.ApplicationName).ForEach(applicationData => {
+                        if (!compositionCounts.ContainsKey(applicationData.ApplicationName)) {
+                            compositionCounts.Add(applicationData.ApplicationName, applicationData.NewCount);
+                        } else {
+                            compositionCounts[applicationData.ApplicationName] = compositionCounts[applicationData.ApplicationName] + applicationData.NewCount;
+                        }
+                    });
 
                     var topAppTotals = topCountData.Sum(s => s.Value);
                     var compositionTotals = compositionCounts.Sum(s => s.Value);
