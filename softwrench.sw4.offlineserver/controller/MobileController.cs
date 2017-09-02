@@ -215,7 +215,7 @@ namespace softwrench.sw4.offlineserver.controller
         /// <param name="batchContent">The </param>
         /// <returns></returns>
         [HttpPost]
-        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, [FromUri]string clientOperationId, [FromUri]DeviceData deviceData, JObject batchContent)
+        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent,[FromUri]string clientOperationId=null, [FromUri]DeviceData deviceData = null)
         {
             var operation = _offlineAuditManager.MarkSyncOperationBegin(clientOperationId, deviceData, OfflineAuditManager.OfflineAuditMode.Batch);
             Log.InfoFormat("Creating batch for application {0}", application);
