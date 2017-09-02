@@ -107,7 +107,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         #region maintenance dash
         private bool IsMaintenanceBuildDash() {
             var context = ContextLookuper.LookupContext();
-            return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny(FirstSolarDashboardInitializer.BuildPanelSchemaId, FirstSolarDashboardInitializer.BuildPanel290SchemaId, FirstSolarDashboardInitializer.BuildPanel290CMSchemaId);
+            return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny(FirstSolarDashboardInitializer.PmBuildPanelSchemaId, FirstSolarDashboardInitializer.CmBuildPanelSchemaId);
         }
 
         private async Task<ApplicationListResult> InnerGetMaintenanceBuildDashList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
@@ -174,7 +174,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                     dm["#colorcode"] = "#39b54a"; // green
                     continue;
                 }
-                if (FirstSolarDashboardInitializer.BuildPanel290SchemaId.Equals(schema)) {
+                if (FirstSolarDashboardInitializer.PmBuildPanelSchemaId.Equals(schema)) {
                     dm["#colorcode"] = "#f65752"; // red
                     continue;
                 }

@@ -30,9 +30,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public const string BuildPanelAlias290PM = "fs.maintenance.290pm";
         public const string BuildPanelAlias290CM = "fs.maintenance.290cm";
 
-        public const string BuildPanelSchemaId = "workpackagebuilddash";
-        public const string BuildPanel290SchemaId = "workpackagebuild290dash";
-        public const string BuildPanel290CMSchemaId = "workpackagebuild290CMdash";
+        public const string PmBuildPanelSchemaId = "pmbuilddash";
+        public const string CmBuildPanelSchemaId = "cmbuilddash";
 
 
         private ILog Log = LogManager.GetLogger(typeof(FirstSolarDashboardInitializer));
@@ -79,7 +78,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Application = "workorder",
                     AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,daysleftcm,#buildcomplete,#colorcode",
                     DefaultSortField = "reportdate desc",
-                    SchemaRef = BuildPanel290CMSchemaId,
+                    SchemaRef = CmBuildPanelSchemaId,
                     Limit = 10,
                     Size = 12
                 },
@@ -108,7 +107,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Application = "workorder",
                     AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,daysleft,#buildcomplete,#colorcode",
                     DefaultSortField = "daysleft",
-                    SchemaRef = BuildPanel290SchemaId,
+                    SchemaRef = PmBuildPanelSchemaId,
                     Limit = 10,
                     Size = 12
                 },
@@ -119,7 +118,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Application = "workorder",
                     AppFields = "#wpnum,description,planner,location_.facilityname,asset_.description,reportdate,schedstart,daysleft,#buildcomplete,#colorcode",
                     DefaultSortField = "daysleft",
-                    SchemaRef = BuildPanelSchemaId,
+                    SchemaRef = PmBuildPanelSchemaId,
                     Limit = 10,
                     Size = 12
                 },

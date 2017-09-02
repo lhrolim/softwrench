@@ -34,7 +34,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             //                return MaintenanceBuildQuery();
             //            }
             //
-            //            if (FirstSolarDashboardInitializer.BuildPanel290SchemaId.Equals(searchDto.Key.SchemaId)) {
+            //            if (FirstSolarDashboardInitializer.PmBuildPanelSchemaId.Equals(searchDto.Key.SchemaId)) {
             //                return MaintenanceBuild290Query();
             //            }
 

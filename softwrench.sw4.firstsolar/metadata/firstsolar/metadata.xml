@@ -478,7 +478,7 @@
         </schema>
         
         
-        <schema id="workpackagebuilddash" stereotype="list" platform="web" abstract="true">
+        <schema id="aworkpackagebuilddash" stereotype="list" platform="web" abstract="true">
           <filters>
             <filter attribute="#wpnum" style="width:300px" whereclause="wpnum like !@#value" />
             <booleanfilter attribute="#buildcomplete"  whereclause="buildcomplete = !@#value" />
@@ -518,7 +518,7 @@
           </properties>
         </schema>
 
-        <schema id="workpackagebuild290dash" parentschema="workpackagebuilddash">
+        <schema id="pmbuilddash" parentschema="aworkpackagebuilddash">
           <section id="daysleft">
             <field attribute="daysleft" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
@@ -527,7 +527,7 @@
         </schema>
 
 
-        <schema id="workpackagebuild290CMdash" parentschema="workpackagebuilddash">
+        <schema id="cmbuilddash" parentschema="aworkpackagebuilddash">
           <section id="daysleft">
             <field attribute="daysleftcm" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
