@@ -23,11 +23,8 @@ $asset_path: "../images";
         }
 
         .branding {
-            background: url(#{$asset_path}/branding.png) no-repeat top left;
-
-            .logo img {
-                height: 90px;
-            }
+            background: none;
+            display: none;
         }
     }
 
