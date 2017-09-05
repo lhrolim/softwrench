@@ -113,16 +113,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             return Template.Render(hash ?? BuildTemplateHash(dom, package));
         }
 
-        private EmailAttachment BuildPdfReport(Hash hash) {
+        public string BuildPdfHtml(Hash hash) {
             var pdfTemplate = BuildTemplate(PdfTemplate);
-            var pdfHtml = pdfTemplate.Render(hash);
+            return pdfTemplate.Render(hash);
+        }
+
+        private EmailAttachment BuildPdfReport(Hash hash) {
+            var pdfHtml = BuildPdfHtml(hash);
             var title = "Daily Outage Meeting - " + hash["facilityname"] + " - " + hash["today"];
             var rodayWithDashes = DateTime.Now.ToString("MM-dd-yy", new CultureInfo("en-US"));
             var fileName = "DailyOutageMeeting_" + hash["facilityname"] + "_" + rodayWithDashes + ".pdf";
             return EmailService.CreateAttachment(PdfService.HtmlToPdf(pdfHtml, title), fileName);
         }
 
-        private Hash BuildTemplateHash(DailyOutageMeeting dom, WorkPackage package) {
+        public Hash BuildTemplateHash(DailyOutageMeeting dom, WorkPackage package) {
             var woData = GetWoData(package);
 
             return Hash.FromAnonymousObject(new {

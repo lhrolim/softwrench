@@ -3,7 +3,12 @@
     <title style="box-sizing:border-box;">Daily Outage Meeting - {{facilityname}} {{today}}</title>
     <style style='box-sizing:border-box;'>
         .mail-section { page-break-inside: avoid; }
-        .mail-field-container { padding: 8px 0px 5px 15px; page-break-inside: avoid; }
+        .mail-field-table { width: 100%; page-break-inside: avoid; }
+        .mail-field-container { padding: 8px 0px 5px 15px }
+        tr td:last-child .mail-field-container { margin-right: 0px }
+        .mail-col-4 { width: 33%; }
+        .mail-col-6 { width: 50%; }
+        .mail-col-12 { width: 100%; }
         .mail-label { font-weight: bold; font-size: 13px; line-height: 1.42857143; }
         .mail-content { background-image: none; border-collapse: collapse; border-color: rgb(204, 204, 204); border-style: solid; border-radius: 4px; border-width: 1px; box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px 0px inset; box-sizing: border-box; color: #555; display: block; font-size: 14px; height: auto; line-height: 20px; margin-bottom: 5px; max-width: 100%; min-height: 34px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; padding-top: 6px; text-align: left; text-shadow: rgba(255, 255, 255, 0.2) 0px 1px 0px; text-size-adjust: 100%; word-break: break-word; white-space: pre-wrap; }
         .mail-legend-label { margin: 30px 0px 15px 15px; width: calc(100% - 35px); white-space: nowrap; vertical-align: baseline; font-size: 12px; line-height: 24px; background: #aaa; border: none; padding: 8px 10px 5px; font-weight: bold; color: #fff; page-break-inside: avoid; }
@@ -14,14 +19,23 @@
     <h1 style="text-align: center; font-size: 30px">Daily Outage Meeting - {{facilityname}} {{today}}</h1>
 
     <div class="mail-section">
-        <div class="mail-field-container">
-            <div class="mail-label">Work Package:</div>
-            <div class="mail-content">{{wpnum}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Site Name:</div>
-            <div class="mail-content">{{facilityname}}</div>
-        </div>
+        <table class="mail-field-table">
+            <tr>
+                <td class="mail-col-6">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Work Package:</div>
+                        <div class="mail-content">{{wpnum}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-6">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Site Name:</div>
+                        <div class="mail-content">{{facilityname}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
         <div class="mail-field-container">
             <div class="mail-label">Summary:</div>
             <div class="mail-content">{{wosummary}}</div>
@@ -30,36 +44,56 @@
 
     <div class="mail-section">
         <div class="mail-legend-label">Daily Outage Update</div>
-
-        <div class="mail-field-container">
-            <div class="mail-label">Start Date of Outage:</div>
-            <div class="mail-content">{{outagestartdate}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Estimated Completion Date:</div>
-            <div class="mail-content">{{estimatedcompletiondate}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Actual Completion Date:</div>
-            <div class="mail-content">{{actualcompletiondate}}</div>
-        </div>
+        
+        <table class="mail-field-table">
+            <tr>
+                <td class="mail-col-4">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Start Date of Outage:</div>
+                        <div class="mail-content">{{outagestartdate}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-4">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Estimated Completion Date:</div>
+                        <div class="mail-content">{{estimatedcompletiondate}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-4">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Actual Completion Date:</div>
+                        <div class="mail-content">{{actualcompletiondate}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div class="mail-section">
         <div class="mail-legend-label">Lost Energy</div>
-
-        <div class="mail-field-container">
-            <div class="mail-label">MWH Lost Total:</div>
-            <div class="mail-content">{{mwhlosttotal}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Daily Estimated Loss (MWh):</div>
-            <div class="mail-content">{{mwhlostperday}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Total Estimated Loss (MWh):</div>
-            <div class="mail-content">{{expectedmwhlost}}</div>
-        </div>
+        
+        <table class="mail-field-table">
+            <tr>
+                <td class="mail-col-4">
+                    <div class="mail-field-container">
+                        <div class="mail-label">MWH Lost Total:</div>
+                        <div class="mail-content">{{mwhlosttotal}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-4">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Daily Estimated Loss (MWh):</div>
+                        <div class="mail-content">{{mwhlostperday}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-4">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Total Estimated Loss (MWh):</div>
+                        <div class="mail-content">{{expectedmwhlost}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
         <div class="mail-legend-label">Outage Summary</div>
 
@@ -72,27 +106,46 @@
 
     <div class="mail-section">
         <div class="mail-legend-label">Daily Update Meeting</div>
+        
+        <table class="mail-field-table">
+            <tr>
+                <td class="mail-col-6">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Meeting Time:</div>
+                        <div class="mail-content">{{meetingtime}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-6">
+                    <div class="mail-field-container">
+                        <div class="mail-label">MWH Lost:</div>
+                        <div class="mail-content">{{mwhlost}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-        <div class="mail-field-container">
-            <div class="mail-label">Meeting Time:</div>
-            <div class="mail-content">{{meetingtime}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">MWH Lost:</div>
-            <div class="mail-content">{{mwhlost}}</div>
-        </div>
         <div class="mail-field-container">
             <div class="mail-label">Critical Path/Constraints:</div>
             <div class="mail-content">{{criticalpath}}</div>
         </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Open Action Items:</div>
-            <div class="mail-content">{{openactionitems}}</div>
-        </div>
-        <div class="mail-field-container">
-            <div class="mail-label">Completed Action Items:</div>
-            <div class="mail-content">{{completedactionitems}}</div>
-        </div>
+        
+        <table class="mail-field-table">
+            <tr>
+                <td class="mail-col-6">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Open Action Items:</div>
+                        <div class="mail-content">{{openactionitems}}</div>
+                    </div>
+                </td>
+                <td class="mail-col-6">
+                    <div class="mail-field-container">
+                        <div class="mail-label">Completed Action Items:</div>
+                        <div class="mail-content">{{completedactionitems}}</div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
         <div class="mail-field-container">
             <div class="mail-label">Meeting Summary:</div>
             <div class="mail-content">{{meetingsummary}}</div>
