@@ -362,7 +362,7 @@
                 <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.editfunction=fsengineeringevaluationService.openModalEdit;composition.inline.forcehideremove=true;composition.inline.addTitle=Evaluation"/>
               </composition>
 
-              <section>
+              <section id="componentdeclarationsection">
                 <header label="Component Tests" params="fieldset=true"/>
 
                 <section orientation="horizontal">
@@ -388,6 +388,8 @@
                       <option  label="Capture Oil Sampling" value="gsucaptureoil"/>
                       <option  label="Capture Bushing Monitoring Data" value="gsucapturemon"/>
                       <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="gsuoilsampleanddissolved"/>
+                      <option  label="Other Test" value="gsuoilothertest"/>
+                     
 
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
@@ -402,6 +404,7 @@
                       <option  label="(C1/C2) Bushing Power Factor Test" value="gsuc1c2"/>
                       <option  label="Leakage Reactance Test" value="gsuleakage"/>
                       <option  label="Test Results to Doble Engineers" value="gsutestresultstodoble"/>
+                      <option  label="Other Test" value="gsuothertest"/>
                       <option  label="Recommend Repair" value="gsurepair"/>
                       <option  label="Recommend Replace" value="gsureplace"/>
 
@@ -420,6 +423,7 @@
                     <option  label="Test SF6 for Purity &amp; Moisture" value="sf6testsf6"/>
                     <option  label="Overall Power Factor Test" value="sf6overallpower"/>
                     <option  label="Bushing Power Factor Test" value="sf6bushingpower"/>
+                    <option  label="Other Test" value="sf6othertest"/>
                     <option  label="Recommend Repair" value="sf6repair"/>
                     <option  label="Recommend Replace" value="sf6replace"/>
 
@@ -436,6 +440,7 @@
                     <option  label="HI-Pot Test" value="vachipot"/>
                     <option  label="Contact Erosion Test" value="vaccontacterosion"/>
                     <option  label="Bushing Power Factor Test" value="vacbushingpower"/>
+                    <option  label="Other Test" value="vacothertest"/>
                     <option  label="Recommend Repair" value="vacrepair"/>
                     <option  label="Recommend Replace" value="vacreplace"/>
 
@@ -451,6 +456,7 @@
                     <option  label="Ductor Test" value="airductor"/>
                     <option  label="HI-Pot Test" value="airhipot"/>
                     <option  label="Functionality Test (open-close-open)" value="airftoco"/>
+                    <option  label="Other Test" value="airothertest"/>
                     <option  label="Recommend Repair" value="airrepair"/>
                     <option  label="Recommend Replace" value="airreplace"/>
 
@@ -462,6 +468,7 @@
                     <renderer type="checkbox" params="layout=left"/>
 
                     <option  label="Measure Capacitance" value="capmeasurecap"/>
+                    <option  label="Other Test" value="capothertest"/>
                     <option  label="Recommend Repair" value="caprepair"/>
                     <option  label="Recommend Replace" value="capreplace"/>
 
@@ -471,7 +478,7 @@
 
                   <optionfield attribute="batterytests" label="Battery Bank/Charger Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('BATTERY')!= -1 " qualifier="battery">
                     <renderer type="checkbox" params="layout=left"/>
-
+                    <option  label="Other Test" value="batothertest"/>
                     <option  label="Recommend Repair" value="batrepair"/>
                     <option  label="Recommend Replace" value="batreplace"/>
 
@@ -481,7 +488,7 @@
 
                   <optionfield attribute="relaytests" label="Relay Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('RELAY')!= -1 " qualifier="relay">
                     <renderer type="checkbox" params="layout=left"/>
-
+                    <option  label="Other Test" value="relothertest"/>
                     <option  label="Recommend Repair" value="relrepair"/>
                     <option  label="Recommend Replace" value="relreplace"/>
 
@@ -496,6 +503,7 @@
                     <option  label="Ductor Test" value="feedductor"/>
                     <option  label="HI-Pot Test" value="feedhipot"/>
                     <option  label="Transformer Turns Ratio (TTR) Test" value="feedttr"/>
+                    <option  label="Other Test" value="feedothertest" />
                     <option  label="Recommend Repair" value="feedrepair"/>
                     <option  label="Recommend Replace" value="feedreplace"/>
 
@@ -509,6 +517,7 @@
 
               <section id="components">
                 <!--Placeholder section to display the components on the screen-->
+                <field hidden="true" attribute="#fake"></field>
               </section>
 
 
