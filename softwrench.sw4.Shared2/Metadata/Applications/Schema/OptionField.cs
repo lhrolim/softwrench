@@ -80,7 +80,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string ExtraParameter => _extraParameter;
 
-        public IEnumerable<IAssociationOption> Options => _options;
+        public List<IAssociationOption> Options => _options;
 
         public ISet<string> DependantFields => _dependantFields;
 

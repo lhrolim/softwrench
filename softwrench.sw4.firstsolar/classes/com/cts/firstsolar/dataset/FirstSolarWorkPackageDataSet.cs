@@ -456,40 +456,48 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private void HandleGenericLists(CrudOperationData crudoperationData, WorkPackage package) {
             var id = package.Id;
-            HandleGenericList(crudoperationData, package.OutagesList, "outages", id);
-            HandleGenericList(crudoperationData, package.EngComponentsList, "engcomponents", id);
-            HandleGenericList(crudoperationData, package.GsuImmediateTestsList, "gsuimmediatetests", id);
-            HandleGenericList(crudoperationData, package.GsuTestsList, "gsutests", id);
-            HandleGenericList(crudoperationData, package.Sf6TestsList, "sf6tests", id);
-            HandleGenericList(crudoperationData, package.VacuumTestsList, "vacuumtests", id);
-            HandleGenericList(crudoperationData, package.AirSwitcherTestsList, "airswitchertests", id);
-            HandleGenericList(crudoperationData, package.CapBankTestsList, "capbanktests", id);
-            HandleGenericList(crudoperationData, package.BatteryTestsList, "batterytests", id);
-            HandleGenericList(crudoperationData, package.RelayTestsList, "relaytests", id);
-            HandleGenericList(crudoperationData, package.FeederTestsList, "feedertests", id);
+            HandleGenericList(crudoperationData, package.GenericRelationships, id);
+
+
+            //HandleGenericList(crudoperationData, package.EngComponentsList, "engcomponents", id);
+            //HandleGenericList(crudoperationData, package.GsuImmediateTestsList, "gsuimmediatetests", id);
+            //HandleGenericList(crudoperationData, package.GsuTestsList, "gsutests", id);
+            //HandleGenericList(crudoperationData, package.Sf6TestsList, "sf6tests", id);
+            //HandleGenericList(crudoperationData, package.VacuumTestsList, "vacuumtests", id);
+            //HandleGenericList(crudoperationData, package.AirSwitcherTestsList, "airswitchertests", id);
+            //HandleGenericList(crudoperationData, package.CapBankTestsList, "capbanktests", id);
+            //HandleGenericList(crudoperationData, package.BatteryTestsList, "batterytests", id);
+            //HandleGenericList(crudoperationData, package.RelayTestsList, "relaytests", id);
+            //HandleGenericList(crudoperationData, package.FeederTestsList, "feedertests", id);
         }
 
-        private void HandleGenericList(CrudOperationData crudoperationData, ICollection<GenericListRelationship> originalList, string column, int? packageId) {
-            var currentValues = crudoperationData.GetUnMappedAttribute(column);
-            var toKeep = new List<GenericListRelationship>();
-            if (!string.IsNullOrEmpty(currentValues?.Trim())) {
-                var values = currentValues.Split(',');
-                values.ForEach((value) => {
-                    value = value.Trim();
-                    var found = originalList.FirstOrDefault(itemObj => value.Equals(itemObj.Value)) ?? new GenericListRelationship() {
-                        Value = value,
-                        ParentColumn = column,
-                        ParentEntity = "WorkPackage"
-                    };
-                    if (found.Id == null) {
-                        found.ParentId = packageId ?? 0;
-                        found = Dao.Save(found);
-                        originalList.Add(found);
-                    }
-                    toKeep.Add(found);
-                });
-            }
+        private void HandleGenericList(CrudOperationData crudoperationData, ICollection<GenericListRelationship> originalList, int? packageId) {
 
+            var columns = MaintenanceEngineeringHandler.GetTestNames(crudoperationData.ApplicationMetadata.Schema);
+            columns.Add("outages");
+            var toKeep = new List<GenericListRelationship>();
+            foreach (var column in columns){
+                var currentValues = crudoperationData.GetUnMappedAttribute(column);
+                
+                if (!string.IsNullOrEmpty(currentValues?.Trim())) {
+                    var values = currentValues.Split(',');
+                    values.ForEach((value) => {
+                        value = value.Trim();
+                        var found = originalList.FirstOrDefault(itemObj => value.Equals(itemObj.Value)) ?? new GenericListRelationship() {
+                            Value = value,
+                            ParentColumn = column,
+                            ParentEntity = "WorkPackage"
+                        };
+                        if (found.Id == null) {
+                            found.ParentId = packageId ?? 0;
+                            found = Dao.Save(found);
+                            originalList.Add(found);
+                        }
+                        toKeep.Add(found);
+                    });
+                }
+            }
+          
             var deleted = new List<GenericListRelationship>();
             originalList.ForEach(item => {
                 if (toKeep.Contains(item)) {
@@ -506,9 +514,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             //TODO: generic solution
             //using the base default schema, regardless of the logged user
             var completeApplicationMetadataDefinition = MetadataProvider.Application("workorder");
-            var schema =completeApplicationMetadataDefinition.Schema(FirstSolarWorkPackageCompositionHandler
+            var schema = completeApplicationMetadataDefinition.Schema(FirstSolarWorkPackageCompositionHandler
                     .CompositionSchemaKey);
-            var appData= ApplicationMetadata.FromSchema(schema);
+            var appData = ApplicationMetadata.FromSchema(schema);
 
 
             var woData = new JObject { { "workorderid", woId }, { "wonum", woNum }, { "siteid", woSite } };

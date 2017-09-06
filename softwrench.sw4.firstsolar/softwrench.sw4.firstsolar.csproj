@@ -293,6 +293,7 @@
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolar\htmls\templates\othertestsmodal.html" />
     <Content Include="web_content\firstsolar\htmls\templates\meetingpdf.html" />
     <Content Include="web_content\firstsolar\htmls\templates\meeting.html" />
     <Content Include="web_content\firstsolar\htmls\templates\workpackageemail.html" />

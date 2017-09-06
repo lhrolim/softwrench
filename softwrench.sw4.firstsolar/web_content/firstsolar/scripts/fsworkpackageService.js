@@ -1,4 +1,4 @@
-﻿(function (angular) {
+﻿(function (angular, bootbox) {
     "use strict";
 
     let handleEngComponentSection, locatePreferredSectionIdx, generateOuterSection, generateTestSection, generateInlineFileComposition, generateInlineWorklogComposition;
@@ -55,10 +55,10 @@
                 const componentsTopSection = fieldService.getDisplayableByKey(crudContextHolderService.currentSchema(), "components");
                 if (componentsTopSection) {
                     //might be null due to security policies
-                    componentsTopSection.displayables = [];    
+                    componentsTopSection.displayables = [];
                 }
 
-                
+
             }
 
 
@@ -257,7 +257,7 @@
                         type: 'fileexplorer',
                         params: {
                             acceptedFileExtensions: "sw_all_types",
-                            deletefunction:"fsworkpackagefilesService.deleteFile"
+                            deletefunction: "fsworkpackagefilesService.deleteFile"
                         }
                     },
                     rendererType: 'fileexplorer'
@@ -452,10 +452,101 @@
             }
         }
 
+        showOtherTestModal() {
+            const deferred = this.$q.defer();
+
+            var saveFormSt = $("#othertestsform").prop("outerHTML");
+            saveFormSt = saveFormSt.replace("none", "");
+            //change id of the filter so that it becomes reacheable via jquery
+            saveFormSt = saveFormSt.replace("othertestsname", "othertestsname2");
+            bootbox.dialog({
+                templates: {
+                    header:
+                    "<div class='modal-header'>" +
+                    "<i class='fa fa-question-circle'></i>" +
+                    "<h4 class='modal-title'></h4>" +
+                    "</div>"
+                },
+                message: saveFormSt,
+                title: "Save Test",
+                onEscape: true,
+                buttons: {
+                    cancel: {
+                        label: 'cancel',
+                        className: "btn btn-default",
+                        callback: function () {
+                            deferred.reject();
+                        }
+                    },
+                    main: {
+                        label: "Save",
+                        className: "btn-primary",
+                        callback: function (result) {
+                            if (result) {
+                                deferred.resolve($("#othertestsname2").val());
+                            }
+                        }
+                    }
+                },
+                className: "smallmodal"
+            });
+
+            return deferred.promise;
+        }
+
+        addNewOption(field, newtest) {
+
+            var existingOptions = field.options;
+            if (existingOptions.some(o => o.value === newtest)) {
+                this.alertService.alert(`Test "${newtest}" already exists.`);
+                return null;
+            }
+            const newOption = { label: newtest, value: newtest };
+            var indexToInsert = existingOptions.length >= 3 ? existingOptions.length - 3 : 0;
+            existingOptions.splice(indexToInsert, 0, newOption);
+            if (!!field.jscache) {
+                delete field.jscache.grouppedcheckboxes;
+            }
+
+
+            return newOption;
+        }
+
         //afterchange
         reevaluateSections(eventParameters) {
+            const dm = this.crudContextHolderService.rootDataMap();
             const field = eventParameters.fieldMetadata;
+
+            const removeOtherTest = (field) => {
+                var idx = dm[field.attribute].findIndex(f => f.endsWith("othertest"));
+                if (idx !== -1) {
+                    dm[field.attribute].splice(idx, 1);
+                }
+            }
+
+            const markasSelected = (field) => {
+                var idx = dm[field.attribute].findIndex(f => f.endsWith("othertest"));
+                if (idx !== -1) {
+                    dm[field.attribute].splice(idx, 1);
+                }
+            }
+
+            
             const option = eventParameters.option;
+            if (option.value.endsWith("othertest")) {
+                return this.showOtherTestModal()
+                    .then(label => {
+                        removeOtherTest(field);
+                        dm[field.attribute].push(label);
+                        const fakeOption = this.addNewOption(field, label);
+                        if (!!fakeOption) {
+                            this.innerReevaluateSections(field, fakeOption);
+                        }
+                    }).catch(() => {
+                        removeOtherTest(field);
+                    });
+            }
+
 
             this.innerReevaluateSections(field, option);
             if (field.attribute !== "gsuimmediatetests") {
@@ -489,6 +580,17 @@
                 }
                 this.innerReevaluateSections(fieldMetadata, option);
             }
+
+            
+
+            values.forEach(val => {
+                if (!fieldMetadata.options.some(o => o.value === val)) {
+                    const existingOptions = fieldMetadata.options;
+                    const newOption = { label: val, value: val };
+                    var indexToInsert = existingOptions.length >= 3 ? existingOptions.length - 3 : 0;
+                    existingOptions.splice(indexToInsert, 0, newOption);
+                }
+            });
 
             angular.forEach(fieldMetadata.options, (option) => {
                 let onDatamap = false;
@@ -533,6 +635,8 @@
 
                 load(option);
             });
+
+            
 
             if (gsucaptureoilLoaded && !gsucapturemonLoaded) {
                 datamap[test].push("gsucapturemon");
@@ -628,18 +732,18 @@
 
             if (worklogComp != null) {
                 //might be null due to security policies
-                worklogCompositionSchema = worklogComp.schema;    
+                worklogCompositionSchema = worklogComp.schema;
             }
 
             if (fileExplorerComp != null) {
-                fileExplorerCompositionSchema = fileExplorerComp.schema;    
+                fileExplorerCompositionSchema = fileExplorerComp.schema;
             }
 
             if (rootSchema.id === "newdetail" && datamap["workorderid"]) {
                 this.onWorkorderSelected({ fields: { "workorder_.workorderid": datamap["workorderid"] } });
             }
-            
-            
+
+
             log.debug("caching composition schemas");
 
             //to correct SWWEB-3012
@@ -650,6 +754,8 @@
             });
 
         }
+
+
 
 
 
@@ -668,4 +774,4 @@
 
     angular.module('sw_layout').service('fsworkpackageService', workPackageService);
 
-})(angular);
+})(angular, bootbox);

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset;
@@ -43,7 +44,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         public bool HandleMaintenanceEngs(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
-            
+
 
             if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "maintenanceEngineerings"))) {
                 package.MaintenanceEngineerings = package.MaintenanceEngineerings ?? new List<MaintenanceEngineering>();
@@ -195,5 +196,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             });
             return options;
         }
+
+
+        public IList<string> GetTestNames(ApplicationSchemaDefinition applicationSchema) {
+            var section = DisplayableUtil.LocateDisplayableWithId<ApplicationSection>(applicationSchema, "componentdeclarationsection");
+            var result = new List<string>();
+            if (section == null) {
+                //due to security evaluation
+                return result;
+            }
+            var optionFields = DisplayableUtil.GetDisplayable<OptionField>(typeof(OptionField), section.Displayables);
+            foreach (var optionField in optionFields) {
+                result.Add(optionField.Attribute);
+            }
+            return result;
+        }
+
     }
 }

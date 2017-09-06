@@ -365,6 +365,8 @@
               <section id="componentdeclarationsection">
                 <header label="Component Tests" params="fieldset=true"/>
 
+                <section resourcepath="/Content/Customers/firstsolar/htmls/templates/othertestsmodal.html"/>
+                
                 <section orientation="horizontal">
                   <optionfield label="Components" attribute="engcomponents">
                     <renderer type="checkbox" params="layout=left"/>
@@ -388,7 +390,7 @@
                       <option  label="Capture Oil Sampling" value="gsucaptureoil"/>
                       <option  label="Capture Bushing Monitoring Data" value="gsucapturemon"/>
                       <option  label="Oil Sample &amp; Dissolved Gas Analysis" value="gsuoilsampleanddissolved"/>
-                      <option  label="Other Test" value="gsuoilothertest"/>
+                      <option  label="Other Test" value="gsu2othertest"/>
                      
 
                       <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />

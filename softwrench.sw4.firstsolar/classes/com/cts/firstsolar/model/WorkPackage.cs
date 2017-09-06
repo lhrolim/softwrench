@@ -142,55 +142,61 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
 
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'engcomponents' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> EngComponentsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'engcomponents' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> EngComponentsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsuimmediatetests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> GsuImmediateTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsutests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentEntity = 'WorkPackage' ", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> GsuTestsList { get; set; } = new List<GenericListRelationship>();
+        public IList<GenericListRelationship> GenericRelationships { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'sf6tests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> Sf6TestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsuimmediatetests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> GsuImmediateTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'vacuumtests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> VacuumTestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'gsutests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> GsuTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'airswitchertests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> AirSwitcherTestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'sf6tests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> Sf6TestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'capbanktests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> CapBankTestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'vacuumtests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> VacuumTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'batterytests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> BatteryTestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'airswitchertests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> AirSwitcherTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'relaytests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> RelayTestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'capbanktests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> CapBankTestsList { get; set; } = new List<GenericListRelationship>();
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'feedertests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> FeederTestsList { get; set; } = new List<GenericListRelationship>();
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'batterytests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> BatteryTestsList { get; set; } = new List<GenericListRelationship>();
+
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'relaytests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> RelayTestsList { get; set; } = new List<GenericListRelationship>();
+
+        //[Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentColumn = 'feedertests' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+        //[Key(1, Column = "parentid")]
+        //[OneToMany(2, ClassType = typeof(GenericListRelationship))]
+        //public IList<GenericListRelationship> FeederTestsList { get; set; } = new List<GenericListRelationship>();
 
         /// <summary>
         /// Token used to access this workpackage without requiring the user to be authenticated

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -93,6 +94,32 @@ namespace softwrench.sW4.Shared2.Util {
         }
 
 
+        public static T LocateDisplayableWithId<T>(IApplicationDisplayableContainer applicationSchema, string attributeToCheck) where T : IApplicationDisplayable {
+            if (attributeToCheck == null) {
+                throw new InvalidOperationException("attributeToCheck is required");
+            }
 
+            T result = default(T);
+
+            foreach (IApplicationDisplayable displayable in applicationSchema.Displayables) {
+                var identifiedDisplayable = displayable as IApplicationIndentifiedDisplayable;
+                if (identifiedDisplayable != null && attributeToCheck.EqualsIc(identifiedDisplayable.Attribute)) {
+                    return (T)identifiedDisplayable;
+                }
+                if (displayable is ApplicationSection && attributeToCheck.EqualsIc(((ApplicationSection)displayable).Id)) {
+                    return (T)displayable;
+                }
+
+                if (displayable is IApplicationDisplayableContainer) {
+                    var container = displayable as IApplicationDisplayableContainer;
+                    var innerResult = LocateDisplayableWithId<T>(container, attributeToCheck);
+                    if (innerResult != null) {
+                        return innerResult;
+                    }
+                }
+            }
+
+            return result;
+        }
     }
 }
