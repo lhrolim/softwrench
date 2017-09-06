@@ -176,7 +176,7 @@ namespace softwrench.sw4.offlineserver.audit {
                 Name = "offline",
                 ExternalId = requestClientOperationId,
                 Session = new AuditSession(user.SessionAuditId),
-                ShouldPersist = true
+                ShouldPersist = true,
             };
             operation.ServerEnv = ApplicationConfiguration.Profile;
             operation.ServerVersion = ApplicationConfiguration.SystemVersion;
@@ -184,6 +184,7 @@ namespace softwrench.sw4.offlineserver.audit {
             operation.DeviceData = deviceData;
             operation.MetadataDownload = metadataDownload;
             operation.AuditTrail = trail;
+            operation.HasUploadOperation = false;
             RedisManager.Insert(new BaseRedisInsertKey(key) { ExpiresIn = _defaultExpiresIn }, operation);
             return operation;
         }
@@ -216,6 +217,7 @@ namespace softwrench.sw4.offlineserver.audit {
             var currentTrail = AuditManager.CurrentTrail();
             //updating current thread trail
             operation.AuditTrail = currentTrail;
+            operation.HasUploadOperation = true;
             RedisManager.Insert(new BaseRedisInsertKey(key) { ExpiresIn = _defaultExpiresIn }, operation);
             LoggingUtil.BaseDurationMessage("updating batch syncoperation", before);
         }
