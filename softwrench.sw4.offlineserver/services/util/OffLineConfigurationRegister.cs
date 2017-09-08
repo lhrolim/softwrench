@@ -37,7 +37,7 @@ namespace softwrench.sw4.offlineserver.services.util {
             _configFacade.Register(OfflineConstants.SupportContactEmail, new PropertyDefinition() {
                 Description = "Support email the offline app should contact",
                 PropertyDataType = PropertyDataType.STRING,
-                StringValue = "lrolim@controltechnologysolutions.com",
+                StringValue = "devteam@controltechnologysolutions.com",
                 DefaultValue = "devteam@controltechnologysolutions.com"
             });
 
