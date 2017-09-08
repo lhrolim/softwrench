@@ -52,12 +52,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "workorder");
             }
             if (IsMaintenanceBuildDash() || IsWorkPackageGrid()) {
-                return await GetMaintenanceBuildDashList(application, searchDto);
+                return await GetMaintenanceBuildDashList(application, searchDto, IsMaintenanceBuildDash());
             }
             return await base.GetList(application, searchDto);
         }
 
-    
+
 
         public override SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
@@ -112,8 +112,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny(FirstSolarDashboardInitializer.PmBuildPanelSchemaId, FirstSolarDashboardInitializer.CmBuildPanelSchemaId);
         }
 
-        private bool IsWorkPackageGrid()
-        {
+        private bool IsWorkPackageGrid() {
             var context = ContextLookuper.LookupContext();
             return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny("wplist");
         }
@@ -132,26 +131,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return result;
         }
 
-        private async Task<ApplicationListResult> GetMaintenanceBuildDashList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+        private async Task<ApplicationListResult> GetMaintenanceBuildDashList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto, bool ignoreOldWps) {
             var workPackageFilters = GetWorkPackageFilters(searchDto);
             SanitizeDTOForMaximo(searchDto);
-            var wpData = await LookupWorkPackageData(workPackageFilters);
+            var wpData = await LookupWorkPackageData(workPackageFilters, ignoreOldWps);
             var withRestrictionsSearchDto = HandleWorkPackageRestrictions(searchDto, wpData);
             var result = await InnerGetMaintenanceBuildDashList(application, withRestrictionsSearchDto);
             return BuildCombinedProjectedData(result, wpData);
         }
 
-        private async Task<IDictionary<string, DataMap>> LookupWorkPackageData(Dictionary<string, SearchParameter> wpFilters) {
+        private async Task<IDictionary<string, DataMap>> LookupWorkPackageData(Dictionary<string, SearchParameter> wpFilters, bool ignoreOldWps) {
             var wpSearchDTO = new PaginatedSearchRequestDto();
             wpFilters.ForEach(pair => {
                 wpSearchDTO.AppendSearchEntry(pair.Key, pair.Value.RawValue);
             });
             //            wpSearchDTO.WhereClause = DefaultValuesBuilder.ConvertAllValues(" WorkPackage_.createddate > :createddate ", SecurityFacade.CurrentUser());
             wpSearchDTO.PageSize = 1000;
-            var now = DateTime.Now;
-            now = DateUtil.BeginOfDay(now.AddDays(-60));
 
-            wpSearchDTO.AppendSearchEntry(":createddate", ">=" + now.ToString("yyyy/MM/dd"));
+            if (ignoreOldWps) {
+                var now = DateTime.Now;
+                now = DateUtil.BeginOfDay(now.AddDays(-60));
+                wpSearchDTO.AppendSearchEntry(":createddate", ">=" + now.ToString("yyyy/MM/dd"));
+            }
 
             return await EntityRepository.GetGrouppingById(GetWorkPackageEntity(), wpSearchDTO);
         }

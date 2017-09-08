@@ -110,7 +110,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             if (Log.IsDebugEnabled) {
                 xml = SerializeIntegrationObject();
                 Log.Debug("sending content to mif :\n " + xml);
-            } else if (ApplicationConfiguration.IsLocal() || Log.IsInfoEnabled) {
+            } else if (ApplicationConfiguration.IsLocal() && Log.IsInfoEnabled) {
+                xml = SerializeIntegrationObject();
                 Log.Info("sending content to mif :\n " + xml);
             }
 
