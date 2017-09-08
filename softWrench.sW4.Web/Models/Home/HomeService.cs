@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using cts.commons.simpleinjector;
@@ -40,25 +42,29 @@ namespace softWrench.sW4.Web.Models.Home {
         }
 
         public virtual string GetUrlFromApplication(string application, DataRequestAdapter adapter) {
-            return GetUrlFromApplication(application, adapter.Key.SchemaId, adapter.Key.Mode, adapter.Key.Platform);
+            var schema = new ApplicationSchemaDefinition {
+                SchemaId = adapter.Key.SchemaId,
+                Properties = new Dictionary<string, string>()
+            };
+            return GetUrlFromApplication(application, schema, adapter.Key.Mode, adapter.Key.Platform);
         }
 
         public virtual string GetUrlFromApplication(string application, ApplicationSchemaDefinition schema, string id) {
-            return GetUrlFromApplication(application, schema.SchemaId, schema.Mode, schema.Platform, id);
+            return GetUrlFromApplication(application, schema, schema.Mode, schema.Platform, id);
         }
 
-       
+
 
         public virtual string GetUrlFromApplication(string application, ApplicationSchemaDefinition schema, string userid, string siteid) {
-            return GetUrlFromApplication(application, schema.SchemaId, schema.Mode, schema.Platform, null, userid, siteid);
+            return GetUrlFromApplication(application, schema, schema.Mode, schema.Platform, null, userid, siteid);
         }
 
-        protected virtual string GetUrlFromApplication(string application, string schemaId, SchemaMode? mode, ClientPlatform? platform, string id = null, string userid = null, string siteid = null) {
+        protected virtual string GetUrlFromApplication(string application, ApplicationSchemaDefinition schema, SchemaMode? mode, ClientPlatform? platform, string id = null, string userid = null, string siteid = null) {
             var actionURL = $"api/data/{application}";
             //TODO: fix WEBAPIUTIL method
             var modeStr = mode.ToString().ToLower();
             var platformStr = platform.ToString().ToLower();
-            var queryString = $"key[schemaId]={schemaId}&key[mode]={modeStr}&key[platform]={platformStr}";
+            var queryString = $"key[schemaId]={schema.SchemaId}&key[mode]={modeStr}&key[platform]={platformStr}";
             if (!string.IsNullOrEmpty(id)) {
                 queryString += "&id=" + id;
             }
@@ -68,6 +74,11 @@ namespace softWrench.sW4.Web.Models.Home {
             if (!string.IsNullOrEmpty(siteid)) {
                 queryString += "&siteId=" + siteid;
             }
+
+            if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.AliasUrl)) {
+                queryString += "&aliasurl=" + schema.Properties[ApplicationSchemaPropertiesCatalog.AliasUrl];
+            }
+
             return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);
         }
 

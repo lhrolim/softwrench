@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
+using DocumentFormat.OpenXml.Presentation;
 using NHibernate.Linq;
 using NHibernate.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -67,19 +68,19 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (renderer == null) {
                 switch (ftype) {
                     case FieldRendererType.ASSOCIATION:
-                    return new AssociationFieldRenderer();
+                        return new AssociationFieldRenderer();
                     case FieldRendererType.COMPOSITION:
-                    return new CompositionFieldRenderer();
+                        return new CompositionFieldRenderer();
                     case FieldRendererType.OPTION:
-                    return new OptionFieldRenderer();
+                        return new OptionFieldRenderer();
                     default:
-                    if (entity != null) {
-                        var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
-                        if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
-                            return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
+                        if (entity != null) {
+                            var attr = entity.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(targetName));
+                            if (attr != null && (attr.Type == "timestamp" || attr.Type == "datetime")) {
+                                return new FieldRenderer(FieldRenderer.BaseRendererType.DATETIME.ToString().ToLower(), null, targetName, null);
+                            }
                         }
-                    }
-                    return new FieldRenderer();
+                        return new FieldRenderer();
                 }
             }
             var type = renderer.Attribute(XmlMetadataSchema.RendererAttributeType).Value;
@@ -87,13 +88,13 @@ namespace softWrench.sW4.Metadata.Parsing {
             var stereotype = renderer.Attribute(XmlMetadataSchema.RendererAttributeStereotype).ValueOrDefault((string)null);
             switch (ftype) {
                 case FieldRendererType.ASSOCIATION:
-                return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
+                    return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
                 case FieldRendererType.COMPOSITION:
-                return new CompositionFieldRenderer(type, parameters, targetName);
+                    return new CompositionFieldRenderer(type, parameters, targetName);
                 case FieldRendererType.OPTION:
-                return new OptionFieldRenderer(type, parameters, targetName);
+                    return new OptionFieldRenderer(type, parameters, targetName);
                 default:
-                return new FieldRenderer(type, parameters, targetName, stereotype);
+                    return new FieldRenderer(type, parameters, targetName, stereotype);
             }
         }
 
@@ -249,7 +250,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var role = tabElement.Attribute(XmlBaseSchemaConstants.RoleAttribute).ValueOrDefault((string)null);
             var countRelationship = tabElement.Attribute(XmlBaseSchemaConstants.CountRelationshipAttribute).ValueOrDefault((string)null);
             var displayables = ParseDisplayables(applicationName, schemaId, tabElement, entityName);
-            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression, enableExpression,icon, role, countRelationship);
+            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression, enableExpression, icon, role, countRelationship);
         }
 
         private static ApplicationSection ParseSection(string applicationName, string schemaId, XElement sectionElement, EntityMetadata entityMetadata) {
@@ -269,7 +270,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 throw new InvalidOperationException("A section with secondarycontent=\"true\" cannot have a child section with secondarycontent=\"true\"");
             }
 
-            var header = ParseHeader(applicationName, schemaId,entityMetadata.Name,sectionElement);
+            var header = ParseHeader(applicationName, schemaId, entityMetadata.Name, sectionElement);
             var orientation = sectionElement.Attribute(XmlMetadataSchema.ApplicationSectionOrientationAttribute).ValueOrDefault((string)null);
             var renderer = ParseRendererNew(sectionElement.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.RendererElement),
                 attribute, FieldRendererType.SECTION, entityMetadata);
@@ -308,7 +309,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                     var showExpression = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
                     var toolTip = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
                     var helpIcon = xElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableHelpIconAttribute).ValueOrDefault((string)null);
-                    var displayables =ParseDisplayables(applicationName, schemaId, xElement, entityName);
+                    var displayables = ParseDisplayables(applicationName, schemaId, xElement, entityName);
                     return new ApplicationHeader(label, parameters, displacement, showExpression, helpIcon, toolTip, displayables);
                 }
             }
@@ -449,7 +450,7 @@ namespace softWrench.sW4.Metadata.Parsing {
 
             var metadataId = dataProviderElement.Attribute(XmlMetadataSchema.DataProviderMetadataId).ValueOrDefault((string)null);
 
-            if (whereClause == null && prefilterFunction == null && postfilterFunction == null && metadataId==null) {
+            if (whereClause == null && prefilterFunction == null && postfilterFunction == null && metadataId == null) {
                 throw new InvalidOperationException("either whereclause, metadataid, or filterfunction should be provided for a dataprovider");
             }
             return new AssociationDataProvider(prefilterFunction, postfilterFunction, whereClause, metadataId);
@@ -466,7 +467,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var requiredRelationshipExpression = composition.Attribute(XmlMetadataSchema.ApplicationCompositionRequiredRelationshipAttribute).ValueOrDefault((string)null);
             var schema = ParseCompositionSchema(entityName, applicationName, sourceSchemaId, relationship, composition);
             schema.RequiredRelationshipExpression = requiredRelationshipExpression;
-            return ApplicationCompositionFactory.GetInstance(applicationName, relationship, label, schema, showExpression, toolTip, hidden, printEnabled, ParseHeader(applicationName,sourceSchemaId, entityName, composition));
+            return ApplicationCompositionFactory.GetInstance(applicationName, relationship, label, schema, showExpression, toolTip, hidden, printEnabled, ParseHeader(applicationName, sourceSchemaId, entityName, composition));
         }
 
         private static ApplicationCompositionSchema ParseCompositionSchema(string entityName, string applicationName, string sourceSchemaId, string relationship, XElement composition) {
@@ -620,7 +621,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var schema = ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
                 isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                 userIdFieldName, unionSchema, ParseEvents(xElement, id));
-            resultDictionary.AddE(key,schema, "application:{0} templateparsing:{1}".Fmt(schema.ApplicationName,_isTemplateParsing));
+            resultDictionary.AddE(key, schema, "application:{0} templateparsing:{1}".Fmt(schema.ApplicationName, _isTemplateParsing));
         }
 
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,
@@ -700,7 +701,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var appFilters = XmlFilterMetadataParser.ParseSchemaFilters(application);
 
             var appComponents = ParseComponents(name, entity, application, idFieldName);
-            
+
             MetadataProvider.AddComponents(name, appComponents);
 
             var completeApplicationMetadataDefinition = new CompleteApplicationMetadataDefinition(id, name, title, entity, idFieldName, userIdFieldName, properties, null, appComponents, appFilters, service, role, auditFlag);
@@ -710,20 +711,28 @@ namespace softWrench.sW4.Metadata.Parsing {
             var schemas = ParseSchemas(name, title, entity, application, idFieldName, userIdFieldName);
             completeApplicationMetadataDefinition.SetSchemas(schemas);
 
-            completeApplicationMetadataDefinition.MainListSchema = GetMainSchema(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainListSchema);
-            completeApplicationMetadataDefinition.MainNewDetailSchema = GetMainSchema(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainNewDetailSchema);
-            completeApplicationMetadataDefinition.MainDetailSchema = GetMainSchema(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainDetailSchema);
+            completeApplicationMetadataDefinition.MainListSchemaKey = GetMainSchemaKey(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainListSchema);
+            completeApplicationMetadataDefinition.MainNewDetailSchemaKey = GetMainSchemaKey(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainNewDetailSchema);
+            completeApplicationMetadataDefinition.MainDetailSchemaKey = GetMainSchemaKey(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainDetailSchema);
+//            completeApplicationMetadataDefinition.LazySchemaResolver = MetadataProvider.LazySchemaResolver;
 
             return completeApplicationMetadataDefinition;
         }
 
-        private static ApplicationSchemaDefinition GetMainSchema(CompleteApplicationMetadataDefinition application, string proppertyKey) {
+
+        private static ApplicationMetadataSchemaKey GetMainSchemaKey(CompleteApplicationMetadataDefinition application, string proppertyKey) {
             var propertyValue = application.GetProperty(proppertyKey);
             if (string.IsNullOrEmpty(propertyValue)) {
                 return null;
             }
+            if (propertyValue.Contains(".")) {
+                var split = propertyValue.Split('.');
+                return new ApplicationMetadataSchemaKey(split[1], SchemaMode.None, ClientPlatform.Web) { ApplicationName = split[0] };
+            }
+
             var key = new ApplicationMetadataSchemaKey(propertyValue, null, ClientPlatform.Web);
-            return application.Schema(key);
+            key.ApplicationName = application.ApplicationName;
+            return key;
         }
 
         private static List<DisplayableComponent> ParseComponents(string name, string entity, XElement application, string idFieldName) {

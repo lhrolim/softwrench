@@ -8,7 +8,6 @@ using softwrench.sw4.Shared2.Metadata.Applications.Filter;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
-using softwrench.sW4.Shared2.Metadata.Applications.Notification;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sW4.Shared2.Metadata {
@@ -69,6 +68,25 @@ namespace softwrench.sW4.Shared2.Metadata {
 
         public IEnumerable<DisplayableComponent> DisplayableComponents = new List<DisplayableComponent>();
 
+        /// <summary>
+        /// Override schema to be used on the url /{applicationname}/
+        /// </summary>
+        public ApplicationMetadataSchemaKey MainListSchemaKey { get; set; }
+
+        /// <summary>
+        ///  Override schema to be used on the url /{applicationname}/{userid} and /{applicationname}/uid/{id}
+        /// </summary>
+        public ApplicationMetadataSchemaKey MainDetailSchemaKey { get; set; }
+
+        /// <summary>
+        ///  Override schema to be used on the url /{applicationname}/new
+        /// </summary>
+        public ApplicationMetadataSchemaKey MainNewDetailSchemaKey { get; set; }
+
+        public delegate ApplicationSchemaDefinition LazySchemaResolverDelegate(ApplicationMetadataSchemaKey key);
+
+        [JsonIgnore]
+        public static LazySchemaResolverDelegate LazySchemaResolver;
 
         public SchemaFilters AppFilters;
 
@@ -80,16 +98,15 @@ namespace softwrench.sW4.Shared2.Metadata {
             IEnumerable<DisplayableComponent> components, SchemaFilters appFilters,
             string service,
             string role,
-            bool? auditFlag = false
-            ) {
+            bool? auditFlag = false) {
             if (applicationName == null)
-                throw new ArgumentNullException("name");
+                throw new ArgumentNullException(nameof(applicationName));
             if (title == null)
-                throw new ArgumentNullException("title");
+                throw new ArgumentNullException(nameof(title));
             if (entity == null)
-                throw new ArgumentNullException("entity");
+                throw new ArgumentNullException(nameof(entity));
             if (idFieldName == null)
-                throw new ArgumentNullException("idFieldName");
+                throw new ArgumentNullException(nameof(idFieldName));
 
             Id = id;
             ApplicationName = applicationName;
@@ -229,7 +246,7 @@ namespace softwrench.sW4.Shared2.Metadata {
         }
 
         public void SetSchemas([CanBeNull]IDictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> schemas) {
-            if (schemas == null)return;
+            if (schemas == null) return;
 
             _schemas = schemas;
             foreach (var schema in _schemas.Values) {
@@ -253,19 +270,16 @@ namespace softwrench.sW4.Shared2.Metadata {
             return Properties[propertyKey];
         }
 
-        /// <summary>
-        /// Override schema to be used on the url /{applicationname}/
-        /// </summary>
-        public ApplicationSchemaDefinition MainListSchema { get; set; }
+
+        public ApplicationSchemaDefinition MainListSchema => MainListSchemaKey != null ? LazySchemaResolver(MainListSchemaKey) : null;
+
+        public ApplicationSchemaDefinition MainDetailSchema => MainDetailSchemaKey != null ? LazySchemaResolver(MainDetailSchemaKey) : null;
+
 
         /// <summary>
         ///  Override schema to be used on the url /{applicationname}/new
         /// </summary>
-        public ApplicationSchemaDefinition MainNewDetailSchema { get; set; }
+        public ApplicationSchemaDefinition MainNewDetailSchema => MainNewDetailSchemaKey != null ? LazySchemaResolver(MainNewDetailSchemaKey) : null;
 
-        /// <summary>
-        ///  Override schema to be used on the url /{applicationname}/{userid} and /{applicationname}/uid/{id}
-        /// </summary>
-        public ApplicationSchemaDefinition MainDetailSchema { get; set; }
     }
 }

@@ -487,9 +487,8 @@
           <field attribute="#id" hidden="true"/>
           <field attribute="wonum" hidden="true"/>
           <field attribute="#buildcomplete" hidden="true"/>
-          <field attribute="#colorcode">
-            <renderer type="colorcode" params="width=2%;"/>
-          </field>
+          <section id="colorcode"/>
+          
           <field attribute="#wpnum" label="WP#">
             <renderer type="default" params="width=7%" />
           </field>
@@ -519,6 +518,11 @@
         </schema>
 
         <schema id="pmbuilddash" parentschema="aworkpackagebuilddash">
+          <section id="colorcode">
+            <field attribute="#colorcode">
+              <renderer type="colorcode" params="width=2%;"/>
+            </field>
+          </section>
           <section id="daysleft">
             <field attribute="daysleft" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
@@ -527,7 +531,27 @@
         </schema>
 
 
+        <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages">
+          <properties>
+            <!--reusing same service-->
+            <property key="list.click.service" value="fsDashboardService.buildDashClick"/>
+            <property key="schema.aliasurl" value="/web/_workpackage/"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="gridtop" platform="web">
+              <command id="new" icon="fa-plus" service="fsworkpackageService" method="newDetail" label="New" tooltip="$scope:newShemaLabel" showexpression="$scope:hasNewSchema" cssclasses="large-button"/>
+            </commandgroup>
+          </commandbars>
+          
+        </schema>
+
         <schema id="cmbuilddash" parentschema="aworkpackagebuilddash">
+          <section id="colorcode">
+            <field attribute="#colorcode">
+              <renderer type="colorcode" params="width=2%;"/>
+            </field>
+          </section>
           <section id="daysleft">
             <field attribute="daysleftcm" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
@@ -1686,6 +1710,7 @@
         </schema>
       </schemas>
     </application>
+
 
     <!-- #region: Mobile offline association data -->
 

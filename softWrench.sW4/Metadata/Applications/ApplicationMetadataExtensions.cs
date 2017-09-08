@@ -43,6 +43,14 @@ namespace softWrench.sW4.Metadata.Applications {
             if (!application.Schemas().TryGetValue(metadataSchemaKey, out resultingSchema)) {
                 var schemaId = metadataSchemaKey.SchemaId;
                 if (schemaId.EqualsAny(ApplicationMetadataConstants.List, ApplicationMetadataConstants.Detail)) {
+                    if (schemaId.Equals(ApplicationMetadataConstants.List) && application.MainListSchema != null) {
+                        return application.MainListSchema;
+                    }
+
+                    if (schemaId.Equals(ApplicationMetadataConstants.Detail) && application.MainDetailSchema != null) {
+                        return application.MainDetailSchema;
+                    }
+
                     //let´s give these default schema names a stereotype search fallback and return them case they are uniquely found
                     resultingSchema = SchemaByStereotype(application, schemaId);
                     return resultingSchema;
@@ -66,13 +74,13 @@ namespace softWrench.sW4.Metadata.Applications {
 
             switch (platform) {
                 case ClientPlatform.Web:
-                return application.IsWebSupported();
+                    return application.IsWebSupported();
 
                 case ClientPlatform.Mobile:
-                return application.IsMobileSupported();
+                    return application.IsMobileSupported();
 
                 default:
-                throw new ArgumentOutOfRangeException(platform.ToString());
+                    throw new ArgumentOutOfRangeException(platform.ToString());
             }
         }
 

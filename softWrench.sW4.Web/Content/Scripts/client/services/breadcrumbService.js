@@ -193,6 +193,16 @@
             });
         }
 
+        /**
+         * Iterates through all menu expanded items, trying to locate a leaf 
+         *
+         * 
+         * @param {any} leafs
+         * @param {any} currentTitle
+         * @param {any} applicationName
+         * @param {any} schemaTitle
+         * @param {any} indexOnHistory
+         */
         var findCurrentPages = function (leafs, currentTitle, applicationName, schemaTitle, indexOnHistory) {
             var pages = [];
 
@@ -202,42 +212,74 @@
                 return pages;
             }
 
-            for (var id in leafs) {
-                if (!leafs[id].hasOwnProperty("title")) {
-                    continue;
+            if (!leafs) {
+                return pages;
+            }
+
+
+            Object.keys(leafs).forEach((id) => {
+                const leaf = leafs[id];
+                if (!leaf.hasOwnProperty("title")) {
+                    return;
                 }
 
-                var childPages = findCurrentPages(leafs[id].leafs, currentTitle, applicationName, schemaTitle, indexOnHistory);
+                var log = $log.getInstance("breadcrumbService#getBreadcrumbItems", ['breadcrumb']);
+
+                var isLeafTxt = leaf.leaf ? "leaf" : "root";
+
+                log.trace(`analyzing ${isLeafTxt} ${leaf.id} with title ${leaf.title}`);
+
+                if (currentTitle === "Work Packages" && leaf.id === "workorder") {
+                    //TODO: rewrite this component from scratch
+                    return;
+                }
+
+                if (currentTitle === "Work Order Grid" && leaf.schema === "wplist") {
+                    //TODO: rewrite this component from scratch
+                    return;
+                }
+
+                let childPages = [];
+
+                if (!!leaf.leafs) {
+                    childPages = findCurrentPages(leaf.leafs, currentTitle, applicationName, schemaTitle, indexOnHistory);    
+                }
 
                 //add page if current or decentant is the current page
-                if (childPages.length > 0 || leafs[id].title === currentTitle) {
-                    pages.push(leafs[id]);
+                if (leaf.title === currentTitle || (childPages.length > 0 && applicationName === leaf.applicationContainer)) {
+                    log.debug(`root leaf ${leaf.id} with title ${leaf.title}  matched`);
+                    pages.push(leaf);
                 }
 
                 //if decentants were found, add to the return
                 if (childPages.length > 0) {
                     for (var x in childPages) {
-                        if (childPages[x].hasOwnProperty("title") || childPages[x].type === "EllipsisItemDefinition") {
-                            pages.push(childPages[x]);
+                        let innerPage = childPages[x];
+                        if (innerPage.hasOwnProperty("title") || innerPage.type === "EllipsisItemDefinition") {
+                            log.debug(`childpage: leaf ${innerPage.id} with title ${innerPage.title}  matched`);
+                            pages.push(innerPage);
                         }
                     }
                 }
 
                 if (!applicationName) {
-                    continue;
+                    return;
                 }
 
                 //if the current leaf matches the current application
-                var isParent = leafs[id].applicationContainer === applicationName;
+                var isParent = leaf.applicationContainer === applicationName;
 
                 //if the lcurrent leaf is likely the parent
-                var possibleParent = leafs[id].application === applicationName;
-                possibleParent = possibleParent && (leafs[id].schema.toLowerCase().indexOf("list") > -1 || leafs[id].schema.toLowerCase().indexOf("grid") > -1);
-                possibleParent = possibleParent && leafs[id].title !== schemaTitle;
+                var possibleParent = leaf.application === applicationName;
+                possibleParent = possibleParent && ((leaf.schema.toLowerCase().indexOf("list") > -1 || leaf.schema.toLowerCase().indexOf("grid") > -1) && leaf.schema!== "wplist");
+                possibleParent = possibleParent && leaf.title !== schemaTitle;
 
                 if ((isParent || possibleParent) && childPages.length === 0) {
+
+                    log.debug(`possibleparent: leaf ${leaf.id} with title ${leaf.title}  matched`);
+
                     //add to the breadcrumb
-                    pages.push(leafs[id]);
+                    pages.push(leaf);
 
                     // for now only pages that are not on menu could be on breadcrumb history
                     // so it's possible to iterate over history here on the deepest part of the recursion (no child pages)
@@ -247,9 +289,11 @@
                     else if (!pageFoundInMenu(currentTitle)) {
                         //add a breadcrumb item for the unknown page
                         pages.push(buildUnknownMenuItemPage(currentTitle));
+                        log.debug(`unknown with title ${currentTitle}  matched`);
                     }
                 }
-            }
+            });
+
 
             return pages;
         }
@@ -284,7 +328,7 @@
         //#region Public methods
 
         function getBreadcrumbItems(title) {
-            var log = $log.getInstance("breadcrumbService#getBreadcrumbItems");
+            var log = $log.getInstance("breadcrumbService#getBreadcrumbItems",['breadcrumb']);
 
             var currentTitle = getCurrentTitle(title);
             var currentMenu = getCurrentMenu(currentTitle);
@@ -315,6 +359,8 @@
                 applicationName = history.length > 0 ? history[0].applicationName : null;
                 schemaTitle = history.length > 0 ? history[0].schemaTitle : null;
             }
+
+            log.debug(`init breadcrumb for title ${currentTitle} at application ${applicationName} and schemaTitle ${schemaTitle}`);
 
             var foundPages = findCurrentPages(currentMenu.leafs, currentTitle, applicationName, schemaTitle, indexOnHistory);
 

@@ -273,13 +273,9 @@
             $rootScope.popupmode = popupMode;
             fixHeaderService.unfix();
 
-            if (redirectUrl && !popupMode) {
-                historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn, true);
-            }
+         
 
             if (jsonData == undefined) {
-
-
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));
                 return $http.get(redirectUrl).then(function (httpResponse) {
                     const data = httpResponse.data;
@@ -287,6 +283,13 @@
                         parameters.postProcessFn(data);
                     }
                     innerGoToApplicationGet(data, popupMode, redirectUrl, mode, applicationName, afterRedirectHook, parameters);
+                    if (redirectUrl && !popupMode) {
+                        let historyUrl = redirectUrl;
+                        if (!!data.aliasURL) {
+                            historyUrl = data.aliasURL;
+                        }
+                        historyService.addToHistory(historyUrl, parameters.saveHistoryReturn, true);
+                    }
                     return $q.when(data);
                 });
             } else {
@@ -296,6 +299,9 @@
                 }
                 return $http.post(redirectUrl, jsonString).then(httpResponse => {
                     const data = httpResponse.data;
+                    if (redirectUrl && !popupMode) {
+                        historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn, true);
+                    }
                     if (angular.isFunction(parameters.postProcessFn)) {
                         parameters.postProcessFn(data);
                     }

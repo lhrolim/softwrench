@@ -4,6 +4,9 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
     public class NotFoundResponse : IApplicationResponse {
+
+        public string AliasURL { get; set; }
+
         public string Type {
             get {
                 return typeof(NotFoundResponse).Name;

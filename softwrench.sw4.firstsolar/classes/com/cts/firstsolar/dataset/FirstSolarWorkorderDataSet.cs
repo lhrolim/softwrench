@@ -51,11 +51,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             if (_advancedSearchHandler.IsAdvancedSearch(searchDto)) {
                 _advancedSearchHandler.AppendAdvancedSearchWhereClause(application, searchDto, "workorder");
             }
-            if (IsMaintenanceBuildDash()) {
+            if (IsMaintenanceBuildDash() || IsWorkPackageGrid()) {
                 return await GetMaintenanceBuildDashList(application, searchDto);
             }
             return await base.GetList(application, searchDto);
         }
+
+    
 
         public override SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
             var filter = parameters.BASEDto;
@@ -108,6 +110,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         private bool IsMaintenanceBuildDash() {
             var context = ContextLookuper.LookupContext();
             return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny(FirstSolarDashboardInitializer.PmBuildPanelSchemaId, FirstSolarDashboardInitializer.CmBuildPanelSchemaId);
+        }
+
+        private bool IsWorkPackageGrid()
+        {
+            var context = ContextLookuper.LookupContext();
+            return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny("wplist");
         }
 
         private async Task<ApplicationListResult> InnerGetMaintenanceBuildDashList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {

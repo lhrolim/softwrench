@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Web.Util;
 
 namespace softWrench.sW4.Web.SPF.Filters {
@@ -40,6 +41,11 @@ namespace softWrench.sW4.Web.SPF.Filters {
             }
             var value = objectContent.Value as IGenericResponseResult;
             var applicationResponse = objectContent.Value as IApplicationResponse;
+
+            if (value != null) {
+                value.AliasURL = FindAliasUrl(applicationResponse);
+            }
+
             ClearSchemaIfCached(applicationResponse, actionExecutedContext);
 
 
@@ -50,6 +56,9 @@ namespace softWrench.sW4.Web.SPF.Filters {
             if (value.RedirectURL == null) {
                 value.RedirectURL = url;
             }
+
+
+
             if (value.CrudSubTemplate == null && redirectAttribute != null && redirectAttribute.CrudSubTemplate != null) {
                 if (!redirectAttribute.CrudSubTemplate.StartsWith("/Content", StringComparison.CurrentCultureIgnoreCase)) {
                     redirectAttribute.CrudSubTemplate = "/Content" + redirectAttribute.CrudSubTemplate;
@@ -59,13 +68,18 @@ namespace softWrench.sW4.Web.SPF.Filters {
             value.TimeStamp = DateTime.UtcNow;
             //this should avoid unwanted conversions on JsonDateTimeConverter
             DateTime.SpecifyKind(value.TimeStamp, DateTimeKind.Utc);
-                
+
             var actionArguments = LookupArguments(actionExecutedContext.ActionContext);
             if (actionArguments != null && !String.IsNullOrWhiteSpace(actionArguments.Title)) {
                 value.Title = actionArguments.Title;
             } else if (value.Title == null && redirectAttribute != null) {
                 value.Title = redirectAttribute.Title;
             }
+        }
+
+        private string FindAliasUrl(IApplicationResponse applicationResponse) {
+            return applicationResponse?.Schema?.GetProperty(ApplicationSchemaPropertiesCatalog.AliasUrl);
+
         }
 
         private void ClearSchemaIfCached(IApplicationResponse applicationResponse, HttpActionExecutedContext actionExecutedContext) {

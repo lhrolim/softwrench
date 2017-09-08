@@ -4,6 +4,11 @@ namespace softWrench.sW4.SPF {
     public interface IGenericResponseResult {
         string RedirectURL { get; set; }
 
+        /// <summary>
+        /// Alias url to be shown on browser/breadcrumbs regardless of the real url used
+        /// </summary>
+        string AliasURL { get; set; }
+
         string Title { get; set; }
         
         /// <summary>

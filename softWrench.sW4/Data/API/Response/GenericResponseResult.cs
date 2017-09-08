@@ -19,7 +19,7 @@ namespace softWrench.sW4.Data.API.Response {
             ResultObject = resultObject;
             SuccessMessage = successMessage;
         }
-
+        public string AliasURL { get; set; }
         public T ResultObject { get; set; }
         public string RedirectURL { get; set; }
         public string Title { get; set; }

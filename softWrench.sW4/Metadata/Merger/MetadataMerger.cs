@@ -127,9 +127,9 @@ namespace softWrench.sW4.Metadata.Validator {
                 overridenParameters, resultSchemas,
                 souceAplication.DisplayableComponents.Union(overridenApplication.DisplayableComponents), mergedFilters,
                 service, role, auditEnabled) {
-                MainListSchema = overridenApplication.MainListSchema ?? souceAplication.MainListSchema,
-                MainNewDetailSchema = overridenApplication.MainNewDetailSchema ?? souceAplication.MainNewDetailSchema,
-                MainDetailSchema = overridenApplication.MainDetailSchema ?? souceAplication.MainDetailSchema
+                MainListSchemaKey = overridenApplication.MainListSchemaKey ?? souceAplication.MainListSchemaKey,
+                MainNewDetailSchemaKey = overridenApplication.MainNewDetailSchemaKey ?? souceAplication.MainNewDetailSchemaKey,
+                MainDetailSchemaKey = overridenApplication.MainDetailSchemaKey ?? souceAplication.MainDetailSchemaKey,
             };
             return app;
         }

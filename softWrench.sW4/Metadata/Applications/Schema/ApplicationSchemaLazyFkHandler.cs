@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.UI;
 using softWrench.sW4.Util;
 using System.Collections.Generic;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema;
+using softwrench.sW4.Shared2.Metadata;
 
 namespace softWrench.sW4.Metadata.Applications.Schema {
     class ApplicationSchemaLazyFkHandler {
@@ -38,13 +39,15 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
                 return new List<IApplicationDisplayable>(resultSet);
             };
 
+    
+
 
         public static ApplicationSchemaDefinition.LazySchemaFilterResolver LazyFilterResolver =
             delegate (ApplicationSchemaDefinition definition) {
 
-//                if (!MetadataProvider.FinishedParsing) {
-//                    return null;
-//                }
+                //                if (!MetadataProvider.FinishedParsing) {
+                //                    return null;
+                //                }
 
                 return SchemaFilterBuilder.BuildSchemaFilters(definition);
             };

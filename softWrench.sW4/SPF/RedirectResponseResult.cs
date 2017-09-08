@@ -7,6 +7,9 @@ namespace softWrench.sW4.SPF {
     /// to perform a redirection in the single page framework.
     /// </summary>
     public class RedirectResponseResult : IGenericResponseResult {
+
+        public string AliasURL { get; set; }
+
         public string RedirectURL { get; set; }
         public string Title { get; set; }
         public string CrudSubTemplate { get; set; }

@@ -136,27 +136,30 @@ namespace softWrench.sW4.Web.Controllers {
             return detailSchema == null ? NotFound(user) : RouteView(user, appMetadata, detailSchema, iserId, siteId);
         }
 
-      
+
 
         private ActionResult RouteView(InMemoryUser user, IApplicationIdentifier appMetadata, [NotNull]ApplicationSchemaDefinition schema, string id) {
-            var model = _homeService.BaseHomeModel(Request,user, schema);
+            var model = _homeService.BaseHomeModel(Request, user, schema);
             model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, id);
             return View(Index, model);
         }
 
         private ActionResult RouteView(InMemoryUser user, IApplicationIdentifier appMetadata, ApplicationSchemaDefinition schema, string userid, string siteid) {
-            var model = _homeService.BaseHomeModel(Request,user, schema);
+            var model = _homeService.BaseHomeModel(Request, user, schema);
             model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, userid, siteid);
             return View(Index, model);
         }
 
         private ActionResult RouteListView(InMemoryUser user, IApplicationIdentifier appMetadata, ApplicationSchemaDefinition schema) {
-            var model = _homeService.BaseHomeModel(Request,user, schema);
-            model.Url = _homeService.GetUrlFromApplication(appMetadata.ApplicationName, schema, null);
+            var model = _homeService.BaseHomeModel(Request, user, schema);
+            model.Url = _homeService.GetUrlFromApplication(schema.ApplicationName, schema, null);
+
             model.RouteListInfo = new RouteListInfo {
-                ApplicationName = appMetadata.ApplicationName,
+                ApplicationName = schema.ApplicationName,
+                OriginalApplicationName = appMetadata.ApplicationName,
                 Schemaid = schema.SchemaId
             };
+
             return View(Index, model);
         }
 
@@ -193,12 +196,12 @@ namespace softWrench.sW4.Web.Controllers {
 
             // extra null - tries to find the list schema
             if (string.IsNullOrEmpty(extra)) {
-                return InnerGetSchema(appMetadata, schemaInfo.listSchema);
+                return InnerGetSchema(appMetadata, schemaInfo.listSchema, schemaInfo.ListApplicationName);
             }
 
             // extra "new" - tries to find the detailnew schema
             if ("new".EqualsIc(extra)) {
-                return InnerGetSchema(appMetadata, schemaInfo.newDetailSchema);
+                return InnerGetSchema(appMetadata, schemaInfo.newDetailSchema, schemaInfo.DetailNewApplicationName);
             }
 
             // tries to find the detail schema
@@ -207,10 +210,14 @@ namespace softWrench.sW4.Web.Controllers {
 
         private ApplicationSchemaDefinition GetDetailSchema(CompleteApplicationMetadataDefinition appMetadata) {
             var schemaInfo = GetSchemaInfo(appMetadata.ApplicationName);
-            return schemaInfo == null ? null : InnerGetSchema(appMetadata, schemaInfo.detailSchema);
+            return schemaInfo == null ? null : InnerGetSchema(appMetadata, schemaInfo.detailSchema, schemaInfo.DetailApplicationName);
         }
 
-        private ApplicationSchemaDefinition InnerGetSchema(CompleteApplicationMetadataDefinition appMetadata, string schemaId) {
+        private ApplicationSchemaDefinition InnerGetSchema(CompleteApplicationMetadataDefinition appMetadata, string schemaId, string applicationName) {
+            if (!appMetadata.ApplicationName.Equals(applicationName)) {
+                appMetadata = MetadataProvider.Application(applicationName);
+            }
+
             return string.IsNullOrEmpty(schemaId) ? null : appMetadata.Schema(new ApplicationMetadataSchemaKey(schemaId, null, ClientPlatform.Web));
         }
 

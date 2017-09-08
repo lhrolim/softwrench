@@ -80,7 +80,19 @@ namespace softWrench.sW4.Web.Controllers {
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
 
+            var requestKey = request.Key;
+
+
             var securityModeCheckResult = _mainSecurityApplier.VerifyMainSecurityMode(user, applicationMetadata, request);
+
+            if (!applicationMetadata.Name.Equals(applicationMetadata.Schema.ApplicationName))
+            {
+                requestKey = applicationMetadata.Schema.GetSchemaKey();
+                // the application name could have changed ultimately due to a aliasurl property, or other kinds of redirect (ex: workpage grid pointing to workorder.wplist)
+                applicationMetadata = MetadataProvider
+                    .Application(applicationMetadata.Schema.ApplicationName)
+                    .ApplyPolicies(requestKey, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
+            }
 
             if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
                 throw new SecurityException("You do not have permission to access this application. Please contact your administrator");
@@ -88,8 +100,9 @@ namespace softWrench.sW4.Web.Controllers {
 
             _auditManager.InitThreadTrail(new AuditTrail(application, $"{application}:get", user.SessionAuditId));
 
-            ContextLookuper.FillContext(request.Key);
-            var response = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
+            ContextLookuper.FillContext(requestKey);
+            
+            var response = await DataSetProvider.LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
             if (response == null) {
                 return new NotFoundResponse();
             }
@@ -235,8 +248,8 @@ namespace softWrench.sW4.Web.Controllers {
 
                 _auditManager.SaveThreadTrail();
 
-//                this.txService.AuditTransaction(operationDataRequest.ApplicationName,
-//                    $"{operationDataRequest.ApplicationName}:{operationDataRequest.Operation}", transactionStart, transactionEnd);
+                //                this.txService.AuditTransaction(operationDataRequest.ApplicationName,
+                //                    $"{operationDataRequest.ApplicationName}:{operationDataRequest.Operation}", transactionStart, transactionEnd);
             }
             if (currentschemaKey.Platform == ClientPlatform.Mobile) {
                 //mobile requests doesn´t have to handle success messages or redirections

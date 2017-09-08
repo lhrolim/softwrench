@@ -100,6 +100,7 @@ namespace softWrench.sW4.Metadata {
 
         public static void DoInit() {
             var before = Stopwatch.StartNew();
+            CompleteApplicationMetadataDefinition.LazySchemaResolver = LazySchemaResolver;
             InternalCache = null;
             InitializeMetadata();
             //force eager initialization to allow eager catching of errors.
@@ -761,7 +762,7 @@ namespace softWrench.sW4.Metadata {
 
         [CanBeNull]
         public static string RoleByApplication(string applicationName) {
-            var application = Application(applicationName,false);
+            var application = Application(applicationName, false);
             if (application == null) {
                 return applicationName;
             }
@@ -802,7 +803,10 @@ namespace softWrench.sW4.Metadata {
             return entityMetaDatas;
         }
 
-       
+
+        public static CompleteApplicationMetadataDefinition.LazySchemaResolverDelegate LazySchemaResolver = (ApplicationMetadataSchemaKey key) => Schema(key.ApplicationName, key.SchemaId,key.Platform.Value);
+
+        
 
         [CanBeNull]
         public static ApplicationSchemaDefinition Schema(string application, string schema, ClientPlatform platform) {

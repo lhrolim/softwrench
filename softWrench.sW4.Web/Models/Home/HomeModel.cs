@@ -102,6 +102,10 @@ namespace softWrench.sW4.Web.Models.Home {
     }
 
     public class SchemaInfo {
+        public string ListApplicationName { get; set; }
+        public string DetailApplicationName { get; set; }
+        public string DetailNewApplicationName { get; set; }
+
         public string listSchema { get; set; }
         public string newDetailSchema { get; set; }
         public string detailSchema { get; set; }
@@ -109,6 +113,7 @@ namespace softWrench.sW4.Web.Models.Home {
 
     public class RouteListInfo {
         public string ApplicationName { get; set; }
+        public string OriginalApplicationName { get; set; }
         public string Schemaid { get; set; }
     }
 }

@@ -8,9 +8,16 @@
         public const string NonInternalSchema = "schema.noninternal";
 
         /// <summary>
+        /// Marks a schema as a non internal
+        /// <seealso cref="MetadataProvider.FetchNonInternalSchemas"/>
+        /// </summary>
+        public const string AliasUrl = "schema.aliasurl";
+
+        /// <summary>
         /// Name of the schema to be used on the url /{applicationname}/
         /// </summary>
         public const string MainListSchema = "application.mainlistschema";
+
 
         /// <summary>
         /// Name of the schema to be used on the url /{applicationname}/new

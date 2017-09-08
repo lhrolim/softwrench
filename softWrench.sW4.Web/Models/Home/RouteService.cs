@@ -122,9 +122,12 @@ namespace softWrench.sW4.Web.Models.Home {
                 var newDetailSchema = app.MainNewDetailSchema ?? GetSchema(app, SchemaStereotype.DetailNew, "newdetail");
                 var detailSchema = app.MainDetailSchema ?? GetSchema(app, SchemaStereotype.Detail, "detail", "editdetail");
                 var mainSchemaInfo = new SchemaInfo {
-                    listSchema = listSchema != null ? listSchema.SchemaId : null,
-                    newDetailSchema = newDetailSchema != null ? newDetailSchema.SchemaId : null,
-                    detailSchema = detailSchema != null ? detailSchema.SchemaId : null,
+                    listSchema = listSchema?.SchemaId,
+                    newDetailSchema = newDetailSchema?.SchemaId,
+                    detailSchema = detailSchema?.SchemaId,
+                    ListApplicationName = listSchema?.ApplicationName,
+                    DetailApplicationName = detailSchema?.ApplicationName,
+                    DetailNewApplicationName = newDetailSchema?.ApplicationName
                 };
                 routeInfo.schemaInfo.Add(app.ApplicationName.ToLowerInvariant(), mainSchemaInfo);
             });

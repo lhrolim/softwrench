@@ -51,6 +51,7 @@
     <application entity="WorkPackage" name="WorkPackage" title="Work Package">
       <properties>
         <property key="application.maindetailschema" value="adetail"/>
+        <property key="application.mainlistschema" value="workorder.wplist"/>
       </properties>
 
       <components>
@@ -105,7 +106,9 @@
       </components>
 
       <schemas>
-        <list stereotype="list" title="Work Packages">
+
+
+        <schema id="listdeprecatedfortest" title="Work Packages" stereotype="list">
           <properties>
             <property key="list.search.quicksearchfieldstoexclude" value="wpnum,#outreq,createdate"/>
           </properties>
@@ -138,8 +141,9 @@
           <field attribute="#schedstart" label="Scheduled Start">
             <renderer type="datetime"/>
           </field>
-        </list>
-
+        </schema>
+        
+        
         <schema id="dashlist" stereotype="list" platform="online">
           <field attribute="id"/>
           <field attribute="wpnum"/>

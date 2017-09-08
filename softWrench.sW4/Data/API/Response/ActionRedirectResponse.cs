@@ -10,7 +10,7 @@ namespace softWrench.sW4.Data.API.Response {
 
         public string Parameters { get; set; }
 
-
+        public string AliasURL { get; set; }
 
         public string RedirectURL { get; set; }
         public string Title { get; set; }

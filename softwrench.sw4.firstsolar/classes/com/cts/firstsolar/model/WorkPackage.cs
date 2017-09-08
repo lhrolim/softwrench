@@ -13,6 +13,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         public static string ByToken = "from WorkPackage where AccessToken = ?";
 
+        public static string WorkorderIds = "from WorkPackage where AccessToken = ?";
+
 
         private string _wonum;
 

@@ -6,6 +6,8 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softWrench.sW4.Data.API.Response {
     public class SchemaChoosingDataResponse : IApplicationResponse {
+
+        public string AliasURL { get; set; }
         private string _mode;
         public string Type { get { return null; } }
         public ApplicationSchemaDefinition Schema

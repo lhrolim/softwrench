@@ -15,7 +15,7 @@ namespace softWrench.sW4.Metadata.Applications {
         /// <param name="keepSyncSchema"></param>
         /// <returns></returns>
         public static CompleteApplicationMetadataDefinition CloneSecuring(this CompleteApplicationMetadataDefinition originalMetadata,
-           InMemoryUser user, bool keepSyncSchema=false) {
+           InMemoryUser user, bool keepSyncSchema = false) {
             var schemas = originalMetadata.SchemasList;
             var securedSchemas = new Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition>();
 
@@ -36,8 +36,11 @@ namespace softWrench.sW4.Metadata.Applications {
                 originalMetadata.Entity,
                 originalMetadata.IdFieldName,
                 originalMetadata.UserIdFieldName,
-                originalMetadata.Parameters, securedSchemas, originalMetadata.DisplayableComponents, originalMetadata.AppFilters,
-                originalMetadata.Service,originalMetadata.Role,originalMetadata.AuditFlag);
+                originalMetadata.Parameters, securedSchemas, originalMetadata.DisplayableComponents,
+                originalMetadata.AppFilters,
+                originalMetadata.Service, originalMetadata.Role, originalMetadata.AuditFlag) {
+                
+            };
         }
 
         public static bool IsWebSupported(this CompleteApplicationMetadataDefinition metadata) {

@@ -25,7 +25,7 @@ namespace softwrench.sW4.test.Data.Search.QuickSearch {
         {
             base.Init();
             var schemas = MetadataProvider.Application("_workpackage").Schemas();
-            _schema = schemas[new ApplicationMetadataSchemaKey("list", "input", "web")];
+            _schema = schemas[new ApplicationMetadataSchemaKey("listdeprecatedfortest", "input", "web")];
 
             _helperMock = new Mock<QuickSearchHelper>();
             // not interested in testing this component here

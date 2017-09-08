@@ -10,6 +10,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public const string NotFoundPattern = "schema {0} not found";
 
 
+        
+
         public ApplicationMetadataSchemaKey(string schemaId)
             : this(schemaId, (string)null, null) {
         }

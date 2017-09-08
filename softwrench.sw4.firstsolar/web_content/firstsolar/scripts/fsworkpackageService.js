@@ -765,6 +765,10 @@
             this.redirectService.goToApplication("_WorkPackage", "newdetail");
         }
 
+        newDetail(datamap, fieldMap, gridSchema) {
+            this.redirectService.goToApplication("_WorkPackage", "newdetail");
+        }
+
 
 
 

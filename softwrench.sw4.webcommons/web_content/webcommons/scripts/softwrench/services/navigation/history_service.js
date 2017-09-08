@@ -149,7 +149,15 @@
             const isPrefixed = stateUrl.startsWith(dataPrefix);
             const isPrefixedUpper = stateUrl.startsWith(dataPrefixUpper);
             if (!isPrefixed && !isPrefixedUpper) {
-                return changePath(contextPath);
+                if (stateUrl.contains("/api")) {
+                    return changePath(contextPath);   
+                }
+
+                if (!stateUrl.startsWith("/")) {
+                    stateUrl = "/" + stateUrl;
+                }
+
+                return changePath(`${contextPath}${stateUrl}`);
             }
 
             const realPrefix = isPrefixed ? dataPrefix : dataPrefixUpper;
@@ -169,6 +177,14 @@
             application = application.toLowerCase();
 
             const params = JSON.parse(`{"${paramsStr.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"')}"}`);
+
+            if (!!params.aliasurl) {
+                if (!params.aliasurl.startsWith("/")) {
+                    params.aliasurl = "/" + params.aliasurl;
+                }
+
+                return changePath(`${contextPath }${params.aliasurl}`);
+            }
 
             const schemaId = params["key[schemaId]"] || params["key[schemaid]"];
             if (!schemaId) {
