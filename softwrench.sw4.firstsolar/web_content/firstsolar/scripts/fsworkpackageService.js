@@ -9,7 +9,7 @@
 
     class workPackageService {
 
-        constructor($rootScope, $q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService) {
+        constructor($rootScope, $q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService, submitService) {
             this.$rootScope = $rootScope;
             this.$q = $q;
             this.$log = $log;
@@ -18,6 +18,7 @@
             this.crudContextHolderService = crudContextHolderService;
             this.redirectService = redirectService;
             this.fieldService = fieldService;
+            this.submitService = submitService;
 
             this.$rootScope.$on("sw.crud.body.crawlocurred", () => {
                 wipeDynamicSections();
@@ -513,6 +514,64 @@
         }
 
         //afterchange
+        testChecked(eventParameters) {
+            this.reevaluateSections(eventParameters);
+            const field = eventParameters.fieldMetadata;
+            const option = eventParameters.option;
+            return this.createOutageAction(field, option);
+        }
+
+        createOutageAction(field, option) {
+            const dm = this.crudContextHolderService.rootDataMap();
+            const schema = this.crudContextHolderService.currentSchema();
+
+            if (dm[field.attribute].indexOf(option.value) < 0 || option.value.endsWith("othertest")) {
+                return this.$q.when(null);
+            }
+
+            const tech = dm["#technicianid"];
+            const techName = dm["#technician"];
+            if (!tech || !techName) {
+                this.alertService.notifyWarning({ "warningDto": { "warnMessage": "Site Technician not found. Outage action not created." } });
+                return this.$q.when(null);
+            }
+
+            const saveDataMap = {
+                "#isDirty": true,
+                "application": "_OutageAction",
+                "_iscreation": true,
+                action: field.label + " - " + option.label,
+                assignee: tech,
+                "assignee_.displayname": techName,
+                completed: false
+            }
+
+            if (option.value === "gsucaptureoil") {
+                const pairOption = field.options.find((testOption) => testOption.value === "gsucapturemon");
+                saveDataMap.action = field.label + " - " + option.label + " and " + pairOption.label;
+            }
+            if (option.value === "gsucapturemon") {
+                const pairOption = field.options.find((testOption) => testOption.value === "gsucaptureoil");
+                saveDataMap.action = field.label + " - " + pairOption.label + " and " + option.label;
+            }
+
+            if (!dm["outageActions_"]) {
+                dm["outageActions_"] = [];
+            }
+            dm["outageActions_"].push(saveDataMap);
+
+            const params = {
+                compositionData: new CompositionOperation("crud_create", "outageActions_", saveDataMap),
+                dispatchedByModal: false,
+                originalDatamap: dm,
+                refresh: false,
+                successMessage: "Outage Action Created"
+            }
+            return this.submitService.submit(schema, dm, params).catch(() => {
+                dm["outageActions_"].pop();
+            });
+        }
+
         reevaluateSections(eventParameters) {
             const dm = this.crudContextHolderService.rootDataMap();
             const field = eventParameters.fieldMetadata;
@@ -541,6 +600,7 @@
                         const fakeOption = this.addNewOption(field, label);
                         if (!!fakeOption) {
                             this.innerReevaluateSections(field, fakeOption);
+                            this.createOutageAction(field, fakeOption);
                         }
                     }).catch(() => {
                         removeOtherTest(field);
@@ -774,7 +834,7 @@
 
     }
 
-    workPackageService.$inject = ['$rootScope', '$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService'];
+    workPackageService.$inject = ['$rootScope', '$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService', 'submitService'];
 
     angular.module('sw_layout').service('fsworkpackageService', workPackageService);
 

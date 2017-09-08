@@ -397,7 +397,7 @@
                       <option  label="Other Test" value="gsu2othertest"/>
                      
 
-                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
 
@@ -414,7 +414,7 @@
                       <option  label="Recommend Repair" value="gsurepair"/>
                       <option  label="Recommend Replace" value="gsureplace"/>
 
-                      <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                      <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                     </optionfield>
 
@@ -433,7 +433,7 @@
                     <option  label="Recommend Repair" value="sf6repair"/>
                     <option  label="Recommend Replace" value="sf6replace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
@@ -450,7 +450,7 @@
                     <option  label="Recommend Repair" value="vacrepair"/>
                     <option  label="Recommend Replace" value="vacreplace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
@@ -466,7 +466,7 @@
                     <option  label="Recommend Repair" value="airrepair"/>
                     <option  label="Recommend Replace" value="airreplace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
@@ -478,7 +478,7 @@
                     <option  label="Recommend Repair" value="caprepair"/>
                     <option  label="Recommend Replace" value="capreplace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
@@ -488,7 +488,7 @@
                     <option  label="Recommend Repair" value="batrepair"/>
                     <option  label="Recommend Replace" value="batreplace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
@@ -498,7 +498,7 @@
                     <option  label="Recommend Repair" value="relrepair"/>
                     <option  label="Recommend Replace" value="relreplace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 
@@ -513,7 +513,7 @@
                     <option  label="Recommend Repair" value="feedrepair"/>
                     <option  label="Recommend Replace" value="feedreplace"/>
 
-                    <event service="fsworkpackageService" method="reevaluateSections" type="afterchange" />
+                    <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                     <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
                   </optionfield>
 

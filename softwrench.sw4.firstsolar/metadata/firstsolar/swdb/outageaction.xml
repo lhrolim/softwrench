@@ -31,7 +31,7 @@
           <field attribute="actiontime" hidden="true"/>
           <field attribute="action" label="Action" />
           <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true"/>
-          <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname" >
+          <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname" requiredexpression="true">
             <renderer type="lookup" />
           </association>
           

@@ -19,6 +19,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_regional_manager and onm_regional_manager is not null) as regmanager, 
 	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_site_manager and onm_site_manager is not null) as supervisor, 
 	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technician, 
+	                (select top 1 e.personid from email e where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technicianid, 
 	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onM_Planner_Scheduler and onM_Planner_Scheduler is not null) as planner, 
 	                [street address line 1] as facilityAddress, 
 	                city as facilityCity, 
@@ -27,6 +28,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on x.PlantName=G.facilityTitle";
 
         public const string TechColumn = "technician";
+        public const string TechIdColumn = "technicianid";
         public const string SupervisorColumn = "supervisor";
         public const string RegionalManagerColumn = "regmanager";
         public const string PlannerColumn = "planner";
@@ -84,6 +86,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
 
             AddColumn(row, result.ResultObject, TechColumn);
+            AddColumn(row, result.ResultObject, TechIdColumn);
             AddColumn(row, result.ResultObject, SupervisorColumn);
             AddColumn(row, result.ResultObject, RegionalManagerColumn);
             AddColumn(row, result.ResultObject, PlannerColumn);
@@ -172,6 +175,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (!ApplicationConfiguration.IsProd()) {
                 return new Dictionary<string, string>() {
                     {TechColumn, "Test Technician"},
+                    {TechIdColumn, "swadmin"},
                     {SupervisorColumn, "Test Supervisor"},
                     {RegionalManagerColumn, "Test Manager"},
                     {PlannerColumn, "Test Planner"},
