@@ -171,10 +171,11 @@
             }
 
             generateTestSection = function (outerSectionName, selectedTest, preferredIdx) {
+                const sectionId = outerSectionName + selectedTest.value + "section";
 
                 const resultSection = {
-                    id: outerSectionName + selectedTest.value + "section",
-                    attribute: outerSectionName + selectedTest.value + "section",
+                    id: sectionId,
+                    attribute: sectionId,
                     rendererParameters: {
                         class: "borderedsection"
                     },
@@ -194,24 +195,26 @@
                 };
 
                 resultSection.displayables[0] = generateInlineFileComposition(selectedTest);
-                resultSection.displayables[1] = generateInlineWorklogComposition(selectedTest);
+                resultSection.displayables[1] = generateInlineWorklogComposition(selectedTest, sectionId);
 
                 return resultSection;
             }
 
 
-            generateInlineWorklogComposition = function (selectedTest) {
+            generateInlineWorklogComposition = function (selectedTest, sectionId) {
 
                 //                <composition inline="true" relationship="#relayeventevaluations_" label="Engineering Evaluation - Event File" detailschema="worklog.workpackageview" printschema="">
                 //                    <collectionproperties listschema="worklog.workpackagelist" autocommit="true" allowremoval="false" allowupdate="false" allowcreation="false" />
                 //                    <!--<renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.editfunction=fsengineeringevaluationService.openModalEdit;composition.inline.forcehideremove=true" />-->
                 //                    <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;composition.inline.addfunction=fsengineeringevaluationService.openModalNew;composition.inline.forcehideremove=true" />
                 //                    </composition>
+
+                const relationship = worklogKey(selectedTest.value);
                 const worklogComposition = {
                     type: "ApplicationCompositionDefinition",
                     inline: true,
-                    relationship: worklogKey(selectedTest.value),
-                    //                    label: "Engineering Evaluation " + selectedTest.label,
+                    relationship: relationship,
+                    id: relationship,
                     detailschema: 'worklog.workpackageview',
                     printschema: '',
                     showExpression: 'true',
@@ -234,7 +237,8 @@
                         allowupdate: false,
                         allowcreation: "true"
                     },
-                    rendererType: 'TABLE'
+                    rendererType: 'TABLE',
+                    parentsectionid: sectionId
                 }
                 worklogComposition.schema.rendererParameters["composition.inline.avoidheader"] = "true";
                 return worklogComposition;

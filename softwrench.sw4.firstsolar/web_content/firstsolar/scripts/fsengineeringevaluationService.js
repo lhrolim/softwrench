@@ -1,7 +1,7 @@
 ﻿(function (angular, $) {
     'use strict';
 
-    function fsengineeringevaluationService($rootScope, $http, $q, $timeout, modalService, schemaCacheService, crudContextHolderService, submitService) {
+    function fsengineeringevaluationService($rootScope, $http, $q, $timeout, modalService, schemaCacheService, crudContextHolderService, submitService, fieldService) {
 
         const woDetailSchema = "workpackagesimplecomposition";
 
@@ -58,6 +58,23 @@
             });
         }
 
+        function sendEvaluationEmail(evaluationDm, relationship) {
+            const rootDm = crudContextHolderService.rootDataMap();
+            const schema = crudContextHolderService.currentSchema();
+
+            const evaluationField = fieldService.getDisplayableByKey(schema, relationship);
+            const testSection = evaluationField ? fieldService.getDisplayableByKey(schema, evaluationField.parentsectionid) : null;
+            const testName = testSection ? testSection.header.label : "";
+
+            const sendEmailParams = {
+                wpId: rootDm["id"],
+                siteId: rootDm["#workorder_.siteid"],
+                evaluation: evaluationDm["wld_.ldtext"],
+                testName: testName
+            }
+            const sendEmailurlToCall = url("/firstSolarEmail/EngeneeringEvaluationEmail");
+            return $http.post(sendEmailurlToCall, JSON.stringify(sendEmailParams));
+        }
 
         function openModalNew(item, callbackAdd, rollbackAdd, callbackSave, relationship) {
             schemaCacheService.fetchSchema("worklog", "workpackagenewdetail").then((schema) => {
@@ -78,6 +95,9 @@
                         submit(saveDatamap, "Evaluation successfully created.").then(data => {
                             modalService.hide();
                             callbackSave(data, false, true);
+
+                            // send evaluation email
+                            return sendEvaluationEmail(saveDatamap, relationship);
                         });
                     });
             });
@@ -105,5 +125,5 @@
 
     angular
         .module("firstsolar")
-        .clientfactory("fsengineeringevaluationService", ["$rootScope", "$http", "$q", "$timeout", "modalService", "schemaCacheService", "crudContextHolderService", "submitService", fsengineeringevaluationService]);
+        .clientfactory("fsengineeringevaluationService", ["$rootScope", "$http", "$q", "$timeout", "modalService", "schemaCacheService", "crudContextHolderService", "submitService", "fieldService", fsengineeringevaluationService]);
 })(angular, jQuery);

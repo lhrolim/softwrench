@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
 using softWrench.sW4.Data.Persistence.SWDB;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.callout.exception;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
@@ -18,11 +19,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         [Import]
         public FirstSolarCallOutEmailService FirstSolarCallOutEmailService { get; set; }
-        
 
         [Import]
         public FirstSolarMaintenanceEmailService FirstSolarMaintenanceEmailService { get; set; }
 
+        [Import]
+        public FirstSolarWorkPackageEvaluationEmailHandler FirstSolarWorkPackageEvaluationEmailHandler { get; set; }
 
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> TransitionCallout(string token, string status) {
@@ -62,7 +64,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
 
-
+        [System.Web.Http.HttpPost]
+        public async Task<ActionResult> EngeneeringEvaluationEmail([FromBody] EvaluationEmailModel model) {
+            var wp = await DAO.FindByPKAsync<WorkPackage>(model.WpId);
+            await FirstSolarWorkPackageEvaluationEmailHandler.SendEmail(model, wp, model.SiteId);
+            return null;
+        }
     }
 
     public class EmailRequestModel : IBaseLayoutModel {
@@ -81,7 +88,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         public string EntityName { get; set; }
     }
 
-
+    public class EvaluationEmailModel {
+        public int WpId { get; set; }
+        public string SiteId { get; set; }
+        public string Evaluation { get; set; }
+        public string TestName { get; set; }
+    }
 
     public class FirstSolarEmailRestController : ApiController {
 

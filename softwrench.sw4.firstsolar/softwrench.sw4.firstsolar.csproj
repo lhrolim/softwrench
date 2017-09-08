@@ -256,6 +256,7 @@
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarOptConfigurations.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageAttachmentsHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCompositionHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageEvaluationEmailHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCreationEmailHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -296,6 +297,7 @@
     <Content Include="web_content\firstsolar\htmls\templates\othertestsmodal.html" />
     <Content Include="web_content\firstsolar\htmls\templates\meetingpdf.html" />
     <Content Include="web_content\firstsolar\htmls\templates\meeting.html" />
+    <Content Include="web_content\firstsolar\htmls\templates\evaluation.html" />
     <Content Include="web_content\firstsolar\htmls\templates\workpackageemail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengineeremail.html" />
     <Content Include="web_content\firstsolar\htmls\templates\maintenanceengrejectemail.html" />
