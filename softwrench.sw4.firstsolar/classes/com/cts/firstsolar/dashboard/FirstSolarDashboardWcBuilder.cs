@@ -88,7 +88,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             WosWithPackages = SWDBDao.FindByNativeQuery("select workorderid from opt_workpackage where (deleted = 'false' or deleted is null)").Select(dict => dict["workorderid"]).ToList();
             return WosWithPackages.Any() ? "workorder.workorderid not in (:wosWithPackage)" : "1=1";
         }
-
+        
         protected virtual string MaintenanceIncomingCmQuery() {
             // TODO: add a flag on wp to know if its completed to not search all wps on this query
             WosWithPackages = SWDBDao.FindByNativeQuery("select workorderid from opt_workpackage where (deleted = 'false' or deleted is null)").Select(dict => dict["workorderid"]).ToList();

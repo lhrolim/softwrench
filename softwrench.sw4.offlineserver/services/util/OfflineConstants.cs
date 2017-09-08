@@ -14,7 +14,7 @@ namespace softwrench.sw4.offlineserver.services.util {
 
         public const string MaxAssociationThreads = "/Global/Offline/Sync/MaxAssociationThreads";
 
-        public const string SupportContactEmail = "/Offline/Support/Email";
+        public const string SupportContactEmail = "/Global/Offline/Support/Email";
 
         public const string EnableAudit = "/Global/Offline/Sync/Audit";
 
