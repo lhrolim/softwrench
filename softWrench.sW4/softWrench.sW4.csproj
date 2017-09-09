@@ -696,7 +696,6 @@
     <Compile Include="Metadata\Applications\Schema\ApplicationSchemaFactory.cs" />
     <Compile Include="Metadata\Applications\Schema\ApplicationSchemaLazyFkHandler.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedRelationshipBuilderHelper.cs" />
-    <Compile Include="Metadata\Menu\Containers\MenuContainerExtensions.cs" />
     <Compile Include="Metadata\Applications\CompleteApplicationMetadataExtensions.cs" />
     <Compile Include="Metadata\Properties\EnvironmentProperties.cs" />
     <Compile Include="Scheduler\Interfaces\ISwJob.cs" />
@@ -1148,6 +1147,7 @@
     <Folder Include="Metadata\Applications\DataSet\Compositions\" />
     <Folder Include="Metadata\Applications\Notification\" />
     <Folder Include="Metadata\Applications\Relationship\Composition\" />
+    <Folder Include="Metadata\Menu\Containers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Service References\mif_workorder2\configuration91.svcinfo" />
