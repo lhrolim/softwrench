@@ -89,24 +89,27 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         private List<OutageAction> HandleDoasOutOfEngineeringTests(WorkPackage package, CrudOperationData crudoperationData) {
             var createdTests = crudoperationData.GetStringAttribute("newlycreatedtests");
             var outageActionsToAdd = new List<OutageAction>();
-
-            const string techKey = "#" + FirstSolarCustomGlobalFedService.TechColumn;
-            const string techIdKey = "#" + FirstSolarCustomGlobalFedService.TechIdColumn;
-            var unmaped = crudoperationData.UnmappedAttributes;
-            if (string.IsNullOrEmpty(createdTests) || !unmaped.ContainsKey(techKey) || !unmaped.ContainsKey(techIdKey)) {
+            if (string.IsNullOrEmpty(createdTests)) {
                 return outageActionsToAdd;
             }
 
             var tests = createdTests.Split(',');
+            const string techKey = "#" + FirstSolarCustomGlobalFedService.TechColumn;
+            const string techIdKey = "#" + FirstSolarCustomGlobalFedService.TechIdColumn;
+            var unmaped = crudoperationData.UnmappedAttributes;
 
             foreach (var test in tests) {
                 var action = new OutageAction {
                     Completed = false,
                     ActionTime = DateTime.Now,
-                    Action = test,
-                    Assignee = unmaped[techIdKey],
-                    AssigneeLabel = unmaped[techKey]
+                    Action = test
                 };
+
+                if (unmaped.ContainsKey(techKey) && unmaped.ContainsKey(techIdKey)) {
+                    action.Assignee = unmaped[techIdKey];
+                    action.AssigneeLabel = unmaped[techKey];
+                }
+
                 outageActionsToAdd.Add(action);
                 package.OutageActions.Add(action);
             }

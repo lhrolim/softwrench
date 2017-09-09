@@ -37,6 +37,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.migration {
         public override void Down() {
         }
     }
+
+    [Migration(201709090010)]
+    public class Swweb3147_2Migration : FluentMigrator.Migration {
+        public override void Up() {
+            Alter.Column("assignee").OnTable("OPT_DAILY_OUTAGE_ACTION").AsString(MigrationUtil.StringMedium).Nullable();
+            Alter.Column("assigneelabel").OnTable("OPT_DAILY_OUTAGE_ACTION").AsString(MigrationUtil.StringMedium).Nullable();
+        }
+
+        public override void Down() {
+        }
+    }
 }
 
 
