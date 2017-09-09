@@ -27,7 +27,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         public string AssigneeLabel { get; set; }
 
         [Property]
-        public string Completed { get; set; }
+        public bool Completed { get; set; }
 
         [Property]
         public DateTime? ActionTime { get; set; }

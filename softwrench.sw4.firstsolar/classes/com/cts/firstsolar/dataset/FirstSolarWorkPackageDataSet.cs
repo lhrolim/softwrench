@@ -412,7 +412,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var anyNewDom = DailyOutageMeetingHandler.HandleDailyOutageMeetings(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
 
-            var anyNewAction = OutageActionHandler.HandleOutageActions(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
+            var anyNewAction = OutageActionHandler.HandleOutageActions(crudoperationData, package,  operationWrapper.ApplicationMetadata.Schema);
 
             package = await Dao.SaveAsync(package);
 

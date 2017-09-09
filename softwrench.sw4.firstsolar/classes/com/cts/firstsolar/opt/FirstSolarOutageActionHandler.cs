@@ -28,7 +28,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         [Import]
         public ISWDBHibernateDAO Dao { get; set; }
 
-        public bool HandleOutageActions(CrudOperationData crudoperationData, WorkPackage package, CrudOperationData woData, ApplicationSchemaDefinition schema) {
+        public bool HandleOutageActions(CrudOperationData crudoperationData, WorkPackage package, ApplicationSchemaDefinition schema) {
 
             //TODO: extract composition generic code
             if (package.OutageActions == null) {
@@ -48,6 +48,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 if (doasData == null) {
                     throw new Exception("Incorrect format of daily outage meeting list.");
                 }
+
                 doasData.ForEach((data) => {
                     var doa = GetOurCreateDailyOutageAction(data, package.OutageActions, toKeepDoa);
                     EntityBuilder.PopulateTypedEntity(data, doa);
@@ -67,7 +68,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
                     toKeepDoa.Add(doa);
                 });
+
+
+
             }
+            toKeepDoa.AddRange(HandleDoasOutOfEngineeringTests(package, crudoperationData));
 
             var deleted = new List<OutageAction>();
             package.OutageActions.ForEach(doa => {
@@ -79,6 +84,34 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             });
             deleted.ForEach(doa => package.OutageActions.Remove(doa));
             return anyNewDoa;
+        }
+
+        private List<OutageAction> HandleDoasOutOfEngineeringTests(WorkPackage package, CrudOperationData crudoperationData) {
+            var createdTests = crudoperationData.GetStringAttribute("newlycreatedtests");
+            var outageActionsToAdd = new List<OutageAction>();
+
+            const string techKey = "#" + FirstSolarCustomGlobalFedService.TechColumn;
+            const string techIdKey = "#" + FirstSolarCustomGlobalFedService.TechIdColumn;
+            var unmaped = crudoperationData.UnmappedAttributes;
+            if (string.IsNullOrEmpty(createdTests) || !unmaped.ContainsKey(techKey) || !unmaped.ContainsKey(techIdKey)) {
+                return outageActionsToAdd;
+            }
+
+            var tests = createdTests.Split(',');
+
+            foreach (var test in tests) {
+                var action = new OutageAction {
+                    Completed = false,
+                    ActionTime = DateTime.Now,
+                    Action = test,
+                    Assignee = unmaped[techIdKey],
+                    AssigneeLabel = unmaped[techKey]
+                };
+                outageActionsToAdd.Add(action);
+                package.OutageActions.Add(action);
+            }
+
+            return outageActionsToAdd;
         }
 
         private OutageAction GetOurCreateDailyOutageAction(AttributeHolder crudoperationData, ICollection<OutageAction> existingDom, ICollection<OutageAction> toKeepDom) {

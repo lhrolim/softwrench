@@ -9,7 +9,7 @@
 
     class workPackageService {
 
-        constructor($rootScope, $q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService, submitService) {
+        constructor($rootScope, $q, $log, alertService, applicationService, crudContextHolderService, redirectService, fieldService, submitService, compositionService) {
             this.$rootScope = $rootScope;
             this.$q = $q;
             this.$log = $log;
@@ -19,11 +19,22 @@
             this.redirectService = redirectService;
             this.fieldService = fieldService;
             this.submitService = submitService;
+            this.compositionService = compositionService;
 
             this.$rootScope.$on("sw.crud.body.crawlocurred", () => {
                 wipeDynamicSections();
             });
 
+            this.$rootScope.$on(JavascriptEventConstants.CrudSaved, () => {
+                const dm = this.crudContextHolderService.rootDataMap();
+                const schema = crudContextHolderService.currentSchema();
+                if (dm["newlycreatedtests"] && dm["newlycreatedtests"].length > 0) {
+                    this.compositionService.getCompositionList("outageActions_", schema, dm, 1, 10).then((result) => {
+                        this.compositionService.resolveCompositions(result);
+                    });
+                }
+                dm["newlycreatedtests"] = [];
+            });
 
             testsMap = {
                 "GSU": ["gsuimmediatetests", "gsutests"],
@@ -522,58 +533,33 @@
             this.reevaluateSections(eventParameters);
             const field = eventParameters.fieldMetadata;
             const option = eventParameters.option;
-            return this.createOutageAction(field, option);
+            return this.createOutageActionEntry(field, option);
         }
 
-        createOutageAction(field, option) {
+        createOutageActionEntry(field, option) {
             const dm = this.crudContextHolderService.rootDataMap();
-            const schema = this.crudContextHolderService.currentSchema();
 
-            if (dm[field.attribute].indexOf(option.value) < 0 || option.value.endsWith("othertest")) {
-                return this.$q.when(null);
-            }
+            dm["newlycreatedtests"] = dm["newlycreatedtests"] || [];
 
-            const tech = dm["#technicianid"];
-            const techName = dm["#technician"];
-            if (!tech || !techName) {
-                this.alertService.notifyWarning({ "warningDto": { "warnMessage": "Site Technician not found. Outage action not created." } });
-                return this.$q.when(null);
-            }
+            let selectedValue = dm[field.attribute];
+            //oposite logic as used on the beforechange event
+            const selecting = !(selectedValue == undefined || (!!selectedValue && selectedValue.indexOf(option.value) === -1));
 
-            const saveDataMap = {
-                "#isDirty": true,
-                "application": "_OutageAction",
-                "_iscreation": true,
-                action: field.label + " - " + option.label,
-                assignee: tech,
-                "assignee_.displayname": techName,
-                completed: false
-            }
 
+            var test = field.label + " - " + option.label;
             if (option.value === "gsucaptureoil") {
-                const pairOption = field.options.find((testOption) => testOption.value === "gsucapturemon");
-                saveDataMap.action = field.label + " - " + option.label + " and " + pairOption.label;
+                test = field.label + " - " + option.label + " and " + field.options.find((testOption) => testOption.value === "gsucapturemon").label;
             }
             if (option.value === "gsucapturemon") {
-                const pairOption = field.options.find((testOption) => testOption.value === "gsucaptureoil");
-                saveDataMap.action = field.label + " - " + pairOption.label + " and " + option.label;
+                test = field.label + " - " + field.options.find((testOption) => testOption.value === "gsucaptureoil").label + " and " + option.label;
             }
+            const idx = dm["newlycreatedtests"].indexOf(test);
 
-            if (!dm["outageActions_"]) {
-                dm["outageActions_"] = [];
+            if (idx === -1 && selecting) {
+                dm["newlycreatedtests"].push(test);
+            } else if (idx !== -1 && !selecting) {
+                dm["newlycreatedtests"].splice(idx, 1);
             }
-            dm["outageActions_"].push(saveDataMap);
-
-            const params = {
-                compositionData: new CompositionOperation("crud_create", "outageActions_", saveDataMap),
-                dispatchedByModal: false,
-                originalDatamap: dm,
-                refresh: false,
-                successMessage: "Outage Action Created"
-            }
-            return this.submitService.submit(schema, dm, params).catch(() => {
-                dm["outageActions_"].pop();
-            });
         }
 
         reevaluateSections(eventParameters) {
@@ -594,7 +580,7 @@
                 }
             }
 
-            
+
             const option = eventParameters.option;
             if (option.value.endsWith("othertest")) {
                 return this.showOtherTestModal()
@@ -645,7 +631,7 @@
                 this.innerReevaluateSections(fieldMetadata, option);
             }
 
-            
+
 
             values.forEach(val => {
                 if (!fieldMetadata.options.some(o => o.value === val)) {
@@ -700,7 +686,7 @@
                 load(option);
             });
 
-            
+
 
             if (gsucaptureoilLoaded && !gsucapturemonLoaded) {
                 datamap[test].push("gsucapturemon");
@@ -838,7 +824,7 @@
 
     }
 
-    workPackageService.$inject = ['$rootScope', '$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService', 'submitService'];
+    workPackageService.$inject = ['$rootScope', '$q', '$log', 'alertService', 'applicationService', 'crudContextHolderService', 'redirectService', 'fieldService', 'submitService', 'compositionService'];
 
     angular.module('sw_layout').service('fsworkpackageService', workPackageService);
 
