@@ -116,7 +116,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                             };
                         }
 
-                        if (compPermission.HasNoPermission) {
+                        if (compPermission.HasNoPermissions) {
                             //excluding the composition entirely
                             continue;
                         } else if (comp.Schema is ApplicationCompositionCollectionSchema) {

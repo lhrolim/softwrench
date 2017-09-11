@@ -328,7 +328,7 @@
             expect(redirectService.redirectToTab).not.toHaveBeenCalledWith('main');
             expect(modalService.showPromise).not.toHaveBeenCalled();
 
-            expect(compositionService.getCompositionDetailItem).toHaveBeenCalledWith("100", SchemaPojo.CompositionDetailSchema(), {});
+            expect(compositionService.getCompositionDetailItem).toHaveBeenCalledWith("100", SchemaPojo.CompositionDetailSchema(),"worklog_", {});
             expect(compositionListViewModel.doToggle).toHaveBeenCalled();
             expect(mockScope.detailData["100"]).not.toBeUndefined();
 

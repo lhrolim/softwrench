@@ -38,7 +38,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                     Log.WarnFormat("composition {0} not found at schema {1}", compositionPermission.CompositionKey, schema.GetApplicationKey());
                     continue;
                 }
-                if (compositionPermission.HasNoPermission) {
+                if (compositionPermission.HasNoPermissions) {
                     clonedDictionary.Remove(key);
                 } else {
                     var composition = clonedDictionary[key];

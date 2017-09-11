@@ -61,7 +61,7 @@
                         }
 
                         // hit server
-                        return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
+                        return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, $scope.relationship)
                             .then(result=> {
                                 compositionListViewModel.doToggle($scope, result.resultObject, entry, null, compositionId);
                                 $(document.body).animate({ scrollTop: 0 });

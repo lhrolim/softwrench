@@ -7,12 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
+using JetBrains.Annotations;
 using softwrench.sw4.api.classes.application;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sw4.user.classes.entities.security;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
@@ -36,12 +38,14 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             var isTopLevelApp = MetadataProvider.FetchTopLevelApps(ClientPlatform.Web, null)
                 .Any(a => a.ApplicationName.EqualsIc(application.Name));
 
-            if (application.Name.StartsWith("_") && !isTopLevelApp) {
+            if (IsSwSecurityApplication(application, request, isTopLevelApp)) {
                 return VerifySecurityModeSw(user, application);
             }
 
             var profile = user.MergedUserProfile;
-            var permission = LookupPermission(application, profile);
+
+
+            var permission = LookupPermission(application, profile, request.CompositionContextData);
 
             if (permission == null) {
                 if (isTopLevelApp) {
@@ -53,6 +57,9 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             }
             var viewingExisting = request.Id != null || request.UserId != null;
             var isList = application.Schema.Stereotype == SchemaStereotype.List || request.SearchDTO != null;
+
+
+
             if (application.Schema.Stereotype.Equals(SchemaStereotype.Search)) {
                 //TODO: think about this in the future
                 return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
@@ -77,8 +84,30 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
         }
 
-        protected virtual ApplicationPermission LookupPermission(ApplicationMetadata application, MergedUserProfile profile) {
-            return profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
+        private static bool IsSwSecurityApplication(ApplicationMetadata application, DataRequestAdapter request, bool isTopLevelApp) {
+            return application.Name.StartsWith("_") && !isTopLevelApp && request.CompositionContextData == null;
+        }
+
+        protected virtual IApplicationPermission LookupPermission(ApplicationMetadata application, MergedUserProfile profile, [CanBeNull] CompositionDetailFetchRequestDTO compositionContextData) {
+            var isComposition = compositionContextData != null;
+            if (!isComposition) {
+                return profile.GetPermissionByApplication(application.Name, MetadataProvider.RoleByApplication(application.Name));
+            }
+
+            var rootApplicationName = compositionContextData.RootApplicationKey.ApplicationName;
+            var permission = profile.GetPermissionByApplication(rootApplicationName);
+            if (permission == null) {
+                //should not happen at this stage, since the composition request shouldn´t be allowed if the top application isn´t
+                return null;
+            }
+            var compPermission = permission.CompositionPermissions.FirstOrDefault(c => c.CompositionKey.Equals(compositionContextData.CompositionKey));
+            if (compPermission == null) {
+                return ApplicationPermission.AllowInstance();
+            }
+
+            return compPermission;
+
+
         }
 
         private InMemoryUserExtensions.SecurityModeCheckResult VerifySecurityModeSw(IPrincipal user, ApplicationMetadata application) {

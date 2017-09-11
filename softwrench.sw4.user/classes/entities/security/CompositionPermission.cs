@@ -12,7 +12,7 @@ namespace softwrench.sw4.user.classes.entities.security {
 
 
     [Class(Table = "SEC_COMPOSITION_PER", Lazy = false)]
-    public class CompositionPermission : IBaseEntity {
+    public class CompositionPermission : IBaseEntity, IApplicationPermission {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -61,11 +61,7 @@ namespace softwrench.sw4.user.classes.entities.security {
             get; set;
         }
 
-        public bool HasNoPermission {
-            get {
-                return !AllowCreation && !AllowUpdate && !AllowView;
-            }
-        }
+        public bool HasNoPermissions => !AllowCreation && !AllowUpdate && !AllowView;
 
 
         public void Merge(CompositionPermission other) {

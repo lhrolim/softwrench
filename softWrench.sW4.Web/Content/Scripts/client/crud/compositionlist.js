@@ -662,7 +662,7 @@
 
             const customParams = $scope.getCustomParameters(compositionlistschema, item);
 
-            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(result => {
+            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema,$scope.relationship, customParams).then(result => {
                 const datamap = result.resultObject;
 
                 var mergeddata = compositionCommons.buildMergedDatamap(datamap, angular.copy(item));
@@ -751,7 +751,7 @@
 
             const customParams = $scope.getCustomParameters(compositionlistschema, item);
 
-            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, customParams).then(result => {
+            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, $scope.relationship, customParams).then(result => {
                 const datamap = result.resultObject;
                 if ($scope.isUpdate) {
                     datamap[CompositionConstants.Edited] = 1;
@@ -803,7 +803,7 @@
                     });
                 }
 
-                return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema)
+                return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, $scope.relationship)
                     .then((result) => {
                         //TODO: generate composition deletion method
                         var compositionItem = result.resultObject;

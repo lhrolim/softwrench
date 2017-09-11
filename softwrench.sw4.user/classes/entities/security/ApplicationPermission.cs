@@ -20,7 +20,7 @@ namespace softwrench.sw4.user.classes.entities.security {
     /// 
     /// </summary>
     [Class(Table = "SEC_APPLICATION_PER", Lazy = false)]
-    public class ApplicationPermission : IBaseEntity {
+    public class ApplicationPermission : IBaseEntity, IApplicationPermission {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -181,5 +181,11 @@ namespace softwrench.sw4.user.classes.entities.security {
             return
                 $"ApplicationName: {ApplicationName}, AllowCreation: {AllowCreation}, AllowUpdate: {AllowUpdate}, AllowView: {AllowView}";
         }
+
+
+        public static ApplicationPermission AllowInstance() {
+            return new ApplicationPermission { AllowCreation = true, AllowUpdate = true, AllowView = true, AllowRemoval = true};
+        }
+
     }
 }

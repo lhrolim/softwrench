@@ -3,6 +3,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Pagination;
 using System;
 using System.Collections.Generic;
+using softWrench.sW4.Data.API.Composition;
 
 namespace softWrench.sW4.Data.API {
 
@@ -24,6 +25,9 @@ namespace softWrench.sW4.Data.API {
         public IDictionary<string, object> CustomParameters { get; set; }
         public string CommandId { get; set; }
 
+        
+
+        public CompositionDetailFetchRequestDTO CompositionContextData { get; set; }
 
         public PaginatedSearchRequestDto SearchDTO { get; set; }
 

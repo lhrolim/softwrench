@@ -293,8 +293,9 @@
                  * @param {Object} compositiondetailschema composition's detail schema 
                  * @returns Promise resolved with response's body 
                  */
-                function getCompositionDetailItem(compositionId, compositiondetailschema, customParams) {
+                function getCompositionDetailItem(compositionId, compositiondetailschema, relationship, customParams) {
                     const applicationName = compositiondetailschema.applicationName;
+                    const currentSchema = crudContextHolderService.currentSchema();
                     const parameters = {
                         request: {
                             id: compositionId,
@@ -302,6 +303,15 @@
                                 schemaId: compositiondetailschema.schemaId,
                                 mode: compositiondetailschema.mode,
                                 platform: "web"
+                            },
+                            compositionContextData: {
+                                rootApplicationKey: {
+                                    applicationName: currentSchema.applicationName,
+                                    schemaId: currentSchema.schemaId,
+                                    mode: compositiondetailschema.mode,
+                                    platform: "web"
+                                },
+                                compositionKey: relationship
                             }
                         }
                     };

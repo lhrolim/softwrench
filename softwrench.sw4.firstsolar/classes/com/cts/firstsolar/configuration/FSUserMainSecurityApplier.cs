@@ -18,8 +18,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
     [OverridingComponent(ClientFilters = "firstsolar")]
     public class FSUserMainSecurityApplier : UserMainSecurityApplier {
 
+
         public override InMemoryUserExtensions.SecurityModeCheckResult VerifyMainSecurityMode(InMemoryUser user, ApplicationMetadata application,
             DataRequestAdapter request){
+
             var securityResult = base.VerifyMainSecurityMode(user, application, request);
             var profile = user.MergedUserProfile;
             var wpPermission = profile.GetPermissionByApplication("_workpackage");
@@ -27,8 +29,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 return securityResult;
             }
 
-            if (application.Name.EqualsIc("workorder") || application.Name.Equals("_DailyOutageMeeting")) {
-                //TODO: improve _DailyOutageMeeting verification, but this call is only performed at the DailyOutageTab in first place, this adjustment would be just from a backend standpoint
+            if (application.Name.EqualsIc("workorder")) {
                 //if the user has access to workpackage, it should be given access to workorders schemas as well, otherwise some lookups would fail
                 return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
             }
