@@ -320,7 +320,7 @@ namespace softWrench.sW4.Util {
                 if (IsLocal() && IsDev()) {
                     //                    var swdbConnectionString = ConfigurationManager.ConnectionStrings["swdb_hapag"];
                     //                    if (swdbConnectionString == null) {
-                    var swdbConnectionString = new ConnectionStringSettings("swdb", "Data Source=localhost;Initial Catalog=swdbhapag;User Id=sw;password=sw;", "System.Data.SQL");
+                    var swdbConnectionString = new ConnectionStringSettings("swdb", "Data Source=localhost;Initial Catalog=swdb_hapag;User Id=sw;password=sw;", "System.Data.SQL");
                     //                    }
                     return swdbConnectionString;
                 }

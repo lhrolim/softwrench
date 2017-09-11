@@ -54,7 +54,7 @@ namespace softwrench.sw4.Hapag.Data.Connector.Imac {
                 var currentITC = GetCurrentITC(jsonObject);
                 var fromLocation = jsonObject.GetAttribute("fromlocation");
                 var toLocation = jsonObject.GetAttribute("tolocation");
-                var classification = (string)(jsonObject.GetAttribute("classification") ?? "");
+                var classification = jsonObject.GetUnMappedAttribute("asset_.classstructureid") ?? "";
 
                 var toITC = ISMConstants.AddEmailIfNeeded(jsonObject.GetAttribute("toitc") as string);
                 if (toITC != null) {

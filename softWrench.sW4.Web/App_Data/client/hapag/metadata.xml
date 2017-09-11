@@ -2117,11 +2117,12 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <association
                  target="asset" dependantfields="fromlocation" label="Asset" labelfield="asset_.hlagdescription2" required="true"
                                       extraprojectionvalues="assetspecmacaddress_.alnvalue, usage, assetid, primaryuser_.personid, primaryuser_.hlagdisplayname, primaryuser_person_.displayname,primaryuser_person_.hlagdisplayname
-                     ,classification,location,location_.description,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,pluspcustomer,assetglaccount_.displaycostcenter,assetglaccount_.glaccount,status">
+                     ,classstructureid,location,location_.description,aucisowner_person_.hlagdisplayname,aucisowner_person_.personid,pluspcustomer,assetglaccount_.displaycostcenter,assetglaccount_.glaccount,status">
             <renderer type="autocompleteclient" params="minLength=3;opendetails=true;idtopendetails=asset_.assetid"/>
             <event type="afterchange" service="imacservice" method="afterChangeAsset"/>
             <dataprovider prefilterfunction="FilterAssetByHlagLocation"/>
           </association>
+          <field hidden="true" attribute="asset_.classstructureid"/>
           <field hidden="true" attribute="asset_.status"/>
           <field hidden="true" attribute="asset_.location"/>
           <field hidden="true" attribute="asset_.aucisowner_.person_.personid"/>
