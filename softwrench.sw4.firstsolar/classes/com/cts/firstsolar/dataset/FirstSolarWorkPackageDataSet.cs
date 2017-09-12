@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
+using DotLiquid.Tags;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.ByCode;
@@ -412,7 +413,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var anyNewDom = DailyOutageMeetingHandler.HandleDailyOutageMeetings(crudoperationData, package, woData, operationWrapper.ApplicationMetadata.Schema);
 
-            var anyNewAction = OutageActionHandler.HandleOutageActions(crudoperationData, package,  operationWrapper.ApplicationMetadata.Schema);
+            var anyNewAction = OutageActionHandler.HandleOutageActions(crudoperationData, package, operationWrapper.ApplicationMetadata.Schema);
 
             package = await Dao.SaveAsync(package);
 
@@ -476,9 +477,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var columns = MaintenanceEngineeringHandler.GetTestNames(crudoperationData.ApplicationMetadata.Schema);
             columns.Add("outages");
             var toKeep = new List<GenericListRelationship>();
-            foreach (var column in columns){
+            foreach (var column in columns) {
                 var currentValues = crudoperationData.GetUnMappedAttribute(column);
-                
+
                 if (!string.IsNullOrEmpty(currentValues?.Trim())) {
                     var values = currentValues.Split(',');
                     values.ForEach((value) => {
@@ -497,7 +498,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                     });
                 }
             }
-          
+
             var deleted = new List<GenericListRelationship>();
             originalList.ForEach(item => {
                 if (toKeep.Contains(item)) {
@@ -601,8 +602,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
             var gfedService = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>();
+            //TODO:review
+            var to = await gfedService.BuildToFromGfed(package);
+            if (domsToSend != null) {
+                foreach (var domToSend in domsToSend) {
+                    domToSend.Email = to;
+                }
+            }
             await gfedService.LoadGfedData(package, calloutsToSend?.ToList());
-            await gfedService.LoadGfedData(package, domsToSend?.ToList());
             await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
             await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
             await DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -125,7 +126,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             AddFacilityData(row, callout);
         }
 
-        public async Task LoadGfedData(WorkPackage package, List<DailyOutageMeeting> doms) {
+        public async Task LoadGfedData(WorkPackage package, List<DailyOutageMeeting> doms, string to = null) {
             if (doms == null || !doms.Any()) {
                 return;
             }
@@ -139,19 +140,27 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (row.ContainsKey(FacilityTitleColumn)) {
                 package.FacilityName = row[FacilityTitleColumn];
             }
+            if (to == null) {
+                to = BuildToFromGfed(row);
+            }
 
-            var to = BuildToFromGfed(row);
             doms.ForEach(dom => {
                 dom.Email = to;
             });
         }
 
         public async Task<string> BuildToFromGfed(WorkPackage package) {
-            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedEmailQuery, package.WorkorderId);
-            if (qryResult != null && qryResult.Any()) {
-                return BuildToFromGfed(qryResult.First());
+            if (!ApplicationConfiguration.IsProd()) {
+                return null;
             }
-            return BuildToFromGfed((Dictionary<string, string>)null);
+
+            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedEmailQuery, package.WorkorderId);
+            var dict = qryResult.FirstOrDefault();
+            var to = BuildToFromGfed(dict);
+            if (dict != null && dict.ContainsKey(FacilityTitleColumn)) {
+                package.FacilityName = dict[FacilityTitleColumn];
+            }
+            return to;
         }
 
         private static string BuildToFromGfed(Dictionary<string, string> row) {
