@@ -17,7 +17,7 @@ namespace softWrench.sW4.Configuration.Definitions {
 
         public const string ByDefinitionConditionIdModuleProfile = "from PropertyValue v where Definition.FullKey = ? and Condition.Id = ? and Module = ? and UserProfile = ?";
 
-        public const string ByDefinitionNoCondition = "from PropertyValue v where Definition.FullKey = ? and UserProfile = ?";
+        public const string ByDefinitionNoCondition = "from PropertyValue v where Definition.FullKey = ? and UserProfile = ? and Condition = null";
 
         public const string DistinctModules = "select distinct(Module) from PropertyValue";
 
