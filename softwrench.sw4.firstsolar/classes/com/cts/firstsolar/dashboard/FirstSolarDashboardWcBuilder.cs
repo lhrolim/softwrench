@@ -76,7 +76,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public virtual string MaintenanceDashBuild290CMQuery() {
             return @"workorder.status in ('APPR','INPRG') {0} and workorder.outreq = 1
                     and        
-                    (workorder.worktype = 'WO')".Fmt(SiteClause());
+                    (workorder.worktype != 'PM')".Fmt(SiteClause());
         }
 
         public virtual string MaintenanceCmDashQuery() {
