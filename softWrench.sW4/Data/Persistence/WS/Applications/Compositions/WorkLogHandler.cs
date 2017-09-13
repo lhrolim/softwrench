@@ -39,7 +39,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 WsUtil.SetValueIfNull(integrationObject, "worklogid", -1);
                 WsUtil.SetValue(integrationObject, "recordkey", recordKey);
                 WsUtil.SetValueIfNull(integrationObject, "class", entity.TableName);
-                WsUtil.SetValueIfNull(integrationObject, "createby", user.Login);
+                WsUtil.SetValueIfNull(integrationObject, "createby", user.MaximoPersonId);
                 WsUtil.SetValueIfNull(integrationObject, "logtype", "CLIENTNOTE");
 
                 WsUtil.CopyFromRootEntity(rootObject, integrationObject, "siteid", user.SiteId);
