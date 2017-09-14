@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence.Util;
 using FluentMigrator;
+using softwrench.sw4.api.classes.migration;
 using softWrench.sW4.Extension;
 
 namespace softwrench.sw4.offlineserver.migration {
@@ -73,7 +74,12 @@ namespace softwrench.sw4.offlineserver.migration {
     public class MigrationSwoff298_2 : Migration {
 
         public override void Up() {
-            Alter.Table("audit_entry").AlterColumn("data").AsBinary(int.MaxValue).Nullable();
+            if (!MigrationContext.IsMySql) {
+                Alter.Table("audit_entry").AlterColumn("data").AsBinary(int.MaxValue).Nullable();
+            } else {
+                Alter.Table("audit_entry").AlterColumn("data").AsBinary().Nullable();
+            }
+            
         }
 
         public override void Down() {
