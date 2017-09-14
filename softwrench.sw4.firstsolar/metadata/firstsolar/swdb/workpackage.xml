@@ -375,7 +375,7 @@
               </composition>
 
               <section id="componentdeclarationsection">
-                <header label="Component Tests" params="fieldset=true"/>
+                <header label="Component Tests - Click Save to Create New Outage Action" params="fieldset=true"/>
 
                 <section resourcepath="/Content/Customers/firstsolar/htmls/templates/othertestsmodal.html"/>
                 
