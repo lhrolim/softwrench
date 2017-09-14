@@ -6,5 +6,6 @@
         public const string MaintenanceEngAttachsRelationship = "wkpgmeattachments_";
         public const string DailyOutageMeetingAttachsRelationship = "wkpgdomattachments_";
         public const string AllAttachmentsRelationship = "wkpgallattachments_";
+        public const string RelatedWorkOrdersRelationship = "wkpgrelatedwos_";
     }
 }

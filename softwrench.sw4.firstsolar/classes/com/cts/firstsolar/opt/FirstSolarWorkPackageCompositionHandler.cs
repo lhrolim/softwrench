@@ -83,6 +83,36 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             });
         }
 
+        public void HandleRelatedWos(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
+            var relatedWos = woResult.ResultObject.FirstOrDefault(pair => FSWPackageConstants.RelatedWorkOrdersRelationship.Equals(pair.Key)).Value;
+
+            if (relatedWos == null) {
+                //might be null due to security restrictions
+                return;
+            }
+
+
+            var relatedWosResult = new List<Dictionary<string, object>>();
+            relatedWos.ResultList.ForEach(relatedWo => {
+                var relatedWoMap = new Dictionary<string, object>();
+                relatedWo.ForEach(pair => {
+                    relatedWoMap.Add("#" + pair.Key, pair.Value);
+                });
+
+                // workaround to show expand button
+                relatedWoMap.Add("id", 1);
+
+                relatedWosResult.Add(relatedWoMap);
+            });
+
+            var searchResult = new EntityRepository.SearchEntityResult {
+                ResultList = relatedWosResult,
+                IdFieldName = relatedWos.IdFieldName,
+                PaginationData = relatedWos.PaginationData
+            };
+            packageResult.ResultObject.Add("#" + FSWPackageConstants.RelatedWorkOrdersRelationship.Substring(4), searchResult);
+        }
+
         public void HandleAttachmentsTab(CompositionFetchResult woResult, CompositionFetchResult packageResult) {
             var allAttachs = woResult.ResultObject.FirstOrDefault(pair => FSWPackageConstants.AllAttachmentsRelationship.Equals(pair.Key)).Value;
             if (allAttachs == null) {
@@ -124,7 +154,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                     attach["#attachsource"] = CallOutEmailAttachmentSource;
                 } else if (filter.StartsWith("swwpkgme:")) {
                     attach["#attachsource"] = MaintenanceEngEmailAttachmentSource;
-                }  else if (filter.StartsWith("swwpkgdo:")) {
+                } else if (filter.StartsWith("swwpkgdo:")) {
                     attach["#attachsource"] = DomEmailAttachmentSource;
                 } else {
                     attach["#attachsource"] = UnknownSource;

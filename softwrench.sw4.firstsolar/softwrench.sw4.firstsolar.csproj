@@ -310,6 +310,7 @@
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
     <Content Include="web_content\firstsolar\scripts\fsdailyoutagemeetingService.js" />
+    <Content Include="web_content\firstsolar\scripts\fsworkpackagerelatedrecordsservice.js" />
     <Content Include="web_content\firstsolar\scripts\fsdashboardService.js" />
     <Content Include="web_content\firstsolar\scripts\fsrequestService.js" />
     <Content Include="web_content\firstsolar\scripts\fsemailrequestcontroller.js" />

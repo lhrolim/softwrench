@@ -175,6 +175,10 @@
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
           <relationshipAttribute query="(docinfo_.urlparam1 like 'swwpk%')"/>
         </relationship>
+        <relationship to="relatedrecord" collection="true" qualifier="wkpgrelatedwos">
+          <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
+          <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true"/>
+        </relationship>
       </relationships>
     </entity>
 
@@ -578,6 +582,9 @@
           <composition relationship="wkpgworklogs" label="">
             <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate desc" listschema="workpackagelist"/>
           </composition>
+          <composition relationship="wkpgrelatedwos" label="">
+            <collectionproperties allowupdate="false" allowcreation="false" listschema="workpackagelist"/>
+          </composition>
           <composition relationship="wkpgattachments" label="">
             <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate asc" listschema="workpackagelist"/>
           </composition>
@@ -618,6 +625,9 @@
             </composition>
             <composition relationship="attachment" label="Attachments" hidden="true">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" allowremoval="@status!='CLOSE'" prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+            </composition>
+            <composition relationship="relatedrecord" label="Related Records" hidden="true">
+              <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'"/>
             </composition>
           </section>
         </schema>
@@ -1744,6 +1754,15 @@
       </schemas>
     </application>
 
+    <application name="relatedrecord" title="Related Records" entity="relatedrecord">
+      <schemas>
+        <schema id="workpackagelist" stereotype="compositionlist" platform="web">
+          <field attribute="relatedreckey" label="Related Record Key" />
+          <field attribute="relatedrecclass" label="Related Record Class" />
+          <field attribute="siteid" hidden="true" />
+        </schema>
+      </schemas>
+    </application>
 
     <!-- #region: Mobile offline association data -->
 

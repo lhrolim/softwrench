@@ -18,6 +18,14 @@
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute query="worktype in ('CM','PM','WO') and historyflag=0"/>
         </relationship>
+
+        <relationship to="workorder" qualifier="relatedworkorder">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute from="siteid" to="siteid"/>
+          <relationshipAttribute query="historyflag=0"/>
+        </relationship>
+        
         <relationship to="_CallOut_" qualifier="callOuts" collection="true">
           <relationshipAttribute from="id" to="workpackageid" primary="true"/>
         </relationship>
@@ -538,6 +546,13 @@
               </composition>
             </tab>
 
+            <tab label="Related Work Orders" icon="fa-tags" id="relatedwos" enableexpression="@id!=null" countrelationship="#relatedwos_">
+              <composition inline="true" relationship="#relatedwos_" label="" detailschema="relatedwosdetail">
+                <collectionproperties allowcreation="true" allowremoval="false" allowupdate="false" listschema="relatedwoslist" />
+                <renderer type="table" params="composition.inline.addTitle=Related Work Order"/>
+              </composition>
+            </tab>
+
             <composition detailschema="" relationship="emailtracking_" label="Email Tracking" showexpression="@id!=null">
               <collectionproperties allowcreation="false" allowupdate="false" allowremoval="false"/>
             </composition>
@@ -578,6 +593,28 @@
 
         <!-- workaround to show expand button-->
         <schema id="attachmentdetail" stereotype="compositiondetail">
+        </schema>
+
+        <schema id="relatedwoslist" stereotype="compositionlist">
+          <field attribute="#siteid" hidden="true" />
+          <field attribute="#relatedreckey" label="Related Record Key" />
+          <field attribute="#relatedrecclass" label="Related Record Class" />
+          <properties>
+            <property key="list.click.event" value="fsWorkPackageRelatedRecordsService.rowClick"/>
+          </properties>
+        </schema>
+
+        <schema id="relatedwosdetail" stereotype="compositiondetail" title="Related Work Order">
+          <association label="Work Order" labelfield="relatedworkorder_.description" target="wonum" extraprojectionvalues="workorderid, siteid, orgid" requiredexpression="true">
+            <renderer type="lookup" params="application=workorder;schemaId=wonumlookupwithwtype;"/>
+          </association>
+          
+          <commandbars>
+            <commandgroup position="modal.detail.primary" platform="web">
+              <command id="customsave" icon="fa-check" service="fsWorkPackageRelatedRecordsService" method="save" parameters="datamap" label="Save" position="-save" primary="true"/>
+              <removecommand id="save"/>
+            </commandgroup>
+          </commandbars>
         </schema>
       </schemas>
     </application>

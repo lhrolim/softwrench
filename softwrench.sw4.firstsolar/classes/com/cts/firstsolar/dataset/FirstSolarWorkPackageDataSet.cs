@@ -567,7 +567,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 FSWPackageConstants.CallOutAttachsRelationship,
                 FSWPackageConstants.MaintenanceEngAttachsRelationship,
                 FSWPackageConstants.DailyOutageMeetingAttachsRelationship,
-                FSWPackageConstants.AllAttachmentsRelationship
+                FSWPackageConstants.AllAttachmentsRelationship,
+                FSWPackageConstants.RelatedWorkOrdersRelationship
 
             };
 
@@ -582,6 +583,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             CompositionHandler.HandleAttachmentsTab(woCompList, compList);
             CompositionHandler.HandleWorkLogs(woCompList, compList);
             CompositionHandler.HandleAttachments(woCompList, compList);
+            CompositionHandler.HandleRelatedWos(woCompList, compList);
             CallOutHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             DailyOutageMeetingHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
