@@ -46,6 +46,10 @@
 
         }
 
+        isSysAdmin() {
+            return this.hasRole(["sysadmin"]);
+        }
+
         getPersonId() {
             const user = this.contextService.getUserData();
             const personId = user.maximoPersonId;

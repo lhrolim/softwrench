@@ -8,6 +8,13 @@
     <property key="list.paginationsize" value="30"/>
   </stereotype>
 
+  <stereotype id="list.noexport">
+    <property key="list.click.mode" value="input"/>
+    <property key="list.click.popup" value="none"/>
+    <property key="commandbar.top" value="gridtop.justnew"/>
+    <property key="list.disablepagination" value="true"/>
+  </stereotype>
+  
   <stereotype id="list.modal">
     <!--Reducing the number of options by default-->
     <property key="list.paginationsize" value="10"/>

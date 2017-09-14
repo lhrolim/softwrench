@@ -373,6 +373,7 @@
     <Compile Include="Data\Entities\Workflow\MaximoWorkflowManager.cs" />
     <Compile Include="Data\Filter\FilterDTOHandlerComposite.cs" />
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
+    <Compile Include="Data\Help\HelpEntry.cs" />
     <Compile Include="Data\JObjectDatamapAdapter.cs" />
     <Compile Include="Data\PDF\PDFService.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseGlobalSearchDataSet.cs" />

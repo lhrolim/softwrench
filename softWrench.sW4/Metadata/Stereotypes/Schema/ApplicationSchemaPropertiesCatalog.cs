@@ -50,6 +50,11 @@
         public const string SystemAdminApplication = "application.security.systemadmin";
 
         /// <summary>
+        /// Mark an sw aplication as viewable by users with system admin role
+        /// </summary>
+        public const string DefaultUserApplication = "application.security.defaultuser";
+
+        /// <summary>
         /// Mark an sw aplication as viewable by users with client admin role
         /// </summary>
         public const string ClientAdminApplication = "application.security.clientadmin";

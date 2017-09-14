@@ -120,9 +120,11 @@
             });
         }
 
-        function getLogReportingModal() {
+        function getLogReportingModal(logreporting = true) {
             // create an isolated $scope to hold the viewmodel
             const $scope = $rootScope.$new(true);
+            $scope.title = logreporting ? "Log Reporting" : "Contact";
+            $scope.actiontitle = logreporting ? "Send Report" : "Send";
             $scope.email = { subject: null, message: null };
             // $scope method: report and dispose of the modal
             $scope.sendLogReport = function (email) {
@@ -206,6 +208,7 @@
         //#region Service Instance
         const service = {
             reportLogs,
+            getLogReportingModal,
             requestLogReporting: _.debounce(requestLogReporting, 500)
         };
         return service;

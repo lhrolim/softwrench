@@ -24,8 +24,10 @@
                 }
             }
 
-            $scope.sendLogFiles = function () {
-                supportService.requestLogReporting();
+            $scope.sendLogFiles = function() {
+                supportService.getLogReportingModal(false).then(modal => {
+                    modal.show();
+                });
             };
 
             $scope.reset = function () {

@@ -454,6 +454,7 @@
     <Compile Include="DB_Migration\5.20.0\20170302_SWWEB_2929.cs" />
     <Compile Include="DB_Migration\5.29.0\20170627_SWWEB_3032.cs" />
     <Compile Include="DB_Migration\5.3.0\20160127_SWWEB_2020.cs" />
+    <Compile Include="DB_Migration\5.36.0\20170914_SWWEB_1954.cs" />
     <Compile Include="DB_Migration\5.8.0\20160504_SWWEB_2437.cs" />
     <Compile Include="DB_Migration\5.9.0\20160518_SWWEB_2513.cs" />
     <Compile Include="DB_Migration\5.9.0\20160517_SWWEB_2492.cs" />
@@ -483,6 +484,8 @@
     <Compile Include="Formatting\Rule\EmptyCollectionSerializationRule.cs" />
     <Compile Include="Formatting\Rule\EmptyObjectSerializationRule.cs" />
     <Compile Include="Formatting\Rule\IPropertySerializationRule.cs" />
+    <Compile Include="Help\HelpController.cs" />
+    <Compile Include="Help\HelpDataSet.cs" />
     <Compile Include="Models\ErrorConfig.cs" />
     <Compile Include="Models\Home\HomeService.cs" />
     <Compile Include="Models\Home\MenuModel.cs" />
@@ -508,6 +511,9 @@
     <Compile Include="Util\StaticFileLoad\PassthroughBundleOrderer.cs" />
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
+    <Content Include="App_Data\Client\%40internal\templates\swdb\swhelp.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Client\%40internal\templates\swdb\whereclause.xml" />
     <Content Include="App_Data\Client\dzsp21\properties.xml">
       <SubType>Designer</SubType>
@@ -831,6 +837,7 @@
     <Content Include="Content\Scripts\client\services\crud\modalFilter_service.js" />
     <Content Include="Content\Scripts\client\services\crud\modal_service.js" />
     <Content Include="Content\Scripts\client\services\dynComponent_service.js" />
+    <Content Include="Content\Scripts\client\services\helpService.js" />
     <Content Include="Content\Scripts\client\services\error_service.js" />
     <Content Include="Content\Scripts\client\services\excelservice.js" />
     <Content Include="Content\Scripts\client\services\file_service.js" />
@@ -946,6 +953,7 @@
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\problem\templates\problemsection.html" />
+    <Content Include="Views\Help\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">

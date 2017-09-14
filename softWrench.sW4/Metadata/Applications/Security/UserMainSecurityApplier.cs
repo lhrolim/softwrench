@@ -121,7 +121,15 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             var local = ApplicationConfiguration.IsLocal();
 
             var isSysAdmin = user.IsInRole(Role.SysAdmin) || (local && context.MockSecurity);
+
+            var defaultUserApp = applicationMetadata.GetProperty(ApplicationSchemaPropertiesCatalog.DefaultUserApplication);
+            if ("true".EqualsIc(defaultUserApp)) {
+                return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
+            }
+
             var sysAdminApplication = applicationMetadata.GetProperty(ApplicationSchemaPropertiesCatalog.SystemAdminApplication);
+
+
             if ("true".EqualsIc(sysAdminApplication) && isSysAdmin) {
                 return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
             }

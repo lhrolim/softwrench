@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <entities>
+    <entity name="HelpEntry" idAttribute="id" useridAttribute="id">
+      <attributes>
+        <attribute name="downloadable" query="CASE WHEN !@url is null THEN 'true' ELSE 'false' end " type="bool"/>
+        <attribute name="remove" query="1" type="varchar"/>
+      </attributes>
+    </entity>
+  </entities>
+
+  <applications>
+
+    <application name="SoftwrenchHelp" entity="HelpEntry" title="Softwrench Help">
+      <properties>
+        <property key="application.security.defaultuser" value="true"/>
+      </properties>
+      
+      <schemas>
+        <schema id="list" stereotype="list.noexport" title="Softwrench Help">
+          <field attribute="id" hidden="true"/>
+          <field attribute="url" hidden="true"/>
+
+          <field attribute="entrylabel" label="Entry">
+            <renderer type="default" params="width=50%"/>
+          </field>
+          <field attribute="type" label="Type"/>
+          
+          <field attribute="downloadable" label="Download">
+            <renderer type="icon" params="expression={'true':'fa-download','false':''};width=5%"/>
+          </field>
+          <field label="Remove" attribute="remove" showexpression="service:userService.isSysAdmin">
+            <renderer type="icon" params="expression={'#default':'fa-trash-o'};width=5%"/>
+          </field>
+          <properties>
+            <property key="list.click.service" value="swhelpService.downloadForm"/>
+            <property key="list.defaultorderby" value="label asc"/>
+            <property key="list.preventnoresultsnew" value="true"/>
+          </properties>
+          <commandbars>
+            <commandgroup position="gridtop.justnew" removeundeclared="true">
+              <command id="new" icon="fa-plus" service="$scope" method="newEntry" label="New" tooltip="$scope:newShemaLabel" showexpression="service:userService.isSysAdmin" cssclasses="large-button"/>
+            </commandgroup>
+          </commandbars>
+          
+        </schema>
+
+        <schema id="detail" stereotype="detail">
+          <field attribute="entrylabel" label="Label"/>
+          <!--optionfield attribute="type" label="Type">
+            <option label="Pdf" value="pdf"/>
+            <option label="Article" value="article"/>
+            <option label="Video" value="video"/>
+          </-optionfield-->
+          <field attribute="type" default="pdf" hidden="true"/>
+          <field attribute="url" label="Url" showexpression="@type!='pdf'"/>
+          <properties>
+            <property key="nextschema.schemaid" value="list"/>
+          </properties>
+        </schema>
+        
+        <schema id="new" stereotype="detailnew">
+          <field attribute="entrylabel" label="Label"/>
+          <!--optionfield attribute="type" label="Type">
+            <option label="Pdf" value="pdf"/>
+            <option label="Article" value="article"/>
+            <option label="Video" value="video"/>
+          </-optionfield-->
+          <field attribute="type" default="pdf" hidden="true"/>
+          <field attribute="url" label="Url" showexpression="@type!='pdf'"/>
+          <field label="Attachment" attribute="newattachment" requiredexpression="@type!==pdf'">
+            <renderer type="upload"/>
+          </field>
+          <properties>
+            <property key="nextschema.schemaid" value="list"/>
+          </properties>
+        </schema>
+        
+      </schemas>
+      
+      
+    </application>
+
+  </applications>
+</metadata>

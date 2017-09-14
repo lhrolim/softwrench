@@ -10,6 +10,11 @@
              tooltip="Export to Excel" showexpression="" cssclasses="large-button"/>
   </commandgroup>
 
+
+  <commandgroup position="gridtop.justnew" platform="web" removeundeclared="true">
+    <command id="new" icon="fa-plus" service="$scope" method="newEntry" label="New" tooltip="$scope:newShemaLabel" showexpression="$scope:hasNewSchema" cssclasses="large-button"/>
+  </commandgroup>
+
   <!--TODO: move $scope method to generic service with overrides for specific services-->
   <commandgroup position="detail.primary" platform="web">
     <!--<command id="additem" icon="$scope:getAddIcon" service="$scope" method="newDetailFn" label="$scope:getAddLabel" showexpression="$scope:shouldShowAdd" />-->

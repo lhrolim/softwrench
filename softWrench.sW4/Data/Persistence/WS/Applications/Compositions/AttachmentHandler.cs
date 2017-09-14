@@ -43,7 +43,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
         private readonly DataSetProvider _dataSetProvider;
 
-        public AttachmentDao AttachmentDao { get; }
+        public AttachmentDao AttachmentDao {
+            get;
+        }
 
         private readonly IConfigurationFacade _facade;
 
@@ -71,11 +73,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         /// <summary>
         /// Used for parsing the base64 string from the html input="file" element
         /// </summary>
-        //        public static Base64Delegate InputFile = delegate(string attachmentAsString) {
-        //            var indexOf = attachmentAsString.IndexOf(',');
-        //            var base64String = attachmentAsString.Substring(indexOf + 1);
-        //            return System.Convert.FromBase64String(base64String);
-        //        };
+        public byte[] FromBase64ToByteArray(string attachmentAsString) {
+            var indexOf = attachmentAsString.IndexOf(',');
+            var base64String = attachmentAsString.Substring(indexOf + 1);
+            return System.Convert.FromBase64String(base64String);
+        }
 
         [Transactional(DBType.Maximo)]
         public virtual void HandleAttachmentAndScreenshot(MaximoOperationExecutionContext maximoTemplateData) {
@@ -110,7 +112,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 // this will only filter new attachments
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
                     var title = attachment.GetAttribute("document").ToString();
-                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo",true);
+                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo", true);
                     var desc = docinfo != null && !string.IsNullOrEmpty(docinfo.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
 
                     data = attachment.GetUnMappedAttribute("newattachment");
@@ -191,7 +193,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (attachment.OffLineHash != null) {
                 //for offline solution
                 w.SetValue(docLink, "URLPARAM1", attachment.OffLineHash);
-            }else if (attachment.Filter != null) {
+            } else if (attachment.Filter != null) {
                 //for fs workpackage solution
                 w.SetValue(docLink, "URLPARAM1", attachment.Filter);
             }

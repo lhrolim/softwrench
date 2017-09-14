@@ -16,7 +16,7 @@
                                 search-template="searchTemplate"
                                 panelid="panelid"
                                 class="gridtop" />
-                <div class="separator large-button hidden-xs col-sm-1" ng-if="ismodal !== 'true'">&nbsp;</div>
+                <div class="separator large-button hidden-xs col-sm-1" ng-if="ismodal !== 'true' &amp;&amp;shouldShowGridNavigation()" >&nbsp;</div>
                 <!-- quick search input -->
                 <div ng-show="shouldShowGridNavigation()">
                     <div class="quick-search col-xs-12 col-sm-6 col-md-5" ng-class="{'no-search-options' : shouldShowSearchOptions()}">
