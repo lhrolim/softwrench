@@ -102,6 +102,9 @@ namespace softWrench.sW4.Web.Models.Home {
     }
 
     public class SchemaInfo {
+
+        public string Alias { get; set; }
+
         public string ListApplicationName { get; set; }
         public string DetailApplicationName { get; set; }
         public string DetailNewApplicationName { get; set; }

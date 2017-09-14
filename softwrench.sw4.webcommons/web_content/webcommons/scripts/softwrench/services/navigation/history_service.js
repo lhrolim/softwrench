@@ -128,10 +128,10 @@
                 contextService.setActiveTab(hash.substring("tabid=".length));
             }
 
-            
+
         }
 
-        function doUpdatePath(stateUrl, routeInfo) {
+        function doUpdatePath(stateUrl, routeInfo, aliasUrl) {
             if (!routeInfo || !routeInfo.contextPath) {
                 return null;
             }
@@ -150,7 +150,7 @@
             const isPrefixedUpper = stateUrl.startsWith(dataPrefixUpper);
             if (!isPrefixed && !isPrefixedUpper) {
                 if (stateUrl.contains("/api")) {
-                    return changePath(contextPath);   
+                    return changePath(contextPath);
                 }
 
                 if (!stateUrl.startsWith("/")) {
@@ -179,11 +179,15 @@
             const params = JSON.parse(`{"${paramsStr.replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g, '":"')}"}`);
 
             if (!!params.aliasurl) {
-                if (!params.aliasurl.startsWith("/")) {
-                    params.aliasurl = "/" + params.aliasurl;
+                aliasUrl = params.aliasurl;
+            }
+
+            if (!!aliasUrl) {
+                if (!aliasUrl.startsWith("/")) {
+                    aliasUrl = "/" + aliasUrl;
                 }
 
-                return changePath(`${contextPath }${params.aliasurl}`);
+                return changePath(`${contextPath}${aliasUrl}`);
             }
 
             const schemaId = params["key[schemaId]"] || params["key[schemaid]"];
@@ -197,7 +201,10 @@
 
             const schemaInfo = routeInfo.schemaInfo[application];
 
-            const decoratedApplication = applicationDecorationObject[application] || application;
+            let decoratedApplication = applicationDecorationObject[application] || application;
+            if (schemaInfo.Alias) {
+                decoratedApplication = schemaInfo.Alias;
+            }
 
             const listSchema = schemaInfo["listSchema"];
             if ((listSchema && listSchema === schemaId) || "list".equalsIc(schemaId)) {
@@ -229,14 +236,15 @@
             return changePath(contextPath);
         }
 
-        function updatePath(stateUrl) {
+        function updatePath(stateUrl, aliasUrl) {
             if (stateUrl) {
-                getRouteInfo().then(routeInfo => doUpdatePath(stateUrl, routeInfo));    
+                return getRouteInfo().then(routeInfo => doUpdatePath(stateUrl, routeInfo, aliasUrl));
             }
         }
 
         function updateState(state) {
             const hash = `state=${Base64.encode(JSON.stringify(state))}`;
+            contextService.set("currentstateurl" + $location.path(), state.url);
 //            $location.hash(hash);
         }
 
@@ -266,8 +274,8 @@
                 url: url,
                 BcHistoryIndex: historyIndex
             }
-            updateState(state);
             updatePath(state.url);
+            updateState(state);
 
             // fires an event if the src and target have the same title
             // to force the breadcrumb update the current page
@@ -311,7 +319,7 @@
 
         //#region Public methods for history
 
-        function addToHistory(url, saveHistoryReturn, saveCancelReturn) {
+        function addToHistory(url, { saveHistoryReturn, saveCancelReturn, aliasUrl } = { saveHistoryReturn: true, saveCancelReturn: false, aliasUrl: null }) {
             const state = { url: url };
             if (saveHistoryReturn) {
                 state.BcHistoryIndex = addToBreadcrumbHistory(url);
@@ -330,11 +338,13 @@
 
             locationUpdatedByService = true;
 
-            if ($location.hash() === "") {
-                $location.replace();
-            }
-            updateState(state);
-            updatePath(state.url);
+            //            if ($location.hash() === "") {
+            //                $location.replace();
+            //            }
+            
+            updatePath(state.url, aliasUrl).then(() => {
+                updateState(state);
+            });
         }
 
         function getLocationUrl() {

@@ -13,6 +13,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 
 namespace softWrench.sW4.Web.Models.Home {
     public class RouteService : ISingletonComponent, ISWEventListener<RefreshMetadataEvent> {
@@ -121,7 +122,13 @@ namespace softWrench.sW4.Web.Models.Home {
                 var listSchema = app.MainListSchema ?? GetSchema(app, SchemaStereotype.List, "list");
                 var newDetailSchema = app.MainNewDetailSchema ?? GetSchema(app, SchemaStereotype.DetailNew, "newdetail");
                 var detailSchema = app.MainDetailSchema ?? GetSchema(app, SchemaStereotype.Detail, "detail", "editdetail");
+                var alias = "";
+                if (app.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.AppAliasUrl)) {
+                    alias = app.Properties[ApplicationSchemaPropertiesCatalog.AppAliasUrl];
+                }
                 var mainSchemaInfo = new SchemaInfo {
+
+                    Alias = alias,
                     listSchema = listSchema?.SchemaId,
                     newDetailSchema = newDetailSchema?.SchemaId,
                     detailSchema = detailSchema?.SchemaId,

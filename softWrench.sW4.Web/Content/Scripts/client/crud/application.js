@@ -143,11 +143,7 @@
 
             $scope.applicationname = applicationName;
             const urlToCall = url("/api/data/" + applicationName + "?" + $.param(parameters));
-            if (printMode == undefined) {
-                //avoid the print url to be saved on the sessionStorage, breaking page refresh
-                contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
-                historyService.addToHistory(urlToCall, false, true);
-            }
+        
             log.info("calling url".format(urlToCall));
 
             //save the current scroll position to resotre when switching back
@@ -157,6 +153,15 @@
             return $http.get(urlToCall)
                 .then(response => {
                     const data = response.data;
+
+                    let historyUrl = urlToCall;
+                
+                    if (printMode == undefined) {
+                        //avoid the print url to be saved on the sessionStorage, breaking page refresh
+                        contextService.insertIntoContext("swGlobalRedirectURL", urlToCall, false);
+                        historyService.addToHistory(historyUrl, { saveCancelReturn: true, aliasUrl: data.aliasURL });
+                    }
+
                     // besides printMode is not undefined, we need to verify that printMode is true;
                     // otherwise disable printRequest, that will allow the pagination to update.
                     if (printMode != undefined && printMode) {

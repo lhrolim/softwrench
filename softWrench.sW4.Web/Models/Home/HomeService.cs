@@ -75,8 +75,8 @@ namespace softWrench.sW4.Web.Models.Home {
                 queryString += "&siteId=" + siteid;
             }
 
-            if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.AliasUrl)) {
-                queryString += "&aliasurl=" + schema.Properties[ApplicationSchemaPropertiesCatalog.AliasUrl];
+            if (schema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.SchemaAliasUrl)) {
+                queryString += "&aliasurl=" + schema.Properties[ApplicationSchemaPropertiesCatalog.SchemaAliasUrl];
             }
 
             return WebAPIUtil.GetRelativeRedirectURL(actionURL, queryString);

@@ -165,8 +165,9 @@
             const urlToUse = url("/api/Data/{0}?{1}".format(applicationName, queryString));
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
-            historyService.addToHistory(urlToUse);
+            
             return $http.get(urlToUse).then(function (response) {
+                historyService.addToHistory(urlToUse,{aliasUrl: response.aliasURL});
                 const data = response.data;
                 jsonData = data;
                 innerGoToApplicationGet(data, null, null, mode, applicationName, null, extraParameters);
@@ -285,10 +286,7 @@
                     innerGoToApplicationGet(data, popupMode, redirectUrl, mode, applicationName, afterRedirectHook, parameters);
                     if (redirectUrl && !popupMode) {
                         let historyUrl = redirectUrl;
-                        if (!!data.aliasURL) {
-                            historyUrl = data.aliasURL;
-                        }
-                        historyService.addToHistory(historyUrl, parameters.saveHistoryReturn, true);
+                        historyService.addToHistory(historyUrl, { saveHistoryReturn: parameters.saveHistoryReturn, saveCancelReturn: true, aliasUrl: data.aliasURL });
                     }
                     return $q.when(data);
                 });
@@ -300,7 +298,7 @@
                 return $http.post(redirectUrl, jsonString).then(httpResponse => {
                     const data = httpResponse.data;
                     if (redirectUrl && !popupMode) {
-                        historyService.addToHistory(redirectUrl, parameters.saveHistoryReturn, true);
+                        historyService.addToHistory(redirectUrl, { saveHistoryReturn: parameters.saveHistoryReturn, saveCancelReturn: true, aliasUrl: data.aliasURL });
                     }
                     if (angular.isFunction(parameters.postProcessFn)) {
                         parameters.postProcessFn(data);

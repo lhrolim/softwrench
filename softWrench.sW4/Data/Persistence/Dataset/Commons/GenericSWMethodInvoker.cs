@@ -80,7 +80,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             var mi = ReflectionUtil.GetMethodNamed(service, methodName);
             if (mi == null) {
-                throw new MetadataException("error locating reference {0}: method {1} not found on service {2}".Fmt(alias, methodName, serviceName));
+                throw new MetadataException("error locating reference {0}: method {1} not found on service {2} for app {3}".Fmt(alias, methodName, serviceName, applicationName));
             }
             if (parameterData == null) {
                 //void methods, or no extra validation information provided

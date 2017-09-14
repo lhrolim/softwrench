@@ -9,9 +9,14 @@
 
         /// <summary>
         /// Marks a schema as a non internal
-        /// <seealso cref="MetadataProvider.FetchNonInternalSchemas"/>
         /// </summary>
-        public const string AliasUrl = "schema.aliasurl";
+        public const string SchemaAliasUrl = "schema.aliasurl";
+
+        /// <summary>
+        /// Marks a schema as a non internal
+        /// </summary>
+        public const string AppAliasUrl = "application.aliasurl";
+
 
         /// <summary>
         /// Name of the schema to be used on the url /{applicationname}/
@@ -28,6 +33,16 @@
         /// Name of the schema to be used on the url /{applicationname}/{userid} and /{applicationname}/uid/{id}
         /// </summary>
         public const string MainDetailSchema = "application.maindetailschema";
+
+        /// <summary>
+        /// The schema that should serve as the base for the customization
+        /// </summary>
+        public const string OriginalSchema = "application.originalschema";
+
+        /// <summary>
+        /// The aplication that should serve as the base for the customization
+        /// </summary>
+        public const string OriginalApplication = "application.original";
 
         /// <summary>
         /// Mark an sw aplication as viewable by users with system admin role
@@ -75,8 +90,6 @@
         /// if true the selection mode will be enabled when the grid is rendered by default
         /// </summary>
         public const string ListSelectionModeByDefault = "list.selectionmodebydefault";
-
-      
 
         /// <summary>
         ///

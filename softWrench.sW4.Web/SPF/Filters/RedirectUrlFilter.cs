@@ -78,7 +78,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
         }
 
         private string FindAliasUrl(IApplicationResponse applicationResponse) {
-            return applicationResponse?.Schema?.GetProperty(ApplicationSchemaPropertiesCatalog.AliasUrl);
+            return applicationResponse?.Schema?.GetProperty(ApplicationSchemaPropertiesCatalog.SchemaAliasUrl);
 
         }
 

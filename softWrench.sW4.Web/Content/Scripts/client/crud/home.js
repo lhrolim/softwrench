@@ -2,7 +2,7 @@
     "use strict";
 
 
-    function HomeController($scope, $http, $templateCache, $rootScope, $timeout, $log, $q, contextService, i18NService, alertService, statuscolorService,
+    function HomeController($scope, $http, $location, $templateCache, $rootScope, $timeout, $log, $q, contextService, i18NService, alertService, statuscolorService,
         classificationColorService, historyService, configurationService, localStorageService, userPreferencesService, restService, schemaCacheService, logoutService, dynamicScriptsCacheService) {
         const APP_VERION = 'sw_system_version_key';
         $scope.$name = 'HomeController';
@@ -105,7 +105,7 @@
             if (locationUrl) {
                 redirectUrl = locationUrl;
             } else {
-                historyService.addToHistory(redirectUrl, false, true);
+                historyService.addToHistory(redirectUrl, { saveCancelReturn: true});
             }
 
             //Check if the user is sysadmin and the application version has changed since last login for this user
@@ -174,7 +174,7 @@
                 return false;
             }
 
-            const redirectUrl = historyService.getLocationUrl();
+            const redirectUrl = contextService.get("currentstateurl" + $location.path());
             if (!redirectUrl) {
                 return false;
             }
@@ -206,7 +206,7 @@
         initController();
     }
 
-    app.controller("HomeController", ["$scope", "$http", "$templateCache", "$rootScope", "$timeout", "$log", "$q", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", "logoutService", "dynamicScriptsCacheService", HomeController]);
+    app.controller("HomeController", ["$scope", "$http","$location", "$templateCache", "$rootScope", "$timeout", "$log", "$q", "contextService", "i18NService", "alertService", "statuscolorService", "classificationColorService", "historyService", "configurationService", "localStorageService", "userPreferencesService", "restService", "schemaCacheService", "logoutService", "dynamicScriptsCacheService", HomeController]);
     window.HomeController = HomeController;
 
 })(angular);

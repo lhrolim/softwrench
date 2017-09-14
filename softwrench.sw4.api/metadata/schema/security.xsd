@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+targetNamespace="http://www.controltechnologysolutions.com/security"
+        xmlns:se="http://www.controltechnologysolutions.com/security"
+	 elementFormDefault="qualified">
+
+  <element name="security" type="se:security">
+  </element>
+
+
+
+  <complexType name="security">
+    <sequence minOccurs="1" maxOccurs="unbounded">
+      <element name="application" type="se:application"
+               maxOccurs="unbounded" minOccurs="0"/>  
+        <element name="removeapplication" type="se:removeapplication"
+               maxOccurs="unbounded" minOccurs="0"/>
+    </sequence >
+  </complexType>
+
+
+  <complexType name="application">
+    <attribute name="ref" type="string" use="required"></attribute>
+    <attribute name="label" type="string" use="required"></attribute>
+    <attribute name="listschemas" type="string" use="optional"></attribute>
+    <attribute name="creationschemas" type="string" use="optional"></attribute>
+    <attribute name="updateschemas" type="string" use="optional"></attribute>
+  </complexType>
+
+  <complexType name="removeapplication">
+    <attribute name="ref" type="string" use="required"></attribute>
+  </complexType>
+
+
+
+
+</schema>

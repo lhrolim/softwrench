@@ -5,12 +5,18 @@
 	elementFormDefault="qualified"
 	xmlns:pref="http://www.controltechnologysolutions.com/menumetadata"
 	xmlns:f="http://www.controltechnologysolutions.com/filters"
+	xmlns:se="http://www.controltechnologysolutions.com/security"
 	xmlns:s="http://www.controltechnologysolutions.com/stereotypes">
 
 
   <import schemaLocation="filters.xsd"
 		namespace="http://www.controltechnologysolutions.com/filters">
   </import>
+
+  <import schemaLocation="security.xsd"
+          namespace="http://www.controltechnologysolutions.com/security">
+  </import>
+  
   <import schemaLocation="stereotypes.xsd" namespace="http://www.controltechnologysolutions.com/stereotypes"></import>
 
 
@@ -22,6 +28,10 @@
         </element>
         <element name="applications" type="tns:Applications"
 					maxOccurs="1" minOccurs="1">
+        </element>
+
+        <element name="security" type="se:security"
+                 maxOccurs="1" minOccurs="1">
         </element>
 
         <element name="templates" type="tns:TemplatesType"></element>

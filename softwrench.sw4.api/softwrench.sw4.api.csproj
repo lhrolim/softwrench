@@ -109,6 +109,9 @@
     <None Include="metadata\schema\Deploy_Metadata.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="metadata\schema\security.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="metadata\schema\filters.xsd">
       <SubType>Designer</SubType>
     </None>

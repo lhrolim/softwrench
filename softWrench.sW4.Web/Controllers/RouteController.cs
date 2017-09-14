@@ -12,6 +12,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Web.Models.Home;
 
@@ -181,11 +182,11 @@ namespace softWrench.sW4.Web.Controllers {
         }
 
         private static CompleteApplicationMetadataDefinition GetAppMetadata(string applicationName) {
-            try {
-                return MetadataProvider.Application(applicationName);
-            } catch (Exception) {
-                return null;
+            var app = MetadataProvider.Application(applicationName, false);
+            if (app == null) {
+                app = MetadataProvider.Applications().FirstOrDefault(a => applicationName.EqualsIc(a.GetProperty(ApplicationSchemaPropertiesCatalog.AppAliasUrl)));
             }
+            return app;
         }
 
         private ApplicationSchemaDefinition GetSchema(CompleteApplicationMetadataDefinition appMetadata, string extra) {

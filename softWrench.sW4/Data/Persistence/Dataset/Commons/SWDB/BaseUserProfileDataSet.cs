@@ -23,9 +23,9 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
-    class BaseUserProfileDataSet : SWDBApplicationDataset {
+    public class BaseUserProfileDataSet : SWDBApplicationDataset {
 
-        private UserProfileManager _userProfileManager;
+        private readonly UserProfileManager _userProfileManager;
 
         public BaseUserProfileDataSet(UserProfileManager userProfileManager) {
             _userProfileManager = userProfileManager;
@@ -50,7 +50,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             return result;
         }
 
-        private void HandleAppPermissions(UserProfile profileOb, DataMap profileDatamap) {
+        protected virtual void HandleAppPermissions(UserProfile profileOb, DataMap profileDatamap) {
 
             //force eager cache
 
@@ -62,34 +62,36 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
             }
 
             foreach (var app in apps) {
-                IDictionary<string, object> dict = new Dictionary<string, object>();
-                var title = app.Title;
-                if (app.ApplicationName == "otherworkorder") {
-                    //TODO: make it generic
-                    title = "Group Workorders";
-                }
-
-                dict["title"] = title;
-                dict["#application"] = app.ApplicationName;
-
-                var loadApplicationPermissions = profileOb.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(app.ApplicationName));
-                if (loadApplicationPermissions != null) {
-                    dict["id"] = loadApplicationPermissions.Id;
-                    dict["#appallowview"] = loadApplicationPermissions.AllowView;
-                    dict["#appallowcreation"] = loadApplicationPermissions.AllowCreation;
-                    dict["#appallowupdate"] = loadApplicationPermissions.AllowUpdate;
-                    dict["#fullAppPermission"] = loadApplicationPermissions;
-                } else {
-                    dict["#appallowview"] = false;
-                    dict["#appallowcreation"] = false;
-                    dict["#appallowupdate"] = false;
-                }
-                //force eager cache
-                MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, app.ApplicationName);
-                dict["hascreationschema"] = app.HasCreationSchema;
+                var dict = CreateAppDict(profileOb, app);
                 appPermissions.Add(dict);
             }
+            appPermissions = appPermissions.OrderBy(a => a["title"]).ToList();
             profileDatamap.SetAttribute("#apppermissions_", appPermissions);
+        }
+
+        protected virtual IDictionary<string, object> CreateAppDict(UserProfile profileOb, CompleteApplicationMetadataDefinition app) {
+            IDictionary<string, object> dict = new Dictionary<string, object>();
+            var title = app.Title;
+            dict["title"] = title;
+            dict["#application"] = app.ApplicationName;
+
+            var loadApplicationPermissions =
+                profileOb.ApplicationPermissions.FirstOrDefault(f => f.ApplicationName.EqualsIc(app.ApplicationName));
+            if (loadApplicationPermissions != null) {
+                dict["id"] = loadApplicationPermissions.Id;
+                dict["#appallowview"] = loadApplicationPermissions.AllowView;
+                dict["#appallowcreation"] = loadApplicationPermissions.AllowCreation;
+                dict["#appallowupdate"] = loadApplicationPermissions.AllowUpdate;
+                dict["#fullAppPermission"] = loadApplicationPermissions;
+            } else {
+                dict["#appallowview"] = false;
+                dict["#appallowcreation"] = false;
+                dict["#appallowupdate"] = false;
+            }
+            //force eager cache
+            MetadataProvider.FetchNonInternalSchemas(ClientPlatform.Web, app.ApplicationName);
+            dict["hascreationschema"] = app.HasCreationSchema;
+            return dict;
         }
 
         [UsedImplicitly]

@@ -60,7 +60,6 @@ namespace softWrench.sW4.Metadata.Parsing {
 
 
 
-
         public const string AttributesElement = "attributes";
         public const string TargetPathAttribute = "targetpath";
         public const string ExcludeUndeclared = "excludeundeclared";
@@ -293,6 +292,8 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string ReferenceElement = "reference";
 
         public const string SecurityElement = "security";
+        public const string RefAttribute = "ref";
+        public const string RemoveApplicationElement = "removeapplication";
         public const string RolesElement = "roles";
         public const string RoleElement = "role";
         public const string RoleIdAttribute = "id";
@@ -311,5 +312,6 @@ namespace softWrench.sW4.Metadata.Parsing {
 
         public static string ConstElement = "const";
 
+        
     }
 }

@@ -625,6 +625,10 @@
     <Compile Include="Metadata\Parsing\XmlEntityTargetMetadataParser.cs" />
     <Compile Include="Metadata\Parsing\XmlTemplateHandler.cs" />
     <Compile Include="Metadata\RefreshMetadataEvent.cs" />
+    <Compile Include="Metadata\Security\InMemoryUser.cs" />
+    <Compile Include="Metadata\Security\InMemoryUserExtensions.cs" />
+    <Compile Include="Metadata\Security\RemoveApplicationEntry.cs" />
+    <Compile Include="Metadata\Security\SecurityApplicationEntry.cs" />
     <Compile Include="Metadata\Security\SecurityException.cs" />
     <Compile Include="Metadata\Security\SecurityGroupExtensions.cs" />
     <Compile Include="Metadata\Stereotypes\AComponentStereotype.cs" />
@@ -644,6 +648,7 @@
     <Compile Include="Metadata\Validator\StereotypesXmlInitializer.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializer.cs" />
     <Compile Include="Metadata\Validator\UserIdProperty.cs" />
+    <Compile Include="Metadata\Parsing\XmlSecurityMetadataParser.cs" />
     <Compile Include="Metadata\Validator\XmlStereotypeMetadataParser.cs" />
     <Compile Include="Preferences\GlobalUserPreferencesRegistry.cs" />
     <Compile Include="Preferences\GridFilterAssociation.cs" />
@@ -801,15 +806,10 @@
     <Compile Include="Metadata\Parsing\XmlMenuMetadataSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlMetadataSchema.cs" />
     <Compile Include="Metadata\Parsing\XmlParserExtensions.cs" />
-    <Compile Include="Metadata\Parsing\XmlSecurityMetadataParser.cs" />
     <Compile Include="Configuration\Definitions\Category.cs" />
     <Compile Include="Metadata\Properties\MetadataProperties.cs" />
     <Compile Include="Configuration\Definitions\PropertyDefinition.cs" />
     <Compile Include="Configuration\Definitions\PropertyValue.cs" />
-    <Compile Include="Metadata\Security\DataRestriction.cs" />
-    <Compile Include="Metadata\Security\InMemoryUser.cs" />
-    <Compile Include="Metadata\Security\SecurityMetadata.cs" />
-    <Compile Include="Metadata\Security\InMemoryUserExtensions.cs" />
     <Compile Include="Data\EL\ToString\ToStringELParser.cs" />
     <Compile Include="Data\EL\ToString\ToStringExpression.cs" />
     <Compile Include="Data\DataMap.cs" />

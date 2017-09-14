@@ -496,7 +496,14 @@
                                 hasSection = true;
                                 html += "<div>";
                                 //ng-if= true is needed to create a new scope here
-                                html += "<div ng-include=\"'{0}'\" href=\"#\" style=\"width: 100%\" ng-init=\"dm={1}\"  ng-if=\"'true'\">".format(contextPath, rowst);
+                                if (contextPath) {
+                                    html +=
+                                        "<div ng-include=\"'{0}'\" href=\"#\" style=\"width: 100%\" ng-init=\"dm={1}\"  ng-if=\"'true'\">"
+                                        .format(contextPath, rowst);
+                                } else {
+                                    html += "<div href=\"#\" style=\"width: 100%\" ng-init=\"dm={1}\"  ng-if=\"'true'\">".format(contextPath, rowst);    
+                                }
+                                
                             }
                             html += "</div></td>";
 
