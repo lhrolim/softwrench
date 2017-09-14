@@ -2,6 +2,13 @@
     'use strict';
     
     function fsdailyoutagemeetingService(modalService, schemaCacheService, alertService, applicationService, compositionService, fsrequestService) {
+        function modalProps() {
+            const props = fsrequestService.requestModalProps();
+            props["cssclass"] = "largemodal";
+            props["removecrudmodalclass"] = true;
+            return props;
+        }
+
         function openModalNew(item, callback, rollback) {
             if (!fsrequestService.validatePackage()) {
                 return;
@@ -19,7 +26,7 @@
                     mergedItem["summary"] = "Meeting Summary Test";
                 }
 
-                modalService.show(schema, mergedItem, fsrequestService.requestModalProps(), (saveDatamap) => {
+                modalService.show(schema, mergedItem, modalProps(), (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback);
                 });
             });
@@ -34,7 +41,7 @@
 
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "detail").then((schema) => {
                 item["sendnow"] = 0;
-                modalService.show(schema, item, fsrequestService.requestModalProps(), (saveDatamap) => {
+                modalService.show(schema, item, modalProps(), (saveDatamap) => {
                     fsrequestService.postSave(saveDatamap, callback, rollback).then(r => {
                         return r;
                     });
