@@ -12,6 +12,9 @@
   </entities>
   <applications>
     <application entity="DailyOutageMeeting" name="DailyOutageMeeting" title="Daily Outage Meeting">
+      <properties>
+        <property key="detail.modal.confirmclose" value="true"/>
+      </properties>
       <schemas>
         <schema id="dailyoutagelineline" stereotype="compositionlist" platform="web">
           <field attribute="meetingtime" label="Meeting Time" readonly="true">

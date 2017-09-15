@@ -72,17 +72,16 @@
         expect(crudContextHolderService.getSaveFn()).toBe(savefn);
         expect(crudContextHolderService.getPrimaryCommand()).toBe(saveCommand);
 
-        mockScope.closeModal();
+        mockScope.closeModal().then(() => {
+            expect(crudContextHolderService.isShowingModal()).toBeFalsy();
+            expect(crudContextHolderService.rootDataMap("#modal")).toBeNull();
+            expect(crudContextHolderService.currentSchema("#modal")).toBeNull();
+
+            expect(crudContextHolderService.getSaveFn()).toBeNull();
+            expect(crudContextHolderService.getPrimaryCommand()).toBeUndefined();
+        }).finally(done);
         
 
-        expect(crudContextHolderService.isShowingModal()).toBeFalsy();
-        expect(crudContextHolderService.rootDataMap("#modal")).toBeNull();
-        expect(crudContextHolderService.currentSchema("#modal")).toBeNull();
-
-        expect(crudContextHolderService.getSaveFn()).toBeNull();
-        expect(crudContextHolderService.getPrimaryCommand()).toBeUndefined();
-
-        done();
         $rootScope.$digest();
 
     });
