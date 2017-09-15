@@ -212,7 +212,6 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarLocationDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
-    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarSecurityGroupDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkPackageDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
@@ -324,6 +323,7 @@
     <Content Include="web_content\firstsolar\scripts\assetService.js" />
     <Content Include="web_content\firstsolar\scripts\batchWorkorderService.js" />
     <Content Include="web_content\firstsolar\scripts\advancedSearchPcsButtons.js" />
+    <Content Include="web_content\firstsolar\scripts\fsworkorderService.js" />
     <Content Include="web_content\firstsolar\scripts\fsworkpackageService.js" />
     <Content Include="web_content\firstsolar\scripts\locationService.js" />
     <Content Include="web_content\firstsolar\scripts\location_filter.js" />

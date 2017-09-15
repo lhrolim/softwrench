@@ -387,7 +387,7 @@
 
           <customization position="status">
             <association label="Status" target="status" labelfield="pescosynstatus.description">
-              <dataprovider prefilterfunction="FilterStatusCodes"/>
+              <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
             </association>
           </customization>

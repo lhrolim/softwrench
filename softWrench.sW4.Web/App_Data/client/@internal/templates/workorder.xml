@@ -302,13 +302,13 @@
           <field attribute="outmatcost"        hidden="true"/>
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
-          
+          <field attribute="originalstatus" hidden="true"/>
           
         </componentdisplayable>
 
         <componentdisplayable id="statuslookup">
           <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
         </componentdisplayable>
@@ -399,7 +399,7 @@
 
         <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status" platform="web">
           <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
             <renderer type="lookup" params="avoidautofocus=true"/>
           </association>
         </schema>
@@ -487,9 +487,11 @@
         </schema>
 
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web">
+          <reference id="detailhiddensoffline"/>
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
+          
 
           <!--TODO: investigate hidden fields on customizations not being added-->
 <!--          <field attribute="crewid" hidden="true"/>-->
@@ -708,7 +710,7 @@
               <renderer type="default" />
             </field>
             <association label="Status" target="status" labelfield="synstatus.description">
-              <dataprovider prefilterfunction="FilterStatusCodes"/>
+              <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
             </association>
           </section>

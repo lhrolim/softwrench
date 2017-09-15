@@ -536,7 +536,7 @@
     </application>
     
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
-
+      
 
 
       <components>
@@ -557,6 +557,18 @@
 
 
       <schemas>
+
+        <schema id="editdetail" redeclaring="false">
+          <commandbars>
+            <commandgroup position="actions" removeundeclared="true">
+              <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder" 
+                       permissionexpression="@maximoVersionEvaluator.Is76" showexpression="@status != null &amp;&amp; @status.equalsAny('INPRG','APPR')" cssclasses="large-button"/>
+              <!-- Create new SR as Related Record -->
+              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+              <!--              </container>-->
+            </commandgroup>
+          </commandbars>
+        </schema>
         
         <!--#region Work Package --> 
         <schema id="workpackageschema" redeclaring="false" stereotype="detail" platform="web">
@@ -1022,7 +1034,7 @@
           <association label="Priority" target="wopriority" labelfield="realpriority_.description" showexpression="false"/>
 
           <association label="Status" target="status" labelfield="synstatus.description">
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
           </association>
 
           <field attribute="description" label="Description" requiredexpression="true"/>
@@ -1214,7 +1226,7 @@
 
 
           <association label="Status" target="status" labelfield="synstatus.description" >
-            <dataprovider prefilterfunction="FilterStatusCodes"/>
+            <dataprovider postfilterfunction="FilterAvailableStatus"/>
           </association>
 
           <field attribute="description" label="Description" requiredexpression="true"/>

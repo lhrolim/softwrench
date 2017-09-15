@@ -78,7 +78,7 @@
          * 
          * @returns {Promise} 
          */
-        function save({compositionData,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap} = defaultSaveParams) {
+        function save({compositionData,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap,datamap} = defaultSaveParams) {
             
             if (dispatchedByModal == undefined) {
                 dispatchedByModal = crudContextHolderService.isShowingModal();
@@ -87,7 +87,7 @@
             const panelId = dispatchedByModal ? "#modal" : null;
 
             const schema = crudContextHolderService.currentSchema(panelId);
-            const datamap = crudContextHolderService.rootDataMap(panelId);
+            datamap = datamap || crudContextHolderService.rootDataMap(panelId);
 
             //LUIZ -- TODO: review circular dependency
             return $injector.get('submitService').submit(schema, datamap, {

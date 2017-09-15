@@ -646,7 +646,7 @@
           </customization>
           <customization position="status">
             <association label="Status:" target="status" labelfield="synstatus.description">
-              <dataprovider prefilterfunction="FilterStatusCodes"/>
+              <dataprovider postfilterfunction="FilterAvailableStatus"/>
               <renderer type="lookup" params="avoidautofocus=true"/>
               <event type="afterchange" method="onStatusChanged" service="workorderService"/>
             </association>

@@ -64,7 +64,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
 
             var selectedStatus = crudData.GetAttribute("status");
 
-            if (!ContextLookuper.LookupContext().OfflineMode || !selectedStatus.Equals("COMP")) {
+            if (!selectedStatus.Equals("COMP")) {
                 return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
             }
 
