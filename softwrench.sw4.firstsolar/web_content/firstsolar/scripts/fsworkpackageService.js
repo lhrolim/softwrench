@@ -43,7 +43,7 @@
                 "AIRS": ["airswitchertests"],
                 "CAPB": ["capbanktests"],
                 "BATTERY": ["batterytests"],
-                "FEEDER": ["feedertests"],
+                "FEEDER": ["feedertests", "feedertranstests", "feederpvcstests"],
                 "RELAY": ["relaytests"]
             }
 
@@ -181,7 +181,7 @@
                 return resultSection;
             }
 
-            generateTestSection = function (outerSectionName, selectedTest, preferredIdx) {
+            generateTestSection = function (outerSectionName, selectedTest, preferredIdx, testgrouplabel) {
                 const sectionId = outerSectionName + selectedTest.value + "section";
 
                 const resultSection = {
@@ -196,7 +196,7 @@
                     orientation: "vertical",
                     preferredIdx: preferredIdx,
                     header: {
-                        label: outerSectionName.toUpperCase() + " - " + selectedTest.label,
+                        label: testgrouplabel + " - " + selectedTest.label,
                         displacement: "sameline",
                         showExpression: "true",
                         parameters: {
@@ -432,7 +432,7 @@
                     log.debug(`adding missing outer component section for ${outerSectionName} at position ${idxToInsert}`);
                 }
                 const idxData = locatePreferredSectionIdx(schema, outerSection, option.value, field);
-                const generatedTestSection = generateTestSection(outerSectionName, option, idxData.preferredIdx);
+                const generatedTestSection = generateTestSection(outerSectionName, option, idxData.preferredIdx, field.label);
                 const idxToInsertInternalSection = idxData.idxToInsert;
                 log.debug(`adding missing internal test section ${outerSectionName}${option.value} at position ${idxToInsertInternalSection} for ${outerSectionName} `);
                 //                outerSection.displayables.splice(idxToInsertInternalSection,0,generatedTestSection);

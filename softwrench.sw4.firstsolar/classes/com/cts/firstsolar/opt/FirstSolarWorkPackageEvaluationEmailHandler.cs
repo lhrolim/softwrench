@@ -110,8 +110,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var user = SecurityFacade.CurrentUser();
 
             var component = "";
-            if (model.TestName.Contains("-")) {
-                component = model.TestName.Split('-')[0];
+            if (model.TestName.Contains(" Testing")) {
+                component = model.TestName.Split(new[] { " Testing" }, StringSplitOptions.None)[0];
             }
 
             var msg = Template.Render(
