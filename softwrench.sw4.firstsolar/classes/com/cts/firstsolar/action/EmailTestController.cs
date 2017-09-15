@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Dynamic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -87,10 +88,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [System.Web.Http.HttpGet]
         public ActionResult Meeting() {
             var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingEmailService>();
-            var handler = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingHandler>();
             var dom = Dao.FindAll<DailyOutageMeeting>(typeof(DailyOutageMeeting)).First();
             var package = Dao.FindAll<WorkPackage>(typeof(WorkPackage)).First();
-            handler.HandleMwhTotalsAfterSave(package);
+
+            if (package.CreatedDate != null) {
+                var gfedService = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>();
+                var lostTotal = AsyncHelper.RunSync(() => gfedService.LoadGfedTotalLostEnergy(package.WorkorderId, package.CreatedDate.Value));
+                package.MwhLostTotal = lostTotal.ToString(new CultureInfo("en-US"));
+            }
 
             var html = service.GenerateEmailBody(dom, package, "1803");
 
@@ -108,10 +113,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [System.Web.Http.HttpGet]
         public ActionResult MeetingPdf() {
             var service = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingEmailService>();
-            var handler = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarDailyOutageMeetingHandler>();
             var dom = Dao.FindAll<DailyOutageMeeting>(typeof(DailyOutageMeeting)).First();
             var package = Dao.FindAll<WorkPackage>(typeof(WorkPackage)).First();
-            handler.HandleMwhTotalsAfterSave(package);
+
+            if (package.CreatedDate != null) {
+                var gfedService = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>();
+                var lostTotal = AsyncHelper.RunSync(() => gfedService.LoadGfedTotalLostEnergy(package.WorkorderId, package.CreatedDate.Value));
+                package.MwhLostTotal = lostTotal.ToString(new CultureInfo("en-US"));
+            }
 
             var html = service.BuildPdfHtml(service.BuildTemplateHash(dom, package));
 

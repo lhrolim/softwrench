@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using DotLiquid.Tags;
 using JetBrains.Annotations;
@@ -268,7 +269,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
             await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedData(result);
 
-            HandleMwhTotals(result.ResultObject);
+            await HandleLostMwhTotal(result.ResultObject);
 
             if (application.Schema.SchemaId.Equals("viewdetail")) {
                 //two rounds, since we need to first load the workorder details, and only then we´re able to fully bring the associations of it
@@ -279,19 +280,56 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return result;
         }
 
-        private void HandleMwhTotals(DataMap dm) {
-            if (!dm.ContainsKey("dailyOutageMeetings_")) {
+        private static async Task HandleLostMwh(CompositionFetchRequest request, CompositionFetchResult compList, string woId, string createddate) {
+            if (string.IsNullOrEmpty(woId) || string.IsNullOrEmpty(createddate) || 
+                request.CompositionList == null || !request.CompositionList.Contains("#lostenergyentries_")) {
                 return;
             }
-            //SWWEB-3047
-            var dailyMeetings = (IList<Dictionary<string, object>>)dm["dailyOutageMeetings_"];
-            decimal sum = 0;
-            foreach (var dailyMeeting in dailyMeetings) {
-                if (dailyMeeting.ContainsKey("mwhlostyesterday")) {
-                    sum += Convert.ToDecimal(dailyMeeting["mwhlostyesterday"]);
+
+            var woIdLong = long.Parse(woId);
+            var createDate = DateUtil.Parse(createddate) ?? DateTime.Parse(createddate);
+
+            var start = DateUtil.BeginOfDay(createDate);
+            var end = DateTime.Today.AddDays(1);
+
+            var lostEnergyEntries = new List<Dictionary<string, object>>();
+            var totalDays = new TimeSpan(end.Ticks - start.Ticks).Days;
+            var pag = request.PaginatedSearch;
+            var pageSize = pag.PageSize >= totalDays ? totalDays : pag.PageSize;
+            var paginatedStart = end.AddDays(-1 * pageSize * pag.PageNumber);
+            var paginatedEnd = end.AddDays(-1 * pageSize * (pag.PageNumber - 1));
+
+            var lostEnergy = await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>()
+                .LoadGfedLostEnergyData(woIdLong, paginatedStart, paginatedEnd);
+            for (var i = pageSize - 1; i >= 0; i--) {
+                var date = paginatedStart.AddDays(i);
+                var datestring = date.ToString("yyyyMMdd");
+                if (lostEnergy.ContainsKey(datestring)) {
+                    lostEnergyEntries.Add(new Dictionary<string, object>() { { "date", date }, { "value", lostEnergy[datestring] } });
+                } else {
+                    lostEnergyEntries.Add(new Dictionary<string, object>() { { "date", date }, { "value", 0m } });
                 }
             }
-            dm["mwhlosttotal"] = sum;
+
+            var searchResult = new EntityRepository.SearchEntityResult {
+                ResultList = lostEnergyEntries,
+                PaginationData = new PaginatedSearchRequestDto(totalDays, pag.PageNumber, pag.PageSize, null, pag.PaginationOptions)
+            };
+
+            compList.ResultObject.Add("#lostenergyentries_", searchResult);
+        }
+
+        private static async Task HandleLostMwhTotal(DataMap dm) {
+            if (!dm.ContainsKey("workorderid") || !dm.ContainsKey("createddate")) {
+                return;
+            }
+            var woId = dm["workorderid"] as long?;
+            var createDate = dm["createddate"] as DateTime?;
+            if (woId == null || createDate == null) {
+                return;
+            }
+            var start = DateUtil.BeginOfDay(createDate.Value);
+            dm["mwhlosttotal"] = await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedTotalLostEnergy(woId, start);
         }
 
         private void HandleWonum(AttributeHolder ah) {
@@ -353,7 +391,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var workPackage = tupleResult.Item1;
 
             await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
-            DailyOutageMeetingHandler.HandleMwhTotalsAfterSave(workPackage);
 
             var dm = DataMap.BlankInstance("_workpackage");
             dm.SetAttribute("mwhlosttotal", workPackage.MwhLostTotal);
@@ -527,10 +564,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,
             CompositionFetchRequest request, JObject currentData) {
 
-            if (request.CompositionList != null && !request.CompositionList.Contains("dailyOutageMeetings_")) {
-                request.CompositionList.Add("dailyOutageMeetings_");
-            }
-
             //these would bring only the workpackage compositions, such as callouts, dom, me and outageactions
             var compList = await base.GetCompositionData(application, request, currentData);
 
@@ -539,6 +572,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             string woId = null;
             string woNum = null;
             string woSite = null;
+            string createddate = null;
 
             if (currentData == null) {
                 if (request.ExtraParameters == null || !request.ExtraParameters.ContainsKey("loadattachments")) {
@@ -550,16 +584,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 woId = entity.GetStringAttribute("#workorder_.workorderid");
                 woNum = entity.GetStringAttribute("#workorder_.wonum");
                 woSite = entity.GetStringAttribute("#workorder_.siteid");
+                createddate = entity.GetStringAttribute("createddate");
             } else {
                 loadWorkLogs = true;
                 woId = currentData.StringValue("#workorder_.workorderid");
                 woNum = currentData.StringValue("#workorder_.wonum");
                 woSite = currentData.StringValue("#workorder_.siteid");
+                createddate = currentData.StringValue("createddate");
             }
 
-
-
-
+            await HandleLostMwh(request, compList, woId, createddate);
+            if (request.CompositionList != null && request.CompositionList.Contains("#lostenergyentries_") &&
+                request.CompositionList.Count == 1) {
+                return compList;
+            }
 
             var relList = new List<string> {
 
@@ -588,8 +626,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             MaintenanceEngineeringHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             DailyOutageMeetingHandler.HandleAttachmentsOnCompositionLoad(woCompList, compList);
             MaintenanceEngineeringHandler.LoadEngineerNames(compList, woSite);
-
-
             return compList;
         }
 

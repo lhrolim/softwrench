@@ -78,7 +78,7 @@
 
           <section orientation="horizontal">
             <header label="Lost Energy"  params="fieldset=true"/>
-            <field label="MWH Lost Total" attribute="mwhlosttotal" readonly="true"/>
+            <field label="MWh Lost Total" attribute="mwhlosttotal" readonly="true"/>
             <field label="Daily Estimated Loss (MWh)" attribute="mwhlostperday"/>
             <field label="Total Estimated Loss (MWh)" attribute="expectedmwhlost"/>
           </section>
@@ -91,8 +91,16 @@
           </section>
 
           <section orientation="horizontal">
+            <header label="Daily Lost Energy"  params="fieldset=true"/>
+            <composition fetchtype="lazy" detailschema="lostenergydetail"  relationship="#lostenergyentries" printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="lostenergylist" allowupdate="false"/>
+            </composition>
+          </section>
+          
+          
+          <section orientation="horizontal">
             <header label="Daily Update Meetings"  params="fieldset=true"/>
-            <composition inline="true" relationship="dailyOutageMeetings" label="" detailschema="detail" outputschema="detailview" printschema="" fetchtype="eager" >
+            <composition inline="true" relationship="dailyOutageMeetings" label="" detailschema="detail" outputschema="detailview" printschema="" fetchtype="lazy" >
               <collectionproperties listschema="dailyoutagelineline" autocommit="true" allowremoval="false" allowcreation="true" allowupdate="true" orderbyfield="meetingtime"/>
               <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsdailyoutagemeetingService.openModalNew;
                             composition.inline.expandreadonly=true;composition.inline.editfunction=fsdailyoutagemeetingService.openModalEdit;
@@ -615,6 +623,16 @@
               <removecommand id="save"/>
             </commandgroup>
           </commandbars>
+        </schema>
+
+        <schema id="lostenergylist" stereotype="compositionlist">
+          <field attribute="date" label="Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+          </field>
+          <field attribute="value" label="MWh Lost"/>
+        </schema>
+
+        <schema id="lostenergydetail" stereotype="compositiondetail">
         </schema>
       </schemas>
     </application>

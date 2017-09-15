@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -58,6 +59,36 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         public const string AccountManagerEmailColumn = "accountmanageremail";
         public const string PerformanceEngineerEmailColumn = "perfengineeremail";
 
+        public const string GFedLostEnergy = @"
+            SELECT
+                R.OutageReportedAsType, 
+                sum(R.TotalLostkWh / 1000) AS lostmwhh, 
+                R.EventStart, 
+                R.EventEnd as lostdate 
+            FROM GLOBALFEDPRODUCTION.GlobalFed.Alarms.vwOperatorLogGADSRecords AS R 
+            INNER JOIN GLOBALFEDPRODUCTION.GlobalFed.Business.vwSites as S 
+                On R.SiteAssetID = S.AssetID 
+            WHERE R.OutageReportedAsType IN ('FO','MO','PO','OMC','OMCCurtail','OMCCurtailBuyer') 
+                AND S.assettitle in (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') from workorder w where w.workorderid = ?)
+                AND R.EventEnd >= ?  
+                AND R.EventEnd < ? 
+            GROUP BY R.TotalLostkWh, S.AssetTitle, R.OutageReportedAsType, R.Description, R.EventStart, R.EventEnd 
+            ORDER BY R.EventEnd DESC";
+
+        public const string GFedTotalLostEnergy = @"
+            SELECT SUM(R.TotalLostkWh / 1000) AS totallostmwh 
+            FROM GLOBALFEDPRODUCTION.GlobalFed.Alarms.vwOperatorLogGADSRecords AS R 
+            INNER JOIN GLOBALFEDPRODUCTION.GlobalFed.Business.vwSites as S 
+                On R.SiteAssetID = S.AssetID 
+            WHERE R.OutageReportedAsType IN ('FO','MO','PO','OMC','OMCCurtail','OMCCurtailBuyer') 
+                AND S.assettitle in (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') from workorder w where w.workorderid = ?)
+                AND R.EventEnd >= ?  
+                AND R.EventEnd < ?";
+
+        public const string LostEnergyColumn = "lostmwhh";
+        public const string TotalLostEnergyColumn = "totallostmwh";
+        public const string LostEnergyDateColumn = "lostdate";
+
         // DO NOT USE [Import] HERE THERE IS A BUG WITH REFLECTION
 
         private readonly IMaximoHibernateDAO _maxDao;
@@ -78,6 +109,53 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 return " ( SUBSTRING({0}.supervisor, 1, 0) + 'Test Planner') ".Fmt(context); // substring turns out to be a empty string, just to avoid a constant in dev
             }
             return " (select top 1 (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = G.onM_Planner_Scheduler and G.onM_Planner_Scheduler is not null) from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
+        }
+
+        public async Task<Dictionary<string, decimal>> LoadGfedLostEnergyData(long? workOrderId, DateTime start, DateTime end) {
+            var entries = new List<LostEnergyEntry>();
+            if (!ApplicationConfiguration.IsProd()) {
+                for (var i = 4; i >= 0; i--) {
+                    var date = DateTime.Today.AddDays(-1 * i);
+                    entries.Add(new LostEnergyEntry() {
+                        Date = date,
+                        Value = (i + 1) * 0.1m
+                    });
+                    entries.Add(new LostEnergyEntry() {
+                        Date = date,
+                        Value = (i + 1) * 1m
+                    });
+                }
+                return JoinSameDateLostEnergy(entries);
+            }
+
+
+            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedLostEnergy, workOrderId, start, end);
+            if (qryResult == null || !qryResult.Any()) {
+                return new Dictionary<string, decimal>();
+            }
+
+            qryResult.ForEach(result => {
+                entries.Add(new LostEnergyEntry() {
+                    Date = Convert.ToDateTime(result[LostEnergyDateColumn], new CultureInfo("en-US")),
+                    Value = Convert.ToDecimal(result[LostEnergyColumn])
+                });
+            });
+
+            return JoinSameDateLostEnergy(entries);
+        }
+
+        public async Task<decimal> LoadGfedTotalLostEnergy(long? workOrderId, DateTime start) {
+            if (!ApplicationConfiguration.IsProd()) {
+                return 16.5m;
+            }
+
+            var qryResult = await _maxDao.FindByNativeQueryAsync(GFedTotalLostEnergy, workOrderId, start, DateTime.Today.AddDays(1));
+            if (qryResult == null || !qryResult.Any()) {
+                return 0m;
+            }
+
+            var row = qryResult.First();
+            return !row.ContainsKey(TotalLostEnergyColumn) ? 0m : Convert.ToDecimal(row[TotalLostEnergyColumn]);
         }
 
         public async Task LoadGfedData(ApplicationDetailResult result) {
@@ -240,6 +318,26 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (source.ContainsKey(FacilityPostalCodeColumn)) {
                 callout.FacilityPostalCode = source[FacilityPostalCodeColumn];
             }
+        }
+
+        private static Dictionary<string, decimal> JoinSameDateLostEnergy(List<LostEnergyEntry> entries) {
+            var output = new Dictionary<string, decimal>();
+            entries.ForEach(entry => {
+                var datestring = entry.Date.ToString("yyyyMMdd");
+                if (output.ContainsKey(datestring)) {
+                    output[datestring] = output[datestring] + entry.Value;
+                } else {
+                    output[datestring] = entry.Value;
+                }
+            });
+
+
+            return output;
+        }
+
+        public class LostEnergyEntry {
+            public DateTime Date { get; set; }
+            public decimal Value { get; set; }
         }
     }
 }

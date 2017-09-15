@@ -76,21 +76,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return anyNewDom;
         }
 
-        public void HandleMwhTotalsAfterSave(WorkPackage wp) {
-            if (!wp.DailyOutageMeetings.Any()) {
-                return;
-            }
-            //SWWEB-3047
-            var dailyMeetings = wp.DailyOutageMeetings;
-            decimal sum = 0;
-            foreach (var dailyMeeting in dailyMeetings) {
-                sum += dailyMeeting.MWHLostYesterday;
-            }
-            wp.MwhLostTotal = sum.ToString(new CultureInfo("en-US"));
-        }
-
         public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
-            HandleMwhTotalsAfterSave(package);
+            if (package.CreatedDate != null) {
+                var lostTotal = await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedTotalLostEnergy(package.WorkorderId, package.CreatedDate.Value);
+                package.MwhLostTotal = lostTotal.ToString(new CultureInfo("en-US"));
+            }
             await AttachmentsHandler.HandleEmails(package, siteId, FSWPackageConstants.DailyOutageMeetingAttachsRelationship, FilterPrefix, domsToSend, EmailService);
         }
 

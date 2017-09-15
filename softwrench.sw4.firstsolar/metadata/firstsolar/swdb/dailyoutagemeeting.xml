@@ -19,7 +19,6 @@
           </field>
           <field label="Cc" attribute="cc" hidden="true"/>
           <field attribute="status" label="Email Status" />
-          <field attribute="mwhlostyesterday" label="MWH Lost" />
           <field attribute="#hasattachments">
             <renderer type="icon" params="expression={'true':'fa-paperclip','false':''}; width=1%"/>
           </field>
@@ -40,9 +39,6 @@
               <renderer type="checkbox" params="inputsize=3;layout=left"/>
             </field>
           </section>
-          <field attribute="mwhlostyesterday" label="MWH Lost">
-            <renderer type="numericinput" params="min=0"/>
-          </field>
 
           <optionfield label="Cc" attribute="cc">
             <renderer type="multiselectautocompleteclient" stereotype="email" params="valtype=email;"/>
