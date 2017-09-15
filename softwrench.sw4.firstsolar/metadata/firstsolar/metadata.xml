@@ -650,7 +650,7 @@
             <renderer type="default" params="width=7%" />
           </field>
           <field attribute="description" label="Summary"/>
-          <field attribute="planner" label="Planner/Scheduler">
+          <field attribute="planner" label="Planner/ Scheduler">
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
@@ -680,7 +680,7 @@
             <renderer type="default" params="width=7%" />
           </field>
           <field attribute="description" label="Summary"/>
-          <field attribute="planner" label="Planner/Scheduler">
+          <field attribute="planner" label="Planner/ Scheduler">
             <renderer type="default" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">
@@ -717,7 +717,7 @@
             <renderer type="default" params="width=7%" />
           </field>
           <field attribute="description" label="Summary"/>
-          <field attribute="planner" label="Planner/Scheduler">
+          <field attribute="planner" label="Planner/ Scheduler">
             <renderer type="default" params="width=13%" />
           </field>
           <field attribute="location_.facilityname" label="Site Name">

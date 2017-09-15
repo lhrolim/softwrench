@@ -159,7 +159,8 @@
                         .add-on {
                             max-width: 62%;
                             text-overflow: ellipsis;
-                            white-space: nowrap;
+                            white-space: initial;
+                            word-break: initial;
                             overflow: hidden;
                             position: relative;
                             top: 2px;
