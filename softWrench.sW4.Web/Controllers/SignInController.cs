@@ -21,6 +21,7 @@ using softwrench.sw4.user.classes.ldap;
 using softwrench.sw4.user.classes.services;
 using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Web.Models;
 
@@ -116,6 +117,11 @@ namespace softWrench.sW4.Web.Controllers {
                 return await AuthSucceeded(userName, userTimezoneOffset, user, context);
             }
             return AuthFailed(user);
+        }
+
+        [HttpGet]
+        public ActionResult Ping() {
+            return null;
         }
 
 
