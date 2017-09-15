@@ -19,8 +19,8 @@
 
 
   <security>
-<!--    <application xmlns="http://www.controltechnologysolutions.com/security" id="workorder" label="Technician Work Orders" ref="otherworko" listschema="list" creationschema="newdetail" updateschema="editdetail" />-->
-<!--    <application xmlns="http://www.controltechnologysolutions.com/security" id="fsocworkorder" label="Work Orders" ref="workorder" listschema="fsoclist" creationschema="fsocnewdetail" updateschema="fsoceditdetail"  />-->
+    <!--    <application xmlns="http://www.controltechnologysolutions.com/security" id="workorder" label="Technician Work Orders" ref="otherworko" listschema="list" creationschema="newdetail" updateschema="editdetail" />-->
+    <!--    <application xmlns="http://www.controltechnologysolutions.com/security" id="fsocworkorder" label="Work Orders" ref="workorder" listschema="fsoclist" creationschema="fsocnewdetail" updateschema="fsoceditdetail"  />-->
 
     <application xmlns="http://www.controltechnologysolutions.com/security" label="Group Work Orders" ref="otherworkorder" />
     <application xmlns="http://www.controltechnologysolutions.com/security" label="Work Orders" ref="fsocworkorder" />
@@ -84,7 +84,7 @@
         <attribute name="failurelist" query="(select failurelist from failurelist fl where fl.failurecode = !@failurecode and fl.orgid = !@orgid and fl.type is null)" type="varchar"/>
         <attribute name="problemlist" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='PROBLEM' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
-<!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
+        <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
         <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
@@ -136,7 +136,7 @@
           <relationshipAttribute from="orgid" to="orgid" />
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
-        
+
         <relationship to="multiassetlocci" collection="true">
           <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
           <relationshipAttribute from="woclass" to="RECORDCLASS" />
@@ -248,7 +248,7 @@
         <attribute name="facilityname" query="@firstSolarCustomGlobalFedService.FacilityQuery" type="varchar"/>
       </attributes>
     </entity>
-        
+
     <entity name="multiassetlocci" idAttribute="multiid">
       <relationships>
         <relationship to="asset" qualifier="offlineasset">
@@ -349,7 +349,7 @@
         <property key="application.maindetailschema" value="fsoceditdetail"/>
         <property key="application.maindetailnewschema" value="fsocnewdetail"/>
       </properties>
-      
+
       <schemas>
         <!--#region Online-->
         <schema id="fsoclist" stereotype="list" redeclaring="false" platform="web">
@@ -531,12 +531,12 @@
             <property key="search.startexpanded" value="true"/>
           </properties>
         </schema>
-        
+
       </schemas>
     </application>
-    
+
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
-      
+
 
 
       <components>
@@ -561,7 +561,7 @@
         <schema id="editdetail" redeclaring="false">
           <commandbars>
             <commandgroup position="actions" removeundeclared="true">
-              <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder" 
+              <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
                        permissionexpression="@maximoVersionEvaluator.Is76" showexpression="@status != null &amp;&amp; @status.equalsAny('INPRG','APPR')" cssclasses="large-button"/>
               <!-- Create new SR as Related Record -->
               <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
@@ -569,8 +569,8 @@
             </commandgroup>
           </commandbars>
         </schema>
-        
-        <!--#region Work Package --> 
+
+        <!--#region Work Package -->
         <schema id="workpackageschema" redeclaring="false" stereotype="detail" platform="web">
           <field attribute="wonum"/>
           <field attribute="workorderid"/>
@@ -643,7 +643,7 @@
             </composition>
           </section>
         </schema>
-        
+
         <schema id="workpackageincomingdash" stereotype="list" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="wonum" label="WO#">
@@ -700,8 +700,8 @@
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
           </properties>
         </schema>
-        
-        
+
+
         <schema id="aworkpackagebuilddash" stereotype="list" platform="web" abstract="true">
           <filters>
             <filter attribute="#wpnum" style="width:300px" whereclause="wpnum like !@#value" />
@@ -712,7 +712,7 @@
           <field attribute="wonum" hidden="true"/>
           <field attribute="#buildcomplete" hidden="true"/>
           <section id="colorcode"/>
-          
+
           <field attribute="#wpnum" label="WP#">
             <renderer type="default" params="width=7%" />
           </field>
@@ -733,7 +733,7 @@
             <renderer type="datetime" params="width=15%" />
           </field>
           <section id="daysleft"/>
-          
+
 
           <properties>
             <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
@@ -755,19 +755,28 @@
         </schema>
 
 
-        <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages">
+        <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages" stereotype="list">
+          <filters>
+            <filter attribute="#tier" style="width:300px" whereclause="tier like !@#value" />
+          </filters>
           <properties>
             <!--reusing same service-->
             <property key="list.click.service" value="fsDashboardService.buildDashClick"/>
             <property key="schema.aliasurl" value="/web/_workpackage/"/>
+            <property key="list.preventnoresultsnew" value="true"/>
           </properties>
+          <section id="daysleft">
+            <field attribute="#tier" label="Tier">
+              <renderer type="default" params="showsort=false;width=6%;" />
+            </field>
+          </section>
 
           <commandbars>
             <commandgroup position="gridtop" platform="web">
               <command id="new" icon="fa-plus" service="fsworkpackageService" method="newDetail" label="New" tooltip="$scope:newShemaLabel" showexpression="$scope:hasNewSchema" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
-          
+
         </schema>
 
         <schema id="cmbuilddash" parentschema="aworkpackagebuilddash">
@@ -782,12 +791,12 @@
             </field>
           </section>
         </schema>
-        
+
         <!--#endregion-->
 
-     
-        
-        
+
+
+
 
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly" platform="web">
           <field attribute="wonum" label="WO#" >
@@ -985,7 +994,7 @@
           </commandbars>
         </schema>
 
-      
+
 
         <!--#endregion-->
 
@@ -1017,7 +1026,7 @@
 
         <schema id="basedetail" title="Work Order" abstract="true" stereotype="detail" platform="mobile">
           <reference id="detailhiddensoffline"/>
-<!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->
+          <!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->
           <field attribute="failurelist" hidden="true"></field>
           <field attribute="problemlist" hidden="true"></field>
           <field attribute="fr1list" hidden="true"></field>
@@ -1038,7 +1047,7 @@
           </association>
 
           <field attribute="description" label="Description" requiredexpression="true"/>
-          <field label="Details" attribute="ld_.ldtext">      
+          <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
 
@@ -1158,7 +1167,7 @@
           <field attribute="wonum" hidden="true" />
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
-<!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->
+          <!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->
           <field attribute="problemlist" hidden="true"></field>
           <field attribute="failurelist" hidden="true"></field>
           <field attribute="fr1list" hidden="true"></field>
@@ -1486,7 +1495,7 @@
             <field attribute="maxuser_.loginid" label="FS Id" readonly="true"/>
             <field attribute="personid" label="Person Id" requiredexpression="true" readonly="true"/>
           </customization>
-          
+
           <customization position="location">
             <reference id="facilities"/>
           </customization>
@@ -1497,12 +1506,12 @@
             <field attribute="maxuser_.loginid" label="FS Id"/>
             <field attribute="personid" label="Person Id"/>
           </customization>
-          
+
         </schema>
-        
-        
-        
-        
+
+
+
+
 
         <schema id="myprofiledetail" redeclaring="false">
           <customization position="location">
@@ -1870,7 +1879,7 @@
           <field attribute="status" hidden="true"/>
           <field attribute="parent" hidden="true"/>
           <field attribute="description" label="Description"/>
-          
+
         </list>
       </schemas>
       <properties>
@@ -1954,7 +1963,7 @@
           <field attribute="progress" label="Progress"/>
         </schema>
       </schemas>
-    
+
       <properties>
         <property key="list.offline.numeric.indexlist" value="sequence"/>
       </properties>

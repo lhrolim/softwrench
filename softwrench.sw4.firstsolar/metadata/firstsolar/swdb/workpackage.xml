@@ -165,6 +165,7 @@
           <field attribute="wpnum"/>
           <field attribute="workorderid"/>
           <field attribute="buildcomplete"/>
+          <field attribute="tier"/>
         </schema>
 
         <schema id="adetailnotabs" stereotype="detail" abstract="true">
