@@ -6,11 +6,11 @@
 
             return {
 
-                hide: function (modalId) {
+                hide: function (ignoreConfirmClose) {
                     //adding this call to solve a mistereous bug on minified environments where the modal-backdrop element would remain
                     $('.modal-backdrop').remove();
                     if (crudContextHolderService.isShowingModal()) {
-                        $rootScope.$broadcast(JavascriptEventConstants.HideModal);
+                        $rootScope.$broadcast(JavascriptEventConstants.HideModal, false, ignoreConfirmClose);
                     }
                 },
 

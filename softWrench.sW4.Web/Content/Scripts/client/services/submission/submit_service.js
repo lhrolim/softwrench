@@ -199,7 +199,7 @@ class SubmitResult {
                 this.redirectService.redirectViewWithData(data);
             }
 
-            this.modalService.hide();
+            this.modalService.hide(true);
             
             return data;
         }

@@ -8,6 +8,7 @@ using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using Common.Logging;
 using DotLiquid;
+using NHibernate.Util;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
@@ -129,6 +130,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         public Hash BuildTemplateHash(DailyOutageMeeting dom, WorkPackage package) {
             var woData = GetWoData(package);
 
+            var actions = new List<object>();
+            var even = false;
+            package.OutageActions?.ForEach(action => {
+                actions.Add(new {
+                    action = action.Action,
+                    actiontime = FmtDateTime(action.ActionTime),
+                    assignee = action.AssigneeLabel,
+                    completed = action.Completed,
+                    even
+                });
+                even = !even;
+            });
+
             return Hash.FromAnonymousObject(new {
                 today = SafePlaceholder(FmtDate(DateTime.Now)),
                 facilityname = SafePlaceholder(package.FacilityName),
@@ -147,11 +161,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 completedactionitems = SafePlaceholder(dom.CompletedActionItems),
                 meetingsummary = SafePlaceholder(dom.Summary),
                 wpnum = SafePlaceholder(package.Wpnum),
+                actions,
 //                workpackageurl = SafePlaceholder(RedirectService.GetActionUrl("FirstSolarWpGenericEmail", "DailyOutageView", "token={0}".Fmt(dom.Token)))
                 workpackageurl = SafePlaceholder(RedirectService.GetApplicationUrlRoute("_workpackage", dom.WorkPackage.Id.Value, "dailyoutage"))
             });
         }
-
-      
     }
 }

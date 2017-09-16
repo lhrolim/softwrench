@@ -22,14 +22,14 @@
             return schema.properties[propertyName];
         };
 
-        $scope.$on(JavascriptEventConstants.HideModal, function (event, selfThrown) {
+        $scope.$on(JavascriptEventConstants.HideModal, function (event, selfThrown, ignoreConfirmClose) {
             crudContextHolderService.clearCrudContext(modalService.panelid);
             if (selfThrown !== true) {
-                $scope.cancel();
+                $scope.cancel(ignoreConfirmClose);
             }
         });
 
-        $scope.closeModal = function () {
+        $scope.closeModal = function (ignoreConfirmClose) {
 
             const doClose = function() {
                 $scope.modalshown = false;
@@ -54,7 +54,7 @@
             }
 
 
-            if ("true" === $scope.schema.properties["detail.modal.confirmclose"]) {
+            if ("true" === $scope.schema.properties["detail.modal.confirmclose"] && !ignoreConfirmClose) {
                 return alertService.confirm("Are you sure you want to cancel?").then(doClose);
             }
             return $q.when().then(doClose);
@@ -70,8 +70,8 @@
             }
         }
 
-        $scope.cancel = function () {
-            $scope.closeModal().then(() => {
+        $scope.cancel = function (ignoreConfirmClose) {
+            $scope.closeModal(ignoreConfirmClose).then(() => {
                 if ($scope.cancelfn) {
                     $scope.cancelfn();
                 }    

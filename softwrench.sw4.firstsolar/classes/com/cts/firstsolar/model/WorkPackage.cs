@@ -90,7 +90,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [OneToMany(2, ClassType = typeof(DailyOutageMeeting))]
         public virtual IList<DailyOutageMeeting> DailyOutageMeetings { get; set; }
 
-        [Bag(0, Table = "OPT_DAILY_OUTAGE_ACTION", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "ActionTime asc")]
+        [Bag(0, Table = "OPT_DAILY_OUTAGE_ACTION", Cascade = "all", Lazy = CollectionLazy.False, OrderBy = "ActionTime desc")]
         [Key(1, Column = "workpackageid", NotNull = true)]
         [OneToMany(2, ClassType = typeof(OutageAction))]
         public virtual IList<OutageAction> OutageActions { get; set; }

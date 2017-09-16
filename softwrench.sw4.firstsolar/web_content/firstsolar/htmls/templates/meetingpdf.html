@@ -12,6 +12,10 @@
         .mail-label { font-weight: bold; font-size: 13px; line-height: 1.42857143; }
         .mail-content { background-image: none; border-collapse: collapse; border-color: rgb(204, 204, 204); border-style: solid; border-radius: 4px; border-width: 1px; box-shadow: rgba(0, 0, 0, 0.075) 0px 1px 1px 0px inset; box-sizing: border-box; color: #555; display: block; font-size: 14px; height: auto; line-height: 20px; margin-bottom: 5px; max-width: 100%; min-height: 34px; padding-bottom: 6px; padding-left: 12px; padding-right: 12px; padding-top: 6px; text-align: left; text-shadow: rgba(255, 255, 255, 0.2) 0px 1px 0px; text-size-adjust: 100%; word-break: break-word; white-space: pre-wrap; }
         .mail-legend-label { margin: 30px 0px 15px 15px; width: calc(100% - 35px); white-space: nowrap; vertical-align: baseline; font-size: 12px; line-height: 24px; background: #aaa; border: none; padding: 8px 10px 5px; font-weight: bold; color: #fff; page-break-inside: avoid; }
+        .mail-action-table { width: 100%; padding-left: 15px; page-break-inside: avoid; }
+        .mail-action-table-header { text-align: left; }
+        .mail-action-table-row { line-height: 28px; }
+        .mail-action-table-row-odd { background-color: #ebebeb; }         
     </style>
 </head>
 
@@ -145,6 +149,28 @@
             <div class="mail-label">Meeting Summary:</div>
             <div class="mail-content">{{meetingsummary}}</div>
         </div>
+    </div>
+
+    <div class="mail-section">
+        <div class="mail-legend-label">Outage Actions</div>
+        
+        <table class="mail-action-table">
+            <tr class="mail-label mail-action-table-header mail-action-table-row">
+                <th style="width: 15%"><p class="mail-action-table-header">Action Time</p></th>
+                <th style="width: 40%"><p class="mail-action-table-header">Action</p></th>
+                <th style="width: 30%"><p class="mail-action-table-header">Assignee</p></th>
+                <th style="width: 5%"><p class="mail-action-table-header">Completed</p></th>
+            </tr>
+        
+            {% for action in actions %}
+                <tr class="mail-action-table-row {% if !action.even %}mail-action-table-row-odd{% endif %}">
+                    <td>{{action.actiontime}}</td>
+                    <td>{{action.action}}</td>
+                    <td>{{action.assignee}}</td>
+                    <td><input type="checkbox" onclick="return false;" {% if action.completed %}checked{% endif %}></td>
+                </tr>
+            {% endfor %}            
+        </table>
     </div>
 </body>
 </html>

@@ -46,7 +46,7 @@
                 const parentSchema = crudContextHolderService.currentSchema();
                 const parentDm = crudContextHolderService.rootDataMap();
                 return compositionService.populateWithCompositionData(parentSchema, parentDm, true).then(() => {
-                    modalService.hide();
+                    modalService.hide(true);
                     return result;
                 });
             }).catch(() => {
