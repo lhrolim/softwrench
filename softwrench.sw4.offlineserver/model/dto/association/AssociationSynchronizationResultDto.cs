@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using softWrench.sW4.Data;
-using softWrench.sW4.Data.Persistence.Relational.Cache;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 using softWrench.sW4.Util;
 
-namespace softwrench.sw4.offlineserver.dto.association {
+namespace softwrench.sw4.offlineserver.model.dto.association {
 
     public class AssociationSynchronizationResultDto {
 

@@ -5,11 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace softwrench.sw4.api.classes.exception {
-    public abstract class BaseSwException : Exception {
+    public interface IBaseSwException  {
 
-        public virtual bool NotifyException {
-            get { return true; }
-        }
-
+        bool NotifyException { get; }
     }
 }

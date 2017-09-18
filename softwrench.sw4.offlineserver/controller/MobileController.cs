@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
-using cts.commons.simpleinjector.app;
 using cts.commons.Util;
 using cts.commons.web.Attributes;
 using log4net;
@@ -16,9 +15,9 @@ using softwrench.sw4.batch.api.entities;
 using softwrench.sw4.offlineserver.audit;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
-using softwrench.sw4.offlineserver.dto;
-using softwrench.sw4.offlineserver.dto.association;
 using softwrench.sw4.offlineserver.model;
+using softwrench.sw4.offlineserver.model.dto;
+using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services;
 using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Security.Services;
@@ -35,8 +34,7 @@ using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.SPF;
 
-namespace softwrench.sw4.offlineserver.controller
-{
+namespace softwrench.sw4.offlineserver.controller {
 
     /// <summary>
     /// <para>This controller is a front facade for handling all operations that comes from a mobile device.</para>
@@ -48,8 +46,7 @@ namespace softwrench.sw4.offlineserver.controller
     /// </summary>
     [Authorize]
     [SWControllerConfiguration]
-    public class MobileController : ApiController
-    {
+    public class MobileController : ApiController {
 
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
 
@@ -67,69 +64,59 @@ namespace softwrench.sw4.offlineserver.controller
 
         private readonly JavascriptDynamicService _jsService;
 
-        private readonly IApplicationConfiguration _applicationConfiguration;
 
         private readonly OfflineAuditManager _offlineAuditManager;
 
-        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings
-        {
+        private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
 
         public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
-            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService, IApplicationConfiguration applicationConfiguration,
-            OfflineAuditManager offlineAuditManager)
-        {
+            OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService,
+            OfflineAuditManager offlineAuditManager) {
             _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
             _menuManager = menuManager;
             _contextLookuper = contextLookuper;
             _jsService = jsService;
-            _applicationConfiguration = applicationConfiguration;
             _offlineAuditManager = offlineAuditManager;
         }
 
 
-        private static string BuildOfflineMenuTitle(IDictionary<string, object> parameters)
-        {
-            if (parameters == null || !parameters.ContainsKey(MenuBuilderKey))
-            {
+        private static string BuildOfflineMenuTitle(IDictionary<string, object> parameters) {
+            if (parameters == null || !parameters.ContainsKey(MenuBuilderKey)) {
                 return null;
             }
             var builderString = parameters[MenuBuilderKey] as string;
             return string.IsNullOrEmpty(builderString) ? null : GenericSwMethodInvoker.Invoke<string>(null, builderString, null);
         }
 
-        private static void BuildOfflineMenuTitle(MenuBaseDefinition leaf)
-        {
+        private static void BuildOfflineMenuTitle(MenuBaseDefinition leaf) {
             var container = leaf as MenuContainerDefinition;
-            if (container != null)
-            {
+            if (container != null) {
                 container.Title = BuildOfflineMenuTitle(container.Parameters) ?? container.Title;
                 container.Leafs.ToList().ForEach(BuildOfflineMenuTitle);
             }
             var application = leaf as ApplicationMenuItemDefinition;
-            if (application != null)
-            {
+            if (application != null) {
                 application.Title = BuildOfflineMenuTitle(application.Parameters) ?? application.Title;
             }
         }
 
-        private static MenuDefinition BuildOfflineMenuTitles(MenuDefinition baseMenu)
-        {
+        private static MenuDefinition BuildOfflineMenuTitles(MenuDefinition baseMenu) {
             var builtLeafs = new List<MenuBaseDefinition>();
-            if (baseMenu.Leafs == null)
-            {
+            if (baseMenu.Leafs == null) {
                 return new MenuDefinition(builtLeafs, baseMenu.MainMenuDisplacement.ToString(), baseMenu.ItemindexId);
             }
-            builtLeafs.AddRange(baseMenu.Leafs.Select(leaf =>
-            {
+            builtLeafs.AddRange(baseMenu.Leafs.Select(leaf => {
                 BuildOfflineMenuTitle(leaf);
                 return leaf;
             }));
             return new MenuDefinition(builtLeafs, baseMenu.MainMenuDisplacement.ToString(), baseMenu.ItemindexId);
         }
+
+
 
         /// <summary>
         /// The main purpose here is to retrieve all the metadata information 
@@ -138,10 +125,10 @@ namespace softwrench.sw4.offlineserver.controller
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public MobileMetadataDownloadResponseDefinition DownloadMetadatas(MetadataDownloadDto metadataDto)
-        {
+        public async Task<MobileMetadataDownloadResponseDefinition> DownloadMetadatas(MetadataDownloadDto metadataDto) {
             var watch = Stopwatch.StartNew();
-            _offlineAuditManager.MarkSyncOperationBegin(metadataDto.ClientOperationId, metadataDto.DeviceData, OfflineAuditManager.OfflineAuditMode.Metadata);
+            
+            await _offlineAuditManager.MarkSyncOperationBegin(metadataDto.ClientOperationId, metadataDto.DeviceData, OfflineAuditManager.OfflineAuditMode.Metadata);
             var user = SecurityFacade.CurrentUser();
             var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
             //apply any user role constraints that would avoid bringing unwanted fields for that specific user.
@@ -154,8 +141,7 @@ namespace softwrench.sw4.offlineserver.controller
             bool fromCache;
             var securedMenu = BuildOfflineMenuTitles(_menuManager.Menu(user, ClientPlatform.Mobile, out fromCache));
 
-            var response = new MobileMetadataDownloadResponseDefinition
-            {
+            var response = new MobileMetadataDownloadResponseDefinition {
                 TopLevelMetadatasJson = JsonConvert.SerializeObject(securedMetadatas, Formatting.None, _jsonSerializerSettings),
                 AssociationMetadatasJson = JsonConvert.SerializeObject(associationApps, Formatting.None, _jsonSerializerSettings),
                 CompositionMetadatasJson = JsonConvert.SerializeObject(compositonApps, Formatting.None, _jsonSerializerSettings),
@@ -169,34 +155,29 @@ namespace softwrench.sw4.offlineserver.controller
         }
 
         [HttpGet]
-        public MobileMetadataDownloadResponseDefinition DownloadMetadatas()
-        {
-            return DownloadMetadatas(new MetadataDownloadDto());
+        public async Task<MobileMetadataDownloadResponseDefinition> DownloadMetadatas() {
+            return await DownloadMetadatas(new MetadataDownloadDto { DeviceData = new DeviceData() });
         }
 
         [HttpPost]
-        public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest)
-        {
-            _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+        public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
+            await _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
             var synchronizationResultDto = await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
             _offlineAuditManager.PopulateSyncOperationWithTopData(synchronizationRequest.ClientOperationId, synchronizationResultDto);
             return synchronizationResultDto;
         }
 
         [HttpPost]
-        public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request)
-        {
-            _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId, request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+        public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
+            await _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId, request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
             var associationResult = await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
             _offlineAuditManager.PopulateSyncOperationWithAssociationData(request.ClientOperationId, associationResult);
             return associationResult;
         }
 
         [HttpPost]
-        public async Task<ISet<ScriptSyncResultDTO>> BuildSyncMap([FromBody]OfflineScriptSyncDtoRequest clientRequest)
-        {
-            return await _jsService.SyncResult(clientRequest.ClientState, new ScriptDeviceInfo
-            {
+        public async Task<ISet<ScriptSyncResultDTO>> BuildSyncMap([FromBody]OfflineScriptSyncDtoRequest clientRequest) {
+            return await _jsService.SyncResult(clientRequest.ClientState, new ScriptDeviceInfo {
                 Platform = ClientPlatform.Mobile,
                 OfflineDevice = clientRequest.offlineDevice,
                 OfflineVersions = clientRequest.offlineVersion
@@ -214,9 +195,8 @@ namespace softwrench.sw4.offlineserver.controller
         /// <param name="batchContent">The </param>
         /// <returns></returns>
         [HttpPost]
-        public Batch SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent,[FromUri]string clientOperationId=null, [FromUri]DeviceData deviceData = null)
-        {
-            var operation = _offlineAuditManager.MarkSyncOperationBegin(clientOperationId, deviceData, OfflineAuditManager.OfflineAuditMode.Batch);
+        public async Task<Batch> SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent, [FromUri]string clientOperationId = null, [FromUri]DeviceData deviceData = null) {
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(clientOperationId, deviceData, OfflineAuditManager.OfflineAuditMode.Batch);
             Log.InfoFormat("Creating batch for application {0}", application);
             // return the generated Batch to be serialized
             var batch = _offLineBatchService.SubmitBatch(application, remoteId, operation, batchContent);
@@ -226,19 +206,16 @@ namespace softwrench.sw4.offlineserver.controller
         }
 
         [HttpGet]
-        public async Task<IList<Batch>> BatchStatus([FromUri]IList<string> ids)
-        {
+        public async Task<IList<Batch>> BatchStatus([FromUri]IList<string> ids) {
             return await _offLineBatchService.GetBatchesByRemoteIds(ids);
         }
 
         #region Reporting
         [HttpGet]
-        public async Task<string> Counts()
-        {
+        public async Task<string> Counts() {
             var user = SecurityFacade.CurrentUser();
 
-            var req = new SynchronizationRequestDto()
-            {
+            var req = new SynchronizationRequestDto() {
                 ReturnNewApps = true,
                 UserData = new UserSyncData(user)
             };
@@ -265,8 +242,7 @@ namespace softwrench.sw4.offlineserver.controller
             var associationTotals = associationCounts.Sum(s => s.Value);
             var topAppTotals = topCountData.Sum(s => s.Value);
 
-            var report = new MobileCountReport()
-            {
+            var report = new MobileCountReport() {
                 TopAppCounts = topCountData,
                 AssociationCounts = associationCounts,
                 AssociationTotals = associationTotals,
@@ -278,14 +254,12 @@ namespace softwrench.sw4.offlineserver.controller
             };
 
             return JsonConvert.SerializeObject(report, Newtonsoft.Json.Formatting.Indented,
-            new JsonSerializerSettings()
-            {
+            new JsonSerializerSettings() {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
         }
 
-        public class MobileCountReport
-        {
+        public class MobileCountReport {
             public IDictionary<string, int> TopAppCounts = new Dictionary<string, int>();
             public IDictionary<string, int> AssociationCounts = new Dictionary<string, int>();
             public IDictionary<string, int> CompositionCounts = new Dictionary<string, int>();
@@ -297,11 +271,9 @@ namespace softwrench.sw4.offlineserver.controller
             public MobileUserDtoReport UserData { get; set; }
         }
 
-        public class MobileUserDtoReport
-        {
+        public class MobileUserDtoReport {
 
-            public MobileUserDtoReport(InMemoryUser user)
-            {
+            public MobileUserDtoReport(InMemoryUser user) {
                 PersonId = user.MaximoPersonId;
                 Properties = user.Genericproperties;
                 Username = user.Login;

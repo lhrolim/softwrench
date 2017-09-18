@@ -5,7 +5,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
-using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;

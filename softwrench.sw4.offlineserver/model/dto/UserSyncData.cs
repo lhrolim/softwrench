@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using softWrench.sW4.Metadata.Security;
 
-namespace softwrench.sw4.offlineserver.dto {
+namespace softwrench.sw4.offlineserver.model.dto {
     public class UserSyncData {
         public bool Found { get; set; }
         public string UserName { get; set; }

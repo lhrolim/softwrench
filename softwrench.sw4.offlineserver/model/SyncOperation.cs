@@ -53,10 +53,25 @@ namespace softwrench.sw4.offlineserver.model {
         [Property]
         public DateTime? RegisterTime { get; set; }
 
+        [Property]
+        public string ErrorMessage { get; set; }
+
+        [Property]
+        public string StackTrace { get; set; }
+
+        public void SetDefaultCounts() {
+            CompositionCounts = 0;
+            TopAppCounts = 0;
+            AssociationCounts = 0;
+        }
+
 
         public static string GenerateKey(InMemoryUser user, string clientOperationId) {
             return user.DBId + clientOperationId;
         }
 
+        public bool IsErrorOperation() {
+            return ErrorMessage != null || StackTrace != null;
+        }
     }
 }

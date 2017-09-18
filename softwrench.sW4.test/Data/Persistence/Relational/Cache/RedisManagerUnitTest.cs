@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.test.Util;
 using softWrench.sW4.Data;

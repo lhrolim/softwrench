@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
-using softwrench.sw4.offlineserver.model;
 
-namespace softwrench.sw4.offlineserver.dto {
+namespace softwrench.sw4.offlineserver.model.dto {
     public abstract class BaseSynchronizationRequestDto {
 
         public DeviceData DeviceData { get; set; }

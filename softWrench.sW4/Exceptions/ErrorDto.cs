@@ -26,15 +26,16 @@ namespace softWrench.sW4.Exceptions {
             get; set;
         }
 
+        public bool RequestLogSupport {
+            get; set;
+        }
+
         [JsonIgnore]
         public Type ErrorNativeType {
             get; set;
         }
-        public string ErrorType {
-            get {
-                return ErrorNativeType == null ? null : ErrorNativeType.Name;
-            }
-        }
+        public string ErrorType => ErrorNativeType == null ? null : ErrorNativeType.Name;
+
         public string OutlineInformation {
             get; set;
         }
@@ -59,7 +60,7 @@ namespace softWrench.sW4.Exceptions {
             FullStack = rootException.StackTrace;
             ErrorNativeType = rootException.GetType();
             OutlineInformation = ExceptionUtil.FirstProjectStackTraceLine(rootException);
-            var baseSwException = rootException as BaseSwException;
+            var baseSwException = rootException as IBaseSwException;
             NotifyException = true;
             if (baseSwException != null) {
                 NotifyException = baseSwException.NotifyException;

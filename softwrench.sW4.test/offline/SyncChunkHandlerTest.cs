@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.test.Util;

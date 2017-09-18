@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using softwrench.sw4.offlineserver.model;
 
-namespace softwrench.sw4.offlineserver.dto {
+namespace softwrench.sw4.offlineserver.model.dto {
     public class SynchronizationRequestDto : BaseSynchronizationRequestDto {
 
         public string ApplicationName { get; set; }

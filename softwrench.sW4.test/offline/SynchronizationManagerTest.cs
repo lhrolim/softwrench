@@ -7,7 +7,7 @@ using cts.commons.simpleinjector.Events;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
-using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
@@ -57,7 +57,7 @@ namespace softwrench.sW4.test.offline {
 
         //        [TestMethod]
         public async Task TestInitialLoadSimulatingSingleApp() {
-            var dto = new sw4.offlineserver.dto.association.AssociationSynchronizationRequestDto { InitialLoad = true, ApplicationsToFetch = new List<string> { "location" } };
+            var dto = new AssociationSynchronizationRequestDto { InitialLoad = true, ApplicationsToFetch = new List<string> { "location" } };
 
 
             var locationSyncSchema = MetadataProvider.Application("location").Schemas()[new ApplicationMetadataSchemaKey("@sync")];
@@ -77,11 +77,11 @@ namespace softwrench.sW4.test.offline {
         public void ApplicationsFromDatabaseToFetchAllCacheCompletedNotOverFlown() {
             var apps = OffLineMetadataProvider.FetchAssociationApps(_user, true);
 
-            var dto = new sw4.offlineserver.dto.association.AssociationSynchronizationResultDto(1000);
+            var dto = new AssociationSynchronizationResultDto(1000);
             foreach (var app in apps) {
                 if (app.ApplicationName != "assignment") {
                     dto.AssociationData[app.ApplicationName] =
-                        new sw4.offlineserver.dto.association.AssociationDataDto {
+                        new AssociationDataDto {
                             HasMoreCachedEntries = false,
                             CompleteCacheEntries = new Dictionary<string,CacheRoundtripStatus> { {"fakecache",new CacheRoundtripStatus {Complete = true} }}
                         };
@@ -100,11 +100,11 @@ namespace softwrench.sW4.test.offline {
         public void ApplicationsFromDatabaseToFetchAllCacheCompletedOverFlown() {
             var apps = OffLineMetadataProvider.FetchAssociationApps(_user, true);
 
-            var dto = new sw4.offlineserver.dto.association.AssociationSynchronizationResultDto(1000);
+            var dto = new AssociationSynchronizationResultDto(1000);
             foreach (var app in apps) {
                 if (app.ApplicationName != "assignment") {
                     dto.AssociationData[app.ApplicationName] =
-                        new sw4.offlineserver.dto.association.AssociationDataDto {
+                        new AssociationDataDto {
                             HasMoreCachedEntries = false,
                             CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus> { { "fakecache" + app.ApplicationName, new CacheRoundtripStatus { Complete = true } } }
                         };
@@ -121,11 +121,11 @@ namespace softwrench.sW4.test.offline {
         public void CacheMissNonOverFlowScenario() {
             var apps = OffLineMetadataProvider.FetchAssociationApps(_user, true);
 
-            var dto = new sw4.offlineserver.dto.association.AssociationSynchronizationResultDto(1000);
+            var dto = new AssociationSynchronizationResultDto(1000);
             foreach (var app in apps) {
                 if (app.ApplicationName == "offlineasset"){
                     dto.AssociationData[app.ApplicationName] =
-                        new sw4.offlineserver.dto.association.AssociationDataDto {
+                        new AssociationDataDto {
                             HasMoreCachedEntries = false,
                             CacheMiss = true,
                             CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus> { { "fakecache" + app.ApplicationName, new CacheRoundtripStatus { Complete = true } } }
@@ -134,7 +134,7 @@ namespace softwrench.sW4.test.offline {
 
                 else if (app.ApplicationName != "assignment") {
                     dto.AssociationData[app.ApplicationName] =
-                        new sw4.offlineserver.dto.association.AssociationDataDto {
+                        new AssociationDataDto {
                             HasMoreCachedEntries = false,
                             CompleteCacheEntries = new Dictionary<string, CacheRoundtripStatus> { { "fakecache" + app.ApplicationName, new CacheRoundtripStatus { Complete = true } } }
                         };

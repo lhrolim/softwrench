@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 
-namespace softwrench.sw4.offlineserver.dto.association {
+namespace softwrench.sw4.offlineserver.model.dto.association {
     public class AssociationDataDto {
 
         public List<DataMap> IndividualItems = new List<DataMap>();

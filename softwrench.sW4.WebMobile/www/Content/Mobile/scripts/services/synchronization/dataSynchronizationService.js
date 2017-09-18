@@ -96,48 +96,56 @@
 
         function userDataIfChanged() {
             const current = securityService.currentFullUser();
+            if (!current) {
+                return securityService.logout();
+            }
             return current.meta && current.meta.changed ? current : null;
         }
 
         function createAppSyncPromise(firstInLoop, app, currentApps, compositionMap, clientOperationId) {
             var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
-            return rowstampService.generateRowstampMap(app)
-                .then(function (rowstampMap) {
-                    //see samplerequest.json
-                    rowstampMap.compositionmap = compositionMap;
-                    log.debug("invoking service to get new data");
-                    const payload = {
-                        applicationName: app,
-                        clientCurrentTopLevelApps: currentApps,
-                        returnNewApps: firstInLoop,
-                        clientOperationId,
-                        userData: userDataIfChanged(),
-                        rowstampMap
-                    };
-                    return restService.post("Mobile", "PullNewData", null, payload);
-                }).then(resultHandlePromise);
+            return applicationStateService.getServerDeviceData().then(deviceData => {
+                    return rowstampService.generateRowstampMap(app)
+                        .then(function (rowstampMap) {
+                            //see samplerequest.json
+                            rowstampMap.compositionmap = compositionMap;
+                            log.debug("invoking service to get new data");
+                            const payload = {
+                                applicationName: app,
+                                clientCurrentTopLevelApps: currentApps,
+                                returnNewApps: firstInLoop,
+                                clientOperationId,
+                                userData: userDataIfChanged(),
+                                rowstampMap,
+                                deviceData
+                            };
+                            return restService.post("Mobile", "PullNewData", null, payload);
+                        }).then(resultHandlePromise);
+                });
         };
 
         function syncSingleItem(item, clientOperationId) {
             const app = item.application;
 
-            return rowstampService.generateCompositionRowstampMap().then(compositionMap => {
-                const rowstampMap = {
-                    compositionmap: compositionMap
-                }
-                const payload = {
-                    applicationName: app,
-                    itemsToDownload: [item.remoteId],
-                    userData: userDataIfChanged(),
-                    rowstampMap,
-                    clientOperationId
-                };
-                var promise = restService.post("Mobile", "PullNewData", null, payload).then(resultHandlePromise).catch(errorHandlePromise);
-                return $q.all([promise]);
+            return applicationStateService.getServerDeviceData().then(deviceData => {
+                return rowstampService.generateCompositionRowstampMap().then(compositionMap => {
+                    const rowstampMap = {
+                        compositionmap: compositionMap
+                    }
+                    const payload = {
+                        applicationName: app,
+                        itemsToDownload: [item.remoteId],
+                        userData: userDataIfChanged(),
+                        rowstampMap,
+                        deviceData,
+                        clientOperationId
+                    };
+                    var promise = restService.post("Mobile", "PullNewData", null, payload).then(resultHandlePromise)
+                        .catch(errorHandlePromise);
+                    return $q.all([promise]);
+                });
             });
-
-
         }
 
         function syncData(clientOperationId) {

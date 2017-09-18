@@ -915,6 +915,7 @@
     <Compile Include="Util\TransactionStatistics\Job\TransStatsReporterJob.cs" />
     <Compile Include="Util\TransactionStatistics\TransactionStatisticsService.cs" />
     <Compile Include="Util\TransactionStatistics\UserStatistics.cs" />
+    <Compile Include="Util\VersionUtil.cs" />
     <Compile Include="Web References\wsAsset\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using softWrench.sW4.Data;
 using softWrench.sW4.Web.Formatting;
 
-namespace softwrench.sw4.offlineserver.dto {
+namespace softwrench.sw4.offlineserver.model.dto {
     public class JSONConvertedDatamap : DataMap {
 
 

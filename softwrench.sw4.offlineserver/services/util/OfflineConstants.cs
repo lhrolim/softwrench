@@ -18,6 +18,8 @@ namespace softwrench.sw4.offlineserver.services.util {
 
         public const string EnableAudit = "/Global/Offline/Sync/Audit";
 
+        public const string AllowedClientVersions = "/Global/Offline/Sync/AllowedVersions";
+
 
         #region metadataproperties
         /// <summary>

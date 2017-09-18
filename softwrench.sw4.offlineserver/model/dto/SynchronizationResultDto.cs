@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace softwrench.sw4.offlineserver.dto {
+namespace softwrench.sw4.offlineserver.model.dto {
 
     public class SynchronizationResultDto {
 

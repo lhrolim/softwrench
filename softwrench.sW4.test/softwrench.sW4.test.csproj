@@ -318,6 +318,7 @@
     <Compile Include="Util\DateExtensionUtilTest.cs" />
     <Compile Include="Util\EntityUtilTest.cs" />
     <Compile Include="Util\ReflectionUtilTest.cs" />
+    <Compile Include="Util\VersionUtilTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

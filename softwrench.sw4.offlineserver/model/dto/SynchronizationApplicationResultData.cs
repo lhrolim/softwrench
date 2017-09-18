@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using softWrench.sW4.Data;
 using softWrench.sW4.Metadata.Applications;
 
-namespace softwrench.sw4.offlineserver.dto {
+namespace softwrench.sw4.offlineserver.model.dto {
     public class SynchronizationApplicationResultData {
 
         public string ApplicationName {

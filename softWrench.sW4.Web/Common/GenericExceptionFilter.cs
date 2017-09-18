@@ -5,6 +5,8 @@ using System.Web.Http;
 using System.Web.Http.Filters;
 using System.Web.Mvc;
 using log4net;
+using softwrench.sw4.api.classes.exception;
+using softwrench.sw4.offlineserver.model.exception;
 using softWrench.sW4.Data.Persistence.Engine.Exception;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Exceptions;
@@ -21,6 +23,10 @@ namespace softWrench.sW4.Web.Common {
         /// <param name="e"></param>
         /// <returns></returns>
         private HttpStatusCode CodeOf(Exception e) {
+            if (e is IStatusCodeException) {
+                return ((IStatusCodeException)e).StatusCode;
+            }
+
             if (e is UnauthorizedException) {
                 return HttpStatusCode.Unauthorized;
             }
@@ -35,13 +41,18 @@ namespace softWrench.sW4.Web.Common {
         /// <returns></returns>
         private ErrorDto BuildErrorDto(Exception e, Exception rootException) {
             var maximoException = rootException as MaximoException;
-            var dto = maximoException != null 
-                ? new ErrorDto(maximoException) {
+            ErrorDto dto = null;
+            if (maximoException != null) {
+                dto = new ErrorDto(maximoException) {
                     OutlineInformation = maximoException.OutlineInformation,
                     ErrorStack = maximoException.FullStackTrace,
                     FullStack = maximoException.FullStackTrace
-                }
-                : new ErrorDto(rootException);
+                };
+            } else if (rootException is IOfflineSyncException) {
+                dto = new OfflineErrorDto(rootException);
+            } else {
+                dto = new ErrorDto(rootException);
+            }
 
             var afterCreationException = e as AfterCreationException;
             if (afterCreationException != null) {
@@ -65,10 +76,10 @@ namespace softWrench.sW4.Web.Common {
             var rootException = ExceptionUtil.DigRootException(e);
             Log.Error(rootException, e);
 
-//            filterContext.ExceptionHandled = true;
-//            filterContext.HttpContext.Response.Clear();
-//            filterContext.HttpContext.Response.StatusCode = (int)CodeOf(rootException);
-//            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
+            //            filterContext.ExceptionHandled = true;
+            //            filterContext.HttpContext.Response.Clear();
+            //            filterContext.HttpContext.Response.StatusCode = (int)CodeOf(rootException);
+            //            filterContext.HttpContext.Response.TrySkipIisCustomErrors = true;
 
             if (filterContext.HttpContext.Request.IsAjaxRequest()) {
                 // if Ajax: json response
@@ -78,7 +89,7 @@ namespace softWrench.sW4.Web.Common {
                     JsonRequestBehavior = JsonRequestBehavior.AllowGet
                 };
                 filterContext.Result = result;
-                
+
             } else {
                 // not ajax: view result (html)
                 var controllerName = (string)filterContext.RouteData.Values["controller"];
@@ -91,7 +102,7 @@ namespace softWrench.sW4.Web.Common {
                 };
                 filterContext.Result = result;
             }
-//            filterContext.HttpContext.Response.End();
+            //            filterContext.HttpContext.Response.End();
         }
     }
 }

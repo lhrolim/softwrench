@@ -43,12 +43,13 @@
             }
 
             return function (exception, cause) {
-                if (exception && isString(exception) && exception.startsWith("Possibly unhandled rejection:")) {
+                if ((exception && isString(exception) && exception.startsWith("Possibly unhandled rejection:")) || !exception.notifyException) {
                     return;
                 }
 
                 // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScope
                 $log = lazyInstance($log, "$log");
+                swAlertPopup = lazyInstance(swAlertPopup, "swAlertPopup");
                 logger = lazyInstance(logger, "$exceptionHandler", $log);
                 // default behavior (from angular.js source): $log.error.apply($log, arguments);
                 logger.error.apply(logger, arguments);
@@ -59,8 +60,17 @@
                 if (!!exception && !!exception.title) {
                     logReportObject.title = exception.title;
                 }
-
-                supportService.requestLogReporting(logReportObject);
+                logReportObject.notifyException = exception.notifyException;
+                logReportObject.requestSupportReport = exception.requestSupportReport;
+                if (exception.requestSupportReport !== false) {
+                    supportService.requestLogReporting(logReportObject);
+                } else {
+                    swAlertPopup.show({
+                        title: exception.title,
+                        template: exception.message
+                    });
+                }
+                
             };
 
         }]);

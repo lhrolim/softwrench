@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 
-namespace softwrench.sw4.offlineserver.dto.association {
+namespace softwrench.sw4.offlineserver.model.dto.association {
     public class AssociationSynchronizationRequestDto : BaseSynchronizationRequestDto {
         public IList<string> ApplicationsToFetch { get; set; }
 

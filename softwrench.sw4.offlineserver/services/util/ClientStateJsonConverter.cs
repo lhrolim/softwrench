@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Iesi.Collections.Generic;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.batch.api.entities;
-using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.model.dto.association;
 
 namespace softwrench.sw4.offlineserver.services.util {
     public class ClientStateJsonConverter {

@@ -1,5 +1,5 @@
 ﻿using cts.commons.simpleinjector.Events;
-using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.model.dto;
 
 namespace softwrench.sw4.offlineserver.events {
     public class PreSyncEvent : ISWEvent {

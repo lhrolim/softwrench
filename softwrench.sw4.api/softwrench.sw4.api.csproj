@@ -81,9 +81,10 @@
     <Compile Include="classes\configuration\PropertyDefinitionRegistry.cs" />
     <Compile Include="classes\email\EmailAttachment.cs" />
     <Compile Include="classes\email\EmailData.cs" />
-    <Compile Include="classes\exception\BaseSwException.cs" />
+    <Compile Include="classes\exception\IBaseSwException.cs" />
     <Compile Include="classes\exception\BlankListException.cs" />
     <Compile Include="classes\exception\InvalidStateException.cs" />
+    <Compile Include="classes\exception\IStatusCodeException.cs" />
     <Compile Include="classes\fwk\context\IMemoryContextLookuper.cs" />
     <Compile Include="classes\fwk\context\RedirectService.cs" />
     <Compile Include="classes\fwk\context\SwHttpContext.cs" />

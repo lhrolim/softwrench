@@ -47,6 +47,12 @@ namespace softwrench.sw4.offlineserver.services.util {
                 StringValue = "true",
                 DefaultValue = "true"
             });
+
+            _configFacade.Register(OfflineConstants.AllowedClientVersions, new PropertyDefinition {
+                Description = "A comma separated list of versions which are allowed for for the offline system. Note that these will be considered as min versions (such as 3.8.0 > 3.7.4)",
+                PropertyDataType = PropertyDataType.STRING,
+                StringValue = "",
+            });
         }
     }
 }

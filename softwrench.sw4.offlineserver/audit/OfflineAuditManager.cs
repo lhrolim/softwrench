@@ -5,20 +5,21 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using NHibernate.Util;
-using softwrench.sw4.offlineserver.dto;
-using softwrench.sw4.offlineserver.dto.association;
 using softwrench.sw4.offlineserver.model;
+using softwrench.sw4.offlineserver.model.dto;
+using softwrench.sw4.offlineserver.model.dto.association;
+using softwrench.sw4.offlineserver.model.exception;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.audit.classes.Model;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Core;
 using softWrench.sW4.Metadata.Security;
@@ -42,11 +43,18 @@ namespace softwrench.sw4.offlineserver.audit {
         [Import]
         public IAuditManager AuditManager { get; set; }
 
+
         private readonly ILog _log = LogManager.GetLogger(typeof(OfflineAuditManager));
 
         private readonly TimeSpan _defaultExpiresIn = TimeSpan.FromMinutes(3);
 
 
+
+        /// <summary>
+        /// Marks the end of the PullData Operation
+        /// </summary>
+        /// <param name="clientOperationId"></param>
+        /// <param name="synchronizationResultDto"></param>
         public void PopulateSyncOperationWithTopData(string clientOperationId, SynchronizationResultDto synchronizationResultDto) {
 
             var user = SecurityFacade.CurrentUser();
@@ -119,26 +127,59 @@ namespace softwrench.sw4.offlineserver.audit {
         }
 
         public enum OfflineAuditMode {
-            Metadata, Batch, Data, Association
+            Metadata, Batch, Data, Association, Exception
         }
 
-        public SyncOperation MarkSyncOperationBegin(string requestClientOperationId, DeviceData deviceData, OfflineAuditMode mode) {
+        //        public async Task<SyncOperation> MarkSyncOperationException(string requestClientOperationId, DeviceData deviceData, OfflineAuditMode mode, string message, string stacktrace = null) {
+        //            var syncOperation = MarkSyncOperationBegin(requestClientOperationId, deviceData, OfflineAuditMode.Exception);
+        //            if (syncOperation != null && syncOperation.Id == null) {
+        //                syncOperation.ErrorMessage = message;
+        //                syncOperation.StackTrace = stacktrace;
+        //                syncOperation = await Dao.SaveAsync(syncOperation);
+        //
+        //            }
+        //
+        //            return syncOperation;
+        //
+        //        }
+
+        public async Task<SyncOperation> MarkSyncOperationBegin(string requestClientOperationId, DeviceData deviceData, OfflineAuditMode mode) {
 
 
             var user = SecurityFacade.CurrentUser();
             var key = SyncOperation.GenerateKey(user, requestClientOperationId);
 
+            if (deviceData == null) {
+                //playing safe, shouldn´t happen
+                deviceData = new DeviceData();
+            }
+
+            var validversion = await ValidateOffLineVersion(deviceData.ClientVersion);
+
             if (!ShouldAudit(key, mode == OfflineAuditMode.Batch)) {
+                if (!validversion) {
+                    throw new InvalidOffLineVersionException(deviceData.ClientVersion);
+                }
+
                 return null;
             }
 
-            SyncOperation operation= null;
+            SyncOperation operation = null;
 
             lock (string.Intern(key)) {
                 //to ensure a lock, waiting for 10s to acquire it or giving up
                 operation = RedisManager.Lookup<SyncOperation>(key);
                 if (operation == null) {
                     operation = GenerateOperation(requestClientOperationId, deviceData, user, key, mode == OfflineAuditMode.Metadata);
+                    if (!validversion) {
+                        operation.ErrorMessage = InvalidOffLineVersionException.Msg.Fmt(deviceData.ClientVersion);
+                        operation.SetDefaultCounts();
+                        SaveOperation(operation, false);
+                        RedisManager.Insert(new BaseRedisInsertKey(key) { ExpiresIn = _defaultExpiresIn }, operation);
+                        throw new InvalidOffLineVersionException(deviceData.ClientVersion);
+                    }
+                } else if (!validversion) {
+                    throw new InvalidOffLineVersionException(deviceData.ClientVersion);
                 }
                 if (OfflineAuditMode.Batch.Equals(mode)) {
                     AuditManager.InitThreadTrail(operation.AuditTrail);
@@ -149,11 +190,15 @@ namespace softwrench.sw4.offlineserver.audit {
         }
 
 
-        private void SaveOperation(SyncOperation operation) {
+        private void SaveOperation(SyncOperation operation, bool ignoreErrorOperation = true) {
+            if (ignoreErrorOperation && operation.IsErrorOperation()) {
+                return;
+            }
             //saving at the database on another thread to avoid performance hit
             Task.Run(() => {
                 var user = SecurityFacade.CurrentUser();
                 operation.User = user.DBUser;
+                operation.TimezoneOffset = user.TimezoneOffset;
                 operation.AuditTrail.EndTime = DateTime.Now;
                 operation.RegisterTime = DateTime.Now;
                 operation.MetadataDownload = false;
@@ -189,6 +234,12 @@ namespace softwrench.sw4.offlineserver.audit {
             return operation;
         }
 
+        private async Task<bool> ValidateOffLineVersion(string currentVersion) {
+            var allowedVersions = await ConfigFacade.LookupAsync<string>(OfflineConstants.AllowedClientVersions);
+            return VersionUtil.IsGreaterThan(currentVersion, allowedVersions);
+
+        }
+
 
         private bool ShouldAudit(string key, bool isBatchOperation = false) {
             if (!RedisManager.IsAvailable()) {
@@ -210,7 +261,7 @@ namespace softwrench.sw4.offlineserver.audit {
 
         public void MarkBatchCompleted(SyncOperation operation) {
             var before = Stopwatch.StartNew();
-            var key = SyncOperation.GenerateKey(SecurityFacade.CurrentUser(),operation.AuditTrail.ExternalId);
+            var key = SyncOperation.GenerateKey(SecurityFacade.CurrentUser(), operation.AuditTrail.ExternalId);
             if (!ShouldAudit(key, true)) {
                 return;
             }

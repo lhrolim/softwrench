@@ -19,9 +19,9 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
-using softwrench.sw4.offlineserver.dto;
-using softwrench.sw4.offlineserver.dto.association;
 using softwrench.sw4.offlineserver.events;
+using softwrench.sw4.offlineserver.model.dto;
+using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -39,7 +39,7 @@ using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
-using SynchronizationResultDto = softwrench.sw4.offlineserver.dto.SynchronizationResultDto;
+using SynchronizationResultDto = softwrench.sw4.offlineserver.model.dto.SynchronizationResultDto;
 
 namespace softwrench.sw4.offlineserver.services {
     public class SynchronizationManager : ISingletonComponent {

@@ -103,9 +103,22 @@
 //                            title: "Error Synchronizing Data",
 //                            template: !!error && !!error.message ? error.message : ""
 //                        });
+                        var message = "";
+                        let requestSupportReport = true;
+                        let notifyException = true;
+                        if (!!error && !!error.data) {
+                            message = error.data.errorMessage;
+                            requestSupportReport = error.data.requestSupportReport;
+                            notifyException = error.data.notifyException;
+                        }else if (!!error && !!error.message) {
+                            message = error.message;
+                        }
 
-                        var e = new Error(!!error && !!error.message ? error.message : "");
+                        var e = new Error(message);
                         e.title = "Error Synchronizing Data";
+                        e.requestSupportReport = requestSupportReport;
+                        e.notifyException = notifyException;
+
 
                         throw e;
                     })

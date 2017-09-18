@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.simpleinjector;
 using log4net;
-using softwrench.sw4.offlineserver.dto.association;
+using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services.util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;

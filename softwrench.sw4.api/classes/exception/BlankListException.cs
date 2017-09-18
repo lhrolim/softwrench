@@ -5,11 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace softwrench.sw4.api.classes.exception {
-    public class BlankListException : BaseSwException {
+    public class BlankListException : Exception, IBaseSwException {
 
-        public override bool NotifyException {
-            get { return false; }
-        }
-
+        public bool NotifyException => false;
     }
 }

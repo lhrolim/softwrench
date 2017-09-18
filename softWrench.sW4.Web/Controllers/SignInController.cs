@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
-using softwrench.sw4.offlineserver.dto;
+using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Web.Controllers.Security;
 using softwrench.sw4.user.classes.ldap;
