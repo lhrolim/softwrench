@@ -157,8 +157,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 meetingtime = SafePlaceholder(FmtDateTime(dom.MeetingTime)),
                 mwhlost = SafePlaceholder(dom.MWHLostYesterday.ToString("0", new CultureInfo("en-US"))),
                 criticalpath = SafePlaceholder(dom.CriticalPath),
-                openactionitems = SafePlaceholder(dom.OpenActionItems),
-                completedactionitems = SafePlaceholder(dom.CompletedActionItems),
                 meetingsummary = SafePlaceholder(dom.Summary),
                 wpnum = SafePlaceholder(package.Wpnum),
                 actions,

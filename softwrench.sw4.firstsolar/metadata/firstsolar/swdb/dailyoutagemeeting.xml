@@ -27,8 +27,8 @@
           </field>
 
           <field attribute="criticalpath" hidden="true"/>
-          <field attribute="openactionitems" hidden="true"/>
-          <field attribute="completedactionitems" hidden="true"/>
+<!--          <field attribute="openactionitems" hidden="true"/>-->
+<!--          <field attribute="completedactionitems" hidden="true"/>-->
           <field attribute="summary" hidden="true"/>
           <field attribute="sendnow" hidden="true"/>
         </schema>
@@ -48,8 +48,8 @@
           </optionfield>
           
           <field label="Critical Path/Constraints" attribute="criticalpath"/>
-          <field label="Open Action Items" attribute="openactionitems"/>
-          <field label="Completed Action Items" attribute="completedactionitems"/>
+<!--          <field label="Open Action Items" attribute="openactionitems"/>-->
+<!--          <field label="Completed Action Items" attribute="completedactionitems"/>-->
           <field attribute="summary" label="Meeting Summary">
             <renderer type="textarea"/>
           </field>
@@ -75,8 +75,8 @@
         <schema id="detailview" title="Daily Outage Meeting"  platform="web" stereotype="detail">
           <field label="Cc" attribute="cc"/>
           <field label="Critical Path/Constraints" attribute="criticalpath"/>
-          <field label="Open Action Items" attribute="openactionitems"/>
-          <field label="Completed Action Items" attribute="completedactionitems"/>
+<!--          <field label="Open Action Items" attribute="openactionitems"/>-->
+<!--          <field label="Completed Action Items" attribute="completedactionitems"/>-->
           <field attribute="summary" label="Meeting Summary">
             <renderer type="textarea"/>
           </field>

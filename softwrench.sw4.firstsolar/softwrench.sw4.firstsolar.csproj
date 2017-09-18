@@ -228,6 +228,7 @@
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3047Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3044Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3024Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_3182Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2974Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\SWWEB_2930Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\model\DailyOutageMeeting.cs" />

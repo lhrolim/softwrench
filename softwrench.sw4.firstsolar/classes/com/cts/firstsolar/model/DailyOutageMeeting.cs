@@ -26,11 +26,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public string CriticalPath { get; set; }
 
-        [Property]
-        public string OpenActionItems { get; set; }
-
-        [Property]
-        public string CompletedActionItems { get; set; }
+//        [Property]
+//        public string OpenActionItems { get; set; }
+//
+//        [Property]
+//        public string CompletedActionItems { get; set; }
 
         [Property]
         public string Cc { get; set; }
