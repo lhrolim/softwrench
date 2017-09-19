@@ -15,6 +15,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         public static string WorkorderIds = "from WorkPackage where AccessToken = ?";
 
+        public static string NonDeletedWorkorderIds = "select WorkorderId from WorkPackage where Deleted is null or Deleted = 0 ";
+
 
         private string _wonum;
 

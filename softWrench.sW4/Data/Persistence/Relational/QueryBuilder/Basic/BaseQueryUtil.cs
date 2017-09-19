@@ -23,20 +23,24 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             var metadata = MetadataProvider.Entity(entity);
             var table = metadata.GetTableName();
             if (ApplicationConfiguration.IsOracle(DBType.Maximo)) {
-                return string.Format("{0} {1}", table, alias);
+                return $"{table} {alias}";
             }
-            return string.Format("{0} as {1}", table, alias);
+            return $"{table} as {alias}";
         }
 
         public static string QualifyAttribute(EntityMetadata entityMetadata, EntityAttribute attribute) {
             return attribute.IsAssociated
                 ? attribute.Name
-                : string.Format("{0}.{1}", entityMetadata.Name, attribute.Name);
+                : $"{entityMetadata.Name}.{attribute.Name}";
         }
 
         public static string GenerateInString(IEnumerable<string> items) {
+            if (items == null || !items.Any()) {
+                return "";
+            }
+
             var enumerable = items as ISet<string> ?? items.ToHashSet();
-            Validate.NotEmpty(enumerable,"items");
+            Validate.NotEmpty(enumerable, "items");
 
             var sb = new StringBuilder();
             foreach (var item in enumerable) {
@@ -47,7 +51,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             return sb.ToString(0, sb.Length - 1);
         }
 
-        public static string GenerateOrLikeString(string columnName, IEnumerable<string> items, bool bringNoneIfEmpty=false) {
+        public static string GenerateOrLikeString(string columnName, IEnumerable<string> items, bool bringNoneIfEmpty = false) {
             var sb = new StringBuilder();
             var enumerable = items as ISet<string> ?? items.ToHashSet();
             if (items == null || !enumerable.Any()) {
