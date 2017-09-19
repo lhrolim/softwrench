@@ -86,7 +86,7 @@
                                 return rowstampService.generateAssociationRowstampMap(applicationsToFetch, firstTime).then(rowstampMap => {
                                     const payload = { rowstampMap, clientOperationId, deviceData };
                                     const current = securityService.currentFullUser();
-                                    if (current.meta && current.meta.changed) {
+                                    if (current && current.meta && current.meta.changed) {
                                         payload.userData = current;
                                     }
                                     payload.applicationsToFetch = applicationsToFetch;

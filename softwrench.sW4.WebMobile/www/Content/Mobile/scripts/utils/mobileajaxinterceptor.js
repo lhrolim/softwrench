@@ -38,10 +38,18 @@
                     if (networkConnectionService.isOffline()) {
                         // no connection at all
                         return new Error("No internet connection detected.");
-                    } 
+                    }
+                    const timeout = isTimeoutError(rejection);
                     // request-response timeout or server unreachable/socket timeout 
-                    const message = (isTimeoutError(rejection) ? "Request timed out" : "Server unreachable") + ". Please make sure the url in settings is correct and check your internet connection.";
-                    return new Error(message);
+                    const message = (timeout ? "Request timed out" : "Server unreachable") + ". Please make sure the url in settings is correct and check your internet connection.";
+                    const error = new Error(message);
+                    if (rejection.config.url.contains("SignIn/Ping")) {
+                        //to avoid circular error handling for ping calls that are made in order to double check server reacheability
+                        return rejection;
+                    }
+                    error.type = timeout ? "timeout" : "unreacheable";    
+                    
+                    return error;
                 
                 } else if (status >= 500 && status < 600) {
                     // internal server error

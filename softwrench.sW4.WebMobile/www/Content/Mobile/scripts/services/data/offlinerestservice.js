@@ -19,10 +19,11 @@
                 return $http.post(url, json);
             });
         }
-        function get(controller, action, params) {
+        function get(controller, action, params, configHeaders = {}) {
+
             return getActionUrl(controller, action, params).then(function (url) {
                 $log.get("offlineRestService#get").info("invoking get on url", url);
-                return $http.get(url);
+                return $http.get(url, configHeaders);
             });
         }
         //#endregion

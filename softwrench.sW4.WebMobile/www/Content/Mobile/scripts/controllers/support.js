@@ -2,17 +2,27 @@
     "use strict";
 
     angular.module("softwrench")
-        .controller("SupportController", ["$scope", "supportService", "$ionicPopup", "dynamicScriptsCacheService", "securityService", "routeService", "swdbDAO", "$log", function ($scope, supportService, $ionicPopup, dynamicScriptsCacheService, securityService, routeService, swdbDAO, $log) {
+        .controller("SupportController", ["$scope", "supportService", "$ionicPopup", "dynamicScriptsCacheService", "securityService", "routeService", "swdbDAO", "$log", "$roll", function ($scope, supportService, $ionicPopup, dynamicScriptsCacheService, securityService, routeService, swdbDAO, $log, $roll) {
 
             const log = $log.get("SupportController");
 
             $scope.vm = {
                 loglevel: sessionStorage["loglevel"] || "WARN",
-                sqlClientCollapsed : true
+                sqlClientCollapsed: true,
+                logFileCollapsed:true
             }
 
             $scope.toggleSQLClientState = function() {
                 $scope.vm.sqlClientCollapsed = !$scope.vm.sqlClientCollapsed;
+            }
+
+            $scope.toggleLogFile = function () {
+                $scope.vm.logFileCollapsed = !$scope.vm.logFileCollapsed;
+                if (!$scope.vm.logFileCollapsed) {
+                    $roll.readCurrent().then(filecontent => {
+                        $scope.vm.logoutput = filecontent;
+                    });
+                }
             }
 
             $scope.changeloglevel = function (callback) {

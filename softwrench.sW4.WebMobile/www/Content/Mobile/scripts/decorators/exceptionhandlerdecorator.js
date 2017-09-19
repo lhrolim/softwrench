@@ -4,8 +4,8 @@
     mobileServices.config(["$provide", function ($provide) {
 
         $provide.decorator("$exceptionHandler", ["$delegate", "$injector", "fileConstants", "rollingLogFileConstants", function ($delegate, $injector, fileConstants, rollingLogFileConstants) {
-            
-            var swAlertPopup, $log, logger, contextService, supportService;
+
+            var swAlertPopup, $log, logger, contextService, supportService, restService;
 
             function lazyInstance(instance, name, factory = $injector, getter = "get") {
                 if (!instance) {
@@ -21,7 +21,7 @@
             }
 
             function shouldAlertExceptionLogged(exception) {
-                const message = angular.isString(exception) ? exception : exception.message; 
+                const message = angular.isString(exception) ? exception : exception.message;
                 // only considered a worthwhile exception if has a message with more than 10 characters
                 return !!message && message.length >= 10;
             }
@@ -34,7 +34,7 @@
                 }
                 // getting around circular deps: $exceptionHandler <- $interpolate <- $compile <- $ionicTemplateLoader <- $ionicPopup <- swAlertPopup <- $exceptionHandler <- $rootScope
                 swAlertPopup = lazyInstance(swAlertPopup, "swAlertPopup");
-                
+
                 const path = logFilePath();
                 swAlertPopup.show({
                     title: "Unexpected error",
@@ -43,9 +43,11 @@
             }
 
             return function (exception, cause) {
-                if ((exception && isString(exception) && exception.startsWith("Possibly unhandled rejection:")) || !exception.notifyException) {
+                if ((exception && isString(exception) && exception.startsWith("Possibly unhandled rejection:")) || exception.notifyException === false) {
                     return;
                 }
+
+
 
                 // getting around circular deps: $rootScope <- contextService <- $exceptionHandler <- $rootScope
                 $log = lazyInstance($log, "$log");
@@ -62,6 +64,22 @@
                 }
                 logReportObject.notifyException = exception.notifyException;
                 logReportObject.requestSupportReport = exception.requestSupportReport;
+
+                if (exception.type === "unreacheable") {
+                    restService = lazyInstance(restService, "offlineRestService", restService);
+                    return restService.get("SignIn", "Ping", {}, { timeout: 3000 })
+                        .then(() => {
+                            //if for some reason the ping url is available, then this was a false positive, we need to allow support request
+                            supportService.requestLogReporting(logReportObject);
+                        })
+                        .catch(() => {
+                            swAlertPopup.show({
+                                title: exception.title,
+                                template: "Server unreachable.<br> Please make sure the url in settings is correct and check your internet / vpn connection."
+                            });
+                        });
+                }
+
                 if (exception.requestSupportReport !== false) {
                     supportService.requestLogReporting(logReportObject);
                 } else {
@@ -70,7 +88,7 @@
                         template: exception.message
                     });
                 }
-                
+
             };
 
         }]);

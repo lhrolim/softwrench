@@ -29,7 +29,16 @@
             </div>
         </div>
 
+        
+        <div class="list card responsive-container lg">
+            <div class="item item-divider app-summary-title" ng-click="toggleLogFile()">
+                <i class="fa" ng-class="{'fa-caret-down': vm.logFileCollapsed, 'fa-caret-up': !vm.logFileCollapsed}"></i>&ensp;View Logs
+            </div>
 
+            <div class="item item-text-wrap" ng-show="!vm.logFileCollapsed">
+                <textarea ng-model="vm.logoutput" wrap="hard" rows="10" style="width: 100%; resize: none; border-style: solid; border-width: 1px; border-color: #ddd" ng-readonly="true"></textarea>
+            </div>
+        </div>
 
 
         <div class="list card responsive-container lg">

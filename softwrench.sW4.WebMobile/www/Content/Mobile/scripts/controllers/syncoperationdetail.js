@@ -110,17 +110,15 @@
                             message = error.data.errorMessage;
                             requestSupportReport = error.data.requestSupportReport;
                             notifyException = error.data.notifyException;
-                        }else if (!!error && !!error.message) {
-                            message = error.message;
+                            var e = new Error(message);
+                            e.title = "Error Synchronizing Data";
+                            e.requestSupportReport = requestSupportReport;
+                            e.notifyException = notifyException;
+                            throw e;
                         }
 
-                        var e = new Error(message);
-                        e.title = "Error Synchronizing Data";
-                        e.requestSupportReport = requestSupportReport;
-                        e.notifyException = notifyException;
-
-
-                        throw e;
+                        error.title = "Error Synchronizing Data";
+                        throw error;
                     })
                     .finally(function () {
                         $scope.data.isSynching = false;

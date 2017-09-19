@@ -180,8 +180,8 @@
             // Rolling log external service
             return {
                 logs: [], // holds logs in memory before writing to file
-                logCurr: '.0', // suffix for active log
-                logLast: '.1', // suffix for old log
+                logCurr: '.0.txt', // suffix for active log
+                logLast: '.1.txt', // suffix for old log
                 started: false, // whether logging has started
 
                 /**
@@ -193,6 +193,29 @@
                     } else {
                         document.removeEventListener('pause', this.getOnPause(), false);
                     }
+                },
+
+                readCurrent: function () {
+                    const logCurr = this.config.prefix + this.logCurr;
+                    var deferred = $q.defer();
+
+                    cordovaFile.getFile(logCurr).then(fileEntry => {
+
+                        fileEntry.file(function(file) {
+                            var reader = new FileReader();
+
+                            reader.onloadend = function(e) {
+                                deferred.resolve(this.result);
+                            }
+
+                            reader.readAsText(file);
+                        });
+
+                    }).catch(e => {
+                        deferred.reject(e);
+                    });
+
+                    return deferred.promise;
                 },
 
                 /**

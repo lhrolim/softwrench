@@ -5,10 +5,8 @@
     "main": "index.js",
     "dependencies": {
         "angular-ui-router": "^0.4.2",
-        "grunt": "^0.4.5",
-        "grunt-xmlpoke": "^0.8.2",
-        "karma-phantomjs-launcher": "^1.0.2",
         "com.cordova.plugins.cookiemaster": "~1.0.0",
+        "cordova-android": "^6.2.3",
         "cordova-plugin-app-event": "~1.2.0",
         "cordova-plugin-app-version": "~0.1.8",
         "cordova-plugin-camera": "~2.2.0",
@@ -25,7 +23,10 @@
         "cordova-plugin-whitelist": "~1.2.2",
         "cordova-sqlite-evcore-extbuild-free": "https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free",
         "de.appplant.cordova.plugin.local-notification": "~0.8.4",
-        "ionic-plugin-keyboard": "~2.2.1"
+        "grunt": "^0.4.5",
+        "grunt-xmlpoke": "^0.8.2",
+        "ionic-plugin-keyboard": "~2.2.1",
+        "karma-phantomjs-launcher": "^1.0.2"
     },
     "repository": {
         "type": "git",
@@ -97,6 +98,9 @@
             "cordova-sqlite-evcore-extbuild-free": {},
             "de.appplant.cordova.plugin.local-notification": {},
             "ionic-plugin-keyboard": {}
-        }
+        },
+        "platforms": [
+            "android"
+        ]
     }
 }
