@@ -8,13 +8,13 @@
 
 
 
-            /// <summary>
-            ///  Generates the queries to update the composition entries after a synchronization has been performed.
-            /// </summary>
-            /// <param name="compositionDataReturned">The composition data returned from the server, a dictionary of multiple applications (worklogs,attachments, etc)</param>
-            /// <returns type="CompositionSyncResult"></returns>
+            /**
+             * Generates the queries to update the composition entries after a synchronization has been performed.
+             * @param {any} compositionDataReturned The composition data returned from the server, a dictionary of multiple applications (worklogs,attachments, etc)
+             * @return type="string" a array of queries to be executed later
+             */
             const generateSyncQueryArrays = function (compositionDataReturned) {
-                const log = $log.get("compositionService#generateSyncQueryArrays",["composition"]);
+                const log = $log.get("compositionService#generateSyncQueryArrays", ["composition"]);
                 let queryArray = [];
 
                 if (compositionDataReturned == null) {
@@ -22,7 +22,7 @@
                     return queryArray;
                 }
 
-                const doclinksArray = [];
+                const doclinksMap = new Map();
 
                 for (let i = 0; i < compositionDataReturned.length; i++) {
                     const application = compositionDataReturned[i];
@@ -42,7 +42,8 @@
                         idsToDelete.push("'" + datamap.id + "'");
                         queryArray.push(query);
                         if (application.applicationName === "attachment_") {
-                            doclinksArray.push({ compositionRemoteId: parsedDM.doclinksid, hash: parsedDM["docinfo_.urlparam1"], ownerTable: parsedDM.ownertable, ownerId: parsedDM.ownerid, docinfoid: parsedDM.docinfoid });
+                            var queryObj = { compositionRemoteId: parsedDM.doclinksid, hash: parsedDM["docinfo_.urlparam1"], ownerTable: parsedDM.ownertable, ownerId: parsedDM.ownerid, docinfoid: parsedDM.docinfoid };
+                            doclinksMap.set(queryObj.compositionRemoteId, queryObj);
                         }
                     }
                     if (idsToDelete.length !== 0) {
@@ -54,14 +55,14 @@
                             queryArray.unshift(entities.CompositionDataEntry.syncdeletionQuery.format(application.applicationName, idsToDelete));
                         }
 
-                        
+
                     }
-                    
+
                 }
 
-                return attachmentDataSynchronizationService.generateAttachmentsQueryArray(doclinksArray)
+                return attachmentDataSynchronizationService.generateAttachmentsQueryArray(Array.from(doclinksMap.values()))
                     .then((attachmentQueryArray) => {
-                        queryArray =queryArray.concat(attachmentQueryArray);
+                        queryArray = queryArray.concat(attachmentQueryArray);
                         log.debug(`final composition array count ${queryArray.length}`);
                         return queryArray;
                     });

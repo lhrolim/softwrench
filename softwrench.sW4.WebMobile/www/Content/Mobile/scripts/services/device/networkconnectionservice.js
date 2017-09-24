@@ -20,6 +20,10 @@
 
         function isOffline() {
             if (simulator) {
+                if (sessionStorage.mockoffline === "true") {
+                    return true;
+                }
+
                 return !navigator.onLine;
             }
             return $cordovaNetwork.isOffline();
@@ -28,8 +32,8 @@
 
         //#region Service instance
         const service = {
-            isOnline: isOnline,
-            isOffline: isOffline
+            isOnline,
+            isOffline
         };
         return service;
         //#endregion

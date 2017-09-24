@@ -20,6 +20,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
@@ -72,6 +73,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
         protected virtual IDictionary<string, object> CreateAppDict(UserProfile profileOb, CompleteApplicationMetadataDefinition app) {
             IDictionary<string, object> dict = new Dictionary<string, object>();
             var title = app.Title;
+            if (app.GetProperty(ApplicationSchemaPropertiesCatalog.ApplicationSecurityTitle) != null) {
+                title = app.GetProperty(ApplicationSchemaPropertiesCatalog.ApplicationSecurityTitle);
+            }
+
             dict["title"] = title;
             dict["#application"] = app.ApplicationName;
 

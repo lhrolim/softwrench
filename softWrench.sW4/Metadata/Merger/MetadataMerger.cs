@@ -53,12 +53,14 @@ namespace softWrench.sW4.Metadata.Validator {
                     resultApplications.Add(souceAplication);
                 }
             }
+
+            //only the ones which were not previously declared on this pass (ex an app on the metadata which wasn´t present on any template, such as fsocworkorder, pastworkorder for firstsolar, for instance)
             foreach (var overridenApplication in completeApplicationMetadataDefinitions) {
                 if (resultApplications.All(f => f.ApplicationName != overridenApplication.ApplicationName)) {
                     if (overridenApplication.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.OriginalApplication)) {
-                        //an application which is pointing to another application as a base (ex: fsocworkorder --> workorder)
-                        var sourceApplication = MetadataProvider.Application(overridenApplication.Properties[ApplicationSchemaPropertiesCatalog.OriginalApplication]);
+                        var sourceApplication = LocateReferenceApplication(overridenApplication, completeApplicationMetadataDefinitions);
                         resultApplications.Add(DoMergeApplication(sourceApplication, overridenApplication, false));
+
                     } else {
                         resultApplications.Add(overridenApplication);
                     }
@@ -68,6 +70,42 @@ namespace softWrench.sW4.Metadata.Validator {
             }
 
             return resultApplications;
+        }
+
+        /// <summary>
+        /// Depending whether the mirrored application is declared afterwards or beforewards the main application it could use the one declared on the metadata or the tempalte one.
+        /// Ex: FS --> fsocworkroder will copy the template workorder because it´s declared before the workorder declaration on the metadata, while pastworkorder would copy the redefined wokorder itself already
+        /// </summary>
+        /// <param name="overridenApplication"></param>
+        /// <param name="completeApplicationMetadataDefinitions"></param>
+        /// <returns></returns>
+        private static CompleteApplicationMetadataDefinition LocateReferenceApplication(
+            CompleteApplicationMetadataDefinition overridenApplication,
+            CompleteApplicationMetadataDefinition[] completeApplicationMetadataDefinitions) {
+            var originalAppName = overridenApplication.Properties[ApplicationSchemaPropertiesCatalog.OriginalApplication];
+
+            var originalAppUseTemplate = "false";
+
+            if (overridenApplication.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog
+                .OriginalApplicationUseTemplate)) {
+                originalAppUseTemplate = overridenApplication.Properties[ApplicationSchemaPropertiesCatalog.OriginalApplicationUseTemplate];
+            }
+
+
+
+
+            var overridenAppReference =
+                completeApplicationMetadataDefinitions.FirstOrDefault(a => a.ApplicationName.EqualsIc(originalAppName));
+
+            CompleteApplicationMetadataDefinition sourceApplication = null;
+            if (overridenAppReference != null && !"true".Equals(originalAppUseTemplate)) {
+                //an application which is pointing to another application as a base (ex: fsocworkorder --> workorder)
+                sourceApplication = overridenAppReference;
+            } else {
+                //an application which is pointing to another application as a base (ex: fsocworkorder --> workorder)
+                sourceApplication = MetadataProvider.Application(originalAppName);
+            }
+            return sourceApplication;
         }
 
         private static CompleteApplicationMetadataDefinition DoMergeApplication([NotNull]CompleteApplicationMetadataDefinition souceAplication, [NotNull]CompleteApplicationMetadataDefinition overridenApplication, bool addSourceSchemas = true) {
@@ -98,30 +136,31 @@ namespace softWrench.sW4.Metadata.Validator {
             }
 
             foreach (var overridenSchemaEntry in overridenApplication.Schemas()) {
-                if (souceAplication.Schemas().All(f => !f.Key.Equals(overridenSchemaEntry.Key))) {
-                    var overridenSchema = overridenSchemaEntry.Value;
-                    if (overridenSchema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.OriginalSchema)) {
-                        var originalSchemaName =
-                            overridenSchema.Properties[ApplicationSchemaPropertiesCatalog.OriginalSchema];
-                        if (originalSchemaName.Contains(".")) {
-                            var arr = originalSchemaName.Split('.');
-                            var applicationName = arr[0];
-                            originalSchemaName = arr[1];
-                            if (applicationName != souceAplication.ApplicationName) {
-                                souceAplication = MetadataProvider.Application(applicationName);
-                            }
+                var overridenSchema = overridenSchemaEntry.Value;
+                if (overridenSchema.Properties.ContainsKey(ApplicationSchemaPropertiesCatalog.OriginalSchema)) {
+                    var originalSchemaName =
+                        overridenSchema.Properties[ApplicationSchemaPropertiesCatalog.OriginalSchema];
+                    if (originalSchemaName.Contains(".")) {
+                        var arr = originalSchemaName.Split('.');
+                        var applicationName = arr[0];
+                        originalSchemaName = arr[1];
+                        if (applicationName != souceAplication.ApplicationName) {
+                            souceAplication = MetadataProvider.Application(applicationName);
                         }
-
-                        var originalSchema = souceAplication.Schema(new ApplicationMetadataSchemaKey(originalSchemaName, overridenSchemaEntry.Key.Mode, overridenSchemaEntry.Key.Platform));
-                        var resultSchema = MergeCustomizedSchema(overridenSchema, resultFilters, ApplicationSchemaFactory.Clone(originalSchema), resultComponents);
-                        resultSchema.SchemaId = overridenSchema.SchemaId;
-                        resultSchema.ApplicationName = overridenSchema.ApplicationName;
-                        resultSchemas.Add(overridenSchemaEntry.Key, resultSchema);
-                    } else {
-                        //adding any schemas that are only declared on the overriden application (new schemas that are not present on templates...)
-                        resultSchemas.Add(overridenSchemaEntry.Key, overridenSchema);
                     }
+
+                    var originalSchema = souceAplication.Schema(new ApplicationMetadataSchemaKey(originalSchemaName,
+                        overridenSchemaEntry.Key.Mode, overridenSchemaEntry.Key.Platform));
+                    var resultSchema = MergeCustomizedSchema(overridenSchema, resultFilters,
+                        ApplicationSchemaFactory.Clone(originalSchema), resultComponents);
+                    resultSchema.SchemaId = overridenSchema.SchemaId;
+                    resultSchema.ApplicationName = overridenSchema.ApplicationName;
+                    resultSchemas.Add(overridenSchemaEntry.Key, resultSchema);
+                } else if (souceAplication.Schemas().All(f => !f.Key.Equals(overridenSchemaEntry.Key))) {
+                    //adding any schemas that are only declared on the overriden application (new schemas that are not present on templates...)
+                    resultSchemas.Add(overridenSchemaEntry.Key, overridenSchema);
                 }
+
             }
 
             var overridenParameters = souceAplication.MergeProperties(overridenApplication);

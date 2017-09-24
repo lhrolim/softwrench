@@ -14,7 +14,7 @@
                 <!-- container's subitems -->
                 <a ng-repeat="subleaf in leaf.leafs"
                    ng-click="loadApplication(subleaf)"
-                   class="item subleaf">
+                   class="item subleaf" style="white-space: unset; word-break: unset">
                     <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}&ensp;({{getAppCount(subleaf.id)}})
                 </a>
             </div>

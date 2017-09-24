@@ -45,6 +45,16 @@
         public const string OriginalApplication = "application.original";
 
         /// <summary>
+        /// Overrides the title of a given application especifically for security group purposes
+        /// </summary>
+        public const string ApplicationSecurityTitle = "application.securitytitle";
+
+        /// <summary>
+        /// Whether to force using the original application from a template file (ex: fswokorder which points to workorder but workorder is also redeclared on the medata... avoid using the metadata version)
+        /// </summary>
+        public const string OriginalApplicationUseTemplate = "application.originalusetemplate";
+
+        /// <summary>
         /// Mark an sw aplication as viewable by users with system admin role
         /// </summary>
         public const string SystemAdminApplication = "application.security.systemadmin";

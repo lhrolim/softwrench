@@ -82,6 +82,7 @@
         function bufferedDownload(attachmentsToDownload, originalDeferred, log) {
             const promiseDownloadBuffer = [];
             if (attachmentsToDownload.length === 0) {
+                log.info(`finishing download process for attachments`);
                 originalDeferred.resolve();
                 return;
             }
@@ -126,6 +127,8 @@
                     log.debug("no attachments to download, resuming");
                     return null;
                 }
+
+                log.info(`starting download process for ${attachmentsToDownload.length} attachments`);
 
                 var deferred = $q.defer();
 

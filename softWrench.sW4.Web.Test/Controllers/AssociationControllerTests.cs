@@ -18,6 +18,7 @@ using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.API.Association.Lookup;
 using softwrench.sw4.Shared2.Data.Association;
 using System.IO;
+using System.Threading.Tasks;
 using softwrench.sW4.TestBase;
 
 namespace softWrench.sW4.Web.Test.Controllers {
@@ -29,7 +30,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
         /// Client metadata - Pesco
         /// </summary>
         [TestMethod]
-        public async void FetchLookupOptions_LocationLookupTest() {
+        public async Task FetchLookupOptions_LocationLookupTest() {
             // Mock objects
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();

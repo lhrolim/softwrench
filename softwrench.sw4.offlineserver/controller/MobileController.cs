@@ -197,6 +197,7 @@ namespace softwrench.sw4.offlineserver.controller {
         [HttpPost]
         public async Task<Batch> SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent, [FromUri]string clientOperationId = null, [FromUri]DeviceData deviceData = null) {
             var operation = await _offlineAuditManager.MarkSyncOperationBegin(clientOperationId, deviceData, OfflineAuditManager.OfflineAuditMode.Batch);
+            _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
             Log.InfoFormat("Creating batch for application {0}", application);
             // return the generated Batch to be serialized
             var batch = _offLineBatchService.SubmitBatch(application, remoteId, operation, batchContent);

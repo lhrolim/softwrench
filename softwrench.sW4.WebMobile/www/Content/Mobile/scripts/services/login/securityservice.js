@@ -159,20 +159,29 @@
          * 
          * @return Promise resolved with the logged out user 
          */
-        const logout = function (clearSettings =false) {
+        const logout = function (clearSettings =false, clearCookies = true) {
             // invalidate current session
-            const current = localStorageService.remove(config.authkey); 
+
+            let current = null;
+
+            if (clearCookies) {
+                current = localStorageService.remove(config.authkey);
+            } else {
+                current = localStorageService.get(config.authkey);
+            }
+            
             // making sure the previous user is always the last "active" user
             if (!!current) {
                 localStorageService.put(config.previouskey, current);
             }
             $rootScope.$broadcast($event("logout"), current);
             const toAvoid = clearSettings ? [] : ["Settings"];
+            const promises = [dao.resetDataBase(toAvoid)];
+            if (clearCookies) {
+                promises.push(cookieService.clearCookies());
+            }
 
-            return $q.all([
-                dao.resetDataBase(toAvoid),
-                cookieService.clearCookies() // clear cookies 
-            ]).then(() => {
+            return $q.all(promises).then(() => {
                 $ionicHistory.clearCache(); // clean cache otherwise some views may remain after a consecutive login
                 cleanLocalStorage(); // clean non-blacklisted localstorage entries used by apps as cache
                 indexCreatorService.dropIndexes(); //drop sql indexes to allow fast sync insertion

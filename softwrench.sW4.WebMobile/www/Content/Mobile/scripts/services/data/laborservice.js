@@ -312,7 +312,7 @@
          */
         function clearLaborCacheIfCurrentParent(item) {
             if (item.id === getActiveLaborParent()) {
-                clearCachedLabor();
+                clearTrackedLabor();
             }
         }
 
@@ -330,7 +330,7 @@
         function cancelPossibleTimer(item, parent, defaultPostDeleteAction) {
             const activeLabor = getActiveLabor();
             if (!!activeLabor && item["#localswdbid"] === activeLabor["#localswdbid"]) {
-                clearCachedLabor();
+                clearTrackedLabor();
                 return parent;
             }
             return defaultPostDeleteAction();

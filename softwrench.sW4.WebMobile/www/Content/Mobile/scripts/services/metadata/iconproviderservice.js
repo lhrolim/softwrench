@@ -223,7 +223,7 @@
 
         //#region Service Instance
         const service = {
-            getIcon: getIcon
+            getIcon
         };
         return service;
         //#endregion

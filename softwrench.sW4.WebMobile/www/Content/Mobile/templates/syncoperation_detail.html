@@ -9,11 +9,13 @@
         <button ng-if="data.isLatestOperation" class="button button-menu" menu-toggle="left">
             <i class="fa fa-bars"></i>
         </button>
+        <!-- detail of latest syncoperation: full sync button -->
+
     </ion-nav-buttons>
     
     <ion-nav-buttons side="right">
-        <!-- detail of latest syncoperation: full sync button -->
-        <button ng-if="data.isLatestOperation" class="button sync-button" ng-click="fullSynchronize()" ng-disabled="data.isSynching">
+
+        <button ng-if="data.isLatestOperation" class="button sync-button" ng-click="fullSynchronize()" on-hold="reset()" ng-disabled="data.isSynching">
             <i class="fa fa-refresh"></i>&ensp;Sync
         </button>
     </ion-nav-buttons>
@@ -25,7 +27,7 @@
 
             <div class="operation-status">
                 <div class="row">
-                    <div class="col col-20 operation-icon">
+                    <div class="col col-20 operation-icon"  >
                         <sw-operation-icon sync-operation="data.operation"></sw-operation-icon>
                     </div>
                     <div class="col">

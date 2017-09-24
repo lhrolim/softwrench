@@ -51,6 +51,7 @@ namespace softwrench.sW4.audit.Interfaces {
 
         AuditTrail CurrentTrail();
 
+        //do not change this method to async, ever, or the CallContext won´t work correctly
         void InitThreadTrail(AuditTrail trail);
 
         void SaveThreadTrail(bool async = true);

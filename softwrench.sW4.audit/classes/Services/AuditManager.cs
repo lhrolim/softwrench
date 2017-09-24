@@ -52,13 +52,13 @@ namespace softwrench.sW4.audit.classes.Services {
         }
 
         public void AppendToCurrentTrail(AuditEntry entry) {
-            var trail = CallContext.GetData("audittrail") as AuditTrail;
+            var trail = CallContext.LogicalGetData("audittrail") as AuditTrail;
             trail?.Entries.Add(entry);
         }
 
 
         public void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string data) {
-            var trail = CallContext.GetData("audittrail") as AuditTrail;
+            var trail = CallContext.LogicalGetData("audittrail") as AuditTrail;
             var entry = new AuditEntry {
                 Action = action,
                 RefApplication = refApplication,
@@ -81,11 +81,11 @@ namespace softwrench.sW4.audit.classes.Services {
         }
 
         public AuditTrail CurrentTrail() {
-            return CallContext.GetData("audittrail") as AuditTrail;
+            return CallContext.LogicalGetData("audittrail") as AuditTrail;
         }
 
         public void InitThreadTrail(AuditTrail trail) {
-            if (CallContext.GetData("audittrail") != null) {
+            if (CallContext.LogicalGetData("audittrail") != null) {
                 return;
             }
 

@@ -52,7 +52,8 @@
 
 
             let extraLaborQuery = "1=1";
-            if (mainListSchema.applicationName === "workorder" ) {
+            //TODO:review
+            if (mainListSchema.applicationName.equalsAny("workorder") ) {
                 extraLaborQuery = buildExtraLaborAttribute(childListSchema, childEntityName);
             }
             const associatioNameQuqery = "`" + childEntityName + "`" + ".application= 'assignment'";

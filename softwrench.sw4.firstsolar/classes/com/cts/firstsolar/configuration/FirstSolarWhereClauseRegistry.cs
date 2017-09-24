@@ -28,14 +28,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 workorder_.status not in ('comp','can','close') and workorder_.status in ('APPR','INPRG','WAPPR') and historyflag = 0 and istask = 0 and ({0}) )";  /// <summary>
 
 
-//        /// Brings all assignments, where exists a workorder of interest, narrowing by the facility query that will be replaced at {0}
-//        /// no server side filtering based on labor code should take place since these would happen at client side
-//        /// </summary>
-//        private const string AssignedWhereClause2 =
-//            @"assignment.assignmentid in 
-//            (select assignmentid from assignment assignment_ inner join workorder workorder_ on (workorder_.wonum = assignment_.wonum and workorder_.siteid = assignment_.siteid and workorder_.orgid = assignment_.orgid)
-//                where workorder_.wonum is not null  and workorder_.status not in ('comp','can','close')
-//                and workorder_.status in ('APPR','INPRG','WAPPR') and workorder_.historyflag = 0 and workorder_.istask = 0 and {0} )";
+        //        /// Brings all assignments, where exists a workorder of interest, narrowing by the facility query that will be replaced at {0}
+        //        /// no server side filtering based on labor code should take place since these would happen at client side
+        //        /// </summary>
+        //        private const string AssignedWhereClause2 =
+        //            @"assignment.assignmentid in 
+        //            (select assignmentid from assignment assignment_ inner join workorder workorder_ on (workorder_.wonum = assignment_.wonum and workorder_.siteid = assignment_.siteid and workorder_.orgid = assignment_.orgid)
+        //                where workorder_.wonum is not null  and workorder_.status not in ('comp','can','close')
+        //                and workorder_.status in ('APPR','INPRG','WAPPR') and workorder_.historyflag = 0 and workorder_.istask = 0 and {0} )";
 
 
         private const string WOAssignedWhereClause =
@@ -58,6 +58,78 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 and (a.laborcode != '@user.properties['laborcode']' or a.laborcode is null))";
 
 
+        private const string TodayWhereClause =
+                @"(workorder.siteid in ('1803', '1808', '1801', '4801')) and workorder.status not in ('MISSD','COMP','COMP-PEND','CAN','CLOSE') and ({0})
+                and istask = 0 and historyflag = 0 and worktype is not null and wonum in (select assignment.wonum from assignment where workorder.wonum=assignment.wonum and workorder.orgid=assignment.orgid 
+                and assignment.status='ASSIGNED' and cast (assignment.scheduledate as date) = cast (getdate() as date) and assignment.laborcode in (select labor.laborcode from labor where labor.personid= @personid))";
+
+        private const string PastWhereClause =
+            @"woeq4 = 1 
+                and onmstatusflag = 0 
+                and istask = 0 
+                and historyflag = 0
+                and workorder.status not in ('ENRV') and ({0})
+                and schedstart is not null 
+                and worktype is not null 
+                and workorder.persongroup in (select persongroupteam.persongroup from persongroupteam where persongroupteam.respparty= @personid ) 
+                and (select case when min(cast(assignment.scheduledate as date)) is null and min(cast(assignment.startdate as date)) is null then cast(workorder.schedstart as date) 
+                when min(cast(assignment.scheduledate as date)) is not null and min(cast(assignment.startdate as date)) is null then min(cast(assignment.scheduledate as date)) 
+                when min(cast(assignment.scheduledate as date)) is null and min(cast(assignment.startdate as date)) is not null then min(cast(assignment.startdate as date)) 
+                when min(cast(assignment.scheduledate as date))<= min(cast(assignment.startdate as date)) then min(cast(assignment.scheduledate as date)) 
+                when min(cast(assignment.scheduledate as date))> min(cast(assignment.startdate as date)) then min(cast(assignment.startdate as date)) end 
+                from assignment 
+                where workorder.wonum=assignment.wonum and workorder.siteid = assignment.siteid )< cast(getdate() as date) ";
+
+
+        /// <summary>
+        /// Scheduled Panel
+        /// </summary>
+        private const string SchedWhereClause =
+            @"workorder.status not in ('MISSD','COMP-PEND','COMP','CAN','CLOSE','ENRV') 
+              and istask = 0 
+              and schedstart is not null 
+              and worktype is not null 
+              and historyflag = 0
+              and ({0})
+              and workorder.persongroup in (select persongroupteam.persongroup from persongroupteam where persongroupteam.respparty= @personid ) 
+              and (select case when max(cast(assignment.scheduledate as date)) is null and max(cast(assignment.startdate as date)) is null then cast(workorder.schedstart as date) 
+              when max(cast(assignment.scheduledate as date)) is not null and max(cast(assignment.startdate as date)) is null then max(cast(assignment.scheduledate as date)) 
+              when max(cast(assignment.scheduledate as date)) is null and max(cast(assignment.startdate as date)) is not null then max(cast(assignment.startdate as date)) 
+              when max(cast(assignment.scheduledate as date))>= max(cast(assignment.startdate as date)) then max(cast(assignment.scheduledate as date)) 
+              when max(cast(assignment.scheduledate as date))< max(cast(assignment.startdate as date)) then max(cast(assignment.startdate as date)) end 
+              from assignment where workorder.wonum=assignment.wonum and workorder.siteid = assignment.siteid )>=cast(getdate() as date)";
+
+        /// <summary>
+        ///  Planned not Scheduled Panel
+        /// </summary>
+        private const string PnSchedWhereClause =
+            @"woeq4 = 1 and onmstatusflag = 0 and istask = 0 
+            and (wolo10 >= 90 or wolo10 is null) 
+            and worktype is not null 
+            and historyflag = 0
+            and ({0})
+            and (select distinct assignment.wonum from assignment where assignment.wonum= workorder.wonum and assignment.siteid = workorder.siteid and assignment.craft is not null) = workorder.wonum 
+            and wopriority is not null 
+            and (select sum(laborhrs) from assignment where assignment.wonum= workorder.wonum and assignment.siteid = workorder.siteid ) is not null 
+            and schedstart is null 
+            and workorder.persongroup in (select persongroupteam.persongroup from persongroupteam where persongroupteam.respparty= @personid )";
+
+        /// <summary>
+        ///  Planned not Scheduled Panel
+        /// </summary>
+        private const string NPnSchedWhereClause =
+            @"woeq4 = 1 
+            and onmstatusflag = 0 
+            and istask = 0 
+            and historyflag = 0
+            and (worktype in ('EM','FIN','AD') or reportedby = @personid ) 
+            and not(((select distinct assignment.wonum from assignment where assignment.wonum= workorder.wonum and assignment.siteid = workorder.siteid and assignment.craft is not null) = workorder.wonum) 
+            and (wopriority is not null) 
+            and ((select sum(laborhrs) from assignment where assignment.wonum= workorder.wonum and assignment.siteid = workorder.siteid ) is not null)) 
+            and schedstart is null 
+            and workorder.persongroup in (select persongroupteam.persongroup from persongroupteam where persongroupteam.respparty= @personid )";
+
+
         private const string UserLaborWhereClause = "labor.laborcode='@user.properties['laborcode']' and labor.orgid=@orgid";
         private const string UserLaborCraftWhereClause = "laborcraftrate.laborcode='@user.properties['laborcode']' and laborcraftrate.orgid=@orgid";
 
@@ -76,6 +148,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var offLineCondition = new WhereClauseRegisterCondition() { Alias = "offline", OfflineOnly = true, Global = true };
 
             _whereClauseFacade.Register("workorder", "@firstSolarWhereClauseRegistry.AssignedByGroup", offLineCondition);
+            _whereClauseFacade.Register("schedworkorder", "@firstSolarWhereClauseRegistry.SchedWhereClauseMethod", offLineCondition);
+            _whereClauseFacade.Register("todayworkorder", "@firstSolarWhereClauseRegistry.TodayWhereClauseMethod", offLineCondition);
+            _whereClauseFacade.Register("pastworkorder", "@firstSolarWhereClauseRegistry.PastWhereClauseMethod", offLineCondition);
+            _whereClauseFacade.Register("pnschedworkorder", "@firstSolarWhereClauseRegistry.PnSchedWhereClauseMethod", offLineCondition);
+            _whereClauseFacade.Register("npnschedworkorder", "@firstSolarWhereClauseRegistry.NPnSchedWhereClauseMethod", offLineCondition);
+
             _whereClauseFacade.Register("otherworkorder", "@firstSolarWhereClauseRegistry.WorkordersByGroup", offLineCondition);
 
 
@@ -93,18 +171,29 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade.Register("laborcraftrate", UserLaborCraftWhereClause, offLineCondition);
         }
 
+
+        public string TodayWhereClauseMethod() {
+            return DoBuildQuery(TodayWhereClause, "workorder.location");
+        }
+        public string PastWhereClauseMethod() {
+            return DoBuildQuery(PastWhereClause, "workorder.location");
+        }
+
+        public string SchedWhereClauseMethod() {
+            return DoBuildQuery(SchedWhereClause, "workorder.location");
+        }
+
+        public string PnSchedWhereClauseMethod() {
+            return DoBuildQuery(PnSchedWhereClause, "workorder.location");
+        }
+
+        public string NPnSchedWhereClauseMethod() {
+            return DoBuildQuery(NPnSchedWhereClause, "workorder.location");
+        }
+
+
         public string AssignmentsByGroup() {
-            var user = SecurityFacade.CurrentUser();
-            var locationQuery = "1!=1";
-            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
-                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-                var enumerable = facilities as IList<string> ?? facilities.ToList();
-                if (facilities != null && enumerable.Any()) {
-                    locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder_.location", enumerable.Select(f => f + "%"));
-                }
-            }
-            var baseQuery = AssignedWhereClause.Fmt(locationQuery);
-            return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
+            return DoBuildQuery(AssignedWhereClause, "workorder_.location");
         }
 
         public string WorkordersByGroup() {
@@ -131,6 +220,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return sb.ToString();
         }
 
+
+        private string DoBuildQuery(string queryToUse, string columnName) {
+            var user = SecurityFacade.CurrentUser();
+            var locationQuery = BaseFacilityQuery(columnName);
+
+            var baseQuery = queryToUse.Fmt(locationQuery);
+            return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
+        }
+
         private string BaseFacilityQuery(string columnName) {
             var user = SecurityFacade.CurrentUser();
             var sb = new StringBuilder();
@@ -142,6 +240,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return sb.ToString();
         }
 
+
+
         public string LocationWhereClauseByFacility() {
             var user = SecurityFacade.CurrentUser();
             if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
@@ -152,6 +252,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
             return facilities.Contains("AVV") ? @" ({0}) or (type = 'storeroom' and description like 'avra%')".Fmt(byFacility) : byFacility;
         }
+
+
+
 
         public string AssetWhereClauseByFacility() {
             return BaseFacilityQuery("asset.location");

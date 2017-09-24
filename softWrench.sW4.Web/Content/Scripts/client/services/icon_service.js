@@ -34,8 +34,8 @@
             return '';
         }
 
-        var service = {
-            loadIcon: loadIcon
+        const service = {
+            loadIcon
         };
 
         return service;

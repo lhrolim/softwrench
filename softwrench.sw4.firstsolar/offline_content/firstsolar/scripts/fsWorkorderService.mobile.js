@@ -6,7 +6,7 @@
 
     //#region WhereClauses
     // textindex04 = location of the wo
-    const locationsOfAssignedWos = "select textindex04 from DataEntry where application = 'workorder' and textindex04 is not null";
+    const locationsOfAssignedWos = "select textindex04 from DataEntry where application like '%workorder' and textindex04 is not null";
 
     // textindex01 = location of locancestor
     // textindex02 = ancestor of locancestor

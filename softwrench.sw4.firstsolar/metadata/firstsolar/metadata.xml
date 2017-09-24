@@ -344,6 +344,7 @@
     <application name="fsocworkorder" title="Work Order" entity="workorder">
       <properties>
         <property key="application.original" value="workorder"/>
+        <property key="application.originalusetemplate" value="true"/>
         <property key="application.aliasurl" value="fsocwo"/>
         <property key="application.mainlistschema" value="fsoclist"/>
         <property key="application.maindetailschema" value="fsoceditdetail"/>
@@ -1139,9 +1140,204 @@
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Technician Work Orders"/>
       </properties>
     </application>
 
+
+    <application name="schedworkorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="application.original" value="workorder"/>
+        <property key="application.mainlistschema" value="list"/>
+        <property key="application.maindetailschema" value="detail"/>
+        <property key="application.maindetailnewschema" value="newdetail"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Scheduled Work Orders"/>
+      </properties>
+
+      <schemas>
+
+        <schema id="list" platform="mobile" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" platform="mobile" stereotype="detail" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="detail"/>
+          </properties>
+        </schema>
+
+        <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="newdetail"/>
+          </properties>
+        </schema>
+
+
+      </schemas>
+
+    </application>
+
+    <application name="pastworkorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="application.original" value="workorder"/>
+        <property key="application.mainlistschema" value="list"/>
+        <property key="application.maindetailschema" value="detail"/>
+        <property key="application.maindetailnewschema" value="newdetail"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Past Work Orders"/>
+      </properties>
+
+      <schemas>
+
+        <schema id="list" platform="mobile" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" platform="mobile" stereotype="detail" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="detail"/>
+          </properties>
+        </schema>
+
+        <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="newdetail"/>
+          </properties>
+        </schema>
+
+
+      </schemas>
+
+    </application>
+
+    <application name="todayworkorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="application.original" value="workorder"/>
+        <property key="application.mainlistschema" value="list"/>
+        <property key="application.maindetailschema" value="detail"/>
+        <property key="application.maindetailnewschema" value="newdetail"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Today Work Orders"/>
+      </properties>
+
+      <schemas>
+
+        <schema id="list" platform="mobile" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" platform="mobile" stereotype="detail" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="detail"/>
+          </properties>
+        </schema>
+
+        <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="newdetail"/>
+          </properties>
+        </schema>
+
+
+      </schemas>
+
+    </application>
+
+    <application name="pnschedworkorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="application.original" value="workorder"/>
+        <property key="application.aliasurl" value="planned not scheduled"/>
+        <property key="application.mainlistschema" value="list"/>
+        <property key="application.maindetailschema" value="detail"/>
+        <property key="application.maindetailnewschema" value="newdetail"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Planned But Not Scheduled Work Orders"/>
+      </properties>
+
+      <schemas>
+
+        <schema id="list" platform="mobile" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" platform="mobile" stereotype="detail" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="detail"/>
+          </properties>
+        </schema>
+
+        <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="newdetail"/>
+          </properties>
+        </schema>
+
+
+      </schemas>
+
+    </application>
+
+    <application name="npnschedworkorder" title="Work Order" entity="workorder">
+      <properties>
+        <property key="application.original" value="workorder"/>
+        <property key="application.aliasurl" value="planned not scheduled"/>
+        <property key="application.mainlistschema" value="list"/>
+        <property key="application.maindetailschema" value="detail"/>
+        <property key="application.maindetailnewschema" value="newdetail"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Not Planned Not Scheduled Work Orders"/>
+      </properties>
+
+      <schemas>
+
+        <schema id="list" platform="mobile" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" platform="mobile" stereotype="detail" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="detail"/>
+          </properties>
+        </schema>
+
+        <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="newdetail"/>
+          </properties>
+        </schema>
+
+
+      </schemas>
+
+    </application>
+    
+    
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <detail stereotype="detail" title="Labor Reporting" platform="mobile" redeclaring="false">
@@ -1193,6 +1389,7 @@
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="application.securitytitle" value="Group Work Orders"/>
       </properties>
 
       <schemas>

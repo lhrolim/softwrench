@@ -44,7 +44,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         }
 
         public override string ApplicationName() {
-            return "workorder,otherworkorder,fsocworkorder";
+            return "workorder,otherworkorder,fsocworkorder,pastworkorder,todayworkorder,schedworkorder,pnschedworkorder,npnschedworkorder";
         }
 
         public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {

@@ -246,7 +246,7 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
         //either all the incomplete applications, or, if the chunk limit was reached, only those where the cache lookup has exhausted
-        internal virtual ISet<CompleteApplicationMetadataDefinition> DatabaseApplicationsToCollect(bool initialLoad, AssociationSynchronizationResultDto resultDTO, 
+        internal virtual ISet<CompleteApplicationMetadataDefinition> DatabaseApplicationsToCollect(bool initialLoad, AssociationSynchronizationResultDto resultDTO,
             IEnumerable<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, bool hasOverFlownOnCacheOperation) {
 
             var results = new HashSet<CompleteApplicationMetadataDefinition>();
@@ -443,24 +443,29 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
         protected virtual IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
-            if (request.ApplicationName == null) {
+            var applicationName = request.ApplicationName;
+
+            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
+
+            if (applicationName == null) {
                 //no application in special was requested, lets return them all.
-                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
+                return topLevelApps;
             }
             if (request.ReturnNewApps) {
                 if (request.ClientCurrentTopLevelApps != null) {
                     var result = new HashSet<CompleteApplicationMetadataDefinition>();
-                    var otherApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).Where(a => !request.ClientCurrentTopLevelApps.Contains(a.ApplicationName));
+                    var otherApps = topLevelApps.Where(a => !request.ClientCurrentTopLevelApps.Contains(a.ApplicationName));
                     result.AddAll(otherApps);
-                    result.Add(MetadataProvider.Application(request.ApplicationName));
+                    result.Add(MetadataProvider.Application(applicationName));
                     return result;
                 }
-                return MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
+                return topLevelApps;
             }
+            var mainApplication = MetadataProvider.Application(applicationName);
+            var resultList = new List<CompleteApplicationMetadataDefinition> { mainApplication };
+            resultList.AddRange(topLevelApps.Where(a => applicationName.EqualsIc(a.GetProperty(ApplicationSchemaPropertiesCatalog.OriginalApplication))));
 
-
-
-            return new List<CompleteApplicationMetadataDefinition> { MetadataProvider.Application(request.ApplicationName) };
+            return resultList;
         }
 
 
@@ -597,7 +602,7 @@ namespace softwrench.sw4.offlineserver.services {
                 }
             }
 
-            searchDto.QueryAlias = "sync:" + entityMetadata.Name;
+            searchDto.QueryAlias = "sync:" + appMetadata.Name;
 
             var enumerable = await _repository.GetSynchronizationData(entityMetadata, rowstamps, searchDto);
             if (!enumerable.Any()) {

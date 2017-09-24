@@ -182,7 +182,7 @@ namespace softwrench.sw4.offlineserver.audit {
                     throw new InvalidOffLineVersionException(deviceData.ClientVersion);
                 }
                 if (OfflineAuditMode.Batch.Equals(mode)) {
-                    AuditManager.InitThreadTrail(operation.AuditTrail);
+
                 }
             }
 
@@ -266,11 +266,19 @@ namespace softwrench.sw4.offlineserver.audit {
                 return;
             }
             var currentTrail = AuditManager.CurrentTrail();
-            //updating current thread trail
-            operation.AuditTrail = currentTrail;
+            if (currentTrail != null) {
+                //updating current thread trail
+                operation.AuditTrail = currentTrail;
+            }
+
             operation.HasUploadOperation = true;
             RedisManager.Insert(new BaseRedisInsertKey(key) { ExpiresIn = _defaultExpiresIn }, operation);
             LoggingUtil.BaseDurationMessage("updating batch syncoperation", before);
+        }
+
+        //DO not make this asyncable
+        public void InitThreadTrail(AuditTrail operationAuditTrail) {
+            AuditManager.InitThreadTrail(operationAuditTrail);
         }
     }
 }
