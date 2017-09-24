@@ -15,7 +15,7 @@
     
     <ion-nav-buttons side="right">
 
-        <button ng-if="data.isLatestOperation" class="button sync-button" ng-click="fullSynchronize()" on-hold="reset()" ng-disabled="data.isSynching">
+        <button ng-if="data.isLatestOperation" class="button sync-button" on-tap="fullSynchronize()" on-hold="reset()" ng-disabled="data.isSynching">
             <i class="fa fa-refresh"></i>&ensp;Sync
         </button>
     </ion-nav-buttons>
