@@ -134,9 +134,10 @@
          * @param {} mainDatamap  the datamap on the screen to be updated
          * @param {} searchDatamap an optional datamap to be enforced for the search. Usually, it´s needed on compositions or modals, 
          * where we need to set extra values for searching while keeping the screen-state intact
+         * @param {} overrideschema the schema to be used forcibly
          * @returns {Promise} for an update lookupObj 
          */
-        initLookupModal(lookupDTO, mainDatamap, searchDatamap) {
+        initLookupModal(lookupDTO, mainDatamap, searchDatamap, overrideschema) {
             if (!(lookupDTO instanceof LookupDTO)) {
                 throw new Error("expected paramter to be a lookupDTO instance");
             }
@@ -145,7 +146,7 @@
             lookupDTO.searchData = {};
             lookupDTO.searchOperator = {};
 
-            return this.getLookupOptions(lookupDTO, searchDTO, mainDatamap, searchDatamap);
+            return this.getLookupOptions(lookupDTO, searchDTO, mainDatamap, searchDatamap, overrideschema);
 
         }
 
@@ -155,16 +156,17 @@
        * @param {} postFetchHook 
        * @param {} searchObj 
        * @param {} datamap if passed will consider this object instead of the root datamap of the crudcontext
+       * @param {} overrideschema the schema to be used forcibly
        * @returns {} 
        */
-        getLookupOptions(lookupDTO, searchDTO, datamap, searchDatamap) {
+        getLookupOptions(lookupDTO, searchDTO, datamap, searchDatamap, overrideschema) {
 
             const log = this.$log.get("lookupService#getLookupOptions", ["modal"]);
             log.debug("get lookup options init");
 
             const panelId = this.crudContextHolderService.isShowingModal() ? "#modal" : null;
             datamap = datamap || this.crudContextHolderService.rootDataMap(panelId);
-            const currentSchema = this.crudContextHolderService.currentSchema(panelId);
+            const currentSchema = overrideschema ? overrideschema : this.crudContextHolderService.currentSchema(panelId);
 
             if (lookupDTO.modalPaginationData != null) {
                 //scenario where a first paginated search had already been performed

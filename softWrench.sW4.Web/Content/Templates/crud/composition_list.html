@@ -203,7 +203,7 @@
                                                data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
                                                maxlength="{{column.rendererParameters['maxlength']}}"
                                                placeholder="{{column.rendererParameters['placeholder']}}"
-                                               ng-init="initField(column)"
+                                               ng-init="initField(column,compositionitem)"
                                                dynamic-name="column.attribute" />
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
@@ -215,7 +215,7 @@
                                                type="text"
                                                class="form-control"
                                                ng-readonly="true"
-                                               ng-init="initField(column)"
+                                               ng-init="initField(column,compositionitem)"
                                                ng-model="compositionitem[column.attribute]" />
                                     </div>
                                 </div>

@@ -13,27 +13,31 @@ angular.module('sw_components')
         return attrValue == undefined || attrValue === "" ? true : attrValue.toLowerCase() === "true";
     }
 
-    function updateView(ngModel, scope, element, datamap, angularDateFormat) {
-        if (scope.fieldMetadata != undefined) {
-            const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
+    function updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline) {
+        if (!metadata) {
+            return;
+        }
+        
+        const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
          
-            if (datamap != undefined && scope.fieldMetadata != undefined) {
-                let originalUnformattedAttribute = `${scope.fieldMetadata.attribute}_formatted`;
+        if (datamap) {
+            if (!isFromCompositionInline) {
+                let originalUnformattedAttribute = `${metadata.attribute}_formatted`;
                 if (originalUnformattedAttribute[0] !== "#") {
                     originalUnformattedAttribute = "#" + originalUnformattedAttribute;
                 }
                 const originalDM = crudContextHolderService.originalDatamap();
                 if (originalDM[originalUnformattedAttribute] === undefined) {
                     originalDM[originalUnformattedAttribute] = value;
-//                    //setting the original value for the first time
-//                    datamap[originalUnformattedAttribute] = datamap[scope.fieldMetadata.attribute];
+                    //                    //setting the original value for the first time
+                    //                    datamap[originalUnformattedAttribute] = datamap[scope.fieldMetadata.attribute];
                 }
-                datamap[scope.fieldMetadata.attribute] = value;
             }
-            ngModel.$setViewValue(value);
-            element.val(value);
-            ngModel.$render();
+            datamap[metadata.attribute] = value;
         }
+        ngModel.$setViewValue(value);
+        element.val(value);
+        ngModel.$render();
     }
 
     function datetimeclassHandler(timeOnly,element) {
@@ -61,24 +65,28 @@ angular.module('sw_components')
             var angularDateFormat = formatService.adjustDateFormatForAngular(attrs.formatString, showTime);
             attrs.language = (userLanguage !== '') ? userLanguage : 'en';
             const istimeOnly = showTime && !showDate;
-            var datamap = scope.datamap;
+            var datamap = scope.datamap || scope.compositionitem;
+            const metadata = scope.fieldMetadata || scope.column;
+            const isFromCompositionInline = !!scope.column;
             datetimeclassHandler(istimeOnly,element);
 
             scope.$watch(function () {
                 return ngModel.$modelValue;
             }, function (newValue) {
                 //let´s make sure that the view keeps getting update if the model changes via an api call
-                updateView(ngModel, scope, element, datamap, angularDateFormat);
+                updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline);
             });
 
             $timeout(function () {
-                updateView(ngModel, scope, element, datamap, angularDateFormat);
+                updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline);
             });
 
             if (dateFormat !== '' && dateFormat != undefined) {
                 const allowfuture = parseBooleanValue(attrs.allowFuture);
                 const allowpast = parseBooleanValue(attrs.allowPast);
-                const position = !!attrs.position ? attrs.position : "bottom";
+                let position = !!attrs.position ? attrs.position : "bottom";
+                position = metadata.rendererParameters && metadata.rendererParameters["position"] ? metadata.rendererParameters["position"] : position;
+
                 var startDate = false;
                 if (!allowpast) {
                     if (!showTime) {

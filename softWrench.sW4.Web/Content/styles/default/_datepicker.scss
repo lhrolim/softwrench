@@ -1,0 +1,16 @@
+.datepicker {
+    .table-condensed {
+        td, th { padding: 5px !important; }
+        td.active, td.active:hover { background-color: #337ab7 !important; color: #fff !important; text-shadow: 0 -1px 0 rgba(0,0,0,0.25) !important }
+    }
+}
+
+.bootstrap-datetimepicker-widget table td span.active { background-color: #337ab7; color: #fff; text-shadow: 0 -1px 0 rgba(0,0,0,0.25) }
+
+.timepicker-picker { 
+    height: 228px;
+}
+
+#datetimepicker {
+    li.picker-switch { height: 39px }
+}

@@ -1,12 +1,28 @@
 ﻿(function (angular) {
     'use strict';
     
-    function fsdailyoutagemeetingService(modalService, schemaCacheService, alertService, applicationService, compositionService, fsrequestService) {
+    function fsdailyoutagemeetingService(modalService, schemaCacheService, alertService, applicationService, compositionService, fsrequestService, crudContextHolderService) {
         function modalProps() {
             const props = fsrequestService.requestModalProps();
             props["cssclass"] = "largemodal";
             props["removecrudmodalclass"] = true;
             return props;
+        }
+
+        function getOutageActions() {
+            const dm = crudContextHolderService.rootDataMap();
+            return angular.copy(dm["outageActions_"]);
+        }
+
+        function outageActionHandlingPre(item) {
+            delete item["outageActions"];
+            item["outageActions_"] = getOutageActions();
+        }
+
+        function outageActionHandlingPost(item) {
+            const dm = crudContextHolderService.rootDataMap();
+            dm["outageActions_"] = item["outageActions_"];
+            delete item["outageActions_"];
         }
 
         function openModalNew(item, callback, rollback) {
@@ -26,7 +42,10 @@
                     mergedItem["summary"] = "Meeting Summary Test";
                 }
 
+                outageActionHandlingPre(mergedItem);
+
                 modalService.show(schema, mergedItem, modalProps(), (saveDatamap) => {
+                    outageActionHandlingPost(saveDatamap);
                     fsrequestService.postSave(saveDatamap, callback, rollback);
                 });
             });
@@ -41,7 +60,11 @@
 
             schemaCacheService.fetchSchema("_DailyOutageMeeting", "detail").then((schema) => {
                 item["sendnow"] = 0;
+
+                outageActionHandlingPre(item);
+
                 modalService.show(schema, item, modalProps(), (saveDatamap) => {
+                    outageActionHandlingPost(saveDatamap);
                     fsrequestService.postSave(saveDatamap, callback, rollback).then(r => {
                         return r;
                     });
@@ -74,5 +97,5 @@
 
     angular
     .module("firstsolar")
-        .clientfactory("fsdailyoutagemeetingService", ["modalService", "schemaCacheService", "alertService", "applicationService", "compositionService", "firstsolar.fsrequestService", fsdailyoutagemeetingService]);
+        .clientfactory("fsdailyoutagemeetingService", ["modalService", "schemaCacheService", "alertService", "applicationService", "compositionService", "firstsolar.fsrequestService", "crudContextHolderService", fsdailyoutagemeetingService]);
 })(angular);

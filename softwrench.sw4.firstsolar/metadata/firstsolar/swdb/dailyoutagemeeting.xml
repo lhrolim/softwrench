@@ -7,6 +7,9 @@
         <relationship to="_WorkPackage_" qualifier="workpackage">
           <relationshipAttribute from="workpackageid" to="id" primary="true"/>
         </relationship>
+        <relationship to="_OutageAction_" qualifier="outageActions" collection="true">
+          <relationshipAttribute from="id" to="id" primary="true"/> <!-- fake/dummy -->
+        </relationship>
       </relationships>
     </entity>
   </entities>
@@ -53,6 +56,11 @@
           <field attribute="summary" label="Meeting Summary">
             <renderer type="textarea"/>
           </field>
+
+          <composition inline="true" relationship="outageActions" label="Outage Actions" outputschema="" detailschema="" printschema="" fetchtype="eager" >
+            <collectionproperties listschema="list" autocommit="true" allowcreation="true" allowupdate="true" orderbyfield="actiontime desc"/>
+            <renderer type="TABLE" params="mode=batch;composition.inline.addTitle=Action"/>
+          </composition>
 
           <composition inline="true" relationship="#domfileexplorer_" label="Attachments" fetchtype="manual">
             <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types"/>

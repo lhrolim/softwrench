@@ -416,6 +416,7 @@
                     return isTrueValue ? 1 : 0;
 
                 case "boolean":
+                case "Boolean":
                     return isTrueValue ? 'true' : 'false';
             }
         };
@@ -461,6 +462,9 @@
         }
 
         this.getAddLabel = function () {
+            if (!$scope.compositiondetailschema) {
+                return $scope.i18N($scope.relationship + '.add', 'Add ' + $scope.title);
+            }
             const labelOverride = $scope.compositiondetailschema.properties['add.button.label'];
             if (labelOverride) {
                 return $scope.i18N($scope.relationship + '.add', labelOverride);
@@ -717,6 +721,16 @@
             const fullServiceName = compositionlistschema.properties['list.click.service'];
             const clonedItem = angular.copy(item);
 
+            // on batch the actual item is edited
+            if ($scope.isBatch()) {
+                if (!$scope.detailData[compositionId]) {
+                    $scope.detailData[compositionId]= {
+                        expanded: false
+                    }
+                }
+                $scope.detailData[compositionId].data = item;
+            }
+
             if (fullServiceName != null) {
                 return $scope.executeCompositionCustomClickService(fullServiceName, column, compositionlistschema, item, clonedItem);
             };
@@ -889,8 +903,10 @@
             const fakeNegativeId = newItem[listSchema.idFieldName];
 
             $scope.compositionData().push(newItem);
-            safePush($scope.parentdata, $scope.relationship, newItem);
-
+            // check for cases that $scope.compositionData() === $scope.parentdata[$scope.relationship]
+            if (!$scope.parentdata || !$scope.parentdata[$scope.relationship] ||$scope.parentdata[$scope.relationship].indexOf(newItem) < 0) {
+                safePush($scope.parentdata, $scope.relationship, newItem);
+            }
 
             if (!$scope.isBatch()) {
                 return;

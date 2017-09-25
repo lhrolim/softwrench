@@ -92,17 +92,17 @@
     <div class="mail-field-container">
         <table class="mail-action-table">
             <tr class="mail-label mail-action-table-header mail-action-table-row">
-                <th style="width: 15%"><p class="mail-action-table-header">Action Time</p></th>
                 <th style="width: 40%"><p class="mail-action-table-header">Action</p></th>
                 <th style="width: 30%"><p class="mail-action-table-header">Assignee</p></th>
+                <th style="width: 15%"><p class="mail-action-table-header">Due Date</p></th>
                 <th style="width: 5%"><p class="mail-action-table-header">Completed</p></th>
             </tr>
         
             {% for action in actions %}
                 <tr {% if !action.even %}bgcolor="#ebebeb"{% endif %}  class="mail-action-table-row {% if !action.even %}mail-action-table-row-odd{% endif %}">
-                    <td>{{action.actiontime}}</td>
                     <td>{{action.action}}</td>
                     <td>{{action.assignee}}</td>
+                    <td>{{action.duedate}}</td>
                     <td><input type="checkbox" onclick="return false;" {% if action.completed %}checked{% endif %}></td>
                 </tr>
             {% endfor %}            

@@ -17,24 +17,34 @@
     <application entity="OutageAction" name="OutageAction" title="Outage Action">
       <schemas>
         <schema id="list" stereotype="compositionlist" platform="web">
-          <field attribute="actiontime" label="Action Time" readonly="true">
-            <renderer type="datetime"/>
+          <field attribute="actiontime" hidden="true" />
+          <field attribute="action" label="Action" requiredexpression="true">
+            <renderer type="default" params="editable=true"/>
           </field>
-          <field attribute="action" label="Action" />
-          <field attribute="assigneelabel" label="Assignee" />
+          <field attribute="assigneelabel" hidden="true" />
+          <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname">
+            <renderer type="lookup" params="lookup.usescopeschema=true"/>
+          </association>
+          <field attribute="duedate" label="Due Date">
+            <renderer type="datetime" params="editable=true;position=top"/>
+          </field>
           <field attribute="completed" label="Completed" >
-            <renderer type="checkbox"/>
+            <renderer type="checkbox" params="editable=true; width=10%"/>
           </field>
         </schema>
 
         <schema id="detail" stereotype="detail" platform="web" title="Outage Action">
           <field attribute="actiontime" hidden="true"/>
-          <field attribute="action" label="Action" />
+          <field attribute="action" label="Action" requiredexpression="true"/>
           <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true"/>
           <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname">
-            <renderer type="lookup" />
+            <renderer type="lookup" params="lookup.usescopeschema=true"/>
           </association>
-          
+
+          <field attribute="duedate" label="Due Date">
+            <renderer type="datetime"/>
+          </field>
+
           <field attribute="completed" label="Completed" >
             <renderer type="checkbox"/>
           </field>

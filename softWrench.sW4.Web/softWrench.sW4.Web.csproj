@@ -1057,6 +1057,7 @@
     <Content Include="Content\styles\default\_routepage.scss" />
     <Content Include="Content\styles\default\_multi-sort.scss" />
     <Content Include="Content\styles\default\_fileexplorer.scss" />
+    <Content Include="Content\styles\default\_datepicker.scss" />
     <None Include="Content\styles\default\_toolbar.scss" />
     <Content Include="Content\styles\default\_crud-masterdetails.scss" />
     <None Include="Content\styles\default\_crud-fields.scss" />

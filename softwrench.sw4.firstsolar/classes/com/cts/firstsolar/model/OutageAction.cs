@@ -32,5 +32,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public DateTime? ActionTime { get; set; }
 
+        [Property]
+        public DateTime? DueDate { get; set; }
+
     }
 }

@@ -254,11 +254,11 @@
 
                 log.debug("fetching association option from server");
 
-
+                const that = this;
 
                 return this.lookupSingleAssociationByValue(associationKey, itemValue).then(function (association) {
                     if (association == null && allowTransientValue) {
-                        return this.$q.when(itemValue);
+                        return that.$q.when(itemValue);
                     }
                     return parseLabelTextFn(association, options);
                 });

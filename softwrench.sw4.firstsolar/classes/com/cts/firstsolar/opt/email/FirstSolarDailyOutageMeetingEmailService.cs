@@ -135,7 +135,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             package.OutageActions?.ForEach(action => {
                 actions.Add(new {
                     action = action.Action,
-                    actiontime = FmtDateTime(action.ActionTime),
+                    duedate = FmtDateTime(action.DueDate),
                     assignee = action.AssigneeLabel,
                     completed = action.Completed,
                     even

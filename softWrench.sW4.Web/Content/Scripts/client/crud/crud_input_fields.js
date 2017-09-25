@@ -254,8 +254,8 @@
                                 });
                             });
                             //both ids refers to the main form, but crudInputMainCompositionFields when there are other tabs, or crudInputMainFields when there are no other tabs
-                            //
-                            if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields', 'crudInputNewItemCompositionFields')) {
+                            // Fields refers to composition inline batch expand form
+                            if (parentElementId.equalsAny('crudInputMainCompositionFields', 'crudInputMainFields', 'crudInputNewItemCompositionFields', 'Fields')) {
                                 if ($scope.unWatcherArray) {
                                     $scope.unWatcherArray.forEach(function (fn) {
                                         //unregistering previously watches
