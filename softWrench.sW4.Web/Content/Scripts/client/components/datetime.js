@@ -85,7 +85,7 @@ angular.module('sw_components')
                 const allowfuture = parseBooleanValue(attrs.allowFuture);
                 const allowpast = parseBooleanValue(attrs.allowPast);
                 let position = !!attrs.position ? attrs.position : "bottom";
-                position = metadata.rendererParameters && metadata.rendererParameters["position"] ? metadata.rendererParameters["position"] : position;
+                position = metadata && metadata.rendererParameters && metadata.rendererParameters["position"] ? metadata.rendererParameters["position"] : position;
 
                 var startDate = false;
                 if (!allowpast) {
