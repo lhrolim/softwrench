@@ -38,12 +38,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
             return lookupDTO;
         }
 
-        protected override IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
-            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
-            //for the sake of simplicity, let´s always return all the top level apps, regardless.
-            // Reason is that there are several versions of workorders apps that point to the same entry 
-            //(ex: pastworkorders, schedworkorders, etc). A quick sync on one of them should "force" (on this initial version) a sync on another 
-            return topLevelApps;
-        }
+//        protected override IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
+//            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
+//            //for the sake of simplicity, let´s always return all the top level apps, regardless.
+//            // Reason is that there are several versions of workorders apps that point to the same entry 
+//            //(ex: pastworkorders, schedworkorders, etc). A quick sync on one of them should "force" (on this initial version) a sync on another 
+//            return topLevelApps;
+//        }
     }
 }
