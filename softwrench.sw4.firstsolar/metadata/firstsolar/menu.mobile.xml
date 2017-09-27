@@ -6,8 +6,8 @@
 <!--    <application id="PWO" title="Past" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=WO - Past"/>-->
 <!--    <application id="FWO" title="Future" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getFutureWosWhereClause;offlinegridtitle=WO - Future"/>-->
 
-    <application id="TWO" title="Today" ref="todayworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Today"/>
-    <application id="PWO" title="Past" ref="pastworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Past"/>
+    <application id="TWO" title="Today" ref="todayworkorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=WO - Today"/>
+    <application id="PWO" title="Past" ref="pastworkorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=WO - Past"/>
 
     <application id="SWO" title="Scheduled" ref="schedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Scheduled"/>
     <application id="PNSWO" title="Planned Not Scheduled" ref="pnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Planned not Scheduled"/>
