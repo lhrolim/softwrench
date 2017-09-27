@@ -174,11 +174,14 @@
                     return rowstampService.generateCompositionRowstampMap()
                         .then(function (compositionMap) {
                             const httpPromises = [];
-                            for (let i = 0; i < currentApps.length; i++) {
-                                const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap, clientOperationId)
-                                    .catch(errorHandlePromise);
-                                httpPromises.push(promise);
-                            }
+//                            for (let i = 0; i < currentApps.length; i++) {
+//                                const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap, clientOperationId)
+//                                    .catch(errorHandlePromise);
+//                                httpPromises.push(promise);
+//                            }
+                            const promise = createAppSyncPromise(true, null, currentApps, compositionMap, clientOperationId).catch(errorHandlePromise);
+                            httpPromises.push(promise);
+
                             return $q.all(httpPromises);
                         });
                 });

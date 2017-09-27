@@ -12,8 +12,8 @@
     <application id="SWO" title="Scheduled" ref="schedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Scheduled"/>
     <application id="PNSWO" title="Planned Not Scheduled" ref="pnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Planned not Scheduled"/>
     <application id="NPNSWO" title="Not Planned Not Scheduled" ref="npnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Not Planned not Scheduled"/>
-    <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="fa-table"/>
-    <application id="OWO" title="Assigned to Group" ref="otherworkorder" schema="list" icon="fa-table"/>
+<!--    <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="fa-table"/>-->
+<!--    <application id="OWO" title="Assigned to Group" ref="otherworkorder" schema="list" icon="fa-table"/>-->
     <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=WO - Created"/>
   </container>
 

@@ -14,32 +14,67 @@
             generateRowstampMap: function (application) {
                 var log = $log.get("rowstampService#generateRowstampMap");
                 var start = new Date().getTime();
-                var applicationQuery = "application ='{0}'".format(application);
+                
+                var applicationQuery = !application  ? "1=1" : "application ='{0}'".format(application);
                 //https://controltechnologysolutions.atlassian.net/browse/SWOFF-140
                 var shouldUseFullStrategy = true;
                 return swdbDAO.countByQuery("DataEntry", applicationQuery)
                     .then(function (result) {
+
                         shouldUseFullStrategy = result < rowstampConstants.maxItemsForFullStrategy;
+                        //for small datasets we sall bring it all
                         if (!shouldUseFullStrategy) {
+                            if (!application) {
+                                return swdbDAO.findByQuery('DataEntry', null, { fullquery: entities.DataEntry.maxRowstampGeneralQuery });
+                            }
+
                             return swdbDAO.findByQuery('DataEntry', null, { fullquery: entities.DataEntry.maxRowstampByAppQuery.format(application) });
                         }
-                        return swdbDAO.findByQuery("DataEntry", applicationQuery, { projectionFields: ["remoteId", "rowstamp"] });
+                        return swdbDAO.findByQuery("DataEntry", applicationQuery, { projectionFields: ["application","remoteId", "rowstamp"] });
                     }).then(function (queryResults) {
                         const rowstampMap = {};
                         if (shouldUseFullStrategy) {
-                            const resultItems = queryResults.map(function(item) {
-                                return {
-                                    id: item.remoteId,
-                                    rowstamp: item.rowstamp
+                            //small dataset scenario
+                            if (application != null) {
+                                const resultItems = queryResults.map(function(item) {
+                                    return {
+                                        id: item.remoteId,
+                                        rowstamp: item.rowstamp
+                                    }
+                                });
+                                rowstampMap.items = resultItems;
+                                const end = new Date().getTime();
+                                log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms"
+                                    .format(application, resultItems.length, (end - start)));
+                                return rowstampMap;
+                            } else {
+                                const applications = {};
+                                for (let i = 0; i < queryResults.length; i++) {
+                                    var item = queryResults[i];
+                                    if (!applications[item.application]) {
+                                        applications[item.application] = {};
+                                    }
+                                    if (!applications[item.application].items) {
+                                        applications[item.application].items = [];
+                                    }
+                                    applications[item.application].items.push({
+                                        id: item.remoteId,
+                                        rowstamp: item.rowstamp
+                                    });
                                 }
-                            });
-                            
-                            rowstampMap.items = resultItems;
-                            const end = new Date().getTime();
-                            log.debug("generated rowstampmap for application {0} with {1} entries. Ellapsed {2} ms".format(application, resultItems.length, (end - start)));
-                            return rowstampMap;
+                                rowstampMap.applications = applications;
+                                return rowstampMap;
+                            }
                         } else {
-                            rowstampMap.maxrowstamp = queryResults[0].rowstamp;
+                            if (application != null) {
+                                rowstampMap.maxrowstamp = queryResults[0].rowstamp;
+                                rowstampMap.application = application;
+                            } else {
+                                debugger;
+                                rowstampMap.applications = queryResults.map(m => {return {[m.application]: m.rowstamp} });
+                            }
+
+                            
                             return rowstampMap;
                         }
                     });
