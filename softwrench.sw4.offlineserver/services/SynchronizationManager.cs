@@ -79,9 +79,13 @@ namespace softwrench.sw4.offlineserver.services {
             var rowstampMap = request.RowstampMap;
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
 
+            var tasks = new List<Task>();
+
             foreach (var topLevelApp in topLevelApps) {
-                await ResolveApplication(request, user, topLevelApp, result, rowstampMap);
+                tasks.Add(ResolveApplication(request, user, topLevelApp, result, rowstampMap));
             }
+
+            await Task.WhenAll(tasks.ToArray());
 
             // add offline configs to the applications
             var configResultData = await GetOfflineConfigs();
