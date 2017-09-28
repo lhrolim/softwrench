@@ -70,8 +70,11 @@
                                 rowstampMap.maxrowstamp = queryResults[0].rowstamp;
                                 rowstampMap.application = application;
                             } else {
-                                debugger;
-                                rowstampMap.applications = queryResults.map(m => {return {[m.application]: m.rowstamp} });
+                                rowstampMap.applications = {};
+                                for (let i = 0; i < queryResults.length; i++) {
+                                    var res = queryResults[i];
+                                    rowstampMap.applications[[res.application]] = res.rowstamp;
+                                }
                             }
 
                             

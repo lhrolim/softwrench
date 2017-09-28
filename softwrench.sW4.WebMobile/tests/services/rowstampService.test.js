@@ -104,6 +104,33 @@
     });
 
     //use this done function to avoid the tests to finish before the promises were resolved
+    it("Testing Huge DataSets no app", function (done) {
+
+        spyOn(swdbDAO, 'countByQuery').and.callFake(function () {
+            return $q.when(4);
+        });
+
+        spyOn(swdbDAO, 'findByQuery').and.callFake(function () {
+            return $q.when([{ application: 'workorder', rowstamp: "100" }, { application: 'pastworkorder', rowstamp: "200" }]);
+        });
+
+        rowStampService.generateRowstampMap().then(function (result) {
+            expect(result).toEqual({
+                applications: {
+                    "workorder": '100',
+                    "pastworkorder": '200'
+                }
+            });
+            expect(swdbDAO.countByQuery).toHaveBeenCalledWith('DataEntry', "1=1");
+            expect(swdbDAO.findByQuery).toHaveBeenCalledWith('DataEntry', null, { fullquery: entities.DataEntry.maxRowstampGeneralQuery });
+        }).finally(done);
+
+        //this is needed to trigger the promises resolutions!
+        $rootScope.$digest();
+
+    });
+
+    //use this done function to avoid the tests to finish before the promises were resolved
     it("Testing Association Initial Load --> Bring uid instead of rowstamp", function (done) {
 
         spyOn(swdbDAO, 'findByQuery').and.callFake(function () {
