@@ -7,24 +7,57 @@ using softwrench.sw4.offlineserver.model.dto.association;
 
 namespace softwrench.sw4.offlineserver.services.util {
     public class ClientStateJsonConverter {
+
         public class AppRowstampDTO {
-            public IDictionary<string, string> ClientState {
+
+            public string ApplicationName { get; set; }
+
+            public IDictionary<string, string> ClientState  {
                 get; set;
-            }
+            }= new Dictionary<string, string>();
             public string MaxRowstamp {
                 get; set;
             }
         }
 
-        public static AppRowstampDTO ConvertJSONToDict(JObject rowstampMap) {
-            var result = new AppRowstampDTO();
+        public static List<AppRowstampDTO> ConvertJSONToDict(JObject rowstampMap) {
+
             if (rowstampMap == null || !rowstampMap.HasValues) {
-                return new AppRowstampDTO();
+                return new List<AppRowstampDTO>();
             }
+
+            var result = new List<AppRowstampDTO>();
             dynamic obj = rowstampMap;
+
+            if (obj.applications != null) {
+                foreach (dynamic app in obj.applications) {
+                    var singleApp = ParseSingleApp(app.Value);
+                    singleApp.ApplicationName = app.Name;
+                    result.Add(singleApp);
+                }
+                return result;
+            }
+            return new List<AppRowstampDTO>() { ParseSingleApp(obj) };
+        }
+
+        private static AppRowstampDTO ParseSingleApp(dynamic obj) {
+            var result = new AppRowstampDTO();
+            if (obj is JValue) {
+                result.MaxRowstamp = obj.Value?.ToString();
+                result.ClientState = new Dictionary<string, string>();
+                return result;
+            }
+
+
             var resultDict = new Dictionary<string, string>();
             result.ClientState = resultDict;
-            result.MaxRowstamp = obj.maxrowstamp;
+            if (obj.maxrowstamp != null) {
+                result.MaxRowstamp = obj.maxrowstamp;
+            }
+
+            if (obj.application != null) {
+                result.ApplicationName = obj.application;
+            }
             if (obj.items == null) {
                 return result;
             }

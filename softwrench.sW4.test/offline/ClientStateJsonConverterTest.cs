@@ -27,6 +27,63 @@ namespace softwrench.sW4.test.offline {
           }"
             ;
 
+
+        public static string RowstampMapJsonNew = @"{
+            'applications':{
+                'workorder':{
+                      'items':[
+                       {
+                           'id': '100',
+                            rowstamp: 1000
+                        },
+                        {
+                            'id': '101',
+                            rowstamp: 1001
+                        }
+                     ],    
+                },
+                'pastworkorder':{
+                    'items':[
+                       {
+                            'id': '100',
+                            rowstamp: 1000
+                        },
+                        {
+                            'id': '101',
+                            rowstamp: 1001
+                        },
+                        {
+                            'id': '102',
+                            rowstamp: 1002
+                        }
+                     ],
+                }
+            },
+       
+            compositionmap: {
+               'worklog': 1000,
+                'attachments': 1001,
+            }
+            
+          }"
+            ;
+
+
+        public static string NonFullRowstampMapJsonNew = @"{
+            'applications':{
+                'workorder': '1000',
+                'pastworkorder': '1001',
+                'configuration': null
+             },
+         
+            compositionmap: {
+               'worklog': 1000,
+                'attachments': 1001,
+            }
+            
+          }"
+            ;
+
         public static string AssociationMapJson = @"{
                 'associationmap': {
                     'asset': {
@@ -63,10 +120,50 @@ namespace softwrench.sW4.test.offline {
         [TestMethod]
         public void TestJsonConversion() {
             var ob = JObject.Parse(RowstampMapJson);
-            var result = ClientStateJsonConverter.ConvertJSONToDict(ob).ClientState;
+            var result = ClientStateJsonConverter.ConvertJSONToDict(ob)[0].ClientState;
             Assert.AreEqual(2, result.Count);
             Assert.IsTrue(result.ContainsKey("100"));
             Assert.AreEqual("1000", result["100"]);
+        }
+
+
+        [TestMethod]
+        public void TestJsonConversionNew() {
+            var ob = JObject.Parse(RowstampMapJsonNew);
+            var dict = ClientStateJsonConverter.ConvertJSONToDict(ob);
+
+            var app1 = dict[0];
+            var result = app1.ClientState;
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("workorder", app1.ApplicationName);
+
+            app1 = dict[1];
+            result = app1.ClientState;
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual("pastworkorder", app1.ApplicationName);
+
+            Assert.IsTrue(result.ContainsKey("100"));
+            Assert.AreEqual("1000", result["100"]);
+        }
+
+
+        [TestMethod]
+        public void TestJsonConversionNewNonFull() {
+            var ob = JObject.Parse(NonFullRowstampMapJsonNew);
+            var dict = ClientStateJsonConverter.ConvertJSONToDict(ob);
+
+            var app1 = dict[0];
+            var result = app1.ClientState;
+            Assert.AreEqual(result.Count,0);
+            Assert.AreEqual("workorder", app1.ApplicationName);
+            Assert.AreEqual("1000", app1.MaxRowstamp);
+
+            app1 = dict[1];
+            result = app1.ClientState;
+            Assert.AreEqual(result.Count, 0);
+            Assert.AreEqual("pastworkorder", app1.ApplicationName);
+            Assert.AreEqual("1001", app1.MaxRowstamp);
+            
         }
 
         [TestMethod]

@@ -79,9 +79,13 @@ namespace softwrench.sw4.offlineserver.services {
             var rowstampMap = request.RowstampMap;
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
 
+            var tasks = new List<Task>();
+
             foreach (var topLevelApp in topLevelApps) {
-                await ResolveApplication(request, user, topLevelApp, result, rowstampMap);
+                tasks.Add(ResolveApplication(request, user, topLevelApp, result, rowstampMap));
             }
+
+            await Task.WhenAll(tasks.ToArray());
 
             // add offline configs to the applications
             var configResultData = await GetOfflineConfigs();
@@ -372,9 +376,11 @@ namespace softwrench.sw4.offlineserver.services {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(userAppMetadata);
             var rowstampDTO = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
 
+            var appRowstampDTO = LocateAppRowstamp(topLevelApp, rowstampDTO);
+
             Rowstamps rowstamps = null;
-            if (rowstampDTO.MaxRowstamp != null) {
-                rowstamps = new Rowstamps(rowstampDTO.MaxRowstamp, null);
+            if (appRowstampDTO.MaxRowstamp != null) {
+                rowstamps = new Rowstamps(appRowstampDTO.MaxRowstamp, null);
             }
             var isQuickSync = request.ItemsToDownload != null;
 
@@ -383,7 +389,7 @@ namespace softwrench.sw4.offlineserver.services {
             var topLevelAppData = await FetchData(false, entityMetadata, userAppMetadata, rowstamps, request.ItemsToDownload, isLimited);
 
 
-            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, rowstampDTO, topLevelApp, isQuickSync);
+            var appResultData = FilterData(topLevelApp.ApplicationName, topLevelAppData, appRowstampDTO, topLevelApp, isQuickSync);
 
             result.AddTopApplicationData(appResultData);
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
@@ -392,6 +398,25 @@ namespace softwrench.sw4.offlineserver.services {
                 await HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
             }
 
+        }
+
+        private static ClientStateJsonConverter.AppRowstampDTO LocateAppRowstamp(CompleteApplicationMetadataDefinition topLevelApp, List<ClientStateJsonConverter.AppRowstampDTO> rowstampDTO)
+        {
+            ClientStateJsonConverter.AppRowstampDTO appRowstampDTO = null;
+
+            if (rowstampDTO.Count == 1)
+            {
+                appRowstampDTO = rowstampDTO[0];
+            }
+            else
+            {
+                appRowstampDTO = rowstampDTO.FirstOrDefault(f => f.ApplicationName == topLevelApp.ApplicationName);
+            }
+            if (appRowstampDTO == null)
+            {
+                appRowstampDTO = new ClientStateJsonConverter.AppRowstampDTO();
+            }
+            return appRowstampDTO;
         }
 
         /// <summary>

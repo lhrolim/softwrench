@@ -259,6 +259,8 @@
 
         entities.DataEntry.maxRowstampByAppQuery = "select max(rowstamp) as rowstamp,application,id from DataEntry where application = '{0}'";
 
+        entities.DataEntry.maxRowstampGeneralQuery = "select max(rowstamp) as rowstamp,application,id from DataEntry group by application";
+
         //query to be performed after synchronization has occurred, for new items
         entities.DataEntry.insertionQueryPattern = "insert into DataEntry ('application','datamap','pending','isDirty','remoteId','rowstamp','id','textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (:p0,:p1,0,0,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9,:p10,:p11,:p12,:p13,:p14)";
         //query to be performed after synchronization has occurred, for existing items
