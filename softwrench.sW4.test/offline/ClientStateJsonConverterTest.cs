@@ -72,7 +72,8 @@ namespace softwrench.sW4.test.offline {
         public static string NonFullRowstampMapJsonNew = @"{
             'applications':{
                 'workorder': '1000',
-                'pastworkorder': '1001'
+                'pastworkorder': '1001',
+                'configuration': null
              },
          
             compositionmap: {
