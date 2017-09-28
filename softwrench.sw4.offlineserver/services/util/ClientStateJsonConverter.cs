@@ -43,7 +43,7 @@ namespace softwrench.sw4.offlineserver.services.util {
         private static AppRowstampDTO ParseSingleApp(dynamic obj) {
             var result = new AppRowstampDTO();
             if (obj is JValue) {
-                result.MaxRowstamp = obj.Value;
+                result.MaxRowstamp = obj.Value?.ToString();
                 result.ClientState = new Dictionary<string, string>();
                 return result;
             }
