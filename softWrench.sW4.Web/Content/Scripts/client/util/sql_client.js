@@ -80,7 +80,7 @@
                 $scope.resultSet = data.resultSet;
                 $scope.hasData = true;
                 $scope.hasError = false;
-                $scope.executionMessage = data.executionMessage;
+                $scope.executionMessage = data.executionMessage + " in " + data.executionTime;
 
                 //clear the headers
                 $scope.headers.splice(0, $scope.headers.length);
@@ -88,7 +88,7 @@
                     $scope.headers.push(column);
                 }
             } else {
-                $scope.executionMessage = data.executionMessage;
+                $scope.executionMessage = data.executionMessage + " in " + data.executionTime;
                 $scope.hasData = false;
                 $scope.hasError = false;
             }
