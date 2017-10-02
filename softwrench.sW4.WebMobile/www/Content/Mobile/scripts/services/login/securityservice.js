@@ -91,19 +91,22 @@
          * @param {String} password 
          * @returns {Promise<UserData>} resolved with the user retuned from the server
          */
-        const login = (username, password) => 
+        const login = (username, password, ignoreFailure, skipClearCache) => 
             //this was set during bootstrap of the application, or on settingscontroller.js (settings screen)
             routeService.loginURL().then(url => 
                 $http({
                     method: "POST",
                     url: url,
                     data: { username: username, password: password, userTimezoneOffset: new Date().getTimezoneOffset() },
+                    headers: { ignorefailure: ignoreFailure },
                     timeout: 20 * 1000 // 20 seconds
                 })
             )
             .then(response => {
-                //cleaning history so that back button does not return user to login page
-                $ionicHistory.clearCache();
+                if (!skipClearCache) {
+                    //cleaning history so that back button does not return user to login page
+                    $ionicHistory.clearCache();
+                }
 
                 const userdata = response.data;
 
@@ -226,7 +229,13 @@
          * response status (indicating the user requires remote authentication).
          * For now just calls logout.
          */
-        const handleUnauthorizedRemoteAccess = ionic.debounce(() => {
+        const handleUnauthorizedRemoteAccess = ionic.debounce((rejection) => {
+            if (rejection &&
+                rejection.config &&
+                rejection.config.headers &&
+                rejection.config.headers["ignorefailure"]) {
+                return;
+            }
             const logoutPromise = logout();
             // not at login state, transition to it with proper message
             if (!isLoginState()) {
