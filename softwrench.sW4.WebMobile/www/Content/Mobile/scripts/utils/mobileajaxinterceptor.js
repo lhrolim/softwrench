@@ -62,7 +62,7 @@
                 } else if (status === 401) {
                     // unauthorized access
                     if (!securityService) securityService = $injector.get("securityService"); // getting around circular dependency problem ($state -> $http -> ... -> securityService -> routeService -> $state)
-                    securityService.handleUnauthorizedRemoteAccess();
+                    securityService.handleUnauthorizedRemoteAccess(rejection);
                 } 
                 return rejection;
             };

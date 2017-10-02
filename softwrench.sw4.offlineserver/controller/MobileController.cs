@@ -211,6 +211,13 @@ namespace softwrench.sw4.offlineserver.controller {
             return await _offLineBatchService.GetBatchesByRemoteIds(ids);
         }
 
+        /// <summary>
+        /// Used to check if still logged before sync
+        /// </summary>
+        [HttpGet]
+        public void PingAuth() {
+        }
+
         #region Reporting
         [HttpGet]
         public async Task<string> Counts() {

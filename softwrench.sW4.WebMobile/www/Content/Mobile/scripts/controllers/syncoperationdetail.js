@@ -123,26 +123,7 @@
                             return loadData();
                         })
                         .catch(function (error) {
-                            //                        swAlertPopup.show({
-                            //                            title: "Error Synchronizing Data",
-                            //                            template: !!error && !!error.message ? error.message : ""
-                            //                        });
-                            var message = "";
-                            let requestSupportReport = true;
-                            let notifyException = true;
-                            if (!!error && !!error.data) {
-                                message = error.data.errorMessage;
-                                requestSupportReport = error.data.requestSupportReport;
-                                notifyException = error.data.notifyException;
-                                var e = new Error(message);
-                                e.title = "Error Synchronizing Data";
-                                e.requestSupportReport = requestSupportReport;
-                                e.notifyException = notifyException;
-                                throw e;
-                            }
-
-                            error.title = "Error Synchronizing Data";
-                            throw error;
+                            synchronizationFacade.handleError(error);
                         })
                         .finally(function () {
                             $scope.data.isSynching = false;
