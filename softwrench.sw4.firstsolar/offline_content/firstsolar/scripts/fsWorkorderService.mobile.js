@@ -237,27 +237,39 @@
         }
         //#endregion
 
+        laborCode() {
+            const user = this.securityService.currentFullUser();
+            if (user == null) {
+                return this.securityService.logout();
+            }
+            return user.properties["laborcode"];
+        }
+
         //#region Menu whereclauses
         // `assignment_`.dateindex01 = scheduled date without time
         getTodayWosWhereClause() {
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
             const tomorrowTime = todayTime + day;
-            return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime}`;
+            const laborcode =  this.laborCode();
+            
+            return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime} and assignment_.textindex02 = ${laborcode}`;
         }
 
         // `assignment_`.dateindex01 = scheduled date without time
         getPastWosWhereClause() {
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
-            return `assignment_.dateindex01 < ${todayTime}`;
+            const laborcode = this.laborCode();
+            return `assignment_.dateindex01 < ${todayTime} and assignment_.textindex02 = ${laborcode}`;
         }
 
         // `assignment_`.dateindex01 = scheduled date without time
         getFutureWosWhereClause() {
             const now = new Date();
             const tomorrowTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime() + day;
-            return `assignment_.dateindex01 >= ${tomorrowTime}`;
+            const laborcode = this.laborCode();
+            return `assignment_.dateindex01 >= ${tomorrowTime} and assignment_.textindex02 = ${laborcode}`;
         }
 
         getCreatedWosWhereClause() {
