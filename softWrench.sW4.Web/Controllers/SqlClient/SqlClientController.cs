@@ -83,7 +83,7 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
 
             timer.Stop();
 
-            model.ExecutionTime = string.Format("{0}:{1}:{2}:{3}", timer.Elapsed.Hours, timer.Elapsed.Minutes, timer.Elapsed.Seconds, timer.Elapsed.TotalMilliseconds);
+            model.ExecutionTime = timer.ElapsedMilliseconds.ToString() + " ms ";
 
             log.Info(LoggingUtil.BaseDurationMessage("SQL client query processed in {0}", timer));
 
