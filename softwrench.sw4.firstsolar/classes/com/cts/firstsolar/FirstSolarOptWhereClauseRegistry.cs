@@ -47,7 +47,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
             WhereClauseFacade.Register("workorder", SiteClause(false));
             WhereClauseFacade.Register("fsocworkorder", SiteClause(false));
 
-            WhereClauseFacade.Register("workorder", "workorder.status in('INPRG', 'APPR') and workorder.outreq = 1" + SiteClause(true),
+            WhereClauseFacade.Register("workorder", "workorder.outreq = 1" + SiteClause(true),
                 new WhereClauseRegisterCondition {
                     AppContext = new softWrench.sW4.Security.Context.ApplicationLookupContext {
                         Schema = "wplist"
