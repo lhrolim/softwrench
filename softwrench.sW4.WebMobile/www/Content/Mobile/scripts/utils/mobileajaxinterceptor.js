@@ -52,8 +52,13 @@
                     return error;
                 
                 } else if (status >= 500 && status < 600) {
+                    const stack = rejection.data ? rejection.data.fullStack : "";
+                    const error = new Error("Internal server error. Please contact support.");
+                    if (!!stack) {
+                        error.stack = stack;
+                    }
                     // internal server error
-                    return new Error("Internal server error. Please contact support.");
+                    return error;
 
                 } else if (status === 404) {
                     // resource not found
