@@ -20,8 +20,13 @@
             </div>
         </div>
         <!-- exploded items -->
-        <a ng-switch-default class="item" ng-click="loadApplication(leaf)">
-            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}&ensp;({{getAppCount(leaf.id)}})
+        
+        <div ng-switch-when="DividerMenuItem" class="item item-divider">
+            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}
+        </div>
+
+        <a ng-switch-default class="item" ng-click="loadApplication(leaf)" style="white-space: unset; word-break: unset">
+            <i class="fa" ng-class="leaf.icon" ></i>&ensp;{{leaf.title}}&ensp;({{getAppCount(leaf.id)}})
         </a>
     </ng-switch>
 

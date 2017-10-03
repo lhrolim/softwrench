@@ -340,6 +340,8 @@
   <complexType name="MenuDividerItem">
     <attribute name="role" type="string" use="optional">
     </attribute>
+    <attribute name="title" type="string" use="optional"/>
+    <attribute name="icon" type="string" use="optional"/>
   </complexType>
 
   <complexType name="MenuContainer">
