@@ -102,6 +102,12 @@
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Easy.Logger, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Easy.Logger.3.1.0\lib\net40\Easy.Logger.dll</HintPath>
+    </Reference>
+    <Reference Include="Easy.Logger.Interfaces, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Easy.Logger.Interfaces.1.0.0\lib\net40\Easy.Logger.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
@@ -122,9 +128,8 @@
       <HintPath>..\packages\JetBrains.Annotations.10.2.1\lib\net\JetBrains.Annotations.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.3.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.3.2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
@@ -384,6 +389,7 @@
     <Compile Include="Common\LogInfo.cs" />
     <Compile Include="Common\LogFilter.cs" />
     <Compile Include="Common\Log\CaptureResponseFilter.cs" />
+    <Compile Include="Common\Log\HttpContextUserNameProvider.cs" />
     <Compile Include="Common\Log\LogInfo.cs" />
     <Compile Include="Common\Log\MVCLogFilter.cs" />
     <Compile Include="Common\TestProxy.cs" />

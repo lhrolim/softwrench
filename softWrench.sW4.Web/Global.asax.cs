@@ -25,6 +25,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using cts.commons.simpleinjector;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
+using softWrench.sW4.Web.Common.Log;
 using softWrench.sW4.Web.Models;
 using softWrench.sW4.Web.Security;
 
@@ -74,6 +75,7 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
                 Log4NetUtil.InitDefaultLog();
+                GlobalContext.Properties["user"] = new HttpContextUserNameProvider();
                 Log.Info("*****Starting web app****************");
                 SetFixClient();
                 Log4NetUtil.ConfigureDevLogging();
@@ -179,7 +181,7 @@ namespace softWrench.sW4.Web {
             if (HttpContext.Current.Request.HttpMethod == "OPTIONS") {
                 //These headers are handling the "pre-flight" OPTIONS call sent by the browser
                 HttpContext.Current.Response.AddHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept , offlineMode, request_start_timestamp");
+                HttpContext.Current.Response.AddHeader("Access-Control-Allow-Headers", "Content-Type, Accept , offlineMode, request_start_timestamp,ignorefailure");
                 HttpContext.Current.Response.AddHeader("Access-Control-Max-Age", "1728000");
                 HttpContext.Current.Response.End();
             }
