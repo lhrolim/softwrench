@@ -209,7 +209,7 @@ window.swlog = new LogHelper();
                     return [];
                 }
                 const currentargs = [].slice.call(arguments);
-                const contextarg = [`[${level.toUpperCase()}] ${window.moment().format("dddd hh:mm:ss:SSS a")}::[${context}]> `];
+                const contextarg = [`[${level.toUpperCase()}] ${window.moment().format("DD/MM/YYYY hh:mm:ss:SSS a")}::[${context}]> `];
                 const modifiedArguments = contextarg.concat(currentargs);
 
                 loggingFunc.apply(null, modifiedArguments);
