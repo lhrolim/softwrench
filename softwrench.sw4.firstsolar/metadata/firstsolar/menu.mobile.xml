@@ -1,24 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="vertical" indexitem="WO">
 
-  <container id="workorder" icon="fa-wrench" title="Work Orders">
-<!--    <application id="TWO" title="For Today" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=WO - Today"/>-->
-<!--    <application id="PWO" title="Past" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=WO - Past"/>-->
-<!--    <application id="FWO" title="Future" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getFutureWosWhereClause;offlinegridtitle=WO - Future"/>-->
+  <container id="myassigns" icon="fa-wrench" title="My Assignments">
+    
+  
 
-    <application id="TWO" title="Today" ref="todayworkorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=WO - Today"/>
-    <application id="PWO" title="Past" ref="pastworkorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=WO - Past"/>
+<!--  <divider title="My Assignments" icon="fa-wrench"/>-->
 
-    <application id="SWO" title="Scheduled" ref="schedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Scheduled"/>
-    <application id="PNSWO" title="Planned Not Scheduled" ref="pnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Planned not Scheduled"/>
-    <application id="NPNSWO" title="Not Planned Not Scheduled" ref="npnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=WO - Not Planned not Scheduled"/>
-<!--    <application id="WO" title="Assigned to Me" ref="workorder" schema="list" icon="fa-table"/>-->
-<!--    <application id="OWO" title="Assigned to Group" ref="otherworkorder" schema="list" icon="fa-table"/>-->
-    <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=WO - Created"/>
+  <application id="TWO" title="Today" ref="todayworkorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=Today"/>
+  <application id="PWO" title="Past" ref="pastworkorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=Past"/>
+  <application id="FWO" title="Future" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getFutureWosWhereClause;offlinegridtitle=Future"/>
+  <application id="WO" title="All" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getBaseWhereClause;offlinegridtitle=All"/>
+
   </container>
+
+<!--  <divider title="Group Assignments" icon="fa-users fa-fw"/>-->
+
+  <container id="groupassigns" icon="fa-users fa-fw" title="Group Assignments">
+
+    <application id="SWO" title="Scheduled" ref="schedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Scheduled"/>
+    <application id="PNSWO" title="Planned Not Scheduled" ref="pnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Planned not Scheduled"/>
+    <application id="NPNSWO" title="Not Planned Not Scheduled" ref="npnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Not Planned not Scheduled"/>
+    <application id="GWO" title="Assigned to Others" ref="otherworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Assigned to Others"/>
+  </container>
+
+  <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=Created Work Orders"/>
+
+
+
+  <!--  <container id="workorder" icon="fa-wrench" title="Work Orders">-->
+    <!--    <application id="TWO" title="For Today" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=WO - Today"/>-->
+    <!--    <application id="PWO" title="Past" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getPastWosWhereClause;offlinegridtitle=WO - Past"/>-->
+
+ 
+
+<!--  </container>-->
 
   <container id="user-section">
     <service id="userprofile" service="fsUserProfileService" method="goToMyProfile" title="User Profile" icon="fa-user"/>
   </container>
-<!--  -->
+  <!--  -->
 </Menu>

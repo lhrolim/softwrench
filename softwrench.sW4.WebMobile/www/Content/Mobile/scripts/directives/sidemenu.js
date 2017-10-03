@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("softwrench").directive("sideMenu", [ function () {
+    angular.module("softwrench").directive("sideMenu", [function () {
         const directive = {
             restrict: "E",
             templateUrl: getResourcePath("Content/Mobile/templates/directives/sidemenu.html"),
@@ -11,19 +11,42 @@
                 "$scope", "menuModelService", "menuRouterService", "routeService", "$ionicSideMenuDelegate", "swAlertPopup", "$ionicPopup", "securityService", "synchronizationFacade", "networkConnectionService",
                 function ($scope, menuModelService, menuRouterService, routeService, $ionicSideMenuDelegate, swAlertPopup, $ionicPopup, securityService, synchronizationFacade, networkConnectionService) {
 
+                    $scope.vm = {
+                        activeleaf: null
+                    };
+
+
                     $scope.menuleafs = function () {
                         return menuModelService.getApplicationMenuItems();
                     };
 
-                    $scope.loadApplication = function (menuleaf) {
+                    $scope.isActive = function (leaf) {
+                        
+
+                        if (typeof leaf === 'string' || leaf instanceof String) {
+                            if (!$scope.vm.activeleaf && leaf === "main.home") {
+                                return true;
+                            }
+
+                            return $scope.vm.activeleaf === leaf;
+                        }
+
+                        return $scope.vm.activeleaf === leaf.id;
+                    }
+
+                    $scope.loadApplication = function ($event, menuleaf) {
                         menuRouterService.routeFromMenuItem(menuleaf)
                             .catch(e => swAlertPopup.show({ title: "Error", template: e.message }, 3000))
                             .finally(() => $ionicSideMenuDelegate.toggleLeft());
+
+                        $event.stopImmediatePropagation();
+                        $scope.vm.activeleaf = menuleaf.id;
                     };
 
                     $scope.loadAction = function (action) {
                         routeService.go(action);
                         $ionicSideMenuDelegate.toggleLeft();
+                        $scope.vm.activeleaf = action;
                     };
 
                     $scope.adminMenuItems = function () {
@@ -34,7 +57,7 @@
                         return menuModelService.getUserMenuItems();
                     };
 
-                    $scope.getAppCount = function(menuId) {
+                    $scope.getAppCount = function (menuId) {
                         return menuModelService.getAppCount(menuId);
                     }
 
@@ -79,16 +102,16 @@
                                         "Are you sure you want to logout?"
                                     ].join(" ")
                                 })
-                                .then(res => {
-                                    // ok then sync before logging out, otherwise break promise chain
-                                    return !res ? res : synchronizationFacade.attempSyncAndContinue({ template: "Do you wish to logout anyway?" });
-                                })
-                                .then(canlogout => {
-                                    return !canlogout /* sync failed and user did not wish to continue */
-                                        ? false
-                                        /* sync sucessfull or sync failed and user wished to continue anyway */
-                                        : doLogout();
-                                });
+                                    .then(res => {
+                                        // ok then sync before logging out, otherwise break promise chain
+                                        return !res ? res : synchronizationFacade.attempSyncAndContinue({ template: "Do you wish to logout anyway?" });
+                                    })
+                                    .then(canlogout => {
+                                        return !canlogout /* sync failed and user did not wish to continue */
+                                            ? false
+                                            /* sync sucessfull or sync failed and user wished to continue anyway */
+                                            : doLogout();
+                                    });
                             })
                             .then(didlogout => {
                                 if (didlogout) {

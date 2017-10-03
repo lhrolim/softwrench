@@ -253,7 +253,12 @@
             const tomorrowTime = todayTime + day;
             const laborcode =  this.laborCode();
             
-            return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime} and assignment_.textindex02 = ${laborcode}`;
+            return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime} and assignment_.textindex02 = '${laborcode}'`;
+        }
+
+        getBaseWhereClause() {
+            const laborcode = this.laborCode();
+            return `assignment_.textindex02 = '${laborcode}'`;
         }
 
         // `assignment_`.dateindex01 = scheduled date without time
@@ -261,7 +266,7 @@
             const now = new Date();
             const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
             const laborcode = this.laborCode();
-            return `assignment_.dateindex01 < ${todayTime} and assignment_.textindex02 = ${laborcode}`;
+            return `assignment_.dateindex01 < ${todayTime} and assignment_.textindex02 = '${laborcode}'`;
         }
 
         // `assignment_`.dateindex01 = scheduled date without time
@@ -269,7 +274,7 @@
             const now = new Date();
             const tomorrowTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime() + day;
             const laborcode = this.laborCode();
-            return `assignment_.dateindex01 >= ${tomorrowTime} and assignment_.textindex02 = ${laborcode}`;
+            return `assignment_.dateindex01 >= ${tomorrowTime} and assignment_.textindex02 = '${laborcode}'`;
         }
 
         getCreatedWosWhereClause() {

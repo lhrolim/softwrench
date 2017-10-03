@@ -13,15 +13,22 @@
             <div ng-show="!collapsed">
                 <!-- container's subitems -->
                 <a ng-repeat="subleaf in leaf.leafs"
-                   ng-click="loadApplication(subleaf)"
+                   ng-click="loadApplication($event,subleaf)"
                    class="item subleaf" style="white-space: unset; word-break: unset">
                     <i class="fa" ng-class="subleaf.icon"></i>&ensp;{{subleaf.title}}&ensp;({{getAppCount(subleaf.id)}})
+                    <i class="fa fa-check activeleaf"  ng-show="isActive(subleaf)"></i>
                 </a>
             </div>
         </div>
         <!-- exploded items -->
-        <a ng-switch-default class="item" ng-click="loadApplication(leaf)">
-            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}&ensp;({{getAppCount(leaf.id)}})
+        
+        <div ng-switch-when="DividerMenuItem" class="item item-divider">
+            <i class="fa" ng-class="leaf.icon"></i>&ensp;{{leaf.title}}
+        </div>
+
+        <a ng-switch-default class="item" ng-click="loadApplication($event,leaf)" style="white-space: unset; word-break: unset">
+            <i class="fa" ng-class="leaf.icon" ></i>&ensp;{{leaf.title}}&ensp;({{getAppCount(leaf.id)}})
+            <i class="fa fa-check activeleaf" ng-show="isActive(leaf)"></i>
         </a>
     </ng-switch>
 
@@ -32,15 +39,25 @@
         <i class="fa fa-cogs"></i>&ensp;Admin
     </div>
 
-    <a class="item" ng-click="loadAction('main.home')"><i class="fa fa-refresh"></i>&ensp;Synchronization</a>
+    <a class="item" ng-click="loadAction('main.home')">
+        <i class="fa fa-refresh"></i>&ensp;Synchronization
+        <i class="fa fa-check activeleaf" ng-show="isActive('main.home')"></i>
+    </a>
 
-    <a class="item" ng-click="loadAction('main.settings')"><i class="fa fa-cog"></i>&ensp;Settings</a>
+    <a class="item" ng-click="loadAction('main.settings')">
+        <i class="fa fa-cog"></i>&ensp;Settings
+        <i class="fa fa-check activeleaf" ng-show="isActive('main.settings')"></i>
+    </a>
 
-    <a class="item" ng-click="loadAction('main.support')"><i class="fa fa-question"></i>&ensp;Support</a>
+    <a class="item" ng-click="loadAction('main.support')">
+        <i class="fa fa-question"></i>&ensp;Support
+        <i class="fa fa-check activeleaf"  ng-show="isActive('main.support')"></i>
+    </a>
 
     <!-- metadata defined admin-section menu items -->
-    <a ng-repeat="adminLeaf in adminMenuItems()" class="item" ng-click="loadApplication(adminLeaf)">
+    <a ng-repeat="adminLeaf in adminMenuItems()" class="item" ng-click="loadApplication($event,adminLeaf)">
         <i class="fa {{adminLeaf.icon}}"></i>&ensp;{{adminLeaf.title}}
+        <i class="fa fa-check activeleaf" ng-show="isActive(adminLeaf)"></i>
     </a>
     <!-- #endregion -->
 
@@ -50,8 +67,9 @@
     </div>
 
     <!-- metadata defined user-section menu items -->
-    <a ng-repeat="userLeaf in userMenuItems()" class="item" ng-click="loadApplication(userLeaf)">
+    <a ng-repeat="userLeaf in userMenuItems()" class="item" ng-click="loadApplication($event,userLeaf)">
         <i class="fa {{userLeaf.icon}}"></i>&ensp;{{userLeaf.title}}
+        <i class="fa fa-check activeleaf" ng-show="isActive(userLeaf)"></i>
     </a>
 
     <a class="item" ng-click="logout()"><i class="fa fa-sign-out"></i>&ensp;Logout</a>
