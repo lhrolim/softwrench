@@ -363,7 +363,7 @@
                   <collectionproperties listschema="hazardlist" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="FilterHazards"/>
                 </composition>
               </tab>
-              <composition relationship="hazardrousmaterials" label="Hazardous Materials" detailschema="hazardrousmaterialsdetail" printschema="">
+              <composition relationship="hazardrousmaterials" label="Hazardous Material" detailschema="hazardrousmaterialsdetail" printschema="">
                 <collectionproperties listschema="hazardrousmaterialslist" allowcreation="false" allowremoval="false" allowupdate="false"/>
               </composition>
               <composition relationship="tagouts" label="Lock Out/Tag Out" detailschema="" printschema="">

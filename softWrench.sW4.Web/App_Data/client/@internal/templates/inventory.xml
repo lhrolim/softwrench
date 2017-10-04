@@ -415,9 +415,9 @@
       </schemas>
     </application>
 
-    <application name="reservedMaterials" entity="invreserve" title="Reserved Materials">
+    <application name="reservedMaterials" entity="invreserve" title="Reserved Material">
       <schemas>
-        <schema stereotype="list" id="reservedMaterialsList" title="Reserved Materials">
+        <schema stereotype="list" id="reservedMaterialsList" title="Reserved Material">
           <properties>
             <property key="config.fullKey" value="/Global/Grids/ReservedMaterials/ScanBar"/>
           </properties>

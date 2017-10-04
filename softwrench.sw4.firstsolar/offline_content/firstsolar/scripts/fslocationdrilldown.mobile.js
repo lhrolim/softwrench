@@ -1,8 +1,8 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("softwrench").controller("FsLocationDrillDownController", ["$rootScope", "$scope", "$timeout", "$ionicHistory", "drillDownService", "crudContextService", function ($rootScope, $scope, $timeout, $ionicHistory, drillDownService, crudContextService) {
-        $scope.buildLocationTitle = function(location) {
+    angular.module("softwrench").controller("FsLocationDrillDownController", ["$rootScope", "$scope", "$timeout", "$ionicHistory", "drillDownService", "crudContextService", "swdbDAO", function ($rootScope, $scope, $timeout, $ionicHistory, drillDownService, crudContextService, swdbDAO) {
+        $scope.buildLocationTitle = function (location) {
             if (!location) {
                 return "";
             }
@@ -17,7 +17,7 @@
             const datamap = asset.datamap;
             return datamap.description ? `${datamap.assetnum} - ${datamap.description}` : datamap.assetnum;
         }
-        
+
         $scope.locationClick = function (location) {
             drillDownService.locationDrillDownClick(location);
         }
@@ -58,13 +58,35 @@
             const datamap = crudContextService.currentDetailItemDataMap();
             datamap.assetnum = asset.datamap.assetnum;
             datamap.location = asset.datamap.location;
+            const failurecode = asset.datamap.failurecode;
+            datamap["failurecode"] = failurecode;
+            if (!!failurecode) {
+                return swdbDAO.findSingleByQuery("AssociationData", `textindex01='${failurecode}' and application = 'failurelistonly'`).then(result => {
+                    datamap["failurelistonly_.failurelist"] = result.datamap.failurelist;
+                    $timeout(() => {
+                        $ionicHistory.goBack();
+                        $timeout(() => {
+                            //this inner timeout is needed because we need the ionautocompletes, which have the $on listeners, to be back on the screen in order to handle the event
+                            $rootScope.$broadcast("sw:association:resolved", {
+                                failurelistonly_: {
+                                    associationKey: "failurelistonly_",
+                                    item: result
+                                }
+                            });        
+                        },200,false);
+                    }, 0, false);
+                    
+                });
+            }
+
+            //            datamap.failurecode = asset.datamap.failurecode;
             $timeout(() => $ionicHistory.goBack(), 0, false);
         }
 
-        $scope.loadMore = function() {
+        $scope.loadMore = function () {
             drillDownService.loadMore();
         }
-        
+
         drillDownService.drillDownClear();
         $scope.drillDown = drillDownService.getDrillDown();
 
@@ -85,7 +107,7 @@
         const directive = {
             restrict: "E",
             template: "<div ng-if='!context.currentDetailItem.datamap.assetnum'><button class='button button-calm button-block search-clear-button' ng-click='openDrillDown()' style='margin-bottom: 0px;'>Drill Down</button></div>" +
-                "<textarea autosize-textarea wrap='hard' ng-model='description' ng-if='context.currentDetailItem.datamap.assetnum' ng-click='openDrillDown()' ng-readonly='true' style='cursor: pointer; color: black;'/>",
+            "<textarea autosize-textarea wrap='hard' ng-model='description' ng-if='context.currentDetailItem.datamap.assetnum' ng-click='openDrillDown()' ng-readonly='true' style='cursor: pointer; color: black;'/>",
             transclude: false,
             replace: false,
             scope: {

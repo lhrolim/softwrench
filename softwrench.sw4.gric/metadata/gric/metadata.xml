@@ -142,7 +142,7 @@
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
 
-          <composition relationship="matusetrans" label="Materials" >
+          <composition relationship="matusetrans" label="Material" >
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
 
