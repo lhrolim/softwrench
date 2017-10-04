@@ -1057,7 +1057,9 @@
 
           <reference id="offlineworktypes"/>
 
-          <field label="Warranty Claim Number" attribute="wolo10"/>
+          <field label="Warranty Claim Number" attribute="wolo10">
+            <renderer type="numericinput" params="min=0"/>
+          </field>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
 
           <field label="JP Number" attribute="jobplan_.description" enableexpression="false" readonly="true"/>
@@ -1475,7 +1477,9 @@
 
 
 
-          <field label="Warranty Claim Number" attribute="wolo10"/>
+          <field label="Warranty Claim Number" attribute="wolo10">
+            <renderer type="numericinput" params="min=0"/>
+          </field>
           <field label="EPCR Number" attribute="EPCR_NUM"/>
 
           <field label="JP Number" attribute="jobplan_.description" enableexpression="false" readonly="true"/>
