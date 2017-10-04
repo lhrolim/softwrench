@@ -1155,6 +1155,7 @@
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
         <property key="application.securitytitle" value="Scheduled Work Orders"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
       </properties>
 
       <schemas>
@@ -1193,6 +1194,7 @@
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
         <property key="application.securitytitle" value="Past Work Orders"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
       </properties>
 
       <schemas>
@@ -1231,6 +1233,7 @@
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
         <property key="application.securitytitle" value="Today Work Orders"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
       </properties>
 
       <schemas>
@@ -1270,6 +1273,7 @@
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
         <property key="application.securitytitle" value="Planned But Not Scheduled Work Orders"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
       </properties>
 
       <schemas>
@@ -1309,6 +1313,7 @@
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
         <property key="application.securitytitle" value="Not Planned Not Scheduled Work Orders"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
       </properties>
 
       <schemas>
