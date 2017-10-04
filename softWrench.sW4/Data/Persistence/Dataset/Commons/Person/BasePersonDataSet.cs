@@ -101,7 +101,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             }
             var swusers = UserManager.GetUserByPersonIds(personIds);
             foreach (var record in result.ResultObject) {
-                var swuser = swusers.SingleOrDefault(user => user.UserName.EqualsIc(record.GetAttribute("personid").ToString()));
+                var swuser = swusers.SingleOrDefault(user => user.MaximoPersonId.EqualsIc(record.GetAttribute("personid").ToString()));
                 if (swuser == null) {
                     continue;
                 }
