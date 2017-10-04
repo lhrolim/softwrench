@@ -82,7 +82,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
                 return base.WorkorderStatusChange(maximoTemplateData, crudData, wo, user);
             }
 
-          
+
 
             Log.InfoFormat("routing workflow for workorder {0}", wonum);
 
@@ -91,7 +91,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
         }
 
 
-
+        public override string ApplicationName() {
+            return "workorder,otherworkorder,fsocworkorder,pastworkorder,todayworkorder,schedworkorder,pnschedworkorder,npnschedworkorder";
+        }
 
 
         public override string ClientFilter() {
