@@ -21,6 +21,7 @@
                 savefn: '&',
                 cancelfn: '&',
                 previousschema: '=',
+                parentdata: '=',
                 previousdata: '=',
                 paginationdata: '=',
                 searchData: '=',

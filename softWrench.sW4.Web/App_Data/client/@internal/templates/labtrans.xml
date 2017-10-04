@@ -193,7 +193,7 @@
 
         <schema id="detail" stereotype="detail" title="Labor Reporting Detail" platform="web">
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="laborcode" hidden="true" />
           <field attribute="transtype" hidden="true" />
@@ -287,7 +287,7 @@
             <property key="nextschema.schemaid" value="list"/>
           </properties>
           <field attribute="labtransid" hidden="true"/>
-          <field attribute="orgid" hidden="true"/>
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
           <field attribute="siteid" hidden="true"/>
           <field attribute="enterby" hidden="true" />
 

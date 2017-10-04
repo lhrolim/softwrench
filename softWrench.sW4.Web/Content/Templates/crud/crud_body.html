@@ -90,7 +90,9 @@
                                                 displayables="schema.displayables"
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
-                                                previousschema="previousschema" previousdata="previousdata"
+                                                previousschema="previousschema" 
+                                                parentdata="parentdata"
+                                                previousdata="previousdata"
                                                 is-main-tab='true' tabid="main"/>
 
                         </div>
@@ -98,7 +100,9 @@
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap"
                                                  displayables="schema.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" is-main-tab='true' tabid="main"/>
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" 
+                                                 parentdata="parentdata"
+                                                 previousdata="previousdata" is-main-tab='true' tabid="main"/>
                         </div>
                     </ng-switch>
                 </div>

@@ -79,8 +79,10 @@
 
                     $scope.searchObj = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, {pageNumber}, $scope.searchTemplate, {quickSearchData: $scope.lookupsearchdata});
                     $scope.searchObj.addPreSelectedFilters = false;
+                    const searchDatamap = $scope.datamap;
+                    const overrideschema = ($scope.lookupObj.fieldMetadata.rendererParameters["lookup.usescopeschema"] || searchDatamap["#datamaptype"] === "compositionitem") ? $scope.schema : null;
 
-                    return lookupService.getLookupOptions($scope.lookupObj, $scope.searchObj, $scope.datamap);
+                    return lookupService.getLookupOptions($scope.lookupObj, $scope.searchObj, $scope.datamap, searchDatamap, overrideschema);
                 };
 
                 $scope.shouldShowPagination = function () {

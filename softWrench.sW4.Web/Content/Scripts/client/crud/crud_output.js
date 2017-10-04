@@ -16,6 +16,7 @@ app.directive('crudOutputWrapper', function (contextService, $compile) {
             cancelfn: '&',
             previousschema: '=',
             previousdata: '=',
+            parentdata: '=',
             hasError: '=',
             tabid: '@',
             isMainTab: "@"
@@ -26,7 +27,7 @@ app.directive('crudOutputWrapper', function (contextService, $compile) {
                 element.append(
                     "<crud-output schema='schema'" +
                     "datamap='datamap'" +
-                    "displayables='displayables' extraparameters='extraparameters'" +
+                    "displayables='displayables' extraparameters='extraparameters' parentdata='parentdata'" +
                     "orientation='{{orientation}}'></crud-output-fields>"
                 );
                 $compile(element.contents())(scope);
