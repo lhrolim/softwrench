@@ -560,6 +560,12 @@
       <schemas>
 
         <schema id="editdetail" redeclaring="false">
+
+          <customization position="worklog"/>
+          <customization position="woactivity"/>
+          <customization position="tooltrans"/>
+          <customization position="commlog"/>
+          
           <commandbars>
             <commandgroup position="actions" removeundeclared="true">
               <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
@@ -1345,6 +1351,25 @@
             <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO WARRANTY" requiredexpression="true"/>
           </customization>
         </detail>
+
+        <schema id="compositionlist" stereotype="compositionlist" title="Labor List" platform="web" redeclaring="false">
+          <customization position="linecost"/>
+          <customization position="gldebitacct"/>
+          <customization position="genapprservreceipt"/>
+        </schema>
+
+        <schema id="wolabors" redeclaring="false">
+          <customization position="linecost"/>
+        </schema>
+        
+
+        <detail stereotype="detail" title="Labor Reporting" platform="web" redeclaring="false">
+          <customization position="gldebitacct"/>
+          <customization position="+regularhrs">
+            <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO WARRANTY" requiredexpression="true"/>
+          </customization>
+        </detail>
+
       </schemas>
     </application>
 

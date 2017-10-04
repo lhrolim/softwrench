@@ -165,7 +165,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
 
 
         protected TargetResult CreateResultData(object resultData) {
-            if (OperationData.Id != null) {
+            if (!string.IsNullOrEmpty(OperationData.Id)) {
                 //update scenario
                 return new TargetResult(OperationData.Id, OperationData.UserId, resultData);
             }
