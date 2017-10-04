@@ -1,4 +1,4 @@
-﻿(function (mobileServices, angular) {
+﻿(function (mobileServices, angular, _) {
     "use strict";
 
     var buildIdsString = function (deletedRecordIds) {
@@ -8,7 +8,7 @@
         });
         return ids;
     };
-    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService, applicationStateService) {
+    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService, applicationStateService, configurationService) {
 
         var errorHandlePromise = function (error) {
             if (!error) {
@@ -24,6 +24,17 @@
             const compositionData = result.data.compositionData;
 
             const userProperties = result.data.userProperties;
+
+            const currentFacilities = (securityService.currentFullUser() && securityService.currentFullUser().properties && securityService.currentFullUser().properties["sync.facilities"]) || [];
+            const serverFacilities = (userProperties && userProperties["sync.facilities"]) || [];
+            const facilityChanges = result.data.facilitiesUpdated || !_.isEqual(currentFacilities.sort(), serverFacilities.sort());
+            configurationService.getFullConfig(ConfigurationKeys.FacilitiesChanged).then(config => {
+                const save = config === null || (config && config.value === false && facilityChanges);
+                if (save) {
+                    configurationService.saveConfig({ key: ConfigurationKeys.FacilitiesChanged, value: facilityChanges });
+                }
+            });
+
             securityService.overrideCurrentUserProperties(userProperties);
 
             if (result.data.isEmpty) {
@@ -196,8 +207,8 @@
 
         return api;
     };
-    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService"];
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService", "configurationService"];
 
     mobileServices.factory('dataSynchronizationService', service);
 
-})(mobileServices, angular);
+})(mobileServices, angular, _);

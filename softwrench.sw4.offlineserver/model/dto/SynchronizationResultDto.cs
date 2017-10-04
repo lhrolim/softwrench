@@ -16,6 +16,8 @@ namespace softwrench.sw4.offlineserver.model.dto {
 
         public IDictionary<string, object> UserProperties { get; set; }
 
+        public bool FacilitiesUpdated { get; set; }
+
         public void AddTopApplicationData(SynchronizationApplicationResultData newResultData) {
             if (TopApplicationData == null) {
                 TopApplicationData = new List<SynchronizationApplicationResultData>();

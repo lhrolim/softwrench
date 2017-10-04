@@ -16,5 +16,7 @@ namespace softwrench.sw4.offlineserver.events {
         public bool AllowMultiThreading {
             get { return false; }
         }
+
+        public bool UpdateSwUserDb { get; set; }
     }
 }

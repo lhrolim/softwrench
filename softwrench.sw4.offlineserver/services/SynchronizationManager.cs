@@ -72,7 +72,7 @@ namespace softwrench.sw4.offlineserver.services {
 
 
         public virtual async Task<SynchronizationResultDto> GetData(SynchronizationRequestDto request, InMemoryUser user) {
-            _iEventDispatcher.Dispatch(new PreSyncEvent(request));
+            _iEventDispatcher.Dispatch(new PreSyncEvent(request) { UpdateSwUserDb = true });
 
             var result = new SynchronizationResultDto { UserProperties = user.GenericSyncProperties };
 
@@ -90,6 +90,10 @@ namespace softwrench.sw4.offlineserver.services {
             // add offline configs to the applications
             var configResultData = await GetOfflineConfigs();
             result.TopApplicationData.Add(configResultData);
+
+            if (request.UserData != null) {
+                result.FacilitiesUpdated = true;
+            }
 
             return result;
         }

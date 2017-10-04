@@ -2,7 +2,7 @@
     "use strict";
 
     function synchronizationFacade($log, $q,$rootScope,$timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
-        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService) {
+        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService, configurationService) {
 
         //#region Utils
 
@@ -207,6 +207,13 @@
             throw error;
         }
 
+        /**
+         * Used when facilies were changed and the user needs a full resync to have only the data related to the new facility set.
+         */
+        function checkFullResyncNeeded() {
+            return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
+        }
+
 
         /**
          * If the user caused a Batches to be created (altering and/or creating new content) then the Batches 
@@ -378,7 +385,8 @@
             attempSyncAndContinue,
             handleDeletableDataEntries,
             isFirstSync,
-            handleError
+            handleError,
+            checkFullResyncNeeded
         };
         return api;
         //#endregion
@@ -386,7 +394,7 @@
 
     //#region Service registration
     mobileServices.factory("synchronizationFacade", ["$log", "$q", "$rootScope", "$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", synchronizationFacade]);
+        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

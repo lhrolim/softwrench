@@ -47,8 +47,8 @@
                 };
 
                 var loadData = function (initial) {
-                    let isFirstSyncPromise = !initial ? $q.when(false) : synchronizationFacade.isFirstSync();
-                    isFirstSyncPromise.then(value => {
+                    const isFirstSyncPromise = !initial ? $q.when(false) : synchronizationFacade.isFirstSync();
+                    return isFirstSyncPromise.then(value => {
                         if (value) {
                             //registering first sync call automatically
                             return $timeout(() => {
@@ -106,21 +106,24 @@
                 }
 
 
-                $scope.fullSynchronize = function () {
+                $scope.innerFullSynchronize = function() {
                     $scope.data.isSynching = true;
                     loadingService.showDefault();
 
                     // clears grid search data to consider changes on the metadata
                     crudContextHolderService.clearGridSearch();
 
+                    let needFullResync = false;
                     return synchronizationFacade.fullSync()
                         .then(function (operation) {
-                            swAlertPopup.show({
-                                title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
-                            });
-
-
-                            return loadData();
+                            return synchronizationFacade.checkFullResyncNeeded().then((needsResync) => {
+                                needFullResync = needsResync;
+                                if (!needFullResync) {
+                                    swAlertPopup.show({
+                                        title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
+                                    });
+                                }
+                            }).then(() => loadData());
                         })
                         .catch(function (error) {
                             synchronizationFacade.handleError(error);
@@ -136,7 +139,16 @@
                                 window.restartApplication();
                                 return;
                             }
-                        });
+                        }).then(() => needFullResync ? securityService.logout(false, false) : $q.reject()).then(() => $scope.innerFullSynchronize());
+                }
+
+                $scope.fullSynchronize = function () {
+                    synchronizationFacade.checkFullResyncNeeded().then((needsResync) => {
+                        if (needsResync) {
+                            return securityService.logout(false, false).then(() => $scope.innerFullSynchronize());
+                        }
+                        return $scope.innerFullSynchronize();
+                    });
                 };
 
                 $scope.toggleApplicationStateCollapsed = function () {

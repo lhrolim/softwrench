@@ -89,6 +89,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         public void PopulatePreferredFacilities(User user, string facilitiesToken) {
             var preferences = user.UserPreferences;
+            if (preferences == null) {
+                user.UserPreferences = new UserPreferences {User = user};
+                preferences = user.UserPreferences;
+            }
             if (preferences.GenericProperties == null) {
                 preferences.GenericProperties = new LinkedHashSet<GenericProperty>();
             }
@@ -158,6 +162,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             // update inmemory
             user.Genericproperties.Remove(FirstSolarConstants.FacilitiesProp);
             user.Genericproperties.Add(FirstSolarConstants.FacilitiesProp, selectedFacilitiesList);
+
+            if (!eventToDispatch.UpdateSwUserDb) {
+                return;
+            }
+
             // update swuser db
             var swUser = _swdbDao.FindSingleByQuery<User>(User.UserByUserName, user.Login);
             var selectedFacilitiesToken = string.Join(",", selectedFacilitiesList);
