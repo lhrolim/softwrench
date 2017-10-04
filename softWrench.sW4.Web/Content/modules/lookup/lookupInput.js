@@ -99,7 +99,7 @@
                             searchDatamap = compositionCommons.buildMergedDatamap(scope.datamap, scope.parentdata);
                         }
 
-                        const overrideschema = scope.fieldMetadata.rendererParameters["lookup.usescopeschema"] ? scope.schema : null;
+                        const overrideschema = (scope.fieldMetadata.rendererParameters["lookup.usescopeschema"] || searchDatamap["#datamaptype"] === "compositionitem")? scope.schema : null;
 
                         return lookupService.initLookupModal(scope.lookupObj, scope.datamap, searchDatamap, overrideschema)
                             .then(lookupObj => {
