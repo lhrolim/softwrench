@@ -676,6 +676,11 @@
         }
 
         clearDependantFieldValues(displayables, datamap, triggerFieldName) {
+            if (!displayables) {
+                //seen this scenario for a lookup inside of a composition inside of a modal (ex: labor)
+                return;
+            }
+
             const fieldsDependant = displayables.filter(o=> {
                 return $.inArray(triggerFieldName, o.dependantFields) !== -1 && o.schema.isLazyLoaded;
             });
