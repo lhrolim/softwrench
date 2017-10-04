@@ -45,7 +45,7 @@
     </container>
     <application id="PC" icon="fa fa-table" title="Physical Count Grid" ref="physicalcount" schema="physicalcountList" tooltip="Click to view your Physical Count Grid"/>
     <application id="PD" icon="fa fa-table" title="Physical Deviation Grid" ref="physicaldeviation" schema="physicaldeviationList" tooltip="Click to view your Physical Deviation Grid"/>
-    <application id="RM" icon="fa fa-table" title="Reserved Materials" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
+    <application id="RM" icon="fa fa-table" title="Reserved Material" ref="reservedMaterials" schema="reservedMaterialsList" tooltip="Click to view your Reserved Materials"/>
   </container>
   <container title="Assets" tooltip="Click here to access your assets" icon="fa fa-tags" id="asset" role="asset">
     <application id="AST" icon="fa fa-table" title="Asset Grid" ref="asset" role="asset" schema="list" tooltip="Click to view your Assets"/>

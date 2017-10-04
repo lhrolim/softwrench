@@ -723,7 +723,7 @@
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
             </composition>
-            <composition relationship="matusetrans" label="Materials">
+            <composition relationship="matusetrans" label="Material">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" />
             </composition>
             <composition relationship="labtrans" label="Labor">

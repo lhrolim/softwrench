@@ -59,7 +59,7 @@
       </schemas>
     </application>
     
-    <application name="matusetrans" title="Materials" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
+    <application name="matusetrans" title="Material" entity="matusetrans" id="00000000-0000-0000-0000-000000000009">
       <schemas>
         <detail platform="web" redeclaring="false">
           <customization position="gldebitacct">

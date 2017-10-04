@@ -18,14 +18,6 @@
   </templates>
 
 
-  <security>
-    <!--    <application xmlns="http://www.controltechnologysolutions.com/security" id="workorder" label="Technician Work Orders" ref="otherworko" listschema="list" creationschema="newdetail" updateschema="editdetail" />-->
-    <!--    <application xmlns="http://www.controltechnologysolutions.com/security" id="fsocworkorder" label="Work Orders" ref="workorder" listschema="fsoclist" creationschema="fsocnewdetail" updateschema="fsoceditdetail"  />-->
-
-    <application xmlns="http://www.controltechnologysolutions.com/security" label="Group Work Orders" ref="otherworkorder" />
-    <application xmlns="http://www.controltechnologysolutions.com/security" label="Work Orders" ref="fsocworkorder" />
-    <application xmlns="http://www.controltechnologysolutions.com/security" label="Technician Work Orders" ref="workorder" />
-  </security>
 
 
   <entities>
@@ -1096,10 +1088,10 @@
             </composition>
           </tab>
 
-          <composition relationship="matusetrans" label="Materials" >
+          <composition relationship="matusetrans" label="Material" >
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
-          <composition relationship="labtrans" label="Labors">
+          <composition relationship="labtrans" label="Labor">
             <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
             <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'" />
@@ -1510,8 +1502,8 @@
             </composition>
           </tab>
 
-          <!-- Region Compositions: materials, labors, attachmets -->
-          <composition relationship="matusetrans" label="Materials" >
+          <!-- Region Compositions: material, labor, attachmets -->
+          <composition relationship="matusetrans" label="Material" >
             <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
           </composition>
           <composition relationship="labtrans" label="Labor">

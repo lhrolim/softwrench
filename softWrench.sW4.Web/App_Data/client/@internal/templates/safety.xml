@@ -93,7 +93,7 @@
         <schema id="hazardlist" stereotype="compositionlist">
           <field attribute="hazardid" label="Hazard"/>
           <field attribute="hazard_.description" label="Description"/>
-          <field attribute="hazard_.hazmatenabled" label="Can Have Hazardous Materials?">
+          <field attribute="hazard_.hazmatenabled" label="Can Have Hazardous Material?">
             <renderer type="checkbox"/>
           </field>
           <field attribute="hazard_.hazardtype" label="Type"/>
