@@ -571,7 +571,7 @@
               <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
                        permissionexpression="@maximoVersionEvaluator.Is76" showexpression="@status != null &amp;&amp; @status.equalsAny('INPRG','APPR')" cssclasses="large-button"/>
               <!-- Create new SR as Related Record -->
-              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+<!--              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>-->
               <!--              </container>-->
             </commandgroup>
           </commandbars>
