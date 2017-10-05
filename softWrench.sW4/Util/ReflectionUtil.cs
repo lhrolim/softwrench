@@ -10,6 +10,7 @@ using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
+using NHibernate.Util;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Rest;
 using softWrench.sW4.Util.DeployValidation;
@@ -111,7 +112,7 @@ namespace softWrench.sW4.Util {
                 //Add an other case for boolean
 
                 //TODO: expand to subclasses
-                var isSwdbEntity = baseObject.GetType().GetCustomAttribute<ClassAttribute>() != null; 
+                var isSwdbEntity = baseObject.GetType().GetCustomAttribute<ClassAttribute>() != null;
 
                 var castedValue = HandleCasting(prop, value, isSwdbEntity);
 
@@ -140,10 +141,12 @@ namespace softWrench.sW4.Util {
         private static object HandleCasting(PropertyDescriptor prop, object value, bool isSwdbEntity) {
             var propertyType = prop.PropertyType;
 
+            var nullable = false;
 
             if (propertyType.IsGenericType &&
                 propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
                 propertyType = propertyType.GetGenericArguments()[0];
+                nullable = true;
             }
 
             var stvalue = value.ToString();
@@ -162,9 +165,21 @@ namespace softWrench.sW4.Util {
                 return ConversionUtil.HandleDateConversion(value as string, isSwdbEntity);
             }
             if ("Int64".EqualsIc(propertyType.Name)) {
+                if ("" == stvalue) {
+                    if (nullable) {
+                        return null;
+                    }
+                    return 0L;
+                }
                 return Convert.ToInt64(value);
             }
             if ("Int32".EqualsIc(propertyType.Name)) {
+                if ("" == stvalue) {
+                    if (nullable) {
+                        return null;
+                    }
+                    return 0;
+                }
                 return Convert.ToInt32(value);
             }
 

@@ -13,11 +13,15 @@ namespace softwrench.sW4.test.Util {
             ReflectionUtil.SetProperty(workpackage, "id", "1");
             Assert.AreEqual(workpackage.Id, 1);
 
-            ReflectionUtil.SetProperty(workpackage, "id", "1");
-            Assert.AreEqual(workpackage.Id, 1);
+            ReflectionUtil.SetProperty(workpackage, "id", "");
+            Assert.AreEqual(workpackage.Id, null);
 
             ReflectionUtil.SetProperty(workpackage, "TestResultReviewEnabled", true);
             Assert.AreEqual(workpackage.TestResultReviewEnabled, true);
+
+            ReflectionUtil.SetProperty(workpackage, "TestResultReviewEnabled", true);
+            Assert.AreEqual(workpackage.TestResultReviewEnabled, true);
+
 
             ReflectionUtil.SetProperty(workpackage, "TestResultReviewEnabled", "1");
             Assert.AreEqual(workpackage.TestResultReviewEnabled, true);
@@ -25,5 +29,26 @@ namespace softwrench.sW4.test.Util {
             ReflectionUtil.SetProperty(workpackage, "TestResultReviewEnabled", "False");
             Assert.AreEqual(workpackage.TestResultReviewEnabled, false);
         }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            var test = new Test();
+            ReflectionUtil.SetProperty(test, "L1", "");
+            Assert.AreEqual(test.L1, 0L);
+
+            ReflectionUtil.SetProperty(test, "L2", "");
+            Assert.IsNull(test.L2);
+        }
+
+        class Test
+        {
+            public long L1 { get; set; }
+            public long? L2 { get; set; }
+
+        }
+
     }
+
+    
 }
