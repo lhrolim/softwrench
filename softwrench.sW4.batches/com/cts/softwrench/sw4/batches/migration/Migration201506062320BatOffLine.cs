@@ -59,8 +59,23 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.migration {
 
         }
 
+
+
+
         public override void Down() {
 
+        }
+    }
+
+    [Migration(201710051121)]
+    public class Migration201506062320BatOffLine2 : Migration {
+        public override void Up() {
+            //might be null on the moment of creation
+            Alter.Table("BAT_BATCHITEM").AlterColumn("ItemId").AsString(MigrationUtil.StringSmall).Nullable();
+        }
+
+        public override void Down() {
+            throw new System.NotImplementedException();
         }
     }
 }

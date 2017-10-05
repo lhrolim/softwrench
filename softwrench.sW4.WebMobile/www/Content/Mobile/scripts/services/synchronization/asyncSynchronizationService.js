@@ -16,11 +16,11 @@
         var self = this;
 
         // clear batchRegistry (only user related state) on logout
-        $rootScope.$on("sw4:security:logout", function() {
+        $rootScope.$on("sw4:security:logout", function () {
             batchRegistry = {};
         });
 
-        var getBatchIds = function() {
+        var getBatchIds = function () {
             var ids = [];
             for (var id in batchRegistry) {
                 if (!batchRegistry.hasOwnProperty(id)) {
@@ -31,7 +31,7 @@
             return ids;
         };
 
-        var fetchBatchStatus = function() {
+        var fetchBatchStatus = function () {
             var log = $log.get("asyncSynchronizationService#fetchBatchStatus");
             var ids = getBatchIds();
             if (ids.length <= 0 || completionCallBacks.length <= 0) {
@@ -78,7 +78,7 @@
          * 
          * @param Batch batch 
          */
-        this.registerForAsyncProcessing = function(batch) {
+        this.registerForAsyncProcessing = function (batch) {
             if (batchRegistry[batch.id]) {
                 return;
             }
@@ -91,8 +91,8 @@
          * 
          * @param [Batch] batches 
          */
-        this.registerListForAsyncProcessing = function(batches) {
-            angular.forEach(batches, function(batch) {
+        this.registerListForAsyncProcessing = function (batches) {
+            angular.forEach(batches, function (batch) {
                 self.registerForAsyncProcessing(batch);
             });
         };
@@ -128,7 +128,7 @@
          */
         var loadBatchesForProcessing = function () {
             var ids = getBatchIds();
-            ids = ids.map(function(id) {
+            ids = ids.map(function (id) {
                 return "'{0}'".format(id);
             });
             var query = "status!='COMPLETE'";
@@ -136,11 +136,11 @@
                 query += " and id not in ({0})".format(ids);
             }
             swdbDAO.findByQuery("Batch", query)
-                .then(function(batches) {
+                .then(function (batches) {
                     var promises = [];
                     angular.forEach(batches, function (batch) {
                         var deferred = $q.defer();
-                        batch.items.prefetch("dataentry").prefetch("problem").list(null, function(items) {
+                        batch.items.prefetch("dataentry").prefetch("problem").list(null, function (items) {
                             batch.loadeditems = items;
                             deferred.resolve(batch);
                         });
@@ -154,7 +154,9 @@
         };
 
         var startPolling = function () {
-            $interval(fetchBatchStatus, pollingDelay);
+            var interval = isRippleEmulator() ? 10 * 1000 : pollingDelay;
+            $interval(fetchBatchStatus, interval);
+
         };
 
         loadBatchesForProcessing();

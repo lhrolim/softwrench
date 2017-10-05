@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q,$rootScope,$timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
+    function synchronizationFacade($log, $q, $rootScope, $timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
         asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService, configurationService) {
 
         //#region Utils
@@ -70,14 +70,15 @@
                 // update the related syncoperations as 'COMPLETE'
                 // TODO: assuming there's only a single batch/application per syncoperation -> develop generic case
                 .then(batches => synchronizationOperationService.completeFromAsyncBatch(batches)
-                // resolve with the saved batches to transparently continue the promise 
-                // chain as it was before (not aware of syncoperations update)
-                .then(operations => batches))
+                    // resolve with the saved batches to transparently continue the promise 
+                    // chain as it was before (not aware of syncoperations update)
+                    .then(operations => batches))
                 .then(batches =>
-                    dataSynchronizationService.syncData().then(downloadResults => {
-                        var dataCount = getDownloadDataCount(downloadResults);
-                        return synchronizationOperationService.createSynchronousBatchOperation(start, dataCount, batches);
-                    })
+                    $q.all([dataSynchronizationService.syncData(), associationDataSynchronizationService.syncData(false, null)])
+                        .then(downloadResults => {
+                            var dataCount = getDownloadDataCount(downloadResults[0]);
+                            return synchronizationOperationService.createSynchronousBatchOperation(start, null, dataCount, batches);
+                        })
                 )
                 .then(operation => {
                     log.info("created SyncOperation for async Batch Processing");
@@ -129,7 +130,7 @@
             const currentApps = metadataModelService.getApplicationNames();
             const firstTime = currentApps.length === 0;
 
-//            const clientOperationId = persistence.createUUID();
+            //            const clientOperationId = persistence.createUUID();
 
             const httpPromises = [
                 metadataSynchronizationService.syncData("1.0", clientOperationId),
@@ -230,7 +231,7 @@
             tracking.trackFullState("synchornizationFacace#fullSync pre-sync");
 
             if (networkConnectionService.isOffline()) {
-                return $q.reject({message:"Cannot synchronize application without internet connection"});
+                return $q.reject({ message: "Cannot synchronize application without internet connection" });
             }
 
             return checkRelogin().then(() => {
@@ -353,7 +354,7 @@
                         title: failPopupConfig.title || "Synchronization Failed",
                         template: failPopupConfig.template || "Continue Anyway?"
                     })
-                    .then(continueAnyway => !!continueAnyway);
+                        .then(continueAnyway => !!continueAnyway);
                 });
         }
 
@@ -375,7 +376,7 @@
         // registering completion callback on the asyncSynchronizationService
         asyncSynchronizationService.onBatchesCompleted(onBatchesCompleted);
 
-        
+
 
         const api = {
             hasDataToSync,

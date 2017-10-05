@@ -13,6 +13,12 @@
 
             const jsonString = JSON.stringify(item.datamap);
             const localId = item.id;
+
+            if (localId == null && applicationName.contains("workorder") && applicationName !== "workorder") {
+                //workaround to enforce that all created entries go to the created menu
+                applicationName = "workorder";
+            }
+
             const generatedId = localId ? null : persistence.createUUID();
 
             const isAlreadyDirty = _.contains([true, 1, "true"], item.isDirty);
@@ -38,6 +44,8 @@
 
             return swdbDAO.executeQuery(queryToExecute)
                 .then(() => {
+                    //enforcing the real application that got saved
+                    item.application = applicationName;
                     if (!localId) {
                         item.newId = generatedId;
                     } else {

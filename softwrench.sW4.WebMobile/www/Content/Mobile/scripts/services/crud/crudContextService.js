@@ -314,7 +314,7 @@
 
             saveCurrentItem: function (showConfirmationMessage, loadSavedItem) {
                 const crudContext = crudContextHolderService.getCrudContext();
-                const applicationName = crudContext.currentApplicationName;
+                let applicationName = crudContext.currentApplicationName;
                 const item = crudContext.currentDetailItem;
                 const datamap = item.datamap;
                 const schema = this.currentDetailSchema();
@@ -327,6 +327,7 @@
                         return offlineSaveService.saveItem(applicationName, item, title, showConfirmationMessage);
                     })
                     .then(saved => {
+                        applicationName = saved.application;
                         contextService.insertIntoContext("crudcontext", crudContext);
                         if (!crudContext.newItem) {
 //                            crudContext.originalDetailItemDatamap = angular.copy(saved.datamap);

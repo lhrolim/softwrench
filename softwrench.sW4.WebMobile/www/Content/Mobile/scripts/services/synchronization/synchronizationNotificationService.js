@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    var synchronizationNotificationService = function ($rootScope, routeService, $cordovaLocalNotification, $ionicPopup, notificationPluginWrapper) {
+    var synchronizationNotificationService = function ($rootScope, menuModelService, routeService, $cordovaLocalNotification, $ionicPopup, notificationPluginWrapper) {
 
         /* DEFAULT CONFIGURATION */
 
@@ -107,6 +107,7 @@
                 data = JSON.parse(data);
             }
             routeService.go("main.syncoperationdetail", { id: data.operationId });
+            menuModelService.updateAppsCount();
         });
 
         /* SERVICE INSTANCE */
@@ -121,6 +122,6 @@
     }
 
     mobileServices.factory("synchronizationNotificationService",
-        ["$rootScope", "routeService", "$cordovaLocalNotification", "$ionicPopup", "notificationPluginWrapper", synchronizationNotificationService]);
+        ["$rootScope","menuModelService", "routeService", "$cordovaLocalNotification", "$ionicPopup", "notificationPluginWrapper", synchronizationNotificationService]);
 
 })(mobileServices, angular);

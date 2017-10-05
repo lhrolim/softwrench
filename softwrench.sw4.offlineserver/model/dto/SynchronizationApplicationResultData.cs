@@ -96,5 +96,11 @@ namespace softwrench.sw4.offlineserver.model.dto {
         public bool HasNewEntries => NewdataMaps.Count > 0;
 
         public int NewCount => NewdataMaps.Count;
+
+        public int UpdateCount => UpdatedDataMaps.Count;
+
+        public override string ToString() {
+            return $"{nameof(ApplicationName)}: {ApplicationName}, {nameof(NewCount)}: {NewCount}, {nameof(UpdateCount)}: {UpdateCount}";
+        }
     }
 }
