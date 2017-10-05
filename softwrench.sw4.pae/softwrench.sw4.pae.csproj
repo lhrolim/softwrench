@@ -69,8 +69,8 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sW4.audit, Version=2.0.6448.38234, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.audit.2.0.6448.38234\lib\net46\softwrench.sW4.audit.dll</HintPath>
+    <Reference Include="softwrench.sW4.audit, Version=2.1.6487.17953, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.audit.2.1.6487.17953\lib\net46\softwrench.sW4.audit.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

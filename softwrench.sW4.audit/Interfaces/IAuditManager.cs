@@ -43,7 +43,7 @@ namespace softwrench.sW4.audit.Interfaces {
         /// <returns></returns>
         ICollection<AuditEntry> SaveAuditEntries(ICollection<AuditEntry> entries);
 
-        void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string data);
+        void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string siteId, string data);
 
         void AppendToCurrentTrail(AuditEntry entry);
 

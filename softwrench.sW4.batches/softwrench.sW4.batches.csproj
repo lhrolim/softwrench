@@ -95,8 +95,8 @@
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="softwrench.sW4.audit, Version=2.0.6474.35533, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.audit.2.0.6474.35533\lib\net46\softwrench.sW4.audit.dll</HintPath>
+    <Reference Include="softwrench.sW4.audit, Version=2.1.6487.17953, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.audit.2.1.6487.17953\lib\net46\softwrench.sW4.audit.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.34730, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>

@@ -198,8 +198,8 @@
     <Reference Include="softwrench.sw4.activitystream, Version=1.2.6449.32979, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6449.32979\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sW4.audit, Version=2.0.6474.35533, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.audit.2.0.6474.35533\lib\net46\softwrench.sW4.audit.dll</HintPath>
+    <Reference Include="softwrench.sW4.audit, Version=2.1.6487.17953, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.audit.2.1.6487.17953\lib\net46\softwrench.sW4.audit.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6449.16347, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6449.16347\lib\net46\softwrench.sw4.dashboard.dll</HintPath>

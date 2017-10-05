@@ -57,7 +57,7 @@ namespace softwrench.sW4.audit.classes.Services {
         }
 
 
-        public void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string data) {
+        public void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string siteId, string data) {
             var trail = CallContext.LogicalGetData("audittrail") as AuditTrail;
             var entry = new AuditEntry {
                 Action = action,
@@ -65,6 +65,7 @@ namespace softwrench.sW4.audit.classes.Services {
                 CreatedBy = SecurityFacade.Current().Login,
                 CreatedDate = DateTime.Now,
                 RefId = refId,
+                SiteId = siteId,
                 RefUserId = refUserId
             };
 

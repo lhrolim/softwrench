@@ -154,6 +154,7 @@
     <Compile Include="classes\Services\Batch\Data\AuditPostBatchData.cs" />
     <Compile Include="Interfaces\IAuditPostBatchHandler.cs" />
     <Compile Include="Interfaces\IAuditManager.cs" />
+    <Compile Include="Migration\MigrationSwweb1322Fix.cs" />
     <Compile Include="Migration\MigrationSwweb1322PartTwo.cs" />
     <Compile Include="Migration\MigrationSwweb1322.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

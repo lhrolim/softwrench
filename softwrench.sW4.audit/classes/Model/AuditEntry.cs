@@ -27,6 +27,9 @@ namespace softwrench.sW4.audit.classes.Model {
         [Property]
         public virtual string RefUserId { get; set; }
 
+        [Property]
+        public virtual string SiteId { get; set; }
+
         [Property(Type = "BinaryBlob")]
         [JsonIgnore]
         public virtual byte[] Data { get; set; }

@@ -132,7 +132,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         }
 
         protected void AuditXml(string xml, TargetResult targetResult) {
-            _auditManager.AppendToCurrentTrail(OperationData.OperationType.ToString(), ApplicationMetadata.Name, targetResult.Id, targetResult.UserId, xml);
+            _auditManager.AppendToCurrentTrail(OperationData.OperationType.ToString(), ApplicationMetadata.Name, targetResult.Id, targetResult.UserId, targetResult.SiteId, xml);
         }
 
         protected bool ShouldAudit() {
