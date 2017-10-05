@@ -7,10 +7,11 @@
         "angular-ui-router": "^0.4.2",
         "com.cordova.plugins.cookiemaster": "~1.0.0",
         "cordova-android": "^6.2.3",
+        "cordova-ios": "^4.4.0",
         "cordova-plugin-app-event": "~1.2.0",
         "cordova-plugin-app-version": "~0.1.8",
         "cordova-plugin-camera": "~2.2.0",
-        "cordova-plugin-compat": "~1.0.0",
+        "cordova-plugin-compat": "^1.2.0",
         "cordova-plugin-device": "~1.0.1",
         "cordova-plugin-email": "~1.2.6",
         "cordova-plugin-file": "~3.0.0",
@@ -100,7 +101,8 @@
             "ionic-plugin-keyboard": {}
         },
         "platforms": [
-            "android"
+            "android",
+            "ios"
         ]
     }
 }

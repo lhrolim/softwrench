@@ -101,12 +101,10 @@
     <preference name="SuppressesIncrementalRendering" value="True" />
     <hook src="hooks/hook-symlink-fix.js" type="before_compile" />
     <vs:toolsetVersion>7.0.1</vs:toolsetVersion>
-    <engine name="android" spec="^6.2.3" />
     <plugin name="com.cordova.plugins.cookiemaster" spec="~1.0.0" />
     <plugin name="cordova-plugin-app-event" spec="~1.2.0" />
     <plugin name="cordova-plugin-app-version" spec="~0.1.8" />
     <plugin name="cordova-plugin-camera" spec="~2.2.0" />
-    <plugin name="cordova-plugin-compat" spec="~1.0.0" />
     <plugin name="cordova-plugin-device" spec="~1.0.1" />
     <plugin name="cordova-plugin-email" spec="~1.2.6" />
     <plugin name="cordova-plugin-file" spec="~3.0.0" />
@@ -120,4 +118,7 @@
     <plugin name="cordova-sqlite-evcore-extbuild-free" spec="https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free" />
     <plugin name="de.appplant.cordova.plugin.local-notification" spec="~0.8.4" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <engine name="android" spec="~6.2.3" />
+    <engine name="ios" spec="~4.4.0" />
+    <plugin name="cordova-plugin-compat" spec="^1.2.0" />
 </widget>
