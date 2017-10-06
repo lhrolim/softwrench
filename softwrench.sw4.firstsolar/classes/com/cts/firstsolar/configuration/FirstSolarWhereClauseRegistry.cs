@@ -9,6 +9,7 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -146,6 +147,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             }
 
             var offLineCondition = new WhereClauseRegisterCondition() { Alias = "offline", OfflineOnly = true, Global = true };
+            var techWorkorderCondition = new WhereClauseRegisterCondition { Alias = "techworkorder", Global = true, AppContext = new ApplicationLookupContext{ParentApplication = "workorder"}};
 
             _whereClauseFacade.Register("workorder", "@firstSolarWhereClauseRegistry.AssignedByGroup", offLineCondition);
             _whereClauseFacade.Register("schedworkorder", "@firstSolarWhereClauseRegistry.SchedWhereClauseMethod", offLineCondition);
@@ -162,6 +164,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade.Register("classstructure", "useclassindesc= 1 and parent is null and genassetdesc =0 and siteid is null and type is null and haschildren=0 and showinassettopo = 1", offLineCondition);
 
 
+            
+
             _whereClauseFacade.Register("offlinelocation", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("offlineasset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", offLineCondition);
 
@@ -170,6 +174,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade.Register("synstatus", "value in ('WOEN','COMP')", offLineCondition);
             _whereClauseFacade.Register("labor", UserLaborWhereClause, offLineCondition);
             _whereClauseFacade.Register("laborcraftrate", UserLaborCraftWhereClause, offLineCondition);
+
+
+            _whereClauseFacade.Register("location", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", techWorkorderCondition);
+            _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", techWorkorderCondition);
+            _whereClauseFacade.Register("inventory", "@firstSolarWhereClauseRegistry.InventoryWhereClauseByFacility", techWorkorderCondition);
+
         }
 
 

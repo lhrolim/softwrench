@@ -21,6 +21,7 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Search.QuickSearch;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Applications.Association {
@@ -97,11 +98,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 associationFilter.AppendWhereClause(EntityUtil.EvaluateQuery(association.Schema.DataProvider.WhereClause, originalEntity));
             }
 
+            associationFilter.Context = new ApplicationLookupContext { ParentApplication = schema.ApplicationName, ParentSchema = schema.SchemaId };
+
             if (association.Schema.DataProvider.MetadataId != null) {
-                associationFilter.Context =
-                    new sW4.Security.Context.ApplicationLookupContext {
-                        MetadataId = association.Schema.DataProvider.MetadataId
-                    };
+                associationFilter.Context.MetadataId = association.Schema.DataProvider.MetadataId;
             }
 
             var entityMetadata = MetadataProvider.Entity(association.EntityAssociation.To);
