@@ -211,8 +211,15 @@
         /**
          * Used when facilies were changed and the user needs a full resync to have only the data related to the new facility set.
          */
-        function checkFullResyncNeeded() {
-            return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
+        function shouldFullResync(considerDirty) {
+            const dirtyPromise = considerDirty ? hasDataToSync() : $q.when(false);
+
+            return dirtyPromise.then(hasDirty => {
+                if (hasDirty) {
+                    return $q.when(false);
+                }
+                return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
+            });
         }
 
 
@@ -387,7 +394,7 @@
             handleDeletableDataEntries,
             isFirstSync,
             handleError,
-            checkFullResyncNeeded
+            shouldFullResync
         };
         return api;
         //#endregion

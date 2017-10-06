@@ -116,7 +116,7 @@
                     let needFullResync = false;
                     return synchronizationFacade.fullSync()
                         .then(function (operation) {
-                            return synchronizationFacade.checkFullResyncNeeded().then((needsResync) => {
+                            return synchronizationFacade.shouldFullResync().then((needsResync) => {
                                 needFullResync = needsResync;
                                 if (!needFullResync) {
                                     swAlertPopup.show({
@@ -143,7 +143,7 @@
                 }
 
                 $scope.fullSynchronize = function () {
-                    synchronizationFacade.checkFullResyncNeeded().then((needsResync) => {
+                    synchronizationFacade.shouldFullResync(true).then((needsResync) => {
                         if (needsResync) {
                             return securityService.logout(false, false).then(() => $scope.innerFullSynchronize());
                         }
