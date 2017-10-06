@@ -16,19 +16,17 @@
                 return new SearchDTO(searchDTO);
             }
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <param name="schema"></param>
-            /// <param name="gridData">An object combining the following properties:
-            /// 
+            /**
+             * 
+             * @param {any} schema
+             * @param {any} gridData An object combining the following properties:
+            ///
             /// searchData -->
             /// searchSort -->
             /// searchOperators -->
             /// paginationData -->
-            /// 
-            /// </param>
-            /// <param name="panelid"></param>
+             * @param {any} panelid
+             */
             function createGridCheckpointFromGridData(schema, gridData, panelid) {
                 if (gridData == null) {
                     throw new Error('gridData should not be null');
@@ -36,7 +34,7 @@
 
                 const dto = buildSearchDTO(gridData);
                 if (!dto.isDefault()) {
-                    this.createGridCheckpoint(schema, dto);
+                    this.createGridCheckpoint(schema, dto, panelid);
                 }
 
                 //                previousFilterService.createPreviousFilter(schema, gridData.searchData, gridData.searchOperator, gridData.searchSort);
@@ -46,7 +44,8 @@
                 const applicationKey = schema.applicationName + "." + schema.schemaId;
                 const checkpointData = {
                     listContext: searchDTO,
-                    applicationKey
+                    applicationKey,
+                    panelid
                 };
                 const selectedFilter = crudContextHolderService.getSelectedFilter();
                 if (!!selectedFilter && selectedFilter.id !==-2) {
@@ -69,10 +68,10 @@
                 }
             };
 
-            function fetchCheckpoint(applicationKey) {
+            function fetchCheckpoint(applicationKey,panelid) {
                 const checkPointArray = this.fetchAllCheckpointInfo();
                 let checkpoint = checkPointArray.firstOrDefault(item => {
-                    return item.applicationKey === applicationKey;
+                    return item.applicationKey === applicationKey && item.panelid == panelid;
                 });
 
                 if (checkpoint) {

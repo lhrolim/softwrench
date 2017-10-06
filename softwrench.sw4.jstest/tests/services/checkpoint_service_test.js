@@ -29,5 +29,24 @@
     });
 
 
+    it('Test checkpoint with panelid--> prevent default if filter applied', function () {
+        //creating mock user
+        const schema = SchemaPojo.WithId("list", "workorder");
+
+        //a checkpoint for a dashboard
+        checkpointService.createGridCheckpoint(schema, new SearchDTO({ searchSort: "test desc" }), "8");
+
+        //bringing without panelid
+        var checkpoint = checkpointService.fetchCheckpoint("workorder.list");
+        expect(checkpoint).toBeUndefined();
+
+        checkpoint = checkpointService.fetchCheckpoint("workorder.list", "8");
+        expect(checkpoint ).not.toBeNull();
+        //TODO: refactor checkpointService, rethink of the need of pass this data
+        // without this call other tests were being affected by the presence of a checkpoint
+        checkpointService.clearCheckpoints();
+    });
+
+
 
 });

@@ -237,7 +237,7 @@
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
 
                         if (!initialLoad) {
-                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope);
+                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope,$scope.panelid);
                         }
 
                         $scope.gridDataChanged($scope.datamap);
