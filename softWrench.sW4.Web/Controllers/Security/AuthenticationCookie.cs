@@ -9,7 +9,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
     public class AuthenticationCookie {
 
 
-        private const int PersistentCookieTimeoutDays = 14;
+        private const int PersistentCookieTimeoutDays = 30;
 
 
         private static readonly ILog Log = LogManager.GetLogger(SwConstants.AUTH_LOG);
