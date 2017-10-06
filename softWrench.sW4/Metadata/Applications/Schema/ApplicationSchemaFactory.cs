@@ -258,6 +258,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
             newSchema.RelatedCompositions = schema.RelatedCompositions;
             newSchema.NewSchemaRepresentation = schema.NewSchemaRepresentation;
+            newSchema.IdDisplayable = schema.IdDisplayable;
             return newSchema;
         }
 
@@ -283,6 +284,7 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             newSchema.NoResultsNewSchema = schema.NoResultsNewSchema;
             newSchema.RelatedCompositions = schema.RelatedCompositions;
             newSchema.NewSchemaRepresentation = CheckCreationAllowed(schema, profile);
+            newSchema.IdDisplayable = schema.IdDisplayable;
             return newSchema;
         }
 
