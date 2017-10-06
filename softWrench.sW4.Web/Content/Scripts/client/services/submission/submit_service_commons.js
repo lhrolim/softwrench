@@ -18,6 +18,18 @@
             return transformedFields;
         }
 
+            function applyTransformationsForAssociation(schemaToSave, fields) {
+                //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
+                //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
+                let transformedFields = angular.copy(fields);
+//                removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
+                transformedFields = this.removeExtraFields(transformedFields, true, schemaToSave);
+                translateFields(schemaToSave.displayables, transformedFields);
+//                handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
+//                this.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
+                return transformedFields;
+            }
+
         function insertAssocationLabelsIfNeeded(schema, datamap) {
             if (schema.properties['addassociationlabels'] !== "true") {
                 return;
@@ -193,9 +205,11 @@
         const service = {
             addSchemaDataToParameters,
             applyTransformationsForSubmission,
+            applyTransformationsForAssociation,
             createSubmissionParameters,
             getFormToSubmitIfHasAttachement,
             insertAssocationLabelsIfNeeded,
+            translateFields,
             removeExtraFields
         };
         return service;

@@ -499,8 +499,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
                 if (associationData.Any()) {
                     foreach (var associationOption in associationData) {
-                        //usually we´ll have just one option, unless we´re dealing with associations of inline compositions
-                        lazyOptions[association.AssociationKey].Add(associationOption.Value.ToLower(), associationOption);
+                        if (!lazyOptions[association.AssociationKey].ContainsKey(associationOption.Value.ToLower())){
+                            //usually we´ll have just one option, unless we´re dealing with associations of inline compositions
+                            //for some unhandled failure code scenario, the same key can be present more than once
+                            //TODO: fix these mappings to cause, remedy, problem
+                            lazyOptions[association.AssociationKey].Add(associationOption.Value.ToLower(), associationOption);
+                        }
+
+                        
                     }
                 }
             }

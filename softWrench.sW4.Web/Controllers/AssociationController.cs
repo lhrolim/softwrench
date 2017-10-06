@@ -132,6 +132,7 @@ namespace softWrench.sW4.Web.Controllers {
 
             Log.DebugFormat("retrieving single association value for {0}:{1} app {2} ", associationKey, associationValue, key.ApplicationName);
             //TODO: make specific method for single association to increase performance/encapsulation
+            //NOTE: despite not passing explicetely the associationValue, it´s still used due to the primary association to query for only the exact value
             var result = await DoGetAssociations(key, new SingleAssociationPrefetcherRequest() { AssociationsToFetch = associationKey }, currentData);
             if (result.PreFetchLazyOptions.ContainsKey(associationKey)) {
                 var preFetchLazyOption = result.PreFetchLazyOptions[associationKey];

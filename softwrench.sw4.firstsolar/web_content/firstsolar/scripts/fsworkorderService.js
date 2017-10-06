@@ -15,6 +15,17 @@
             this.applicationService.save({ datamap});
         }
 
+        failureClassChanged(event) {
+            event.fields["problemcode"] = null;
+        }
+
+        problemCodeChanged(event) {
+            event.fields["fr1code"] = null;
+        }
+
+        causeChanged(event) {
+            event.fields["fr2code"] = null;
+        }
     }
 
     fsWorkOrderService.$inject = ['crudContextHolderService','applicationService'];

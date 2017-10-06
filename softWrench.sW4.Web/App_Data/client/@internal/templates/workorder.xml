@@ -94,13 +94,15 @@
           <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true"/>
         </relationship>
         
-        <relationship to="failurelistonly" qualifier="failurelist">
+        <relationship to="failurelistonly" qualifier="failurelist" >
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
         <relationship to="problemlist" qualifier="problemlist">
-          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
@@ -499,6 +501,8 @@
           <field attribute="class" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field hidden="true" attribute="failurelist_.failurelist"/>
+          <field hidden="true" attribute="#problemlist_.failurelist" attributeToServer="problemlist_.failurelist"/>
+          <field hidden="true" attribute="#causelist_.failurelist" attributeToServer="causelist_.failurelist"/>
           
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
@@ -589,7 +593,7 @@
           </section>
 
 
-          <section secondarycontent="true" orientation="vertical">
+          <section id="secondary" secondarycontent="true" orientation="vertical">
 
             <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
               <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" orderbyfield="sequence"/>
@@ -669,10 +673,12 @@
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
           <section id="siteidsection">
-            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true" extraprojectionvalues="orgid">
-              <renderer type="lookup" />
-              <event type="afterchange" method="adjustOrgId" service="genericTicketService"/>
-            </association>
+            <section id="siteidinnersection">
+              <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true" extraprojectionvalues="orgid">
+                <renderer type="lookup" />
+                <event type="afterchange" method="adjustOrgId" service="genericTicketService"/>
+              </association>
+            </section>
           </section>
 
 
@@ -700,9 +706,11 @@
           </section>
 
           <section id="siteidsection">
-            <field label="Site" attribute="siteid" readonly="true" requiredexpression="true">
-              <renderer type="default" />
-            </field>
+            <section id="siteidinnersection">
+              <field label="Site" attribute="siteid" readonly="true" requiredexpression="true">
+                <renderer type="default" />
+              </field>
+            </section>
           </section>
 
           <section id="statussection">

@@ -7,13 +7,16 @@ using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
@@ -38,20 +41,59 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return filter;
         }
 
-       
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var baseDetail = await base.GetApplicationDetail(application, user, request);
+            if (request.IsEditionRequest) {
+                var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ?",
+                    baseDetail.ResultObject["wonum"]);
+                foreach (var item in items) {
+                    var type = item["type"];
+                    var projectedFieldName = "";
+                    if (type.EqualsIc("PROBLEM")) {
+                        projectedFieldName = "#problemlist_.failurelist";
+                    } else if (type.EqualsIc("CAUSE")) {
+                        projectedFieldName = "#causelist_.failurelist";
+                    } else {
+                        //remedy is useless as no one relies on him
+                        continue;
+                    }
+                    baseDetail.ResultObject.SetAttribute(projectedFieldName, item["linenum"]);
+                }
+            }
+            return baseDetail;
 
-
-        /* Need to add this prefilter function for the problem codes !! */
-        public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters) {
-            return ProblemCodeFilterByFailureClassFunction(parameters);
         }
 
-        private SearchRequestDto ProblemCodeFilterByFailureClassFunction(AssociationPreFilterFunctionParameters parameters) {
+
+
+
+        #region Problem, Cause, Remedy Filters
+        /* Need to add this prefilter function for the problem codes !! */
+        public SearchRequestDto FilterProblemCodes(AssociationPreFilterFunctionParameters parameters) {
+            return FilterByFailureClass(parameters, "failurelist_.failurelist");
+        }
+
+        /* Need to add this prefilter function for the causes !! */
+        public SearchRequestDto FilterCauses(AssociationPreFilterFunctionParameters parameters) {
+            return FilterByFailureClass(parameters, "problemlist_.failurelist");
+        }
+
+        /* Need to add this prefilter function for the remedies !! */
+        public SearchRequestDto FilterRemedies(AssociationPreFilterFunctionParameters parameters) {
+            return FilterByFailureClass(parameters, "causelist_.failurelist");
+        }
+
+        private SearchRequestDto FilterByFailureClass(AssociationPreFilterFunctionParameters parameters, string parentField, string fallbackField = null) {
             var filter = parameters.BASEDto;
-            var failurecodeid = FailureCodeId(parameters.OriginalEntity);
+            var primaryAttribute = parameters.Relationship.EntityAssociation.PrimaryAttribute();
+            //            if (parameters.OriginalEntity.ContainsAttribute(primaryAttribute.From, true)) {
+            //                return filter;
+            //            }
+
+            var failurecodeid = FailureCodeId(parameters.OriginalEntity, parentField);
             if (string.IsNullOrEmpty(failurecodeid)) {
-                // the code comes as a hidden field when the entity first opens, and later as extrafields, if the failurelit is changed on screen
-                var originalDataCode = parameters.OriginalEntity.GetStringAttribute("failurelist_.failurelist");
+                // the code comes as a hidden field when the entity first opens, and later as extrafields, if the parent field is changed on screen
+                var originalDataCode = parameters.OriginalEntity.GetStringAttribute(fallbackField ?? parentField);
                 if (string.IsNullOrEmpty(originalDataCode)) {
                     filter.ForceEmptyResult = true;
                 } else {
@@ -63,14 +105,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return filter;
         }
 
-        private string FailureCodeId(AttributeHolder entity) {
-
-
+        private static string FailureCodeId(AttributeHolder entity, string parentField) {
             var extrafields = ((Entity)entity).GetUnMappedAttribute("extrafields");
             if (extrafields == null) return null;
             dynamic fields = JObject.Parse(extrafields);
-            return fields["failurelist_.failurelist"].Value.ToString();
+            return fields[parentField].Value.ToString();
         }
+        #endregion Problem, Cause, Remedy Filters
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request,
             JObject currentData) {
@@ -103,13 +144,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             return list;
         }
-        
+
         public IEnumerable<IAssociationOption> GetWOClassStructureType(OptionFieldProviderParameters parameters) {
             return GetClassStructureType(parameters, "WORKORDER");
         }
 
-        public IEnumerable<IAssociationOption> GetWOClassStructureTypeDescription(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetWOClassStructureTypeDescription(OptionFieldProviderParameters parameters) {
             return GetClassStructureTypeDescription(parameters, "WORKORDER");
         }
 

@@ -146,7 +146,7 @@
             const panelId = this.crudContextHolderService.isShowingModal() ? "#modal" : null;
             const datamap = this.crudContextHolderService.rootDataMap(panelId);
             const schema = this.crudContextHolderService.currentSchema(panelId);
-            const fieldsTosubmit = this.submitServiceCommons.removeExtraFields(datamap, true, schema);
+            const fieldsTosubmit = this.submitServiceCommons.applyTransformationsForAssociation(schema, datamap);
             const key = this.schemaService.buildApplicationMetadataSchemaKey(schema);
             const lazyAssociationsBeingResolvedLocal = this.lazyAssociationsBeingResolved;
             const updateLazyFn = this.crudContextHolderService.updateLazyAssociationOption.bind(this.crudContextHolderService);
@@ -548,7 +548,8 @@
                 showmore: options.showmore || false
             };
             const fields = datamap;
-            const fieldsTosubmit = this.submitServiceCommons.removeExtraFields(fields, true, schema);
+
+            let fieldsTosubmit = this.submitServiceCommons.applyTransformationsForAssociation(schema, fields);
             const urlToUse = url("/api/generic/Association/GetSchemaOptions?" + $.param(parameters));
             const jsonString = angular.toJson(fieldsTosubmit);
             log.info('going to server for loading schema {0} associations '.format(schema.schemaId));
@@ -613,7 +614,7 @@
                 triggerFieldName: triggerFieldName,
                 id: fields[schema.idFieldName]
             };
-            const fieldsTosubmit = this.submitServiceCommons.removeExtraFields(fields, true, scope.schema);
+            const fieldsTosubmit = this.submitServiceCommons.applyTransformationsForAssociation(scope.schema,fields);
             const urlToUse = url("/api/generic/ExtendedData/UpdateAssociation?" + $.param(parameters));
             const jsonString = angular.toJson(fieldsTosubmit);
             log.info('going to server for dependent associations of {0}'.format(triggerFieldName));

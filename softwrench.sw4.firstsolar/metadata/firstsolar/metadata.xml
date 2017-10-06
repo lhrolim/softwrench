@@ -83,6 +83,8 @@
         <attribute name="daysleftcm" query="(DATEDIFF(day,GETDATE(),!@reportdate))" type="smallint"/>
         <attribute name="outreq" type="boolean"/>
         <attribute name="planner" type="varchar" query="@firstSolarCustomGlobalFedService.PlannerQuery"/>
+        <!-- workaround to show remedy on detail load -->
+        <attribute name="causefailurelist" query="(select failurelist from failurelist fl where fl.failurecode = (select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid) and fl.orgid = !@orgid and fl.type = 'CAUSE')" type="varchar"/>
       </attributes>
       <relationships>
 
@@ -98,12 +100,23 @@
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
+
+        <relationship to="causelist">
+          <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
         <relationship to="causelist" qualifier="offlinecauselist">
           <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
           <relationshipAttribute from="offlineproblemlist_.failurelist" to="parent" />
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
+        <relationship to="remedylist">
+          <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
+        </relationship>
         <relationship to="remedylist" qualifier="offlineremedylist">
           <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
           <relationshipAttribute from="offlinecauselist_.failurelist" to="parent" />
@@ -344,7 +357,6 @@
       </properties>
 
       <schemas>
-        <!--#region Online-->
         <schema id="fsoclist" stereotype="list" redeclaring="false" platform="web">
           <filters>
             <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px">
@@ -440,7 +452,6 @@
 
         </schema>
 
-
         <schema id="search" title="Location Search" stereotype="search" platform="web">
           <field attribute="status" hidden="true" default="INPRG,APPR,WOEN,ENRV,HOLD,WAPPR" searchoperation="eq"/>
           <field attribute="fslocationsearch" hidden="true" default="false" searchoperation="eq"/>
@@ -524,7 +535,6 @@
             <property key="search.startexpanded" value="true"/>
           </properties>
         </schema>
-
       </schemas>
     </application>
 
@@ -550,24 +560,6 @@
 
 
       <schemas>
-
-        <schema id="editdetail" redeclaring="false">
-
-          <customization position="worklog"/>
-          <customization position="woactivity"/>
-          <customization position="tooltrans"/>
-          <customization position="commlog"/>
-          
-          <commandbars>
-            <commandgroup position="actions" removeundeclared="true">
-              <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
-                       permissionexpression="@maximoVersionEvaluator.Is76" showexpression="@status != null &amp;&amp; @status.equalsAny('INPRG','APPR')" cssclasses="large-button"/>
-              <!-- Create new SR as Related Record -->
-<!--              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>-->
-              <!--              </container>-->
-            </commandgroup>
-          </commandbars>
-        </schema>
 
         <!--#region Work Package -->
         <schema id="workpackageschema" redeclaring="false" stereotype="detail" platform="web">
@@ -673,7 +665,6 @@
           </properties>
         </schema>
 
-
         <schema id="workpackageincomingcmdash" stereotype="list" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="wonum" label="WO#">
@@ -700,7 +691,6 @@
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
           </properties>
         </schema>
-
 
         <schema id="aworkpackagebuilddash" stereotype="list" platform="web" abstract="true">
           <filters>
@@ -754,7 +744,6 @@
           </section>
         </schema>
 
-
         <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages" stereotype="list">
           <filters>
             <filter attribute="#tier" style="width:300px" whereclause="tier like !@#value" />
@@ -791,12 +780,105 @@
             </field>
           </section>
         </schema>
-
         <!--#endregion-->
 
+        <!--#region Online-->
+        <schema id="adetail" redeclaring="false">
+          <customization position="owner"/>
+          <customization position="ownergroup"/>
+          
+          <customization position="location">
+            <association label="Location" target="location" labelfield="location_.description"
+                         dependantfields="siteid" enableexpression="!@siteid != null"
+                         extraprojectionvalues="facilityname, serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
+              <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
+              <renderer type="lookup" />
+            </association>
+          </customization>
 
+          <customization position="secondary">
+            <section>
+              <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true">
+                <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" orderbyfield="sequence"/>
+                <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;"/>
+              </composition>
 
+              <section orientation="horizontal">
+                <header displacement="ontop" label="Failure Reporting" params="fieldset=true" />
+                <renderer type="default" params="childinputsize=large" />
 
+                <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                  <renderer type="lookup" />
+                  <event type="afterchange" service="fsWorkOrderService" method="failureClassChanged"/>
+                </association>
+                <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                  <renderer type="lookup"  />
+                  <dataprovider prefilterfunction="FilterProblemCodes" />
+                  <event type="afterchange" service="fsWorkOrderService" method="problemCodeChanged"/>
+                </association>
+                
+                <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="causelist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                  <renderer type="lookup" />
+                  <dataprovider prefilterfunction="FilterCauses" />
+                  <event type="afterchange" service="fsWorkOrderService" method="causeChanged"/>
+                </association>
+
+                <!-- Used to find cause assoc option on detail load -->
+                <field hidden="true" attribute="failurelist"/>
+                
+                
+                
+                <!--field hidden="true" attribute="causefailurelist"/--> <!-- Used to find remedy assoc option on detail load -->
+                
+                <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="remedylist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
+                  <renderer type="lookup" />
+                  <dataprovider prefilterfunction="FilterRemedies" />
+                </association>
+
+                <section id="attachmentsection"/>
+              </section>
+            </section>
+          </customization>
+        </schema>
+        
+        
+        <schema id="editdetail" redeclaring="false" parentschema="adetail">
+          <customization position="worklog"/>
+          <customization position="woactivity"/>
+          <customization position="tooltrans"/>
+          <customization position="commlog"/>
+
+          <customization position="siteidinnersection">
+            <field attribute="siteid" hidden="true"/>
+            <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
+            <field attribute="schedstart" label="Scheduled Start Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+            </field>
+          </customization>
+          
+          <commandbars>
+            <commandgroup position="actions" removeundeclared="true">
+              <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
+                       permissionexpression="@maximoVersionEvaluator.Is76" showexpression="@status != null &amp;&amp; @status.equalsAny('INPRG','APPR')" cssclasses="large-button"/>
+              <!-- Create new SR as Related Record -->
+              <!--              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>-->
+              <!--              </container>-->
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" redeclaring="false" parentschema="adetail" platform="web">
+          <customization position="siteidinnersection">
+            <association label="Site" target="siteid" labelfield="site_.description" requiredexpression="true" extraprojectionvalues="orgid">
+              <renderer type="lookup" />
+              <event type="afterchange" method="adjustOrgId" service="genericTicketService"/>
+            </association>
+            <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
+            <field attribute="schedstart" label="Scheduled Start Date">
+              <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+            </field>
+          </customization>
+        </schema>
 
         <schema id="readonlyfixedlist" stereotype="list.modal.readonly" platform="web">
           <field attribute="wonum" label="WO#" >
@@ -818,7 +900,6 @@
             <property key="commandbar.bottom" value="bottom.confirmation"/>
           </properties>
         </schema>
-
 
         <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" redeclaring="false" platform="web">
           <customization position="classstructureid">
@@ -888,7 +969,6 @@
           </commandbars>
         </schema>
 
-
         <schema id="batchAssetSpreadSheet" title="Workorder Creation" stereotype="list.selection.spreadsheet" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="classificationid" hidden="true"/>
@@ -932,7 +1012,6 @@
           </commandbars>
         </schema>
 
-
         <schema id="batchLocationInlineEdit" title="Edit Workorder" stereotype="detail.modal" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
@@ -963,7 +1042,6 @@
           </commandbars>
         </schema>
 
-
         <schema id="batchAssetInlineEdit" title="Edit Workorder" stereotype="detail.modal" platform="web">
           <field attribute="workorderid" hidden="true"/>
           <field attribute="userIdFieldName" hidden="true"/>
@@ -993,9 +1071,6 @@
             </commandgroup>
           </commandbars>
         </schema>
-
-
-
         <!--#endregion-->
 
         <!--#region Mobile -->

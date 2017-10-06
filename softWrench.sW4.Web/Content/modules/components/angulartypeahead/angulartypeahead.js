@@ -206,7 +206,7 @@
             }
 
             scope.name = "angulartypeahead";
-            var log = $log.getInstance('angulartypeahed', ['association', 'lookup']);
+            var log = $log.getInstance('angulartypeahed', ['association', 'lookup','typeahead']);
             //setting defaults
             var rateLimit = scope.rateLimit || 500;
 
