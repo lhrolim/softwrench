@@ -1,5 +1,9 @@
 ﻿(function (angular) {
     "use strict";
+
+    // solves conflict between jquery-ui and bootstrap
+    const bootstrapButton = $.fn.button.noConflict(); // return $.fn.button to previously assigned value
+    $.fn.bootstrapBtn = bootstrapButton;            // give $().bootstrapBtn the Bootstrap functionality
     
     angular.module("sw_prelogin", ["webcommons_services", "ngSanitize", "angular-clipboard", "ui.tinymce"]);
 

@@ -72,6 +72,14 @@ module.exports = function (grunt) {
                     "jquery-ui/jquery-ui.css": "jquery-ui/themes/base/jquery-ui.min.css"
                 }
             },
+            imgs: {
+                options: {
+                    destPrefix: "<%= app.vendor %>/css"
+                },
+                files: {
+                    "jquery-ui/images": "jquery-ui/themes/base/images/*"
+                }
+            },
             fonts: {
                 options: {
                     destPrefix: "<%= app.vendor %>/css"
@@ -257,7 +265,7 @@ module.exports = function (grunt) {
     //#endregion
 
     //#region cutom tasks
-    grunt.registerTask("copyAll", ["clean:vendor", "bowercopy:css", "bowercopy:fonts", "bowercopy:scripts"]);
+    grunt.registerTask("copyAll", ["clean:vendor", "bowercopy:css", "bowercopy:imgs", "bowercopy:fonts", "bowercopy:scripts"]);
     grunt.registerTask("default", ["copyAll", "sass:dev"]);
     //#endregion
 };

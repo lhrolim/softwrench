@@ -139,6 +139,14 @@ module.exports = function (grunt) {
                     ]
                 }
             },
+            imgs: {
+                options: {
+                    destPrefix: "<%= app.dist %>/css"
+                },
+                files: {
+                    "images": "jquery-ui/themes/base/images/*"
+                }
+            },
             scripts: {
                 options: {
                     destPrefix: "<%= app.vendor %>/scripts"
@@ -618,7 +626,7 @@ module.exports = function (grunt) {
 
     //#region customTasks
     grunt.registerTask("cleanAll", ["clean:vendor", "clean:tmp", "clean:dist"]);
-    grunt.registerTask("copyAll", ["bowercopy:css", "bowercopy:fonts", "bowercopy:scripts"]);
+    grunt.registerTask("copyAll", ["bowercopy:css", "bowercopy:imgs", "bowercopy:fonts", "bowercopy:scripts"]);
 
     var defaultTasks = [
         "sass:prod", // compile scss sources

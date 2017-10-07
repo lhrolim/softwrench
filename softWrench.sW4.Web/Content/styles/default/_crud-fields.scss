@@ -198,15 +198,7 @@ textarea .readonly {
     overflow: hidden;
     padding: 0;
     vertical-align: middle;
-    width: 100%;
-
-    .ui-icon {
-        position: absolute;
-        margin-top: -5px;
-        top: 50%;
-        left: 40%;
-        color: #000;
-    }
+    width: 100%;    
 }
 
 .ui-spinner-input {
@@ -228,6 +220,11 @@ textarea .readonly {
     background: #eee;
     border: 1px solid #ccc;
 }
+
+.ui-spinner-button:active{
+    border: 0px !important;
+    background: $cts_gray !important;
+} 
 
 .ui-spinner-up {
     top: 0;
