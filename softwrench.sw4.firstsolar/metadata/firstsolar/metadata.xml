@@ -783,6 +783,12 @@
         <!--#endregion-->
 
         <!--#region Online-->
+        <schema id="list" redeclaring="false" platform="web">
+          <customization position="+status">
+            <field attribute="location_.facilityname" label="Facility Name"/>
+          </customization>
+        </schema>
+        
         <schema id="adetail" redeclaring="false">
           <customization position="owner"/>
           <customization position="ownergroup"/>
