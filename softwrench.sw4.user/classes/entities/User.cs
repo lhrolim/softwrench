@@ -255,6 +255,7 @@ namespace softwrench.sw4.user.classes.entities {
             MaximoPersonId = MaximoPersonId ?? dbUSer.MaximoPersonId;
             ChangePassword = ChangePassword ?? dbUSer.ChangePassword;
             Locked = Locked ?? dbUSer.Locked;
+            PasswordExpirationTime = PasswordExpirationTime ?? dbUSer.PasswordExpirationTime;
         }
 
         public void MergeMaximoWithNewUser(User newUser) {
