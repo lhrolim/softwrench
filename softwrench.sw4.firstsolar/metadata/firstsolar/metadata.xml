@@ -85,6 +85,7 @@
         <attribute name="planner" type="varchar" query="@firstSolarCustomGlobalFedService.PlannerQuery"/>
         <!-- workaround to show remedy on detail load -->
         <attribute name="causefailurelist" query="(select failurelist from failurelist fl where fl.failurecode = (select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid) and fl.orgid = !@orgid and fl.type = 'CAUSE')" type="varchar"/>
+        <attribute name="facilityname" query="@firstSolarCustomGlobalFedService.FacilityQuery" type="varchar"/>
       </attributes>
       <relationships>
 
@@ -571,7 +572,7 @@
           <field attribute="status"/>
           <field attribute="siteid"/>
           <field attribute="site_.description"/>
-          <field attribute="location_.facilityname"/>
+          <field attribute="facilityname"/>
           <field attribute="pm_.description"/>
           <field attribute="orgid"/>
           <field attribute="assetnum"/>
@@ -645,7 +646,7 @@
           <field attribute="planner" label="Planner/ Scheduler">
             <renderer type="default" params="width=13%" />
           </field>
-          <field attribute="location_.facilityname" label="Site Name">
+          <field attribute="facilityname" label="Site Name">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="asset_.description" label="Asset">
@@ -674,7 +675,7 @@
           <field attribute="planner" label="Planner/ Scheduler">
             <renderer type="default" />
           </field>
-          <field attribute="location_.facilityname" label="Site Name">
+          <field attribute="facilityname" label="Site Name">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="asset_.description" label="Asset">
@@ -710,7 +711,7 @@
           <field attribute="planner" label="Planner/ Scheduler">
             <renderer type="default" params="width=13%" />
           </field>
-          <field attribute="location_.facilityname" label="Site Name">
+          <field attribute="facilityname" label="Site Name">
             <renderer type="default" params="width=8%" />
           </field>
           <field attribute="asset_.description" label="Asset">
@@ -785,7 +786,7 @@
         <!--#region Online-->
         <schema id="list" redeclaring="false" platform="web">
           <customization position="+status">
-            <field attribute="location_.facilityname" label="Facility Name"/>
+            <field attribute="facilityname" label="Facility Name"/>
           </customization>
         </schema>
         
@@ -856,6 +857,7 @@
 
           <customization position="siteidinnersection">
             <field attribute="siteid" hidden="true"/>
+            <!-- location_.facilityname to update when location changes-->
             <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
@@ -879,6 +881,7 @@
               <renderer type="lookup" />
               <event type="afterchange" method="adjustOrgId" service="genericTicketService"/>
             </association>
+            <!-- location_.facilityname to update when location changes-->
             <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>

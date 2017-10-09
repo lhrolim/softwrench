@@ -206,7 +206,7 @@
                   <renderer type="lookup" params="avoidautofocus=true"/>
                 </association>
 
-                <field label="Site Name" attribute="#workorder_.location_.facilityname" readonly="true"/>
+                <field label="Site Name" attribute="#workorder_.facilityname" readonly="true"/>
 
                 <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location" >
                   <renderer type="lookup" params="application=asset;schemaId=assetLookupList;hidecode=true"/>
