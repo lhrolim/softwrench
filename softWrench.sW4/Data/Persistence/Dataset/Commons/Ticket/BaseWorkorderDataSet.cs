@@ -43,9 +43,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var baseDetail = await base.GetApplicationDetail(application, user, request);
-            if (request.IsEditionRequest) {
-                var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ?",
-                    baseDetail.ResultObject["wonum"]);
+            if (request.IsEditionRequest)
+            {
+                var siteid = baseDetail.ResultObject["siteid"];
+
+                var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ? and siteid=?",
+                    baseDetail.ResultObject["wonum"],siteid);
                 foreach (var item in items) {
                     var type = item["type"];
                     var projectedFieldName = "";
@@ -53,9 +56,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
                         projectedFieldName = "#problemlist_.failurelist";
                     } else if (type.EqualsIc("CAUSE")) {
                         projectedFieldName = "#causelist_.failurelist";
+                        baseDetail.ResultObject.SetAttribute("fr1code", item["failurecode"]);
                     } else {
-                        //remedy is useless as no one relies on him
-                        continue;
+                        projectedFieldName = "#remedylist_.failurelist";
+                        baseDetail.ResultObject.SetAttribute("fr2code", item["failurecode"]);
                     }
                     baseDetail.ResultObject.SetAttribute(projectedFieldName, item["linenum"]);
                 }
