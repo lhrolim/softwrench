@@ -106,8 +106,8 @@
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6449.16347, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6449.16347\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.user, Version=1.4.6462.35524, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.user.1.4.6462.35524\lib\net46\softwrench.sw4.user.dll</HintPath>
+    <Reference Include="softwrench.sw4.user, Version=1.4.6491.20823, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.4.6491.20823\lib\net46\softwrench.sw4.user.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
