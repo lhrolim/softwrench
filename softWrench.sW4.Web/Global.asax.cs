@@ -75,7 +75,7 @@ namespace softWrench.sW4.Web {
                 ViewEngines.Engines.Add(new FixedWebFormViewEngine());
                 // to render the reports user controls (.ascx)            
                 Log4NetUtil.InitDefaultLog();
-                GlobalContext.Properties["user"] = new HttpContextUserNameProvider();
+//                GlobalContext.Properties["user"] = new HttpContextUserNameProvider();
                 Log.Info("*****Starting web app****************");
                 SetFixClient();
                 Log4NetUtil.ConfigureDevLogging();

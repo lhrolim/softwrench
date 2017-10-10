@@ -477,7 +477,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var schemaId = composition.Attribute(XmlMetadataSchema.ApplicationCompositionSchemaIdAttribute).ValueOrDefault("detail");
             var outputSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionOutputSchemaIdAttribute).ValueOrDefault((string)null);
             var printSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionPrintAttribute).ValueOrDefault("detail");
-            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault("lazy");
+            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault(inline ? "eager": "lazy");
             var fetchType = (FetchType)Enum.Parse(typeof(FetchType), fetchTypeStr, true);
 
             var dependantfields = composition.Attribute(XmlMetadataSchema.ApplicationCompositionDependantFieldsAttribute).ValueOrDefault((string)null);

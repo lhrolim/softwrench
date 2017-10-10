@@ -102,12 +102,6 @@
       <HintPath>..\packages\DotLiquid.1.8.0\lib\NET45\DotLiquid.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Easy.Logger, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Easy.Logger.3.1.0\lib\net40\Easy.Logger.dll</HintPath>
-    </Reference>
-    <Reference Include="Easy.Logger.Interfaces, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Easy.Logger.Interfaces.1.0.0\lib\net40\Easy.Logger.Interfaces.dll</HintPath>
-    </Reference>
     <Reference Include="FluentMigrator, Version=1.6.2.0, Culture=neutral, PublicKeyToken=aacfc7de5acabf05, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentMigrator.1.6.2\lib\40\FluentMigrator.dll</HintPath>
       <Private>True</Private>
@@ -392,7 +386,6 @@
     <Compile Include="Common\LogInfo.cs" />
     <Compile Include="Common\LogFilter.cs" />
     <Compile Include="Common\Log\CaptureResponseFilter.cs" />
-    <Compile Include="Common\Log\HttpContextUserNameProvider.cs" />
     <Compile Include="Common\Log\LogInfo.cs" />
     <Compile Include="Common\Log\MVCLogFilter.cs" />
     <Compile Include="Common\TestProxy.cs" />
