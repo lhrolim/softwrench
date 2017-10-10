@@ -162,9 +162,10 @@
             });
         }
 
+
         // listen to a location change to redirect on browser back and forward navigation
         $scope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
-            if (newUrl === oldUrl || oldUrl && oldUrl.endsWith(location.pathname)) {
+            if (newUrl === oldUrl || oldUrl && oldUrl.contains(location.pathname)) {
                 return false;
             }
 
