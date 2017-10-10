@@ -1273,7 +1273,7 @@
             <event type="afterchange" service="generalsrService" method="afterchangeowner" />
           </association>
           <association label="Owner Group:" target="ownergroup" labelfield="persongroup_.description" requiredexpression="true" hideDescription="false">
-            <dataprovider prefilterfunction="FilterByPersonGroup" />
+            <dataprovider metadataid="persongroup" />
             <renderer type="lookup" params="inputsize=medium" />
           </association>
           <section>
