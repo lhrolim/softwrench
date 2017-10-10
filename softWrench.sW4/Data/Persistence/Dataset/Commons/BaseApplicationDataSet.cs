@@ -233,7 +233,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 foreach (var compositionEntry in applicationCompositionSchemas) {
 
                     if (prefetchCompositions || FetchType.Eager.Equals(compositionEntry.Value.FetchType) ||
-                        compositionEntry.Value.INLINE || compositionList.Contains(compositionEntry.Key)) {
+                        compositionList.Contains(compositionEntry.Key)) {
                         compostionsToUse.Add(compositionEntry.Key, compositionEntry.Value);
                     }
                 }
