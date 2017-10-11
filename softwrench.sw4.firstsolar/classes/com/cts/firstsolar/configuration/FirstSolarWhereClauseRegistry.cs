@@ -61,8 +61,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         private const string TodayWhereClause =
                 @"(workorder.siteid in ('1803', '1808', '1801', '4801')) and workorder.status not in ('MISSD','COMP','COMP-PEND','CAN','CLOSE') and ({0})
-                and istask = 0 and historyflag = 0 and worktype is not null and wonum in (select assignment.wonum from assignment where workorder.wonum=assignment.wonum and workorder.orgid=assignment.orgid 
+                and istask = 0 and historyflag = 0 and worktype is not null and workorder.wonum in (select assignment.wonum from assignment where workorder.wonum=assignment.wonum and workorder.orgid=assignment.orgid 
                 and assignment.status='ASSIGNED' and cast (assignment.scheduledate as date) = cast (getdate() as date) and assignment.laborcode in (select labor.laborcode from labor where labor.personid= @personid))";
+
+
+        private const string PastMyWhereClause =
+            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+            and cast (assignment.scheduledate as date) < cast (getdate() as date) and
+            exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
+                and a.laborcode = '@user.properties['laborcode']')";
+
+        private const string FutureMyWhereClause =
+            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+            and cast (assignment.scheduledate as date) > cast (getdate() as date) and
+            exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
+                and a.laborcode = '@user.properties['laborcode']')";
+
 
         private const string PastWhereClause =
             @"woeq4 = 1 
@@ -192,6 +206,49 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         public string TodayWhereClauseMethod() {
             return DoBuildQuery(TodayWhereClause, "workorder.location");
         }
+
+
+        #region MyAssignmentsDash
+
+        public string TodayWhereClauseForDashMethod() {
+            return DoBuildQuery(TodayWhereClause.Replace("workorder.", "workorder_."), "workorder_.location");
+        }
+
+        public string PastWhereClauseForDashMethod() {
+            return DoBuildQuery(PastMyWhereClause.Replace("workorder", "workorder_"), "workorder_.location");
+        }
+
+        public string FutureWhereClauseForDashMethod() {
+            return DoBuildQuery(FutureMyWhereClause.Replace("workorder", "workorder_"), "workorder_.location");
+        }
+
+        public string AllWhereClauseForDashMethod() {
+            return DoBuildQuery(WOAssignedWhereClause.Replace("workorder", "workorder_"), "workorder_.location");
+        }
+
+        #endregion
+
+        #region OtherDash
+
+        public string SchedWhereClauseForDashMethod() {
+            return DoBuildQuery(SchedWhereClause.Replace("workorder.", "workorder_."), "workorder_.location");
+        }
+
+        public string PNSchedWhereClauseForDashMethod() {
+            return DoBuildQuery(PnSchedWhereClause.Replace("workorder", "workorder_"), "workorder_.location");
+        }
+
+        public string NPNSchedWhereClauseForDashMethod() {
+            return DoBuildQuery(NPnSchedWhereClause.Replace("workorder", "workorder_"), "workorder_.location");
+        }
+
+        public string OtherWhereClauseForDashMethod() {
+            return DoBuildQuery(WOGroupByBaseWhereClause.Replace("workorder", "workorder_"), "workorder_.location");
+        }
+
+        #endregion
+
+
         public string PastWhereClauseMethod() {
             return DoBuildQuery(PastWhereClause, "workorder.location");
         }

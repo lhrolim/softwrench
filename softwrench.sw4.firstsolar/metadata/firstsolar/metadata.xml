@@ -56,6 +56,14 @@
         </attribute>
       </attributes>
 
+      <relationships>
+        <relationship to="workorder" collection="true">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+      </relationships>
+
       <connectorParameters>
         <connectorParameter key="dbtable" value="assignment" />
       </connectorParameters>
@@ -325,6 +333,34 @@
 
     <application name="assignment" title="Assignments" entity="assignment">
       <schemas>
+
+        <schema id="techdashboard" abstract="true" stereotype="list" platform="web">
+          <field attribute="workorder_.workorderid" hidden="true"/>
+            <field attribute="workorder_wopriority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=6%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+          </field>
+          <field attribute="workorder_.wonum" label="WO #">
+            <renderer type="default" params="width=10%"/>
+          </field>
+          <field attribute="laborcode" label="Labor">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="workorder_.description" label="Description">
+<!--            <renderer type="default" params="width=40%"/>-->
+          </field>
+          <field attribute="schedstartnotime" label="Schedule Start Date" hidden="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy"/>
+          </field>
+          <field attribute="scheduledate" label="Schedule Start Date">
+            <renderer type="datetime" params="width=20%"/>
+          </field>
+          <properties>
+            <property key="list.click.service" value="fsDashboardService.techDashClick"/>
+          </properties>
+        </schema>
+
+
+        
         <list platform="mobile" title="WO - Assigned">
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="laborcode" label="Labor" qualifier="featured"/>

@@ -126,6 +126,10 @@ namespace softwrench.sw4.dashboard.classes.startup {
 
         [Transactional(DBType.Swdb)]
         public virtual void RegisterWhereClause(string application, string query, string alias, string metadataId) {
+            if (metadataId != null && !metadataId.StartsWith("dashboard:")) {
+                metadataId = "dashboard:" + metadataId;
+            }
+
             var lookupContext = new ApplicationLookupContext { MetadataId = metadataId };
 
             _whereClauseFacade.Register(application, query, new WhereClauseRegisterCondition {

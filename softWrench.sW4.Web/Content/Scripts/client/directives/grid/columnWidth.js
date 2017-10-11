@@ -235,7 +235,7 @@
         }
 
         if (!minWidth) {
-            minWidth = '1024px';
+            minWidth = '800px';
         }
 
         //build listgrid min-width rules

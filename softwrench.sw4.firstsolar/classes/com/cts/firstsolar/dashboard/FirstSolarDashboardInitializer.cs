@@ -13,8 +13,24 @@ using softWrench.sW4.Configuration.Services.Api;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
     public class FirstSolarDashboardInitializer : ISWEventListener<ApplicationStartedEvent>, IOrdered {
 
-        public const string CorrectiveMaintenanceDashAlias = "fs.cmmaintenance";
 
+        public const string TechnicianMyAssignmentsDash = "fs.techmyassignments";
+
+        public const string TodayPanel = "fs.myassignments.today";
+        public const string PastPanel = "fs.myassignments.past";
+        public const string FuturePanel = "fs.myassignments.future";
+        public const string MyAssignmentsAllPanel = "fs.myassignments.all";
+
+        public const string TechnicianGroupAssignmentDash = "fs.groupassignments";
+
+        public const string ScheduledPanel = "fs.groupassignments.scheduled";
+        public const string PlannedNotScheduledPanel = "fs.groupassignments.pnscheduled";
+        public const string NPlannedNotScheduledPanel = "fs.groupassignments.npnscheduled";
+        public const string AssignedToOthersPanel = "fs.groupassignments.assignothers";
+
+
+
+        public const string CorrectiveMaintenanceDashAlias = "fs.cmmaintenance";
         public const string PreventiveMaintenanceDashAlias = "fs.pmmaintenance";
 
 
@@ -58,18 +74,35 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             var cmDash = DashboardInitializationService.FindByAlias(CorrectiveMaintenanceDashAlias) ??
                 DashboardInitializationService.CreateDashboard("Corrective Maintenance", CorrectiveMaintenanceDashAlias, new List<DashboardBasePanel>());
 
+            var myaDash = DashboardInitializationService.FindByAlias(TechnicianMyAssignmentsDash) ??
+                DashboardInitializationService.CreateDashboard("My Assignments", TechnicianMyAssignmentsDash, new List<DashboardBasePanel>());
+
+            var groupaDash = DashboardInitializationService.FindByAlias(TechnicianGroupAssignmentDash) ??
+                          DashboardInitializationService.CreateDashboard("Group Assignments", TechnicianGroupAssignmentDash, new List<DashboardBasePanel>());
+
             var pmDash = DashboardInitializationService.FindByAlias(PreventiveMaintenanceDashAlias) ??
-                                  DashboardInitializationService.CreateDashboard("Preventive Maintenance", PreventiveMaintenanceDashAlias, new List<DashboardBasePanel>(),1);
+                                  DashboardInitializationService.CreateDashboard("Preventive Maintenance", PreventiveMaintenanceDashAlias, new List<DashboardBasePanel>(), 1);
 
             cmDash.Application = "_WorkPackage";
             pmDash.Application = "_WorkPackage";
+
+            //so that they are visible to workorder allowed users
+            //TODO: security group dashboard selection
+            myaDash.Application = "workorder";
+            groupaDash.Application = "workorder";
+
             pmDash.PreferredOrder = 1;
+            cmDash.PreferredOrder = 2;
+
+            myaDash.PreferredOrder = 3;
+            groupaDash.PreferredOrder = 4;
 
 
             Dao.Save(cmDash);
             Dao.Save(pmDash);
 
 
+            #region CM
             var panelsCM = new List<DashboardBasePanel> {
                 new DashboardGridPanel
                 {
@@ -95,15 +128,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Size = 12
                 },
             };
+            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290CMQuery(), "WoMaintenananceBuild290CM", "dashboard:" + BuildPanelAlias290CM);
+            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceCmDashQuery", "WoMaintenananceCmIncoming", "dashboard:" + IncomingPanelCmAlias);
+            DashboardInitializationService.AddPanelsToDashboard(cmDash, panelsCM);
+            #endregion
 
-
-            var panelsPM = new List<DashboardBasePanel> {
-
-
+            #region PM
+            var panelsPM = new List<DashboardBasePanel>{
                 new DashboardGridPanel
                 {
                     Alias = BuildPanelAlias290PM,
-                    Title = "29-0 Days Queue",
+                    Title = "Today",
                     Application = "workorder",
                     AppFields = "#wpnum,description,planner,facilityname,asset_.description,reportdate,schedstart,daysleft,#buildcomplete,#colorcode",
                     DefaultSortField = "daysleft",
@@ -133,22 +168,139 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Limit = 10,
                     Size = 12
                 }
-             
             };
-
-            #region CM
-            DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290CMQuery(), "WoMaintenananceBuild290CM", "dashboard:" + BuildPanelAlias290CM);
-            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceCmDashQuery", "WoMaintenananceCmIncoming", "dashboard:" + IncomingPanelCmAlias);
-            #endregion
-
-            #region PM
             DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild290PMQuery(), "WoMaintenananceBuild290PM", "dashboard:" + BuildPanelAlias290PM);
             DashboardInitializationService.RegisterWhereClause("workorder", FSDashboardWcBuilder.MaintenanceDashBuild30PQuery(), "WoMaintenananceBuild", "dashboard:" + BuildPanelAlias);
             DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarDashboardWcBuilder.MaintenanceDashQuery", "WoMaintenananceIncoming", "dashboard:" + IncomingPanelAlias);
+            DashboardInitializationService.AddPanelsToDashboard(pmDash, panelsPM);
             #endregion
 
-            DashboardInitializationService.AddPanelsToDashboard(cmDash, panelsCM);
-            DashboardInitializationService.AddPanelsToDashboard(pmDash, panelsPM);
+
+            #region AssignedToMe
+            var panelsTechMine = new List<DashboardBasePanel> {
+
+
+                new DashboardGridPanel
+                {
+                    Alias = TodayPanel,
+                    Title = "Today",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = PastPanel,
+                    Title = "Past",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = FuturePanel,
+                    Title = "Future",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = MyAssignmentsAllPanel,
+                    Title = "All",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+
+            };
+            DashboardInitializationService.AddPanelsToDashboard(myaDash, panelsTechMine);
+//
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.TodayWhereClauseForDashMethod", "TodayPanel", "dashboard:" + TodayPanel);
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.PastWhereClauseForDashMethod", "PastPanel", "dashboard:" + PastPanel);
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.FutureWhereClauseForDashMethod", "FuturePanel", "dashboard:" + FuturePanel);
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.AllWhereClauseForDashMethod", "AllPanel", "dashboard:" + MyAssignmentsAllPanel);
+
+
+            #endregion
+
+
+            #region Group
+            var panelsTechGroup = new List<DashboardBasePanel> {
+
+
+                new DashboardGridPanel
+                {
+                    Alias = ScheduledPanel,
+                    Title = "Scheduled",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = PlannedNotScheduledPanel,
+                    Title = "Planned Not Scheduled",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = NPlannedNotScheduledPanel,
+                    Title = "Not Planned Not Scheduled",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+                new DashboardGridPanel
+                {
+                    Alias = AssignedToOthersPanel,
+                    Title = "Assigned to Others",
+                    Application = "assignment",
+                    DefaultSortField = "scheduledate",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
+
+
+
+
+
+            };
+
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.SchedWhereClauseForDashMethod", "SchedPanel", "dashboard:" + ScheduledPanel);
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.PNSchedWhereClauseForDashMethod", "PNSchedPanel", "dashboard:" + PlannedNotScheduledPanel);
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.NPNSchedWhereClauseForDashMethod", "NPNSchedPanel", "dashboard:" + NPlannedNotScheduledPanel);
+            DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.OtherWhereClauseForDashMethod", "OtherPanel", "dashboard:" + AssignedToOthersPanel);
+
+            DashboardInitializationService.AddPanelsToDashboard(groupaDash, panelsTechGroup);
+
+            #endregion
+
+
 
             Log.Info("finishing dashboard registry");
         }

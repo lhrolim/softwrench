@@ -22,11 +22,35 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                 return;
             }
             var gridPanel = (DashboardGridPanel)panel;
-            if (ShouldSeeMaintenanceDash(user, gridPanel)) {
+            //TODO: refactor
+            if (ShouldSeeMaintenanceDash(user, gridPanel) || ShouldSeeTechnicianDash(user, gridPanel)) {
                 gridPanel.Visible = true;
-            } else if (ShouldNotSeeMaintenanceDash(user, gridPanel)) {
+            } else if (ShouldNotSeeMaintenanceDash(user, gridPanel) || ShouldNotSeeTechDash(user,gridPanel)) {
                 gridPanel.Visible = false;
             }
+        }
+
+        private bool ShouldSeeTechnicianDash(InMemoryUser user, DashboardGridPanel gridPanel) {
+            var baseCondition = !user.IsSwAdmin() && "assignment".Equals(gridPanel.Application) && !gridPanel.Visible && IsTechnicianDash(gridPanel);
+            if (!baseCondition) {
+                return false;
+            }
+
+            var permissions = user.MergedUserProfile.Permissions;
+            var wpPermission = permissions.FirstOrDefault(p => p.ApplicationName.Equals("workorder"));
+            return wpPermission != null && !wpPermission.HasNoPermissions;
+        }
+
+
+        protected virtual bool ShouldNotSeeTechDash(InMemoryUser user, DashboardGridPanel gridPanel) {
+            var baseCondition = !user.IsSwAdmin() && "assignment".Equals(gridPanel.Application) && gridPanel.Visible && IsTechnicianDash(gridPanel);
+            if (!baseCondition) {
+                return false;
+            }
+
+            var permissions = user.MergedUserProfile.Permissions;
+            var wpPermission = permissions.FirstOrDefault(p => p.ApplicationName.Equals("workorder"));
+            return wpPermission == null || wpPermission.HasNoPermissions;
         }
 
         protected virtual bool ShouldSeeMaintenanceDash(InMemoryUser user, DashboardGridPanel gridPanel) {
@@ -58,7 +82,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                 FirstSolarDashboardInitializer.BuildPanelAlias,
                 FirstSolarDashboardInitializer.BuildPanelAlias290PM,
                 FirstSolarDashboardInitializer.BuildPanelAlias290CM,
-                FirstSolarDashboardInitializer.IncomingPanelCmAlias
+                FirstSolarDashboardInitializer.IncomingPanelCmAlias,
+            });
+        }
+
+
+        protected virtual bool IsTechnicianDash(DashboardBasePanel panel) {
+            return panel.Alias.EqualsAny(new List<string>()
+            {
+                FirstSolarDashboardInitializer.TodayPanel,
+                FirstSolarDashboardInitializer.PastPanel,
+                FirstSolarDashboardInitializer.FuturePanel,
+                FirstSolarDashboardInitializer.MyAssignmentsAllPanel,
+                FirstSolarDashboardInitializer.ScheduledPanel,
+                FirstSolarDashboardInitializer.NPlannedNotScheduledPanel,
+                FirstSolarDashboardInitializer.PlannedNotScheduledPanel,
+                FirstSolarDashboardInitializer.AssignedToOthersPanel,
             });
         }
     }

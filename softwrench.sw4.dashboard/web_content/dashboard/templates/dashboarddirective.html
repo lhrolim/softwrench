@@ -11,6 +11,7 @@
              dnd-moved="dashboard.panels.splice($index, 1);panelMoved(panelDataSource)"
              dnd-disable-if="!canEdit"
              ng-if="isPanelVisible(panelDataSource)"
+             ng-style="{'min-height': panelDataSource.panel.size != 12 ? '309px' : '0px'}"
              class="column col-sm-{{ panelDataSource.panel.size }}">
 
             <div class="wrap">

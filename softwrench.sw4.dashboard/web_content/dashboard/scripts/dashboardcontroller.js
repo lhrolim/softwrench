@@ -10,8 +10,8 @@
                 if (scope.$last === false) {
                     return;
                 }
-                const log = $log.getInstance('dashboardrendered');
-                log.debug("finished rendering dashboards");
+                const log = $log.getInstance('dashboardrendered',["dashboard"]);
+                log.debug("finished rendering dashboards (still loading panels data)");
 
                 $rootScope.$broadcast(JavascriptEventConstants.TitleChanged, 'Dashboard');
                 $rootScope.$broadcast(DashboardEventConstants.FinishLoading);

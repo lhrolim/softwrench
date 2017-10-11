@@ -28,6 +28,10 @@
             this.redirectService.goToApplicationView("_WorkPackage", "adetail", "input", null, { id: datamap["#id"] });
         }
 
+        techDashClick(datamap, schema) {
+            this.redirectService.goToApplicationView("workorder", "detail", "input", null, { id: datamap["workorder_.workorderid"] });
+        }
+
 
     }
 
