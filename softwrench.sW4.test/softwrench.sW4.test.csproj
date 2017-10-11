@@ -296,6 +296,7 @@
     <Compile Include="Metadata\Parsing\XmlStereotypeMetadataParserTest.cs" />
     <Compile Include="Metadata\Parsing\XmlMCommandBarMetadataParserTest.cs" />
     <Compile Include="Metadata\Schema\ApplicationSchemaFactoryTest.cs" />
+    <Compile Include="Metadata\Schema\SchemaRedeclaringTest.cs" />
     <Compile Include="Metadata\SyncSchemaTest.cs" />
     <Compile Include="Metadata\Validator\SWDBMetadataXmlSourceInitializerTest.cs" />
     <Compile Include="offline\ClientStateJsonConverterTest.cs" />

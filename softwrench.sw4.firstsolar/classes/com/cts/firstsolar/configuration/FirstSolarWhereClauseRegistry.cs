@@ -6,6 +6,7 @@ using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -297,22 +298,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         private string DoBuildQuery(string queryToUse, string columnName) {
             var user = SecurityFacade.CurrentUser();
-            var locationQuery = BaseFacilityQuery(columnName);
+            var locationQuery = FirstSolarFacilityUtil.BaseFacilityQuery(columnName);
 
             var baseQuery = queryToUse.Fmt(locationQuery);
             return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
         }
 
-        private string BaseFacilityQuery(string columnName) {
-            var user = SecurityFacade.CurrentUser();
-            var sb = new StringBuilder();
-            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
-                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-                var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => f + "%"), true);
-                sb.AppendFormat("({0})", locationQuery);
-            }
-            return sb.ToString();
-        }
 
 
 
@@ -321,7 +312,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 return "";
             }
-            var byFacility = BaseFacilityQuery("location.location");
+            var byFacility = FirstSolarFacilityUtil.BaseFacilityQuery("location.location");
 
             var facilities = ((IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp]).ToList();
             return facilities.Contains("AVV") || facilities.Contains("avv") ? @" ({0}) or (location.type = 'storeroom' and location.description like 'avra%')".Fmt(byFacility) : byFacility;
@@ -335,11 +326,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
         public string LocAncestorWhereClauseByFacility() {
-            return BaseFacilityQuery("locancestor.ancestor");
+            return FirstSolarFacilityUtil.BaseFacilityQuery("locancestor.ancestor");
         }
 
         public string InventoryWhereClauseByFacility() {
-            return BaseFacilityQuery("inventory.location");
+            return FirstSolarFacilityUtil.BaseFacilityQuery("inventory.location");
         }
     }
 }

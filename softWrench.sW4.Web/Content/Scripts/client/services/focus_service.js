@@ -52,7 +52,11 @@ angular.module('sw_layout')
             this.setFocusOnIdx(schema, idx);
         },
 
-        setFocusOnIdx: function (schema,  idx, parameters ={}) {
+        setFocusOnIdx: function (schema, idx, parameters = {}) {
+            if (idx === -1) {
+                return;
+            }
+
             const log = $log.get("focusService#setFocusOnIdx", ["detail", "focus"]);
             if (schema.properties && schema.properties["detail.focus.allowmovingbackward"] === "true") {
                 parameters.allowmovingbackward = true;

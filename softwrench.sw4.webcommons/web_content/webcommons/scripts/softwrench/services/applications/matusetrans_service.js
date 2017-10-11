@@ -15,7 +15,7 @@ angular.module('sw_layout')
             const data = response.data;
             const resultObject = data.resultObject;
             if (resultObject.length > 0) {
-                parameters.fields['commoditygroup'] = resultObject[0].fields['commoditygroup'];
+                parameters.fields['commoditygroup'] = resultObject[0]['commoditygroup'];
             }
         });
     }
@@ -37,11 +37,11 @@ angular.module('sw_layout')
             const data = response.data;
             const resultObject = data.resultObject;
             if (resultObject.length === 1) {
-                parameters.fields['binnum'] = resultObject[0].fields['binnum'];
-                parameters.fields['lotnum'] = resultObject[0].fields['lotnum'];
+                parameters.fields['binnum'] = resultObject[0]['binnum'];
+                parameters.fields['lotnum'] = resultObject[0]['lotnum'];
                 
-                parameters.fields['curbal'] = resultObject[0].fields['curbal'];
-                parameters.fields['physcnt'] = resultObject[0].fields['physcnt'];
+                parameters.fields['curbal'] = resultObject[0]['curbal'];
+                parameters.fields['physcnt'] = resultObject[0]['physcnt'];
             } else if (resultObject.length <= 0) {
                 // no inventory item found, display error message
                 alertService.alert('This material is not available for use; please make another selection.');
@@ -63,7 +63,7 @@ angular.module('sw_layout')
             const data = response.data;
             const resultObject = data.resultObject;
             if (resultObject.length === 1) {
-                const fields = resultObject[0].fields;
+                const fields = resultObject[0];
                 const costtype = parameters.fields['costtype'];
                 if (costtype === 'STANDARD') {
                     parameters.fields['unitcost'] = fields.stdcost;
@@ -91,7 +91,7 @@ angular.module('sw_layout')
             const data = response.data;
             const resultObject = data.resultObject;
             if (resultObject.length > 0) {
-                const resultMap = resultObject[0].fields;
+                const resultMap = resultObject[0];
                 parameters.fields['costtype'] = resultMap['costtype'];
                 parameters.fields['itemsetid'] = resultMap['itemsetid'];
                 doCommodityGroupAssociation(parameters);

@@ -212,6 +212,7 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPCSLocationHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarPersonDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderMaterialsDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkPackageDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
     <Compile Include="classes\com\cts\firstsolar\FirstSolarOptWhereClauseRegistry.cs" />
@@ -261,6 +262,7 @@
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCompositionHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageEvaluationEmailHandler.cs" />
     <Compile Include="classes\com\cts\firstsolar\opt\FirstSolarWorkPackageCreationEmailHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolar\util\FirstSolarFacilityUtil.cs" />
     <Compile Include="classes\com\cts\firstsolar\util\FirstSolarOfflineMenuService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
