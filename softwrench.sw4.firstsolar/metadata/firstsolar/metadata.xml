@@ -355,6 +355,7 @@
         <property key="application.mainlistschema" value="fsoclist"/>
         <property key="application.maindetailschema" value="fsoceditdetail"/>
         <property key="application.maindetailnewschema" value="fsocnewdetail"/>
+        <property key="application.securitytitle" value="FSOC Work Orders"/>
       </properties>
 
       <schemas>
@@ -1225,7 +1226,7 @@
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
-        <property key="application.securitytitle" value="Technician Work Orders"/>
+        <property key="application.securitytitle" value="Work Orders"/>
       </properties>
     </application>
 

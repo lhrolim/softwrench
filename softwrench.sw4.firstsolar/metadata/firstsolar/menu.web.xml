@@ -5,14 +5,14 @@
   <reference id="asset"/>
   <reference id="location"/>
   
-  <container title="Technician Work Orders" tooltip="Click to access your techinician work orders" icon="fa fa-wrench" id="workorder" role="workorders">
-    <application id="TWO" icon="fa fa-table" title="Technician Work Orders" ref="workorder" schema="list" tooltip="Click to view your Techinician Work Order Grid"/>
-    <application id="NTWO" icon="fa fa-plus" title="New Techinician Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Techinician Work Order"/>
+  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders">
+    <application id="TWO" icon="fa fa-table" title="Work Orders" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
+    <application id="NTWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
   </container>
   
-  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="fsocworkorder" >
-    <application id="WO" icon="fa fa-table" title="Work Order Grid" ref="fsocworkorder" schema="fsoclist" tooltip="Click to view your Work Order Grid"/>
-    <application id="NWO" icon="fa fa-plus" title="New Work Order" ref="fsocworkorder" schema="fsocnewdetail" tooltip="Click to Create a New Work Order"/>
+  <container title="FSOC Work Orders" tooltip="Click to access your FSOC work orders" icon="fa fa-wrench" id="fsocworkorder" >
+    <application id="WO" icon="fa fa-table" title="FSOC Work Orders" ref="fsocworkorder" schema="fsoclist" tooltip="Click to view your FSOC Work Order Grid"/>
+    <application id="NWO" icon="fa fa-plus" title="New FSOC Work Order" ref="fsocworkorder" schema="fsocnewdetail" tooltip="Click to Create a New FSOC Work Order"/>
     <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
   </container>
   <container id="workpackage" title="Work Packages" icon="fa fa-arrow-circle-down">
