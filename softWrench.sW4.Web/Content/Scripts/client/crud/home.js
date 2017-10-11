@@ -162,10 +162,31 @@
             });
         }
 
+        function equalsButHashes(oldurl, newurl) {
+            if (!oldurl) {
+                return false;
+            }
+
+            const oldHashIdx = oldurl.indexOf("#");
+            const newHashIdx = newurl.indexOf("#");
+
+            let oldUrlParsed = oldurl;
+            let newUrlParsed = newurl;
+
+            if (oldHashIdx !== -1) {
+                oldUrlParsed = oldurl.substring(0, oldHashIdx);
+            }
+
+            if (newHashIdx !== -1) {
+                newUrlParsed = newurl.substring(0, newHashIdx);
+            }
+
+            return oldUrlParsed === newUrlParsed;
+        }
 
         // listen to a location change to redirect on browser back and forward navigation
         $scope.$on("$locationChangeSuccess", function (event, newUrl, oldUrl) {
-            if (newUrl === oldUrl || oldUrl && oldUrl.contains(location.pathname)) {
+            if (newUrl === oldUrl || equalsButHashes(oldUrl, newUrl) || (oldUrl && oldUrl.endsWith(location.pathname))) {
                 return false;
             }
 
