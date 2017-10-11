@@ -25,7 +25,7 @@
           <relationshipAttribute from="siteid" to="siteid"/>
           <relationshipAttribute query="historyflag=0"/>
         </relationship>
-        
+
         <relationship to="_CallOut_" qualifier="callOuts" collection="true">
           <relationshipAttribute from="id" to="workpackageid" primary="true"/>
         </relationship>
@@ -96,8 +96,8 @@
               <collectionproperties allowcreation="false" listschema="lostenergylist" allowupdate="false"/>
             </composition>
           </section>
-          
-          
+
+
           <section orientation="horizontal">
             <header label="Daily Update Meetings"  params="fieldset=true"/>
             <composition inline="true" relationship="dailyOutageMeetings" label="" detailschema="detail" outputschema="detailview" printschema="" fetchtype="lazy" >
@@ -116,8 +116,8 @@
               <renderer type="TABLE" params="mode=batch;composition.inline.addTitle=Action"/>
             </composition>
           </section>
-          
-          
+
+
         </componentdisplayable>
       </components>
 
@@ -158,13 +158,14 @@
             <renderer type="datetime"/>
           </field>
         </schema>
-        
-        
+
+
         <schema id="dashlist" stereotype="list" platform="online">
           <field attribute="id"/>
           <field attribute="wpnum"/>
           <field attribute="workorderid"/>
           <field attribute="buildcomplete"/>
+          <field attribute="nerc"/>
           <field attribute="tier"/>
         </schema>
 
@@ -265,18 +266,27 @@
             </section>
 
 
+            <!--            <section enableexpression="@wooutreq == true">-->
+            <!--              <header displacement="ontop" label="Outage Type" params="fieldset=true"/>-->
+            <!--              <optionfield attribute="outages" enableexpression="@wooutreq == true">-->
+            <!--                <renderer type="checkbox" params="maxrows=4"/>-->
+            <!--                <option label="1. Intercompany Outage" value="1"-->
+            <!--                        help="Will this outage remove MW’s from Production during the day?&lt;br/&gt;Will this outage require an inter-company clearance?&lt;br/&gt;Will this outage require more than 14 days notification to the SC? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>-->
+            <!--                <option label="2. Curtailment/Grid Control Outage" value="2" help="Will this outage remove MW’s from Production during the day?&lt;br/&gt;Will this outage require more than 14 days notification to the SC? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>-->
+            <!--                <option label="3. Change Control Outage" value="3" help="Is this outage to make changes covered under a Change control request (ePCR)?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>-->
+            <!--                <option label="4. Production/Relay Outage" value="4" help="Is this outage to make changes to any relay protection system? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>-->
+            <!--                <option label="5. Telemetry Outage" value="5" help="Is this a telemetry outage?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>-->
+            <!--                <option label="6. Met-Station Outage" value="6" help="Is this outage to a Met station that is sending data to an outside entity?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier2')"/>-->
+            <!--                <option label="7. Non-Coordinated Outage" value="7" help="All others" enableexpression="@tier != null &amp;&amp;@tier.equalsAny('tier3')"/>-->
+            <!--              </optionfield>-->
+            <!--            </section>-->
+
             <section enableexpression="@wooutreq == true">
-              <header displacement="ontop" label="Outage Type" params="fieldset=true"/>
-              <optionfield attribute="outages" enableexpression="@wooutreq == true">
-                <renderer type="checkbox" params="maxrows=4"/>
-                <option label="1. Intercompany Outage" value="1"
-                        help="Will this outage remove MW’s from Production during the day?&lt;br/&gt;Will this outage require an inter-company clearance?&lt;br/&gt;Will this outage require more than 14 days notification to the SC? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
-                <option label="2. Curtailment/Grid Control Outage" value="2" help="Will this outage remove MW’s from Production during the day?&lt;br/&gt;Will this outage require more than 14 days notification to the SC? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
-                <option label="3. Change Control Outage" value="3" help="Is this outage to make changes covered under a Change control request (ePCR)?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
-                <option label="4. Production/Relay Outage" value="4" help="Is this outage to make changes to any relay protection system? " enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
-                <option label="5. Telemetry Outage" value="5" help="Is this a telemetry outage?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier1','tier2')"/>
-                <option label="6. Met-Station Outage" value="6" help="Is this outage to a Met station that is sending data to an outside entity?" enableexpression="@tier != null &amp;&amp; @tier.equalsAny('tier2')"/>
-                <option label="7. Non-Coordinated Outage" value="7" help="All others" enableexpression="@tier != null &amp;&amp;@tier.equalsAny('tier3')"/>
+              <header displacement="ontop" label="NERC Compliance" params="fieldset=true"/>
+              <optionfield attribute="nerc" default="no" defaultexpression="no">
+                <renderer type="radio" />
+                <option label="Yes" value="true" />
+                <option label="No" value="false" />
               </optionfield>
             </section>
           </section>
@@ -387,7 +397,7 @@
                 <header label="Component Tests - Click Save to Create New Outage Action" params="fieldset=true"/>
 
                 <section resourcepath="/Content/Customers/firstsolar/htmls/templates/othertestsmodal.html"/>
-                
+
                 <section orientation="horizontal">
                   <optionfield label="Components" attribute="engcomponents">
                     <renderer type="checkbox" params="layout=left"/>
@@ -417,7 +427,7 @@
                       <option  label="Calisto - Oil Sample &amp; Dissolved Gas Analysis" value="gsucaloil"/>
                       <option  label="Visual Inspection" value="gsuimvisual"/>
                       <option  label="Other Test" value="gsu2othertest"/>
-                     
+
 
                       <event service="fsworkpackageService" method="testChecked" type="afterchange" />
                       <event service="fsworkpackageService" method="checkSectionRefresh" type="beforechange" />
@@ -557,7 +567,7 @@
 
                   <optionfield attribute="feedertranstests" label="Feeder Testing - Transformer Testing" showexpression="@engcomponents !=null &amp;&amp; @engcomponents.indexOf('FEEDER')!= -1 " qualifier="feeder">
                     <renderer type="checkbox" params="layout=left"/>
-                    
+
                     <option  label="Transformer Turns Ratio (TTR) Test" value="feedtransttr"/>
                     <option  label="Megger Test" value="feedtransmegger"/>
                     <option  label="Other Test" value="feedtransothertest" />
@@ -665,7 +675,7 @@
           <association label="Work Order" labelfield="relatedworkorder_.description" target="wonum" extraprojectionvalues="workorderid, siteid, orgid" requiredexpression="true">
             <renderer type="lookup" params="application=workorder;schemaId=wonumlookupwithwtype;"/>
           </association>
-          
+
           <commandbars>
             <commandgroup position="modal.detail.primary" platform="web">
               <command id="customsave" icon="fa-check" service="fsWorkPackageRelatedRecordsService" method="save" parameters="datamap" label="Save" position="-save" primary="true"/>

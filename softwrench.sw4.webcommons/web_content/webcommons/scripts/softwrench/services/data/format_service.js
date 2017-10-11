@@ -86,15 +86,20 @@
                     }
                     return doFormatDate(value, dateFormat, false);
                 }
-            } else if (field.type == "ApplicationSection" && field.parameters['format']) {
+            } else if (field.type === "ApplicationSection" && field.parameters['format']) {
                 if (field.parameters['format'] != null && value != null) {
                     dateFormat = field.parameters['format'];
                     return doFormatDate(value, dateFormat, false);
                 }
             } else if (field.rendererParameters != undefined && field.rendererParameters['formatter'] != null) {
-                if (field.rendererParameters['formatter'] == 'numberToBoolean') {
+                if (field.rendererParameters['formatter'] === 'numberToBoolean') {
                     value = value == 1 ? i18NService.get18nValue('general.yes', 'Yes') : i18NService.get18nValue('general.no', 'No');
                 }
+
+                if (field.rendererParameters['formatter'] === 'booltostring') {
+                    value = value === true ? "true" : "false";
+                }
+
                 else if (field.rendererParameters['formatter'] === 'numberToAbs') {
                     if (!isNaN(value)) {
                         value = Math.abs(value);

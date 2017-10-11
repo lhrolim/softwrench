@@ -250,6 +250,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 return null;
             }
 
+            //TODO: make it generic
+            var nercBoolean = result.ResultObject.GetBooleanAttribute("nerc");
+            result.ResultObject.SetAttribute("nerc",nercBoolean?.ToString().ToLower());
+
             var defaultEmail = ConfigFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultMeToEmailKey);
             result.ResultObject.SetAttribute("defaultmetoemail", defaultEmail);
 

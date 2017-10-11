@@ -721,9 +721,6 @@
           <field attribute="reportdate" label="Reported Date">
             <renderer type="datetime" params="width=10%" />
           </field>
-          <field attribute="schedstart" label="Scheduled Start Date">
-            <renderer type="datetime" params="width=15%" />
-          </field>
           <section id="daysleft"/>
 
 
@@ -740,15 +737,19 @@
             </field>
           </section>
           <section id="daysleft">
+            <field attribute="schedstart" label="Scheduled Start Date">
+              <renderer type="datetime" params="width=15%" />
+            </field>
             <field attribute="daysleft" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
             </field>
           </section>
         </schema>
 
-        <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages" stereotype="list">
+        <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages" stereotype="list" redeclaring="false">
           <filters>
             <filter attribute="#tier" style="width:300px" whereclause="tier like !@#value" />
+            <booleanfilter attribute="#nerc" style="width:300px" whereclause="nerc like !@#value" />
           </filters>
           <properties>
             <!--reusing same service-->
@@ -756,7 +757,12 @@
             <property key="schema.aliasurl" value="/web/_workpackage/"/>
             <property key="list.preventnoresultsnew" value="true"/>
           </properties>
+
           <section id="daysleft">
+            <field attribute="worktype" label="Work Type"/>
+            <field attribute="#nerc" label="Nerc Compliance?">
+              <renderer type="checkbox"/>
+            </field>
             <field attribute="#tier" label="Tier">
               <renderer type="default" params="showsort=false;width=6%;" />
             </field>
@@ -777,6 +783,9 @@
             </field>
           </section>
           <section id="daysleft">
+            <field attribute="schedstart" label="Scheduled Start Date">
+              <renderer type="datetime" params="width=15%" />
+            </field>
             <field attribute="daysleftcm" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
             </field>
@@ -790,11 +799,11 @@
             <field attribute="facilityname" label="Facility Name"/>
           </customization>
         </schema>
-        
+
         <schema id="adetail" redeclaring="false">
           <customization position="owner"/>
           <customization position="ownergroup"/>
-          
+
           <customization position="location">
             <association label="Location" target="location" labelfield="location_.description"
                          dependantfields="siteid" enableexpression="!@siteid != null"
@@ -824,7 +833,7 @@
                   <dataprovider prefilterfunction="FilterProblemCodes" />
                   <event type="afterchange" service="fsWorkOrderService" method="problemCodeChanged"/>
                 </association>
-                
+
                 <association label="Cause" enableexpression="@problemcode!=null" target="fr1code" labelfield="causelist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
                   <renderer type="lookup" />
                   <dataprovider prefilterfunction="FilterCauses" />
@@ -833,11 +842,12 @@
 
                 <!-- Used to find cause assoc option on detail load -->
                 <field hidden="true" attribute="failurelist"/>
-                
-                
-                
-                <!--field hidden="true" attribute="causefailurelist"/--> <!-- Used to find remedy assoc option on detail load -->
-                
+
+
+
+                <!--field hidden="true" attribute="causefailurelist"/-->
+                <!-- Used to find remedy assoc option on detail load -->
+
                 <association label="Remedy" enableexpression="@fr1code!=null" target="fr2code" labelfield="remedylist_.description" hideDescription="false" extraprojectionvalues="failurelist" orderbyfield="failurecode asc">
                   <renderer type="lookup" />
                   <dataprovider prefilterfunction="FilterRemedies" />
@@ -848,8 +858,8 @@
             </section>
           </customization>
         </schema>
-        
-        
+
+
         <schema id="editdetail" redeclaring="false" parentschema="adetail">
           <customization position="worklog"/>
           <customization position="woactivity"/>
@@ -864,7 +874,7 @@
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
             </field>
           </customization>
-          
+
           <commandbars>
             <commandgroup position="actions" removeundeclared="true">
               <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
@@ -1427,8 +1437,8 @@
       </schemas>
 
     </application>
-    
-    
+
+
     <application name="labtrans" entity="labtrans" title="Labor">
       <schemas>
         <detail stereotype="detail" title="Labor Reporting" platform="mobile" redeclaring="false">
@@ -1446,7 +1456,7 @@
         <schema id="wolabors" redeclaring="false">
           <customization position="linecost"/>
         </schema>
-        
+
 
         <detail stereotype="detail" title="Labor Reporting" platform="web" redeclaring="false">
           <customization position="gldebitacct"/>

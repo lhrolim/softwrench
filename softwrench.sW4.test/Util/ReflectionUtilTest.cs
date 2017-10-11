@@ -41,10 +41,28 @@ namespace softwrench.sW4.test.Util {
             Assert.IsNull(test.L2);
         }
 
+
+        [TestMethod]
+        public void TestBooleanConversion() {
+            var test = new TestBoolean();
+            ReflectionUtil.SetProperty(test, "b1", "",true);
+            Assert.IsNull(test.b1);
+
+            ReflectionUtil.SetProperty(test, "b1", "1",true);
+            Assert.IsTrue(test.b1.Value);
+            
+        }
+
         class Test
         {
             public long L1 { get; set; }
             public long? L2 { get; set; }
+
+        }
+
+
+        class TestBoolean {
+            public Boolean? b1 { get; set; }
 
         }
 

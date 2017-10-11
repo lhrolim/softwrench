@@ -111,35 +111,35 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var woOutReq = woData.GetIntAttribute("outreq");
             var outagereq = woOutReq != null && woOutReq.Value > 0 ? "yes" : "no";
 
-            var outageTypeList = new List<string>();
-            if (package.OutagesList != null && package.OutagesList.Any()) {
-                package.OutagesList.ForEach(gen => {
-                    switch (gen.Value) {
-                        case "1":
-                            outageTypeList.Add("1. Intercompany Outage");
-                            break;
-                        case "2":
-                            outageTypeList.Add("2. Curtailment/Grid Control Outage");
-                            break;
-                        case "3":
-                            outageTypeList.Add("3. Change Control Outage");
-                            break;
-                        case "4":
-                            outageTypeList.Add("4. Production/Relay Outage");
-                            break;
-                        case "5":
-                            outageTypeList.Add("5. Telemetry Outage");
-                            break;
-                        case "6":
-                            outageTypeList.Add("6. Met-Station Outage");
-                            break;
-                        case "7":
-                            outageTypeList.Add("7. Non-Coordinated Outage");
-                            break;
-                    }
-                });
-            }
-            var outagetype = string.Join(", ", outageTypeList);
+//            var outageTypeList = new List<string>();
+//            if (package.OutagesList != null && package.OutagesList.Any()) {
+//                package.OutagesList.ForEach(gen => {
+//                    switch (gen.Value) {
+//                        case "1":
+//                            outageTypeList.Add("1. Intercompany Outage");
+//                            break;
+//                        case "2":
+//                            outageTypeList.Add("2. Curtailment/Grid Control Outage");
+//                            break;
+//                        case "3":
+//                            outageTypeList.Add("3. Change Control Outage");
+//                            break;
+//                        case "4":
+//                            outageTypeList.Add("4. Production/Relay Outage");
+//                            break;
+//                        case "5":
+//                            outageTypeList.Add("5. Telemetry Outage");
+//                            break;
+//                        case "6":
+//                            outageTypeList.Add("6. Met-Station Outage");
+//                            break;
+//                        case "7":
+//                            outageTypeList.Add("7. Non-Coordinated Outage");
+//                            break;
+//                    }
+//                });
+//            }
+//            var outagetype = string.Join(", ", outageTypeList);
 
 
             var interdocs = "N/A";
@@ -151,6 +151,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                     interdocs = "Source of Power Clearance";
                     break;
             }
+
+            //TODO: review email
+            var nerc = package.Nerc;
 
             return Hash.FromAnonymousObject(new
             {
@@ -166,7 +169,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
                 schedstart = FmtDateTime(woData.GetAttribute("schedstart") as DateTime?),
                 tier,
                 outagereq,
-                outagetype,
+                nerc,
                 interdocs,
                 operationprocedured = package.OutageType,
                 headerurl = GetHeaderURL(),

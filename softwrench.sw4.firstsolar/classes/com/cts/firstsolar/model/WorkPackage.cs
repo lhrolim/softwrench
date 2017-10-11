@@ -103,6 +103,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [Property]
         public bool? BuildComplete { get; set; }
 
+        /// <summary>
+        /// Requirement from SWWEB-3215
+        /// </summary>
+        [Property]
+        public bool? Nerc { get; set; }
+
         [Property]
         public bool? Deleted { get; set; }
 
@@ -121,11 +127,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         #endregion
 
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False,
-            Where = "ParentColumn = 'outages' and ParentEntity = 'WorkPackage' ", Inverse = true)]
-        [Key(1, Column = "parentid")]
-        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
-        public IList<GenericListRelationship> OutagesList { get; set; } = new List<GenericListRelationship>();
+//        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False,
+//            Where = "ParentColumn = 'outages' and ParentEntity = 'WorkPackage' ", Inverse = true)]
+//        [Key(1, Column = "parentid")]
+//        [OneToMany(2, ClassType = typeof(GenericListRelationship))]
+//        public IList<GenericListRelationship> OutagesList { get; set; } = new List<GenericListRelationship>();
 
         [Property]
         public string OutageType { get; set; }
