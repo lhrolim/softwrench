@@ -8,6 +8,7 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
@@ -44,7 +45,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
                     }
                 });
 
-            WhereClauseFacade.Register("workorder", SiteClause(false));
+            WhereClauseFacade.Register("workorder", "@firstSolarOptWhereClauseRegistry.WorkorderFacilityClause");
             WhereClauseFacade.Register("fsocworkorder", SiteClause(false));
 
             WhereClauseFacade.Register("workorder", "workorder.outreq = 1" + SiteClause(true),
@@ -68,6 +69,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
             return $"workorder.status in('INPRG', 'APPR') and workorder.outreq = 1 {SiteClause(true)} ";
         }
 
+        public string WorkorderFacilityClause() {
+            return SiteClause(false) + " and ({0})".Fmt(FirstSolarFacilityUtil.BaseFacilityQuery("workorder.location"));
+        }
 
         private static string SiteClause(bool appendAnd) {
             var sb = new StringBuilder();
