@@ -12,7 +12,8 @@
                     lookupObj: '=',
                     schema: '=',
                     datamap: '=',
-                    loadedmodals: '='
+                    loadedmodals: '=',
+                    largemodal: '='
                 },
                 template: "<div></div>",
                 link: function (scope, element) {
@@ -23,7 +24,7 @@
 
                     element.append(
                     "<lookup-modal loadedmodals='loadedmodals' lookup-obj='lookupObj'" +
-                        "schema='schema' datamap='datamap'>" +
+                        "schema='schema' datamap='datamap' largemodal='largemodal'>" +
                     "</lookup-modal>"
                     );
 
@@ -44,7 +45,8 @@
                 lookupObj: '=',
                 schema: '=',
                 datamap: '=',
-                loadedmodals: '='
+                loadedmodals: '=',
+                largemodal: '='
             },
 
             link: function (scope, element) {

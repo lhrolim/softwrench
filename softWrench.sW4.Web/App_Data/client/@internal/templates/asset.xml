@@ -410,6 +410,7 @@
           <field attribute="description" label="Description">
             <renderer type="default" params="minwidth=300px" />
           </field>
+          <field attribute="parent" label="Parent"/>
           <field attribute="location" label="Location"/>
           <field attribute="siteid"  label="Site"/>
           <field attribute="status" label="Status"/>

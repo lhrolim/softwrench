@@ -190,6 +190,11 @@
 @media all and (min-width: 992px) {
     .lookupModal .modal-dialog {
         width: 800px;
+        min-width: 800px;
+
+        &.largemodal {
+            width: 90% !important; 
+        }
     }
 }
 

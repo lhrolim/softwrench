@@ -210,7 +210,7 @@
                 <field label="Site Name" attribute="#workorder_.facilityname" readonly="true"/>
 
                 <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location" >
-                  <renderer type="lookup" params="application=asset;schemaId=assetLookupList;hidecode=true"/>
+                  <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList;hidecode=true"/>
                   <!--                  <dataprovider prefilterfunction="FilterAssets"/>-->
                   <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
                 </association>

@@ -22,6 +22,14 @@
 
                     scope.lookupObj = new LookupDTO(scope.fieldMetadata);
 
+                    if (scope.fieldMetadata &&
+                        scope.fieldMetadata.rendererParameters &&
+                        scope.fieldMetadata.rendererParameters.largemodal === "true") {
+                        scope.largemodal = "largemodal";
+                    } else {
+                        scope.largemodal = "";
+                    }
+
                     scope.vm = {
                         isSearching: false
                     };

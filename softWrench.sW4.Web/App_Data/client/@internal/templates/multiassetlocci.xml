@@ -95,7 +95,7 @@
           <field attribute="siteid" hidden="true"></field>
           <field attribute="isprimary" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location" >
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList"/>
             <dataprovider prefilterfunction="FilterAssets"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
           </association>
@@ -123,7 +123,7 @@
           </properties>
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location" >
             <!--TODO: remove that parameter it´s a workaround-->
@@ -144,7 +144,7 @@
         <schema id="detail" stereotype="compositiondetail" platform="web">
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
-            <renderer type="lookup"/>
+            <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location">
             <renderer type="lookup"/>

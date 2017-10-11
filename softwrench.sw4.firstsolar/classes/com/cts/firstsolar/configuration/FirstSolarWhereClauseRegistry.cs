@@ -323,8 +323,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             }
             var byFacility = BaseFacilityQuery("location.location");
 
-            var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-            return facilities.Contains("AVV") ? @" ({0}) or (type = 'storeroom' and description like 'avra%')".Fmt(byFacility) : byFacility;
+            var facilities = ((IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp]).ToList();
+            return facilities.Contains("AVV") || facilities.Contains("avv") ? @" ({0}) or (location.type = 'storeroom' and location.description like 'avra%')".Fmt(byFacility) : byFacility;
         }
 
         
