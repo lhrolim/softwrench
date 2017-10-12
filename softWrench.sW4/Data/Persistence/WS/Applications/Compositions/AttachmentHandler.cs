@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using JetBrains.Annotations;
@@ -113,15 +114,21 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                 foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
                     var title = attachment.GetAttribute("document").ToString();
                     var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo", true);
-                    var desc = docinfo != null && !string.IsNullOrEmpty(docinfo.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
+                    var desc = !string.IsNullOrEmpty(docinfo?.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
+
 
                     data = attachment.GetUnMappedAttribute("newattachment");
                     path = attachment.GetUnMappedAttribute("newattachment_path");
                     var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
+                    //TODO: create a subclass
                     var filter = attachment.GetUnMappedAttribute("#filter");
+                    var walkdown = attachment.GetBooleanAttribute("#walkdown");
                     var mainattachments = BuildAttachments(path, data, title, desc, offlinehash);
                     if (!string.IsNullOrEmpty(filter)) {
                         mainattachments.ForEach(attch => attch.Filter = filter);
+                    }
+                    if (true == walkdown) {
+                        mainattachments.ForEach(attch => attch.Filter = "swwpkg:walkdown");
                     }
                     try {
                         mainattachments.ForEach(attch => AddAttachment(maximoObj, attch));
@@ -192,8 +199,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             w.SetValue(docLink, "DOCTYPE", "Attachments");
             if (attachment.OffLineHash != null) {
                 //for offline solution
-                w.SetValue(docLink, "URLPARAM1", attachment.OffLineHash);
-            } else if (attachment.Filter != null) {
+                w.SetValue(docLink, "URLPARAM2", attachment.OffLineHash);
+            }
+            if (attachment.Filter != null) {
                 //for fs workpackage solution
                 w.SetValue(docLink, "URLPARAM1", attachment.Filter);
             }

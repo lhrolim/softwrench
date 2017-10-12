@@ -64,6 +64,9 @@
                     .then(() => {
                         return that.securityService.login(localdata.username, localdata.password);
                     }).then(() => {
+                        if (isRippleEmulator()) {
+                            return this.$q.when();
+                        }
                         return that.routeService.go("main.home");
                     }).catch(function(error) {
                         that.securityService.logout();

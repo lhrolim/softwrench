@@ -42,7 +42,7 @@
                         idsToDelete.push("'" + datamap.id + "'");
                         queryArray.push(query);
                         if (application.applicationName === "attachment_") {
-                            var queryObj = { compositionRemoteId: parsedDM.doclinksid, hash: parsedDM["docinfo_.urlparam1"], ownerTable: parsedDM.ownertable, ownerId: parsedDM.ownerid, docinfoid: parsedDM.docinfoid };
+                            var queryObj = { compositionRemoteId: parsedDM.doclinksid, hash: parsedDM["docinfo_.urlparam2"], ownerTable: parsedDM.ownertable, ownerId: parsedDM.ownerid, docinfoid: parsedDM.docinfoid };
                             doclinksMap.set(queryObj.compositionRemoteId, queryObj);
                         }
                     }

@@ -4,79 +4,86 @@
         <ng-switch on="field.type" class="full-width">
             <div ng-switch-when="ApplicationAssociationDefinition">
                 <textarea ng-if="isReadOnly(field)"
-                            ng-model="datamap[field.attribute]"
-                            ng-readonly="true"
-                            autosize-textarea
-                            wrap="hard"></textarea>
+                          ng-model="datamap[field.attribute]"
+                          ng-readonly="true"
+                          autosize-textarea
+                          wrap="hard"></textarea>
                 <ion-autocomplete ng-if="!isReadOnly(field)"
-                                    ng-model="datamap[field.target]"
-                                    component-id="{{field.associationKey}}"
-                                    items-method="associationSearch(query,componentId,pageNumber,useWhereClause,datamap[field.target])"
-                                    items-clicked-method="itemSelected(callback)"
-                                    item-value-key="{{getAssociationValueField(field)}}"
-                                    item-view-value-key="{{getAssociationLabelField(field)}}"
-                                    has-use-where-clause="hasUseWhereClause(field)"
-                                    title="{{field.label}}"
-                                    loading-icon="spiral"
-                                    association-description/>
+                                  ng-model="datamap[field.target]"
+                                  component-id="{{field.associationKey}}"
+                                  items-method="associationSearch(query,componentId,pageNumber,useWhereClause,datamap[field.target])"
+                                  items-clicked-method="itemSelected(callback)"
+                                  item-value-key="{{getAssociationValueField(field)}}"
+                                  item-view-value-key="{{getAssociationLabelField(field)}}"
+                                  has-use-where-clause="hasUseWhereClause(field)"
+                                  title="{{field.label}}"
+                                  loading-icon="spiral"
+                                  association-description />
 
             </div>
             <div ng-switch-when="OptionField">
                 <option-field header-text="{{field.label}}"
-                                allow-empty="false"
-                                component-id="{{field.associationKey}}"
-                                value="datamap[field.target]"
-                                text="Choose"
-                                items="field.options"
-                                callback2="optionFieldSelected(callback)"/>
+                              allow-empty="false"
+                              component-id="{{field.associationKey}}"
+                              value="datamap[field.target]"
+                              text="Choose"
+                              items="field.options"
+                              callback2="optionFieldSelected(callback)" />
             </div>
             <div ng-switch-default ng-switch on="field.rendererType">
                 <textarea ng-switch-when="textarea"
-                            ng-model="datamap[field.attribute]"
-                            ng-readonly="isReadOnly(field)"
-                            data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
-                            maxlength="{{field.rendererParameters['maxlength']}}"
-                            ng-required="isFieldRequired(field.requiredExpression)"
-                            autosize-textarea
-                            wrap="hard">
+                          ng-model="datamap[field.attribute]"
+                          ng-readonly="isReadOnly(field)"
+                          data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
+                          maxlength="{{field.rendererParameters['maxlength']}}"
+                          ng-required="isFieldRequired(field.requiredExpression)"
+                          autosize-textarea
+                          wrap="hard">
                 </textarea>
 
+
+                <div ng-switch-when="checkbox">
+                    <ion-checkbox ng-checked="datamap[field.attribute]"
+                                ng-model="datamap[field.attribute]" style="border:none">
+                    </ion-checkbox>
+                </div>
+
                 <rich-text-field ng-switch-when="richtext"
-                                    data-value="datamap[field.attribute]" 
-                                    data-max-length="field.rendererParameters['maxlength']" data-is-required="isFieldRequired(field.requiredExpression)"
-                                    data-read-only="field.isReadOnly">
+                                 data-value="datamap[field.attribute]"
+                                 data-max-length="field.rendererParameters['maxlength']" data-is-required="isFieldRequired(field.requiredExpression)"
+                                 data-read-only="field.isReadOnly">
                 </rich-text-field>
 
                 <div ng-switch-when="numericinput">
                     <input ng-if="field.rendererParameters['numberType'] === 'double' || field.rendererParameters['numberType'] === 'float'"
-                            type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
-                            min="{{field.rendererParameters['min']}}"
-                            max="{{setMaxNumericInput(datamap,field)}}"
-                            step="{{ field.rendererParameters['step'] || 1 }}"
-                            float-converter ng-model-options="{ debounce : 500 }"
-                            ng-required="isFieldRequired(field.requiredExpression)"/>
+                           type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
+                           min="{{field.rendererParameters['min']}}"
+                           max="{{setMaxNumericInput(datamap,field)}}"
+                           step="{{ field.rendererParameters['step'] || 1 }}"
+                           float-converter ng-model-options="{ debounce : 500 }"
+                           ng-required="isFieldRequired(field.requiredExpression)" />
 
                     <input ng-if="field.rendererParameters['numberType'] !== 'double' && field.rendererParameters['numberType'] !== 'float'"
-                            type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
-                            min="{{field.rendererParameters['min']}}"
-                            max="{{setMaxNumericInput(datamap,field)}}"
-                            ng-required="isFieldRequired(field.requiredExpression)" />
+                           type="number" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)"
+                           min="{{field.rendererParameters['min']}}"
+                           max="{{setMaxNumericInput(datamap,field)}}"
+                           ng-required="isFieldRequired(field.requiredExpression)" />
                 </div>
 
-                <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-show="!isReadOnly(field) || datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" 
-                        dateconverter
-                        max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
-                        min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"/>
+                <input ng-switch-when="date" type="date" ng-model="datamap[field.attribute]" ng-show="!isReadOnly(field) || datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)"
+                       dateconverter
+                       max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
+                       min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}" />
 
                 <input ng-switch-when="time" type="time" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" dateconverter />
 
-                <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)" 
-                        dateconverter 
-                        max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
-                        min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}"/>
+                <input ng-switch-when="datetime" type="datetime-local" ng-model="datamap[field.attribute]" ng-readonly="isReadOnly(field)" ng-required="isFieldRequired(field.requiredExpression)"
+                       dateconverter
+                       max="{{ dateHandler.getMaxDateValue(field) | date:'yyyy-MM-dd' }}"
+                       min="{{ dateHandler.getMinDateValue(field) | date:'yyyy-MM-dd' }}" />
 
                 <single-file-input ng-switch-when="dndupload"
-                                    datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
+                                   datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
                 </single-file-input>
                 <single-file-input ng-switch-when="upload"
                                    datamap="datamap" schema="schema" field-name="{{ field.attribute }}">
@@ -87,11 +94,11 @@
                 </div>
 
                 <textarea ng-switch-default
-                            ng-model="datamap[field.attribute]"
-                            ng-readonly="isReadOnly(field)"
-                            ng-required="isFieldRequired(field.requiredExpression)"
-                            autosize-textarea
-                            wrap="hard"></textarea>
+                          ng-model="datamap[field.attribute]"
+                          ng-readonly="isReadOnly(field)"
+                          ng-required="isFieldRequired(field.requiredExpression)"
+                          autosize-textarea
+                          wrap="hard"></textarea>
 
             </div>
 

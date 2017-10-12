@@ -2189,6 +2189,15 @@
           <field attribute="createdate" label="Created Date"/>
           <field attribute="creator_.displayname" label="Created By"/>
         </schema>
+
+        <schema id="detail" platform="mobile" title="Attachments" redeclaring="false">
+          <customization position="+document">
+            <field attribute="#walkdown" label="Walk Down Photo">
+              <renderer type="checkbox"/>
+            </field>
+          </customization>
+        </schema>
+        
       </schemas>
     </application>
 
