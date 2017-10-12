@@ -16,8 +16,9 @@
 
         $scope.changeCurrentProfile = function () {
             const panelId = $scope.panelid || null;
+            const metadataid = $scope.metadataid || null;
             crudContextHolderService.setCurrentSelectedProfile($scope.currentSelectedProfile, panelId);
-            searchService.refreshGrid({}, null, { panelid: panelId });
+            searchService.refreshGrid({}, null, { panelid: panelId, metadataid });
         }
     }
 
@@ -34,6 +35,7 @@
 
                 scope: {
                     panelid: '=',
+                    metadataid: '=',
                     lookup: '='
                 },
 

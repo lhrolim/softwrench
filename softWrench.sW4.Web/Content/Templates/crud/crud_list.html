@@ -113,7 +113,7 @@
 
     <div class="affix-pagination-panel hiddenonprint" ng-hide="'false' !== hidebars" ng-if="panelid && !forprint">
         <div class="context clearfix header-menu">
-            <grid-multiple-profile panelid="panelid"></grid-multiple-profile>
+            <grid-multiple-profile panelid="panelid" metadataid="metadataid"></grid-multiple-profile>
             
             <pagination pagination-data="paginationData" renderfn="selectPage(pageNumber,pageSize,printMode)"
                         schema="schema" application-name="{{schema.applicationName}}"
