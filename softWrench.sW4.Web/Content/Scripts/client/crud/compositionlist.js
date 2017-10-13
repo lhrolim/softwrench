@@ -166,7 +166,7 @@
             $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
 
             $scope.compositionoutputschema = $scope.compositionschemadefinition.schemas.detailOutput;
-            if ($scope.compositionschemadefinition.detailOutputSchema === "") {
+            if ($scope.compositionschemadefinition.detailOutputSchema !== "") {
                 $scope.compositionoutputschema = $scope.compositionschemadefinition.schemas.detail;
             }
 
@@ -1157,6 +1157,9 @@
         /*API Methods*/
         this.showExpansionCommands = function () {
             if ($scope.ismodal === "true") {
+                return false;
+            }
+            if (!$scope.hasDetailOutputSchema()) {
                 return false;
             }
 

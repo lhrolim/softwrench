@@ -31,8 +31,7 @@ namespace softwrench.sW4.test.Util {
         }
 
         [TestMethod]
-        public void TestMethod2()
-        {
+        public void TestMethod2() {
             var test = new Test();
             ReflectionUtil.SetProperty(test, "L1", "");
             Assert.AreEqual(test.L1, 0L);
@@ -45,16 +44,16 @@ namespace softwrench.sW4.test.Util {
         [TestMethod]
         public void TestBooleanConversion() {
             var test = new TestBoolean();
-            ReflectionUtil.SetProperty(test, "b1", "",true);
+            ReflectionUtil.SetProperty(test, "b1", "", true);
             Assert.IsNull(test.b1);
 
-            ReflectionUtil.SetProperty(test, "b1", "1",true);
+            ReflectionUtil.SetProperty(test, "b1", "1", true);
             Assert.IsTrue(test.b1.Value);
-            
+
         }
 
-        class Test
-        {
+
+        class Test {
             public long L1 { get; set; }
             public long? L2 { get; set; }
 
@@ -66,7 +65,8 @@ namespace softwrench.sW4.test.Util {
 
         }
 
+
     }
 
-    
+
 }

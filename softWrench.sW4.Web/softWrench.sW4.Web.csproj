@@ -516,6 +516,7 @@
     <Compile Include="Util\StaticFileLoad\PassthroughBundleOrderer.cs" />
     <Compile Include="Util\StaticFileLoad\RowStampScriptHelper.cs" />
     <Compile Include="Util\StaticFileLoad\StaticFileTagRenderer.cs" />
+    <Content Include="App_Data\Client\%40internal\templates\assignment.xml" />
     <Content Include="App_Data\Client\%40internal\templates\swdb\swhelp.xml">
       <SubType>Designer</SubType>
     </Content>

@@ -9,6 +9,7 @@
     <template path="@labtrans.xml"/>
     <template path="@tooltrans.xml"/>
     <template path="@woactivity.xml"/>
+    <template path="@assignment.xml"/>
     <template path="@asset.xml"/>
     <template path="@jobplan.xml"/>
 
@@ -53,6 +54,11 @@
         <relationship to="location" >
           <relationshipAttribute from="location" to="location" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="assignment" qualifier="assignment" collection="true">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
         <relationship to="asset" >
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -731,6 +737,11 @@
             <composition relationship="woactivity" label="WO Tasks">
               <collectionproperties allowupdate="false" allowcreation="false"  />
             </composition>
+
+            <composition relationship="assignment" label="Assignments" detailschema="compositiondetail" outputschema="" printschema="">
+              <collectionproperties allowupdate="true" allowcreation="@status!='CLOSE'" listschema="compositionlist"   />
+            </composition>
+            
             <composition relationship="matusetrans" label="Material">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" />
             </composition>

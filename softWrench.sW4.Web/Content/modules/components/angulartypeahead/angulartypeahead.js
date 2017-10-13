@@ -141,7 +141,7 @@
 
 
             //initing typeahead itself
-            element.typeahead({ minLength: minLength, highlight: true }, {
+            element.typeahead({ minLength: minLength, highlight: true, autoselect:true }, {
                 displayKey: function (item) {
                     return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true" });
                 },
@@ -191,7 +191,12 @@
                         //rootScope needed if datamap is change to reeval any related expressions that were bound to that particular item
                         $rootScope.$digest();
                     }
-                } else {
+                } else if (e.which === 13) {
+                    datamap[scope.attribute]
+                    e.stopImmediatePropagation();
+                }
+
+                else {
                     //if filter is applied, let´s not show recently used filters
                     //scope digest is enough if we´re not clearing nor selecting an entry (i.e, not changing the datamap)
                     scope.$digest();

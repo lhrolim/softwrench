@@ -38,23 +38,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
         public override void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData) {
             base.BeforeCreation(maximoTemplateData);
             if (ContextLookuper.LookupContext().OfflineMode) {
-
-                var user = SecurityFacade.CurrentUser();
-
                 var root = maximoTemplateData.IntegrationObject;
                 WsUtil.SetValue(root, "STATUS", "APPR");
                 var nowServer = DateTime.Now.FromServerToRightKind();
                 WsUtil.SetValue(root, "SCHEDSTART", nowServer);
 
-                var arr = ReflectionUtil.InstantiateArrayWithBlankElements(root, "ASSIGNMENT", 1);
-                var assignment = arr.GetValue(0);
-
-                WsUtil.SetValue(assignment, "LABORCODE", user.GetProperty("laborcode"));
-                WsUtil.SetValue(assignment, "SCHEDULEDATE", nowServer);
-                WsUtil.SetValue(assignment, "FINISHDATE", DateTime.Now.AddMonths(2).FromServerToRightKind());
-                WsUtil.CopyFromRootEntity(root, assignment, "orgid", user.OrgId);
-
-
+                AssignmentHandler.CreateNewAssignmentForToday(root, nowServer);
             }
         }
 

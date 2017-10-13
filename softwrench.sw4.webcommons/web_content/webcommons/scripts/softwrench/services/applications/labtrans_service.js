@@ -53,16 +53,16 @@
                 }
             };
 
-            var deleteLabtrans = function(labtransIds) {
-                return alertService.confirm("Are you sure you wish to delete the selected labor transaction(s)? This operation cannot be undone.").then(function() {
-                    return restService.postPromise("Labtrans", "DeleteLabtrans", {}, labtransIds).then(function(result) {
+            var deleteLabtrans = function (labtransIds) {
+                return alertService.confirm("Are you sure you wish to delete the selected labor transaction(s)? This operation cannot be undone.").then(function () {
+                    return restService.postPromise("Labtrans", "DeleteLabtrans", {}, labtransIds).then(function (result) {
                         crudContextHolderService.clearSelectionBuffer(null);
                         searchService.refreshGrid();
                     });
                 });
             };
 
-            var approveLabtrans = function(labtransIds) {
+            var approveLabtrans = function (labtransIds) {
                 return alertService.confirm("Are you sure you wish to approve the selected labor transaction(s)?").then(function () {
                     return restService.postPromise("Labtrans", "ApproveLabtrans", {}, labtransIds).then(function (result) {
                         crudContextHolderService.clearSelectionBuffer(null);
@@ -74,7 +74,7 @@
             return {
                 //afterchange
                 afterlaborchange: function (event) {
-                    if (event.fields['laborcode'] == ' ') {
+                    if (event.fields['laborcode'] === ' ') {
                         event.fields['craft'] = null;
                         event.fields['payrate'] = 0.0; // Reset payrate
                         alertService.alert("Task field will be disabled if labor is not selected");
@@ -96,12 +96,12 @@
                 },
 
                 //afterchange
-                afterDateTimeChange: function(event) {
+                afterDateTimeChange: function (event) {
                     // If all of the datetime fields are filed
                     if ((event.fields['startdate'] && !event.fields['startdate'].nullOrEmpty()) &&
-                    (event.fields['starttime'] && !event.fields['starttime'].nullOrEmpty()) &&
-                    (event.fields['finishdate'] && !event.fields['finishdate'].nullOrEmpty()) &&
-                    (event.fields['finishtime'] && !event.fields['finishtime'].nullOrEmpty())) {
+                        (event.fields['starttime'] && !event.fields['starttime'].nullOrEmpty()) &&
+                        (event.fields['finishdate'] && !event.fields['finishdate'].nullOrEmpty()) &&
+                        (event.fields['finishtime'] && !event.fields['finishtime'].nullOrEmpty())) {
                         const startDate = new Date(event.fields['startdate']);
                         const startTime = Date.parse(event.fields['starttime']);
                         startDate.setHours(startTime.getHours());
@@ -132,7 +132,7 @@
                     labtransIds.push(datamap.labtransid);
                     approveLabtrans(labtransIds);
                 },
-                approveMultipleLabtrans: function() {
+                approveMultipleLabtrans: function () {
                     const selectedLabtrans = crudContextHolderService.getSelectionModel(null).selectionBuffer;
                     const labtransIds = Object.keys(selectedLabtrans);
                     if (labtransIds.length < 1) {
@@ -140,7 +140,7 @@
                     }
                     approveLabtrans(labtransIds);
                 },
-                deleteSingleLabtrans: function() {
+                deleteSingleLabtrans: function () {
                     const datamap = crudContextHolderService.rootDataMap();
                     const labtransIds = [];
                     if (datamap.genapprservreceipt == 1) {
@@ -159,7 +159,7 @@
                     var labtransIds = [];
                     var approvedLaborIds = [];
                     // Sort the labors checking for approved records
-                    keys.forEach(function(key) {
+                    keys.forEach(function (key) {
                         if (selectedLabtrans[key].genapprservreceipt == 1) {
                             approvedLaborIds.push(key);
                         } else {
@@ -172,14 +172,14 @@
                     }
                     deleteLabtrans(labtransIds);
                 },
-                validateEdit: function(datamap, schema) {
+                validateEdit: function (datamap, schema) {
                     if (datamap["genapprservreceipt"] === 1) {
                         alertService.alert("Cannot modify already approved labor transactions");
                         return $q.reject();
                     }
                     return $q.when();
                 },
-                editLabtrans: function() {
+                editLabtrans: function () {
                     const datamap = crudContextHolderService.rootDataMap();
                     if (datamap.genapprservreceipt == 1) {
                         alertService.alert("Cannot edit already approved labor transactions");
@@ -187,7 +187,7 @@
                     }
                     return true;
                 },
-                listClick: function(datamap, field, schema) {
+                listClick: function (datamap, field, schema) {
                     const history = datamap["workorder_.historyflag"];
                     const approved = datamap["genapprservreceipt"];
                     const parameters = {
@@ -201,20 +201,25 @@
                     return false;
                 },
                 defaultLaborExpression: function (datamap, schema, displayable) {
-                    var username = '';
                     const rootdatamap = crudContextHolderService.rootDataMap();
-                    if (rootdatamap['#laborlist_'].length < 2) {
-                        const user = contextService.getUserData();
-                        username = user.login.toUpperCase();
+                    const laborlist = rootdatamap['#laborlist_'];
+                    if (laborlist && laborlist.length >= 2) {
+                        return "";
                     }
-                    return username;
+
+                    const user = contextService.getUserData();
+                    if (user && user.genericproperties['laborcode']) {
+                        return user.genericproperties['laborcode'];
+                    }
+
+                    return user.maximoPersonId;
                 },
                 save: function (datamap) {
                     applicationService.save().then(function (data) {
                         datamap['labtransid'] = data.id;
                     });
                 }
-    };
-}]);
+            };
+        }]);
 
 })(angular);

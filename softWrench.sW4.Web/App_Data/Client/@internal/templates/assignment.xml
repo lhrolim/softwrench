@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <templates>
+    <template path="@labor.xml"/>
+  </templates>
+
+
+  <entities>
+
+    <entity name="craft" idAttribute="craftid">
+      <attributes>
+        <attribute name="craft" type="varchar" required="true" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="craftid" type="bigint" required="true" />
+        <attribute name="langcode" type="varchar" required="true" />
+        <attribute name="sendersysid" type="varchar" required="false" />
+        <attribute name="sourcesysid" type="varchar" required="false" />
+        <attribute name="ownersysid" type="varchar" required="false" />
+        <attribute name="externalrefid" type="varchar" required="false" />
+        <attribute name="hasld" type="smallint" required="true" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="iscrew" type="smallint" required="true" />
+        <attribute name="workzonetype" type="varchar" required="false" />
+      </attributes>
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="craft" />
+      </connectorParameters>
+    </entity>
+
+
+    <entity name="assignment" idAttribute="assignmentid">
+      <attributes>
+        <attribute name="wplaborid" type="varchar" required="false" />
+        <attribute name="wonum" type="varchar" required="true" />
+        <attribute name="craft" type="varchar" required="false" />
+        <attribute name="laborhrs" type="float" required="false" />
+        <attribute name="status" type="varchar" required="true" />
+        <attribute name="scheduledate" type="datetime" required="false" />
+        <attribute name="laborcode" type="varchar" required="false" />
+        <attribute name="startdate" type="datetime" required="false" />
+        <attribute name="finishdate" type="datetime" required="false" />
+        <attribute name="orgid" type="varchar" required="true" />
+        <attribute name="siteid" type="varchar" required="false" />
+        <attribute name="assignmentid" type="bigint" required="true" />
+        <attribute name="skilllevel" type="varchar" required="false" />
+        <attribute name="contractnum" type="varchar" required="false" />
+        <attribute name="vendor" type="varchar" required="false" />
+        <attribute name="workdate" type="datetime" required="false" />
+        <attribute name="parentassignid" type="bigint" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+        <attribute name="crewworkgroup" type="varchar" required="false" />
+        <attribute name="amcrew" type="varchar" required="false" />
+        <attribute name="amcrewtype" type="varchar" required="false" />
+        <attribute name="apptrequired" type="smallint" required="true" />
+        <attribute name="appointment" type="smallint" required="true" />
+        <attribute name="worklog" type="smallint" required="true" />
+        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0)" type="date">
+          <connectorParameters>
+            <connectorParameter key="offset" value="true" />
+          </connectorParameters>
+        </attribute>
+      </attributes>
+
+      <relationships>
+        <relationship to="workorder" collection="true">
+          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+          <relationshipAttribute from="siteid" to="siteid"/>
+        </relationship>
+
+        <relationship to="labor">
+          <relationshipAttribute from="laborcode" to="laborcode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+
+        <relationship to="craft">
+          <relationshipAttribute from="craft" to="craft" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid" />
+        </relationship>
+
+
+      </relationships>
+
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="assignment" />
+      </connectorParameters>
+
+    </entity>
+  </entities>
+
+  <applications>
+    <application name="assignment" title="Assignments" entity="assignment">
+      <properties>
+        <property key="icon.composition.tab" value="fa fa-user"/>
+      </properties>
+      
+      
+      <schemas>
+        <schema id="compositionlist" stereotype="compositionlist">
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="assignmentid" hidden="true"/>
+          <field attribute="laborcode" label="Labor"/>
+          <field attribute="craft" label="Craft"/>
+          <field attribute="scheduledate" label="Scheduled Start"/>
+          <field attribute="laborhrs" label="Hours"/>
+          <field attribute="status" label="Status"/>
+        </schema>
+
+        <schema id="compositiondetail" stereotype="compositiondetail" title="New Assignment">
+          <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
+          <field attribute="assignmentid" hidden="true"/>
+        
+          
+          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" defaultexpression="service:labtransService.defaultLaborExpression">
+            <renderer type="lookup"/>
+            <event type="afterchange" service="labtransService" method="afterlaborchange"/>
+          </association>
+
+          <association label="Craft" target="craft" labelfield="craft_.craft" >
+            <renderer type="autocompleteclient" />
+          </association>
+          
+          <field attribute="scheduledate" label="Scheduled Start" default="@now"/>
+          <field attribute="laborhrs" label="Hours">
+            <renderer type="numericinput"/>
+          </field>
+          <field attribute="status" label="Status" readonly="true" defaultexpression="'WAITASGN'" default="'WAITASGN'"/>
+        </schema>
+
+      </schemas>
+    </application>
+
+  </applications>
+
+
+
+
+</metadata>

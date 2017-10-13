@@ -23,52 +23,7 @@
   <entities>
 
 
-    <entity name="assignment" idAttribute="assignmentid">
-      <attributes>
-        <attribute name="wplaborid" type="varchar" required="false" />
-        <attribute name="wonum" type="varchar" required="true" />
-        <attribute name="craft" type="varchar" required="false" />
-        <attribute name="laborhrs" type="float" required="false" />
-        <attribute name="status" type="varchar" required="true" />
-        <attribute name="scheduledate" type="datetime" required="false" />
-        <attribute name="laborcode" type="varchar" required="false" />
-        <attribute name="startdate" type="datetime" required="false" />
-        <attribute name="finishdate" type="datetime" required="false" />
-        <attribute name="orgid" type="varchar" required="true" />
-        <attribute name="siteid" type="varchar" required="false" />
-        <attribute name="assignmentid" type="bigint" required="true" />
-        <attribute name="skilllevel" type="varchar" required="false" />
-        <attribute name="contractnum" type="varchar" required="false" />
-        <attribute name="vendor" type="varchar" required="false" />
-        <attribute name="workdate" type="datetime" required="false" />
-        <attribute name="parentassignid" type="bigint" required="false" />
-        <attribute name="rowstamp" type="timestamp" required="true" />
-        <attribute name="crewworkgroup" type="varchar" required="false" />
-        <attribute name="amcrew" type="varchar" required="false" />
-        <attribute name="amcrewtype" type="varchar" required="false" />
-        <attribute name="apptrequired" type="smallint" required="true" />
-        <attribute name="appointment" type="smallint" required="true" />
-        <attribute name="worklog" type="smallint" required="true" />
-        <attribute name="schedstartnotime" query="DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0)" type="date">
-          <connectorParameters>
-            <connectorParameter key="offset" value="true" />
-          </connectorParameters>
-        </attribute>
-      </attributes>
-
-      <relationships>
-        <relationship to="workorder" collection="true">
-          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
-          <relationshipAttribute from="orgid" to="orgid" />
-          <relationshipAttribute from="siteid" to="siteid"/>
-        </relationship>
-      </relationships>
-
-      <connectorParameters>
-        <connectorParameter key="dbtable" value="assignment" />
-      </connectorParameters>
-
-    </entity>
+ 
 
 
     <entity name="asset" idAttribute="assetuid">
@@ -145,11 +100,7 @@
           <relationshipAttribute from="location" to="location" primary="true"/>
         </relationship>
 
-        <relationship to="assignment" qualifier="assignment">
-          <relationshipAttribute from="wonum" to="wonum" primary="true"/>
-          <relationshipAttribute from="orgid" to="orgid" />
-          <relationshipAttribute from="siteid" to="siteid"/>
-        </relationship>
+     
 
         <relationship to="multiassetlocci" collection="true">
           <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>

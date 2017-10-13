@@ -245,7 +245,7 @@
 
         <schema id="wolabors" stereotype="compositionlist">
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.orgid"/>
-          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid">
+          <association label="Labor" target="laborcode" labelfield="labor_.laborcode" requiredexpression="true" extraprojectionvalues="worksite, orgid" defaultexpression="service:labtransService.defaultLaborExpression">
             <renderer type="lookup"/>
             <event type="afterchange" service="labtransService" method="afterlaborchange"/>
           </association>

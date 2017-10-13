@@ -36,6 +36,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         }
 
         [Import]
+        public AssignmentHandler AssignmentHandler {
+            get; set;
+        }
+
+        [Import]
         public LabTransHandler LabTransHandler {
             get; set;
         }
@@ -70,6 +75,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
             AttachmentHandler.HandleAttachmentAndScreenshot(maximoTemplateData);
             // Update or create commlogs
             CommlogHandler.HandleCommLogs(maximoTemplateData, crudData, wo);
+            AssignmentHandler.HandleAssignments(crudData, wo);
 
             base.BeforeUpdate(maximoTemplateData);
         }
