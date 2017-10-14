@@ -238,7 +238,12 @@
 
                 $scope.handleContainerClick = function (container, $event) {
                     var target = $event.target;
-                    if (container.controller != null && !$(target).find("span").hasClass('bottom-caret') && !mockService.isMockedContainerDashBoard()) {
+                    if (container.controller != null && !mockService.isMockedContainerDashBoard()) {
+                        if (menuService.isSelectedLeaf(container)) {
+                            return;
+                        }
+
+
                         var msg = "Are you sure you want to leave the page?";
                         if (crudContextHolderService.getDirty()) {
                             alertService.confirmCancel(msg).then(function () {

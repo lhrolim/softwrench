@@ -15,6 +15,7 @@ using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.Home;
 using softWrench.sW4.Web.Security;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 using softWrench.sW4.Configuration.Services;
 using softWrench.sW4.Data.Configuration;
 
@@ -60,7 +61,7 @@ namespace softWrench.sW4.Web.Controllers.MenuHelper {
             }
         }
 
-        public string GetUrlFromAction(ActionMenuItemDefinition item) {
+        public string GetUrlFromAction(IMenuAction item) {
             var action = item.Action;
             if (String.IsNullOrWhiteSpace(action)) {
                 action = "Get";

@@ -268,6 +268,15 @@ namespace softwrench.sw4.dashboard.classes.controller {
             return manageDTO;
         }
 
+
+        [HttpGet]
+        public async Task<IGenericResponseResult> LoadDashboardByAlias(string alias) {
+            var manageDTO = Manage();
+            var dashboard = await _dao.FindSingleByQueryAsync<Dashboard>(Dashboard.By_ALIAS, alias);
+            manageDTO.ResultObject.PreferredId = dashboard.Id;
+            return manageDTO;
+        }
+
         /// <summary>
         /// Authenticates the user the selected graphic storage system provider.
         /// </summary>

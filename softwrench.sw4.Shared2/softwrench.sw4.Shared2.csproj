@@ -140,6 +140,7 @@
     <Compile Include="Metadata\IPCLCloneable.cs" />
     <Compile Include="Metadata\Menu\Containers\IMenuRootDefinition.cs" />
     <Compile Include="Metadata\Menu\Containers\MenuTemplateCatalogDefinition.cs" />
+    <Compile Include="Metadata\Menu\Interfaces\IMenuAction.cs" />
     <Compile Include="Metadata\Menu\ReferenceMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ExternalLinkMenuItemDefinition.cs" />
     <Compile Include="Metadata\Menu\ActionMenuItemDefinition.cs" />

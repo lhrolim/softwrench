@@ -14,6 +14,8 @@ namespace softwrench.sw4.dashboard.classes.model.entities {
         private const string BY_USER_PROFILES_APPLICATIONS_TEMPLATE = "from Dashboard where (userid is null or userid = :p0) and (userprofiles is null or {0}) and (application is null or application in (:p1))";
         private const string BY_USER_PROFILES_APPLICATIONS_ACTIVE_TEMPLATE = BY_USER_PROFILES_APPLICATIONS_TEMPLATE + " and active is true order by preferredorder";
 
+        public const string By_ALIAS = "from Dashboard where alias = ?";
+
         public static string ByUserAndApplications(IEnumerable<int?> profiles, bool includeInactive = false) {
             return includeInactive
                 ? (string.Format(BY_USER_PROFILES_APPLICATIONS_TEMPLATE, DashboardFilter.GetUserProfileString(profiles)) + "order by preferredorder")

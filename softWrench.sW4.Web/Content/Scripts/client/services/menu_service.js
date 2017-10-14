@@ -5,13 +5,16 @@
 
     function menuService($rootScope, $timeout, redirectService, contextService, i18NService, securityService, checkpointService, $log, userService, gridPreferenceService) {
 
+        let selectedLeaf = null;
+
         var cleanSelectedLeaf = function () {
             const menu = $("#applicationmenu");
             $("button", menu).removeClass("selected");
             $("a", menu).removeClass("selected");
+            selectedLeaf = null;
         }
 
-        var toggleSelectedLeaf = function (leaf) {
+        var toggleSelectedLeaf = function (leaf, menuleaf) {
 
             // look for parent container of the new active menu item and its button
             const parentMenuContainer = $(leaf).parents('.dropdown-container').last();
@@ -20,7 +23,12 @@
                 $(leaf).addClass("selected");
             } else {
                 menuContainerToggle.addClass("selected");
+                selectedLeaf = menuleaf;
             }
+        }
+
+        var isSelectedLeaf = function(leaf) {
+            return selectedLeaf === leaf;
         }
 
         var locateLeafById = function (leafs, id) {
@@ -78,6 +86,7 @@
             doAction,
             goToApplication,
             adjustHeight,
+            isSelectedLeaf,
             setActiveLeaf,
             getI18nMenuLabel,
             getI18nMenuIcon,
@@ -135,7 +144,7 @@
             }
 
             if (target != undefined) {
-                this.setActiveLeaf(target);
+                this.setActiveLeaf(target,leaf);
             }
             contextService.insertIntoContext('currentmetadata', null);
             contextService.insertIntoContext('currentgridarray', null);
@@ -152,7 +161,7 @@
 
 
             if (target != undefined) {
-                this.setActiveLeaf(target);
+                this.setActiveLeaf(target,leaf);
             }
             $log.getInstance('sw4.menu').info("current module: " + leaf.module);
             contextService.insertIntoContext('currentmetadata', null);
@@ -190,12 +199,12 @@
             menu.children().first().css('min-height', bodyHeight + 4);
         };
 
-        function setActiveLeaf(leaf) {
+        function setActiveLeaf(leaf,menuleaf) {
             const menu = $("#applicationmenu");
             if (menu.data('displacement') === 'horizontal') {
                 cleanSelectedLeaf();
                 if ($(leaf).parents('#applicationmenu').length > 0) {
-                    toggleSelectedLeaf(leaf);
+                    toggleSelectedLeaf(leaf, menuleaf);
                 }
             }
         };

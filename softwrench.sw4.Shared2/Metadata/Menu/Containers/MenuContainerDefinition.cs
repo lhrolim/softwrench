@@ -3,7 +3,7 @@ using System.Linq;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softwrench.sW4.Shared2.Metadata.Menu.Containers {
-    public class MenuContainerDefinition : MenuBaseDefinition {
+    public class MenuContainerDefinition : MenuBaseDefinition, IMenuAction {
 
         private List<MenuBaseDefinition> _cachedExplodedLeafs;
 

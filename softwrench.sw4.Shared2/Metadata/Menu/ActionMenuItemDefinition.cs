@@ -3,7 +3,7 @@ using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softwrench.sW4.Shared2.Metadata.Menu {
 
-    public class ActionMenuItemDefinition : MenuBaseDefinition, IMenuLeaf {
+    public class ActionMenuItemDefinition : MenuBaseDefinition, IMenuLeaf, IMenuAction {
 
         public string Action { get; set; }
         public string Controller { get; set; }

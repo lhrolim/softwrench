@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -45,11 +46,11 @@ namespace softWrench.sW4.Web.Controllers {
                 var adapter = new DataRequestAdapter(null, key);
                 url = _homeService.GetUrlFromApplication(app.Application, adapter);
                 //title = app.Title;
-            } else if (indexItem is ActionMenuItemDefinition) {
-                var actItem = (ActionMenuItemDefinition)indexItem;
+            } else if (indexItem is IMenuAction) {
+                var actItem = (IMenuAction)indexItem;
                 url = _menuHelper.GetUrlFromAction(actItem);
                 //title = actItem.Title;
-            } else {
+            }  else {
                 FormsAuthentication.SignOut();
                 return Redirect("~/SignIn?ReturnUrl=%2f{0}%2f&forbidden=true".Fmt(Request.ApplicationPath.Replace("/", "")));
             }
@@ -70,6 +71,12 @@ namespace softWrench.sW4.Web.Controllers {
             var indexItemId = menuModel.Menu.ItemindexId;
             indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(l => indexItemId.EqualsIc(l.Id));
             if (indexItem == null) {
+                var container = menuModel.Menu.Leafs.FirstOrDefault(f => f.Id.EqualsIc(indexItemId)) as MenuContainerDefinition;
+                if (container?.Controller != null) {
+                    return container;
+                }
+
+
                 //first we´ll try to get the item declared, if it´s null (that item is role protected for that user, for instance, let´s pick the first leaf one as a fallback to avoid problems
                 indexItem = menuModel.Menu.ExplodedLeafs.FirstOrDefault(a => a.Leaf);
             }
