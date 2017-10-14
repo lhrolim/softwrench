@@ -92,6 +92,9 @@ const ToggleSelectionMode = "sw.crud.list.toggleselectionmode";
 //event to switch the mode showing only the selecte or all entries of a grid
 const ToggleSelected = "sw.crud.list.toggleselected";
 
+// event to reset the toggle buttons to initial state
+const ReloadToggleState = "sw.crud.list.reloadtogglestate";
+
 //event to indicate that the crud_tbody has finished processing for real
 const ListTableRendered = "sw.crud.list.tbodyrendered";
 
@@ -142,7 +145,7 @@ const ClearAutoCompleteCache = "sw.crud.association.clearautocompletecache";
 const COMPOSITION_RESOLVED = "sw.crud.composition.dataresolved";
 const COMPOSITION_EDIT = "sw.crud.composition.edit";
 const COMPOSITION_REFRESH_PAGE = "sw.crud.composition.refreshpage";
-
+const COMPOSITION_BATCH_ADD_MULTIPLE = "sw.crud.composition.batch.add.multiple";
 
 //#endregion
 
@@ -358,6 +361,10 @@ class JavascriptEventConstants {
         return ToggleSelected;
     }
 
+    static get ReloadToggleState() {
+        return ReloadToggleState;
+    }
+
     //#endregion
 
 
@@ -373,6 +380,10 @@ class JavascriptEventConstants {
 
     static get CompositionRefreshPage() {
         return COMPOSITION_REFRESH_PAGE;
+    }
+
+    static get CompositionBatchAddMultiple() {
+        return COMPOSITION_BATCH_ADD_MULTIPLE;
     }
 
     //#endregion

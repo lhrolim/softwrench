@@ -19,7 +19,7 @@
                 <div class="separator large-button hidden-xs col-sm-1" ng-if="ismodal !== 'true' &amp;&amp;shouldShowGridNavigation()" >&nbsp;</div>
                 <!-- quick search input -->
                 <div ng-show="shouldShowGridNavigation()">
-                    <div class="quick-search col-xs-12 col-sm-6 col-md-5" ng-class="{'no-search-options' : shouldShowSearchOptions()}">
+                    <div class="quick-search col-xs-12 col-sm-6 col-md-5" ng-class="{'no-search-options' : !shouldShowSearchOptions()}">
                         <div class="input-group">
                             <input type="text"
                                    placeholder="Search"
@@ -37,7 +37,7 @@
                                    ng-if="autoQuicksearch()">
                             <span class="input-group-btn">
                                 <button class="btn btn-default"
-                                        type="button" ng-enabled="!!vm.quickSearchDTO.quickSearchData"
+                                        type="button" ng-enabled="true"
                                         ng-click="quickSearch(vm.quickSearchDTO)"
                                         disabled="disabled">
                                     <i class="fa fa-search"></i>
@@ -45,7 +45,7 @@
                             </span>
                         </div>
 
-                        <div class="btn-group search-options col-xs-12 col-sm-3 col-md-3 col-lg-2" ng-if="schema.relatedCompositions.length > 0">
+                        <div class="btn-group search-options col-xs-12 col-sm-3 col-md-3 col-lg-2" ng-if="shouldShowSearchOptions()">
                             <button type="button" class="btn btn-context dropdown-toggle" data-toggle="dropdown" data-original-title="{{commandtooltip(command)}}" rel="tooltip">
                                 <i ng-if="command.service==null" class="fa" ng-class="command.icon"></i>
                                 <div class="text">Options</div>

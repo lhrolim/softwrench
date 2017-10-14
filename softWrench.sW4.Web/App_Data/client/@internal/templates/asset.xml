@@ -415,6 +415,33 @@
           <field attribute="siteid"  label="Site"/>
           <field attribute="status" label="Status"/>
         </schema>
+        <schema id="multiAssetLookupList" stereotype="list.selection.modal" platform="web" title="Select Assets">
+          <filters>
+            <optionfilter attribute="status" displaycode="false">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" value="ACTIVE" label="ACTIVE"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" value="OPERATING" label="OPERATING"/>
+            </optionfilter>
+          </filters>
+          
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="description" label="Description">
+            <renderer type="default" params="minwidth=300px" />
+          </field>
+          <field attribute="parent" label="Parent"/>
+          <field attribute="location" label="Location"/>
+          <field attribute="siteid"  label="Site"/>
+          <field attribute="status" label="Status"/>
+
+          <properties>
+            <property key="list.advancedfilter.hidesearchoptions" value="true"/>
+          </properties>
+          
+          <commandbars>
+            <commandgroup position="gridfiltertop">
+              <removecommand id="toggleselected"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
         <schema id="locationassets" title="Assets" stereotype="compositionlist" platform="web">
           <properties>
             <property key="list.click.event" value="assetService.goToDetail"/>

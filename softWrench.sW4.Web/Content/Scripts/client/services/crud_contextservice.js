@@ -375,7 +375,7 @@
             this.clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
             context._eagerassociationOptions = { "#global": {} };
-            this._crudContext._lazyAssociationOptions = {};
+            context._lazyAssociationOptions = {};
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
             if (!!clearTab) {

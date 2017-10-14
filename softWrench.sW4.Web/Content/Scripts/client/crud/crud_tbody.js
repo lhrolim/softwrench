@@ -21,23 +21,19 @@
         var scope = angular.element(element).scope();
 
         doubleClicked = false;
+        
+        if (hasSelection) {
+            hasSelection = false;
+            return;
+        }
 
-        setTimeout(function () {
-
-            if (hasSelection) {
-                hasSelection = false;
-                return;
+        if (getSelection().toString() === "" && !hasSelection) {
+            if (scope.showDetail) {
+                scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition);
             }
-
-            if (getSelection().toString() === "" && !hasSelection) {
-                if (scope.showDetail) {
-                    scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition);
-                }
-            } else {
-                hasSelection = true;
-            }
-        }, 100);
-
+        } else {
+            hasSelection = true;
+        }
 
         // to process the checkbox values and select-all state from parent (crud_list) too
         scope.$root.$digest();

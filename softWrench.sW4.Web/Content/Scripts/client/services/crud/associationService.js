@@ -514,7 +514,7 @@
             log.debug("updating schema associations");
 
             angular.forEach(schemaLoadResult.preFetchLazyOptions, (value, key) =>{
-                this.crudContextHolderService.updateLazyAssociationOption(key, value);
+                this.crudContextHolderService.updateLazyAssociationOption(key, value, null, contextData ? contextData.panelid : null);
             },this);
 
             angular.forEach(schemaLoadResult.eagerOptions, (value, key)=> {

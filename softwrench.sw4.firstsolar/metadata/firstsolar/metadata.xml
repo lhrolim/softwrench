@@ -802,9 +802,9 @@
 
           <customization position="secondary">
             <section>
-              <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="detail" showexpression="true" fetchtype="lazy">
+              <composition inline="true" relationship="multiassetlocci" label="Multi Asset Locations:" detailschema="" showexpression="true" fetchtype="lazy">
                 <collectionproperties listschema="newlist" autocommit="false" allowcreation="true" orderbyfield="sequence"/>
-                <renderer type="TABLE" params="mode=batch;composition.inline.expandreadonly=true;"/>
+                <renderer type="TABLE" params="mode=batch"/>
               </composition>
 
               <section orientation="horizontal">

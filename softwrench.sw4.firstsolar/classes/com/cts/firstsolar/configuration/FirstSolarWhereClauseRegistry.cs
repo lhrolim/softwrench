@@ -166,8 +166,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var offLineCondition = new WhereClauseRegisterCondition() { Alias = "offline", OfflineOnly = true, Global = true };
             var techWorkorderCondition = new WhereClauseRegisterCondition { Alias = "techworkorder", Global = true, AppContext = new ApplicationLookupContext{ParentApplication = "workorder"}};
             var fsocWorkorderCondition = new WhereClauseRegisterCondition { Alias = "fsocworkorder", Global = true, AppContext = new ApplicationLookupContext { ParentApplication = "fsocworkorder" } };
-            var multiAssetCondition = new WhereClauseRegisterCondition { Alias = "multiasset", Global = true, AppContext = new ApplicationLookupContext { ParentApplication = "multiassetlocci" } };
-
+            
             _whereClauseFacade.Register("workorder", "@firstSolarWhereClauseRegistry.AssignedByGroup", offLineCondition);
             _whereClauseFacade.Register("schedworkorder", "@firstSolarWhereClauseRegistry.SchedWhereClauseMethod", offLineCondition);
             _whereClauseFacade.Register("todayworkorder", "@firstSolarWhereClauseRegistry.TodayWhereClauseMethod", offLineCondition);
@@ -198,9 +197,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             _whereClauseFacade.Register("location", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", techWorkorderCondition);
             _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", techWorkorderCondition);
             _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", fsocWorkorderCondition);
-            _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", multiAssetCondition);
             _whereClauseFacade.Register("inventory", "@firstSolarWhereClauseRegistry.InventoryWhereClauseByFacility", techWorkorderCondition);
 
+            var multiAssetCondition = new WhereClauseRegisterCondition { Alias = "multiasset", Global = true };
+            multiAssetCondition = multiAssetCondition.AppendSchema("multiAssetLookupList");
+            _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", multiAssetCondition);
         }
 
 

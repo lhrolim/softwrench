@@ -26,7 +26,7 @@
     </div>
     <input type="hidden" ng-model="datamap[fieldMetadata.target]" />
 
-    <div ng-if="loadModalWrappers[fieldMetadata.attribute]!=null">
+    <div ng-if="loadModalWrappers[fieldMetadata.attribute]!=null && !customModal">
         <lookup-modal-wrapper lookup-obj="lookupObj"
                               schema="schema"
                               datamap="datamap"

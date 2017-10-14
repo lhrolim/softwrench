@@ -94,9 +94,9 @@
           <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
           <field attribute="isprimary" hidden="true"></field>
-          <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location" >
-            <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList"/>
-            <dataprovider prefilterfunction="FilterAssets"/>
+          <field attribute="asset_.assetuid" hidden="true"/>
+          <association target="assetnum" labelfield="asset_.description" label="Asset" extraprojectionvalues="location,assetuid">
+            <renderer type="lookup" params="largemodal=true;application=asset;schemaid=multiAssetLookupList;lookup.mode=modal;onload=multiassetlocciService.beforeAssetModalOpen;onsave=multiassetlocciService.assetsSelected"/>
             <event type="afterchange" service="multiassetlocciService" method="afterChangeAsset"/>
           </association>
           <association target="location" labelfield="location_.location" label="Location">
@@ -107,7 +107,7 @@
             <renderer type="numericinput" params="min=1;width=10%"/>
           </field>
           <field attribute="progress" label="Progress">
-            <renderer type="checkbox" params="editable=true;width=5%"/>
+            <renderer type="checkbox" params="editable=true;width=10%"/>
           </field>
           <field attribute="#isDirty" defaultexpression="true" showexpression="false" hidden="true"/>
           <commandbars>

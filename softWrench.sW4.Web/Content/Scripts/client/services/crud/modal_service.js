@@ -96,7 +96,10 @@
                         cancelOnClickOutside: properties.cancelOnClickOutside,
                         useavailableheight: properties.useavailableheight,
                         resizable: properties.resizable,
-                        resizableElements: properties.resizableElements
+                        resizableElements: properties.resizableElements,
+                        searchData: properties.searchData,
+                        searchOperator: properties.searchOperator,
+                        searchSort: properties.searchSort
                     };
 
 

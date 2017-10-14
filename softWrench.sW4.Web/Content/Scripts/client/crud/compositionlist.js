@@ -379,6 +379,12 @@
 
         $scope.$on(JavascriptEventConstants.COMPOSITION_RESOLVED, $scope.onAfterCompositionResolved);
 
+        $scope.$on(JavascriptEventConstants.CompositionBatchAddMultiple, (event, relationship, datamaps) => {
+            if ($scope.relationship === relationship) {
+                datamaps.forEach(dm => $scope.addItem(dm));
+            }
+        });
+
         $scope.getBooleanClass = function (compositionitem, attribute) {
             if (formatService.isChecked(compositionitem[attribute])) {
                 return 'fa-check-square-o';
@@ -853,7 +859,7 @@
 
         //#region ***************Batch functions **************************************/
 
-        $scope.addItem = function () {
+        $scope.addItem = function (initData) {
 
 
             const idx = $scope.compositionData().length;
@@ -870,7 +876,7 @@
                 }
             }
 
-            const newItem = compositionService.generateBatchItemDatamap(idx, listSchema);
+            const newItem = compositionService.generateBatchItemDatamap(idx, listSchema, initData);
 
             if ($scope.compositionschemadefinition.rendererParameters && $scope.compositionschemadefinition.rendererParameters["composition.inline.addfunction"]) {
                 const addFunction = $scope.compositionschemadefinition.rendererParameters["composition.inline.addfunction"];

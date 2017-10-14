@@ -4,6 +4,8 @@
     var sharedController = ["$scope","$q", "contextService", "expressionService", "commandService", "$log", "i18NService", "securityService", "$timeout", "fixHeaderService", "crudContextHolderService", "genericTicketService",
         function ($scope,$q, contextService, expressionService, commandService, $log, i18NService, securityService, $timeout, fixHeaderService, crudContextHolderService, genericTicketService) {
 
+    $scope.toggleCommands = [];
+
     $scope.invokeOuterScopeFn = function (expr, throwExceptionIfNotFound) {
         const methodname = expr.substr(7);
         const fn = $scope.ctrlfns[methodname];
@@ -165,9 +167,7 @@
     }
 
     function calcToggleInitialState(command) {
-        if (command.initialStateExpression) {
-            command.state = calcToggleExpression(command.initialStateExpression);
-        }
+        command.state = command.initialStateExpression ? calcToggleExpression(command.initialStateExpression) : false;
     }
 
     $scope.initIfToggleCommand = function(command) {
@@ -175,6 +175,7 @@
             return;
         }
         crudContextHolderService.addToggleCommand(command, $scope.panelid);
+        $scope.toggleCommands.push(command);
         calcToggleInitialState(command);
     }
 
@@ -234,6 +235,16 @@
         return "ToggleCommand" === command.type ? command : null;
     }
 
+    $scope.$on(JavascriptEventConstants.ReloadToggleState, (event, panelid) => {
+        if (panelid !== $scope.panelid || $scope.toggleCommands.length === 0) {
+            return;
+        }
+
+        const currentToggleCommands = $scope.toggleCommands;
+        $scope.toggleCommands = [];
+        crudContextHolderService.getCommandsModel(panelid).toggleCommands = [];
+        currentToggleCommands.forEach($scope.initIfToggleCommand);
+    });
 }];
 
 app.directive('gridtoolbar', ["contextService", function (contextService) {

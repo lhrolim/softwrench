@@ -393,25 +393,26 @@
                 }
 
 
-                function generateBatchItemDatamap(idx, compositionlistSchema) {
-                    const newItem = {
-                        //used to make a differentiation between a compositionitem datamap and a regular datamap
-                        [DatamapConstants.DatamapType]: "compositionitem"
-                    };
+                function generateBatchItemDatamap(idx, compositionlistSchema, initData) {
+                    const newItem = initData || {};
+
+                    //used to make a differentiation between a compositionitem datamap and a regular datamap
+                    newItem[DatamapConstants.DatamapType] = "compositionitem";
 
                     //this id will be placed on the entity so that angular can use it to track. 
                     //It has to be negative to indicate its not a maximo Id, and also a unique value to avoid collisions
                     const fakeNegativeId = -Date.now().getTime();
                     newItem[compositionlistSchema.idFieldName] = fakeNegativeId;
                     compositionlistSchema.displayables.forEach(d => {
-                        if (!d.isHidden) {
-                            //in order to override parentdata on default lookupsearch
-                            //check compositioncommons#buildMergedDatamap
-                            if (d.target) {
-                                newItem[d.target] = null;
-                            } else {
-                                newItem[d.attribute] = null;
-                            }
+                        if (d.isHidden) {
+                            return;
+                        }
+
+                        //in order to override parentdata on default lookupsearch
+                        //check compositioncommons#buildMergedDatamap
+                        const key = d.target ? d.target : d.attribute;
+                        if (!newItem[key]) {
+                            newItem[key] = null;
                         }
                     });
 

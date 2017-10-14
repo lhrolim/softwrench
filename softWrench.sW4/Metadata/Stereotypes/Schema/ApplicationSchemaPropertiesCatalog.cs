@@ -97,6 +97,11 @@
         public const string ListShowSearchIcon = "list.advancedfilter.showsearchicon";
 
         /// <summary>
+        /// if false the search icon would remain static (true by default)
+        /// </summary>
+        public const string ListHideSearchOptions = "list.advancedfilter.hidesearchoptions";
+
+        /// <summary>
         /// this property accepts single,multiple indicating that either a radiobutton or a checkbox should appear on the screen. If none provided, then there´ll be no selection
         /// </summary>
         public const string ListSelectionStyle = "list.selectionstyle";

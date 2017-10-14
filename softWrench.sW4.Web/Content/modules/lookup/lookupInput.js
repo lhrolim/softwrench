@@ -2,8 +2,8 @@
     "use strict";
 
     angular.module("sw_lookup").directive("lookupInput", ["$q", "lookupService", "contextService", 'expressionService', 'cmpfacade',
-        'dispatcherService', 'modalService', 'compositionCommons', 'i18NService',
-        function ($q, lookupService, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService) {
+        'dispatcherService', 'modalService', 'compositionCommons', 'i18NService', 'schemaService', 
+        function ($q, lookupService, contextService, expressionService, cmpfacade, dispatcherService, modalService, compositionCommons, i18NService, schemaService) {
 
             const directive = {
                 restrict: "E",
@@ -21,6 +21,9 @@
                 link: function (scope) {
 
                     scope.lookupObj = new LookupDTO(scope.fieldMetadata);
+
+                    const fieldMetadata = scope.fieldMetadata;
+                    scope.customModal = fieldMetadata.rendererType === "modal" || (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["lookup.mode"] === "modal");
 
                     if (scope.fieldMetadata &&
                         scope.fieldMetadata.rendererParameters &&
@@ -40,37 +43,45 @@
                     }
 
                     scope.showCustomModal = function (fieldMetadata, schema, datamap) {
-                        if (fieldMetadata.rendererParameters['schema'] == undefined) {
-                            return $q.reject("schema must be defined for custom modal");
+                        if (!fieldMetadata.rendererParameters["schemaid"] || !fieldMetadata.rendererParameters["application"] ) {
+                            return $q.reject("schema and application must be defined for custom modal");
                         }
                         const service = fieldMetadata.rendererParameters['onsave'];
-                        var savefn = $q.when();
+                        let savefn = null;
 
                         if (service != null) {
                             const servicepart = service.split('.');
-                            savefn = $q.when(dispatcherService.loadService(servicepart[0], servicepart[1]));
+                            savefn = dispatcherService.loadService(servicepart[0], servicepart[1]);
                         }
                         const onloadservice = fieldMetadata.rendererParameters['onload'];
-                        let onloadfn = $q.when(null);
+                        let onloadfn = null;
 
                         if (onloadservice != null) {
                             const onloadservicepart = onloadservice.split('.');
-                            onloadfn = $q.when(dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]));
+                            onloadfn = dispatcherService.loadService(onloadservicepart[0], onloadservicepart[1]);
                         }
-                        const modaldatamap = onloadfn(datamap, fieldMetadata.rendererParameters['schema'], fieldMetadata);
 
-                        const properties = (() => {
-                            const props = {};
-                            const cssclass = fieldMetadata.rendererParameters["cssclass"];
-                            if (!!cssclass) props.cssclass = cssclass;
+                        const schemaId = fieldMetadata.rendererParameters["schemaid"];
+                        const application = fieldMetadata.rendererParameters["application"];
+
+                        return schemaService.getSchema(application, schemaId).then(fieldSchema => {
+                            const props = {
+                                cssclass: fieldMetadata.rendererParameters["cssclass"] || ""
+                            };
                             const title = fieldMetadata.rendererParameters["title"];
                             if (!!title) props.title = title;
-                            return props;
-                        })();
 
-                        return modalService.showPromise(fieldMetadata.rendererParameters['schema'], modaldatamap, properties, datamap, schema).then(selecteditem => {
-                            //TODO: document this custom function
-                            return savefn(datamap, fieldMetadata.rendererParameters['schema'], selecteditem, fieldMetadata);
+                            if (fieldMetadata.rendererParameters["largemodal"] === "true") {
+                                props.cssclass = `${props.cssclass} largemodal`;
+                                props.removecrudmodalclass = true;
+                            }
+
+                            const modaldatamap = onloadfn ? onloadfn(datamap, fieldSchema, fieldMetadata, props) : {};
+
+                            return modalService.showPromise(fieldSchema, modaldatamap, props, datamap, schema).then(selecteditems => {
+                                //TODO: document this custom function
+                                return savefn && savefn(datamap, fieldSchema, selecteditems, fieldMetadata, schema);
+                            });
                         });
                     };
 
@@ -92,9 +103,7 @@
                          [scope.fieldMetadata.attribute]: true
                         };
 
-                        const fieldMetadata = scope.fieldMetadata;
-
-                        if (fieldMetadata.rendererType === "modal") {
+                        if (scope.customModal) {
                             return this.showCustomModal(fieldMetadata, scope.schema, scope.datamap);
                         }
 

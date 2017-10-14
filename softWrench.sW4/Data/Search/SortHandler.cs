@@ -18,6 +18,11 @@ namespace softWrench.sW4.Data.Search {
                 return;
             }
 
+            if (!string.IsNullOrWhiteSpace(dto.SearchSort) && dto.SearchSort.StartsWith("custom:")) {
+                dto.SearchSort = dto.SearchSort.Substring(7);
+                return;
+            }
+
             var translatedFields = schema.Fields.Where(f => f.AttributeToServer != null);
             if (!translatedFields.Any()) {
                 var searchField = schema.Fields.FirstOrDefault(f => f.Attribute.Equals(dto.SearchSort));

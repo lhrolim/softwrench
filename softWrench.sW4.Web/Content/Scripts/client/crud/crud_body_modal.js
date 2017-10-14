@@ -183,11 +183,14 @@
                     crudlistViewmodel.initGridFromServerResult(modaldata.appResponseData, "#modal");
                 } else if (datamap.length > 0) {
                     crudlistViewmodel.initGridFromDatamapAndSchema(datamap, schema, "#modal");
-                } else if (!modaldata.fromLink) {
-                    searchService.refreshGrid({}, {}, { panelid: "#modal", forcecleanup: true });
+                } else if (!modaldata.fromLink || modaldata.searchData) {
+                    searchService.refreshGrid(modaldata.searchData || {}, modaldata.searchOperator || {}, {
+                        panelid: "#modal", forcecleanup: true, searchSort: modaldata.searchSort || {}
+                    });
                 }
 
-
+                // refresh toggle buttons state too
+                $rootScope.$broadcast(JavascriptEventConstants.ReloadToggleState, "#modal");
             }
 
             return associationService.loadSchemaAssociations(datamapToUse, schema, { contextData: new ContextData("#modal") }).then(function () {

@@ -173,6 +173,9 @@
                             return;
                         }
 
+                        // enforcing updated selection model
+                        $scope.selectionModel = crudContextHolderService.getSelectionModel($scope.panelid);
+
                         $scope.schema = schemaCacheService.getSchemaFromResult(data);
                         $scope.datamap = data.resultObject;
                         crudContextHolderService.updateCrudContext($scope.schema, $scope.datamap, panelId);
@@ -234,7 +237,7 @@
                         contextService.deleteFromContext("grid_refreshdata");
                         fixHeaderService.FixHeader();
                         //usually this next call won´t do anything, but for lists with optionfields, this is needed
-                        associationService.updateFromServerSchemaLoadResult(data.associationOptions, null, true);
+                        associationService.updateFromServerSchemaLoadResult(data.associationOptions, { panelid: $scope.panelid }, true);
 
                         if (!initialLoad) {
                             checkpointService.createGridCheckpointFromGridData($scope.schema, $scope,$scope.panelid);
@@ -292,12 +295,12 @@
                     }
 
 
-                    $scope.cleanup = function () {
+                    $scope.cleanup = function (searchData, searchOperator, searchSort) {
                         $scope.paginationData.filterFixedWhereClause = null;
-                        $scope.searchData = {};
-                        $scope.searchSort = {};
+                        $scope.searchData = searchData || {};
+                        $scope.searchSort = searchSort || {};
                         sortModel().sortColumns = [];
-                        $scope.searchOperator = {};
+                        $scope.searchOperator = searchOperator || {};
                         $scope.searchValues = "";
                         $scope.vm.quickSearchDTO = { compositionsToInclude: [] };
                         crudContextHolderService.setSelectedFilter(null, $scope.panelid);
@@ -358,7 +361,7 @@
                         }
 
                         if (forcecleanup) {
-                            $scope.cleanup();
+                            $scope.cleanup(searchData, searchOperator, searchSort);
                         }
 
                         $scope.selectPage(pagetogo, newPageSize, printMode, { addPreSelectedFilters, numberOfPages, schemaFilterId });
@@ -619,11 +622,11 @@
                     }
 
                     $scope.shouldShowSearchOptions = function () {
-                        if (!$scope.schema.relatedCompositions) {
-                            return true;
+                        if (!$scope.schema.relatedCompositions || ($scope.schema.properties && $scope.schema.properties["list.advancedfilter.hidesearchoptions"] === "true")) {
+                            return false;
                         }
 
-                        return !$scope.schema.relatedCompositions.length > 0;
+                        return $scope.schema.relatedCompositions.length > 0;
                     }
 
                     $scope.noRecordsNewButtonLabel = function () {
