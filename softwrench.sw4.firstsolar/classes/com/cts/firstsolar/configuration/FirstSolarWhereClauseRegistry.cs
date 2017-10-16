@@ -53,6 +53,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         /// </summary>
         private const string WOGroupByBaseWhereClause =
           @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+            and {0}
             and not
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
                 and a.laborcode = '@user.properties['laborcode']')
@@ -273,15 +274,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
         public string WorkordersByGroup() {
-            var user = SecurityFacade.CurrentUser();
-            var sb = new StringBuilder();
-            sb.Append(DefaultValuesBuilder.ConvertAllValues(WOGroupByBaseWhereClause, user));
-            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
-                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-                var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"), true);
-                sb.AppendFormat(" and ({0})", locationQuery);
-            }
-            return sb.ToString();
+            return DoBuildQuery(WOGroupByBaseWhereClause, "workorder.location");
         }
 
         public string AssignedByGroup() {
