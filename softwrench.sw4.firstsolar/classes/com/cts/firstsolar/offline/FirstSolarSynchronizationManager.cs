@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
@@ -33,7 +34,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
             var lookupDTO = await base.BuildRedisDTO(appMetadata, completeCacheEntries);
             if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-                lookupDTO.ExtraKeys.Add("facilities", facilities);
+                if (appMetadata.Name.EqualsAny("offlineasset", "offlinelocation", "locancestor")) {
+                    lookupDTO.ExtraKeys.Add("facilities", facilities);
+                }
+
             }
             return lookupDTO;
         }
