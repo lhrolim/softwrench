@@ -11,6 +11,7 @@ using DotLiquid;
 using NHibernate.Util;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.PDF;
@@ -105,7 +106,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             }
             attachs.Add(BuildPdfReport(hash));
 
-            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs) { Cc = dom.Cc, BCc = "support@controltechnologysolutions.com" };
+            var cc = dom.Cc;
+            if (ApplicationConfiguration.IsProd() && "tier1".Equals(package.Tier)) {
+                cc = string.IsNullOrWhiteSpace(cc) ? FirstSolarConstants.TierOneCcEmails : cc + ", " + FirstSolarConstants.TierOneCcEmails;
+            }
+
+            var emailData = new EmailData(GetFrom(), to, subject, msg, attachs) { Cc = cc, BCc = "support@controltechnologysolutions.com" };
             return emailData;
         }
 

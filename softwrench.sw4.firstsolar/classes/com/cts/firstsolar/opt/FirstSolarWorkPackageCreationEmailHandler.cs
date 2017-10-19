@@ -13,6 +13,7 @@ using cts.commons.Util;
 using DotLiquid;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.api.classes.fwk.context;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softWrench.sW4.Configuration.Services.Api;
@@ -87,7 +88,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             }
 
             var isProdOrUat = ApplicationConfiguration.IsUat() || ApplicationConfiguration.IsProd();
-            var ccEmail = isProdOrUat ? "brent.galyon@firstsolar.com" : null;
+            var ccEmail = (string)null;
+            if (isProdOrUat) {
+                ccEmail = "brent.galyon@firstsolar.com";
+                if (ApplicationConfiguration.IsProd() && "tier1".Equals(wp.Tier)) {
+                    ccEmail = FirstSolarConstants.TierOneCcEmails + ", " + ccEmail;
+                }
+            }
 
             emailStatus = new WorkPackageEmailStatus {
                 Email = toEmail,
