@@ -1,7 +1,7 @@
 ﻿<div class="commandbar {{getCommandBarStyleClass()}}" ng-if="commandBar.hasActiveCommands">
     <ng-switch on="position">
 
-        <div ng-switch-when="mobile.fab">
+        <div ng-switch-when="mobile.fab" ng-show="shouldShowFabCommand()">
             <div class="action-fab" ng-repeat="container in commandBar.containers" ng-if="container.hasActiveCommands">
                 <mfb-menu ng-if="!container.isSingleActiveCommand"
                           label="{{label}}"
