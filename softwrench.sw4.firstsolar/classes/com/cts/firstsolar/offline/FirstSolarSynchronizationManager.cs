@@ -28,6 +28,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
             : base(resolver, respository, lookuper, iEventDispatcher, swdbDAO, syncChunkHandler, configFacade, redisManager) {
         }
 
+
         protected override async Task<RedisLookupDTO> BuildRedisDTO(ApplicationMetadata appMetadata, IDictionary<string, CacheRoundtripStatus> completeCacheEntries) {
             var user = SecurityFacade.CurrentUser();
             var lookupDTO = await base.BuildRedisDTO(appMetadata, completeCacheEntries);

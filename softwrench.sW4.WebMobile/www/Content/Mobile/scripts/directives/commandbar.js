@@ -89,6 +89,23 @@
                 $scope.executeCommand = command => offlineCommandService.executeCommand(command, $scope.schema, $scope.datamap);
 
                 $scope.isCommandHidden = command => !command || offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, command);
+
+                $scope.shouldShowFabCommand = () => {
+                    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                        return !cordova.plugins.Keyboard.isVisible;
+                    }
+                    return true;
+                };
+
+                window.addEventListener('native.keyboardshow', keyboardToggleHandler);
+                window.addEventListener('native.keyboardhide', keyboardToggleHandler);
+
+                function keyboardToggleHandler(e) {
+                    //forcing toggle visibility to be restored
+                    console.log("keyboard toggle");
+
+                    $scope.$digest();
+                }
                 
                 const updateCommandBar = (schema, position) => {
                     const commands = offlineCommandService.getCommands(schema || $scope.schema, position || $scope.position) || [];
