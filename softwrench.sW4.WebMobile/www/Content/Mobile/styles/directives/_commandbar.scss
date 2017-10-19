@@ -17,6 +17,11 @@
             }
         }
     }
+
+    .mfb-component--bl, .mfb-component--br, .mfb-component--tl, .mfb-component--tr {
+        margin: 0px 25px 25px 25px;
+    }
+
     // single command present
     .button.button-fab-single {
         background-color: $cts_gray;

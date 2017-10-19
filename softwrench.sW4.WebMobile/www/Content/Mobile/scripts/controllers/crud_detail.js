@@ -29,6 +29,12 @@
                 $scope.datamap = crudContextService.currentDetailItemDataMap();
                 $scope.item = crudContextHolderService.currentDetailItem();
 
+                $timeout(() => {
+                        const element = $("command-bar[position=\"mobile.fab\"]");
+                        commandBarDelegate.positionFabCommandBar(element);
+                    },0,false);
+                
+
                 if (!$scope.inlineCompositionsLoaded) {
                     inlineCompositionService.loadInlineCompositions($scope.item, $scope.datamap, $scope.allDisplayables)
                         .then(() => {

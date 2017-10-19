@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function commandBarDelegate() {
+    function commandBarDelegate($ionicScrollDelegate) {
         //#region Utils
 
         //#endregion
@@ -15,6 +15,14 @@
          * @param {Number} scrollPosition optional current scroll handler's position.top
          */
         function positionFabCommandBar(commandBarElement, scrollPosition) {
+
+            if (!scrollPosition) {
+
+                let positionObj = $ionicScrollDelegate.$getByHandle('detailHandler').getScrollPosition();
+                scrollPosition = !!positionObj ? positionObj.top : 0;
+            }
+
+
             const toolbarPrimary = $(".bar-header.bar-positive:visible").outerHeight(true);
             const toolbarSecondary = $(".bar-subheader.bar-dark:visible").outerHeight(true);
             const headerTitle = $(".crud-details .crud-title:visible").outerHeight(true);
@@ -22,7 +30,7 @@
             const componetHeights = toolbarPrimary + toolbarSecondary + headerTitle + headerDescription;
             const top = angular.isNumber(scrollPosition) && scrollPosition >= 0 ? scrollPosition : 0;
             const windowHeight = $(window).height();
-            const offset = (windowHeight - componetHeights - 110) + top;
+            const offset = (windowHeight - componetHeights - 70) + top;
 
             $(commandBarElement).css("top", offset);
 
@@ -50,7 +58,7 @@
 
     //#region Service registration
 
-    angular.module("sw_mobile_services").factory("commandBarDelegate", [commandBarDelegate]);
+    angular.module("sw_mobile_services").factory("commandBarDelegate", ["$ionicScrollDelegate", commandBarDelegate]);
 
     //#endregion
 

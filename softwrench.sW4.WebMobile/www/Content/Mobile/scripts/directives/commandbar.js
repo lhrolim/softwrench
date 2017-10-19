@@ -19,7 +19,7 @@
                     constructor() {
                         if (this.constructor === CommandHolder) {
                             throw new TypeError("Cannot instantiate abstract class CommandHolder");
-                        }    
+                        }
                     }
                     get activeCommands() {
                         throw new TypeError("Abstract getter for activeCommands not implemented");
@@ -86,7 +86,11 @@
 
                 $scope.getCommandBarStyleClass = () => window.replaceAll($scope.position, "\\.", "-");
 
-                $scope.executeCommand = command => offlineCommandService.executeCommand(command, $scope.schema, $scope.datamap);
+                $scope.executeCommand = command => offlineCommandService.executeCommand(command, $scope.schema, $scope.datamap).then(r => {
+                    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+                        return cordova.plugins.Keyboard.close();
+                    }
+                });
 
                 $scope.isCommandHidden = command => !command || offlineCommandService.isCommandHidden($scope.datamap, $scope.schema, command);
 
@@ -105,16 +109,17 @@
                     console.log("keyboard toggle");
 
                     $scope.$digest();
+                    commandBarDelegate.positionFabCommandBar($scope.element);
                 }
-                
+
                 const updateCommandBar = (schema, position) => {
                     const commands = offlineCommandService.getCommands(schema || $scope.schema, position || $scope.position) || [];
                     $scope.commandBar = new CommandBar(commands);
-                } 
+                }
                 const init = () => updateCommandBar();
 
                 init();
-                
+
                 $scope.$watch("schema", (newSchema, oldSchema) => {
                     if (newSchema === oldSchema || angular.equals(newSchema, oldSchema)) return;
                     updateCommandBar(newSchema);
@@ -133,6 +138,7 @@
 
             link: function (scope, element, attrs) {
                 commandBarDelegate.positionFabCommandBar(element);
+                scope.element = element;
             }
         };
 
