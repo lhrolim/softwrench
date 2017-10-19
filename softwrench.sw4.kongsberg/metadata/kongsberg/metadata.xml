@@ -817,6 +817,10 @@
           <field attribute="internalpriority" label="Int. Priority">
             <renderer type="default" params="width=4%" />
           </field>
+          <field attribute="reportedpriority" label="Reported Priority">
+            <renderer type="default" params="width=4%" />
+          </field>
+
           <field attribute="owner" label="Owner">
             <renderer type="default" params="width=8%" />
           </field>
@@ -826,6 +830,8 @@
           <field attribute="changedate" label="Changed Date">
              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;width=8%;showtime=false"/>
           </field>
+
+
           <field attribute="actualstart" label="Actual Start Date">
              <renderer type="datetime" params="format=MM/dd/yyyy HH:mm:ss;width=8%;showtime=false"/>
           </field>
@@ -904,6 +910,7 @@
           </field>
           <field attribute="reportedby" label="Reported By"/>
           <field attribute="internalpriority" label="Int. Priority"/>
+          <field attribute="reportedpriority" label="Rep. Priority"/>
           <field attribute="owner" label="Owner"/>
           <field attribute="ownergroup" label="Owner Group"/>
           <field attribute="changedate" label="Changed Date">
