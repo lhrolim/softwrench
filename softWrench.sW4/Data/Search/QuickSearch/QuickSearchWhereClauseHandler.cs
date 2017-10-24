@@ -60,7 +60,7 @@ namespace softWrench.sW4.Data.Search.QuickSearch {
             var filtersToApply = schemaFilters.Filters
                 .Where(f => !(f is MetadataBooleanFilter) && !(f is MetadataDateTimeFilter) && !(f is MetadataNumberFilter) && !StatusFilter(f.Attribute, schema));
 
-            var validFilterAttributes = filtersToApply
+            var validFilterAttributes = filtersToApply.Where(f => !f.Attribute?.StartsWith("#") ?? false)
                     .Select(f => AttribteAppendingApplicationPrefix(schema,f.Attribute, entity,  schema.Fields)).Where(f => f!= null);
 
             var sb = new StringBuilder();

@@ -136,6 +136,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             SanitizeDTOForMaximo(searchDto);
             var wpData = await LookupWorkPackageData(workPackageFilters, ignoreOldWps);
             var withRestrictionsSearchDto = HandleWorkPackageRestrictions(searchDto, wpData);
+
+            // workaround to search wp num as wonum
+            var quickSearch = withRestrictionsSearchDto.QuickSearchDTO?.QuickSearchData;
+            if (!string.IsNullOrEmpty(quickSearch) && quickSearch.ToLower().StartsWith("wp")) {
+                withRestrictionsSearchDto.QuickSearchDTO.QuickSearchData = quickSearch.Substring(2);
+            }
+
             var result = await InnerGetMaintenanceBuildDashList(application, withRestrictionsSearchDto);
             return BuildCombinedProjectedData(result, wpData);
         }

@@ -74,7 +74,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         public static string PrecompiledAssociationAttributeQuery([NotNull]string entityName, [NotNull]IQueryHolder attribute, string from = null, string originalToName = null) {
             if (attribute.Query == null)
                 return null;
-            var query = attribute.GetQueryReplacingMarkers(entityName);
+            var query = attribute.GetQueryReplacingMarkers(entityName, null, entityName); // from is null on pourpose
             if (originalToName != null) {
                 //SWWEB-2785 --> queries can be declared using the entityname rather than the qualified name, causing an issue under some scenarios:
                 // for compositions and grids, we do not use the qualifiers, but we do for quick search relationships.
