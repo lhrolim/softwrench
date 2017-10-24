@@ -736,6 +736,7 @@
         <schema id="wplist" parentschema="aworkpackagebuilddash" title="Work Packages" stereotype="list" redeclaring="false">
           <filters>
             <filter attribute="#tier" style="width:300px" whereclause="tier like !@#value" />
+            <filter attribute="wonum"/>
             <booleanfilter attribute="#nerc" style="width:300px" whereclause="nerc like !@#value" />
           </filters>
           <properties>
