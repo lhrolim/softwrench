@@ -22,6 +22,7 @@ namespace softwrench.sW4.TestBase {
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\pesco", "Client\\pesco")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\umc", "Client\\umc")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\firstsolar", "Client\\firstsolar")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\firstsolardispatch", "Client\\firstsolardispatch")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\manchester", "Client\\manchester")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\kongsberg", "Client\\kongsberg")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\tva", "Client\\tva")]

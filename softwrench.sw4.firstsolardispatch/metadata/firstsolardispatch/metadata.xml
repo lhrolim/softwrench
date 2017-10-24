@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <templates>
+    <template path="@servicerequest.xml"/>
+    <template path="@quickservicerequest.xml"/>
+    <template path="@asset.xml"/>
+    <template path="@location.xml"/>
+    <template path="@person.xml"/>
+    <template path="@workorder.xml"/>
+    <template path="@relatedrecords.xml"/>
+    <template path="@worklogs.xml"/>
+    <template path="@attachments.xml"/>
+  </templates>
+</metadata>

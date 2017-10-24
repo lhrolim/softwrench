@@ -1289,6 +1289,10 @@
       <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
       <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.firstsolardispatch\softwrench.sw4.firstsolardispatch.csproj">
+      <Project>{b5b6c7cb-3b3e-43cf-9def-a67d26f981ca}</Project>
+      <Name>softwrench.sw4.firstsolardispatch</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.firstsolar\softwrench.sw4.firstsolar.csproj">
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
       <Name>softwrench.sw4.firstsolar</Name>
