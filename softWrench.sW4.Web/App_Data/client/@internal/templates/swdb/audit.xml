@@ -24,6 +24,10 @@
           <field attribute="createddate" label="Audit Date" readonly="true">
             <renderer type="datetime"/>
           </field>
+          <field attribute="data" label="Data" hidden="true"/>
+          <field attribute="#data" label="Data" readonly="true">
+            <renderer type="textarea"/>
+          </field>
           <!--<section showexpression="@canCreateBoth">
             <optionfield attribute="policy" label="Policy">
               <option label="Personal" value="personal"/>
