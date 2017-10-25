@@ -15,16 +15,13 @@ namespace softWrench.sW4.Security.Init {
     public class DbUserInitializer : ISWEventListener<ApplicationStartedEvent>, IPriorityOrdered {
         private static SWDBHibernateDAO _dao;
 
-        public int Order {
-            get {
-                return 4;
-            }
-        }
+        public int Order => 4;
 
         [Transactional(DBType.Swdb)]
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             CreateUser();
         }
+
 
         public DbUserInitializer(SWDBHibernateDAO dao) {
             _dao = dao;
@@ -37,27 +34,27 @@ namespace softWrench.sW4.Security.Init {
                     User user = null;
                     switch (defaultUser) {
                         case UserType.Admin:
-                        user = _dao.FindSingleByQuery<User>(User.UserByUserName, "swadmin");
-                        if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
-                            var adminUser = User.CreateAdminUser("swadmin", "admin", "admin", ApplicationConfiguration.DefaultSiteId ?? ApplicationConfiguration.DefaultOrgId,
-                                ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n", ApplicationConfiguration.DefaultStoreloc, "swadmin@controltechnologysolutions.com");
-                            adminUser.MaximoPersonId = "swadmin";
-                            adminUser.Systemuser = true;
-                            _dao.Save(adminUser);
-                            CreateUserRoles(adminUser, UserType.Admin);
-                        }
-                        break;
+                            user = _dao.FindSingleByQuery<User>(User.UserByUserName, "swadmin");
+                            if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
+                                var adminUser = User.CreateAdminUser("swadmin", "admin", "admin", ApplicationConfiguration.DefaultSiteId ?? ApplicationConfiguration.DefaultOrgId,
+                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", "sw@dm1n", ApplicationConfiguration.DefaultStoreloc, "swadmin@controltechnologysolutions.com");
+                                adminUser.MaximoPersonId = "swadmin";
+                                adminUser.Systemuser = true;
+                                _dao.Save(adminUser);
+                                CreateUserRoles(adminUser, UserType.Admin);
+                            }
+                            break;
                         case UserType.Job:
-                        user = _dao.FindSingleByQuery<User>(User.UserByUserName, JobManager.JobUser);
-                        if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
-                            var jobUser = User.CreateAdminUser(JobManager.JobUser, "jobuser", "jobuser", ApplicationConfiguration.DefaultSiteId ?? "bla",
-                                ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", null, ApplicationConfiguration.DefaultStoreloc, "swadmin@controltechnologysolutions.com");
-                            jobUser.MaximoPersonId = "jobuser";
-                            jobUser.Systemuser = true;
-                            _dao.Save(jobUser);
-                            CreateUserRoles(jobUser, UserType.Job);
-                        }
-                        break;
+                            user = _dao.FindSingleByQuery<User>(User.UserByUserName, JobManager.JobUser);
+                            if (user == null && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.ClientName != "hapag")) {
+                                var jobUser = User.CreateAdminUser(JobManager.JobUser, "jobuser", "jobuser", ApplicationConfiguration.DefaultSiteId ?? "bla",
+                                    ApplicationConfiguration.DefaultOrgId ?? "ble", "test", "1-800-433-7300", "en", null, ApplicationConfiguration.DefaultStoreloc, "swadmin@controltechnologysolutions.com");
+                                jobUser.MaximoPersonId = "jobuser";
+                                jobUser.Systemuser = true;
+                                _dao.Save(jobUser);
+                                CreateUserRoles(jobUser, UserType.Job);
+                            }
+                            break;
                     }
                     if (user == null) {
                         continue;

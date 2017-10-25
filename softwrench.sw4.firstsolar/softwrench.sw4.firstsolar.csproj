@@ -218,6 +218,7 @@
     <Compile Include="classes\com\cts\firstsolar\FirstSolarOptWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />
+    <Compile Include="classes\com\cts\firstsolar\migration\Swweb3241Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3215Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3175Migration.cs" />
     <Compile Include="classes\com\cts\firstsolar\migration\Swweb3119Migration.cs" />

@@ -21,6 +21,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
         public IWhereClauseFacade WhereClauseFacade { get; set; }
 
         [Import]
+        public FirstSolarFacilityUtil FirstSolarFacilityUtil { get; set; }
+
+        [Import]
         public ISWDBHibernateDAO Dao { get; set; }
 
 
@@ -79,7 +82,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
                 sb.Append(" and ");
             }
             if (ApplicationConfiguration.IsProd() || ApplicationConfiguration.Profile.StartsWith("uat")) {
-                sb.Append(" workorder.siteid in ('1801','1803','1808', '6801') ");
+                sb.Append(" workorder.siteid in ('1801','1803','1808', '6801') and historyflag = 0 and istask = 0");
                 return sb.ToString();
             }
 
