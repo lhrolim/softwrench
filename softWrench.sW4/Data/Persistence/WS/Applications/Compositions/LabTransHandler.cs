@@ -132,19 +132,24 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             return Convert.ToDouble(d);
         }
 
-        private static void FillLineCostLabor(object integrationObject) {
+        private static void FillLineCostLabor(object integrationObject, double regularHrs) {
             try {
                 var payRateAux = WsUtil.GetRealValue(integrationObject, "PAYRATE");
                 double payRate;
                 double.TryParse(payRateAux.ToString(), out payRate);
-                var regularHrsAux = WsUtil.GetRealValue(integrationObject, "REGULARHRS");
-                double regularHrs;
-                double.TryParse(regularHrsAux.ToString(), out regularHrs);
+
                 var lineCost = (payRate * regularHrs);
                 WsUtil.SetValue(integrationObject, "LINECOST", lineCost);
             } catch {
                 WsUtil.SetValue(integrationObject, "LINECOST", null);
             }
+        }
+
+        private static double GetRegularHours(object integrationObject) {
+            var regularHrsAux = WsUtil.GetRealValue(integrationObject, "REGULARHRS");
+            double regularHrs;
+            double.TryParse(regularHrsAux.ToString(), out regularHrs);
+            return regularHrs;
         }
 
         [Transactional(DBType.Maximo)]
@@ -179,23 +184,48 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             WsUtil.SetValueIfNull(integrationObject, "LABORCODE", user.Login.ToUpper());
             WsUtil.SetValueIfNull(integrationObject, "ENTERBY", user.Login.ToUpper());
             var payRate = GetPayRate(crudData);
-
+            var regularHrs = GetRegularHours(integrationObject);
 
             WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
+            ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
+            FillLineCostLabor(integrationObject, regularHrs);
             // Maximo 7.6 Changes
-            DateTime startdateentered;
-            var jsonDate = crudData.GetAttribute("startdate");
-            var parsedDate = jsonDate as DateTime?;
+            DateTime? parsedDate = GetStartDate(crudData);
+
             if (parsedDate != null) {
                 //if already a date, it was parsed on ConversionUTIL
                 WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", DateUtil.BeginOfDay(parsedDate.Value), true);
                 WsUtil.SetValueIfNull(integrationObject, "STARTTIMEENTERED", parsedDate, true);
-            } else if (jsonDate != null && DateTime.TryParse(jsonDate.ToString(), out startdateentered)) {
-                WsUtil.SetValueIfNull(integrationObject, "STARTDATEENTERED", DateUtil.BeginOfDay(startdateentered).FromServerToRightKind(), true);
-                WsUtil.SetValueIfNull(integrationObject, "STARTTIMEENTERED", startdateentered.FromServerToRightKind(), true);
+                var finalDate = AdjustFinalDate(parsedDate.Value, regularHrs);
+                WsUtil.SetValueIfNull(integrationObject, "FINISHDATEENTERED", DateUtil.BeginOfDay(finalDate), true);
+                WsUtil.SetValueIfNull(integrationObject, "FINISHTIMEENTERED", finalDate, true);
+
             }
-            ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
-            FillLineCostLabor(integrationObject);
+
+
+        }
+
+        private DateTime AdjustFinalDate(DateTime parsedDate, double regularHrs) {
+            return parsedDate.AddHours(regularHrs);
+        }
+
+        private static DateTime? GetStartDate(CrudOperationData crudData) {
+            DateTime startdateentered;
+            var jsonDate = crudData.GetAttribute("startdate");
+            if (jsonDate == null) {
+                return null;
+            }
+
+            var parsedDate = jsonDate as DateTime?;
+
+            if (parsedDate != null) {
+                return parsedDate;
+            }
+
+
+            DateTime.TryParse(jsonDate.ToString(), out startdateentered);
+
+            return startdateentered;
         }
     }
 }
