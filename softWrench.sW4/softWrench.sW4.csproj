@@ -345,6 +345,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Audit\BaseAuditDataSet.cs" />
     <Compile Include="Configuration\Services\Api\IWhereClauseValidator.cs" />
     <Compile Include="Configuration\Services\ClientSideConfigurations.cs" />
     <Compile Include="Configuration\Services\ConfigurationCache.cs" />
