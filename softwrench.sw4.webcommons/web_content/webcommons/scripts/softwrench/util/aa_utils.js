@@ -647,6 +647,8 @@ function isEmpty(obj) {
     // that that property is correct.
     if (obj.length > 0) return false;
     if (obj.length === 0) return true;
+    if (obj === "") return true;
+
 
     // Otherwise, does it have any properties of its own?
     // Note that this doesn't handle

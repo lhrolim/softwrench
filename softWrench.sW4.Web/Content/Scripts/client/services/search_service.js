@@ -10,9 +10,9 @@
 
         var objCache = {};
 
-        function isEmpty(value) {
-            return value == null || value === "" || value.length === 0;
-        }
+//        function isEmpty(value) {
+//            return value == null || value === "" || value.length === 0;
+//        }
 
         function getSearchValue(value) {
             if (!value) {
@@ -75,36 +75,7 @@
             return searchOperations;
         };
 
-        var buildSearchParamsString = function (searchData, searchOperator, useOrOperator) {
-            const operatorToUse = useOrOperator ? "||" : "&&";
-            var resultString = "";
-            for (let data in searchData) {
-                if (!searchData.hasOwnProperty(data) || data === "lastSearchedValues") {
-                    //exclude this field which is used only to control the  needsCountUpdate flag
-                    continue;
-                }
-
-                if (!isEmpty(searchData[data]) || (searchOperator[data] != null && searchOperator[data].id === "BLANK")) {
-                    if (!searchOperator[data]) {
-                        continue;
-                    }
-
-                    if (data.indexOf('___') !== -1) {
-                        // this case is only for "BETWEEN" operator
-                        data = data.substring(0, data.indexOf('___'));
-                        if (resultString.indexOf(data) !== -1) {
-                            resultString += data + operatorToUse;
-                        } else {
-                            resultString += data + "___";
-                        }
-                        continue;
-                    }
-
-                    resultString += data + operatorToUse;
-                }
-            }
-            return resultString.substring(0, resultString.lastIndexOf(operatorToUse));
-        };
+        
 
         var buildSearchSortString = function (searchSort) {
             //            var searchSort = scope.searchSort;
@@ -144,6 +115,38 @@
         };
 
         return {
+
+            buildSearchParamsString : function (searchData, searchOperator= {}, useOrOperator = false) {
+                const operatorToUse = useOrOperator ? "||" : "&&";
+                var resultString = "";
+                for (let data in searchData) {
+                    if (!searchData.hasOwnProperty(data) || data === "lastSearchedValues") {
+                        //exclude this field which is used only to control the  needsCountUpdate flag
+                        continue;
+                    }
+
+                    if (!isEmpty(searchData[data]) || (searchOperator[data] != null && searchOperator[data].id === "BLANK")) {
+                        if (!isEmpty(searchOperator) && !searchOperator[data]) {
+                            continue;
+                        }
+
+                        if (data.indexOf('___') !== -1) {
+                            // this case is only for "BETWEEN" operator
+                            data = data.substring(0, data.indexOf('___'));
+                            if (resultString.indexOf(data) !== -1) {
+                                resultString += data + operatorToUse;
+                            } else {
+                                resultString += data + "___";
+                            }
+                            continue;
+                        }
+
+                        resultString += data + operatorToUse;
+                    }
+                }
+                return resultString.substring(0, resultString.lastIndexOf(operatorToUse));
+            },
+
             //TODO: dictionary?
             getSearchOperator: function (value) {
                 if (value.startsWith('>')) {
@@ -190,50 +193,60 @@
             },
 
 
-            buildSearchValuesString: function (searchData, searchOperator) {
+            buildSearchValuesString: function (searchData, searchOperator ={}) {
                 var resultString = "";
                 var value = "";
                 var beginAlreadySet = false;
+
                 for (let data in searchData) {
-                    if (searchOperator[data] == null) {
-                        continue;
+                    let soperator = searchOperator[data];
+
+                    if (soperator == null) {
+                        if (!isEmpty(searchOperator)) {
+                            //keeping backwards compatibility.
+                            //TODO: refactor
+                            continue;    
+                        }
+                        soperator = this.eqSearchOperation();
                     }
+
+                    
 
 
                     if ((isEmpty(searchData[data]) || data === "lastSearchedValues") &&
-                        (searchOperator[data] == null || searchOperator[data].id !== "BLANK")) {
+                        (soperator == null || soperator.id !== "BLANK")) {
                         continue;
                     }
 
 
-                    if (searchOperator[data].id === 'BTW') {
+                    if (soperator && soperator.id === 'BTW') {
                         value = searchData[data] + "__" + searchData[data + "_end"];
                     } else {
                         value = searchData[data];
                         if (data.indexOf('___') != -1) {
                             data = data.substring(0, data.indexOf('___'));
                         }
-                        if (searchOperator[data] == null) {
+                        if (soperator == null) {
                             searchOperator[data] = this.defaultSearchOperation();
                         }
-                        if (searchOperator[data].begin !== '' && !beginAlreadySet) {
-                            value = searchOperator[data].begin + value;
-                            if (searchOperator[data].id === 'BTW') {
+                        if (soperator.begin !== '' && !beginAlreadySet) {
+                            value = soperator.begin + value;
+                            if (soperator.id === 'BTW') {
                                 beginAlreadySet = true;
                                 resultString += value + "___";
                                 continue;
                             }
                         }
-                        if (searchOperator[data].end !== '') {
-                            if (searchOperator[data].id === 'BTW') {
-                                value = searchOperator[data].end + value;
+                        if (soperator.end !== '') {
+                            if (soperator.id === 'BTW') {
+                                value = soperator.end + value;
                                 beginAlreadySet = false;
                             }
                             else {
-                                value = value + searchOperator[data].end;
+                                value = value + soperator.end;
                             }
                         }
-                        if (searchOperator[data] != null && searchOperator[data].id === 'BLANK') {
+                        if (soperator != null && soperator.id === 'BLANK') {
                             value = '!@BLANK';
                         }
                     }
@@ -261,7 +274,7 @@
             buildSearchDTO: function (searchData ={}, searchSort ={}, searchOperator ={}, filterFixedWhereClause, paginationData, searchTemplate, quickSearchDTO, multiSearchSort) {
                 specialCharactersHandler(searchData, searchOperator);
                 const searchDto = {
-                    searchParams : buildSearchParamsString(searchData, searchOperator),
+                    searchParams : this.buildSearchParamsString(searchData, searchOperator),
                     searchValues : this.buildSearchValuesString(searchData, searchOperator),
                     searchSort : buildSearchSortString(searchSort),
                     SearchAscending : searchSort.order === "asc",
@@ -290,11 +303,11 @@
             buildReportSearchDTO: function (searchDto, searchData, searchSort, searchOperator, filterFixedWhereClause) {
                 if (searchDto == null) {
                     searchDto = {};
-                    searchDto.searchParams = buildSearchParamsString(searchData, searchOperator);
+                    searchDto.searchParams = this.buildSearchParamsString(searchData, searchOperator);
                     searchDto.searchValues = this.buildSearchValuesString(searchData, searchOperator);
                 }
                 else {
-                    const extraParams = buildSearchParamsString(searchData, searchOperator);
+                    const extraParams = this.buildSearchParamsString(searchData, searchOperator);
                     const extraValues = this.buildSearchValuesString(searchData, searchOperator);
                     if (extraParams != null && extraParams != '' && extraValues != null && extraValues != '') {
                         searchDto.searchParams += "&&" + extraParams;
@@ -383,6 +396,10 @@
 
             defaultSearchOperation: function () {
                 return this.searchOperations()[1];
+            },
+
+            eqSearchOperation: function () {
+                return this.searchOperations()[2];
             },
 
             /**
