@@ -422,6 +422,7 @@
           <field attribute="wonum" label="Work Order"/>
           <field attribute="description" label="description"/>
           <field attribute="worktype" label="Work Type"/>
+          <field attribute="status" label="Status"/>
         </schema>
 
         <schema id="locationwolist" title="Work Orders" stereotype="compositionlist" platform="web">
