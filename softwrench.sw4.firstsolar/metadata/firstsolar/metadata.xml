@@ -672,9 +672,9 @@
           <field attribute="reportdate" label="Reported Date">
             <renderer type="datetime" params="width=10%" />
           </field>
-          <field attribute="schedstart" label="Scheduled Start Date">
-            <renderer type="datetime" params="width=15%" />
-          </field>
+<!--          <field attribute="schedstart" label="Scheduled Start Date">-->
+<!--            <renderer type="datetime" params="width=15%" />-->
+<!--          </field>-->
           <properties>
             <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
@@ -771,9 +771,9 @@
             </field>
           </section>
           <section id="daysleft">
-            <field attribute="schedstart" label="Scheduled Start Date">
-              <renderer type="datetime" params="width=15%" />
-            </field>
+<!--            <field attribute="schedstart" label="Scheduled Start Date">-->
+<!--              <renderer type="datetime" params="width=15%" />-->
+<!--            </field>-->
             <field attribute="daysleftcm" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
             </field>
