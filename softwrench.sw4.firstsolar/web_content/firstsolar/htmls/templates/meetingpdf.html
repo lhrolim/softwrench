@@ -51,22 +51,16 @@
         
         <table class="mail-field-table">
             <tr>
-                <td class="mail-col-4">
+                <td class="mail-col-6">
                     <div class="mail-field-container">
                         <div class="mail-label">Start Date of Outage:</div>
                         <div class="mail-content">{{outagestartdate}}</div>
                     </div>
                 </td>
-                <td class="mail-col-4">
+                <td class="mail-col-6">
                     <div class="mail-field-container">
-                        <div class="mail-label">Estimated Completion Date:</div>
-                        <div class="mail-content">{{estimatedcompletiondate}}</div>
-                    </div>
-                </td>
-                <td class="mail-col-4">
-                    <div class="mail-field-container">
-                        <div class="mail-label">Actual Completion Date:</div>
-                        <div class="mail-content">{{actualcompletiondate}}</div>
+                        <div class="mail-label">MWh Lost Total:</div>
+                        <div class="mail-content">{{mwhlosttotal}}</div>
                     </div>
                 </td>
             </tr>
@@ -74,30 +68,6 @@
     </div>
 
     <div class="mail-section">
-        <div class="mail-legend-label">Lost Energy</div>
-        
-        <table class="mail-field-table">
-            <tr>
-                <td class="mail-col-4">
-                    <div class="mail-field-container">
-                        <div class="mail-label">MWh Lost Total:</div>
-                        <div class="mail-content">{{mwhlosttotal}}</div>
-                    </div>
-                </td>
-                <td class="mail-col-4">
-                    <div class="mail-field-container">
-                        <div class="mail-label">Daily Estimated Loss (MWh):</div>
-                        <div class="mail-content">{{mwhlostperday}}</div>
-                    </div>
-                </td>
-                <td class="mail-col-4">
-                    <div class="mail-field-container">
-                        <div class="mail-label">Total Estimated Loss (MWh):</div>
-                        <div class="mail-content">{{expectedmwhlost}}</div>
-                    </div>
-                </td>
-            </tr>
-        </table>
 
         <div class="mail-legend-label">Outage Summary</div>
 
