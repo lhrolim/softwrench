@@ -91,8 +91,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             myaDash.Application = "workorder";
             groupaDash.Application = "workorder";
 
-            pmDash.PreferredOrder = 1;
-            cmDash.PreferredOrder = 2;
+            
+            cmDash.PreferredOrder = 1;
+            pmDash.PreferredOrder = 2;
 
             myaDash.PreferredOrder = 3;
             groupaDash.PreferredOrder = 4;
