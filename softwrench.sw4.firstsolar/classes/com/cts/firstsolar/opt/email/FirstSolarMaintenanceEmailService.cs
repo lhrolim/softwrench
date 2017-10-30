@@ -153,7 +153,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             }
 
             //TODO: review email
-            var nerc = package.Nerc;
+            var nerc = woData.GetBooleanAttribute("asset_.isnerc");
 
             return Hash.FromAnonymousObject(new
             {

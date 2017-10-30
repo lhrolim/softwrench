@@ -102,12 +102,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
 
         [Property]
         public bool? BuildComplete { get; set; }
-
-        /// <summary>
-        /// Requirement from SWWEB-3215
-        /// </summary>
-        [Property]
-        public bool? Nerc { get; set; }
+//
 
         [Property]
         public bool? Deleted { get; set; }

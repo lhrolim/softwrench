@@ -29,6 +29,8 @@
     <entity name="asset" idAttribute="assetuid">
       <attributes>
         <attribute name="openwo" query="(select count(1) from workorder where UPPER(workorder.status) not in ('CAN', 'COMP', 'CLOSE') and workorder.assetnum = !@assetnum and workorder.siteid = !@siteid and workorder.orgid = !@orgid)" type="int"/>
+        <attribute name="isnercst"  type="varchar" query="CASE WHEN (!@isnerc is not null and !@isnerc = 1) THEN 'true' ELSE 'false' end "/>
+        <attribute name="isnerc"  type="boolean"/>
       </attributes>
     </entity>
 
@@ -572,6 +574,8 @@
           <field attribute="schedstart"/>
           <field attribute="description"/>
           <field attribute="ld_.ldtext"/>
+          <field attribute="asset_.isnerc"/>
+          <field attribute="asset_.isnercst"/>
           <composition relationship="wkpgworklogs" label="">
             <collectionproperties allowupdate="false" allowcreation="false" orderbyfield="createdate desc" listschema="workpackagelist"/>
           </composition>
@@ -737,7 +741,7 @@
           <filters>
             <filter attribute="#tier" style="width:300px" whereclause="tier like !@#value" />
             <filter attribute="wonum"/>
-            <booleanfilter attribute="#nerc" style="width:300px" whereclause="nerc like !@#value" />
+            <booleanfilter attribute="asset_.isnerc" style="width:300px"  />
           </filters>
           <properties>
             <!--reusing same service-->
@@ -748,7 +752,7 @@
 
           <section id="daysleft">
             <field attribute="worktype" label="Work Type"/>
-            <field attribute="#nerc" label="Nerc Compliance?">
+            <field attribute="asset_.isnerc" label="Nerc Compliance?">
               <renderer type="checkbox"/>
             </field>
             <field attribute="#tier" label="Tier">

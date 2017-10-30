@@ -160,7 +160,6 @@
           <field attribute="wpnum"/>
           <field attribute="workorderid"/>
           <field attribute="buildcomplete"/>
-          <field attribute="nerc"/>
           <field attribute="tier"/>
         </schema>
 
@@ -204,7 +203,7 @@
 
                 <field label="Site Name" attribute="#workorder_.facilityname" readonly="true"/>
 
-                <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location" >
+                <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location,isnercst" >
                   <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList;hidecode=true"/>
                   <!--                  <dataprovider prefilterfunction="FilterAssets"/>-->
                   <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
@@ -277,9 +276,9 @@
             <!--            </section>-->
 
             <section enableexpression="@wooutreq == true">
-              <header displacement="ontop" label="NERC Compliance" params="fieldset=true"/>
-              <optionfield attribute="nerc" default="no" defaultexpression="no">
-                <renderer type="radio" />
+              <header displacement="ontop" label="NERC Asset" params="fieldset=true"/>
+              <optionfield attribute="#workorder_.asset_.isnercst" enableexpression="false">
+                <renderer type="radio"/>
                 <option label="Yes" value="true" />
                 <option label="No" value="false" />
               </optionfield>

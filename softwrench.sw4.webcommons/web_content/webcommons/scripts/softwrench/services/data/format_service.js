@@ -97,7 +97,11 @@
                 }
 
                 if (field.rendererParameters['formatter'] === 'booltostring') {
-                    value = value === true ? "true" : "false";
+                    value = (value === true || value === 1)? "true" : "false";
+                }
+
+                if (field.rendererParameters['formatter'] === 'stringtonumberbool') {
+                    value = (value === "1" || value === "true") ? 1 : 0;
                 }
 
                 else if (field.rendererParameters['formatter'] === 'numberToAbs') {
