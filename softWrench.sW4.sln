@@ -115,8 +115,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.batches.api"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.audit", "softwrench.sW4.audit\softwrench.sw4.audit.csproj", "{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.dynforms", "softwrench.sw4.dynforms\softwrench.sw4.dynforms.csproj", "{825BF88C-0051-415E-82B7-6F9D91E36709}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.firstsolardispatch", "softwrench.sw4.firstsolardispatch\softwrench.sw4.firstsolardispatch.csproj", "{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}"
 EndProject
 Global
