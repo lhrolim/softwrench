@@ -394,7 +394,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var workPackage = tupleResult.Item1;
 
-            await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4, operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
+            var data = (CrudOperationData)operationWrapper.GetOperationData;
+
+            if (!"COMP".EqualsIc(data.GetStringAttribute("#workorder_.status"))){
+                //as per SWWEB-3230
+                await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4,
+                    operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
+            }
 
             var dm = DataMap.BlankInstance("_workpackage");
             dm.SetAttribute("mwhlosttotal", workPackage.MwhLostTotal);

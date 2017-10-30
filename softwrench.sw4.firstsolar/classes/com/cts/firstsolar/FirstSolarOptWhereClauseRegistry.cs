@@ -65,11 +65,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
             if (ids.Any()) {
                 var idsToSearch = BaseQueryUtil.GenerateInString(ids.Select(i => i.ToString()));
                 return
-                    $"workorder.status in('INPRG', 'APPR') and workorder.outreq = 1 {SiteClause(true)} and workorderid not in ({idsToSearch})";
+                    $"workorder.status in('INPRG', 'APPR', 'COMP') and workorder.outreq = 1 {SiteClause(true)} and workorderid not in ({idsToSearch})";
             }
 
 
-            return $"workorder.status in('INPRG', 'APPR') and workorder.outreq = 1 {SiteClause(true)} ";
+            return $"workorder.status in('INPRG', 'APPR','COMP') and workorder.outreq = 1 {SiteClause(true)} ";
         }
 
         public string WorkorderFacilityClause() {
