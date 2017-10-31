@@ -689,6 +689,7 @@
           <filters>
             <filter attribute="#wpnum" style="width:300px" whereclause="wpnum like !@#value" />
             <booleanfilter attribute="#buildcomplete"  whereclause="buildcomplete = !@#value" />
+            <booleanfilter attribute="#actionscompleted"  whereclause="actionscompleted = !@#value" />
           </filters>
           <field attribute="workorderid" hidden="true"/>
           <field attribute="#id" hidden="true"/>
@@ -711,6 +712,9 @@
           </field>
           <field attribute="reportdate" label="Reported Date">
             <renderer type="datetime" params="width=10%" />
+          </field>
+          <field attribute="#actionscompleted" label="A.I. Completed?">
+            <renderer type="checkbox" params="width=10%" />
           </field>
           <section id="daysleft"/>
 
@@ -751,9 +755,12 @@
           </properties>
 
           <section id="daysleft">
-            <field attribute="worktype" label="Work Type"/>
+            <field attribute="worktype" label="Work Type">
+              <renderer type="default" params="width=8%"/>
+              </field>
             <field attribute="asset_.isnerc" label="Nerc Compliance?">
-              <renderer type="checkbox"/>
+              <renderer type="checkbox" params="width=10%"/>
+
             </field>
             <field attribute="#tier" label="Tier">
               <renderer type="default" params="showsort=false;width=6%;" />

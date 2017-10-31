@@ -10,6 +10,9 @@
 
   <entities>
     <entity name="WorkPackage" idAttribute="id" whereclause="deleted is null or deleted != 1">
+      <attributes>
+        <attribute name="actionscompleted" type="bool" query="(SELECT (CASE WHEN count(id) = 0 THEN 1 ELSE 0 END) AS IsEmtpy from OPT_DAILY_OUTAGE_ACTION where completed = 0 and workpackageid = !@id)"/>
+      </attributes>
       <relationships>
 
         <relationship to="workorder">
@@ -69,6 +72,9 @@
               <renderer type="datetime"/>
             </field>
             <field label="MWh Lost Total" attribute="mwhlosttotal" readonly="true"/>
+            <field label="A.I. Completed?" attribute="actionscompleted" enableexpression="false">
+              <renderer type="checkbox"/>
+            </field>
           </section>
 
 <!--          <section orientation="horizontal">-->
@@ -161,6 +167,7 @@
           <field attribute="workorderid"/>
           <field attribute="buildcomplete"/>
           <field attribute="tier"/>
+          <field attribute="actionscompleted"/>
         </schema>
 
         <schema id="adetailnotabs" stereotype="detail" abstract="true">
