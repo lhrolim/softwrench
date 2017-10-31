@@ -127,7 +127,7 @@ namespace softwrench.sw4.offlineserver.controller {
         [HttpPost]
         public async Task<MobileMetadataDownloadResponseDefinition> DownloadMetadatas(MetadataDownloadDto metadataDto) {
             var watch = Stopwatch.StartNew();
-            
+
             await _offlineAuditManager.MarkSyncOperationBegin(metadataDto.ClientOperationId, metadataDto.DeviceData, OfflineAuditManager.OfflineAuditMode.Metadata);
             var user = SecurityFacade.CurrentUser();
             var topLevel = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
@@ -197,7 +197,10 @@ namespace softwrench.sw4.offlineserver.controller {
         [HttpPost]
         public async Task<Batch> SubmitBatch([FromUri]string application, [FromUri]string remoteId, JObject batchContent, [FromUri]string clientOperationId = null, [FromUri]DeviceData deviceData = null) {
             var operation = await _offlineAuditManager.MarkSyncOperationBegin(clientOperationId, deviceData, OfflineAuditManager.OfflineAuditMode.Batch);
-            _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
+
             Log.InfoFormat("Creating batch for application {0}", application);
             // return the generated Batch to be serialized
             var batch = _offLineBatchService.SubmitBatch(application, remoteId, operation, batchContent);

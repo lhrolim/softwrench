@@ -58,11 +58,12 @@ namespace softwrench.sw4.offlineserver.audit {
         public void PopulateSyncOperationWithTopData(string clientOperationId, SynchronizationResultDto synchronizationResultDto) {
 
             var user = SecurityFacade.CurrentUser();
-            var key = SyncOperation.GenerateKey(user, clientOperationId);
+            
 
-            if (!ShouldAudit(key)) {
+            if (!ShouldAudit()) {
                 return;
             }
+            var key = SyncOperation.GenerateKey(user, clientOperationId);
             lock (string.Intern(key)) {
                 var operation = RedisManager.Lookup<SyncOperation>(key);
                 if (operation == null) {
@@ -105,11 +106,13 @@ namespace softwrench.sw4.offlineserver.audit {
         public void PopulateSyncOperationWithAssociationData(string requestClientOperationId, AssociationSynchronizationResultDto associationResult) {
 
             var user = SecurityFacade.CurrentUser();
-            var key = SyncOperation.GenerateKey(user, requestClientOperationId);
+            
 
-            if (!ShouldAudit(key)) {
+            if (!ShouldAudit()) {
                 return;
             }
+
+            var key = SyncOperation.GenerateKey(user, requestClientOperationId);
 
             lock (string.Intern(key)) {
                 var operation = RedisManager.Lookup<SyncOperation>(key);
@@ -147,7 +150,7 @@ namespace softwrench.sw4.offlineserver.audit {
 
 
             var user = SecurityFacade.CurrentUser();
-            var key = SyncOperation.GenerateKey(user, requestClientOperationId);
+
 
             if (deviceData == null) {
                 //playing safe, shouldn´t happen
@@ -156,13 +159,15 @@ namespace softwrench.sw4.offlineserver.audit {
 
             var validversion = await ValidateOffLineVersion(deviceData.ClientVersion);
 
-            if (!ShouldAudit(key, mode == OfflineAuditMode.Batch)) {
+            if (!ShouldAudit(mode == OfflineAuditMode.Batch)) {
                 if (!validversion) {
                     throw new InvalidOffLineVersionException(deviceData.ClientVersion);
                 }
 
                 return null;
             }
+
+            var key = SyncOperation.GenerateKey(user, requestClientOperationId);
 
             SyncOperation operation = null;
 
@@ -241,7 +246,7 @@ namespace softwrench.sw4.offlineserver.audit {
         }
 
 
-        private bool ShouldAudit(string key, bool isBatchOperation = false) {
+        private bool ShouldAudit(bool isBatchOperation = false) {
             if (!RedisManager.IsAvailable()) {
                 return false;
             }
@@ -261,10 +266,11 @@ namespace softwrench.sw4.offlineserver.audit {
 
         public void MarkBatchCompleted(SyncOperation operation) {
             var before = Stopwatch.StartNew();
-            var key = SyncOperation.GenerateKey(SecurityFacade.CurrentUser(), operation.AuditTrail.ExternalId);
-            if (!ShouldAudit(key, true)) {
+            
+            if (!ShouldAudit(true)) {
                 return;
             }
+            var key = SyncOperation.GenerateKey(SecurityFacade.CurrentUser(), operation.AuditTrail.ExternalId);
             var currentTrail = AuditManager.CurrentTrail();
             if (currentTrail != null) {
                 //updating current thread trail

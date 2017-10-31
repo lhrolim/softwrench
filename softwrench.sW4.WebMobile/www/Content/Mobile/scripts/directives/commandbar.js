@@ -110,6 +110,8 @@
 
                     $scope.$digest();
                 
+                
+                
                     commandBarDelegate.positionFabCommandBar($scope.element);
                 }
 
@@ -117,6 +119,7 @@
                     const commands = offlineCommandService.getCommands(schema || $scope.schema, position || $scope.position) || [];
                     $scope.commandBar = new CommandBar(commands);
                 }
+
                 const init = () => updateCommandBar();
 
                 init();
