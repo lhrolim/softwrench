@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using cts.commons.portable.Util;
 using cts.commons.simpleinjector.Events;
 using cts.commons.web.Attributes;
 using Iesi.Collections.Generic;
@@ -118,7 +119,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpGet]
-        public GenericResponseResult<ManageDashBoardsDTO> Manage() {
+        public GenericResponseResult<ManageDashBoardsDTO> Manage(string applicationToFilter = null) {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
             int? preferredDashboardId = null;
@@ -159,14 +160,18 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
             }
             dashboards = (IEnumerable<Dashboard>)user.Genericproperties[DashboardConstants.DashBoardsProperty];
-            var dto = new ManageDashBoardsDTO() {
-                Permissions = new ManageDashBoardsDTO.ManageDashboardsPermissionDTO() {
+            if (applicationToFilter != null) {
+                dashboards = dashboards.Where(d => d.Application == null || d.Application.EqualsIc(applicationToFilter));
+            }
+
+            var dto = new ManageDashBoardsDTO {
+                Permissions = new ManageDashBoardsDTO.ManageDashboardsPermissionDTO {
                     CanCreateOwn = canCreateOwn,
                     CanCreateShared = canCreateShared,
                     CanDeleteOwn = canCreateOwn,
                     CanDeleteShared = canCreateShared
                 },
-                Schemas = new ManageDashBoardsDTO.ManageDashboardsSchemasDTO() {
+                Schemas = new ManageDashBoardsDTO.ManageDashboardsSchemasDTO {
                     NewPanelSchema = panelSelectionSchema,
                     PanelSchemas = panelSchemas,
                     SaveDashboardSchema = saveDashboardSchema,
@@ -199,7 +204,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         [HttpGet]
         public async Task<string> LoadPanelWhereClause([FromUri]string applicationName, [FromUri]string panelAlias) {
-            var queryResult = await _whereClauseFacade.LookupAsync(applicationName, new ApplicationLookupContext() { MetadataId = "dashboard:" + panelAlias });
+            var queryResult = await _whereClauseFacade.LookupAsync(applicationName, new ApplicationLookupContext { MetadataId = "dashboard:" + panelAlias });
             return queryResult?.Query;
         }
 
@@ -226,24 +231,24 @@ namespace softwrench.sw4.dashboard.classes.controller {
         [Transactional(DBType.Swdb)]
         public virtual async Task<IGenericResponseResult> SaveGridPanel(DashboardGridPanel panel) {
             var app = MetadataProvider.Application(panel.Application);
-            
+
             //TODO make it transactional
 
             await _whereClauseFacade.RegisterAsync(app.ApplicationName, panel.WhereClause, new WhereClauseRegisterCondition {
-                AppContext = new ApplicationLookupContext() {
+                AppContext = new ApplicationLookupContext {
                     MetadataId = "dashboard:" + panel.Alias
                 }
-            }, true,false);
+            }, true, false);
 
             if (panel.SchemaRef == null) {
                 var schema = app.GetListSchema();
                 panel.SchemaRef = schema.SchemaId;
             }
-            
+
             panel.Filter = new DashboardFilter();
             var gridPanel = await _dao.SaveAsync(panel);
             gridPanel.WhereClause = panel.WhereClause;
-            _auditManager.CreateAuditEntry("update",typeof(DashboardGridPanel).Name,panel.Id.ToString(), panel.Id.ToString(), "");
+            _auditManager.CreateAuditEntry("update", typeof(DashboardGridPanel).Name, panel.Id.ToString(), panel.Id.ToString(), "");
             return new GenericResponseResult<DashboardBasePanel>(gridPanel);
         }
 
@@ -262,16 +267,16 @@ namespace softwrench.sw4.dashboard.classes.controller {
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadDashboard(int? dashBoardId) {
-            var manageDTO = Manage();
+        public IGenericResponseResult LoadDashboard(int? dashBoardId, string applicationToFilter = null) {
+            var manageDTO = Manage(applicationToFilter);
             manageDTO.ResultObject.PreferredId = dashBoardId;
             return manageDTO;
         }
 
 
         [HttpGet]
-        public async Task<IGenericResponseResult> LoadDashboardByAlias(string alias) {
-            var manageDTO = Manage();
+        public async Task<IGenericResponseResult> LoadDashboardByAlias(string alias, string applicationToFilter = null) {
+            var manageDTO = Manage(applicationToFilter);
             var dashboard = await _dao.FindSingleByQueryAsync<Dashboard>(Dashboard.By_ALIAS, alias);
             manageDTO.ResultObject.PreferredId = dashboard.Id;
             return manageDTO;
@@ -336,9 +341,9 @@ namespace softwrench.sw4.dashboard.classes.controller {
             var metadataId = "dashboard:" + panel.Alias;
             var conditionAlias = ChartInitializer.AliasMetadataIdDict.ContainsKey(metadataId) ? ChartInitializer.AliasMetadataIdDict[metadataId] : metadataId;
 
-            await _whereClauseFacade.RegisterAsync(applicationName, panel.WhereClause, new WhereClauseRegisterCondition() {
+            await _whereClauseFacade.RegisterAsync(applicationName, panel.WhereClause, new WhereClauseRegisterCondition {
                 Alias = conditionAlias,
-                AppContext = new ApplicationLookupContext() {
+                AppContext = new ApplicationLookupContext {
                     MetadataId = metadataId
                 }
             }, true);

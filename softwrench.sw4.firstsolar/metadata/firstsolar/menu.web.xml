@@ -5,7 +5,7 @@
   <reference id="asset"/>
   <reference id="location"/>
   
-  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.techmyassignments" hasmainaction="true">
+  <container title="Work Orders" tooltip="Click to access your work orders" icon="fa fa-wrench" id="workorder" role="workorders" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.techmyassignments;applicationToFilter=workorder" hasmainaction="true">
     <application id="TWO" icon="fa fa-table" title="Work Orders" ref="workorder" schema="list" tooltip="Click to view your Work Order Grid"/>
     <application id="NTWO" icon="fa fa-plus" title="New Work Order" ref="workorder" schema="newdetail" tooltip="Click to Create a New Work Order"/>
   </container>
@@ -15,7 +15,7 @@
     <application id="NWO" icon="fa fa-plus" title="New FSOC Work Order" ref="fsocworkorder" schema="fsocnewdetail" tooltip="Click to Create a New FSOC Work Order"/>
     <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
   </container>
-  <container id="workpackage" title="Work Packages" icon="fa fa-arrow-circle-down" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.pmmaintenance" hasmainaction="true">
+  <container id="workpackage" title="Work Packages" icon="fa fa-arrow-circle-down" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.pmmaintenance;applicationToFilter=_WorkPackage" hasmainaction="true">
     <application id="WP" icon="fa fa-table" title="Work Package Grid" ref="workorder" schema="wplist" tooltip="Click to view your Work Packages"/>
     <application id="NWP" icon="fa fa-plus" title="New Work Package" ref="_workpackage" schema="newdetail" tooltip="Click to Create a New Work Package"/>
   </container>

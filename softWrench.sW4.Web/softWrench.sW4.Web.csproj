@@ -198,6 +198,9 @@
     <Reference Include="softwrench.sW4.batches, Version=1.3.6487.20485, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.batches.1.3.6487.20485\lib\net46\softwrench.sW4.batches.dll</HintPath>
     </Reference>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6513.17875, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6513.17875\lib\net46\softwrench.sw4.dashboard.dll</HintPath>
+    </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
       <Private>True</Private>
@@ -1284,10 +1287,6 @@
     <ProjectReference Include="..\softwrench.sw4.chicago\softwrench.sw4.chicago.csproj">
       <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
       <Name>softwrench.sw4.chicago</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
-      <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
-      <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.firstsolardispatch\softwrench.sw4.firstsolardispatch.csproj">
       <Project>{b5b6c7cb-3b3e-43cf-9def-a67d26f981ca}</Project>
