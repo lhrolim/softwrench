@@ -10,6 +10,7 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -17,7 +18,6 @@ using cts.commons.persistence.Transaction;
 using cts.commons.simpleinjector;
 using cts.commons.Util;
 using Iesi.Collections.Generic;
-using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Metadata.Security;
@@ -136,7 +136,7 @@ namespace softWrench.sW4.Configuration.Services {
         public async Task<ISet<UserProfile>> ProfilesByApplication(string applicationName, InMemoryUser loggedUser) {
 
             var profiles = loggedUser.Profiles;
-            if (!EnumerableExtensions.Any(profiles)) {
+            if (!profiles.Any()) {
                 //no profiles at all, nothing to consider
                 return new LinkedHashSet<UserProfile>();
             }
@@ -162,7 +162,7 @@ namespace softWrench.sW4.Configuration.Services {
                     defaultId = profile.Id;
                 }
             }
-            if (EnumerableExtensions.Any(result) && defaultId != null) {
+            if (result.Any() && defaultId != null) {
                 result.Insert(0, new UserProfile {
                     Id = defaultId,
                     Name = sb.ToString(0, sb.Length - 3)

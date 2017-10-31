@@ -7,7 +7,6 @@ using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
-using NHibernate.Util;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services;
@@ -25,6 +24,7 @@ using softWrench.sW4.Security.Context;
 using softWrench.sW4.Util;
 using PropertyDefinition = softWrench.sW4.Configuration.Definitions.PropertyDefinition;
 using softWrench.sW4.Configuration.Definitions;
+using StackExchange.Redis.Extensions.Core.Extensions;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
     public class BasePropertyDefinitionDataSet : SWDBApplicationDataset {

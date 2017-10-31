@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NHibernate.Util;
 using softwrench.sW4.audit.classes.Model;
 using softWrench.sW4.Data.Persistence.WS.API;
 
@@ -28,7 +27,7 @@ namespace softwrench.sW4.audit.classes.Services.Batch.Data {
         }
 
         private ICollection<AuditEntry> EntriesFromData(JObject itemAdditionalData) {
-            if (!itemAdditionalData.Any()) {
+            if (!itemAdditionalData.HasValues) {
                 return new AuditEntry[0];
             }
             JArray entries = null;

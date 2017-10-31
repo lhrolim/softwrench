@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
-using NHibernate.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
@@ -15,6 +14,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using StackExchange.Redis.Extensions.Core.Extensions;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Commlog {
     public class BaseCommlogDataset : MaximoApplicationDataSet {

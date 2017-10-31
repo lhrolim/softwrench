@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
-using NHibernate.Linq;
-using NHibernate.Util;
 using softwrench.sw4.Shared2.Data.Association;
 using softWrench.sW4.Util;
+using StackExchange.Redis.Extensions.Core.Extensions;
 
 namespace softWrench.sW4.Data.API.Association.SchemaLoading {
 

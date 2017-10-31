@@ -8,7 +8,6 @@ using Iesi.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
-using NHibernate.Type;
 
 namespace softwrench.sw4.user.classes.entities {
     [Class(Table = "SW_USER2", Lazy = false)]

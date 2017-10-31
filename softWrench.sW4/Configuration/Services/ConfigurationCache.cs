@@ -4,9 +4,9 @@ using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
-using NHibernate.Util;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Security.Context;
+using StackExchange.Redis.Extensions.Core.Extensions;
 
 namespace softWrench.sW4.Configuration.Services {
     public class ConfigurationCache : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {

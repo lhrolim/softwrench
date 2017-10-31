@@ -1,19 +1,11 @@
 ﻿using cts.commons.portable.Util;
-using Iesi.Collections.Generic;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Configuration.Util;
 using System;
 using System.Collections.Generic;
 using cts.commons.persistence.Util;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
-using softwrench.sw4.api.classes.configuration;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
-using NHibernate.UserTypes;
-using NHibernate.SqlTypes;
-using System.Data;
-using System.Threading.Tasks;
-using NHibernate;
 
 namespace softWrench.sW4.Configuration.Definitions {
 

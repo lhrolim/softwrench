@@ -280,7 +280,7 @@ namespace cts.commons.persistence {
             }
 
             using (var session = GetSession()) {
-                using (var transaction = await session.BeginTransactionAsync()) {
+                using (var transaction = session.BeginTransaction()) {
                     return await runabble(new TransactionPair(session, transaction));
                 }
             }
@@ -296,7 +296,7 @@ namespace cts.commons.persistence {
             }
 
             using (var session = GetSession()) {
-                using (var transaction = await session.BeginTransactionAsync()) {
+                using (var transaction = session.BeginTransaction()) {
                     await runabble(new TransactionPair(session, transaction));
                 }
             }
@@ -424,7 +424,7 @@ namespace cts.commons.persistence {
             if (txContext.Transaction != null) {
                 return txContext.Transaction;
             }
-            return await session.BeginTransactionAsync();
+            return session.BeginTransaction();
         }
 
         public ITransaction BeginTransaction(ISession session) {

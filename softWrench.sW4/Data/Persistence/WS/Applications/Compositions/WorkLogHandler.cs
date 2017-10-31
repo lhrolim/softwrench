@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using cts.commons.simpleinjector;
-using NHibernate.Linq;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Security.Services;

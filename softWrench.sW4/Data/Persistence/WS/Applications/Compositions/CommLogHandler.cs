@@ -8,12 +8,9 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using JetBrains.Annotations;
 using log4net;
-using NHibernate.Linq;
 using softwrench.sw4.api.classes.email;
-using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
-using softWrench.sW4.Data.PDF;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
@@ -22,13 +19,9 @@ using softWrench.sW4.Util;
 using softWrench.sW4.wsWorkorder;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 using softWrench.sW4.Metadata.Applications;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Net;
-using System.IO;
-using System.Text;
-using cts.commons.persistence.Transaction;
-using NHibernate.Util;
+using StackExchange.Redis.Extensions.Core.Extensions;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class CommLogHandler : ISingletonComponent {

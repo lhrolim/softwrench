@@ -9,7 +9,6 @@ using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using log4net;
 using Newtonsoft.Json.Linq;
-using NHibernate.Util;
 using softwrench.sw4.problem.classes;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.API;

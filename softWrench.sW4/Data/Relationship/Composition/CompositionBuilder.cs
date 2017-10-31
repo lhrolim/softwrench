@@ -1,5 +1,4 @@
 ﻿using System;
-using NHibernate.Util;
 using softwrench.sW4.Shared2.Metadata;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using log4net;
+using NHibernate.Util;
 using softWrench.sW4.Metadata.Applications.Security;
 using softWrench.sW4.Metadata.Security;
 

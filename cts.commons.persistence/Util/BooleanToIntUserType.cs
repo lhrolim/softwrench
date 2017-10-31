@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 using System.Threading.Tasks;
 using NHibernate;
+using NHibernate.Engine;
 using NHibernate.SqlTypes;
 using NHibernate.UserTypes;
 
@@ -9,6 +11,17 @@ namespace cts.commons.persistence.Util {
     public class BooleanToIntUserType : IUserType {
         public object Assemble(object cached, object owner) {
             return cached;
+        }
+
+        public void NullSafeSet(DbCommand cmd, object value, int index, ISessionImplementor session) {
+            if (value == null) {
+                ((IDataParameter)cmd.Parameters[index]).Value =
+                    DBNull.Value;
+            } else {
+                var boolValue = (bool)value;
+                ((IDataParameter)cmd.Parameters[index]).Value =
+                    boolValue ? 1 : 0;
+            }
         }
 
         public object DeepCopy(object value) {
@@ -24,46 +37,56 @@ namespace cts.commons.persistence.Util {
                 return 0;
             return x.GetHashCode();
         }
+
+        public object NullSafeGet(DbDataReader rs, string[] names, ISessionImplementor session, object owner) {
+            var obj = NHibernateUtil.Int32.
+                NullSafeGet(rs, names[0], session, owner);
+            if (obj == null) {
+                return false;
+            }
+            return (int)obj == 1;
+        }
+
         public bool IsMutable {
             get {
                 return false;
             }
         }
-
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        async Task<object> IUserType.NullSafeGet(IDataReader rs, string[] names, object owner) {
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-            var obj = NHibernateUtil.Int32.
-             NullSafeGet(rs, names[0]);
-            if (obj == null) {
-                return false;
-            }
-            return (int)obj == 1;
-        }
-
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
-        async Task IUserType.NullSafeSet(IDbCommand cmd, object value, int index) {
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
-            if (value == null) {
-                ((IDataParameter)cmd.Parameters[index]).Value =
-                      DBNull.Value;
-            } else {
-                var boolValue = (bool)value;
-                ((IDataParameter)cmd.Parameters[index]).Value =
-                      boolValue ? 1 : 0;
-            }
-        }
-
-        // represents conversion on load-from-db operations:
-        public object NullSafeGet(System.Data.IDataReader rs,
-               string[] names, object owner) {
-            var obj = NHibernateUtil.Int32.
-                   NullSafeGet(rs, names[0]);
-            if (obj == null) {
-                return false;
-            }
-            return (int)obj == 1;
-        }
+        //
+        //#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        //        async Task<object> IUserType.NullSafeGet(IDataReader rs, string[] names, object owner) {
+        //#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        //            var obj = NHibernateUtil.Int32.
+        //             NullSafeGet(rs, names[0]);
+        //            if (obj == null) {
+        //                return false;
+        //            }
+        //            return (int)obj == 1;
+        //        }
+        //
+        //#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        //        async Task IUserType.NullSafeSet(IDbCommand cmd, object value, int index) {
+        //#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+        //            if (value == null) {
+        //                ((IDataParameter)cmd.Parameters[index]).Value =
+        //                      DBNull.Value;
+        //            } else {
+        //                var boolValue = (bool)value;
+        //                ((IDataParameter)cmd.Parameters[index]).Value =
+        //                      boolValue ? 1 : 0;
+        //            }
+        //        }
+        //
+        //        // represents conversion on load-from-db operations:
+        //        public object NullSafeGet(System.Data.IDataReader rs,
+        //               string[] names, object owner) {
+        //            var obj = NHibernateUtil.Int32.
+        //                   NullSafeGet(rs, names[0]);
+        //            if (obj == null) {
+        //                return false;
+        //            }
+        //            return (int)obj == 1;
+        //        }
 
         // represents conversion on save-to-db operations:
         public void NullSafeSet(System.Data.IDbCommand cmd,

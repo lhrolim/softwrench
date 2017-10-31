@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
 using System;
-using NHibernate.Engine;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
 namespace softWrench.sW4.Configuration.Definitions {

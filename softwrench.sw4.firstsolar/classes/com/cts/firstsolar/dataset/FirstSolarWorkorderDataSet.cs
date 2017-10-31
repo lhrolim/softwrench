@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
-using NHibernate.Util;
+using Castle.Core.Internal;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
 using softwrench.sw4.Shared2.Data.Association;

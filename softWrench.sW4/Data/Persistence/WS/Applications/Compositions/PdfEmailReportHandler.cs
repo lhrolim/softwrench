@@ -2,12 +2,9 @@
 using System.Linq;
 using cts.commons.simpleinjector;
 using log4net;
-using NHibernate.Linq;
 using softwrench.sw4.api.classes.fwk.context;
 using softWrench.sW4.Data.PDF;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Maximo;
-using softWrench.sW4.Data.Persistence.Operation;
-using softWrench.sW4.Metadata.Applications;
 
 namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
     public class PdfEmailReportHandler : ISingletonComponent {

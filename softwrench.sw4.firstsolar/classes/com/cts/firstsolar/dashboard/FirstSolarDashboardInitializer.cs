@@ -6,7 +6,6 @@ using System.ComponentModel.Composition;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using log4net;
-using NHibernate.Mapping.ByCode;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softWrench.sW4.Configuration.Services.Api;
 

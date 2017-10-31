@@ -4,14 +4,8 @@ using System.Linq;
 using cts.commons.portable.Util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Metadata;
-using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector;
-using NHibernate.Util;
-using softWrench.sW4.Configuration.Definitions.WhereClause;
-using softWrench.sW4.Util;
 using softWrench.sW4.Data.Search;
-using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder {
 
