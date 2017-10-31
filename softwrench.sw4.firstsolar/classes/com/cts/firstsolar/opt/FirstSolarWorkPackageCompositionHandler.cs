@@ -10,6 +10,7 @@ using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
     public class FirstSolarWorkPackageCompositionHandler : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent> {
@@ -186,11 +187,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
-            BuildTestsDict();
+            if (ApplicationConfiguration.IsClient("firstsolar")) {
+                BuildTestsDict();
+            }
+
         }
 
         public void HandleEvent(ContainerReloadedEvent eventToDispatch) {
-            BuildTestsDict();
+            if (ApplicationConfiguration.IsClient("firstsolar")) {
+                BuildTestsDict();
+            }
         }
 
         private void BuildTestsDict() {
