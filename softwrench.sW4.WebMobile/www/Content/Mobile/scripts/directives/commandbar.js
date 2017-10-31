@@ -109,7 +109,7 @@
                     console.log("keyboard toggle");
 
                     $scope.$digest();
-                }
+                
                     commandBarDelegate.positionFabCommandBar($scope.element);
                 }
 
