@@ -26,7 +26,7 @@
                         <crud-output-fields schema="printSchema" datamap="item" displayables="printSchema.displayables" orientation="vertical" forprint="true"></crud-output-fields>
                     </div>
                     <div ng-show="showPrintSectionCompostions">
-                        <div ng-repeat="composition in compositionstoprint" ng-class="{'pagebreak-before1': shouldPageBreak}">
+                        <div ng-repeat="composition in compositionstoprint" ng-class="{'pagebreak-before': shouldPageBreak}">
                             <div ng-show="printComposition(item, composition)">
                                 <div ng-show="shouldPageBreak" class="pagebreak-before"></div>
                                 <div ng-hide="shouldPageBreak">&ensp;</div>

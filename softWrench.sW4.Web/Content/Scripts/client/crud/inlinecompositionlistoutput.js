@@ -18,13 +18,10 @@
                 forprint: "="
             },
 
-            controller: ["$scope", "$injector", "$q", "$timeout", "compositionService", "fieldService", "i18NService", "layoutservice", "expressionService", "formatService", "printAwaitableService",
-                function ($scope, $injector, $q, $timeout, compositionService, fieldService, i18NService, layoutservice, expressionService, formatService, printAwaitableService) {
+            controller: ["$scope", "$injector", "$q", "$log", "$timeout", "compositionService", "fieldService", "i18NService", "layoutservice", "expressionService", "formatService", "printAwaitableService",
+                function ($scope, $injector, $q, $log, $timeout, compositionService, fieldService, i18NService, layoutservice, expressionService, formatService, printAwaitableService) {
 
-                    if ($scope.forprint) {
-                        $scope.printDefered = $q.defer();
-                        printAwaitableService.registerAwaitable($scope.printDefered.promise);
-                    }
+
 
                     $scope.contextPath = function (path) {
                         return url(path);
@@ -39,7 +36,7 @@
                         return fieldService.isFieldHidden(datamap, application, fieldMetadata);
                     };
 
-                    $scope.columns = function() {
+                    $scope.columns = function () {
                         return $scope.compositionlistschema.displayables;
                     }
 
@@ -47,7 +44,7 @@
                         return $scope.compositiondata || [];
                     }
 
-                    $scope.hasDetailSchema = function() {
+                    $scope.hasDetailSchema = function () {
                         return !!$scope.compositiondetailschema;
                     }
 
@@ -89,8 +86,21 @@
                     });
 
                     function init() {
+                        const relationship = $scope.metadata.relationship;
+
+                        //workaround for swweb-3247 --> removing self relationships for now
+                        //TODO: fix this 
+                        const avoidCompositionLoadForPrint = relationship.startsWith("#");
+                        
+                        if ($scope.forprint && !avoidCompositionLoadForPrint) {
+                            $log.get("inlinecomposition#init",["print"]).debug("registering inlinecomposition print awaitable");
+                            $scope.printDefered = $q.defer();
+                            printAwaitableService.registerAwaitable($scope.printDefered.promise);
+                        }
+
                         $scope.compositionschemadefinition = $scope.metadata.schema;
-                        $scope.compositiondata = $scope.parentdata[$scope.metadata.relationship];
+
+                        $scope.compositiondata = $scope.parentdata[relationship];
                         $scope.compositionlistschema = $scope.compositionschemadefinition.schemas.list;
                         $scope.compositiondetailschema = $scope.compositionschemadefinition.schemas.detail;
                         $scope.schema = $scope.compositionlistschema;

@@ -4,7 +4,7 @@
     // created to avoid the use of printservice on richtextfields, thus anabling the use of richtexts on sw_prelogin module
     function printAwaitableService() {
         //#region Utils
-        const awaitables = [];
+        let awaitables = [];
         //#endregion
 
         //#region Public methods
@@ -16,12 +16,17 @@
             return awaitables;
         }
 
+        function dispose() {
+            awaitables = [];
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             registerAwaitable,
-            getAwaitables
+            getAwaitables,
+            dispose
         };
         return service;
         //#endregion

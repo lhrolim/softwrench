@@ -6,7 +6,7 @@
                 <!--#region detail-->
                 <div ng-if="!isList">
                     <div>
-                        <input type="checkbox" ng-model="shouldPrintMain" ng-checked="true">
+                        <input type="checkbox" ng-model="vm.shouldPrintMain" ng-checked="true">
                         {{i18N('printmodal.print','Print')}} {{printSchema.title}}
                     </div>
 
@@ -25,8 +25,8 @@
                     <div style="padding-top: 30px">
 
                         <input type="checkbox"
-                               ng-model="shouldPageBreak"
-                               ng-checked="false">
+                               ng-model="vm.shouldPageBreak"
+                               ng-checked="true">
                         {{i18N('printmodal.applypagebreaks','Apply page-breaks?')}}
                     </div>
                 </div>

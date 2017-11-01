@@ -33,7 +33,14 @@
             var schemas = this.nonInlineCompositionsDict(baseSchema);
             const thisSchema = schemas[compositionKey];
             schemas = thisSchema.schema.schemas;
-            return schemaId === "print" ? schemas.print : schemas.list;
+            if (schemaId === "print") {
+                if (schemas.print) {
+                    return schemas.print;
+                }
+                return schemas.detail;
+            }
+
+            return schemas.list;
         },
 
         getCompositionIdName:  function (baseSchema, compositionKey, schemaId) {

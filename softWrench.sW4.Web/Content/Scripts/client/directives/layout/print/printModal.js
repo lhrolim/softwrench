@@ -37,8 +37,8 @@ app.directive('printModal', function ($log, contextService) {
 
             function buildDetailPrintOptions() {
                 const printOptions = {};
-                printOptions.shouldPageBreak = $scope.shouldPageBreak;
-                printOptions.shouldPrintMain = $scope.shouldPrintMain;
+                printOptions.shouldPageBreak = $scope.vm.shouldPageBreak;
+                printOptions.shouldPrintMain = $scope.vm.shouldPrintMain;
                 printOptions.compositionsToExpand = $scope.compositionstoprint;
                 return printOptions;
             };
@@ -99,10 +99,12 @@ app.directive('printModal', function ($log, contextService) {
 
                 $scope.printSchema = $scope.schema.printSchema != null ? $scope.schema.printSchema : $scope.schema;
 
+                $scope.vm = {};
+
                 //make all the ng-models´s objects true by default... angular will just work on binding upon click
                 //$scope.compositionstoprint = {};
-                $scope.shouldPageBreak = false;
-                $scope.shouldPrintMain = true;
+                $scope.vm.shouldPageBreak = true;
+                $scope.vm.shouldPrintMain = true;
                 
             };
 

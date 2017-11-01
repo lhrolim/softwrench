@@ -94,7 +94,7 @@ angular.module('sw_layout')
         },
 
         printDetail: function (schema, datamap, printOptions) {
-            var log = $log.getInstance("print_service#printDetail");
+            var log = $log.getInstance("print_service#printDetail",["print"]);
             if (schema.hasNonInlineComposition && printOptions === undefined) {
                 //this case, we have to choose which extra compositions to choose, so we will open the print modal
                 //open print modal...
@@ -219,7 +219,10 @@ angular.module('sw_layout')
 
         awaitToPrint: function () {
             var awaitables = printAwaitableService.getAwaitables();
-            return $q.all(awaitables).then(() => {
+            //only not already resolved promises
+            awaitables = awaitables.filter(a => a.$$state.status === 0);
+            return $q.all(awaitables).finally(() => {
+                printAwaitableService.dispose();
                 awaitables.length = 0;
             });
         }

@@ -31,8 +31,11 @@ namespace softWrench.sW4.Data.Relationship.Composition {
                 var name = toExpand.Key;
                 var compositionSchema = compositionSchemas[name];
                 var printSchema = compositionSchema.Schemas.Print;
+                if (printSchema == null) {
+                    printSchema = compositionSchema.Schemas.Detail;
+                }
                 var applicationMetadata = MetadataProvider.Application(EntityUtil.GetApplicationName(name))
-                    .ApplyPolicies(printSchema.GetSchemaKey(), user, ClientPlatform.Web,null);
+                    .ApplyPolicies(printSchema.GetSchemaKey(), user, ClientPlatform.Web, null);
                 var slicedEntityMetadata = MetadataProvider.SlicedEntityMetadata(applicationMetadata);
                 var searchDTO = new SearchRequestDto();
                 searchDTO.AppendSearchParam(printSchema.IdFieldName);
