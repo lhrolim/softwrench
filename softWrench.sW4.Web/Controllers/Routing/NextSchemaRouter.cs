@@ -97,6 +97,14 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                     Log.DebugFormat("retrieving mocked detail results");
                     return MockingUtils.GetMockedDataMap(applicationName, nextSchema, nextMetadata);
                 }
+                if (id == null && userIdSiteTuple == null) {
+                    Log.WarnFormat("No ids provided, skipping detail fetching");
+                    return new BlankApplicationResponse {
+                        TimeStamp = DateTime.Now.FromServerToRightKind(),
+                        FullRefresh = false,
+                    };
+                }
+
                 var detailRequest = new DetailRequest(nextSchema.GetSchemaKey(), null) { Id = id, UserIdSitetuple = userIdSiteTuple };
                 var response = await dataSet.Get(nextMetadata, SecurityFacade.CurrentUser(), detailRequest);
                 return response;
