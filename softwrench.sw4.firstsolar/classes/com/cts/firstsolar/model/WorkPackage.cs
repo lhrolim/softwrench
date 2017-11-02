@@ -144,7 +144,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model {
         [OneToMany(2, ClassType = typeof(MaintenanceEngineering))]
         public virtual IList<MaintenanceEngineering> MaintenanceEngineerings { get; set; }
 
-        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentEntity = 'WorkPackage' ", Inverse = true)]
+        [Bag(0, Table = "GEN_LISTRELATIONSHIP", Cascade = "all", Lazy = CollectionLazy.False, Where = "ParentEntity = 'WorkPackage'", Inverse = true)]
         [Key(1, Column = "parentid")]
         [OneToMany(2, ClassType = typeof(GenericListRelationship))]
         public IList<GenericListRelationship> GenericRelationships { get; set; } = new List<GenericListRelationship>();

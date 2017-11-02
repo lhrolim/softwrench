@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity name="GfedSite" idAttribute="id">
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="GfedSite" name="GfedSite" title="Site">
+      <schemas>
+        <schema id="ticketLookupList" stereotype="list.singleselection.modal" platform="web">
+          <field attribute="id" hidden="true"/>
+          <field attribute="gfedid" hidden="true"/>
+          <field attribute="facilityname" label="Site Name"/>
+          <field attribute="facilitytitle"  label="Description"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

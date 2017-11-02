@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_components").directive("fileexplorer", ["contextService", "dispatcherService", "attachmentService", "fileService", "schemaService", "crudContextHolderService", "alertService","$timeout",
+    angular.module("sw_components").directive("fileexplorer", ["contextService", "dispatcherService", "attachmentService", "fileService", "schemaService", "crudContextHolderService", "alertService", "$timeout",
 
         function (contextService, dispatcherService, attachmentService, fileService, schemaService, crudContextHolderService, alertService) {
             const directive = {
@@ -18,6 +18,7 @@
                     if ($scope.fieldMetadata && $scope.fieldMetadata.schema && !$scope.fieldMetadata.rendererParameters) {
                         $scope.fieldMetadata.rendererParameters = $scope.fieldMetadata.schema.rendererParameters;
                     }
+
                 }],
 
                 link: function (scope, element, attrs) {
@@ -33,10 +34,25 @@
                     scope.downloadAll = function ($event) {
                         $event.preventDefault();
 
-                        //TODO: make it workpackage agnostic 
-                        const ownerId = scope.datamap["#workorder_.workorderid"];//schemaService.getId(scope.datamap, crudContextHolderService.currentSchema());
-                        const userId = scope.datamap["#workorder_.wonum"];//schemaService.getId(scope.datamap, crudContextHolderService.currentSchema());
-                        const ownerTable = "workorder";// TODO: make it generic scope.datamap["class"];
+                        var isSwdb = scope.fieldMetadata.schema.isSwDB;
+
+                        const schema = crudContextHolderService.currentSchema();
+                        const applicationName = crudContextHolderService.currentSchema().applicationName;
+
+                        let ownerId;
+                        let userId;
+                        let ownerTable = applicationName;
+
+
+                        if (applicationName.equalsIc("_workpackage")) {
+                            ownerId = scope.datamap["#workorder_.workorderid"]; 
+                            userId =scope.datamap["#workorder_.wonum"]; 
+                            ownerTable = "workorder"; 
+                        } else {
+                            ownerId = schemaService.getId(scope.datamap, schema);
+                            userId = schemaService.getUserId(scope.datamap, schema);
+                        }
+
                         const relationship = scope.fieldMetadata.relationship;
 
                         const parameters = {
@@ -45,8 +61,9 @@
                             ownerTable,
                             relationship
                         }
+                        const baseUrl = isSwdb ? "/FileExplorer/DownloadAllSwdb" : "/FileExplorer/DownloadAll";
 
-                        const controllerUrl = url(`/FileExplorer/DownloadAll?${$.param(parameters)}`);
+                        const controllerUrl = url(baseUrl + "?" + $.param(parameters));
                         return fileService.downloadPromise(controllerUrl).catch((errorMessage) => alertService.alert("error downloading file"));
 
                     };
@@ -82,7 +99,7 @@
                             return;
                         }
 
-                        return dispatcherService.invokeServiceByString(addFunction, [newFile, rel, scope.datamap]).then(r=> {
+                        return dispatcherService.invokeServiceByString(addFunction, [newFile, rel, scope.datamap]).then(r => {
                         }).catch(() => {
                             const index = scope.files.indexOf(newFile);
                             if (index !== -1) {
@@ -140,8 +157,9 @@
                     scope.$on(JavascriptEventConstants.NavigateRequestCrawlOcurred, scope.clearFileExplorer);
 
 
-                    scope.refresh = function (newValue){
+                    scope.refresh = function (newValue) {
                         scope.files = [];
+                        const isSwdb = scope.fieldMetadata.schema.isSwDB;
                         if (!newValue) {
                             const datamap = crudContextHolderService.rootDataMap();
                             newValue = datamap[scope.fieldMetadata.relationship];
@@ -155,15 +173,30 @@
                             if (currentFile.deleted) {
                                 return;
                             }
+                            let file;
 
-                            scope.files.push({
-                                persisted: true,
-                                label: currentFile["docinfo_.description"],
-                                extension: getExt(currentFile["docinfo_.description"]),
-                                "docinfo_.urltype": currentFile["docinfo_.urltype"],
-                                docinfoid: currentFile["docinfoid"],
-                                doclinksid: currentFile["doclinksid"]
-                            });
+                            if (!currentFile["docinfo_.description"] && isSwdb) {
+                                file = {
+                                    persisted: true,
+                                    label: currentFile["document"],
+                                    extension: currentFile["extension"],
+                                    "docinfo_.urltype": "swdb",
+                                    docinfoid: currentFile["docinfo_id"],
+                                    doclinksid: currentFile["id"]
+                                };
+                            } else {
+                                file = {
+                                    persisted: true,
+                                    label: currentFile["docinfo_.description"],
+                                    extension: getExt(currentFile["docinfo_.description"]),
+                                    "docinfo_.urltype": currentFile["docinfo_.urltype"],
+                                    docinfoid: currentFile["docinfoid"],
+                                    doclinksid: currentFile["doclinksid"]
+                                };
+                            }
+                            scope.files.push(file);
+
+
                         });
                     }
 

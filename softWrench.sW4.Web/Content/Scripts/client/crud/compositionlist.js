@@ -31,12 +31,10 @@
         }
 
         $scope.nonHiddenDisplayables = function () {
-
             if (!$scope.compositionlistschema) {
                 return blankArr;
             }
-
-            return $scope.compositionlistschema.displayables.filter(f => !f.isHidden);
+            return $scope.compositionlistschema.displayables.filter(f => !f.isHidden || $scope.forceBlankSpace(f));
         }
 
         $scope.filterApplied = function () {
@@ -132,6 +130,10 @@
             const datamap = item == null ? $scope.parentdata : compositionService.buildMergedDatamap(item, $scope.parentdata);
             return fieldService.isFieldHidden(datamap, application, fieldMetadata);
         };
+
+        $scope.forceBlankSpace = function(column) {
+            return column.rendererParameters && column.rendererParameters.forceblankspaceifhidden === "true";
+        }
 
 
         $scope.initField = function (fieldMetadata, item) {
@@ -277,7 +279,7 @@
         }
 
         $scope.isNoRecords = function () {
-            return $scope.compositiondata.length <= 0;
+            return !$scope.compositiondata || $scope.compositiondata.length <= 0;
         }
 
         $scope.showPagination = function () {

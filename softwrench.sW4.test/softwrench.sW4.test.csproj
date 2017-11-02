@@ -137,9 +137,8 @@
     <Reference Include="softwrench.sw4.activitystream, Version=1.2.6449.32979, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6449.32979\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.34730, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6514.37490, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6514.37490\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.Hapag, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.Hapag.1.0.0\lib\net46\softwrench.sw4.Hapag.dll</HintPath>
@@ -409,6 +408,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Dependencies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll" />
+    <Content Include="web_content\problem\templates\problemsection.html" />
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
@@ -478,6 +478,10 @@
     <ProjectReference Include="..\softwrench.sw4.deltadental\softwrench.sw4.deltadental.csproj">
       <Project>{a89dc757-b0bd-4ba0-9436-e4ae87f31bf1}</Project>
       <Name>softwrench.sw4.deltadental</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.firstsolardispatch\softwrench.sw4.firstsolardispatch.csproj">
+      <Project>{b5b6c7cb-3b3e-43cf-9def-a67d26f981ca}</Project>
+      <Name>softwrench.sw4.firstsolardispatch</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.firstsolar\softwrench.sw4.firstsolar.csproj">
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>

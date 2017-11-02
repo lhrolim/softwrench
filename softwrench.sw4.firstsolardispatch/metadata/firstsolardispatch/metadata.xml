@@ -11,4 +11,18 @@
     <template path="@worklogs.xml"/>
     <template path="@attachments.xml"/>
   </templates>
+
+  <applications>
+    <application name="asset" title="Asset" entity="asset">
+      <schemas>
+        <schema id="inverterLookupList" stereotype="list.singleselection.modal" platform="web">
+          <field attribute="assetuid" hidden="true"/>
+          <field attribute="assetnum" label="Inverter ID#"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="manufacturer"  label="Manufacturer"/>
+          <field attribute="pluscmodelnum" label="Model"/>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
 </metadata>

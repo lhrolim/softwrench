@@ -477,7 +477,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var schemaId = composition.Attribute(XmlMetadataSchema.ApplicationCompositionSchemaIdAttribute).ValueOrDefault("detail");
             var outputSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionOutputSchemaIdAttribute).ValueOrDefault((string)null);
             var printSchema = composition.Attribute(XmlMetadataSchema.ApplicationCompositionPrintAttribute).ValueOrDefault("detail");
-            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault(inline ? "eager": "lazy");
+            var fetchTypeStr = composition.Attribute(XmlMetadataSchema.ApplicationCompositionFetchType).ValueOrDefault(inline ? "eager" : "lazy");
             var fetchType = (FetchType)Enum.Parse(typeof(FetchType), fetchTypeStr, true);
 
             var dependantfields = composition.Attribute(XmlMetadataSchema.ApplicationCompositionDependantFieldsAttribute).ValueOrDefault((string)null);
@@ -491,6 +491,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 throw new InvalidOperationException(string.Format(MissingEntity, applicationName, relationship));
             }
             var isCollection = false;
+            var isSwDb = false;
             if (!relationship.StartsWith("#")) {
                 //# would mean a self relationship
                 var entityAssociation = e.Associations.FirstOrDefault(a => a.Qualifier.EqualsIc(EntityUtil.GetRelationshipName(relationship)));
@@ -498,15 +499,18 @@ namespace softWrench.sW4.Metadata.Parsing {
                     throw new InvalidOperationException(string.Format(MissingRelationship, applicationName, relationship));
                 }
                 isCollection = entityAssociation.Collection;
+                if (entityName.EndsWith("_")) {
+                    isSwDb = true;
+                }
             }
 
             var collectionProperties = ParseCollectionProperties(composition, applicationName, sourceSchemaId);
             var applicationEvents = ParseEvents(composition, schemaId);
             if (collectionProperties != null || isCollection) {
-                return new ApplicationCompositionCollectionSchema(inline, schemaId, outputSchema, collectionProperties, mode,
+                return new ApplicationCompositionCollectionSchema(inline, isSwDb, schemaId, outputSchema, collectionProperties, mode,
                     (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType, applicationEvents);
             }
-            return new ApplicationCompositionSchema(inline, schemaId, outputSchema, mode,
+            return new ApplicationCompositionSchema(inline, isSwDb, schemaId, outputSchema, mode,
                     (CompositionFieldRenderer)ParseRendererNew(rendererElement, e.Name, FieldRendererType.COMPOSITION), printSchema, dependantfields, fetchType, applicationEvents);
 
         }
@@ -714,7 +718,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             completeApplicationMetadataDefinition.MainListSchemaKey = GetMainSchemaKey(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainListSchema);
             completeApplicationMetadataDefinition.MainNewDetailSchemaKey = GetMainSchemaKey(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainNewDetailSchema);
             completeApplicationMetadataDefinition.MainDetailSchemaKey = GetMainSchemaKey(completeApplicationMetadataDefinition, ApplicationSchemaPropertiesCatalog.MainDetailSchema);
-//            completeApplicationMetadataDefinition.LazySchemaResolver = MetadataProvider.LazySchemaResolver;
+            //            completeApplicationMetadataDefinition.LazySchemaResolver = MetadataProvider.LazySchemaResolver;
 
             return completeApplicationMetadataDefinition;
         }

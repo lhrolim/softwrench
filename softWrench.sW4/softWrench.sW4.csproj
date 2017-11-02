@@ -187,9 +187,8 @@
     <Reference Include="SimpleInjector">
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6162.35358, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6162.34730\lib\net46\softwrench.sw4.batch.api.dll</HintPath>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6514.37490, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6514.37490\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
@@ -374,6 +373,9 @@
     <Compile Include="Data\API\Response\NotFoundResponse.cs" />
     <Compile Include="Data\Batches\ABatchSubmissionConverter.cs" />
     <Compile Include="Data\CompositeDatamap.cs" />
+    <Compile Include="Data\Entities\Attachment\DocInfo.cs" />
+    <Compile Include="Data\Entities\Attachment\DocLink.cs" />
+    <Compile Include="Data\Entities\Attachment\DocLinkQualifier.cs" />
     <Compile Include="Data\Entities\Commlog\EmailCounterHandler.cs" />
     <Compile Include="Data\Entities\Labor\UserLaborCraftFetcher.cs" />
     <Compile Include="Data\Entities\SyncManagers\SwUserConstants.cs" />
@@ -1154,7 +1156,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Entities\Attachment\" />
     <Folder Include="Data\Entities\ServiceRequest\" />
     <Folder Include="Data\Persistence\Operation\SWDB\" />
     <Folder Include="Data\Persistence\Sync\" />

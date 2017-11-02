@@ -50,7 +50,7 @@ namespace softWrench.sW4.Metadata.Validator {
             PropertyInfo idAttribute = null;
             var idAttributeName = "id";
             var isJoinedSubclass = type.ReadAttribute<JoinedSubclassAttribute>() != null;
-            var userIdAttributeName = (string) null;
+            var userIdAttributeName = (string)null;
 
 
             var connectorParameters = new ConnectorParameters(new Dictionary<string, string>(), true);
@@ -69,10 +69,14 @@ namespace softWrench.sW4.Metadata.Validator {
                     var oneTomany = memberInfo.ReadAttribute<OneToManyAttribute>();
                     var manyToOne = memberInfo.ReadAttribute<ManyToOneAttribute>();
                     if (oneTomany != null) {
-                        resultAssociations.Add(HandleOneToMany(memberInfo, oneTomany, idAttribute));
+                        var bagAttribute = memberInfo.ReadAttribute<BagAttribute>();
+                        var whereClause = bagAttribute?.Where;
+
+                        resultAssociations.Add(HandleOneToMany(memberInfo, oneTomany, idAttribute, entityName, whereClause));
                     }
                     if (manyToOne != null) {
                         resultAttributes.Add(HandleManyToOneHiddenAttribute(memberInfo, manyToOne));
+                        resultAssociations.Add(HandleManyToOneRelationship(memberInfo, manyToOne, idAttribute, entityName));
                     }
 
                     var embeddable = memberInfo.ReadAttribute<ComponentPropertyAttribute>();
@@ -109,6 +113,8 @@ namespace softWrench.sW4.Metadata.Validator {
             return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string, string>(resultAttributes, resultAssociations, idAttributeName, userIdAttributeName);
         }
 
+    
+
         private static EntityAttribute HandleManyToOneHiddenAttribute(PropertyInfo memberInfo, ManyToOneAttribute manyToOne) {
             var defaultInstance = Metadata.Entities.Connectors.ConnectorParameters.DefaultInstance();
             var idProperty = memberInfo.PropertyType.FindPropertiesWithAttribute(typeof(IdAttribute));
@@ -120,24 +126,23 @@ namespace softWrench.sW4.Metadata.Validator {
             return new EntityAttribute(manyToOne.Column, idPropertyType, false, true, defaultInstance, null);
         }
 
-        private static bool IsNotAPrimitiveType(PropertyInfo memberInfo)
-        {
+        private static bool IsNotAPrimitiveType(PropertyInfo memberInfo) {
             return !memberInfo.GetMethod.ReturnType.IsPrimitive
-                   && memberInfo.PropertyType != typeof (string)
-                   && memberInfo.PropertyType != typeof (DateTime)
-                   && memberInfo.PropertyType != typeof (DateTime?)
-                   && memberInfo.PropertyType != typeof (Int32)
+                   && memberInfo.PropertyType != typeof(string)
+                   && memberInfo.PropertyType != typeof(DateTime)
+                   && memberInfo.PropertyType != typeof(DateTime?)
+                   && memberInfo.PropertyType != typeof(Int32)
                    && memberInfo.PropertyType != typeof(bool?)
-                   && memberInfo.PropertyType != typeof (Int64)
-                   && memberInfo.PropertyType != typeof (int?)
-                   && memberInfo.PropertyType != typeof (long?)
-                   && memberInfo.PropertyType != typeof (int)
-                   && memberInfo.PropertyType != typeof (long)
-                   && memberInfo.PropertyType != typeof (decimal)
-                   && memberInfo.PropertyType != typeof (decimal?)
-                   && memberInfo.PropertyType != typeof (float)
-                   && memberInfo.PropertyType != typeof (float?)
-                   && memberInfo.PropertyType != typeof (byte[])
+                   && memberInfo.PropertyType != typeof(Int64)
+                   && memberInfo.PropertyType != typeof(int?)
+                   && memberInfo.PropertyType != typeof(long?)
+                   && memberInfo.PropertyType != typeof(int)
+                   && memberInfo.PropertyType != typeof(long)
+                   && memberInfo.PropertyType != typeof(decimal)
+                   && memberInfo.PropertyType != typeof(decimal?)
+                   && memberInfo.PropertyType != typeof(float)
+                   && memberInfo.PropertyType != typeof(float?)
+                   && memberInfo.PropertyType != typeof(byte[])
                    && !memberInfo.PropertyType.IsEnumOrNullableEnum();
 
 
@@ -151,17 +156,34 @@ namespace softWrench.sW4.Metadata.Validator {
 
         }
 
-        private static EntityAssociation HandleOneToMany(PropertyInfo memberInfo, OneToManyAttribute oneTomany, PropertyInfo idAttribute) {
+        private static EntityAssociation HandleOneToMany(PropertyInfo memberInfo, OneToManyAttribute oneTomany, PropertyInfo idAttribute, string entityName, string whereClause) {
             var keyAttr = memberInfo.ReadAttribute<KeyAttribute>();
             var qualifier = memberInfo.Name.ToLower();
-            var to = oneTomany.ClassType.Name.ToLower() + "_";
+            var to = (entityName.EndsWith("_") ? "_" : "") + oneTomany.ClassType.Name.ToLower() + "_";
             //            //TODO: Add reverse customization
             //            string reverse = null;
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
             var idAttributeName = idAttribute?.Name.ToLower() ?? "id";
 
             attributes.Add(new EntityAssociationAttribute(keyAttr.Column, idAttributeName, null, true));
+            if (whereClause != null) {
+                attributes.Add(new EntityAssociationAttribute(null, null, whereClause));
+            }
+
             return new EntityAssociation(qualifier + "_", to, attributes, true, false, false, null, false, false);
+        }
+
+        private static EntityAssociation HandleManyToOneRelationship(PropertyInfo memberInfo, ManyToOneAttribute manyToOne, PropertyInfo idAttribute, string entityName) {
+            var qualifier = memberInfo.Name.ToLower();
+            var to = (entityName.EndsWith("_") ? "_" : "") + memberInfo.PropertyType.Name.ToLower() + "_";
+            //            //TODO: Add reverse customization
+            //            string reverse = null;
+            IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
+            var idAttributeName = idAttribute?.Name.ToLower() ?? "id";
+
+            attributes.Add(new EntityAssociationAttribute(idAttributeName, manyToOne.Column, null, true));
+
+            return new EntityAssociation(qualifier + "_", to, attributes, false, false, false, null, false, false);
         }
 
         private static ConnectorParameters ConnectorParameters(Type type) {

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using cts.commons.persistence;
 using cts.commons.web.Controller;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Entities.Attachment;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 
 namespace softWrench.sW4.Web.Controllers {
@@ -11,9 +13,11 @@ namespace softWrench.sW4.Web.Controllers {
     public class AttachmentController : FileDownloadController {
 
         private readonly AttachmentHandler _attachmentHandler;
+        private ISWDBHibernateDAO _dao;
 
-        public AttachmentController(AttachmentHandler attachmentHandler) {
+        public AttachmentController(AttachmentHandler attachmentHandler, ISWDBHibernateDAO dao) {
             _attachmentHandler = attachmentHandler;
+            _dao = dao;
         }
 
         public async Task<FileContentResult> Download(string id, string mode, AttachmentRequest request) {
@@ -21,6 +25,10 @@ namespace softWrench.sW4.Web.Controllers {
             Tuple<byte[], string> fileTuple;
 
             switch (mode) {
+                case "swdb":
+                    var docinfo = await _dao.FindByPKAsync<DocInfo>(int.Parse(id));
+                    fileTuple = new Tuple<byte[], string>(docinfo.Data, docinfo.Document);
+                    break;
                 case "http":
                     fileTuple = await _attachmentHandler.DownloadViaHttpById(id);
                     break;

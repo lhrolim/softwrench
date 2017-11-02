@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Security.Cryptography;
 using cts.commons.portable.Util;
 
 namespace softWrench.sW4.Util {
@@ -69,6 +70,12 @@ namespace softWrench.sW4.Util {
             return System.Convert.FromBase64String(base64String);
         }
 
+        public static string GenerateCheckSumHash(byte[] byteArray) {
+            using (var sha1 = new SHA1CryptoServiceProvider()) {
+                var hash = Convert.ToBase64String(sha1.ComputeHash(byteArray));
+                return hash;
+            }
+        }
 
 
         public static string GetB64PartOnly(string content) {

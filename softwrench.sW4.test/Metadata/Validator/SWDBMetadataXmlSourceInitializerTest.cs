@@ -4,8 +4,10 @@ using System.Linq;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
+using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Definitions.WhereClause;
+using softWrench.sW4.Data.Entities.Attachment;
 using softWrench.sW4.Dynamic.Model;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Schema;
@@ -33,7 +35,7 @@ namespace softwrench.sW4.test.Metadata.Validator {
             var entityMetadata = service.Convert(typeof(PropertyDefinition));
             Assert.IsNull(entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections).FirstOrDefault(f => f.Name == "rowstamp"));
             var rels = entityMetadata.Associations;
-            var propertyValueRel = rels.FirstOrDefault(f => f.To.EqualsIc("propertyvalue_"));
+            var propertyValueRel = rels.FirstOrDefault(f => f.To.EqualsIc("_propertyvalue_"));
             Assert.IsNotNull(propertyValueRel);
             Assert.IsTrue(propertyValueRel.Collection);
             Assert.AreEqual("values_", propertyValueRel.Qualifier);
@@ -82,6 +84,64 @@ namespace softwrench.sW4.test.Metadata.Validator {
             var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
             Assert.IsTrue(attributes.Any(a => a.Name.EqualsIc("subContractorEnabled")));
 
+        }
+
+
+        [TestMethod]
+        public void TestOneToManyRelationship() {
+            var service = new SWDBMetadataXmlSourceInitializer();
+            var entityMetadata = service.Convert(typeof(WorkPackage));
+            var associations = entityMetadata.Associations;
+            Assert.IsNotNull(associations);
+            var genRelationship = associations.FirstOrDefault(f => f.Qualifier.EqualsIc("genericrelationships_"));
+            Assert.IsNotNull(genRelationship);
+
+            Assert.AreEqual("_genericlistrelationship_", genRelationship.To);
+//            Assert.AreEqual("_genericlistrelationship", genRelationship.EntityName);
+            Assert.IsTrue(genRelationship.Collection);
+            Assert.IsTrue(genRelationship.IsSwDbApplication);
+            var entityAssociationAttributes2 = genRelationship.Attributes;
+
+            var attributes = entityAssociationAttributes2 as IList<EntityAssociationAttribute> ?? entityAssociationAttributes2.ToList();
+
+            Assert.AreEqual(2, attributes.Count());
+            var first = attributes[0];
+            Assert.AreEqual("id", first.From);
+            Assert.AreEqual("parentid", first.To);
+            Assert.IsTrue(first.Primary);
+
+            var second = attributes[1];
+            Assert.AreEqual("ParentEntity = 'WorkPackage'", second.Query);
+            Assert.IsFalse(second.Primary);
+
+
+        }
+
+        [TestMethod]
+        public void TestManyToOneRelationship() {
+            var service = new SWDBMetadataXmlSourceInitializer();
+            var entityMetadata = service.Convert(typeof(DocLink));
+            //cannot test api call without initializing metadata provider
+            var entityAttributes = entityMetadata.Schema.Attributes;
+            Assert.IsNotNull(entityAttributes.FirstOrDefault(f=> f.Name.Equals("docinfo_id")));
+            var associations = entityMetadata.Associations;
+            Assert.IsNotNull(associations);
+            var docInfo = associations.FirstOrDefault(f => f.Qualifier.EqualsIc("docinfo_"));
+            Assert.IsNotNull(docInfo);
+
+            Assert.AreEqual("_docinfo_", docInfo.To);
+            //            Assert.AreEqual("_genericlistrelationship", genRelationship.EntityName);
+            Assert.IsFalse(docInfo.Collection);
+            Assert.IsTrue(docInfo.IsSwDbApplication);
+            var entityAssociationAttributes2 = docInfo.Attributes;
+
+            var attributes = entityAssociationAttributes2 as IList<EntityAssociationAttribute> ?? entityAssociationAttributes2.ToList();
+
+            Assert.AreEqual(1, attributes.Count());
+            var first = attributes[0];
+            Assert.AreEqual("docinfo_id", first.From);
+            Assert.AreEqual("id", first.To);
+            Assert.IsTrue(first.Primary);
         }
     }
 }

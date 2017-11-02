@@ -244,7 +244,12 @@ namespace softWrench.sW4.Metadata {
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");
             ICollection<EntityMetadata> entityMetadata;
+//            if (name.StartsWith("_")) {
+//                name = name.Substring(1) + "_";
+//            }
             name = UnSwdbFy(name);
+          
+
             if (name.EndsWith("_")) {
                 entityMetadata = _swdbmetadataXmlInitializer != null ? _swdbmetadataXmlInitializer.Entities : _swdbentityMetadata;
             } else {
@@ -804,9 +809,9 @@ namespace softWrench.sW4.Metadata {
         }
 
 
-        public static CompleteApplicationMetadataDefinition.LazySchemaResolverDelegate LazySchemaResolver = (ApplicationMetadataSchemaKey key) => Schema(key.ApplicationName, key.SchemaId,key.Platform.Value);
+        public static CompleteApplicationMetadataDefinition.LazySchemaResolverDelegate LazySchemaResolver = (ApplicationMetadataSchemaKey key) => Schema(key.ApplicationName, key.SchemaId, key.Platform.Value);
 
-        
+
 
         [CanBeNull]
         public static ApplicationSchemaDefinition Schema(string application, string schema, ClientPlatform platform) {
