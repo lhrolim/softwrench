@@ -91,10 +91,10 @@
                 </td>
                 <td class="{{safeCSSselector(column.attribute)}}"
                     ng-repeat="column in nonHiddenDisplayables()"
-                    ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)"
+                    ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem) || forceBlankSpace(column)"
                     ng-click="toggleDetails(compositionitem,column,'row',$event,rowindex)"
                     data-title="{{column.label}}">
-                    <ng-switch on="column.type">
+                    <ng-switch on="column.type" ng-show="!isCompositionItemFieldHidden(compositionlistschema,column,compositionitem)">
 
                         <div ng-switch-when="ApplicationAssociationDefinition">
                             <ng-switch on="column.rendererType">

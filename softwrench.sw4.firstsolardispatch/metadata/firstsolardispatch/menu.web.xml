@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Menu xmlns="http://www.controltechnologysolutions.com/menumetadata" mainmenudisplacement="horizontal" indexitem="qservicereq">
-
-  <reference id="qservicereq"/>
-
+  <container id="dispatchticket" title="Dispatch Tickets" icon="fa fa-arrow-circle-down">
+    <application id="DT" icon="fa fa-table" title="Dispatch Tickets Grid" ref="_dispatchticket" schema="list" tooltip="Click to view your Dispatch Tickets"/>
+    <application id="NDT" icon="fa fa-plus" title="Dispatch Ticket" ref="_dispatchticket" schema="newdetail" tooltip="Click to Dispatch a Ticket"/>
+  </container>
 </Menu>
 

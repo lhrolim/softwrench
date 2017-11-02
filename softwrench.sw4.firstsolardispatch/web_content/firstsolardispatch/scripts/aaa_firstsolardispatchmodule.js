@@ -1,0 +1,1 @@
+﻿var firstsolardispatchmod = angular.module('firstsolardispatch', ['sw_layout']);

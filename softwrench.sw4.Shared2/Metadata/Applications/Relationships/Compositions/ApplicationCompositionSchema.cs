@@ -19,6 +19,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get; set;
         }
 
+        public bool IsSwDB { get; set; }
+
         public ApplicationCompositionSchema() {
             Events = new Dictionary<string, ApplicationEvent>();
         }
@@ -39,8 +41,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get; set;
         }
 
-        public ApplicationCompositionSchema(bool inline, string detailSchema,string detailOutputSchema, SchemaMode renderMode, CompositionFieldRenderer renderer,
+        public ApplicationCompositionSchema(bool inline, bool isSwDB, string detailSchema, string detailOutputSchema, SchemaMode renderMode, CompositionFieldRenderer renderer,
             string printSchema, string dependantfields, FetchType fetchType, ISet<ApplicationEvent> events = null) {
+            IsSwDB = isSwDB;
             Events = new Dictionary<string, ApplicationEvent>();
             _inline = inline;
             Renderer = renderer;
@@ -118,7 +121,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
         }
 
         public virtual object Clone() {
-            return new ApplicationCompositionSchema(INLINE, DetailSchema,DetailOutputSchema, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
+            return new ApplicationCompositionSchema(INLINE, IsSwDB, DetailSchema, DetailOutputSchema, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
         }
     }
 }

@@ -34,14 +34,20 @@ namespace softWrench.sW4.Util {
                 return null;
             }
             byte[] decompressedData = null;
-            using (var outputStream = new MemoryStream()) {
-                using (var inputStream = new MemoryStream(zippedData)) {
-                    using (var zip = new GZipStream(inputStream, CompressionMode.Decompress)) {
-                        zip.CopyTo(outputStream);
+            try {
+                using (var outputStream = new MemoryStream()) {
+                    using (var inputStream = new MemoryStream(zippedData)) {
+                        using (var zip = new GZipStream(inputStream, CompressionMode.Decompress)) {
+                            zip.CopyTo(outputStream);
+                        }
                     }
+                    decompressedData = outputStream.ToArray();
                 }
-                decompressedData = outputStream.ToArray();
+            } catch {
+                //not decompressed
+                return zippedData;
             }
+
 
             return decompressedData;
         }

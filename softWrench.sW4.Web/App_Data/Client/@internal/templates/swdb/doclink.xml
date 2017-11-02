@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <applications>
+
+
+    <application entity="doclink" name="doclink" title="Attachments">
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field hidden="true" attribute="ownerid"/>
+          <field label="Id" hidden="true" attribute="id"/>
+          <field attribute="createby" hidden="true"/>
+          <field attribute="extension" hidden="true"/>
+          <field attribute="docinfo_id" hidden="true"/>
+          
+<!--          <field label="Document"  attribute="#parsedurl"/>-->
+          <field  attribute="document" label="Document"/>
+          <field label="Created Date" attribute="createdate"/>
+        </schema>
+      </schemas>
+
+    </application>
+  </applications>
+
+
+
+
+</metadata>

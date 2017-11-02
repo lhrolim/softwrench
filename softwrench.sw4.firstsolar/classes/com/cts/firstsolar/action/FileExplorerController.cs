@@ -16,9 +16,11 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using System.Collections.Async;
+using cts.commons.persistence;
 using cts.commons.portable.Util;
 using log4net;
 using Quartz.Util;
+using softWrench.sW4.Data.Entities.Attachment;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
@@ -33,14 +35,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         private readonly AttachmentHandler _attachmentHandler;
         private readonly EntityRepository _repository;
+        private readonly ISWDBHibernateDAO _swdbDAO;
 
         private readonly ILog Log = LogManager.GetLogger(typeof(FileExplorerController));
 
 
-        public FileExplorerController(AttachmentHandler attachmentHandler, EntityRepository repository) {
+        public FileExplorerController(AttachmentHandler attachmentHandler, EntityRepository repository, ISWDBHibernateDAO swdbDAO) {
             _attachmentHandler = attachmentHandler;
             _repository = repository;
+            _swdbDAO = swdbDAO;
         }
+
+        public async Task<FileContentResult> DownloadAllSwdb(string userId, string ownerId, string ownerTable, string relationship) {
+            var links = await _swdbDAO.FindByQueryAsync<DocLink>(DocLink.ByOwnerTableAndId, ownerTable, ownerId);
+            var results = new List<Tuple<byte[], string>>();
+            foreach (var link in links) {
+                results.Add(new Tuple<byte[], string>(link.DocInfo.DataUncompressed, link.Document));
+            }
+
+            return ConvertIntoFileResult(userId, relationship, results);
+
+        }
+
 
         public async Task<FileContentResult> DownloadAll(string userId, string ownerId, string ownerTable, string relationship) {
 
@@ -48,6 +64,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 return null;
             }
 
+            //TODO: make this following snippet more generic
             if (relationship == null) {
                 //bringing it all for a given workorder
                 relationship = "swwpkg:";
@@ -78,6 +95,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                  results.Add(fileTuple);
              }, MaxThreads, false);
 
+            return ConvertIntoFileResult(userId, relationship, results);
+        }
+
+        private FileContentResult ConvertIntoFileResult(string userId, string relationship, List<Tuple<byte[], string>> results) {
             if (!results.Any()) {
                 Log.InfoFormat("no files found for section {0}, nothing downloaded", relationship);
                 return null;
@@ -91,8 +112,6 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
                 FileDownloadName = "{0}-{1}.zip".Fmt(relationship, userId)
             };
             return result;
-
         }
-
     }
 }

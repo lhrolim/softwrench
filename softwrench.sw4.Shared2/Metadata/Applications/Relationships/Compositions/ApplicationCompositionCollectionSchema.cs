@@ -15,20 +15,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             get; set;
         }
 
+     
 
 
-        public ApplicationCompositionCollectionSchema(bool inline, string detailSchema, string detailOutputSchema, CompositionCollectionProperties collectionProperties,
+        public ApplicationCompositionCollectionSchema(bool inline, bool isSWDB, string detailSchema, string detailOutputSchema, CompositionCollectionProperties collectionProperties,
             SchemaMode renderMode, CompositionFieldRenderer renderer, string printSchema, string dependantfield, FetchType fetchType, ISet<ApplicationEvent> events = null) :
-            base(inline, detailSchema, detailOutputSchema,renderMode, renderer, printSchema, dependantfield, fetchType, events) {
+            base(inline, isSWDB, detailSchema, detailOutputSchema,renderMode, renderer, printSchema, dependantfield, fetchType, events) {
             _collectionProperties = collectionProperties;
         }
 
 
-        public string PrefilterFunction {
-            get {
-                return _collectionProperties.PrefilterFunction;
-            }
-        }
+        public string PrefilterFunction => _collectionProperties.PrefilterFunction;
 
         public CompositionCollectionProperties CollectionProperties {
             get {
@@ -39,26 +36,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             }
         }
 
-        public string AllowInsertion {
-            get {
-                return CollectionProperties.AllowInsertion;
-            }
-        }
-        public string AllowUpdate {
-            get {
-                return CollectionProperties.AllowUpdate;
-            }
-        }
-        public string AllowRemoval {
-            get {
-                return CollectionProperties.AllowRemoval;
-            }
-        }
+        public string AllowInsertion => CollectionProperties.AllowInsertion;
+
+        public string AllowUpdate => CollectionProperties.AllowUpdate;
+
+        public string AllowRemoval => CollectionProperties.AllowRemoval;
 
         public override object Clone() {
             var props = new CompositionCollectionProperties(AllowRemoval, AllowInsertion, AllowUpdate, CollectionProperties.ListSchema, CollectionProperties.AutoCommit, CollectionProperties.HideExistingData, CollectionProperties.OrderByField, CollectionProperties.PrefilterFunction);
 
-            return new ApplicationCompositionCollectionSchema(INLINE, DetailSchema,DetailOutputSchema, props, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
+            return new ApplicationCompositionCollectionSchema(INLINE, IsSwDB, DetailSchema,DetailOutputSchema, props, RenderMode, Renderer, PrintSchema, OriginalDependantfields, FetchType, OriginalEvents);
         }
     }
 }

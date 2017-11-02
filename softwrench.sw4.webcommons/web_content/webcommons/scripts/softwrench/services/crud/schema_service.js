@@ -60,6 +60,10 @@
             return datamap[schema.idFieldName];
         };
 
+        function getUserId(datamap, schema) {
+            return datamap[schema.userIdFieldName];
+        };
+
         /**
          * Returns a jquery element (section) considering the path passed as parameter.
          * 
@@ -305,7 +309,8 @@
             areTheSame: areTheSame,
             buildApplicationKey: buildApplicationKey,
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
-            getId: getId,
+            getId,
+            getUserId,
             getProperty: getProperty,
             getSummary: getSummary,
             getTitle: getTitle,

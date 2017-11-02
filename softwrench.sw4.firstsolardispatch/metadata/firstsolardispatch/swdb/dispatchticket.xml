@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="swdb/inverter.xml"/>
+    <template path="@doclink.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="DispatchTicket" idAttribute="id">
+      <relationships>
+        <relationship to="_Inverter_" qualifier="inverters" collection="true">
+          <relationshipAttribute from="id" to="ticketid" primary="true"/>
+        </relationship>
+
+        <relationship to="_GfedSite_" qualifier="site">
+          <relationshipAttribute from="gfedid" to="gfedid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+  </entities>
+
+  <applications>
+
+    <application entity="DispatchTicket" name="DispatchTicket" title="Dispatch Ticket">
+      <properties>
+        <property key="application.maindetailschema" value="editdetail"/>
+        <property key="application.mainlistschema" value="list"/>
+      </properties>
+
+      <schemas>
+        <list title="Dispatch Tickets Grid" platform="web">
+          <field attribute="id" label="Ticket#"/>
+          <field attribute="site_.facilityname" label="Site Name"/>
+          <field attribute="createddate" label="Created Date">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
+        </list>
+
+
+        <schema id="adetail" abstract="true" stereotype="detail">
+          <field attribute="id" hidden="true"/>
+          <field attribute="site_.siteid" hidden="true"/>
+          <field attribute="site_.locationprefix" hidden="true"/>
+
+          <section>
+            <header displacement="ontop" label="Site Information" params="fieldset=true" />
+
+            <section orientation="horizontal" parameters="">
+              <section id="gfed">
+                <association label="Site" target="gfedid" labelfield="site_.facilityname" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix" >
+                  <renderer type="lookup" params="application=_GfedSite;schemaId=ticketLookupList;"/>
+                  <event type="afterchange" service="fsdTicketService" method="siteSelected"/>
+                </association>
+              </section>
+              <field attribute="siteaddress" label="Site Adress" enableexpression="@gfedid != null"/>
+              <section>
+                <field attribute="gpslatitude" label="GPS Coordinates" enableexpression="@gfedid != null"/>
+                <field attribute="gpslongitude" enableexpression="@gfedid != null"/>
+              </section>
+            </section>
+            <section orientation="horizontal" parameters="">
+              <renderer type="default" params="childinputsize=medium" />
+              
+              <section>
+                <field attribute="sitecontact" label="Site Contact" enableexpression="@gfedid != null"/>
+                <field attribute="sitecontactphone" enableexpression="@gfedid != null"/>
+              </section>
+              <field attribute="supportphone" label="24/7 Technical Support #" enableexpression="@gfedid != null"/>
+            </section>
+            
+            <field attribute="comments" label="Comments">
+              <renderer type="richtext"/>
+            </field>
+          
+            <composition inline="true" relationship="attachments" label="Attachments" detailschema="" fetchtype="lazy">
+              <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;"/>
+            </composition>  
+          
+          </section>
+          
+          <section>
+            <header displacement="ontop" label="First Solar Contacts" params="fieldset=true" />
+          
+            <section orientation="horizontal" parameters="">
+              <renderer type="default" params="childinputsize=medium" />
+              <section>
+                <field attribute="primarycontact" label="Primary Contact" enableexpression="@gfedid != null"/>
+                <field attribute="primarycontactphone" enableexpression="@gfedid != null"/>
+              </section>
+              <section>
+                <field attribute="escalationcontact" label="Escalation Contact" enableexpression="@gfedid != null"/>
+                <field attribute="escalationcontactphone" enableexpression="@gfedid != null"/>
+              </section>
+            </section>
+          </section>
+
+          <section showexpression="@gfedid != null">
+            <header displacement="ontop" label="Inverter Information" params="fieldset=true" />
+            <composition inline="true" relationship="inverters" label="" detailschema="detailview" printschema="" fetchtype="eager">
+              <collectionproperties listschema="inverterline" autocommit="false" allowremoval="true"/>
+              <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsdInverterService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fsdInverterService.openModalEdit;composition.inline.deletefunction=fsdInverterService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Inverter"/>
+            </composition>
+          </section>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="Dispatch Ticket" platform="web" stereotype="detailnew">
+
+        </schema>
+
+        <schema id="editdetail" parentschema="adetail" title="Dispatch Ticket" platform="web" stereotype="detail">
+          <section id="gfed">
+            <field attribute="gfedid" hidden="true"/>
+            <field attribute="site_.facilityname" label="Site" readonly="true"/>
+          </section>
+        </schema>
+
+      </schemas>
+    </application>
+
+
+
+  </applications>
+
+</metadata>

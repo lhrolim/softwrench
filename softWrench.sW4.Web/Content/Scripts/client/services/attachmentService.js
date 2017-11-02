@@ -3,9 +3,9 @@
 
     var staticvalidFileTypes = ["pdf", "zip", "txt", "doc", "docx", "dwg", "gif", "jpg", "csv", "xls", "xlsx", "pptx", "ppt", "xml", "xsl", "bmp", "html", "las", "avi", "jpeg", "mp3", "mp4", "z7", "rar", "AVI", "eml", "emz", "evt", "evtx", "mp4", "log", "LAS", "MDB", "PNG", "JPEG", "config", "dat", "lic", "ora", "eml", "png", "js", "exe"];
 
-    angular.module("sw_layout").service("attachmentService", ["$log","$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", "userService", "crudContextHolderService", "fileService", attachmentService]);
+    angular.module("sw_layout").service("attachmentService", ["$log", "$rootScope", "$q", "$timeout", "contextService", "fieldService", "schemaService", "alertService", "i18NService", "searchService", "tabsService", "redirectService", "$http", "userService", "crudContextHolderService", "fileService", attachmentService]);
 
-    function attachmentService($log,$rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http, userService, crudContextHolderService, fileService) {
+    function attachmentService($log, $rootScope, $q, $timeout, contextService, fieldService, schemaService, alertService, i18NService, searchService, tabsService, redirectService, $http, userService, crudContextHolderService, fileService) {
 
         $rootScope.$on("sw.attachment.file.changed", function (event, fileNames) {
             const panelId = crudContextHolderService.isShowingModal() ? "#modal" : null;
@@ -24,7 +24,7 @@
             $timeout(() => {
                 dm.document = angular.isArray(fileNames) ? fileNames.join(",") : fileNames;
             });
-            
+
         });
 
         const service = {
@@ -52,7 +52,7 @@
 
         function downloadFile(item) {
             const id = item["docinfoid"];
-            const parameters = { id: id, mode: "http" };
+            const parameters = { id: id, mode: item["docinfo_.urltype"] === "swdb" ? "swdb" : "http" };
             const errorMessage = downloadErrorMessage(id);
 
             const controllerUrl = url(`/Attachment/Download?${$.param(parameters)}`);
@@ -246,7 +246,7 @@
                     }
                 });
             })
-            .then(broadCastAttachmentLoaded);
+                .then(broadCastAttachmentLoaded);
         }
 
 

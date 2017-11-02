@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="swdb/partneeded.xml"/>
+  </templates>
+
+  <entities>
+    <entity name="Inverter" idAttribute="id">
+      <relationships>
+        <relationship to="asset">
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+        <relationship to="_DispatchTicket_" qualifier="dispatchticket">
+          <relationshipAttribute from="ticketid" to="id" primary="true"/>
+        </relationship>
+        <relationship to="_PartNeeded_" qualifier="parts" collection="true">
+          <relationshipAttribute from="id" to="inverterid" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+
+  </entities>
+
+  <applications>
+
+    <application entity="Inverter" name="Inverter" title="Inverter">
+      <schemas>
+        <schema id="inverterline" stereotype="compositionlist" platform="web">
+          <field attribute="id" hidden="true"/>
+          <field attribute="assetnum" label="Inverter ID#"/>
+          <field attribute="manufacturer" label="Manufacturer"/>
+          <field attribute="model" label="Model"/>
+          <field attribute="partsrequired" label="Parts Required?">
+            <renderer type="checkbox"/>
+          </field>
+
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="errorcodes" hidden="true"/>
+          <field attribute="failureclass" hidden="true"/>
+
+          <composition inline="true" relationship="parts" label="" detailschema="" printschema="" fetchtype="eager" hidden="true">
+            <collectionproperties listschema="partneededline"/>
+          </composition>
+        </schema>
+
+        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          <field attribute="id" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+
+          <section orientation="horizontal">
+            <renderer type="default" params="childinputsize=medium" />
+            <association label="Inverter" target="assetnum" labelfield="asset_.description" requiredexpression="true" extraprojectionvalues="assetuid,manufacturer,pluscmodelnum,description" hideDescription="true" >
+              <renderer type="lookup" params="application=asset;schemaId=inverterLookupList;largemodal=true"/>
+              <event type="afterchange" service="fsdInverterService" method="assetSelected"/>
+              <dataprovider prefilterfunction="FilterAssets"/>
+            </association>
+
+            <field attribute="manufacturer" label="Manufacturer"/>
+            <field attribute="model" label="Model"/>
+            <field attribute="errorcodes" label="Error Codes"/>
+
+            <optionfield attribute="failureclass" label="Failure Class">
+              <renderer type="radio" params="vertical=true"/>
+              <option value="1" label="Class 1 - Inverter Offline"/>
+              <option value="2" label="Class 2 - Inverter Derate"/>
+            </optionfield>
+          </section>
+          
+          <optionfield attribute="partsrequired" label="Parts Required?">
+            <renderer type="radio" params="vertical=true"/>
+            <option value="false" label="No"/>
+            <option value="true" label="Yes"/>
+          </optionfield>
+
+
+          <composition inline="true" relationship="parts" label="" detailschema="" printschema="" fetchtype="lazy" showexpression="@partsrequired === true || @partsrequired === 'true'">
+            <collectionproperties listschema="partneededline" autocommit="false" allowremoval="true"/>
+            <renderer type="TABLE" params="mode=batch;composition.inline.forceshowremove=true;composition.inline.addTitle=Part"/>
+          </composition>
+
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="add" icon="fa-check" service="fsdInverterService" method="save" label="Save" primary="true" position="+save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Inverter"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="detail" parentschema="adetail" title="Inverter"  platform="web" stereotype="detail">
+        </schema>
+
+        <schema id="detailview" title="Inverter"  platform="web" stereotype="detail">
+          <field attribute="errorcodes" label="Error Codes"/>
+          <optionfield attribute="failureclass" label="Failure Class">
+            <option value="1" label="Class 1 - Inverter Offline"/>
+            <option value="2" label="Class 2 - Inverter Derate"/>
+          </optionfield>
+        </schema>
+
+      </schemas>
+    </application>
+
+
+
+  </applications>
+
+</metadata>

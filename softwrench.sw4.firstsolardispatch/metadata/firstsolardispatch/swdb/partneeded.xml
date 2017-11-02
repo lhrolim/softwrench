@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+  <entities>
+    <entity name="PartNeeded" idAttribute="id">
+      <relationships>
+        <relationship to="_Inverter_" qualifier="inverter">
+          <relationshipAttribute from="inverterid" to="id" primary="true"/>
+        </relationship>
+      </relationships>
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="PartNeeded" name="PartNeeded" title="Part Needed">
+      <schemas>
+        <schema id="partneededline" stereotype="compositionlist" platform="web">
+          <field attribute="id" hidden="true"/>
+          <field attribute="partnumber" label="Part Number" requiredexpression="true">
+            <renderer type="default" params="editable=true"/>
+          </field>
+          <field attribute="partdescription" label="Part Description">
+            <renderer type="default" params="editable=true"/>
+          </field>
+          <optionfield attribute="deliverymethod" label="Delivery Method">
+            <option value="pickup" label="Pickup"/>
+            <option value="shipment" label="Shipment"/>
+          </optionfield>
+          <field attribute="expecteddate" label="Expected Date"  showexpression="@deliverymethod !== 'pickup'">
+            <renderer type="datetime" params="editable=true;forceblankspaceifhidden=true"/>
+          </field>
+          <field attribute="deliverylocation" label="Delivery Location" showexpression="@deliverymethod !== 'pickup'">
+            <renderer type="default" params="editable=true;forceblankspaceifhidden=true"/>
+          </field>
+        </schema>
+
+        <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          <field attribute="id" hidden="true"/>
+          <field attribute="partnumber" label="Part Number"/>
+
+          <commandbars>
+            <commandgroup position="modal.detail.primary">
+              <removecommand id="save"/>
+              <command id="add" icon="fa-check" service="fsdInverterService" method="save" label="Save" primary="true" position="+save"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+        <schema id="newdetail" parentschema="adetail" title="New Part Needed"  platform="web" stereotype="detailnew">
+        </schema>
+
+        <schema id="detail" parentschema="adetail" title="Part Needed"  platform="web" stereotype="detail">
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

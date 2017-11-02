@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@userprofile.xml"/>
+    <template path="@dashboard.xml"/>
+    <template path="@audit.xml"/>
+    <template path="@swhelp.xml"/>
+    <template path="@batch.xml"/>
+    <template path="@swerror.xml"/>
+    <template path="@configuration.xml"/>
+    <template path="@dynamic.xml"/>
+    <template path="@mappingtool.xml"/>
+    <template path="@whereclause.xml"/>
+    <template path="@doclink.xml"/>
+    <template path="swdb/gfedsite.xml"/>
+    <template path="swdb/partneeded.xml"/>
+    <template path="swdb/inverter.xml"/>
+    <template path="swdb/dispatchticket.xml"/>
+  </templates>
+  
+</metadata>
