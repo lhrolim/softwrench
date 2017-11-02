@@ -230,7 +230,7 @@
   </target>
 
   <!-- TODO: extract similar tasks. Copying just for the sake of trial-and-error testing -->
-  <target name="webtest" description="Runs karma tests" depends="generatelinks">
+  <target name="webtest" description="Runs karma tests">
     <if test="${IsWindows}">
       <logtimestart/>
     </if>

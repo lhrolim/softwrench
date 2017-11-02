@@ -1,7 +1,7 @@
 ﻿!(function (angular) {
     "use strict";
 
-    function drillDownService($q, swdbDAO, crudContextHolderService, securityService, applicationStateService) {
+    function drillDownService($q, swdbDAO, crudContextHolderService, securityService, applicationStateService, loadingService) {
         let locationApp = "location";
         let assetApp = "asset";
         let isFlat = true;
@@ -123,11 +123,13 @@
                 promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${assetApp}' and (${locationClause2} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = '${locationApp}' and ${locationClause3}))`));
             }
 
+            loadingService.showDefault();
             return $q.all(promises).then((results) => {
                 setMoreItemsAvailable(drillDown, results[0]);
                 drillDown.locations = results[0];
                 drillDown.locationsCount = results[1];
                 drillDown.assetsCount = results[2];
+                loadingService.hide();
                 return drillDown.locations;
             });
         }
@@ -169,10 +171,12 @@
             promises.push(swdbDAO.findByQuery("AssociationData", assetQuery(true), updatePaginationOptions(drillDown)));
             promises.push(swdbDAO.countByQuery("AssociationData", assetQuery()));
 
+            loadingService.showDefault();
             return $q.all(promises).then((results) => {
                 setMoreItemsAvailable(drillDown, results[0]);
                 drillDown.assets = results[0];
                 drillDown.assetsCount = results[1];
+                loadingService.hide();
                 return drillDown.assets;
             });
         }
@@ -221,5 +225,5 @@
         return service;
     }
 
-    mobileServices.factory("drillDownService", ["$q", "swdbDAO", "crudContextHolderService", "securityService", "applicationStateService", drillDownService]);
+    mobileServices.factory("drillDownService", ["$q", "swdbDAO", "crudContextHolderService", "securityService", "applicationStateService", "loadingService", drillDownService]);
 })(angular);
