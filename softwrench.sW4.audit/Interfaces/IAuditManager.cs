@@ -45,6 +45,8 @@ namespace softwrench.sW4.audit.Interfaces {
 
         void AppendToCurrentTrail(string action, string refApplication, string refId, string refUserId, string siteId, string data);
 
+        Task<IEnumerable<AuditEntry>> Lookup(string refApplication, string refId, string action);
+
         void AppendToCurrentTrail(AuditEntry entry);
 
         void AppendToCurrentTrail(AuditQuery query);

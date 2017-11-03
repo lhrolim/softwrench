@@ -31,6 +31,36 @@
             dm["site_.siteid"] = fields["site_.siteid"];
             dm["site_.locationprefix"] = fields["site_.locationprefix"];
         }
+
+        filterStatus(item) {
+            const value = item.value;
+            const dm = this.crudContextHolderService.rootDataMap();
+            
+            if (!dm["id"]) {
+                return value === "DISPATCHED";
+            }
+            const currentStatus = dm["#originalstatus"];
+            if (currentStatus === value) {
+                return true;
+            }
+
+            if (currentStatus === "REJECTED") {
+                return false;
+            }
+            if (currentStatus === "ACCEPTED") {
+                return value === "ARRIVED";
+            }
+            if (currentStatus === "ARRIVED") {
+                return value === "RESOLVED";
+            }
+
+            if (currentStatus === "DISPATCHED") {
+                return value.equalsAny("ACCEPTED", "REJECTED");
+            }
+
+            return value === "DISPATCHED";
+
+        }
     }
 
     fsdTicketService.$inject = ["crudContextHolderService"];

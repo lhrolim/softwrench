@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.persistence;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
+using NHibernate.Type;
+using softwrench.sw4.batch.api.entities;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Entities.Attachment;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model {
@@ -13,6 +18,21 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         public int? Id {
             get; set;
         }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        [Property(TypeType = typeof(DispatchTicketType))]
+        public DispatchTicketStatus Status { get; set; }
+
+        [Property]
+        public DateTime? StatusDate { get; set; }
+
+        [ManyToOne(Column = "statusreportedby", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+        public User StatusReportedBy { get; set; }
+
+
+        [ManyToOne(Column = "reportedby", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+        public User ReportedBy { get; set; }
+
 
         [Property]
         public long GfedId { get; set; }
@@ -63,4 +83,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [OneToMany(2, ClassType = typeof(DocLink))]
         public virtual IList<DocLink> Attachments { get; set; }
     }
+
+
+    class DispatchTicketType : EnumStringType<DispatchTicketStatus> {
+    }
+
 }

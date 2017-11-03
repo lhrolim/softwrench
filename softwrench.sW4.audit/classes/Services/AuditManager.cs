@@ -51,6 +51,10 @@ namespace softwrench.sW4.audit.classes.Services {
             return _dao.BulkSave(entries);
         }
 
+        public async Task<IEnumerable<AuditEntry>> Lookup(string refApplication, string refId, string action) {
+            return await _dao.FindByQueryAsync<AuditEntry>(AuditEntry.ByAppIdAndAction,refApplication, refId, action);
+        }
+
         public void AppendToCurrentTrail(AuditEntry entry) {
             var trail = CallContext.LogicalGetData("audittrail") as AuditTrail;
             trail?.Entries.Add(entry);
