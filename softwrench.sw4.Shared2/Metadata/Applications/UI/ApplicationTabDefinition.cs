@@ -20,10 +20,15 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         }
         private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
 
+        /// <summary>
+        /// If true an extra dataset method will be invoked to load any related data which this tab needs
+        /// </summary>
+        public bool Lazy { get; set; }
+
         private string _role;
 
         public ApplicationTabDefinition(string id, string applicationName, string label, List<IApplicationDisplayable> displayables, string toolTip,
-            string showExpression,string enableExpression, string icon, string role, string countRelathionship) {
+            string showExpression,string enableExpression, string icon, string role, string countRelathionship, bool lazy) {
             Id = id;
             ApplicationName = applicationName;
             Label = label;
@@ -33,6 +38,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             _displayables = displayables;
             Icon = icon;
             _role = role;
+            Lazy = lazy;
             CountRelationship = countRelathionship;
         }
 

@@ -394,6 +394,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\TabController.cs" />
     <Compile Include="Controllers\Application\Ticket\StatusBatchController.cs" />
     <Compile Include="Controllers\AssociationController.cs" />
     <Compile Include="Controllers\Audit\AuditController.cs" />

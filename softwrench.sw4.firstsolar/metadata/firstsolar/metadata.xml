@@ -752,6 +752,7 @@
             <property key="list.click.service" value="fsDashboardService.buildDashClick"/>
             <property key="schema.aliasurl" value="/web/_workpackage/"/>
             <property key="list.preventnoresultsnew" value="true"/>
+            <property key="list.crawl.idfield" value="#id"/>
           </properties>
 
           <section id="daysleft">

@@ -274,9 +274,14 @@
                     return "main";
                 }
 
-                $scope.setActiveTab = function (tabId) {
+                $scope.setActiveTab = function (tab) {
+                    const tabId = tab == null ? null : tab.tabId;
                     crudContextHolderService.setActiveTab(tabId);
                     $rootScope.$broadcast("sw4_activetabchanged", tabId);
+                    if (tab != null && !!tab.lazy) {
+                        compositionService.getLazyTabData(tab);
+                    }
+
                 };
                 $scope.hasTabs = function (schema) {
                     return tabsService.hasTabs(schema);

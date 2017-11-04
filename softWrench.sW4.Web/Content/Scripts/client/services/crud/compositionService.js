@@ -43,12 +43,70 @@
                     return dto;
                 };
 
+                function compositionArrayHandler(datamap,compositionArray,log) {
+                    const originalDm = crudContextHolderService.originalDatamap();
+                    var result = {};
+                    angular.forEach(compositionArray,(compositionValue, composition) => {
+                            if (!compositionArray.hasOwnProperty(composition)) {
+                                return;
+                            }
+                            var resultList = compositionValue.resultList;
+                            log.info('composition {0} returned with {1} entries'.format(composition,
+                                resultList.length));
+                            //this datamap entry is bound to the whole screen, so we need to set it here as well
+                            datamap[composition] = resultList;
+                            originalDm[composition] = resultList;
 
+                            var paginationData = compositionValue.paginationData;
+                            // enforce composition pagination options
+                            paginationData.paginationOptions = paginationData.paginationOptions
+                                ? paginationData.paginationOptions
+                                : config.defaultOptions;
+                            //setting this case the tabs have not yet been loaded so that they can fetch from here
+                            contextService.insertIntoContext("compositionpagination_{0}".format(composition),
+                                paginationData,true);
+                            compositionContext[composition] = compositionValue;
+                            result[composition] = {
+                                relationship: composition,
+                                list: resultList,
+                                paginationData: paginationData
+                            };
+                        });
+                    return result;
+                }
+
+                function getLazyTabData(tab, showLoading = true) {
+                    if (!tab || !tab.lazy) {
+                        return $q.reject();
+                    }
+                    var log = $log.getInstance('compositionservice#getLazyTabData', ['tab']);
+
+                    if (crudContextHolderService.isLazyTabLoaded(tab.tabId)) {
+                        return $q.reject("already loaded");
+                    }
+
+                    log.debug(`lazy loading data for tab ${tab.tabId}`);
+
+                    const schema = crudContextHolderService.currentSchema();
+                    const datamap = crudContextHolderService.rootDataMap();
+
+                    const urlToUse = url("/api/generic/Tab/GetLazyTabData");
+                    const requestDto = buildTabFetchRequestDTO(schema, datamap, tab);
+
+                    return $http.post(urlToUse, requestDto, { avoidspin: !showLoading }).then(response => {
+                        crudContextHolderService.markTabAsLoaded(tab.tabId);
+                        angular.extend(datamap, response.data.resultObject);
+                        return compositionArrayHandler(datamap, response.data.compositionResult, log);
+                    }).then(result => {
+                        $rootScope.$broadcast(JavascriptEventConstants.COMPOSITION_RESOLVED, result, []);
+                        crudContextHolderService.compositionsLoaded(result);
+                    });
+                }
 
                 function fetchCompositions(requestDTO, datamap, showLoading) {
                     var log = $log.getInstance('compositionservice#fetchCompositions', ['composition']);
                     const urlToUse = url("/api/generic/Composition/GetCompositionData");
-                    const originalDm = crudContextHolderService.originalDatamap();
+                    
                     return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                         .then(response => {
                             var data = response.data;
@@ -62,30 +120,7 @@
                                 });
                             }
                             var compositionArray = data.resultObject;
-                            var result = {};
-                            angular.forEach(compositionArray, (compositionValue, composition) => {
-                                if (!compositionArray.hasOwnProperty(composition)) {
-                                    return;
-                                }
-                                var resultList = compositionValue.resultList;
-                                log.info('composition {0} returned with {1} entries'.format(composition, resultList.length));
-                                //this datamap entry is bound to the whole screen, so we need to set it here as well
-                                datamap[composition] = resultList;
-                                originalDm[composition] = resultList;
-
-                                var paginationData = compositionValue.paginationData;
-                                // enforce composition pagination options
-                                paginationData.paginationOptions = paginationData.paginationOptions ? paginationData.paginationOptions : config.defaultOptions;
-                                //setting this case the tabs have not yet been loaded so that they can fetch from here
-                                contextService.insertIntoContext("compositionpagination_{0}".format(composition), paginationData, true);
-                                compositionContext[composition] = compositionValue;
-                                result[composition] = {
-                                    relationship: composition,
-                                    list: resultList,
-                                    paginationData: paginationData
-                                };
-                            });
-                            return result;
+                            return compositionArrayHandler(datamap,compositionArray,log);
                         });
                 };
 
@@ -120,6 +155,35 @@
                             return result;
                         });
                 };
+
+                function buildTabFetchRequestDTO(schema, datamap, tab) {
+                    const applicationName = schema.applicationName;
+                    // sanitizing data to submit
+                    var fieldsTosubmit = submitServiceCommons.removeExtraFields(datamap, true, schema);
+                    const compositionNames = getLazyCompositions(schema, datamap);
+                    angular.forEach(compositionNames, function (composition) {
+                        if (!fieldsTosubmit[composition] || !fieldsTosubmit.hasOwnProperty(composition)) {
+                            return;
+                        }
+                        delete fieldsTosubmit[composition];
+                    });
+                    const parameters = {
+                        key: {
+                            schemaId: schema.schemaId,
+                            mode: schema.mode,
+                            platform: platform()
+                        },
+                        id: schemaService.getId(datamap, schema),
+                        tabId: tab.tabId
+                    };
+                    parameters.compositionList = compositionNames;
+                    return {
+                        application: applicationName,
+                        request: parameters,
+                        data: fieldsTosubmit
+                    };
+                }
+
 
                 function buildFetchRequestDTO(schema, datamap, compositions, paginatedSearch) {
                     const applicationName = schema.applicationName;
@@ -427,6 +491,7 @@
                     generateBatchItemDatamap,
                     locatePrintSchema,
                     getTitle,
+                    getLazyTabData,
                     getListCommandsToKeep,
                     hasEditableProperty,
                     buildMergedDatamap,

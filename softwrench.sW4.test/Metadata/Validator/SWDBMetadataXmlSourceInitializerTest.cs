@@ -47,7 +47,7 @@ namespace softwrench.sW4.test.Metadata.Validator {
         public void TestGenerationWithDifferentColumnName() {
             var service = new SWDBMetadataXmlSourceInitializer();
             var entityMetadata = service.Convert(typeof(PropertyValue));
-            var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            var attributes = entityMetadata.Schema.Attributes;
             Assert.IsNull(attributes.FirstOrDefault(f => f.Name == "rowstamp"));
             Assert.IsNull(attributes.FirstOrDefault(f => f.Name.EqualsIc("definition")));
             var defId = attributes.FirstOrDefault(f => f.Name.EqualsIc("definition_id"));
@@ -76,12 +76,18 @@ namespace softwrench.sW4.test.Metadata.Validator {
         }
 
         [TestMethod]
-        public void TestBools() {
+        public void TestAttributes() {
             var service = new SWDBMetadataXmlSourceInitializer();
             var entityMetadata = service.Convert(typeof(WorkPackage));
             var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
             Assert.IsTrue(attributes.Any(a => a.Name.EqualsIc("subContractorEnabled")));
+            var dateAttr = attributes.FirstOrDefault(f => f.Name.EqualsIc("createddate"));
+            Assert.IsNotNull(dateAttr);
+            Assert.AreEqual("datetime",dateAttr.Type);
 
+            var id = attributes.FirstOrDefault(f => f.Name.EqualsIc("id"));
+            Assert.IsNotNull(id);
+            Assert.AreEqual("int32", id.Type);
         }
     }
 }

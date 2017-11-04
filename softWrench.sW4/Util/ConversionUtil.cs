@@ -22,7 +22,7 @@ namespace softWrench.sW4.Util {
             if (type == "varchar" || type == "string") {
                 return stValue;
             }
-            if (type.EqualsAny("smallint", "int", "integer")) {
+            if (type.EqualsAny("smallint", "int", "integer", "int32")) {
                 if (stValue.EqualsAny("True", "False")) {
                     return Convert.ToBoolean(stValue);
                 }
@@ -32,7 +32,7 @@ namespace softWrench.sW4.Util {
                     return Convert.ToInt64(stValue);
                 }
             }
-            if (type == "bigint") {
+            if (type == "bigint" || type == "int64") {
                 return Convert.ToInt64(stValue);
             }
             if (type == "datetime" || type == "timestamp") {

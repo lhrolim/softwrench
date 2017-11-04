@@ -92,6 +92,7 @@
                 //current profile selected, if multiple are available, considering whereclauses
                 currentSelectedProfile: null,
                 tabRecordCount: {},
+                lazytabData:{},
                 compositionLoadComplete: false,
                 gridSelectionModel: {
                     selectionBuffer: {}, // buffer of all selected row
@@ -374,6 +375,7 @@
             const context = this.getContext(panelid);
             this.clearDetailDataResolved(panelid);
             context.tabRecordCount = {};
+            context.lazytabData = {};
             context._eagerassociationOptions = { "#global": {} };
             context._lazyAssociationOptions = {};
             context.compositionLoadComplete = false;
@@ -400,6 +402,18 @@
         clearCompositionsLoaded(panelid) {
             const context = this.getContext(panelid);
             context.compositionLoadComplete = false;
+        }
+
+        markTabAsLoaded(tabid,panelid) {
+            const context = this.getContext(panelid);
+            context.lazytabData = {
+                [tabid]:true
+            };
+        }
+
+        isLazyTabLoaded(tabid,panelid) {
+            const context = this.getContext(panelid);
+            return !!context.lazytabData[tabid];
         }
 
 

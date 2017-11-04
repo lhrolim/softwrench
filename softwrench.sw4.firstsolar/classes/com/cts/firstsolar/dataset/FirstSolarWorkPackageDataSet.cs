@@ -245,7 +245,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             //TODO: make it generic
             var nercBoolean = result.ResultObject.GetBooleanAttribute("nerc");
-            result.ResultObject.SetAttribute("nerc",nercBoolean?.ToString().ToLower());
+            result.ResultObject.SetAttribute("nerc", nercBoolean?.ToString().ToLower());
 
             var defaultEmail = ConfigFacade.Lookup<string>(FirstSolarOptConfigurations.DefaultMeToEmailKey);
             result.ResultObject.SetAttribute("defaultmetoemail", defaultEmail);
@@ -266,7 +266,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             MaintenanceEngineeringHandler.AddEngineerAssociations(result);
             await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedData(result);
 
-            await HandleLostMwhTotal(result.ResultObject);
+            //            await HandleLostMwhTotal(result.ResultObject);
 
             if (application.Schema.SchemaId.Equals("viewdetail")) {
                 //two rounds, since we need to first load the workorder details, and only then we´re able to fully bring the associations of it
@@ -277,9 +277,28 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return result;
         }
 
-        private static async Task HandleLostMwh(CompositionFetchRequest request, CompositionFetchResult compList, string woId, string createddate) {
-            if (string.IsNullOrEmpty(woId) || string.IsNullOrEmpty(createddate) || 
-                request.CompositionList == null || !request.CompositionList.Contains("#lostenergyentries_")) {
+        public override async Task<TabLazyDataResult> GetTabLazyData(ApplicationMetadata application, TabDetailRequest request) {
+            var result = await base.GetTabLazyData(application, request);
+            if (request.TabId.EqualsIc("dailyoutage")) {
+                var crudData = request.CrudData;
+                result.ResultObject.SetAttribute("mwhlosttotal", await HandleLostMwhTotal(crudData));
+                var createddate = crudData.GetStringAttribute("createddate");
+                var woId = crudData.GetStringAttribute("workorderid");
+                var compFetchRequest = new CompositionFetchRequest {
+                    CompositionList = new List<string>() { "#lostenergyentries_" },
+                    PaginatedSearch = PaginatedSearchRequestDto.DefaultInstance(null)
+                };
+                await HandleLostMwh(compFetchRequest, result.CompositionResult, woId, createddate);
+            }
+
+
+            return result;
+        }
+
+
+        private static async Task HandleLostMwh(CompositionFetchRequest request, IDictionary<string, EntityRepository.SearchEntityResult> ResultObject, string woId, string createddate) {
+            if (string.IsNullOrEmpty(woId) || string.IsNullOrEmpty(createddate) ||
+                request.CompositionList == null || !request.CompositionList.Contains("#lostenergyentries_") || request.CompositionList.Count != 1) {
                 return;
             }
 
@@ -313,20 +332,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 PaginationData = new PaginatedSearchRequestDto(totalDays, pag.PageNumber, pag.PageSize, null, pag.PaginationOptions)
             };
 
-            compList.ResultObject.Add("#lostenergyentries_", searchResult);
+            ResultObject.Add("#lostenergyentries_", searchResult);
         }
 
-        private static async Task HandleLostMwhTotal(DataMap dm) {
+        private static async Task<decimal?> HandleLostMwhTotal(AttributeHolder dm) {
             if (!dm.ContainsKey("workorderid") || !dm.ContainsKey("createddate")) {
-                return;
+                return null;
             }
             var woId = dm["workorderid"] as long?;
             var createDate = dm["createddate"] as DateTime?;
             if (woId == null || createDate == null) {
-                return;
+                return null;
             }
             var start = DateUtil.BeginOfDay(createDate.Value);
-            dm["mwhlosttotal"] = await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedTotalLostEnergy(woId, start);
+            return await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedTotalLostEnergy(woId, start);
         }
 
         private void HandleWonum(AttributeHolder ah) {
@@ -389,7 +408,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
             var data = (CrudOperationData)operationWrapper.GetOperationData;
 
-            if (!"COMP".EqualsIc(data.GetStringAttribute("#workorder_.status"))){
+            if (!"COMP".EqualsIc(data.GetStringAttribute("#workorder_.status"))) {
                 //as per SWWEB-3230
                 await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4,
                     operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
@@ -582,7 +601,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                     //workaround to avoid bringing the compositions on the "GetDetail scenario"
                     return null;
                 }
-                PreFetchedCompositionFetchRequest r = (PreFetchedCompositionFetchRequest)request;
+                var r = (PreFetchedCompositionFetchRequest)request;
                 var entity = r.PrefetchEntities[0];
                 woId = entity.GetStringAttribute("#workorder_.workorderid");
                 woNum = entity.GetStringAttribute("#workorder_.wonum");
@@ -595,8 +614,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 woSite = currentData.StringValue("#workorder_.siteid");
                 createddate = currentData.StringValue("createddate");
             }
+            //do not bring this data here as it would be brought on the lazy tab method. Except for a paginated call
+            //TODO: integrate better inline compositons inside of tabs
+            await HandleLostMwh(request, compList.ResultObject, woId, createddate);
 
-            await HandleLostMwh(request, compList, woId, createddate);
             if (request.CompositionList != null && request.CompositionList.Contains("#lostenergyentries_") &&
                 request.CompositionList.Count == 1) {
                 return compList;
