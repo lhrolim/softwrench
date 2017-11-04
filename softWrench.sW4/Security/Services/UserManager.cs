@@ -106,7 +106,7 @@ namespace softWrench.sW4.Security.Services {
             }
 
             // ReSharper disable once PossibleInvalidOperationException --> just saved
-            _dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName, isCreation));
+            _dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName, savedUser.MaximoPersonId, isCreation));
             return savedUser;
         }
 
@@ -121,7 +121,7 @@ namespace softWrench.sW4.Security.Services {
             //TODO: wipeout link
             UserLinkManager.DeleteLink(savedUser);
             // ReSharper disable once PossibleInvalidOperationException
-            _dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName, false));
+            _dispatcher.Dispatch(new UserSavedEvent(savedUser.Id.Value, savedUser.UserName, savedUser.MaximoPersonId, false));
         }
 
 

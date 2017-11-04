@@ -10,12 +10,13 @@ using Newtonsoft.Json.Linq;
 using softwrench.sw4.offlineserver.events;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.services.setup;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
-    public class FirstSolarUserFacilityBuilder : ISWEventListener<UserLoginEvent>, ISWEventListener<PreSyncEvent>, ISWEventListener<RefreshMetadataEvent> {
+    public class FirstSolarUserFacilityBuilder : ISWEventListener<UserLoginEvent>, ISWEventListener<PreSyncEvent>, ISWEventListener<RefreshMetadataEvent>, ISWEventListener<UserSavedEvent> {
 
         private const string FacilitiesQuery = @"select omw.location, omw.siteid from omworkgroup omw  
                                                 left join persongroupview pgv on pgv.persongroup = omw.persongroup 
@@ -90,7 +91,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         public void PopulatePreferredFacilities(User user, string facilitiesToken) {
             var preferences = user.UserPreferences;
             if (preferences == null) {
-                user.UserPreferences = new UserPreferences {User = user};
+                user.UserPreferences = new UserPreferences { User = user };
                 preferences = user.UserPreferences;
             }
             if (preferences.GenericProperties == null) {
@@ -187,6 +188,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             siteIdDict.ToList().ForEach(pair => result.AddRange(pair.Value));
             result.Sort();
             return result;
+        }
+
+        public void HandleEvent(UserSavedEvent userEvent) {
+            FacilitiesCache.Remove(userEvent.MaximoPersonId);
         }
     }
 }
