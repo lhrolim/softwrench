@@ -29,16 +29,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         public ISWDBHibernateDAO Dao { get; set; }
 
         public bool HandleOutageActions(CrudOperationData crudoperationData, WorkPackage package, ApplicationSchemaDefinition schema) {
-
-            //TODO: extract composition generic code
-            if (package.OutageActions == null) {
-                package.OutageActions = new List<OutageAction>();
-            }
-
             if (!schema.Compositions().Any(c => EntityUtil.IsRelationshipNameEquals(c.AssociationKey, "outageActions"))) {
                 //might be disabled due to security reasons
                 return false;
             }
+
+            //TODO: extract composition generic code
+            var existimDoas = package.OutageActions;
+            package.OutageActions = new List<OutageAction>();
 
             var toKeepDoa = new List<OutageAction>();
             var anyNewDoa = false;
@@ -50,7 +48,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 }
 
                 doasData.ForEach((data) => {
-                    var doa = GetOurCreateDailyOutageAction(data, package.OutageActions, toKeepDoa);
+                    var doa = GetOurCreateDailyOutageAction(data, existimDoas, toKeepDoa);
                     EntityBuilder.PopulateTypedEntity(data, doa);
                     anyNewDoa = anyNewDoa || doa.Id == null;
                     if ("true".EqualsIc(data.GetStringAttribute("#isDirty"))) {
@@ -75,7 +73,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             toKeepDoa.AddRange(HandleDoasOutOfEngineeringTests(package, crudoperationData));
 
             var deleted = new List<OutageAction>();
-            package.OutageActions.ForEach(doa => {
+            existimDoas.ForEach(doa => {
                 if (toKeepDoa.Contains(doa)) {
                     return;
                 }
