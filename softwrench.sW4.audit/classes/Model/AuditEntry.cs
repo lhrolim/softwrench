@@ -9,7 +9,11 @@ using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sW4.audit.classes.Model {
     [Class(Table = "audit_entry", Lazy = false)]
-    public class AuditEntry : IBaseEntity {
+    public class AuditEntry : IBaseEntity
+    {
+
+        public static string ByAppIdAndAction = "from AuditEntry where RefApplication =? and RefId = ? and Action =? order by CreatedDate desc";
+
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -24,6 +28,9 @@ namespace softwrench.sW4.audit.classes.Model {
         [Property]
         public virtual string RefId { get; set; }
 
+        /// <summary>
+        /// user id of the application to be stored (ex: wonum)
+        /// </summary>
         [Property]
         public virtual string RefUserId { get; set; }
 

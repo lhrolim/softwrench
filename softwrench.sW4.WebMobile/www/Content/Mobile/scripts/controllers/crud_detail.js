@@ -2,9 +2,9 @@
 (function (softwrench) {
     "use strict";
 
-    softwrench.controller("CrudDetailController", ['$log', "$q", '$scope', '$rootScope', '$timeout', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", "drillDownService", "offlineCompositionService", "inlineCompositionService",
+    softwrench.controller("CrudDetailController", ['$log', "$q", '$scope', '$rootScope', '$timeout', '$state', 'schemaService', "crudContextHolderService", "wizardService", "$ionicPlatform", "drillDownService", "offlineCompositionService", "inlineCompositionService",
         'crudContextService', 'fieldService', '$ionicPopover', '$ionicPopup', '$ionicHistory', '$ionicScrollDelegate', 'eventService', "expressionService", "offlineSchemaService", "commandBarDelegate", "swAlertPopup", "loadingService",
-        function (log, $q, $scope, $rootScope, $timeout, schemaService, crudContextHolderService, wizardService, $ionicPlatform, drillDownService, offlineCompositionService, inlineCompositionService,
+        function (log, $q, $scope, $rootScope, $timeout, $state, schemaService, crudContextHolderService, wizardService, $ionicPlatform, drillDownService, offlineCompositionService, inlineCompositionService,
             crudContextService, fieldService, $ionicPopover, $ionicPopup, $ionicHistory, $ionicScrollDelegate, eventService, expressionService, offlineSchemaService, commandBarDelegate, swAlertPopup, loadingService) {
 
             $scope.inlineCompositionsLoaded = false;
@@ -275,6 +275,9 @@
                 return problems[0].message;
             };
 
+            $scope.drillStyle = function() {
+                return $state.$current.name === "main.cruddetail.locationdrilldown" ? { height: "calc(100vh - 87px)" } : {};
+            }
 
             // handles device back button
             const deregisterHardwareBack = $ionicPlatform.registerBackButtonAction(() => {

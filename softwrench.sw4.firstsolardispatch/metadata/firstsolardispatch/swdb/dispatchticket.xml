@@ -31,11 +31,31 @@
 
       <schemas>
         <list title="Dispatch Tickets Grid" platform="web">
+
+          <filters>
+            <optionfilter attribute="status" displaycode="false" style="width:300px" whereclause="status in (!@#value)" >
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Dispatched" value="DISPATCHED"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Accepted" value="ACCEPTED"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Rejected" value="REJECTED"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Arrived" value="ARRIVED"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Resolved" value="RESOLVED"/>
+            </optionfilter>
+            <optionfilter attribute="#worktype" provider="#workorder_.worktype_.wtypedesc" displaycode="true" style="width:300px" whereclause="worktype in (!@#value)" />
+            <filter attribute="#description" style="width:300px" whereclause="description like !@#value" />
+            <booleanfilter attribute="#outreq" whereclause="outreq = !@#value" />
+          </filters>
+
+
           <field attribute="id" label="Ticket#"/>
           <field attribute="site_.facilityname" label="Site Name"/>
           <field attribute="createddate" label="Created Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
+          
+          <field attribute="statusdate" label="Status Change Date"/>
+          <field attribute="reportedby_.username" label="Reported By"/>
+          <field attribute="status" label="Status"/>
+          
         </list>
 
 
@@ -44,6 +64,22 @@
           <field attribute="site_.siteid" hidden="true"/>
           <field attribute="site_.locationprefix" hidden="true"/>
 
+          <section orientation="horizontal" showexpression="@id != null">
+            <header displacement="ontop" label="Ticket Information" params="fieldset=true" />
+            <field attribute="id" label="Ticket#" readonly="true"/>
+            <field attribute="#originalstatus" hidden="true"/>
+            <optionfield label="Status" attribute="status">
+              <filter clientfunction="fsdTicketService.filterStatus"/>
+              
+              <option label="Dispatched" value="DISPATCHED"/>
+              <option label="Accepted" value="ACCEPTED"/>
+              <option label="Rejected" value="REJECTED"/>
+              <option label="Arrived" value="ARRIVED"/>
+              <option label="Resolved" value="RESOLVED"/>
+            </optionfield>
+            <field attribute="reportedby_.username" label="Reported By" readonly="true"/>
+          </section>
+          
           <section>
             <header displacement="ontop" label="Site Information" params="fieldset=true" />
 
@@ -103,7 +139,30 @@
               <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsdInverterService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fsdInverterService.openModalEdit;composition.inline.deletefunction=fsdInverterService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Inverter"/>
             </composition>
           </section>
+
+
+
+          <tab label="Status History" id="statushistory" icon="fa fa-history">
+            <composition detailschema="" fetchtype="lazy"  relationship="#statushistory"  printschema="" inline="true" label="">
+              <collectionproperties allowcreation="false" listschema="statusrepresentation"/>
+            </composition>
+          </tab>
+          
+          
         </schema>
+
+        <schema id="statusrepresentation" stereotype="list">
+          <field attribute="status" label="Status"/>
+          <field attribute="changedate" label="Change Date">
+            <renderer type="datetime"/>
+          </field>
+          <field attribute="changeby" label="Changed by"/>
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+          </properties>
+        </schema>
+
 
         <schema id="newdetail" parentschema="adetail" title="Dispatch Ticket" platform="web" stereotype="detailnew">
 
