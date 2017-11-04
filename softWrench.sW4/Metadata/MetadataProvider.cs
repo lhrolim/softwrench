@@ -243,10 +243,7 @@ namespace softWrench.sW4.Metadata {
 
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");
-            ICollection<EntityMetadata> entityMetadata;
-//            if (name.StartsWith("_")) {
-//                name = name.Substring(1) + "_";
-//            }
+            ICollection<EntityMetadata> entityMetadata = new List<EntityMetadata>();
             name = UnSwdbFy(name);
           
 

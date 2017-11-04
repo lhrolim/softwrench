@@ -248,9 +248,10 @@ namespace softWrench.sW4.Metadata.Parsing {
             var toolTip = tabElement.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
             var icon = tabElement.Attribute(XmlBaseSchemaConstants.IconAttribute).ValueOrDefault((string)null);
             var role = tabElement.Attribute(XmlBaseSchemaConstants.RoleAttribute).ValueOrDefault((string)null);
+            var hasLazyData = tabElement.Attribute(XmlBaseSchemaConstants.HasLazyDataAttribute).ValueOrDefault(false);
             var countRelationship = tabElement.Attribute(XmlBaseSchemaConstants.CountRelationshipAttribute).ValueOrDefault((string)null);
             var displayables = ParseDisplayables(applicationName, schemaId, tabElement, entityName);
-            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression, enableExpression, icon, role, countRelationship);
+            return new ApplicationTabDefinition(id, applicationName, label, displayables, toolTip, showExpression, enableExpression, icon, role, countRelationship, hasLazyData);
         }
 
         private static ApplicationSection ParseSection(string applicationName, string schemaId, XElement sectionElement, EntityMetadata entityMetadata) {

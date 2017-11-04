@@ -211,6 +211,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return detailResult;
         }
 
+        public virtual Task<TabLazyDataResult> GetTabLazyData(ApplicationMetadata application, TabDetailRequest request) {
+            //no op by default
+            return Task.FromResult(new TabLazyDataResult() {
+                ResultObject = new DataMap()
+            });
+        }
+
         public virtual async Task<CompositionFetchResult> LoadCompositions(ApplicationMetadata application, DetailRequest request, IDictionary<string, ApplicationCompositionSchema> applicationCompositionSchemas, DataMap dataMap) {
             var prefetchCompositions =
                 "true".EqualsIc(application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.PreFetchCompositions)) ||
@@ -499,14 +506,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
                 if (associationData.Any()) {
                     foreach (var associationOption in associationData) {
-                        if (!lazyOptions[association.AssociationKey].ContainsKey(associationOption.Value.ToLower())){
+                        if (!lazyOptions[association.AssociationKey].ContainsKey(associationOption.Value.ToLower())) {
                             //usually we´ll have just one option, unless we´re dealing with associations of inline compositions
                             //for some unhandled failure code scenario, the same key can be present more than once
                             //TODO: fix these mappings to cause, remedy, problem
                             lazyOptions[association.AssociationKey].Add(associationOption.Value.ToLower(), associationOption);
                         }
 
-                        
+
                     }
                 }
             }

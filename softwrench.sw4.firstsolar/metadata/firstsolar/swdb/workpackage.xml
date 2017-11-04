@@ -82,6 +82,7 @@
 <!---->
 <!--            <field label="Daily Estimated Loss (MWh)" attribute="mwhlostperday"/>-->
 <!--            <field label="Total Estimated Loss (MWh)" attribute="expectedmwhlost"/>-->
+
 <!--          </section>-->
 
           <section orientation="horizontal">
@@ -93,7 +94,7 @@
 
           <section orientation="horizontal">
             <header label="Daily Lost Energy"  params="fieldset=true"/>
-            <composition fetchtype="lazy" detailschema="lostenergydetail"  relationship="#lostenergyentries" printschema="" inline="true">
+            <composition fetchtype="manual" detailschema="lostenergydetail"  relationship="#lostenergyentries" printschema="" inline="true">
               <collectionproperties allowcreation="false" listschema="lostenergylist" allowupdate="false"/>
             </composition>
           </section>
@@ -374,7 +375,7 @@
               </section>
             </tab>
 
-            <tab label="Daily Outage Update" icon="fa-clock-o" id="dailyoutage" showexpression="@#workorder_.worktype == null || @#workorder_.worktype !== 'PM'" enableexpression="@id!=null" countrelationship="">
+            <tab label="Daily Outage Update" icon="fa-clock-o" id="dailyoutage" showexpression="@#workorder_.worktype == null || @#workorder_.worktype !== 'PM'" enableexpression="@id!=null" countrelationship="" haslazydata="true">
               <reference id="dailyoutage"/>
             </tab>
 

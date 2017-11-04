@@ -248,7 +248,12 @@
                         var elements = $scope.datamap.map(function (item) {
                             const applicationField = schemaService.locateDisplayableByQualifier($scope.schema, "application.name");
                             const detailShemaIdField = schemaService.locateDisplayableByQualifier($scope.schema, "schema.detail.id");
-                            const listitem = { id: item[$scope.schema.idFieldName] };
+                            let idValue = item[$scope.schema.idFieldName];
+                            if (!!$scope.schema.properties["list.crawl.idfield"]) {
+                                idValue = item[$scope.schema.properties["list.crawl.idfield"]];
+                            }
+
+                            const listitem = { id: idValue};
                             if (!!applicationField) listitem.application = item[applicationField.attribute];
                             if (!!detailShemaIdField) listitem.detailSchemaId = item[detailShemaIdField.attribute];
 

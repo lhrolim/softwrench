@@ -27,6 +27,16 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
         Task<IApplicationResponse> Get(ApplicationMetadata application, InMemoryUser user, IDataRequest request);
 
         Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request);
+
+        /// <summary>
+        /// Hook method to allow applications to insert custom datamap values once a lazy tab is first loaded
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        Task<TabLazyDataResult> GetTabLazyData(ApplicationMetadata application, TabDetailRequest request);
+
+
         Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData);
         Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto);
 

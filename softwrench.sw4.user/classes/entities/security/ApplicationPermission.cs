@@ -104,7 +104,7 @@ namespace softwrench.sw4.user.classes.entities.security {
         /// <param name="other"></param>
         public void Merge(ApplicationPermission other) {
             AllowCreation = AllowCreation || other.AllowCreation;
-            AllowUpdate = AllowCreation || other.AllowUpdate;
+            AllowUpdate = AllowUpdate || other.AllowUpdate;
             AllowView = AllowCreation || other.AllowView;
             AllowRemoval = AllowCreation || other.AllowRemoval;
             if (ActionPermissions == null) {
@@ -183,8 +183,17 @@ namespace softwrench.sw4.user.classes.entities.security {
         }
 
 
-        public static ApplicationPermission AllowInstance() {
-            return new ApplicationPermission { AllowCreation = true, AllowUpdate = true, AllowView = true, AllowRemoval = true};
+        public static ApplicationPermission AllowInstance(string application = null) {
+            return new ApplicationPermission { ApplicationName = application, AllowCreation = true, AllowUpdate = true, AllowView = true, AllowRemoval = true };
+        }
+
+        public static ApplicationPermission ReadOnlyInstance(string application = null) {
+            return new ApplicationPermission { ApplicationName = application, AllowCreation = false, AllowUpdate = false, AllowView = true, AllowRemoval = false };
+        }
+
+
+        public static ApplicationPermission BlockInstance(string application = null) {
+            return new ApplicationPermission { ApplicationName = application, AllowCreation = false, AllowUpdate = false, AllowView = false, AllowRemoval = false };
         }
 
     }

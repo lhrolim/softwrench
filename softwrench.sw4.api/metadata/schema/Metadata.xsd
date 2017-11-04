@@ -1166,7 +1166,13 @@
         </documentation>
       </annotation>
     </attribute>
-
+    <attribute name="haslazydata" type="boolean">
+      <annotation>
+        <documentation>
+          If true an extra dataset method will be invoked to load any related data which this tab needs
+        </documentation>
+      </annotation>
+    </attribute>
 
   </complexType>
   <element name="section" type="tns:sectionComplexType"></element>

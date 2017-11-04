@@ -47,7 +47,10 @@ namespace softWrench.sW4.Security.Services {
             _dao = dao;
             _mappingResolver = mappingResolver;
             //            _entityRepositoryForProfileTranslation = entityRepositoryForProfileTranslation;
-            _entityMetadata = MetadataProvider.Entity("groupuser");
+
+            if (MetadataProvider.FinishedParsing)
+
+            _entityMetadata = MetadataProvider.Entity("groupuser",!ApplicationConfiguration.IsUnitTest);
         }
 
 
@@ -162,11 +165,7 @@ namespace softWrench.sW4.Security.Services {
             }
         }
 
-        protected virtual IEntityRepository EntityRepositoryForTranslation {
-            get {
-                return SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>();
-            }
-        }
+        protected virtual IEntityRepository EntityRepositoryForTranslation => SimpleInjectorGenericFactory.Instance.GetObject<EntityRepository>();
 
         public virtual async Task<List<UserProfile>> FindUserProfiles(User dbUser) {
             if (dbUser.Profiles == null) {
@@ -303,7 +302,7 @@ namespace softWrench.sW4.Security.Services {
                 //let´s use the less restictive rule
                 foreach (var appPermission in profile.ApplicationPermissions) {
                     if (!permissionsDict.ContainsKey(appPermission.ApplicationName)) {
-                        permissionsDict.Add(appPermission.ApplicationName, appPermission);
+                        permissionsDict.Add(appPermission.ApplicationName, appPermission.DeepClone());
                     } else {
                         permissionsDict[appPermission.ApplicationName].Merge(appPermission);
                     }

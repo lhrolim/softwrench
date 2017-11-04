@@ -33,6 +33,7 @@
         public const string DisplayCodeAttribute = "displaycode";
         public const string RoleAttribute = "role";
         public const string CountRelationshipAttribute = "countrelationship";
+        public const string HasLazyDataAttribute = "haslazydata";
 
         public const string ToggleButtonInitialStateExpressionAttribute = "initialstateexpression";
     }

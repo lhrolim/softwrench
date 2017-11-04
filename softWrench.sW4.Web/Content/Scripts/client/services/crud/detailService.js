@@ -83,7 +83,15 @@
                 return;
             }
 
-            if (crudContext.panelid != null || crudContext.applicationName !== schema.applicationName) {
+            
+
+            var applicationMatches = crudContext.applicationName === schema.applicationName;
+            if (!!schema.properties["application.mainlistschema"]) {
+                applicationMatches =
+                    schema.properties["application.mainlistschema"].startsWith(crudContext.applicationName);
+            }
+
+            if (crudContext.panelid != null || !applicationMatches) {
                 // the list was from a modal or dashboard panel
                 // or is from another aplication
                 // should not be considered when goint to detail

@@ -104,7 +104,17 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
 
                 Log.DebugFormat("adding swdb attribute {0} to entity {1}", attribute, entityName);
-                var entityAttribute = new EntityAttribute(attribute, memberInfo.PropertyType.Name, false, true, connectorParameters, query);
+
+
+                var propertyType = memberInfo.PropertyType;
+
+                if (propertyType.IsGenericType &&
+                    propertyType.GetGenericTypeDefinition() == typeof(Nullable<>)) {
+                    propertyType = propertyType.GetGenericArguments()[0];
+                }
+
+                
+                var entityAttribute = new EntityAttribute(attribute, propertyType.Name.ToLower(), false, true, connectorParameters, query);
                 if (entityAttribute.Type.EqualsIc("datetime") && memberInfo.ReadAttribute<UTCDateTime>() != null) {
                     entityAttribute.ConnectorParameters.Parameters.Add("utcdate", "true");
                 }
