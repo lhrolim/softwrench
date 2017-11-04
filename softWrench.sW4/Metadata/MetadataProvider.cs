@@ -243,7 +243,7 @@ namespace softWrench.sW4.Metadata {
 
         public static EntityMetadata Entity([NotNull] string name, Boolean throwException = true) {
             Validate.NotNull(name, "name");
-            ICollection<EntityMetadata> entityMetadata;
+            ICollection<EntityMetadata> entityMetadata = new List<EntityMetadata>();
             name = UnSwdbFy(name);
             if (name.EndsWith("_")) {
                 entityMetadata = _swdbmetadataXmlInitializer != null ? _swdbmetadataXmlInitializer.Entities : _swdbentityMetadata;
