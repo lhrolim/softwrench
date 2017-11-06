@@ -125,7 +125,7 @@
           <field attribute="laborhrs" label="Hours">
             <renderer type="numericinput"/>
           </field>
-          <field attribute="status" label="Status" readonly="true" defaultexpression="'WAITASGN'" default="'WAITASGN'"/>
+          <field attribute="status" label="Status" readonly="true" defaultexpression="'ASSIGNED'" default="'ASSIGNED'"/>
         </schema>
 
       </schemas>

@@ -186,6 +186,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var payRate = GetPayRate(crudData);
             var regularHrs = GetRegularHours(integrationObject);
 
+            if (regularHrs ==0) {
+                throw new InvalidOperationException("Please make sure to stop the active timer before you perform a synchronization");
+            }
+
+
             WsUtil.SetValueIfNull(integrationObject, "PAYRATE", payRate);
             ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Add.ToString());
             FillLineCostLabor(integrationObject, regularHrs);

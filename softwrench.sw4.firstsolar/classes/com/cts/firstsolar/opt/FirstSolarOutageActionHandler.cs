@@ -73,13 +73,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             toKeepDoa.AddRange(HandleDoasOutOfEngineeringTests(package, crudoperationData));
 
             var deleted = new List<OutageAction>();
-            existimDoas.ForEach(doa => {
+
+            existimDoas?.ForEach(doa => {
                 if (toKeepDoa.Contains(doa)) {
                     return;
                 }
                 Dao.Delete(doa);
                 deleted.Add(doa);
             });
+
+
             deleted.ForEach(doa => package.OutageActions.Remove(doa));
             return anyNewDoa;
         }
