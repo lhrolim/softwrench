@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using cts.commons.portable.Util;
 using log4net;
 using Newtonsoft.Json;
@@ -35,7 +36,7 @@ namespace softWrench.sW4.Web.Formatting {
                     userOffsetVal = user.TimezoneOffset.Value;
                 }
                 var dateTimeOffset = new DateTimeOffset(dto.DateTime, TimeSpan.FromMinutes(userOffsetVal * -1));
-                writer.WriteValue(dateTimeOffset.ToString());
+                writer.WriteValue(dateTimeOffset.ToString(CultureInfo.InvariantCulture));
                 return;
             }
 
