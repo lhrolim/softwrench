@@ -246,7 +246,7 @@
             return parentPromise.then((foundParent) => {
                 return $ionicPopup.confirm({
                     title: "Labor Report",
-                    template: "It is required to stop labor timer before synchronization. Do you want to stop it and proceed with syncronization?"
+                    template: "You must stop the labor timer before synchronization. Do you want to stop it and proceed with the synchronization?"
                 }).then(res => res ? doStopLaborTransaction(foundParent) : false);
             });
         }
