@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q, $rootScope, $timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService,
+    function synchronizationFacade($log, $q, $rootScope, $timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, laborService,
         asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService, configurationService) {
 
         //#region Utils
@@ -241,54 +241,67 @@
                 return $q.reject({ message: "Cannot synchronize application without internet connection" });
             }
 
-            return checkRelogin().then(() => {
-                const clientOperationId = persistence.createUUID();
-                const start = new Date().getTime();
-                const dbapplications = metadataModelService.getMetadatas();
+            const laborPromise = laborService.hasActiveLabor()
+                ? isFirstSync().then(first => first ? $q.when(true) : laborService.finishLaborBeforeSynch())
+                : $q.when(true);
+            loadingService.hide(); // workaround - was showing load on stop labor prompt
 
-                // one Batch per application
-                const batchPromises = dbapplications.map(dbapplication => batchService.createBatch(dbapplication));
+            return laborPromise.then((laborFinished) => {
+                if (!laborFinished) {
+                    return $q.reject({});
+                }
 
-                return $q.all(batchPromises)
-                    .then(batches => {
-                        // no batches created: full download instead of full sync
-                        if (!batches || batches.length <= 0 || !batches.some(s => s != null)) {
-                            log.info("No batches created: Executing full download instead of full sync.");
-                            return fullDownload(clientOperationId);
-                        }
-                        // batches created: submit to server
-                        log.info("Batches created locally: submitting to server.");
-                        return batchService.submitBatches(batches, clientOperationId).then(batchResults => {
-                            // check for synchronous or asynchronous case
-                            var asyncBatches = batchResults.filter(batch => batch.status !== "COMPLETE");
-                            // async case
-                            if (asyncBatches.length > 0) {
-                                // register async Batches for async processing
-                                angular.forEach(asyncBatches, asyncBatch => asyncSynchronizationService.registerForAsyncProcessing(asyncBatch));
-                                // create batch/offline SyncOperation
-                                return synchronizationOperationService.createBatchOperation(start, batchResults);
+                loadingService.showDefault(); // workaround - was showing load on stop labor prompt
+
+                return checkRelogin().then(() => {
+                    const clientOperationId = persistence.createUUID();
+                    const start = new Date().getTime();
+                    const dbapplications = metadataModelService.getMetadatas();
+
+                    // one Batch per application
+                    const batchPromises = dbapplications.map(dbapplication => batchService.createBatch(dbapplication));
+
+                    return $q.all(batchPromises)
+                        .then(batches => {
+                            // no batches created: full download instead of full sync
+                            if (!batches || batches.length <= 0 || !batches.some(s => s != null)) {
+                                log.info("No batches created: Executing full download instead of full sync.");
+                                return fullDownload(clientOperationId);
                             }
-                            // sync case: 
-                            // - delete DataEntries that should be deleted
-                            // - updates the hasProblem flag on DataEntries
-                            // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
-                            return handleDeletableDataEntries(batchResults)
-                                .then(() => problemService.updateHasProblemToDataEntries(batchResults))
-                                .then(() => {
-                                    var httpPromises = [associationDataSynchronizationService.syncData(false, clientOperationId), dataSynchronizationService.syncData(clientOperationId)];
-                                    return $q.all(httpPromises);
-                                })
-                                .then(downloadResults => {
-                                    log.debug("Batch returned synchronously --> performing download");
-                                    var dataCount = getDownloadDataCount(downloadResults[1]);
-                                    return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
-                                });
+                            // batches created: submit to server
+                            log.info("Batches created locally: submitting to server.");
+                            return batchService.submitBatches(batches, clientOperationId).then(batchResults => {
+                                // check for synchronous or asynchronous case
+                                var asyncBatches = batchResults.filter(batch => batch.status !== "COMPLETE");
+                                // async case
+                                if (asyncBatches.length > 0) {
+                                    // register async Batches for async processing
+                                    angular.forEach(asyncBatches, asyncBatch => asyncSynchronizationService.registerForAsyncProcessing(asyncBatch));
+                                    // create batch/offline SyncOperation
+                                    return synchronizationOperationService.createBatchOperation(start, batchResults);
+                                }
+                                // sync case: 
+                                // - delete DataEntries that should be deleted
+                                // - updates the hasProblem flag on DataEntries
+                                // - download ONLY data and create a SyncOperation indicating both a Batch submission and a download
+                                return handleDeletableDataEntries(batchResults)
+                                    .then(() => problemService.updateHasProblemToDataEntries(batchResults))
+                                    .then(() => {
+                                        var httpPromises = [associationDataSynchronizationService.syncData(false, clientOperationId), dataSynchronizationService.syncData(clientOperationId)];
+                                        return $q.all(httpPromises);
+                                    })
+                                    .then(downloadResults => {
+                                        log.debug("Batch returned synchronously --> performing download");
+                                        var dataCount = getDownloadDataCount(downloadResults[1]);
+                                        return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
+                                    });
+                            });
+                        })
+                        .finally(() => {
+                            tracking.trackFullState("synchornizationFacace#fullSync post-sync");
+                            menuModelService.updateAppsCount();
                         });
-                    })
-                    .finally(() => {
-                        tracking.trackFullState("synchornizationFacace#fullSync post-sync");
-                        menuModelService.updateAppsCount();
-                    });
+                });
             });
         }
 
@@ -297,41 +310,51 @@
             log.info("init quick sync process");
             tracking.trackFullState("synchornizationFacace#syncItem pre-quicksync");
 
-            return checkRelogin().then(() => {
-                const clientOperationId = persistence.createUUID();
-                const dbapplication = metadataModelService.getMetadatas().find(a => a.application === item.application);
-                const start = new Date().getTime();
-                loadingService.showDefault();
-                // one Batch per application
-                return batchService.createBatch(dbapplication, item)
-                    .then(batch => batchService.submitBatches([batch], clientOperationId))
-                    .then(batchResults => {
-                        return handleDeletableDataEntries(batchResults)
-                            .then(() => problemService.updateHasProblemToDataEntries(batchResults, item))
-                            .then(() => {
-                                var httpPromises = [];
-                                httpPromises.push(associationDataSynchronizationService.syncData(false, clientOperationId));
-                                if (!!item.remoteId) {
-                                    httpPromises.push(dataSynchronizationService.syncSingleItem(item, clientOperationId));
-                                } else {
-                                    //TODO: return the remoteid on the operation
-                                    //for creations since we don´t have the remote id yet
-                                    httpPromises.push(dataSynchronizationService.syncData(clientOperationId));
-                                }
-                                return $q.all(httpPromises);
-                            })
-                            .then(downloadResults => {
-                                var dataCount = getDownloadDataCount(downloadResults[1]);
-                                return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
-                            }).then(r => {
-                                $rootScope.$broadcast("sw.sync.quicksyncfinished");
-                                return r;
-                            });
-                    })
-                    .finally(() => {
-                        loadingService.hide();
-                        tracking.trackFullState("synchornizationFacace#syncItem post-quicksync");
-                    });
+            const laborPromise = laborService.hasItemActiveLabor(item)
+                ? laborService.finishLaborBeforeSynch(item)
+                : $q.when(true);
+
+            return laborPromise.then((laborFinished) => {
+                if (!laborFinished) {
+                    return $q.reject({});
+                }
+
+                return checkRelogin().then(() => {
+                    const clientOperationId = persistence.createUUID();
+                    const dbapplication = metadataModelService.getMetadatas().find(a => a.application === item.application);
+                    const start = new Date().getTime();
+                    loadingService.showDefault();
+                    // one Batch per application
+                    return batchService.createBatch(dbapplication, item)
+                        .then(batch => batchService.submitBatches([batch], clientOperationId))
+                        .then(batchResults => {
+                            return handleDeletableDataEntries(batchResults)
+                                .then(() => problemService.updateHasProblemToDataEntries(batchResults, item))
+                                .then(() => {
+                                    var httpPromises = [];
+                                    httpPromises.push(associationDataSynchronizationService.syncData(false, clientOperationId));
+                                    if (!!item.remoteId) {
+                                        httpPromises.push(dataSynchronizationService.syncSingleItem(item, clientOperationId));
+                                    } else {
+                                        //TODO: return the remoteid on the operation
+                                        //for creations since we don´t have the remote id yet
+                                        httpPromises.push(dataSynchronizationService.syncData(clientOperationId));
+                                    }
+                                    return $q.all(httpPromises);
+                                })
+                                .then(downloadResults => {
+                                    var dataCount = getDownloadDataCount(downloadResults[1]);
+                                    return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
+                                }).then(r => {
+                                    $rootScope.$broadcast("sw.sync.quicksyncfinished");
+                                    return r;
+                                });
+                        })
+                        .finally(() => {
+                            loadingService.hide();
+                            tracking.trackFullState("synchornizationFacace#syncItem post-quicksync");
+                        });
+                });
             });
         }
 
@@ -402,7 +425,7 @@
 
     //#region Service registration
     mobileServices.factory("synchronizationFacade", ["$log", "$q", "$rootScope", "$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService", "synchronizationOperationService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", synchronizationFacade]);
+        "metadataModelService", "synchronizationOperationService", "laborService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);
