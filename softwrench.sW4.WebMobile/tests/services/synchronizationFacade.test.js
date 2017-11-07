@@ -116,8 +116,7 @@
     }
 
     beforeEach(module("softwrench"));
-    beforeEach(inject(function (_synchronizationFacade_, _swdbDAO_, _$q_, _$rootScope_, _offlineEntities_) {
-        synchronizationFacade = _synchronizationFacade_;
+    beforeEach(inject(function (_swdbDAO_, _$q_, _$rootScope_, _offlineEntities_) {
         swdbDAO = _swdbDAO_;
         $q = _$q_;
         $rootScope = _$rootScope_;
@@ -131,6 +130,10 @@
                 return statements;
             });
         });
+        spyOn(swdbDAO, "findUnique").and.returnValue($q.when(null));
+    }));
+    beforeEach(inject(function (_synchronizationFacade_) {
+        synchronizationFacade = _synchronizationFacade_;
     }));
 
     //#endregion test config

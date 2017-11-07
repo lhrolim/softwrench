@@ -237,6 +237,20 @@
             .then(res =>  res ? doStopLaborTransaction() : null);
         }
 
+        function finishLaborBeforeSynch(parent) {
+            if ((parent && !shouldAllowLaborFinish()) || (!parent && !hasActiveLabor())) {
+                throw new Error("IllegalStateError: there's no active labor transaction");
+            }
+
+            const parentPromise = parent ? $q.when(parent) : dao.findById("DataEntry", getActiveLaborParent());
+            return parentPromise.then((foundParent) => {
+                return $ionicPopup.confirm({
+                    title: "Labor Report",
+                    template: "You must stop the labor timer before synchronization. Do you want to stop it and proceed with the synchronization?"
+                }).then(res => res ? doStopLaborTransaction(foundParent) : false);
+            });
+        }
+
         function finishLaborTransactionFromComposition(schema, datamap) {
             finishLaborTransaction(schema, datamap).then(result => {
                 if (result) {
@@ -362,6 +376,7 @@
             showLaborFinishCommand,
             startLaborTransaction,
             finishLaborTransaction,
+            finishLaborBeforeSynch,
             finishLaborTransactionFromComposition,
             updateLineCost,
             formatRegularHours,
@@ -370,6 +385,7 @@
             getActiveLabor,
             confirmPossibleTimer,
             cancelPossibleTimer,
+            hasActiveLabor,
             hasItemActiveLabor,
             clearLaborCacheIfCurrentParent
         };
