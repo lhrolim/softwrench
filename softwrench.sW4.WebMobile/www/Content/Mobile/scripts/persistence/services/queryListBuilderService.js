@@ -53,17 +53,15 @@
 
             let extraLaborQuery = "1=1";
             //TODO:review
-            if (mainListSchema.applicationName.equalsAny("workorder") ) {
+            if (mainListSchema.applicationName.equalsAny("workorder", "todayworkorder","pastworkorder") ) {
                 extraLaborQuery = buildExtraLaborAttribute(childListSchema, childEntityName);
             }
-            const associatioNameQuqery = "`" + childEntityName + "`" + ".application= 'assignment'";
 
-            //TODO: make it generic...
-            query += `${mainIdx} = ${leftJoinedIndex} and ${extraLaborQuery} and ${associatioNameQuqery} )`;
-
-            
-
-
+            //TODO: make it generic, cause now it´s all tied to assignment child application
+            const associatioNameQuery = "`" + childEntityName + "`" + ".application= 'assignment'";
+            //this handles SWOFF-342
+            const duplicateQuery =  "`" + childEntityName + "`.dateindex02 = (select max(b.dateindex02) from AssociationData b where b.textindex01 = `" + childEntityName + "`.textindex01 and b.application = 'assignment')";
+            query += `${mainIdx} = ${leftJoinedIndex} and ${extraLaborQuery} and ${associatioNameQuery}  and ${duplicateQuery} )`;
             return query;
         }
 
