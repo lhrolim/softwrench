@@ -261,6 +261,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             toList.Add("fsocleadership@firstsolar.com");
             toList.Add("omengineering@firstsolar.com");
             toList.Add("brent.galyon@firstsolar.com");
+            toList.Add("henry.tagoe@firstsolar.com");
+            toList.Add("joshua.darley@firstsolar.com");
             //            toList.Add("support@controltechnologysolutions.com");
             return string.Join("; ", toList);
         }
