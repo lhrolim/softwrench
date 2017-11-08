@@ -108,14 +108,26 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (!ApplicationConfiguration.IsProd()) {
                 return " SUBSTRING({0}.location, 0, 5) ".Fmt(context);
             }
-            return " (CASE WHEN exists (select * from onmparms o where {0}.location like o.value + '%') THEN (select top 1 G.scadA_GUID from onmparms o inner join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on  (o.description=G.assettitle or o.value=G.maximo_LocationID or o.value = G.scadA_GUID) where o.parameter='PlantID' and {0}.location like o.value + '%') WHEN 1=1 then SUBSTRING({0}.location, 0, 5) END) ".Fmt(context);
+            return @" ( CASE 
+                        WHEN exists (select * from onmparms o where {0}.location like o.value + '%') 
+                            THEN (select top 1 G.scadA_GUID from onmparms o 
+                                    inner join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G 
+                                        on (o.description=G.assettitle or o.value=G.maximo_LocationID or o.value = G.scadA_GUID) 
+                                    where (o.parameter = 'PlantID' or o.parameter is null) and {0}.location like o.value + '%') 
+                        WHEN 1=1 
+                            then SUBSTRING({0}.location, 0, 5) END) ".Fmt(context);
         }
 
         public string PlannerQuery(string context) {
             if (!ApplicationConfiguration.IsProd()) {
                 return " ( SUBSTRING({0}.supervisor, 1, 0) + 'Test Planner') ".Fmt(context); // substring turns out to be a empty string, just to avoid a constant in dev
             }
-            return " (select top 1 (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = G.onM_Planner_Scheduler and G.onM_Planner_Scheduler is not null) from onmparms o inner join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID or o.value = G.scadA_GUID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
+            return @" ( select top 1 
+                            (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = G.onM_Planner_Scheduler and G.onM_Planner_Scheduler is not null) 
+                        from onmparms o 
+                        inner join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G 
+                            on (o.description = G.assettitle or o.value = G.maximo_LocationID or o.value = G.scadA_GUID) 
+                        where (o.parameter = 'PlantID' or o.parameter is null) and {0}.location like o.value + '%') ".Fmt(context);
         }
 
         public async Task<Dictionary<string, decimal>> LoadGfedLostEnergyData(long? workOrderId, DateTime start, DateTime end) {
