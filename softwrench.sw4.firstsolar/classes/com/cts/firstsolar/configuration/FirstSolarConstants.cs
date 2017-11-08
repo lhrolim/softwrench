@@ -5,6 +5,6 @@
 
         public const string FacilitiesProp = "sync.facilities";
         public const string AvailableFacilitiesProp = "sync.availablefacilities";
-        public const string TierOneCcEmails = "Troy.Lauterbach@firstsolar.com, TMoeller@firstsolar.com, Frank.Kelly@firstsolar.com, Kirby.Hunt@firstsolar.com, James.Kieley@firstsolar.com, William.Byrd@firstsolar.com";
+        public const string TierOneCcEmails = "Troy.Lauterbach@firstsolar.com, TMoeller@firstsolar.com, Frank.Kelly@firstsolar.com, Kirby.Hunt@firstsolar.com, Tom.Studer@firstsolar.com, William.Byrd@firstsolar.com";
     }
 }
