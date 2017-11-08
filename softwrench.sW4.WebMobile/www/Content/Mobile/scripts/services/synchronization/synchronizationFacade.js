@@ -241,10 +241,19 @@
                 return $q.reject({ message: "Cannot synchronize application without internet connection" });
             }
 
-            const laborPromise = laborService.hasActiveLabor()
-                ? isFirstSync().then(first => first ? $q.when(true) : laborService.finishLaborBeforeSynch())
-                : $q.when(true);
-            loadingService.hide(); // workaround - was showing load on stop labor prompt
+            let laborPromise;
+            // finish labor if there is a labor started and is not the first sync
+            if (laborService.hasActiveLabor()) {
+                laborPromise = isFirstSync().then(first => {
+                    if (!first) {
+                        loadingService.hide(); // workaround - was showing load on stop labor prompt
+                        return laborService.finishLaborBeforeSynch();
+                    } 
+                    return $q.when(true);
+                });
+            } else {
+                laborPromise = $q.when(true);
+            }
 
             return laborPromise.then((laborFinished) => {
                 if (!laborFinished) {
