@@ -15,19 +15,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public const string GFedQuery = @"
             select * from 
-                (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') as PlantName from workorder w where w.workorderid = ?) x 
-                    left join 
+                (select o.description as PlantName, o.value as PlantValue from workorder w left join onmparms o on (w.location like o.value + '%' and (o.parameter = 'PlantID' or o.parameter is null)) where w.workorderid = ?) x 
+                    inner join 
                 (Select assettitle as facilityTitle, 
-	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_regional_manager and onm_regional_manager is not null) as regmanager, 
-	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_site_manager and onm_site_manager is not null) as supervisor, 
-	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technician, 
-	                (select top 1 e.personid from email e where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technicianid, 
-	                (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onM_Planner_Scheduler and onM_Planner_Scheduler is not null) as planner, 
-	                [street address line 1] as facilityAddress, 
-	                city as facilityCity, 
-	                [state code] as facilityState, 
-	                [postal code] as facilityPostalCode
-                from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on x.PlantName=G.facilityTitle";
+                    maximo_LocationID, 
+                    scadA_GUID,
+                    (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_regional_manager and onm_regional_manager is not null) as regmanager, 
+                    (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_site_manager and onm_site_manager is not null) as supervisor, 
+                    (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technician, 
+                    (select top 1 e.personid from email e where e.emailaddress = onm_maintenance_supervisor and onm_maintenance_supervisor is not null) as technicianid, 
+                    (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = onM_Planner_Scheduler and onM_Planner_Scheduler is not null) as planner, 
+                    [street address line 1] as facilityAddress, 
+                    city as facilityCity, 
+                    [state code] as facilityState, 
+                    [postal code] as facilityPostalCode
+                from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on (x.PlantName=G.facilityTitle or x.PlantValue = G.scadA_GUID or x.PlantValue = G.maximo_LocationID)";
 
         public const string TechColumn = "technician";
         public const string TechIdColumn = "technicianid";
@@ -43,15 +45,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
         public const string GFedEmailQuery = @"
             select * from 
-                (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') as PlantName from workorder w where w.workorderid = ?) x 
-                    left join 
+                (select o.description as PlantName, o.value as PlantValue from workorder w left join onmparms o on (w.location like o.value + '%' and (o.parameter = 'PlantID' or o.parameter is null)) where w.workorderid = ?) x 
+                    inner join 
                 (Select assettitle as facilityTitle, 
-	                onm_regional_manager  as  regmanageremail, 
-	                onm_site_manager as supervisoremail,
-	                onM_Planner_Scheduler  as planneremail, 
-	                onM_Account_Manager as accountmanageremail,
-	                [performance Engineer Email(s)] as perfengineeremail
-                from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on x.PlantName=G.facilityTitle";
+                    maximo_LocationID, 
+                    scadA_GUID,
+                    onm_regional_manager  as  regmanageremail, 
+                    onm_site_manager as supervisoremail,
+                    onM_Planner_Scheduler  as planneremail, 
+                    onM_Account_Manager as accountmanageremail,
+                    [performance Engineer Email(s)] as perfengineeremail
+                from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites) G on (x.PlantName=G.facilityTitle or x.PlantValue = G.scadA_GUID or x.PlantValue = G.maximo_LocationID)";
+
 
         public const string RegionalManagerEmailColumn = "regmanageremail";
         public const string SupervisorEmailColumn = "supervisoremail";
@@ -67,9 +72,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                 R.EventEnd as lostdate 
             FROM GLOBALFEDPRODUCTION.GlobalFed.Alarms.vwOperatorLogGADSRecords AS R 
             INNER JOIN GLOBALFEDPRODUCTION.GlobalFed.Business.vwSites as S 
-                On R.SiteAssetID = S.AssetID 
+                On R.SiteAssetID = S.AssetID  
+            INNER JOIN (select o.description as PlantName, o.value as PlantValue from workorder w left join onmparms o on (w.location like o.value + '%' and (o.parameter = 'PlantID' or o.parameter is null)) where w.workorderid = ?) x
+                On (x.PlantName=S.assettitle or x.PlantValue = S.scadA_GUID or x.PlantValue = S.maximo_LocationID)
             WHERE R.OutageReportedAsType IN ('FO','MO','PO','OMC','OMCCurtail','OMCCurtailBuyer') 
-                AND S.assettitle in (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') from workorder w where w.workorderid = ?)
                 AND R.EventEnd >= ?  
                 AND R.EventEnd < ? 
             GROUP BY R.TotalLostkWh, S.AssetTitle, R.OutageReportedAsType, R.Description, R.EventStart, R.EventEnd 
@@ -80,8 +86,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             FROM GLOBALFEDPRODUCTION.GlobalFed.Alarms.vwOperatorLogGADSRecords AS R 
             INNER JOIN GLOBALFEDPRODUCTION.GlobalFed.Business.vwSites as S 
                 On R.SiteAssetID = S.AssetID 
-            WHERE R.OutageReportedAsType IN ('FO','MO','PO','OMC','OMCCurtail','OMCCurtailBuyer') 
-                AND S.assettitle in (select (select o.description from onmparms o where w.location like o.value + '%' and o.parameter='PlantID') from workorder w where w.workorderid = ?)
+            INNER JOIN (select o.description as PlantName, o.value as PlantValue from workorder w left join onmparms o on (w.location like o.value + '%' and (o.parameter = 'PlantID' or o.parameter is null)) where w.workorderid = ?) x
+                On (x.PlantName=S.assettitle or x.PlantValue = S.scadA_GUID or x.PlantValue = S.maximo_LocationID)
+            WHERE R.OutageReportedAsType IN ('FO','MO','PO','OMC','OMCCurtail','OMCCurtailBuyer')
                 AND R.EventEnd >= ?  
                 AND R.EventEnd < ?";
 
@@ -101,14 +108,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             if (!ApplicationConfiguration.IsProd()) {
                 return " SUBSTRING({0}.location, 0, 5) ".Fmt(context);
             }
-            return " (CASE WHEN exists (select * from onmparms o where {0}.location like o.value + '%') THEN (select top 1 G.scadA_GUID from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on  (o.description=G.assettitle or o.value=G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') WHEN 1=1 then SUBSTRING({0}.location, 0, 5) END) ".Fmt(context);
+            return " (CASE WHEN exists (select * from onmparms o where {0}.location like o.value + '%') THEN (select top 1 G.scadA_GUID from onmparms o inner join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on  (o.description=G.assettitle or o.value=G.maximo_LocationID or o.value = G.scadA_GUID) where o.parameter='PlantID' and {0}.location like o.value + '%') WHEN 1=1 then SUBSTRING({0}.location, 0, 5) END) ".Fmt(context);
         }
 
         public string PlannerQuery(string context) {
             if (!ApplicationConfiguration.IsProd()) {
                 return " ( SUBSTRING({0}.supervisor, 1, 0) + 'Test Planner') ".Fmt(context); // substring turns out to be a empty string, just to avoid a constant in dev
             }
-            return " (select top 1 (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = G.onM_Planner_Scheduler and G.onM_Planner_Scheduler is not null) from onmparms o left join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
+            return " (select top 1 (select top 1 p.displayname from email e left join person p on e.personid = p.personid where e.emailaddress = G.onM_Planner_Scheduler and G.onM_Planner_Scheduler is not null) from onmparms o inner join GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites G on (o.description = G.assettitle or o.value = G.maximo_LocationID or o.value = G.scadA_GUID) where o.parameter='PlantID' and {0}.location like o.value + '%') ".Fmt(context);
         }
 
         public async Task<Dictionary<string, decimal>> LoadGfedLostEnergyData(long? workOrderId, DateTime start, DateTime end) {
