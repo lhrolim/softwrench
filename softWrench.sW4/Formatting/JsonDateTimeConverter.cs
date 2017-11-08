@@ -36,7 +36,12 @@ namespace softWrench.sW4.Web.Formatting {
                     userOffsetVal = user.TimezoneOffset.Value;
                 }
                 var dateTimeOffset = new DateTimeOffset(dto.DateTime, TimeSpan.FromMinutes(userOffsetVal * -1));
-                writer.WriteValue(dateTimeOffset.ToString(CultureInfo.InvariantCulture));
+                if (ApplicationConfiguration.IsLocal()) {
+                    writer.WriteValue(dateTimeOffset.ToString(CultureInfo.InvariantCulture));
+                } else {
+                    writer.WriteValue(dateTimeOffset.ToString());
+                }
+
                 return;
             }
 
@@ -45,8 +50,8 @@ namespace softWrench.sW4.Web.Formatting {
                 return;
             }
             var date = ((DateTime)value);
-           
-            
+
+
 
             if (user.TimezoneOffset != null) {
                 userOffsetVal = user.TimezoneOffset.Value;
