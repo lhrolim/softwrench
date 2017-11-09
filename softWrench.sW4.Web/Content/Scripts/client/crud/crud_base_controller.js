@@ -245,7 +245,9 @@
             if (compositionService.isCompositionListItem($scope.datamap)) {
                 contextData = compositionService.buildCompositionListItemContext(contextData, $scope.datamap, $scope.schema);
             }
-            const rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, $scope.panelid, datamapValue);
+            let panelId = $scope.ismodal === "true" ? "#modal" : $scope.panelid;
+
+            const rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, panelId, datamapValue);
             return applyFilter(fieldMetadata.filter, rawOptions, {compositionItem});
         }
         $scope.GetOptionFieldOptions = function (optionField, datamapValue, {compositionItem} = {}) {
