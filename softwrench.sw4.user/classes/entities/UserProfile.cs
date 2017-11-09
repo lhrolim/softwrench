@@ -14,6 +14,12 @@ namespace softwrench.sw4.user.classes.entities {
     public class UserProfile {
         public const string UserProfileByName = "from UserProfile where Name =?";
 
+        public UserProfile() {
+            Roles = new HashSet<Role>();
+            ApplicationPermissions = new HashSet<ApplicationPermission>();
+        }
+
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id {
@@ -45,16 +51,14 @@ namespace softwrench.sw4.user.classes.entities {
         }
 
         [Set(0, Table = "sw_userprofile_role",
-        Lazy = CollectionLazy.False)]
+            Lazy = CollectionLazy.False)]
         [Key(1, Column = "profile_id")]
         [ManyToMany(2, Column = "role_id", ClassType = typeof(Role))]
         [JsonConverter(typeof(IesiSetConverter<Role>))]
-        public virtual ISet<Role> Roles {
-            get; set;
-        }
+        public virtual ISet<Role> Roles { get; set; } = new HashSet<Role>();
 
 
-        [Set(0,  Lazy = CollectionLazy.False, Cascade = "none", Inverse = true)]
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "none", Inverse = true)]
         [Key(1, Column = "profile_id")]
         [OneToMany(2, ClassType = typeof(ApplicationPermission))]
         [JsonConverter(typeof(IesiSetConverter<ApplicationPermission>))]
@@ -62,10 +66,10 @@ namespace softwrench.sw4.user.classes.entities {
             get; set;
         }
 
-//        //due to a bug where IESI isets aren´t deserialized
-//        public virtual IEnumerable<ApplicationPermission> ScreenApplicationPermission {
-//            get; set;
-//        }
+        //        //due to a bug where IESI isets aren´t deserialized
+        //        public virtual IEnumerable<ApplicationPermission> ScreenApplicationPermission {
+        //            get; set;
+        //        }
 
 
 
@@ -124,6 +128,10 @@ namespace softwrench.sw4.user.classes.entities {
 
             return new UserProfileDTO(Id.Value, Name);
 
+        }
+
+        public override string ToString() {
+            return $"{nameof(Name)}: {Name}";
         }
 
         /// <summary>

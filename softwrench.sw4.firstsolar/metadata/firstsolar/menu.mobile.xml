@@ -22,6 +22,7 @@
     <application id="PNSWO" title="Planned Not Scheduled" ref="pnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Planned not Scheduled"/>
     <application id="NPNSWO" title="Not Planned Not Scheduled" ref="npnschedworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Not Planned not Scheduled"/>
     <application id="GWO" title="Assigned to Others" ref="otherworkorder" schema="list" icon="fa-table" parameters="offlinegridtitle=Assigned to Others"/>
+    <application id="UWO" title="Unassigned" ref="otherworkorderunassigned" schema="list" icon="fa-table" parameters="offlinegridtitle=Unassigned"/>
   </container>
 
   <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=Created Work Orders"/>

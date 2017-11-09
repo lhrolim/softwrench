@@ -333,7 +333,9 @@
 
         clearCrudContext(panelid) {
             if (!panelid) {
+                let currentUseBackNavigation = this.usebackHistoryNavigation();
                 this._crudContext = angular.copy(this._originalContext);
+                this.usebackHistoryNavigation(currentUseBackNavigation);
                 this.setActiveTab(null);
                 return this._crudContext;
             }

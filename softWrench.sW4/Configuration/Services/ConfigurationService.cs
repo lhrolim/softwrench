@@ -37,7 +37,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         [CanBeNull]
-        public async Task<T> Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
+        public virtual async Task<T> Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
             var ignoreCache = cacheContext != null && cacheContext.IgnoreCache;
             var preDefinition = cacheContext?.PreDefinition;
 

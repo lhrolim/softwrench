@@ -26,6 +26,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
         public const string PlannedNotScheduledPanel = "fs.groupassignments.pnscheduled";
         public const string NPlannedNotScheduledPanel = "fs.groupassignments.npnscheduled";
         public const string AssignedToOthersPanel = "fs.groupassignments.assignothers";
+        public const string UnassignedPanel = "fs.groupassignments.unassigned";
 
 
 
@@ -185,7 +186,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = TodayPanel,
                     Title = "Today",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -196,7 +197,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = PastPanel,
                     Title = "Past",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -207,7 +208,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = FuturePanel,
                     Title = "Future",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -218,7 +219,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = MyAssignmentsAllPanel,
                     Title = "All",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -246,7 +247,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = ScheduledPanel,
                     Title = "Scheduled",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -257,7 +258,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = PlannedNotScheduledPanel,
                     Title = "Planned Not Scheduled",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -268,7 +269,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = NPlannedNotScheduledPanel,
                     Title = "Not Planned Not Scheduled",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
@@ -279,13 +280,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                     Alias = AssignedToOthersPanel,
                     Title = "Assigned to Others",
                     Application = "assignment",
-                    DefaultSortField = "scheduledate",
+                    DefaultSortField = "scheduledate desc",
                     SchemaRef = "techdashboard",
                     Limit = 10,
                     Size = 6
                 },
 
-
+                new DashboardGridPanel
+                {
+                    Alias = UnassignedPanel,
+                    Title = "Unassigned Work Orders",
+                    Application = "workorder",
+                    DefaultSortField = "schedstart desc",
+                    SchemaRef = "techdashboard",
+                    Limit = 10,
+                    Size = 6
+                },
 
 
 
@@ -295,6 +305,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
             DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.PNSchedWhereClauseForDashMethod", "PNSchedPanel", "dashboard:" + PlannedNotScheduledPanel);
             DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.NPNSchedWhereClauseForDashMethod", "NPNSchedPanel", "dashboard:" + NPlannedNotScheduledPanel);
             DashboardInitializationService.RegisterWhereClause("assignment", "@firstSolarWhereClauseRegistry.OtherWhereClauseForDashMethod", "OtherPanel", "dashboard:" + AssignedToOthersPanel);
+            DashboardInitializationService.RegisterWhereClause("workorder", "@firstSolarWhereClauseRegistry.UnassignedClauseForDashMethod", "UPanel", "dashboard:" + UnassignedPanel);
 
             DashboardInitializationService.AddPanelsToDashboard(groupaDash, panelsTechGroup);
 

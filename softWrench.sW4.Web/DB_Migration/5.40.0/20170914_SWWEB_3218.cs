@@ -8,15 +8,16 @@ namespace softWrench.sW4.Web.DB_Migration._5._40._0 {
 
     public class Migration20171027Swweb3238 : Migration {
 
-        public override void Up() {
+        public override void Up()
+        {
 
 
             Create.Table("SW_DOCINFO").WithIdColumn(true)
                 .WithColumn("document").AsString(MigrationUtil.StringMedium).NotNullable()
                 .WithColumn("description").AsString(MigrationUtil.StringMedium).Nullable()
                 .WithColumn("extension").AsString(MigrationUtil.StringSmall)
-                .WithColumn("url").AsString(MigrationUtil.StringLarge).Nullable()
-                .WithColumn("checksum").AsString(MigrationUtil.StringLarge).Unique();
+                .WithColumn("url").AsString(MigrationUtil.StringLarge).Nullable();
+            
 
             Create.Table("SW_DOCLINK").WithIdColumn(true)
                 .WithColumn("document").AsString(MigrationUtil.StringMedium).NotNullable()
@@ -38,8 +39,10 @@ namespace softWrench.sW4.Web.DB_Migration._5._40._0 {
 
             if (MigrationContext.IsMySql) {
                 Alter.Table("SW_DOCINFO").AddColumn("data").AsBinary().Nullable();
+                Alter.Table("SW_DOCINFO").AddColumn("checksum").AsString(MigrationUtil.StringLarge);
             } else {
                 Alter.Table("SW_DOCINFO").AddColumn("data").AsBinary((int.MaxValue)).Nullable();
+                Alter.Table("SW_DOCINFO").AddColumn("checksum").AsString(MigrationUtil.StringLarge).Unique();
             }
         }
 

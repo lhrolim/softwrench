@@ -90,7 +90,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         public async Task ValidateWhereClause(string applicationName, string whereClause, WhereClauseCondition condition = null) {
-             await _whereClauseRegisterService.ValidateWhereClause(applicationName, whereClause, condition);
+            await _whereClauseRegisterService.ValidateWhereClause(applicationName, whereClause, condition);
         }
 
         private static string GetConvertedWhereClause(WhereClauseResult whereClauseResult, InMemoryUser user, string defaultValue = DefaultWhereClause) {
@@ -110,7 +110,7 @@ namespace softWrench.sW4.Configuration.Services {
             return defaultValue;
         }
 
-       
+
 
         public void Register(string applicationName, String query, WhereClauseRegisterCondition condition = null, bool validate = false) {
             AsyncHelper.RunSync(() => RegisterAsync(applicationName, query, condition, validate));
@@ -118,7 +118,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         [Transactional(DBType.Swdb)]
         public virtual async Task RegisterAsync(string applicationName, string query, WhereClauseRegisterCondition condition = null, bool validate = false, bool systemValueRegister = true) {
-            var result = await Validate(applicationName,query, validate, condition);
+            var result = await Validate(applicationName, query, validate, condition);
             if (!result) {
                 Log.WarnFormat("application {0} not found skipping registration", applicationName);
                 return;
@@ -143,6 +143,9 @@ namespace softWrench.sW4.Configuration.Services {
             int? defaultId = null;
             var sb = new StringBuilder();
             var result = new List<UserProfile>();
+
+            IDictionary<string, UserProfile> profileQueries = new Dictionary<string, UserProfile>();
+
             foreach (var profile in profiles) {
 
                 if (!profile.HasApplicationPermission(applicationName)) {
@@ -156,12 +159,18 @@ namespace softWrench.sW4.Configuration.Services {
                 };
                 var wc = await _configurationService.Lookup<string>(GetFullKey(applicationName), holder);
                 if (!string.IsNullOrEmpty(wc)) {
-                    result.Add(profile);
+                    if (!profileQueries.ContainsKey(wc)) {
+                        profileQueries.Add(wc, profile);
+                    }
                 } else {
                     sb.Append(profile.Name).Append(" | ");
                     defaultId = profile.Id;
                 }
             }
+            if (profileQueries.Count > 1) {
+                result.AddRange(profileQueries.Values);
+            }
+
             if (result.Any() && defaultId != null) {
                 result.Insert(0, new UserProfile {
                     Id = defaultId,
@@ -177,7 +186,7 @@ namespace softWrench.sW4.Configuration.Services {
             return string.Format(WcConfig, ConfigTypes.WhereClauses.GetRootLevel(), applicationName.ToLower());
         }
 
-        private async Task<bool> Validate(string applicationName, string whereClause, bool throwException = true, WhereClauseRegisterCondition condition=null) {
+        private async Task<bool> Validate(string applicationName, string whereClause, bool throwException = true, WhereClauseRegisterCondition condition = null) {
             var items = MetadataProvider.FetchAvailableAppsAndEntities();
             if (!items.Contains(applicationName)) {
                 if (throwException) {
@@ -193,7 +202,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
 
-//        [Transactional(DBType.Swdb)]
+        //        [Transactional(DBType.Swdb)]
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             foreach (var entry in _toRegister) {
                 var localEntry = entry;

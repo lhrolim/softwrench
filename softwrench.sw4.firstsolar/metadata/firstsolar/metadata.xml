@@ -286,11 +286,10 @@
 
     <application name="assignment" title="Assignments" entity="assignment">
       <schemas>
-
         <schema id="techdashboard" abstract="true" stereotype="list" platform="web">
           <field attribute="workorder_.workorderid" hidden="true"/>
             <field attribute="workorder_wopriority" tooltip="Priority">
-            <renderer type="priorityicon" params="width=6%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+              <renderer type="priorityicon" params="width=6%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="workorder_.wonum" label="WO #">
             <renderer type="default" params="width=10%"/>
@@ -551,6 +550,25 @@
 
 
       <schemas>
+
+        <schema id="techdashboard" abstract="true" stereotype="list" platform="web">
+          <field attribute="workorderid" hidden="true"/>
+          <field attribute="wopriority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=6%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+          </field>
+          <field attribute="wonum" label="WO #">
+            <renderer type="default" params="width=10%"/>
+          </field>
+          <field attribute="description" label="Description"/>
+          <field attribute="reportby" label="Reported By"/>
+          <field attribute="schedstart" label="Schedule Start Date">
+            <renderer type="datetime" params="width=20%"/>
+          </field>
+          <properties>
+            <property key="list.click.service" value="fsDashboardService.techwoDashClick"/>
+          </properties>
+        </schema>
+
 
         <!--#region Work Package -->
         <schema id="workpackageschema" redeclaring="false" stereotype="detail" platform="web">
@@ -1644,6 +1662,38 @@
           <event type="onload" service="fsWorkorderOfflineService" method="onDetailLoad"/>
         </detail>
       </schemas>
+    </application>
+
+
+    <application name="otherworkorderunassigned" title="Work Order" entity="workorder">
+      <properties>
+        <property key="application.original" value="otherworkorder"/>
+        <property key="application.mainlistschema" value="list"/>
+        <property key="application.maindetailschema" value="detail"/>
+        <property key="application.maindetailnewschema" value="newdetail"/>
+        <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
+        <property key="attachments.skiprelatedattachments" value="true"/>
+        <property key="application.securitytitle" value="Unassigned Work Orders"/>
+        <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
+      </properties>
+
+      <schemas>
+
+        <schema id="list" platform="mobile" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="list"/>
+          </properties>
+        </schema>
+
+        <schema id="detail" platform="mobile" stereotype="detail" redeclaring="false">
+          <properties>
+            <property key="application.originalschema" value="detail"/>
+          </properties>
+        </schema>
+      </schemas>
+
     </application>
 
 

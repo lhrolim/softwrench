@@ -280,8 +280,9 @@
             $('.no-touch [rel=tooltip]').tooltip('hide');
 
             // try to redirect from history or breadcrumb history
-            if (crudContextHolderService.usebackHistoryNavigation() && historyService.redirectOneBack(msg)) {
+            if (crudContextHolderService.usebackHistoryNavigation()) {
                 crudContextHolderService.usebackHistoryNavigation(false);
+                historyService.redirectOneBackHard();
                 return;
             }
             

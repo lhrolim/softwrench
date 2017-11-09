@@ -98,6 +98,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                 FirstSolarDashboardInitializer.NPlannedNotScheduledPanel,
                 FirstSolarDashboardInitializer.PlannedNotScheduledPanel,
                 FirstSolarDashboardInitializer.AssignedToOthersPanel,
+                FirstSolarDashboardInitializer.UnassignedPanel,
             });
         }
     }
