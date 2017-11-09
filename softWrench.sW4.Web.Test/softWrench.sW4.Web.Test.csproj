@@ -136,6 +136,10 @@
       <Project>{ccec5ceb-ef32-47ca-9b87-0068651b2a1b}</Project>
       <Name>softwrench.sW4.TestBase</Name>
     </ProjectReference>
+    <ProjectReference Include="..\softwrench.sW4.test\softwrench.sW4.test.csproj">
+      <Project>{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}</Project>
+      <Name>softwrench.sW4.test</Name>
+    </ProjectReference>
     <ProjectReference Include="..\softWrench.sW4.Web\softWrench.sW4.Web.csproj">
       <Project>{8f237b59-e434-4a10-9b53-b982cac34551}</Project>
       <Name>softWrench.sW4.Web</Name>

@@ -6,6 +6,7 @@ namespace softwrench.sW4.TestBase {
     [DeploymentItem(@"App_data\Client\test3", "Client\\test3")]
     [DeploymentItem(@"App_data\Client\test4", "Client\\test4")]
     [DeploymentItem(@"App_data\Client\testrest", "Client\\testrest")]
+    [DeploymentItem(@"..\\..\\..\softWrench.sW4.Web.Test\App_Data\jsons", "jsons")]
     [DeploymentItem(@"App_data\jsons\", "jsons")]
     [DeploymentItem(@"..\Debug")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\@internal", "Client\\@internal")]

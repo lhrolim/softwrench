@@ -19,6 +19,7 @@ using softWrench.sW4.Data.API.Association.Lookup;
 using softwrench.sw4.Shared2.Data.Association;
 using System.IO;
 using System.Threading.Tasks;
+using softwrench.sW4.test.Util;
 using softwrench.sW4.TestBase;
 
 namespace softWrench.sW4.Web.Test.Controllers {
@@ -34,7 +35,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
             // Mock objects
             var swdbMock = new Mock<ISWDBHibernateDAO>();
             var maximodbMock = new Mock<IMaximoHibernateDAO>();
-            var contextLookuperMock = new Mock<IContextLookuper>();
+            
             var whereClauseFacadeMock = new Mock<FilterWhereClauseHandler>();
             var associationResolverMock = new Mock<ApplicationAssociationResolver>();
             var entityRepo = new EntityRepository(swdbMock.Object, maximodbMock.Object);
@@ -43,27 +44,28 @@ namespace softWrench.sW4.Web.Test.Controllers {
             var queryParameter = new ExpandoObject();
 
             // set up mocks
-            maximodbMock.Setup(x => x.FindByNativeQuery(It.IsAny<String>(), It.IsAny<ExpandoObject>(), It.IsAny<IPaginationData>(), It.IsAny<string>()))
+            maximodbMock.Setup(x => x.FindByNativeQueryAsync(It.IsAny<String>(), It.IsAny<ExpandoObject>(), It.IsAny<IPaginationData>(), It.IsAny<string>()))
                 .Callback<string, ExpandoObject, IPaginationData, string>((a, b, c, d) => queryParameter = b)
-                .Returns(() => {
-                    var loc = new ExpandoObject() as IDictionary<string, Object>;
-                    loc.Add("location", "location 1");
-                    loc.Add("description", "location 1");
-                    loc.Add("isproject", 1);
-                    loc.Add("locationsid", 1234);
-                    loc.Add("orgid", "PESCO 1");
-                    loc.Add("siteid", "PVDISTRIBUTED 1");
-                    loc.Add("type", "OPERATING 1");
+                .Returns(() =>
+                    {
+                        var loc = new ExpandoObject() as IDictionary<string, Object>;
+                        loc.Add("location", "location 1");
+                        loc.Add("description", "location 1");
+                        loc.Add("isproject", 1);
+                        loc.Add("locationsid", 1234);
+                        loc.Add("orgid", "PESCO 1");
+                        loc.Add("siteid", "PVDISTRIBUTED 1");
+                        loc.Add("type", "OPERATING 1");
 
-                    return new List<dynamic>(){ loc };
-                }
-            );
+                        return Task.FromResult<IList<dynamic>>(new dynamic[] {loc});
+                    }
+                );
 
             //Set up DI
             var scanner = new TestSimpleInjectorScanner();
             scanner.ResgisterSingletonMock<ISWDBHibernateDAO>(swdbMock);
             scanner.ResgisterSingletonMock<IMaximoHibernateDAO>(maximodbMock);
-            scanner.ResgisterSingletonMock<IContextLookuper>(contextLookuperMock);
+            
             scanner.ResgisterSingletonObject<EntityRepository>(entityRepo);
             scanner.InitDIController();
 
@@ -79,7 +81,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
 
             var target = new AssociationController(dataSetProvider, 
                 new FilterWhereClauseHandler(new Data.Search.QuickSearch.QuickSearchHelper()), 
-                contextLookuperMock.Object, new DataProviderResolver(new DynamicOptionFieldResolver(), new ApplicationAssociationResolver()));
+                new TestContextLookuper(), new DataProviderResolver(new DynamicOptionFieldResolver(), new ApplicationAssociationResolver()));
 
             // Test data.
             var dto = new Data.API.Association.Lookup.LookupOptionsFetchRequestDTO() {
@@ -94,7 +96,8 @@ namespace softWrench.sW4.Web.Test.Controllers {
             };
 
             // Test
-            var response = await target.GetLookupOptions(dto, Newtonsoft.Json.Linq.JObject.Parse(new StreamReader("jsons\\workorder\\test5.json").ReadToEnd()));
+            var wo = Newtonsoft.Json.Linq.JObject.Parse(new StreamReader("jsons\\workorder\\test5.json").ReadToEnd());
+            var response = await target.GetLookupOptions(dto, wo);
 
             Assert.IsNotNull(response);
 
