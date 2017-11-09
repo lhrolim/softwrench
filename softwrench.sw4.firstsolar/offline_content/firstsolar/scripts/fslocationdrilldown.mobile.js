@@ -92,13 +92,13 @@
 
         $scope.$watch("drillDown.locationQuery", function () {
             if (!$scope.drillDown.assetView) {
-                drillDownService.updateDrillDownLocations();
+                $timeout(() => drillDownService.updateDrillDownLocations(), 0, false);
             }
         });
 
         $scope.$watch("drillDown.assetQuery", function () {
             if ($scope.drillDown.assetView) {
-                drillDownService.updateDrillDownAssets();
+                $timeout(() => drillDownService.updateDrillDownAssets(), 0, false);
             }
         });
     }]);

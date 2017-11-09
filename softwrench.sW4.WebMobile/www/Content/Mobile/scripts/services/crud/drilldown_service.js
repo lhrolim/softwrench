@@ -90,6 +90,8 @@
         }
 
         const updateDrillDownLocations = function () {
+            loadingService.showDefault();
+
             const drillDown = dd();
             drillDown.page = 0;
 
@@ -123,7 +125,6 @@
                 promises.push(swdbDAO.countByQuery("AssociationData", ` \`root\`.application = '${assetApp}' and (${locationClause2} or \`root\`.textindex01 in (select textindex01 from AssociationData where application = '${locationApp}' and ${locationClause3}))`));
             }
 
-            loadingService.showDefault();
             return $q.all(promises).then((results) => {
                 setMoreItemsAvailable(drillDown, results[0]);
                 drillDown.locations = results[0];
@@ -164,6 +165,8 @@
         }
 
         const updateDrillDownAssets = function () {
+            loadingService.showDefault();
+
             const drillDown = dd();
             drillDown.page = 0;
 
@@ -171,7 +174,6 @@
             promises.push(swdbDAO.findByQuery("AssociationData", assetQuery(true), updatePaginationOptions(drillDown)));
             promises.push(swdbDAO.countByQuery("AssociationData", assetQuery()));
 
-            loadingService.showDefault();
             return $q.all(promises).then((results) => {
                 setMoreItemsAvailable(drillDown, results[0]);
                 drillDown.assets = results[0];
