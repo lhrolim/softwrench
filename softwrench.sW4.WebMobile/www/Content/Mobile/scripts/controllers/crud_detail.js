@@ -128,7 +128,11 @@
                         $scope.inlineCompositionsLoaded = false;
                         init();
                     }).catch((errors) => {
-                        showValidationErrors(errors);
+                        if (errors && errors.length > 0) {
+                            showValidationErrors(errors);
+                        } else if (errors) { // not a validation error
+                            throw errors;
+                        }
                     });
             };
 
