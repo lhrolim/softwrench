@@ -5,11 +5,14 @@ using System.Text.RegularExpressions;
 using cts.commons.persistence.Transaction;
 
 namespace softWrench.sW4.SqlClient {
+
+    /// <summary>
+    /// Exclusive use for softWrench.sW4.Web.Controllers.SqlClient.SqlClientController
+    /// </summary>
     public class SimpleSqlClient : ISqlClient {
 
         private readonly ISWDBHibernateDAO _swdbDao;
         private readonly IMaximoHibernateDAO _maximodbDao;
-
         public SimpleSqlClient(ISWDBHibernateDAO swdbDao, IMaximoHibernateDAO maximodbDAO) {
             _swdbDao = swdbDao;
             _maximodbDao = maximodbDAO;
@@ -17,6 +20,7 @@ namespace softWrench.sW4.SqlClient {
 
         public IList<dynamic> ExecuteQuery(string query, DBType dbType, int limit = 0) {
             var pagination = limit > 0 ? new PaginationData(limit, 1, string.Empty) : null;
+            
             return GetDao(dbType).FindByNativeQuery(query, null, pagination);
         }
 

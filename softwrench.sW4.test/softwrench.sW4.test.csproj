@@ -57,8 +57,8 @@
     <Reference Include="cts.commons, Version=1.4.6513.27011, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.1.4.6513.27011\lib\net461\cts.commons.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.5.6513.27822, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.5.6513.27822\lib\net461\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.5.6523.16257, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.5.6523.16257\lib\net461\cts.commons.persistence.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.4.6514.21897, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.4.6514.21897\lib\net461\cts.commons.simpleinjector.dll</HintPath>

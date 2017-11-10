@@ -12,6 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using cts.commons.persistence.Event;
 using cts.commons.persistence.Transaction;
@@ -24,10 +25,9 @@ using JetBrains.Annotations;
 using FlushMode = NHibernate.FlushMode;
 
 namespace cts.commons.persistence {
-
-
+    
     public abstract class BaseHibernateDAO : IBaseHibernateDAO, ISingletonComponent, ISWEventListener<RestartDBEvent> {
-
+        
         private static readonly ILog HibernateLog = LogManager.GetLogger(typeof(BaseHibernateDAO));
 
         public IList<IQueryObserver> Observers = new List<IQueryObserver>();
@@ -44,12 +44,8 @@ namespace cts.commons.persistence {
             if (!applicationConfiguration.IsUnitTest) {
                 _sessionManager = SessionManagerWrapperFactory.GetInstance(GetConnectionString(), GetDriverName(), GetDialect(), GetListOfAssemblies(), applicationConfiguration);
             }
-
         }
-
-
-
-
+        
         [CanBeNull]
         protected virtual IEnumerable<Assembly> GetListOfAssemblies() {
             return new[] { Assembly.GetCallingAssembly() };
@@ -387,21 +383,35 @@ namespace cts.commons.persistence {
         protected abstract ILog GetLog();
 
 
-        private void LogQuery(string queryst, string queryAlias, params object[] parameters) {
+        private void LogQuery(string queryst, string queryAlias, params object[] parameters)
+        {
+            var aliasPreventLog = CallContext.LogicalGetData("#sqlclient_prevent_log") as bool?;
+
+            if (aliasPreventLog != null && aliasPreventLog.Value)
+                return;
+
             var anyObserver = Observers.Any(o => o.IsTurnedOn());
 
-            if (!GetLog().IsDebugEnabled && !anyObserver) {
+            if (!GetLog().IsDebugEnabled && !anyObserver)
+            {
                 return;
             }
             var query = LoggingUtil.ReplaceParameters(queryst, parameters);
             var logQuery = LoggingUtil.QueryStringForLogging(query, queryAlias);
             GetLog().Debug(logQuery);
-            foreach (var observer in Observers.Where(o => o.IsTurnedOn())) {
+            foreach (var observer in Observers.Where(o => o.IsTurnedOn()))
+            {
                 observer.OnQueryExecution(query, queryAlias);
             }
         }
 
-        private void LogPaginationQuery(string queryst, string queryAlias, params object[] parameters) {
+        private void LogPaginationQuery(string queryst, string queryAlias, params object[] parameters)
+        {
+            var aliasPreventLog = CallContext.LogicalGetData("#sqlclient_prevent_log") as bool?;
+
+            if (aliasPreventLog != null && aliasPreventLog.Value)
+                return;
+
             if (!HibernateLog.IsDebugEnabled) {
                 return;
             }

@@ -9,6 +9,7 @@ using softWrench.sW4.Web.Models.SqlClient;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Web.Http;
 using cts.commons.persistence.Transaction;
 
@@ -54,6 +55,9 @@ namespace softWrench.sW4.Web.Controllers.SqlClient {
                     model.ExecutionMessage = "The sql query or the datasource cannot be empty.";                    
                 } else {
                     var dbType = (DBType)Enum.Parse(typeof(DBType), datasource, true);
+
+                    var aliasPreventLog = "#sqlclient_prevent_log";
+                    CallContext.LogicalSetData(aliasPreventLog, true);
 
                     var sqlClient = SimpleInjectorGenericFactory.Instance.GetObject<ISqlClient>();
                     if (sqlClient.IsDefinitionOrManipulation(query)) {
