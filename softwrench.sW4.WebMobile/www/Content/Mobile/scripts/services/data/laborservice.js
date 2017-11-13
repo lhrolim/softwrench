@@ -100,11 +100,11 @@
                 );
         }
 
-        function saveLabor(parent, labor, inCurrentParent, saveCustomMessage) {
+        function saveLabor(parent, labor, inCurrentParent, saveCustomMessage, showConfirmationMessage) {
             const application = crudContextService.currentApplicationName();
             const laborMetadata = getLabTransMetadata();
 
-            return offlineSaveService.addAndSaveComposition(application, parent, labor, laborMetadata, saveCustomMessage)
+            return offlineSaveService.addAndSaveComposition(application, parent, labor, laborMetadata, saveCustomMessage, showConfirmationMessage)
                 .then(savedParent => {
                     const context = crudContextService.getCrudContext();
                     if (!!inCurrentParent) {
@@ -137,7 +137,7 @@
                 });
         }
 
-        function doStopLaborTransaction(parent) {
+        function doStopLaborTransaction(parent, showConfirmationMessage) {
             const labor = getActiveLabor();
             const startdate = new Date(labor["startdate"]);
             const hoursDelta = ((new Date().getTime() - startdate.getTime()) / (1000 * 60 * 60));
@@ -148,7 +148,7 @@
             const stopingOnCurrentParent = !parent;
             const realParent = parent || crudContextService.currentDetailItem();
 
-            return saveLabor(realParent, labor, stopingOnCurrentParent, "Labor Timer Stopped").then(() => {
+            return saveLabor(realParent, labor, stopingOnCurrentParent, "Labor Timer Stopped", showConfirmationMessage).then(() => {
                 return clearTrackedLabor().then(() => {
                     $rootScope.$broadcast("sw.labor.stop");
                     return labor;
@@ -247,7 +247,7 @@
                 return $ionicPopup.confirm({
                     title: "Labor Report",
                     template: "You must stop the labor timer before synchronization. Do you want to stop it and proceed with the synchronization?"
-                }).then(res => res ? doStopLaborTransaction(foundParent) : false);
+                }).then(res => res ? doStopLaborTransaction(foundParent, false) : false);
             });
         }
 

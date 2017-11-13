@@ -64,7 +64,7 @@
                 return doSave(applicationName, item, title, showConfirmationMessage);
             },
 
-            addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata, saveCustomMessage) {
+            addAndSaveComposition: function (applicationName, item, compositionItem, compositionMetadata, saveCustomMessage, showConfirmationMessage) {
                 const datamap = item.datamap;
                 const associationKey = compositionMetadata.associationKey;
                 const compositionAppMetadata = metadataModelService.getCompositionByName(compositionMetadata.attribute);
@@ -85,7 +85,7 @@
                         //this will be stored on the Attachement entity instead
                         delete compositionItem["newattachment"];
                         datamap[associationKey].push(compositionItem);
-                        return doSave(applicationName, item, title, null, saveCustomMessage);
+                        return doSave(applicationName, item, title, showConfirmationMessage, saveCustomMessage);
                     });
                 }
 
@@ -96,7 +96,7 @@
                     const itemPosition = datamap[associationKey].findIndex(e => e[constants.localIdKey] === compositionItem[constants.localIdKey]);
                     datamap[associationKey][itemPosition] = compositionItem;
                 }
-                return doSave(applicationName, item, title, null, saveCustomMessage);
+                return doSave(applicationName, item, title, showConfirmationMessage, saveCustomMessage);
             },
         }
 
