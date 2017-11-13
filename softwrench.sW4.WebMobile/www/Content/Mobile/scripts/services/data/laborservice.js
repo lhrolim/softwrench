@@ -142,7 +142,7 @@
             const startdate = new Date(labor["startdate"]);
             const hoursDelta = ((new Date().getTime() - startdate.getTime()) / (1000 * 60 * 60));
             const hours = truncateDecimal(hoursDelta); // truncating and rounding to have 2 decimal
-            labor["regularhrs"] = hours;
+            labor["regularhrs"] = hours === 0 ? 0.01 : hours;
             labor["linecost"] = calculateLineCost(hours, labor["payrate"]);
 
             const stopingOnCurrentParent = !parent;
