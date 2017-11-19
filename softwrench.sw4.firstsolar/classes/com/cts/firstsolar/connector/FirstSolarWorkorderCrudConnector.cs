@@ -47,6 +47,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
             }
         }
 
+        public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
+            base.AfterCreation(maximoTemplateData);
+            if (ContextLookuper.LookupContext().OfflineMode) {
+                var crudData = ((CrudOperationData)maximoTemplateData.OperationData);
+                var wo = maximoTemplateData.IntegrationObject;
+                var hasLabors = LabTransHandler.HandleLabors(crudData, wo);
+                if (hasLabors) {
+                    AfterUpdate(maximoTemplateData);
+                    ((CrudOperationData)maximoTemplateData.OperationData).Fields["wonum"] = maximoTemplateData.ResultObject.UserId;
+                    maximoTemplateData.OperationData.OperationType = softWrench.sW4.Data.Persistence.WS.Internal.OperationType.AddChange;
+                    // Resubmitting MIF for ServiceAddress Update
+                    ConnectorEngine.Update((CrudOperationData)maximoTemplateData.OperationData);
+                }
+
+            }
+
+        }
+
 
         protected override bool WorkorderStatusChange(MaximoOperationExecutionContext maximoTemplateData, CrudOperationData crudData, object wo,
             InMemoryUser user) {

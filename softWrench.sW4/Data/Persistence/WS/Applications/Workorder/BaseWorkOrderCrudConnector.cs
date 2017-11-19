@@ -138,6 +138,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
 
         public override void AfterCreation(MaximoOperationExecutionContext maximoTemplateData) {
             var svcaddressExists = ((CrudOperationData)maximoTemplateData.OperationData).GetAttribute("#haswoaddresschange") != null;
+
             if (!svcaddressExists) {
                 //if no service address is passed we don´t need to perform any update afterwards
                 return;

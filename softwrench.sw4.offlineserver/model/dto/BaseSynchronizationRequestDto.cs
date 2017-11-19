@@ -3,6 +3,7 @@
 namespace softwrench.sw4.offlineserver.model.dto {
     public abstract class BaseSynchronizationRequestDto {
 
+
         public DeviceData DeviceData { get; set; }
 
         public UserSyncData UserData { get; set; }

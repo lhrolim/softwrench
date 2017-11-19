@@ -95,6 +95,8 @@ namespace softwrench.sw4.offlineserver.services {
                 result.FacilitiesUpdated = true;
             }
 
+            result.ClientName = ApplicationConfiguration.ClientName;
+
             return result;
         }
 
@@ -177,6 +179,7 @@ namespace softwrench.sw4.offlineserver.services {
             Log.DebugFormat("SYNC:Finished handling all associations. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             #endregion
+            results.ClientName = ApplicationConfiguration.ClientName;
 
             return results;
         }
@@ -474,7 +477,7 @@ namespace softwrench.sw4.offlineserver.services {
         protected virtual IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
             var applicationName = request.ApplicationName;
 
-            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user);
+            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).Where(a=> !a.IsPropertyTrue(OfflineConstants.IgnoreAsTopApp));
 
             if (applicationName == null) {
                 //no application in special was requested, lets return them all.

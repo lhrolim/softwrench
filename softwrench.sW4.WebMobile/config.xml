@@ -101,8 +101,8 @@
     <preference name="SuppressesIncrementalRendering" value="True" />
     <hook src="hooks/hook-symlink-fix.js" type="before_compile" />
     <vs:toolsetVersion>7.0.1</vs:toolsetVersion>
-    <engine name="android" spec="^6.2.3" />
     <engine name="ios" spec="^4.4.0" />
+    <engine name="android" spec="^6.2.3" />
     <plugin name="com.cordova.plugins.cookiemaster" spec="~1.0.0" />
     <plugin name="cordova-plugin-app-event" spec="~1.2.0" />
     <plugin name="cordova-plugin-app-version" spec="~0.1.8" />

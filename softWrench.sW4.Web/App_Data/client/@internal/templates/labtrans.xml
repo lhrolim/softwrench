@@ -138,7 +138,9 @@
         <schema id="compositionlist" title="Labor List" stereotype="compositionlist" platform="web">
           <field attribute="labtransid" hidden="true"/>
           <field attribute="laborcode" label="Labor" qualifier="title"/>
-          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle"/>
+          <field attribute="regularhrs" label="Regular Hours" qualifier="subtitle">
+            <renderer type="default" params="formatter=doubletotime"/>
+          </field>
           <field attribute="gldebitacct" label="GL Debit Account" qualifier="subtitle"/>
           <field attribute="transdate" label="Created Date"/>
           <field attribute="genapprservreceipt" label="Approved?">
@@ -236,7 +238,7 @@
           </section>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="8">
             <event type="afterchange" service="labtransService" method="updateLineCost"/>
-            <renderer type="numericinput" params="numberType=double;min=0"/>
+            <renderer type="numericinput" params="numberType=double;min=0;formatter=doubletotime"/>
           </field>
           <association label="GL Debit Account" target="gldebitacct" labelfield="chartofaccounts_.accountname" defaultexpression="$.parentdata.glaccount">
             <renderer type="lookup"/>
@@ -426,10 +428,12 @@
         <!-- #region: mobile -->
 
         <list title="Labor List" stereotype="compositionlist" platform="mobile">
+          <field attribute="externalrefid" hidden="true" qualifier="externalid" />
           <field attribute="laborcode" label="Labor" />
           <field attribute="startdate" label="Start Date" >
             <renderer type="datetime" params="format=MM/dd/yyyy"/>
           </field>
+          <field attribute="enterdate" hidden="true"/>
           <field attribute="starttime" label="Start Time" >
             <renderer type="datetime" params="format=HH:mm"/>
           </field>
@@ -461,6 +465,9 @@
           <field attribute="labtransid" hidden="true" />
           <field attribute="orgid" hidden="true" defaultexpression="$.parentdata.fields.orgid"/>
           <field attribute="siteid" hidden="true" defaultexpression="$.parentdata.fields.siteid"/>
+          <field label="Entered Date" requiredexpression="true" attribute="enterdate" default="@now" enableexpression="false" hidden="true">
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
+          </field>
           
           <field attribute="labor_.worksite" hidden="true" />
           <field attribute="labor_.orgid" hidden="true" />
@@ -480,7 +487,7 @@
           </field>
           <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="0">
             <event type="afterchange" service="laborService" method="updateLineCost"/>
-            <renderer type="numericinput" params="min=0;step=0.01;numberType=double;formatter=@laborService.formatRegularHours"/>
+            <renderer type="numericinput" params="min=0;step=0.01;numberType=double;formatter=doubletotime"/>
           </field>
 
           <field attribute="gldebitacct" defaultexpression="$.parentdata.fields.glaccount" requiredexpression="false" hidden="true" readonly="true" />

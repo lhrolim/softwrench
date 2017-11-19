@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function itemActionService($q, synchronizationFacade, crudContextService, $ionicPopup, laborService, alertService) {
+    function itemActionService($q,$rootScope, synchronizationFacade, crudContextService, $ionicPopup, laborService, alertService) {
         //#region Utils
         //#endregion
 
@@ -84,6 +84,7 @@
 
                 return promise
                     .then(() => $ionicPopup.alert({ title: `${currentTitle} was successfuly ${restorable ? "restored" : "deleted"}` }))
+                    .then(()=> $rootScope.$broadcast("sw_itemrestored",item))
                     .then(() => true);
             });
         }
@@ -116,7 +117,7 @@
     //#region Service registration
 
     angular.module("sw_mobile_services")
-        .factory("itemActionService", ["$q", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", "alertService", itemActionService]);
+        .factory("itemActionService", ["$q","$rootScope", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", "alertService", itemActionService]);
 
     //#endregion
 

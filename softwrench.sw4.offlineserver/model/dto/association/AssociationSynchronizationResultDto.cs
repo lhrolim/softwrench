@@ -10,6 +10,10 @@ namespace softwrench.sw4.offlineserver.model.dto.association {
 
     public class AssociationSynchronizationResultDto {
 
+        /// <summary>
+        /// used because at the initial sync we might need to override some custom services at the client side
+        /// </summary>
+        public string ClientName { get; set; }
 
         public IDictionary<string, AssociationDataDto> AssociationData { get; set; }
 

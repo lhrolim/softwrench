@@ -54,7 +54,7 @@
                     return method.apply(null, arguments);
                 }
                 const serviceResult = iconService[methodName].apply(iconService, arguments);
-                return !serviceResult
+                return serviceResult == null
                     ? method.apply(null, arguments)
                     : serviceResult;
             };

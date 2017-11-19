@@ -28,6 +28,12 @@
   <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=Created Work Orders"/>
 
 
+  <container id="timesheets" title="Time Sheets" icon="fa-clock-o" >
+    <application id="WTS" title="Week Time Sheet" ref="tslabor" schema="list" icon="fa-clock-o" parameters="offlinemenuwc=fsLaborOfflineService.getCurrentWeekLaborsWhereClause;offlinegridtitle=Weekly Time Sheet;offlinetititlebuilder=@firstSolarOfflineMenuService.BuildWeekTitle"/>
+    <application id="MTS" title="Month Time Sheet" ref="tslabor" schema="list" icon="fa-clock-o" parameters="offlinemenuwc=fsLaborOfflineService.getCurrentMonthLaborsWhereClause;offlinegridtitle=Monthly Time Sheet;offlinetititlebuilder=@firstSolarOfflineMenuService.BuildMonthTitle"/>
+  </container>
+
+
 
   <!--  <container id="workorder" icon="fa-wrench" title="Work Orders">-->
     <!--    <application id="TWO" title="For Today" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=fsWorkorderOfflineService.getTodayWosWhereClause;offlinegridtitle=WO - Today"/>-->

@@ -1,9 +1,9 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    angular.module("sw_mobile_services").factory("offlineSchemaService", ["$log", "fieldService", "schemaService", "securityService", "dispatcherService",  "metadataModelService", offlineSchemaService]);
+    angular.module("sw_mobile_services").factory("offlineSchemaService", ["$log", "fieldService","formatService", "schemaService", "securityService", "dispatcherService",  "metadataModelService", offlineSchemaService]);
 
-    function offlineSchemaService($log, fieldService, schemaService, securityService, dispatcherService, metadataModelService) {
+    function offlineSchemaService($log, fieldService,formatService, schemaService, securityService, dispatcherService, metadataModelService) {
 
         const dateFormat = "MMM DD";
         const dateFormatHours = "MMM DD hh a";
@@ -170,6 +170,10 @@
 
             if (_.contains([true, "true"], displayable.rendererParameters["showLabel"])) {
                 return `${displayable.label}: ${item[displayable.attribute]}`;
+            }
+
+            if (displayable.rendererParameters["formatter"]){
+                return formatService.format(item[displayable.attribute],displayable,item);
             }
 
             return item[displayable.attribute];

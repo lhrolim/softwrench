@@ -270,6 +270,13 @@ namespace softwrench.sW4.Shared2.Metadata {
             return Properties[propertyKey];
         }
 
+        public bool IsPropertyTrue(string propertyKey) {
+            if (Properties == null || !Properties.ContainsKey(propertyKey)) {
+                return false;
+            }
+            return Properties[propertyKey].Equals("true");
+        }
+
 
         public ApplicationSchemaDefinition MainListSchema => MainListSchemaKey != null ? LazySchemaResolver(MainListSchemaKey) : null;
 

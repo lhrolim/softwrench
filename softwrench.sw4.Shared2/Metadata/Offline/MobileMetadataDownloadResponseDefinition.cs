@@ -14,6 +14,11 @@ namespace softwrench.sW4.Shared2.Metadata.Offline {
 
         public string CommandBarsJson { get; set; }
 
+        /// <summary>
+        /// used because at the initial sync we might need to override some custom services at the client side
+        /// </summary>
+        public string ClientName { get; set; }
+
         public JObject AppConfiguration { get; set; }
     }
 

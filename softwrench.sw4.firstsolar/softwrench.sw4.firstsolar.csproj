@@ -294,6 +294,7 @@
     <Content Include="offline_content\firstsolar\scripts\fsrouteconfig.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsuserprofile.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsuserprofileservice.mobile.js" />
+    <Content Include="offline_content\firstsolar\scripts\fsLabor.mobile.js" />
     <Content Include="offline_content\firstsolar\scripts\fsWorkorderService.mobile.js" />
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldown.html" />
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />

@@ -109,13 +109,17 @@
                         value = Math.abs(value);
                     }
                 }
-                else if (field.rendererParameters['formatter'] === 'doubleToTime') {
+                else if ('doubleToTime'.equalsIc(field.rendererParameters['formatter'])) {
                     if (value == null) {
                         return "";
                     }
                     //Converting to hh:mm
                     var time = value.toString();
                     if (time.length > 0 && time.indexOf('.') === -1) {
+                        if (time === "0") {
+                            return "00 : 00";
+                        }
+
                         return value + " : 00";
                     }
                     var hours = time.split('.')[0];

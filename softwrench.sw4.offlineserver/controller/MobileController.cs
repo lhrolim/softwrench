@@ -32,6 +32,7 @@ using softWrench.sW4.Metadata.Menu;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.SPF;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.controller {
 
@@ -50,6 +51,7 @@ namespace softwrench.sw4.offlineserver.controller {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MobileController));
 
         private const string MenuBuilderKey = "offlinetititlebuilder";
+        private const string OfflineGridTitleParam = "offlinegridtitle";
 
         private readonly IContextLookuper _contextLookuper;
 
@@ -82,7 +84,8 @@ namespace softwrench.sw4.offlineserver.controller {
             _offlineAuditManager = offlineAuditManager;
         }
 
-
+        #region  menu
+        //TODO: move to offline
         private static string BuildOfflineMenuTitle(IDictionary<string, object> parameters) {
             if (parameters == null || !parameters.ContainsKey(MenuBuilderKey)) {
                 return null;
@@ -95,11 +98,20 @@ namespace softwrench.sw4.offlineserver.controller {
             var container = leaf as MenuContainerDefinition;
             if (container != null) {
                 container.Title = BuildOfflineMenuTitle(container.Parameters) ?? container.Title;
+                if (container.Parameters.ContainsKey(OfflineGridTitleParam) &&
+                    container.Parameters[OfflineGridTitleParam].Equals("@sameasmenu")) {
+                    container.Parameters[OfflineGridTitleParam] = container.Title;
+                }
+
                 container.Leafs.ToList().ForEach(BuildOfflineMenuTitle);
             }
             var application = leaf as ApplicationMenuItemDefinition;
             if (application != null) {
                 application.Title = BuildOfflineMenuTitle(application.Parameters) ?? application.Title;
+                if (application.Parameters.ContainsKey(OfflineGridTitleParam) &&
+                    application.Parameters[OfflineGridTitleParam].Equals("@sameasmenu")) {
+                    application.Parameters[OfflineGridTitleParam] = application.Title;
+                }
             }
         }
 
@@ -114,6 +126,10 @@ namespace softwrench.sw4.offlineserver.controller {
             }));
             return new MenuDefinition(builtLeafs, baseMenu.MainMenuDisplacement.ToString(), baseMenu.ItemindexId);
         }
+
+        #endregion
+
+
 
 
 
@@ -150,6 +166,7 @@ namespace softwrench.sw4.offlineserver.controller {
             };
 
             Log.InfoFormat("Download Metadata executed in {0}", LoggingUtil.MsDelta(watch));
+            response.ClientName = ApplicationConfiguration.ClientName;
             return response;
         }
 

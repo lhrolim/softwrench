@@ -19,6 +19,8 @@
             extraprojectionvalues: 'JSON' //usually null, but can contain a json with extra fields
         });
 
+
+
         //#region AssociationData
         ///
         /// Holds top level application data.
@@ -355,6 +357,7 @@
             data: "TEXT"
         });
 
+        
         entities.Menu = persistence.define('Menu', {
             data: "JSON"
         });

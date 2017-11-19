@@ -1486,6 +1486,32 @@
       </schemas>
     </application>
 
+
+    <application name="tslabor" entity="labtrans" title="Time Sheet">
+      <schemas>
+        <list platform="mobile" title="Time Sheet" redeclaring="true">
+          <field attribute="refwo" label="Work Order Number" qualifier="title"/>
+          <field attribute="regularhrs" label="Hours" qualifier="subtitle">
+            <renderer type="default" params="formatter=doubleToTime"/>
+          </field>
+          <field attribute="laborcode" hidden="true"/>
+          <field attribute="enterdate" label="Date" qualifier="featured">
+          <renderer type="date"/>
+          </field>
+          <field attribute="#runninglabor" hidden="true"/>
+
+        </list>
+      </schemas>
+      <properties>
+        <property key="offline.sync.ignoretopapp" value="true"/>
+        <property key="list.offline.date.indexlist" value="enterdate"/>
+        <property key="list.offline.text.indexlist" value="laborcode"/>
+        <property key="mobile.icon.provider" value="laborTimeSheetIconProvider"/>
+        <property key="mobile.application.readonly" value="true"/>
+      </properties>
+    </application>
+    
+
     <application name="otherworkorder" title="Work Order" entity="workorder" role="workorders">
       <components>
         <componentdisplayable id="detailhiddensoffline">

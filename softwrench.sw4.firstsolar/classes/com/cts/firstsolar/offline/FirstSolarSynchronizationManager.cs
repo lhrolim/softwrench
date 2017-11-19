@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -42,7 +43,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
             }
             return lookupDTO;
         }
-
+        
         protected override IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
             if (request.ItemsToDownload == null) {
                 return base.GetTopLevelAppsToCollect(request, user);

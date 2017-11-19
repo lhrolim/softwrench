@@ -38,6 +38,11 @@
         function getServerUrl() {
             return getSettings().then(settings => settings.serverurl);
         }
+
+        function getClient(){
+            return getSettings().then(settings => settings.server.client);
+        }
+
         /**
          * Saves the settings as Settings entity to local database 
          * (uses localStorage as cache for performance).
@@ -70,6 +75,7 @@
         //#region Service Instance
         const service = {
             getSettings,
+            getClient,
             getServerUrl,
             saveSettings,
             initializeSettings

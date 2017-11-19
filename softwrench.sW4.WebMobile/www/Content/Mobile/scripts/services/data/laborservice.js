@@ -1,7 +1,7 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, $log, offlineSchemaService, offlineSaveService, $rootScope, menuModelService) {
+    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, $log, offlineSchemaService, offlineSaveService, $rootScope, menuModelService,fsLaborOfflineService) {
         //#region Utils
 
         const truncateDecimal = value => parseFloat(value.toFixed(2));
@@ -14,7 +14,7 @@
             if (!tracker) {
                 return;
             }
-            
+
             parentIdCache = tracker.parentid;
             dao.findById("DataEntry", parentIdCache).then((parent) => {
                 if (!parent || !parent.datamap || !parent.datamap["labtrans_"]) {
@@ -66,6 +66,12 @@
 
         const getLabTransMetadata = () => crudContextService.currentCompositionTabByName("labtrans");
 
+        const insertTsLaborDataEntry = (labor, wonum, runningLabor = false) =>{
+            //TODO: check for client
+            labor["refwo"] = wonum;
+            fsLaborOfflineService.insertTsLaborDataEntry(labor, runningLabor);
+        }
+
         function setInitialLaborAndCraft(datamap, overrideRegularHours) {
             const currentUser = securityService.currentFullUser();
             return dao.findSingleByQuery("AssociationData", `application = 'labor' and datamap like '%"personid":"${currentUser.PersonId}"%'`)
@@ -100,7 +106,7 @@
                 );
         }
 
-        function saveLabor(parent, labor, inCurrentParent, saveCustomMessage, showConfirmationMessage) {
+        function saveLabor(parent, labor, inCurrentParent, saveCustomMessage,showConfirmationMessage, starting) {
             const application = crudContextService.currentApplicationName();
             const laborMetadata = getLabTransMetadata();
 
@@ -116,7 +122,7 @@
                         if (parentIndex >= 0) context.itemlist[parentIndex] = savedParent;
                     }
                     return labor;
-                });
+                }).then(insertTsLaborDataEntry(labor,parent.datamap.wonum,starting));
         }
 
         function doStartLaborTransaction() {
@@ -127,7 +133,7 @@
             offlineSchemaService.fillDefaultValues(laborDetailSchema, labor, parent.datamap);
 
             return setInitialLaborAndCraft(labor, 0)
-                .then(initialized => saveLabor(parent, initialized, true, "Labor Timer Started"))
+                .then(initialized => saveLabor(parent, initialized, true, "Labor Timer Started",false,true))
                 .then(saved => {
                     return trackStartedLabor(parent.id, saved).then(() => {
                         menuModelService.updateAppsCount();
@@ -148,7 +154,8 @@
             const stopingOnCurrentParent = !parent;
             const realParent = parent || crudContextService.currentDetailItem();
 
-            return saveLabor(realParent, labor, stopingOnCurrentParent, "Labor Timer Stopped", showConfirmationMessage).then(() => {
+
+            return saveLabor(realParent, labor, stopingOnCurrentParent, "Labor Timer Stopped", showConfirmationMessage,false).then(() => {
                 return clearTrackedLabor().then(() => {
                     $rootScope.$broadcast("sw.labor.stop");
                     return labor;
@@ -234,7 +241,7 @@
                 title: "Active Labor Report",
                 template: "Are you sure you want to stop the labor timer?"
             })
-            .then(res =>  res ? doStopLaborTransaction() : null);
+                .then(res => res ? doStopLaborTransaction() : null);
         }
 
         function finishLaborBeforeSynch(parent) {
@@ -396,7 +403,7 @@
     //#region Service registration
     angular.module("sw_mobile_services")
         .factory("laborService",
-        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "$log", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService", laborService]);
+        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "$log", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService","fsLaborOfflineService", laborService]);
     //#endregion
 
 })(angular, _);

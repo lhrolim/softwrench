@@ -8,7 +8,8 @@
         });
         return ids;
     };
-    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService, applicationStateService, configurationService) {
+    const service = function ($http, $q, $log, swdbDAO, dispatcherService, restService, metadataModelService, rowstampService, offlineCompositionService, entities, searchIndexService, securityService, applicationStateService, configurationService, settingsService) {
+
 
         var errorHandlePromise = function (error) {
             if (!error) {
@@ -16,6 +17,10 @@
             }
             return $q.reject(error);
         };
+
+        function invokeCustomServicePromise(result,queryArray){
+            return $q.when(dispatcherService.invokeService(`${result.data.clientName}.dataSynchronizationHook`, 'modifyQueries', [result.data, queryArray]));
+        }
 
 
         function resultHandlePromise(result) {
@@ -37,14 +42,19 @@
 
             securityService.overrideCurrentUserProperties(userProperties);
 
+            const queryArray = [];
+
             if (result.data.isEmpty) {
                 log.info("no new data returned from the server");
-                //interrupting async calls
-                return 0;
+                return invokeCustomServicePromise(result,queryArray).then(customServiceDownloadItems => {
+                    //interrupting async calls
+                    return !!customServiceDownloadItems ? customServiceDownloadItems : 0;
+                })
+
             }
 
             log.info("receiving new topLevel data from the server");
-            const queryArray = [];
+            
             angular.forEach(topApplicationData, application => {
                 //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
                 const newDataMaps = application.newdataMaps;
@@ -52,7 +62,7 @@
                 const insertUpdateDatamap = application.insertOrUpdateDataMaps;
                 const deletedIds = application.deletedRecordIds;
                 log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
-
+                
                 angular.forEach(newDataMaps, newDataMap => {
                     const id = persistence.createUUID();
 
@@ -97,12 +107,16 @@
                 }
             });
 
+            //test
             // ignoring composition number to SyncOperation table
             const numberOfDownloadedItems = queryArray.length;
             return offlineCompositionService.generateSyncQueryArrays(compositionData)
                 .then(compositionQueriesToAppend => queryArray.concat(compositionQueriesToAppend))
-                .then(queryArray => swdbDAO.executeQueries(queryArray))
-                .then(() => $q.when(numberOfDownloadedItems));
+                .then(() => {
+                    return invokeCustomServicePromise(result,queryArray);
+                })
+                .then(() => swdbDAO.executeQueries(queryArray))
+                .then(() => numberOfDownloadedItems);
         };
 
         function userDataIfChanged() {
@@ -117,23 +131,23 @@
             var log = $log.get("dataSynchronizationService#createAppSyncPromise");
 
             return applicationStateService.getServerDeviceData().then(deviceData => {
-                    return rowstampService.generateRowstampMap(app)
-                        .then(function (rowstampMap) {
-                            //see samplerequest.json
-                            rowstampMap.compositionmap = compositionMap;
-                            log.debug("invoking service to get new data");
-                            const payload = {
-                                applicationName: app,
-                                clientCurrentTopLevelApps: currentApps,
-                                returnNewApps: firstInLoop,
-                                clientOperationId,
-                                userData: userDataIfChanged(),
-                                rowstampMap,
-                                deviceData
-                            };
-                            return restService.post("Mobile", "PullNewData", null, payload);
-                        }).then(resultHandlePromise);
-                });
+                return rowstampService.generateRowstampMap(app)
+                    .then(function (rowstampMap) {
+                        //see samplerequest.json
+                        rowstampMap.compositionmap = compositionMap;
+                        log.debug("invoking service to get new data");
+                        const payload = {
+                            applicationName: app,
+                            clientCurrentTopLevelApps: currentApps,
+                            returnNewApps: firstInLoop,
+                            clientOperationId,
+                            userData: userDataIfChanged(),
+                            rowstampMap,
+                            deviceData
+                        };
+                        return restService.post("Mobile", "PullNewData", null, payload);
+                    }).then(resultHandlePromise);
+            });
         };
 
         function syncSingleItem(item, clientOperationId) {
@@ -161,8 +175,6 @@
 
         function syncData(clientOperationId) {
 
-
-
             return applicationStateService.getServerDeviceData()
                 .then(deviceData => {
                     var currentApps = metadataModelService.getApplicationNames();
@@ -185,11 +197,11 @@
                     return rowstampService.generateCompositionRowstampMap()
                         .then(function (compositionMap) {
                             const httpPromises = [];
-//                            for (let i = 0; i < currentApps.length; i++) {
-//                                const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap, clientOperationId)
-//                                    .catch(errorHandlePromise);
-//                                httpPromises.push(promise);
-//                            }
+                            //                            for (let i = 0; i < currentApps.length; i++) {
+                            //                                const promise = createAppSyncPromise(i === 0, currentApps[i], currentApps, compositionMap, clientOperationId)
+                            //                                    .catch(errorHandlePromise);
+                            //                                httpPromises.push(promise);
+                            //                            }
                             const promise = createAppSyncPromise(true, null, currentApps, compositionMap, clientOperationId).catch(errorHandlePromise);
                             httpPromises.push(promise);
 
@@ -200,6 +212,7 @@
 
         };
 
+
         const api = {
             syncData,
             syncSingleItem
@@ -207,7 +220,7 @@
 
         return api;
     };
-    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService", "configurationService"];
+    service.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService", "configurationService", "settingsService"];
 
     mobileServices.factory('dataSynchronizationService', service);
 

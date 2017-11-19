@@ -65,6 +65,7 @@
             currentMenuId: null,
             menuGridTitle: null,
             menuDisableCreate: false,
+            readonly:false,
 
             //composition
             composition: {

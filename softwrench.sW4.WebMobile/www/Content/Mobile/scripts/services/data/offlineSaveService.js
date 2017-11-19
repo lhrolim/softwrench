@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, _) {
     "use strict";
 
-    mobileServices.factory('offlineSaveService', ["$log", "$rootScope", "swdbDAO", "$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService","metadataModelService", function ($log, $rootScope, swdbDAO, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService,metadataModelService) {
+    mobileServices.factory('offlineSaveService', ["$log", "$rootScope", "swdbDAO","offlineSchemaService" ,"$ionicPopup", "offlineEntities", "offlineAttachmentService", "crudContextHolderService", "searchIndexService","metadataModelService", function ($log, $rootScope, swdbDAO,offlineSchemaService, $ionicPopup, offlineEntities, offlineAttachmentService, crudContextHolderService, searchIndexService,metadataModelService) {
 
 
 
@@ -76,7 +76,12 @@
 
                 const isLocalCreate = !compositionItem[constants.localIdKey];
                 if (isLocalCreate) {
-                    compositionItem[constants.localIdKey] = persistence.createUUID();
+                    const id = persistence.createUUID();
+                    compositionItem[constants.localIdKey] = id;
+                    const field = offlineSchemaService.locateDisplayableByQualifier(compositionMetadata.schema.schemas.list,"externalid");
+                    if (!!field){
+                        compositionItem[field.attribute] = id;
+                    }
                 }
 
                 if (compositionMetadata.associationKey === "attachment_") {

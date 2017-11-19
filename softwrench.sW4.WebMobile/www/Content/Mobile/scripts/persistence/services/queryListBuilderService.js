@@ -57,7 +57,7 @@
                 extraLaborQuery = buildExtraLaborAttribute(childListSchema, childEntityName);
             }
 
-            //TODO: make it generic, cause now it´s all tied to assignment child application
+            //TODO: make it generic, cause now itï¿½s all tied to assignment child application
             const associatioNameQuery = "`" + childEntityName + "`" + ".application= 'assignment'";
             //this handles SWOFF-342
             const duplicateQuery =  "`" + childEntityName + "`.dateindex02 = (select max(b.dateindex02) from AssociationData b where b.textindex01 = `" + childEntityName + "`.textindex01 and b.application = 'assignment')";

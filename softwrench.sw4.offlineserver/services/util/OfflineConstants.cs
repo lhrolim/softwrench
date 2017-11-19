@@ -32,6 +32,17 @@ namespace softwrench.sw4.offlineserver.services.util {
 
         public const string AvoidCaching = "offline.sync.avoidcaching";
 
+
+        public const string ReadonlyApplication = "mobile.application.readonly";
+
+
+
+
+        /// <summary>
+        ///  Use this flag to make the framework ignore a menu application for queries. Basically, the data for this app should be built exclusively at the client side.
+        /// </summary>
+        public const string IgnoreAsTopApp = "offline.sync.ignoretopapp";
+
         /// <summary>
         /// If true this will force the database operation to proceed even though the download chunk has been already overflown
         /// </summary>

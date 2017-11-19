@@ -10,6 +10,11 @@ namespace softwrench.sw4.offlineserver.model.dto {
             TopApplicationData = new List<SynchronizationApplicationResultData>();
         }
 
+        /// <summary>
+        /// used because at the initial sync we might need to override some custom services at the client side
+        /// </summary>
+        public string ClientName { get; set; }
+
         public IList<SynchronizationApplicationResultData> TopApplicationData { get; set; }
 
         public IList<SynchronizationApplicationResultData> CompositionData { get; set; }

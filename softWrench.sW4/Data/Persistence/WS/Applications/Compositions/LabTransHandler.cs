@@ -30,8 +30,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
 
         [Transactional(DBType.Maximo)]
-        public virtual void HandleLabors(CrudOperationData entity, object wo) {
+        public virtual bool HandleLabors(CrudOperationData entity, object wo)
+        {
 
+            var hasLaborUpdate = false;
 
             // Filter work order materials for any new entries where matusetransid is null
             var labors = (IEnumerable<CrudOperationData>)entity.GetRelationship("labtrans");
@@ -72,20 +74,24 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                         //                        WsUtil.SetValue(integrationObject, "ENTERDATE", DateTime.Now.AddMinutes(-1).FromServerToRightKind(),
                         //                            true);
                         //                        ReflectionUtil.SetProperty(integrationObject, "action", OperationType.Delete.ToString());
-
+                        
 
 
                     } else if (crudData.ContainsAttribute("#edited") && crudData.GetAttribute("#edited").ToString() == "1") {
                         DeleteLabtrans(crudData.GetAttribute("labtransid").ToString());
                         AddLabtrans(entity, integrationObject, crudData);
+                        hasLaborUpdate = true;
                     } else {
                         AddLabtrans(entity, integrationObject, crudData);
+                        hasLaborUpdate = true;
                     }
                 });
             if (deletion) {
                 ReflectionUtil.SetProperty(wo, "LABTRANS", null);
                 //                WsUtil.SetValue(wo, "LABTRANS", null);
             }
+
+            return hasLaborUpdate;
 
         }
 
@@ -167,6 +173,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             if (crudData.ContainsAttribute("transtype")) {
                 transType = crudData.GetStringAttribute("transtype");
             }
+
+            if (crudData.GetStringAttribute("externalrefid") != null){
+                //truncating at 10 chars since it´s the attribute length at maximo side... we´ll perform a starts with at client side.
+                //unfortunately sendersysid doesn´t work...
+                WsUtil.SetValue(integrationObject, "EXTERNALREFID", crudData.GetStringAttribute("externalrefid").Substring(0, 10));
+            }
+
+            WsUtil.SetValue(integrationObject, "SOURCESYSID", "sw");
+
 
             WsUtil.SetValue(integrationObject, "LABTRANSID", -1);
             WsUtil.SetValue(integrationObject, "REFWO", recordKey);
