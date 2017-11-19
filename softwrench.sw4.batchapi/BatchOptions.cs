@@ -1,4 +1,5 @@
 ﻿using System;
+using softwrench.sw4.api.classes.integration;
 
 namespace softwrench.sw4.batch.api {
     public class BatchOptions {
@@ -14,6 +15,8 @@ namespace softwrench.sw4.batch.api {
         public bool GenerateProblems {
             get; set;
         }
+
+        public OperationProblemData ProblemData { get; set; }
 
         /// <summary>
         /// If present this would be the key used to open a problem.

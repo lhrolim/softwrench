@@ -145,9 +145,8 @@
     <Reference Include="softwrench.sw4.Hapag, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.Hapag.1.0.0\lib\net46\softwrench.sw4.Hapag.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="softwrench.sw4.problem, Version=1.1.6530.32057, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.problem.1.1.6530.32057\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.user, Version=1.4.6522.20442, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.user.1.4.6522.20442\lib\net461\softwrench.sw4.user.dll</HintPath>
@@ -269,6 +268,7 @@
     <Compile Include="Data\Search\SearchTest2.cs" />
     <Compile Include="Data\Search\SearchUtilsTest.cs" />
     <Compile Include="Data\Search\SortHandlerTest.cs" />
+    <Compile Include="Data\JsonXmlProblemTest.cs" />
     <Compile Include="Dynamic\Services\JavascriptDynamicServiceTest.cs" />
     <Compile Include="Email\CommLogTemplateMergerTest.cs" />
     <Compile Include="ExtensionsForICustomAttributeProvider.cs" />

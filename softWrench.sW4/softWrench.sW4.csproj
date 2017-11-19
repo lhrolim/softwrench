@@ -190,9 +190,8 @@
     <Reference Include="softwrench.sw4.batch.api, Version=1.1.6514.37490, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6514.37490\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.problem, Version=1.0.0.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.problem.1.0.0.1\lib\net46\softwrench.sw4.problem.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="softwrench.sw4.problem, Version=1.1.6530.32057, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.problem.1.1.6530.32057\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.user, Version=1.4.6522.20442, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.user.1.4.6522.20442\lib\net461\softwrench.sw4.user.dll</HintPath>
@@ -389,6 +388,7 @@
     <Compile Include="Data\Filter\FilterWhereClauseHandler.cs" />
     <Compile Include="Data\Help\HelpEntry.cs" />
     <Compile Include="Data\JObjectDatamapAdapter.cs" />
+    <Compile Include="Data\JsonXmlProblemHandler.cs" />
     <Compile Include="Data\PDF\PDFService.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseGlobalSearchDataSet.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\BaseLabtransDataSet.cs" />
@@ -471,6 +471,7 @@
     <Compile Include="Data\Persistence\WS\Rest\RestCrudConnector.cs" />
     <Compile Include="Data\Persistence\WS\Rest\RestIntegrationObjectWrapper.cs" />
     <Compile Include="Data\Persistence\WS\Rest\RestQueryEngine.cs" />
+    <Compile Include="Data\JSonXmlProblemData.cs" />
     <Compile Include="Data\Relationship\Association\AssociationCacheKey.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchHelper.cs" />
     <Compile Include="Data\Search\QuickSearch\QuickSearchDTO.cs" />

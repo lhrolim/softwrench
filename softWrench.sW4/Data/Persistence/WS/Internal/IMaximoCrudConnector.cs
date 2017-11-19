@@ -8,6 +8,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         MaximoOperationExecutionContext CreateExecutionContext(DynamicObject proxy, IOperationData operationData);
         void PopulateIntegrationObject(MaximoOperationExecutionContext maximoTemplateData);
 
+        string GenerateXml(MaximoOperationExecutionContext maximoTemplateData);
+
         #region Create
         void BeforeCreation(MaximoOperationExecutionContext maximoTemplateData);
         void DoCreate(MaximoOperationExecutionContext maximoTemplateData);

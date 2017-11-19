@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
 using cts.commons.simpleinjector;
+using Newtonsoft.Json.Linq;
+using softwrench.sw4.problem.classes.api;
 
 namespace softwrench.sw4.problem.classes {
     public interface IProblemManager : ISingletonComponent {
@@ -19,7 +21,7 @@ namespace softwrench.sw4.problem.classes {
         /// <param name="message"></param>
         /// <param name="profiles"></param>
         Problem Register(string recordType, string recordId,string recordUserId, string datamap, int? createdBy, string stackTrace,
-            string message,string problemType = null, string assignee=null,int priority= 1,string profiles=null);
+            string message, IProblemData data, string problemType = null, string assignee=null,int priority= 1,string profiles=null);
 
         Problem RegisterOrUpdateProblem(int? currentUser,Problem problem, Func<string> queryToUse);
 

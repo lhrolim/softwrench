@@ -11,9 +11,11 @@ using softwrench.sw4.problem.classes;
 using softWrench.sW4.Security.Context;
 using cts.commons.simpleinjector;
 using log4net;
+using softwrench.sw4.api.classes.integration;
 using softwrench.sw4.batch.api;
 using softwrench.sw4.batch.api.entities;
 using softwrench.sw4.batch.api.services;
+using softwrench.sw4.problem.classes.api;
 using softwrench.sW4.audit.classes.Services.Batch;
 using softwrench.sW4.audit.classes.Services.Batch.Data;
 using softWrench.sW4.Security.Services;
@@ -54,7 +56,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         }
 
         public Batch Submit(Batch batch, BatchOptions options) {
-            var submissionData = BuildSubmissionData(batch);
+            var submissionData = BuildSubmissionData(batch, options.ProblemData);
             var user = SecurityFacade.CurrentUser();
             _contextLookuper.SetMemoryContext(batch.RemoteId, batch, true);
 
@@ -83,7 +85,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                             Log.Error("error on batch submission", e);
                             var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
                             var problem = _problemManager.Register(originalItem.Application, originalItem.ItemId, itemToSubmit.CrudData.UserId,
-                                problemDataMap, user.DBId, e.StackTrace, e.Message, typeof(BatchItem).Name);
+                                problemDataMap, user.DBId, e.StackTrace, e.Message, new StringProblemData(problemDataMap), typeof(BatchItem).Name);
                             batch.Problems.Add(originalItem.RemoteId, problem);
                         } else {
                             throw;
@@ -102,7 +104,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             return batch;
         }
 
-        private BatchSubmissionData BuildSubmissionData(Batch batch) {
+        private BatchSubmissionData BuildSubmissionData(Batch batch, OperationProblemData problemData) {
 
             var submissionData = new BatchSubmissionData();
             //var jArray = new JArray();
@@ -120,9 +122,10 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                 } else {
                     crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, item.DataMapJSonObject, item.ItemId);
                 }
-
+                crudOperationData.ProblemData = problemData;
 
                 var wrapper = new OperationWrapper(crudOperationData, item.Operation);
+                wrapper.JSON = item.DataMapJSonObject;
 
                 submissionData.AddItem(new BatchSubmissionItem {
                     CrudData = wrapper,

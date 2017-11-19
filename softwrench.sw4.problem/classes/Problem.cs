@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Security.Principal;
 using cts.commons.Util;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using NHibernate.Mapping.Attributes;
+using softwrench.sw4.problem.classes.api;
+using softwrench.sW4.Shared2.Metadata.Applications;
 
 namespace softwrench.sw4.problem.classes {
     [Class(Table = "PROB_PROBLEM", Lazy = false)]
@@ -70,10 +75,11 @@ namespace softwrench.sw4.problem.classes {
         public virtual string Profiles {
             get; set;
         }
-//        [Property]
-//        public virtual string ProblemHandler {
-//            get; set;
-//        }
+
+        [Property]
+        public virtual string ProblemHandler {
+            get; set;
+        }
 
         [Property]
         public virtual string ProblemType {
@@ -84,6 +90,13 @@ namespace softwrench.sw4.problem.classes {
         public virtual string Status {
             get; set;
         }
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        [Property(TypeType = typeof(ClientPlatformType))]
+        public virtual ClientPlatform ClientPlatform { get; set; }
+
+        [Property]
+        public virtual bool? ReadOnly { get; set; }
 
         public virtual string DataAsString {
             get {
@@ -120,19 +133,37 @@ namespace softwrench.sw4.problem.classes {
                 Message = message,
                 ProblemType = problemType,
                 Status = ProblemStatus.Open.ToString(),
-                CreatedDate = DateTime.Now
+                CreatedDate = DateTime.Now,
             };
         }
 
+        public static Problem BaseProblem(string recordType, string recordSchema, string recordId, string recordUserId,
+            string stackTrace, string message, string problemType, string xmlCurrentData, IProblemData data)
+        {
+            var serialized = data.Serialize();
+            return new Problem() {
+                RecordType = recordType,
+                RecordSchema = recordSchema,
+                RecordId = recordId,
+                RecordUserId = recordUserId,
+                StackTrace = stackTrace,
+                Message = message,
+                ProblemType = problemType,
+                Status = ProblemStatus.Open.ToString(),
+                CreatedDate = DateTime.Now,
+                DataAsString = serialized ?? JsonConvert.SerializeObject(data),
+        };
+        }
+
         public Problem(string recordType, string recordId, string recordUserId,
-            string data, DateTime createdDate, int? createdBy,
+            string xmlCurrentData, DateTime createdDate, int? createdBy,
             string assignee, int priority, string stackTrace,
             string message, string profiles, string problemType,
-            string status) {
+            string status, IProblemData data) {
             RecordType = recordType;
             RecordId = recordId;
             RecordUserId = recordUserId;
-            DataAsString = data;
+            DataAsString = JsonConvert.SerializeObject(data);
             CreatedDate = createdDate;
             CreatedBy = createdBy;
             Assignee = assignee;

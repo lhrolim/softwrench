@@ -81,7 +81,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 new MeaExecutionContext(operationData, proxy);
         }
 
-        protected string SerializeIntegrationObject() {
+        public string SerializeIntegrationObject() {
             var rootElement = IntegrationObject;
             var serializer = new XmlSerializer(rootElement.GetType(), @"http://b2b.ibm.com/schema/B2B_CDM_Incident/R2_2");
             var sWriter = new StringWriter();

@@ -4,6 +4,7 @@ using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using log4net;
 using Newtonsoft.Json.Linq;
+using softwrench.sw4.api.classes.integration;
 using softwrench.sw4.batch.api;
 using softwrench.sw4.batch.api.entities;
 using softwrench.sw4.offlineserver.audit;
@@ -11,6 +12,7 @@ using softwrench.sw4.offlineserver.model;
 using softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submission;
 using softWrench.sW4.Configuration.Services.Api;
 using softwrench.sw4.offlineserver.services.util;
+using softWrench.sW4.Data;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.services {
@@ -46,10 +48,14 @@ namespace softwrench.sw4.offlineserver.services {
             };
             var isSynchronous = batch.Items.Count <= minSize;
             var batchOptions = new BatchOptions {
-                GenerateProblems = true,
+                GenerateProblems = false,
                 GenerateReport = false,
                 SendEmail = false,
-                Synchronous = isSynchronous
+                Synchronous = isSynchronous,
+                ProblemData = new OperationProblemData("SyncSubmission") {
+                    ProblemHandler = JsonXmlProblemHandler.Name(),
+                    PropagateException = true
+                }
             };
 
             if (isSynchronous) {
@@ -63,7 +69,7 @@ namespace softwrench.sw4.offlineserver.services {
             return batch;
             //async call here
         }
-        
+
         /// <summary>
         /// Fetches the Batches with matching RemoteId and formats them (fill in SuccessItems and Problems accordingly).
         /// </summary>

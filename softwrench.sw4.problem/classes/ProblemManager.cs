@@ -2,6 +2,8 @@
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using log4net;
+using Newtonsoft.Json.Linq;
+using softwrench.sw4.problem.classes.api;
 
 namespace softwrench.sw4.problem.classes {
     public class ProblemManager : IProblemManager {
@@ -17,10 +19,10 @@ namespace softwrench.sw4.problem.classes {
         }
 
         public Problem Register(string recordType, string recordId, string recordUserId, string datamap, int? createdBy, string stackTrace,
-            string message, string handlerName, string assignee = null, int priority = 1, string profiles = null) {
+            string message,  IProblemData problemData, string handlerName, string assignee = null, int priority = 1, string profiles = null) {
             var problem = new Problem(recordType, recordId, recordUserId, datamap, DateTime.Now,
                 createdBy, assignee, priority, stackTrace, message,
-                profiles, handlerName, ProblemStatus.Open.ToString());
+                profiles, handlerName, ProblemStatus.Open.ToString(), problemData);
             var resultProblem = _swdbHibernateDAO.Save(problem);
             var handler = _problemHandlerLookuper.FindHandler(handlerName, recordType);
             if (handler != null) {

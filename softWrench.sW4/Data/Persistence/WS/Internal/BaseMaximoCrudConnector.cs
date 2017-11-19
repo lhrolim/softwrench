@@ -82,6 +82,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             SetUppercase(integrationObject, operationData, "reportedby");
         }
 
+        public string GenerateXml(MaximoOperationExecutionContext maximoTemplateData) {
+            return maximoTemplateData.SerializeIntegrationObject();
+        }
+
         #region Create
         public void BeforeCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP
@@ -91,7 +95,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
             maximoTemplateData.ResultObject = resultData;
         }
 
-     
+
 
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {
             //NOOP

@@ -1,6 +1,8 @@
 ﻿using System;
 using softwrench.sw4.api.classes.email;
 using softwrench.sw4.problem.classes;
+using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Email;
 
@@ -36,6 +38,10 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.configuration {
 
         public string ProblemHandler() {
             return HandlerName;
+        }
+
+        public ApplicationMetadataSchemaKey OnLoad(AttributeHolder resultObject, string data) {
+            throw new NotImplementedException();
         }
 
         public virtual string ApplicationName() {

@@ -40,6 +40,10 @@ namespace softWrench.sW4.Data.Persistence.WS.API {
             RealCrudConnector.PopulateIntegrationObject(maximoTemplateData);
         }
 
+        public string GenerateXml(MaximoOperationExecutionContext maximoTemplateData) {
+            return RealCrudConnector.GenerateXml(maximoTemplateData);
+        }
+
         public virtual object HandleActualDates(MaximoOperationExecutionContext maximoTemplateData) {
             var entity = maximoTemplateData.IntegrationObject;
 

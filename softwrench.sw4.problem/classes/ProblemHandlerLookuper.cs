@@ -39,7 +39,18 @@ namespace softwrench.sw4.problem.classes {
                 return null;
             }
             //TODO:improve lookup logic to allow for non-perfect matches
-            var handler = handlers.FirstOrDefault(f => f.ApplicationName().EqualsIc(applicationName) && f.ProblemHandler().EqualsIc(handlerName) && f.ClientName().EqualsIc(clientKey));
+            var handlersNamed = handlers.Where(f => f.ProblemHandler().EqualsIc(handlerName));
+            IProblemHandler handler;
+            var problemHandlers = handlersNamed as IList<IProblemHandler> ?? handlersNamed.ToList();
+
+            if (problemHandlers.Count() == 1) {
+                handler = problemHandlers.First();
+                _cachedHandlers.Add(handlerKey, problemHandlers.First());
+                return handler;
+            }
+            handler = problemHandlers.FirstOrDefault(
+                f => f.ApplicationName().Equals(applicationName) && f.ClientName().Equals(clientKey));
+
             _cachedHandlers.Add(handlerKey, handler);
             return handler;
         }

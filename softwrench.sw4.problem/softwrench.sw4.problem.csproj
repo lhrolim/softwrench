@@ -65,6 +65,9 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.5.0.0\lib\net461\NHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate.Mapping.Attributes">
       <HintPath>..\packages\NHibernate.Mapping.Attributes.3.2.0.0\lib\NHibernate.Mapping.Attributes.dll</HintPath>
     </Reference>
@@ -90,6 +93,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\api\IProblemData.cs" />
+    <Compile Include="classes\api\StringProblemData.cs" />
     <Compile Include="classes\IProblemHandler.cs" />
     <Compile Include="classes\IProblemManager.cs" />
     <Compile Include="classes\maximo\MaximoExceptionDTO.cs" />
@@ -99,6 +104,7 @@
     <Compile Include="classes\ProblemManager.cs" />
     <Compile Include="classes\ProblemStatus.cs" />
     <Compile Include="DB_Migration\20160601_SWWEB_2529.cs" />
+    <Compile Include="DB_Migration\20171113_SWWEB_3262.cs" />
     <Compile Include="DB_Migration\Migration20150424Swweb1166Part2.cs" />
     <Compile Include="DB_Migration\20150424_SWWEB_1166.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -108,7 +114,12 @@
     <None Include="packages.config" />
     <None Include="shared.placeholder" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{E3764769-6D4D-4986-BAF4-02D1B479D961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="web_content\problem\templates\problemsection.html" />
   </ItemGroup>

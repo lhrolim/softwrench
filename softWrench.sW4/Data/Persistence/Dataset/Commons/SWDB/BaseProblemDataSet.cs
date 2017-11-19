@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.portable.Util;
 using cts.commons.Util;
@@ -28,12 +29,27 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
             var resultObject = result.ResultObject;
             var applicationName = resultObject.GetStringAttribute("recordtype");
-            var handlerType = resultObject.GetStringAttribute("problemtype");
+            var problemType = resultObject.GetStringAttribute("problemtype");
+            var handlerType = resultObject.GetStringAttribute("problemHandler");
             var recordId = resultObject.GetStringAttribute("recordId");
             var schemaId = resultObject.GetStringAttribute("recordschema");
 
             var handler = _handlerLookuper.FindHandler(handlerType, applicationName);
-            if (handler == null || handler.DelegateToMainApplication()) {
+
+
+            var dataAttribute = resultObject.GetAttribute("data");
+            if (dataAttribute == null) {
+                return result;
+            }
+            var dataAsString = StringExtensions.GetString(CompressionUtil.Decompress((byte[])dataAttribute));
+
+            if (handler == null) {
+                FallbackScenario(dataAsString, resultObject);
+
+                return result;
+            }
+
+            if (handler.DelegateToMainApplication()) {
                 var ds = _dataSetProvider.LookupDataSet(applicationName, null);
                 var schema = schemaId ?? "editdetail";
                 var schemaKey = new ApplicationMetadataSchemaKey(schema);
@@ -42,19 +58,30 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB {
 
                 var applicationDetailResult = await ds.GetApplicationDetail(app, user, new DetailRequest(recordId, schemaKey));
                 ModifySchemaInsertingProblemData(applicationDetailResult, app);
-                applicationDetailResult.ResultObject.SetAttribute("#problemmessage",resultObject.GetAttribute("message"));
+                applicationDetailResult.ResultObject.SetAttribute("#problemmessage", resultObject.GetAttribute("message"));
                 return applicationDetailResult;
             }
 
-            var dataAttribute = resultObject.GetAttribute("data");
-            if (dataAttribute == null) {
-                return result;
+            var redirectSchema = handler.OnLoad(resultObject, dataAsString);
+            if (redirectSchema != null) {
+                try {
+                    var schema = MetadataProvider.Application(application.Name).ApplyPoliciesWeb(redirectSchema).Schema;
+                    result.Schema = schema;
+                } catch (Exception) {
+                    FallbackScenario(dataAsString, resultObject);
+                }
+            } else {
+                FallbackScenario(dataAsString, resultObject);
             }
-            var dataAsString = StringExtensions.GetString(CompressionUtil.Decompress((byte[])dataAttribute));
+
+
+            return result;
+        }
+
+        private static void FallbackScenario(string dataAsString, DataMap resultObject) {
             var deserialized = JsonConvert.DeserializeObject(dataAsString);
             var formatted = JsonConvert.SerializeObject(deserialized, Formatting.Indented);
             resultObject.SetAttribute("#dataasstring", formatted);
-            return result;
         }
 
         private static void ModifySchemaInsertingProblemData(ApplicationDetailResult applicationDetailResult,

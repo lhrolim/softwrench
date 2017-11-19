@@ -1,4 +1,6 @@
-﻿namespace softwrench.sw4.api.classes.integration {
+﻿using softwrench.sW4.Shared2.Metadata.Applications;
+
+namespace softwrench.sw4.api.classes.integration {
     public class OperationProblemData {
 
         /// <summary>
@@ -16,6 +18,9 @@
         public bool PropagateException {
             get; set;
         }
+
+        public string ProblemHandler { get; set; }
+
 
     }
 }
