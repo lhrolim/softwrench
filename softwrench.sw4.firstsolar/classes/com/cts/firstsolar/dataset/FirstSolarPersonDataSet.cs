@@ -15,6 +15,7 @@ using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Person;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
@@ -32,10 +33,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             _userFacilityBuilder = userFacilityBuilder;
         }
 
-        protected override async Task<User> PopulateSwdbUser(ApplicationMetadata application, JObject json, string id,
-            string operation) {
-            var baseUser = await base.PopulateSwdbUser(application, json, id, operation);
-            var facilitiesToken = ParseFacilities(json);
+        protected override async Task<User> PopulateSwdbUser(ApplicationMetadata application, OperationWrapper wrapper) {
+            var baseUser = await base.PopulateSwdbUser(application, wrapper);
+            var facilitiesToken = ParseFacilities(wrapper.JSON);
+            var crudData = (CrudOperationData) wrapper.OperationData();
+            baseUser.UserName = crudData.GetStringAttribute("maxuser_.loginid");
             _userFacilityBuilder.PopulatePreferredFacilities(baseUser, facilitiesToken);
             return baseUser;
         }

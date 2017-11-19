@@ -233,13 +233,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var primaryEmail = json.StringValue("#primaryemail");
             var isCreation = application.Schema.Stereotype == SchemaStereotype.DetailNew;
 
-            var user = await PopulateSwdbUser(application, json, id, operation);
-            var passwordString = await HandlePassword(json, user);
+
 
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = new OperationWrapper(application, entityMetadata, operation, json, id);
             //saving person on Maximo database
             var operationData = (CrudOperationData)operationWrapper.OperationData(typeof(CrudOperationData));
+
+            var user = await PopulateSwdbUser(application, operationWrapper);
+            var passwordString = await HandlePassword(json, user);
 
             if (isCreation) {
                 operationData.SetAttributeIfNull("personid", operationData.GetAttribute("#personid"));
@@ -284,7 +286,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         }
 
         //saving user on SWDB first
-        protected virtual async Task<User> PopulateSwdbUser(ApplicationMetadata application, JObject json, string id, string operation) {
+        protected virtual async Task<User> PopulateSwdbUser(ApplicationMetadata application, OperationWrapper wrapper) {
+            var json = wrapper.JSON;
+
             // Save the updated sw user record
             var username = json.StringValue("personid");
             if (username == null) {
