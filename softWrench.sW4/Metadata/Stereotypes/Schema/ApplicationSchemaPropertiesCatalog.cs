@@ -338,6 +338,11 @@
         public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
+        /// If "true" show detail toolbar even to anonymous user.
+        /// </summary>
+        public static string DetailShowToolbarToAnonymous = "detail.show.toolbar.anonymous";
+
+        /// <summary>
         /// If "true" reloads de current schema kepping filters, page and ordering.
         /// </summary>
         public static string CompositionSoftRefresh = "compositions.keepfilters";

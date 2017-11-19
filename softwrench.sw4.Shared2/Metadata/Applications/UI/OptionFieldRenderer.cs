@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.UI
@@ -15,8 +16,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI
             Stereotype = null;
         }
 
-        public OptionFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
-            : base(renderertype, parameters, targetName, stereotype) {
+        public OptionFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null, Dictionary<string, object> splitedParameters = null)
+            : base(renderertype, parameters, targetName, stereotype, splitedParameters) {
             OptionRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;

@@ -52,7 +52,7 @@
                         </span>
                     </div>
 
-                    <div ng-switch-when="int" style="width: 100%" ng-init="pattern = getValidationPattern('number');">
+                    <div ng-switch-when="int" style="width: 100%" ng-init="pattern = getValidationPatternByType('number');">
                         <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.value | linebreak" data-attribute="{{datamap.value}}" />
                         <input ng-if="ismodal" class="form-control" string-to-number type="number" ng-min="{{datamap.minvalue}}" ng-max="{{datamap.maxvalue}}" ng-model="datamap.value" name="intInput" />
                         <span style="color: red;" ng-show="configFakeForm.intInput.$error.max">this value cannot be greater than {{datamap.maxvalue}}</span>
@@ -60,7 +60,7 @@
                         <span style="color: red;" ng-show="configFakeForm.intInput.$error.pattern">should be a valid intgral number</span>
                     </div>
 
-                    <div ng-switch-when="long" style="width: 100%" ng-init="pattern = getValidationPattern('number');">
+                    <div ng-switch-when="long" style="width: 100%" ng-init="pattern = getValidationPatternByType('number');">
                         <label ng-if="!ismodal" class="form-control" ng-bind-html="datamap.value | linebreak" data-attribute="{{datamap.value}}" />
                         <input ng-if="ismodal" class="form-control" string-to-number type="number" ng-min="{{datamap.minvalue}}" ng-max="{{datamap.maxvalue}}" ng-model="datamap.value" name="longInput"/>
                         <span style="color: red;" ng-show="configFakeForm.longInput.$error.max">this value cannot be greater than {{datamap.maxvalue}}</span>

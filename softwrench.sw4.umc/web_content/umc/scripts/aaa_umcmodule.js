@@ -1,0 +1,1 @@
+﻿var firstsolardispatchmod = angular.module('umc', ['sw_layout']);

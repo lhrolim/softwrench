@@ -19,6 +19,10 @@
           <relationshipAttribute from="crewid" to="value" primary="true"/>
           <relationshipAttribute to="domainid" literal="CREWID" quoteLiteral="true"/>
         </relationship>
+        <relationship to="failurelistonly" qualifier="failurelist" >
+          <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
       </relationships>
     </entity>
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
@@ -52,11 +56,40 @@
         </schema>
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details" redeclaring="false">
-        
+          <customization position="siteid"/>
+        </schema>
+
+        <schema id="nologinnewdetail" stereotype="detailnew" title="Service Request Details">
+          <reference id="srhiddens"/>
+            <field attribute="name" label="Full Name" requiredexpression="true"/>
+            <field attribute="email" label="Email Address" requiredexpression="true">
+              <renderer type="default" params="valtype=custom;valmessage=An '@umcsn.com' email is required.;valflags=i">
+                <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@umcsn\.com$"/>
+              </renderer>
+            </field>
+            <field attribute="phoneext" label="Phone Extension" requiredexpression="true">
+              <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone extension is a sequence of four numbers.;valpattern=^\d{4}$"/>
+            </field>
+          <field attribute="description" label="Request Summary" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+          
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="cancel"/>
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="submit" icon="fa-check" service="umcNoLoginSubmitService" method="submit" label="Submit" cssclasses="large-button" tooltip="Submit Request" enableexpression="$scope:enableSave"/>
+            </commandgroup>
+          </commandbars>
+
+          <properties>
+            <property key="detail.show.toolbar.anonymous" value="true"/>
+          </properties>
         </schema>
 
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="false">
-          
+          <customization position="siteid"/>
         </schema>
         
       </schemas>
@@ -83,6 +116,7 @@
               <renderer type="richtext"/>
             </field>
           </customization>
+          <customization position="siteid"/>
         </schema>
 
         <schema id="quickeditdetail" stereotype="detail" title="Quick Request Details" redeclaring="false">
@@ -96,6 +130,7 @@
               <renderer type="richtext"/>
             </field>
           </customization>
+          <customization position="siteid"/>
         </schema>          
       </schemas>
     </application>

@@ -238,8 +238,13 @@
 
         function updatePath(stateUrl, aliasUrl) {
             if (stateUrl) {
-                return getRouteInfo().then(routeInfo => doUpdatePath(stateUrl, routeInfo, aliasUrl));
+                const info = getRouteInfo();
+                if (!info) {
+                    return $q.reject();
+                }
+                return info.then(routeInfo => doUpdatePath(stateUrl, routeInfo, aliasUrl));
             }
+            return $q.reject();
         }
 
         function updateState(state) {

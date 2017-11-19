@@ -404,6 +404,8 @@
     <Compile Include="Controllers\RouteController.cs" />
     <Compile Include="Controllers\SqlClient\SqlClientController.cs" />
     <Compile Include="Controllers\TransactionStatisticsController.cs" />
+    <Compile Include="Controllers\Umc\UmcRequestController.cs" />
+    <Compile Include="Controllers\Umc\UmcRequestApiController.cs" />
     <Compile Include="Controllers\Utilities\DeployValidationController.cs" />
     <Compile Include="Controllers\WorkflowController.cs" />
     <Compile Include="Controllers\CommLogController.cs" />
@@ -1324,6 +1326,10 @@
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
       <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
+      <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
+      <Name>softwrench.sw4.umc</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>

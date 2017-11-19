@@ -85,16 +85,25 @@ namespace softWrench.sW4.Metadata.Parsing {
             }
             var type = renderer.Attribute(XmlMetadataSchema.RendererAttributeType).Value;
             var parameters = renderer.Attribute(XmlMetadataSchema.RendererAttributeParams).ValueOrDefault((string)null);
+
+            var splitedParameterEls = renderer.Elements().Where(f => f.Name.LocalName == XmlMetadataSchema.RendererParameterElement);
+            var splitedParameters = new Dictionary<string, object>();
+            splitedParameterEls.ForEach(param => {
+                var key = param.Attribute(XmlMetadataSchema.ApplicationPropertyKeyAttribute).Value; // required
+                var value = param.Attribute(XmlMetadataSchema.ApplicationPropertyValueAttribute).Value; // required
+                splitedParameters.Add(key, value);
+            });
+
             var stereotype = renderer.Attribute(XmlMetadataSchema.RendererAttributeStereotype).ValueOrDefault((string)null);
             switch (ftype) {
                 case FieldRendererType.ASSOCIATION:
                     return new AssociationFieldRenderer(type, parameters, targetName, stereotype);
                 case FieldRendererType.COMPOSITION:
-                    return new CompositionFieldRenderer(type, parameters, targetName);
+                    return new CompositionFieldRenderer(type, parameters, targetName, null, splitedParameters);
                 case FieldRendererType.OPTION:
-                    return new OptionFieldRenderer(type, parameters, targetName);
+                    return new OptionFieldRenderer(type, parameters, targetName, null, splitedParameters);
                 default:
-                    return new FieldRenderer(type, parameters, targetName, stereotype);
+                    return new FieldRenderer(type, parameters, targetName, stereotype, splitedParameters);
             }
         }
 

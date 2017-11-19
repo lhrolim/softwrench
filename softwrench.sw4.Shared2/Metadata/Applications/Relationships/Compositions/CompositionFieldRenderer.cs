@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.UI;
@@ -17,8 +18,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
             Stereotype = null;
         }
 
-        public CompositionFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null)
-            : base(renderertype, parameters, targetName, stereotype) {
+        public CompositionFieldRenderer(string renderertype, string parameters, string targetName, string stereotype = null, Dictionary<string, object> splitedParameters = null)
+            : base(renderertype, parameters, targetName, stereotype, splitedParameters) {
                 CompositionRendererType result;
             Enum.TryParse(renderertype, true, out result);
             EnumRendererType = result;

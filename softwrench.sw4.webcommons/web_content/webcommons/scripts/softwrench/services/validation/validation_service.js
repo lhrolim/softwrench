@@ -33,26 +33,35 @@
             return validationArray;
         };
 
-        function getValidationPattern(validationType) {
+        function getValidationPatternByType(validationType, customPattern, customFlags) {
             let regexPattern = '';
             switch (validationType) {
-                case "number":
-                    regexPattern = new RegExp(/^\d+$/);
-                    break;
+            case "number":
+                regexPattern = new RegExp(/^\d+$/);
+                break;
 
-                case "phonenumber":
-                    regexPattern = new RegExp(/^\d+$/);
-                    break;
+            case "phonenumber":
+                regexPattern = new RegExp(/^\d+$/);
+                break;
 
-                case "email":
-                    regexPattern = new RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/, 'i');
-                    break;
+            case "email":
+                regexPattern = new RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/, 'i');
+                break;
+
+            case "custom":
+                    regexPattern = new RegExp(customPattern, customFlags);
+                break;
             }
 
             return regexPattern;
         }
 
-        function getValidationPatterString(validationType) {
+        function getValidationPattern(fieldMetadata) {
+            return getValidationPatternByType(fieldMetadata.rendererParameters["valtype"], fieldMetadata.rendererParameters["valpattern"], fieldMetadata.rendererParameters["valflags"]);
+        }
+
+        function getValidationPatterString(fieldMetadata) {
+            const validationType = fieldMetadata.rendererParameters["valtype"];
             switch (validationType) {
                 case "number":
                     return "^\\d+$";
@@ -61,6 +70,9 @@
 
                 case "email":
                     return "^(([^<>()\\[\\]\\.,;:\\s@\\\"]+(\\.[^<>()\\[\\]\\.,;:\\s@\\\"]+)*)|(\\\".+\\\"))@(([^<>()[\\]\\.,;:\\s@\\\"]+\\.)+[^<>()[\\]\\.,;:\\s@\\\"]{2,})$";
+
+                case "custom":
+                    return fieldMetadata.rendererParameters["valpattern"] || "";
             }
             return "";
         }
@@ -223,6 +235,7 @@
             validatePromise,
             validateInlineComposition,
             getValidationPattern,
+            getValidationPatternByType,
             getValidationPatterString
         };
 

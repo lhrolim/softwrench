@@ -1,5 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web {
     public class RouteConfig {
@@ -26,6 +27,21 @@ namespace softWrench.sW4.Web {
                 url: "web/{application}/{extra}",
                 defaults: new { controller = "Route", action = "Route" }
             );
+
+            if ("umc".Equals(ApplicationConfiguration.ClientName)) {
+                // route to make request anonymous to umc
+                routes.MapRoute(
+                    name: "UmcNoLoginRequest",
+                    url: "umcrequest",
+                    defaults: new { controller = "UmcRequest", action = "New" }
+                );
+                // route to succes page of umc request
+                routes.MapRoute(
+                    name: "UmcNoLoginSuccess",
+                    url: "umcrequestsuccess",
+                    defaults: new { controller = "UmcRequest", action = "Success" }
+                );
+            }
 
             routes.MapRoute(
                 name: "Default",

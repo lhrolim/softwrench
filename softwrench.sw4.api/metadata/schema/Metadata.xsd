@@ -578,6 +578,10 @@
   </complexType>
 
   <complexType name="Renderer">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="parameter" type="tns:Parameter" maxOccurs="unbounded" minOccurs="0">
+      </element>
+    </choice>
     <attribute name="type" type="string" use="required"></attribute>
     <attribute name="params" type="string"></attribute>
     <attribute name="stereotype" type="string"></attribute>

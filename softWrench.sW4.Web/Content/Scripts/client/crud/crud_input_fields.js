@@ -734,12 +734,12 @@
                             crud_inputcommons.initField($scope, fieldMetadata, "datamap");
                         };
 
-                        $scope.getValidationPattern = function (type) {
-                            return validationService.getValidationPattern(type);
+                        $scope.getValidationPattern = function (fieldMetadata) {
+                            return validationService.getValidationPattern(fieldMetadata);
                         };
 
-                        $scope.getValidationPatterString = function (type) {
-                            return validationService.getValidationPatterString(type);
+                        $scope.getValidationPatterString = function (fieldMetadata) {
+                            return validationService.getValidationPatterString(fieldMetadata);
                         };
 
                         $scope.getHelpIconPos = function (fieldMetadata) {

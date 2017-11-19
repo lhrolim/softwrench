@@ -185,7 +185,7 @@ class SubmitResult {
             }
 
             // not necessary to update the complete datamap after a composition save
-            if (!dispatcherComposition && (responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
+            if (!dispatcherComposition && (!responseDataMap || responseDataMap.type === null || responseDataMap.type !== "UnboundedDatamap")) {
                 angular.extend(datamap, responseDataMap);
             }
 
@@ -205,7 +205,7 @@ class SubmitResult {
         }
 
       
-        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,compositionData,successMessage}) {
+        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,compositionData,successMessage,customurl}) {
                 
             const log = this.$log.get("submitService#doSubmitToServer",["submit","save"]);
             log.debug("doSubmit to server start... applying datamap transformations");
@@ -245,7 +245,7 @@ class SubmitResult {
 
             log.debug(jsonString);
 
-            const urlToUse = url("/api/data/" + applicationName + "/");
+            const urlToUse = customurl || url("/api/data/" + applicationName + "/");
             const command = id == null ? this.$http.post : this.$http.put;
 
             log.info(`Invoking server submission at ${urlToUse}`);

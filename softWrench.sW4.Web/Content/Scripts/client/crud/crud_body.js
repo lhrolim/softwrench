@@ -178,7 +178,8 @@
                 }
 
                 $scope.showTopToolbar = function () {
-                    return $scope.isDetail && !contextService.get("anonymous", false, true);
+                    const schema = $scope.schema;
+                    return $scope.isDetail && (!contextService.get("anonymous", false, true) || (schema && schema.properties && schema.properties["detail.show.toolbar.anonymous"] === "true"));
                 }
 
                 $scope.setForm = function (form) {

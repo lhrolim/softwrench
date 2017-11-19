@@ -42,7 +42,7 @@ input.ng-dirty.ng-invalid, .not-found:focus {
     max-width: none;
 }
 
-body > .container {
+body > .container, .no-menu-container {
     display: flex;
     min-height: 100vh;
     flex-direction: column;

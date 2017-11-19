@@ -2,6 +2,7 @@
 using softwrench.sW4.Shared2.Util;
 using System;
 using System.Collections.Generic;
+using Castle.Core.Internal;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
@@ -17,9 +18,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
         private readonly string _parameterString;
 
         private readonly IDictionary<string, object> _parameters;
+        private readonly Dictionary<string, object> _splitedParameters;
 
-        public FieldRenderer(string renderertype, string parameters, string targetName, string stereotype) {
+        public FieldRenderer(string renderertype, string parameters, string targetName, string stereotype, Dictionary<string, object> splitedParameters = null) {
             _parameterString = parameters;
+            _splitedParameters = splitedParameters;
             TargetName = targetName;
             RendererType = renderertype;
             ValidateRendererType(renderertype);
@@ -55,7 +58,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
 
         public IDictionary<string, object> ParametersAsDictionary() {
-            return PropertyUtil.ConvertToDictionary(_parameterString);
+            var parameters = PropertyUtil.ConvertToDictionary(_parameterString);
+            _splitedParameters?.ForEach(pair => parameters.Add(pair.Key, pair.Value));
+            return parameters;
         }
 
         public override string ToString() {
