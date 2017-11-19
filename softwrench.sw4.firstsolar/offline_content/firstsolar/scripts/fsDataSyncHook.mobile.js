@@ -48,7 +48,7 @@
     }
 
 
-    fsDataSyncHook['inject$'] = ["searchIndexService", "offlineEntities", "fsLaborOfflineService"];
+    fsDataSyncHook['$inject'] = ["searchIndexService", "offlineEntities", "fsLaborOfflineService"];
 
     angular.module('sw_mobile_services').service('firstsolar.dataSynchronizationHook', fsDataSyncHook);
 

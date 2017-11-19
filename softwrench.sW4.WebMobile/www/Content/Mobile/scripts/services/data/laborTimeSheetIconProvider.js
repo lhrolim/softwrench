@@ -39,7 +39,7 @@
     }
 
 
-    laborTimeSheetIconProvider['inject$'] = [];
+    laborTimeSheetIconProvider['$inject'] = [];
 
     angular.module('sw_mobile_services').service('laborTimeSheetIconProvider', laborTimeSheetIconProvider);
 
