@@ -71,6 +71,10 @@
                 duplicateQuery += ` and b.dateindex02 <= ${tomorrowTime}` 
             }
 
+            else if (mainListSchema.applicationName === "pastworkorder"){
+                duplicateQuery += ` and b.dateindex02 < ${todayTime}`
+            }
+
             duplicateQuery+= ")";
 
 
