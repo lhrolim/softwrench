@@ -8,7 +8,7 @@ using softWrench.sW4.Web.Controllers;
 
 namespace softwrench.sw4.web.Controllers.Umc {
     public class UmcRequestApiController : ApiController {
-        
+
         private const string Client = "umc";
 
         [Import]
@@ -19,8 +19,10 @@ namespace softwrench.sw4.web.Controllers.Umc {
             if (!Client.Equals(ApplicationConfiguration.ClientName)) {
                 return null;
             }
-            await DataController.Post(wrapper);
-            return new BlankApplicationResponse();
+            var response = await DataController.Post(wrapper) as ApplicationDetailResult;
+            return new BlankApplicationResponse() {
+                Id = response?.ResultObject.GetStringAttribute("ticketid")
+            };
         }
     }
 }

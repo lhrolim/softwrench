@@ -19,8 +19,11 @@
             const schemaToSave = this.crudContextHolderService.currentSchema();
             const datamap = this.crudContextHolderService.rootDataMap();
             this.spinService.start();
-            return this.submitService.submit(schemaToSave, datamap, parameters).finally(() => this.spinService.stop()).then(() => {
-                window.location.pathname = url("/umcrequestsuccess");
+            return this.submitService.submit(schemaToSave, datamap, parameters).finally((result) => {
+                this.spinService.stop();
+                return result;
+            }).then((result) => {
+                window.location = url("/umcrequestsuccess") + `?id=${result.id}`;
             });
         }
     }

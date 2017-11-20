@@ -2,7 +2,9 @@
     "use strict";
 
     function UmcRequestController($scope) {
-        $scope.newRequest = () => window.location.pathname = url("/umcrequest");
+        $scope.newRequest = () => window.location = url("/umcrequest");
+
+        $scope.userid = () => JSON.parse(homeModel.ResultDataJSON).resultObject;
     }
 
     UmcRequestController.$inject = ["$scope"];

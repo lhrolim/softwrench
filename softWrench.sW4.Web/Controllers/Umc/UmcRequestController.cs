@@ -39,7 +39,7 @@ namespace softwrench.sw4.web.Controllers.Umc {
         }
 
         [AllowAnonymous]
-        public ActionResult Success() {
+        public ActionResult Success(string id) {
             if (!Client.Equals(ApplicationConfiguration.ClientName)) {
                 return null;
             }
@@ -50,7 +50,8 @@ namespace softwrench.sw4.web.Controllers.Umc {
 
             var response = new softWrench.sW4.Data.API.Response.GenericApplicationResponse() {
                 Title = "Success",
-                RedirectURL = "/Content/Customers/umc/htmls/SubmitSuccess.html"
+                RedirectURL = "/Content/Customers/umc/htmls/SubmitSuccess.html",
+                ResultObject = id
             };
 
             model.ResultDataJSON = JsonConvert.SerializeObject(response, Formatting.None, new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() });
