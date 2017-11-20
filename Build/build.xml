@@ -315,7 +315,7 @@
         
         <!-- Include a testcontainer for each test project -->
         <arg line="/testcontainer:${TestPath}" />
-        <arg line="/testcontainer:${TestPathWeb}" />
+        <arg line="/testcontainer:${TestWebPath}" />
         <arg line="/testcontainer:${TestPathUser}" />
         
         <arg line="/testsettings:${TestSettingsPath}" />
