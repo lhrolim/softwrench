@@ -67,7 +67,7 @@ namespace cts.commons.persistence {
             parameters = result.Parameters;
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
-            query.SetFlushMode(FlushMode.Never);
+            query.SetFlushMode(FlushMode.Manual);
             LogQuery(queryst, queryAlias, parameters);
             if (result.Parameters == null) {
                 return query;
@@ -429,6 +429,7 @@ namespace cts.commons.persistence {
             return TransactionalInterceptor.GetContext(this).Session ?? _sessionManager.OpenSession();
         }
 
+        #pragma warning disable 1998
         public async Task<ITransaction> BeginTransactionAsync(ISession session) {
             var txContext = TransactionalInterceptor.GetContext(this);
             if (txContext.Transaction != null) {
@@ -436,6 +437,7 @@ namespace cts.commons.persistence {
             }
             return session.BeginTransaction();
         }
+        #pragma warning restore 1998
 
         public ITransaction BeginTransaction(ISession session) {
             var txContext = TransactionalInterceptor.GetContext(this);

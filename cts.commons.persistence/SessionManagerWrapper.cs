@@ -80,7 +80,7 @@ namespace cts.commons.persistence {
             //nhibernate is always readonly
             var openSession = _sessionFactory.OpenSession();
             if (_isReadOnly){
-                openSession.FlushMode = NHibernate.FlushMode.Never;
+                openSession.FlushMode = NHibernate.FlushMode.Manual;
             }
             return openSession;
         }
