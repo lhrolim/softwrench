@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.problem.classes;
+using softwrench.sw4.problem.classes.api;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.Persistence.Engine.Exception;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -114,9 +115,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             problem.ProblemHandler = problemData.ProblemHandler;
 
 
-            _problemManager.RegisterOrUpdateProblem(SecurityFacade.CurrentUser().UserId.Value, problem, null);
+            problem = _problemManager.RegisterOrUpdateProblem(SecurityFacade.CurrentUser().UserId.Value, problem, null);
             if (operationData.ProblemData.PropagateException) {
-                throw e;
+                throw new ProblemExceptionWrapper(e,problem);
             }
             return null;
         }

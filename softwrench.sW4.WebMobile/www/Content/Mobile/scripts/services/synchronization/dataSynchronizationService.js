@@ -70,7 +70,7 @@
                     const datamap = newDataMap.jsonFields ? JSON.parse(newDataMap.jsonFields) : newDataMap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
                     const idx = searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
-                    const insertQuery = { query: entities.DataEntry.insertionQueryPattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
+                    const insertQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                     queryArray.push(insertQuery);
                 });
 

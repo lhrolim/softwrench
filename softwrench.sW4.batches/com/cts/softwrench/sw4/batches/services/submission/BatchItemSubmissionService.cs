@@ -81,7 +81,11 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
 
                     } catch (Exception e) {
-                        if (options.GenerateProblems) {
+                        if (e is ProblemExceptionWrapper) {
+                            var wrapper = (ProblemExceptionWrapper)e;
+                            e = e.InnerException;
+                            batch.Problems.Add(originalItem.RemoteId, wrapper.Problem);
+                        } else if (options.GenerateProblems) {
                             Log.Error("error on batch submission", e);
                             var problemDataMap = originalItem.Id == null ? null : originalItem.DataMapJsonAsString;
                             var problem = _problemManager.Register(originalItem.Application, originalItem.ItemId, itemToSubmit.CrudData.UserId,

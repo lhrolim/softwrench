@@ -190,8 +190,8 @@
     <Reference Include="softwrench.sw4.batch.api, Version=1.1.6514.37490, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6514.37490\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.problem, Version=1.1.6530.32057, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.problem.1.1.6530.32057\lib\net461\softwrench.sw4.problem.dll</HintPath>
+    <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.user, Version=1.4.6522.20442, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.user.1.4.6522.20442\lib\net461\softwrench.sw4.user.dll</HintPath>
