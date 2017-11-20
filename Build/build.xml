@@ -12,7 +12,7 @@
   <property name="FullSolutionFile" value="../FullSolution.sln" />
   <property name="TestSettingsPath" value="../TestSettings1.testsettings" />
   <property name="TestPath" value="../softwrench.sW4.test/bin/Debug/softwrench.sW4.test.dll" />
-  <property name="TestPathWeb" value="../softWrench.sW4.Web.Test/bin/Debug/softWrench.sW4.Web.Test.dll" />
+  <property name="TestWebPath" value="../softWrench.sW4.Web.Test/bin/Debug/softWrench.sW4.Web.Test.dll" />
   <property name="TestPathUser" value="../softwrench.sw4.user.test/bin/Debug/softwrench.sw4.user.test.dll" />
   <if test="${environment::variable-exists('outputdir')}">
     <property name="OutputDir" value="${environment::get-variable('outputdir')}" />
