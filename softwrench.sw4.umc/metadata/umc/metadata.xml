@@ -42,12 +42,58 @@
   <applications>
     <application entity="SR" name="servicerequest" title="Service Request" role="sr">
       <schemas>
-        <list title="Service Request Grid" stereotype="list.selection" redeclaring="false">
-          <customization position="description">
-            <field attribute="description" label="Work Request">
-              <renderer type="default" params="excelwidth=50" />
-            </field>
-          </customization>
+        <list title="Service Request Grid" stereotype="list.selection" redeclaring="true">
+          <field attribute="ticketid" label="SR#">
+            <renderer type="default" params="width=5%" />
+          </field>
+          <field attribute="description" label="Work Request">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="reportedby" label="Reported By">
+            <renderer type="default" params="width=12%" />
+          </field>
+          <field attribute="reportedemail" label="Reported By Email">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field label="Reported Date" attribute="reportdate">
+            <renderer type="datetime" params="width=10%" />
+          </field>
+          <field attribute="owner" label="Owner">
+            <renderer type="default" params="width=12%" />
+          </field>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=8%;grid=servicerequest;column=status" />
+          </field>
+          <field attribute="internalpriority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+          </field>
+          <field attribute="communicationcounter" tooltip="Communications" hidden="true">
+            <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
+          </field>
+          <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
+            <renderer type="icon" params="hideValueOnTooltip=true;icon=fa-paperclip;autoloadcomposition=attachment_"/>
+          </field>
+          <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
+            <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
+          </field>
+          <field attribute="statusicons" tooltip="Status Icons">
+            <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="sr.ticketuid desc"/>
+            <property key="list.search.compositionstoexclude" value="attachment,relatedrecord"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Create" icon="fa-pencil" label="Change Status"
+                       showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
+                       service="genericTicketService" method="initBatchStatusChange"
+                       parameters="schema,datamap" cssclasses="large-button"/>
+            </commandgroup>
+          </commandbars>
         </list>
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
           <customization position="description">
@@ -109,7 +155,13 @@
             <field attribute="description" label="Work Request">
               <renderer type="default" params="excelwidth=50" />
             </field>
-          </customization>         
+          </customization>
+          <customization position="+reportedby">
+            <field attribute="reportedemail" label="Reported By Email"/>
+            <field label="Reported Date" attribute="reportdate">
+              <renderer type="datetime" />
+            </field>
+          </customization>
         </schema>
         
         <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request" redeclaring="false">
@@ -144,12 +196,72 @@
     
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <schemas>
-        <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web" redeclaring="false">
-          <customization position="description">
-            <field attribute="description" label="Work Request">
+        <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web" redeclaring="true">
+          <filters>
+            <optionfilter attribute="status" provider="synstatus_.description" displaycode="true" style="width:300px" />
+            <optionfilter attribute="location" provider="location_.description" allowblank="true" displaycode="true"/>
+            <optionfilter attribute="asset_.description" provider="asset_.description" allowblank="true" style="width:300px" displaycode="true" whereclause="!@assetnum in (!@#value)"/>
+            <optionfilter attribute="wopriority" displaycode="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="High" value="1" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Medium" value="2" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Low" value="3" />
+            </optionfilter>
+            <optionfilter attribute="statusicons" displaycode="true">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Communications" value="communicationcounter" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Attachments" value="attachmentcounter" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Related Records" value="relatedcounter" />
+            </optionfilter>
+          </filters>
+          <field attribute="wonum" label="WO#" >
+            <renderer type="default" params="width=8%" />
+          </field>
+          <field attribute="description" label="Work Request">
             <renderer type="default" params="excelwidth=50" />
           </field>
-          </customization>
+          <field label="Reported Date" attribute="reportdate">
+            <renderer type="datetime" params="width=10%" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="asset_.description" label="Asset Description">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="siteid" label="Site" hidden="true"/>
+          <field attribute="status" label="Status">
+            <renderer type="statuscolor" params="width=8%;grid=workorder;column=status" />
+          </field>
+          <field attribute="wopriority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=5%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+          </field>
+          <field attribute="communicationcounter" tooltip="Communications" hidden="true">
+            <renderer type="icon" params="icon=fa-envelope-o;autoloadcomposition=commlog_"/>
+          </field>
+          <field attribute="attachmentcounter" tooltip="Attachments" hidden="true">
+            <renderer type="icon" params="hideValueOnTooltip=true;icon=fa-paperclip;autoloadcomposition=attachment_"/>
+          </field>
+          <field attribute="relatedcounter" tooltip="Related Records" hidden="true">
+            <renderer type="icon" params="icon=fa-tags;autoloadcomposition=relatedrecord_"/>
+          </field>
+          <field attribute="statusicons" tooltip="Status Icons">
+            <renderer type="statusicons" params="width=9%;iconcolumns=communicationcounter,attachmentcounter,relatedcounter;icon=fa-tachometer;headericon=true;showsort=false"/>
+          </field>
+          <properties>
+            <property key="list.click.schema" value="editdetail"/>
+            <property key="list.defaultorderby" value="workorder.statusdate desc"/>
+            <property key="list.noresultsnewschema" value="newdetail"/>
+            <property key="list.search.compositionstoexclude" value="assetmeter,locationmeter"/>
+            <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
+          </properties>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Create" icon="fa-pencil" label="Change Status"
+                       showexpression="service:genericTicketService.hasSelectedItemsForBatchStatus"
+                       service="genericTicketService" method="initBatchStatusChange"
+                       parameters="schema,datamap" cssclasses="large-button"/>
+            </commandgroup>
+          </commandbars>
         </schema>
         
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
