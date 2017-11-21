@@ -8,13 +8,12 @@
 
         const log = $log.get("queryListBuilderService", ["list", "search"]);
 
-        function buildExtraLaborAttribute(childListSchema, childEntityName) {
+        function getLaborCode() {
             //TODO: make more generic...
             const user = securityService.currentFullUser();
             if (user == null) {
                 return securityService.logout();
             }
-
             let realLabor = user.properties["laborcode"];
             if (!realLabor) {
                 //keeping here for compatibility backwards
@@ -25,6 +24,13 @@
                     realLabor = personId.substring(0, 1).toUpperCase() + personId.substring(dotIndex + 1, personId.length).toUpperCase();
                 }
             }
+            return realLabor;
+        }
+
+        function buildExtraLaborAttribute(childListSchema, childEntityName) {
+            
+            const realLabor = getLaborCode();
+
 
             const laborIdxName = searchIndexService.getIndexColumn(childListSchema.applicationName, childListSchema, "laborcode").replace("`root`", "`" + childEntityName + "`");
 
@@ -65,17 +71,17 @@
             const tomorrowTime = todayTime + day;
 
             //this handles SWOFF-342
-            let duplicateQuery = "`" + childEntityName + "`.dateindex02 = (select max(b.dateindex02) from AssociationData b where b.textindex01 = `" + childEntityName + "`.textindex01 and b.application = 'assignment' ";
+            let duplicateQuery = "`" + childEntityName + "`.dateindex02 = (select max(b.dateindex02) from AssociationData b where b.textindex01 = `" + childEntityName + "`.textindex01 and b.application = 'assignment' and b.textindex02 = " + `'${getLaborCode()}'`;
 
             if (mainListSchema.applicationName === "todayworkorder") {
-                duplicateQuery += ` and b.dateindex02 <= ${tomorrowTime}` 
+                duplicateQuery += ` and b.dateindex02 <= ${tomorrowTime}`
             }
 
             else if (mainListSchema.applicationName === "pastworkorder"){
                 duplicateQuery += ` and b.dateindex02 < ${todayTime}`
             }
 
-            duplicateQuery+= ")";
+            duplicateQuery += ")";
 
 
             query += `${mainIdx} = ${leftJoinedIndex} and ${extraLaborQuery} and ${associatioNameQuery}  and ${duplicateQuery} )`;
