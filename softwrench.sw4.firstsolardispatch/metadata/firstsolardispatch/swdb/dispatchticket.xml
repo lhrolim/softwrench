@@ -149,26 +149,20 @@
 
               <section>
                 <renderer type="default" params="class=col-md-3"/>
-                <optionfield attribute="dispatchtype" label="Choose the desired Dispatch Response Time" default="immediate">
+                <optionfield attribute="immediatedispatch" label="Choose the desired Dispatch Response Time" default="immediate">
                   <renderer type="radio" params="vertical=true"/>
-                  <option label="Immediate" value="immediate"/>
-                  <option label="Delayed" value="delayed"/>
+                  <option label="Immediate" value="true"/>
+                  <option label="Delayed" value="false"/>
                 </optionfield>
               </section>
 
               <section orientation="horizontal">
-                <renderer type="default" params="class=col-md-3 verticaloffset"/>
-                <field attribute="expecteddate" label="" enableexpression="@dispatchtype === 'delayed'">
-                  <renderer type="datetime" params="position=top;allowpast=false;"/>
+                <renderer type="default" params="class=col-md-4 verticaloffset"/>
+                <field attribute="dispatchexpecteddate" label="" enableexpression="@immediatedispatch === 'false'" requiredexpression="@immediatedispatch === 'false'">
+                  <renderer type="datetime" params="position=top;allowpast=false;showtime=true"/>
                 </field>
-                <section resourcepath="/Content/Customers/firstsolardispatch/htmls/templates/dispatchsection.html"/>
-
+                <section resourcepath="/Content/Customers/firstsolardispatch/htmls/templates/dispatchbutton.html"/>
               </section>
-
-              <!--              <section orientation="horizontal">-->
-              <!--                <field label="" attribute="#fake"></field>-->
-              <!--              </section>-->
-
             </section>
 
 

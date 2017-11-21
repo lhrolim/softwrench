@@ -73,6 +73,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Property]
         public string Comments { get; set; }
 
+        [Property]
+        public bool ImmediateDispatch { get; set; }
+
+        [Property]
+        public DateTime? DispatchExpectedDate { get; set; }
+
+
         [Bag(0, Table = "DISP_INVERTER", Cascade = "all", Lazy = CollectionLazy.False, Inverse = true, OrderBy = "AssetNum asc")]
         [Key(1, Column = "ticketid", NotNull = true)]
         [OneToMany(2, ClassType = typeof(Inverter))]

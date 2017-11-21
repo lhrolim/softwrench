@@ -39,12 +39,18 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var baseData = await base.FetchDetailDataMap(application, user, request);
             baseData.SetAttribute("#originalstatus", baseData.GetAttribute("status"));
+            if (baseData.ContainsAttribute("immediatedispatch",true))
+            {
+                baseData.SetAttribute("immediatedispatch", baseData.GetAttribute("immediatedispatch").ToString().ToLower());
+            }
+            
+
             return baseData;
         }
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var compData = await base.GetCompositionData(application, request, currentData);
-            
+
 
             if (request.CompositionList != null && !request.CompositionList.Contains("#statushistory_")) {
                 return compData;
@@ -54,7 +60,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             var statusResult = new EntityRepository.SearchEntityResult();
             var totalCount = entries.Count();
 
-            
+
 
             statusResult.PaginationData = new PaginatedSearchRequestDto(totalCount, 1, totalCount, null, new List<int>() { totalCount });
             statusResult.ResultList = new List<Dictionary<string, object>>();
@@ -76,10 +82,17 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
             var ticket = GetOrCreate<DispatchTicket>(operationWrapper, true);
+
+            var dispatching = crudoperationData.GetBooleanAttribute("#dispatching");
+
             var user = SecurityFacade.CurrentUser().DBUser;
             ticket.ReportedBy = user;
             var hasStatusChange = crudoperationData.GetStringAttribute("#originalstatus") !=
                                   crudoperationData.GetStringAttribute("status");
+
+            if (ticket.ImmediateDispatch) {
+                ticket.DispatchExpectedDate = DateTime.Now;
+            }
 
             if (hasStatusChange) {
                 ticket.StatusReportedBy = user;
