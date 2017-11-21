@@ -1215,7 +1215,7 @@
             <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
           </composition>
 
-          <field label="Outage Requested" attribute="outreq" defaultexpression="false">
+          <field label="Outage Required" attribute="outreq" defaultexpression="false">
             <renderer type="checkbox" />
           </field>
         </schema>
@@ -1249,8 +1249,6 @@
         <schema id="newdetail" title="Work Order" stereotype="detailnew" platform="mobile" redeclaring="true" parentschema="basedetail">
           <event type="onload" service="fsWorkorderOfflineService" method="onNewDetailLoad"/>
         </schema>
-        
-        
         <!--#endregion -->
 
       </schemas>
