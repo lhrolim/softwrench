@@ -874,7 +874,7 @@
                 <section id="attachmentsection"/>
               </section>
             </section>
-          </customization>
+          </customization>          
         </schema>
 
 
@@ -890,6 +890,9 @@
             <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+            </field>
+            <field label="Outage Required" attribute="outreq" defaultexpression="false">
+              <renderer type="checkbox" />
             </field>
           </customization>
 
@@ -914,6 +917,9 @@
             <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
+            </field>
+            <field label="Outage Required" attribute="outreq" defaultexpression="false">
+              <renderer type="checkbox" />
             </field>
           </customization>
         </schema>
