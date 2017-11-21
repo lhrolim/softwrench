@@ -148,7 +148,7 @@
           <field attribute="#description" label="Description">
             <renderer type="default" params="width=30%"/>
           </field>
-          <field attribute="#outreq" label="Outage Requested" >
+          <field attribute="#outreq" label="Outage Required" >
             <renderer params="formatter=numberToBoolean" type="default"/>
           </field>
           <field attribute="#worktype" label="Work Type" />
