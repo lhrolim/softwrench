@@ -132,7 +132,7 @@
             }
 
             // sets the pre selected values from a option filter
-            this.setPreSelectedValue = function(gridSearch, filter) {
+            this.setPreSelectedValue = function (gridSearch, filter) {
                 if (filter.type !== "MetadataOptionFilter") {
                     return;
                 }
@@ -146,7 +146,7 @@
                     searchable.optionChanged(filter.preselected);
                     return;
                 }
-                
+
                 const preselectedValues = [];
                 angular.forEach(searchable.options, option => {
                     if (option.preSelected) {
@@ -171,6 +171,31 @@
                     this.setPreSelectedValue(gridSearch, filter);
                 });
             }
+        }
+
+
+        handleQuickSearch(quickSearch,joinObj) {
+            if (!quickSearch || !quickSearch.value) {
+                return "1=1";
+            }
+
+            const value = quickSearch.value;
+
+            let quickSearchWc = '(`root`.datamap like \'%:"%{0}%\''.format(value);
+            quickSearchWc += ' or `root`.textindex01 like "%{0}%"'.format(value);
+            quickSearchWc += ' or `root`.textindex02 like "%{0}%" '.format(value);
+
+            if (!!joinObj.leftJoinEntities && joinObj.leftJoinEntities.length > 0) {
+                joinObj.leftJoinEntities.forEach(item => {
+                    //searching through related joined indexes
+                    quickSearchWc += ' or `{0}`.textindex01 like "%{1}%"'.format(item, value);
+                    quickSearchWc += ' or `{0}`.textindex02 like "%{1}%" '.format(item, value);
+                })
+            }
+
+            quickSearchWc += ")";
+            return quickSearchWc;
+
         }
 
         initGridSearch() {

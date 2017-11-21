@@ -446,16 +446,13 @@
                     const listSchema = crudContextHolderService.currentListSchema();
                     const appName = crudContextHolderService.currentApplicationName();
 
-                    let extraWhereClause = "1=1";
-                    if (quickSearch.value) {
-                        extraWhereClause += ' and `root`.datamap like \'%:"{0}%\''.format(quickSearch.value);
-                    }
+                    const joinObj = queryListBuilderService.buildJoinParameters(listSchema);
+
+                    let extraWhereClause = crudSearchService.handleQuickSearch(quickSearch,joinObj);
 
                     extraWhereClause += searchIndexService.buildSearchQuery(appName, listSchema, gridSearch);
-
+                    
                     let baseQuery = menuModelService.buildListQuery(crudContext.currentApplicationName, crudContext.currentMenuId, extraWhereClause);
-
-                    const joinObj = queryListBuilderService.buildJoinParameters(listSchema);
 
                     if (internalListContext.lastPageLoaded === 1) {
                         const countQuery = baseQuery;

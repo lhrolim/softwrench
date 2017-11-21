@@ -139,7 +139,7 @@
                 additionalJoins.push(doBuildLeftJoin(listSchema, entity));
             });
 
-            return { additionalJoins, extraProjectionFields: Array.from(extraProjectionFields.values()) };
+            return { additionalJoins, extraProjectionFields: Array.from(extraProjectionFields.values()),leftJoinEntities: Array.from(leftJoinEntities) };
         }
 
 
@@ -147,7 +147,7 @@
 
         //#region Service Instance
         const service = {
-            buildJoinParameters,
+            buildJoinParameters
         };
         return service;
         //#endregion
