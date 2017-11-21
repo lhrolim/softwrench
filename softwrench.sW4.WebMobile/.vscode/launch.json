@@ -107,8 +107,8 @@
             "target": "chrome",
             "simulatePort": 4400,
             "livereload": false,
-            "sourceMaps": true,
             "corsproxy":false,
+            "sourceMaps": true,
             "cwd": "${workspaceRoot}"
         },
         {

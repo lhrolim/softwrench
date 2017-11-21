@@ -51,11 +51,11 @@
           <field attribute="createddate" label="Created Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
-          
+
           <field attribute="statusdate" label="Status Change Date"/>
           <field attribute="reportedby_.username" label="Reported By"/>
           <field attribute="status" label="Status"/>
-          
+
         </list>
 
 
@@ -70,7 +70,7 @@
             <field attribute="#originalstatus" hidden="true"/>
             <optionfield label="Status" attribute="status">
               <filter clientfunction="fsdTicketService.filterStatus"/>
-              
+
               <option label="Dispatched" value="DISPATCHED"/>
               <option label="Accepted" value="ACCEPTED"/>
               <option label="Rejected" value="REJECTED"/>
@@ -79,7 +79,7 @@
             </optionfield>
             <field attribute="reportedby_.username" label="Reported By" readonly="true"/>
           </section>
-          
+
           <section>
             <header displacement="ontop" label="Site Information" params="fieldset=true" />
 
@@ -98,27 +98,27 @@
             </section>
             <section orientation="horizontal" parameters="">
               <renderer type="default" params="childinputsize=medium" />
-              
+
               <section>
                 <field attribute="sitecontact" label="Site Contact" enableexpression="@gfedid != null"/>
                 <field attribute="sitecontactphone" enableexpression="@gfedid != null"/>
               </section>
               <field attribute="supportphone" label="24/7 Technical Support #" enableexpression="@gfedid != null"/>
             </section>
-            
+
             <field attribute="comments" label="Comments">
               <renderer type="richtext"/>
             </field>
-          
+
             <composition inline="true" relationship="attachments" label="Attachments" detailschema="" fetchtype="lazy">
               <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;"/>
-            </composition>  
-          
+            </composition>
+
           </section>
-          
+
           <section>
             <header displacement="ontop" label="First Solar Contacts" params="fieldset=true" />
-          
+
             <section orientation="horizontal" parameters="">
               <renderer type="default" params="childinputsize=medium" />
               <section>
@@ -140,6 +140,40 @@
             </composition>
           </section>
 
+          <section showexpression="@gfedid != null">
+            <header displacement="ontop" label="Dispatch" params="fieldset=true" />
+            <!--            <field label="Choose the desired Dispatch Response Time">-->
+            <!--              <renderer type="label"/>-->
+            <!--            </field>-->
+            <section orientation="horizontal">
+
+              <section>
+                <renderer type="default" params="class=col-md-3"/>
+                <optionfield attribute="dispatchtype" label="Choose the desired Dispatch Response Time" default="immediate">
+                  <renderer type="radio" params="vertical=true"/>
+                  <option label="Immediate" value="immediate"/>
+                  <option label="Delayed" value="delayed"/>
+                </optionfield>
+              </section>
+
+              <section orientation="horizontal">
+                <renderer type="default" params="class=col-md-3 verticaloffset"/>
+                <field attribute="expecteddate" label="" enableexpression="@dispatchtype === 'delayed'">
+                  <renderer type="datetime" params="position=top;allowpast=false;"/>
+                </field>
+                <section resourcepath="/Content/Customers/firstsolardispatch/htmls/templates/dispatchsection.html"/>
+
+              </section>
+
+              <!--              <section orientation="horizontal">-->
+              <!--                <field label="" attribute="#fake"></field>-->
+              <!--              </section>-->
+
+            </section>
+
+
+          </section>
+
 
 
           <tab label="Status History" id="statushistory" icon="fa fa-history">
@@ -147,8 +181,8 @@
               <collectionproperties allowcreation="false" listschema="statusrepresentation"/>
             </composition>
           </tab>
-          
-          
+
+
         </schema>
 
         <schema id="statusrepresentation" stereotype="list">

@@ -12,7 +12,7 @@ UpgradeLog2.*
 .DS_Store
 Thumbs.db
 /.vs
-/.vscode
+/.vscode/simulate
 softwrench.sw4.jstest/jenkinstest-results.xml
 softwrench.sw4.jstest/test-results.testxml
 softwrench.sw4.jstest/node_modules/
@@ -51,7 +51,7 @@ softWrench.sW4.WebMobile/plugins/windows.json
 softWrench.sW4.WebMobile/bower_components/
 softWrench.sW4.WebMobile/simulation/
 softWrench.sW4.WebMobile/node_modules/
-softWrench.sW4.WebMobile/.vscode/
+softWrench.sW4.WebMobile/.vscode/simulate/
 softWrench.sW4.WebMobile/tmp/
 softWrench.sW4.WebMobile/www/Content/public/
 !softWrench.sW4.WebMobile/www/Content/Vendor/
@@ -77,11 +77,10 @@ obj
 /Releases
 /tmp
 */-/
-*/.vscode/
+
 */_CreateNewNuGetPackage/
 TestResults
 
-.vscode/*
 
 
 # 3rd-party stuff copied during build

@@ -196,6 +196,7 @@
     </Content>
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchsection.html" />
     <Content Include="web_content\firstsolardispatch\images\branding.png" />
     <Content Include="web_content\firstsolardispatch\images\footer.jpg" />
     <Content Include="web_content\firstsolardispatch\images\header-email.jpg" />
