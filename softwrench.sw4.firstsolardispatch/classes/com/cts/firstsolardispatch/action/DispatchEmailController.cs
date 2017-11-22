@@ -33,7 +33,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
             DispatchTicketStatus newStatus;
             Enum.TryParse(status, true, out newStatus);
 
-            await StatusService.ValidateStatusChange(oldStatus, newStatus, ticket, false);
+            StatusService.ValidateStatusChange(oldStatus, newStatus, ticket, false);
 
             ticket.Status = newStatus;
             await DAO.SaveAsync(ticket);

@@ -105,7 +105,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
                 ticket.Status = dispatching ? ticket.ImmediateDispatch ? DispatchTicketStatus.DISPATCHED : DispatchTicketStatus.SCHEDULED : DispatchTicketStatus.DRAFT;
             }
             var hasStatusChange = oldStatus != ticket.Status || isCreation;
-            await StatusService.ValidateStatusChange(oldStatus, ticket.Status, ticket);
+            StatusService.ValidateStatusChange(oldStatus, ticket.Status, ticket);
 
             if (ticket.AccessToken == null) {
                 ticket.AccessToken = TokenUtil.GenerateDateTimeToken();

@@ -12,7 +12,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         [Import]
         public IAuditManager AuditManager { get; set; }
 
-        public async Task ValidateStatusChange(DispatchTicketStatus old, DispatchTicketStatus newone, DispatchTicket ticket, bool acceptSame = true) {
+        public void ValidateStatusChange(DispatchTicketStatus old, DispatchTicketStatus newone, DispatchTicket ticket, bool acceptSame = true) {
             if (newone == old) {
                 if (acceptSame) return;
                 StatusException(old, newone);
