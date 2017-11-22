@@ -23,6 +23,7 @@
             dm["gpslongitude"] = fields["site_.gpslongitude"];
             dm["sitecontact"] = fields["site_.sitecontact"];
             dm["sitecontactphone"] = fields["site_.sitecontactphone"];
+            dm["maintenaceprovider"] = fields["site_.maintenaceprovider"];
             dm["supportphone"] = fields["site_.supportphone"];
             dm["primarycontact"] = fields["site_.primarycontact"];
             dm["primarycontactphone"] = fields["site_.primarycontactphone"];

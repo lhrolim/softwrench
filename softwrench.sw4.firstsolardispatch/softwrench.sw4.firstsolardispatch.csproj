@@ -171,6 +171,7 @@
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\BaseHandler.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\FirstSolarPartNeededHandler.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\FirstSolarInverterHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3238Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3224Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3242Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3250Migration.cs" />
@@ -220,6 +221,7 @@
     <Content Include="web_content\firstsolardispatch\images\signin-xxs.jpg" />
     <Content Include="web_content\firstsolardispatch\scripts\aaa_firstsolardispatchmodule.js" />
     <Content Include="web_content\firstsolardispatch\scripts\dispatchbutton.js" />
+    <Content Include="web_content\firstsolardispatch\scripts\fsdpartneededService.js" />
     <Content Include="web_content\firstsolardispatch\scripts\fsdticketService.js" />
     <Content Include="web_content\firstsolardispatch\scripts\fsdinverterService.js" />
     <Content Include="web_content\firstsolardispatch\scripts\fsdcompositionService.js" />

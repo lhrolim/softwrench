@@ -39,7 +39,7 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="errorcodes" hidden="true"/>
           <field attribute="failureclass" hidden="true"/>
-
+          <field attribute="failuredetails" hidden="true"/>
           <composition inline="true" relationship="parts" label="" detailschema="" printschema="" fetchtype="eager" hidden="true">
             <collectionproperties listschema="partneededline"/>
           </composition>
@@ -67,6 +67,10 @@
               <option value="2" label="Class 2 - Inverter Derate"/>
             </optionfield>
           </section>
+
+          <field attribute="failuredetails" label="Failure Details">
+            <renderer type="richtext"/>
+          </field>
           
           <optionfield attribute="partsrequired" label="Parts Required?">
             <renderer type="radio" params="vertical=true"/>

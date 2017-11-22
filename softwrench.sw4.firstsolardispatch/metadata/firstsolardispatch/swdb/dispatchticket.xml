@@ -65,6 +65,7 @@
           <field attribute="id" hidden="true"/>
           <field attribute="site_.siteid" hidden="true"/>
           <field attribute="site_.locationprefix" hidden="true"/>
+          <field attribute="site_.wherehouseaddress" hidden="true"/>
 
           <section orientation="horizontal" showexpression="@id != null">
             <header displacement="ontop" label="Ticket Information" params="fieldset=true" />
@@ -88,7 +89,7 @@
 
             <section orientation="horizontal" parameters="">
               <section id="gfed">
-                <association label="Site" target="gfedid" labelfield="site_.facilityname" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix" >
+                <association label="Site" target="gfedid" labelfield="site_.facilityname" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix,maintenaceprovider,wherehouseaddress" >
                   <renderer type="lookup" params="application=_GfedSite;schemaId=ticketLookupList;"/>
                   <event type="afterchange" service="fsdTicketService" method="siteSelected"/>
                 </association>
@@ -101,7 +102,7 @@
             </section>
             <section orientation="horizontal" parameters="">
               <renderer type="default" params="childinputsize=medium" />
-
+              <field attribute="maintenaceprovider" label="Maintenace Provider" enableexpression="@gfedid != null"/>
               <section>
                 <field attribute="sitecontact" label="Site Contact" enableexpression="@gfedid != null"/>
                 <field attribute="sitecontactphone" enableexpression="@gfedid != null"/>

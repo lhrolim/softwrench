@@ -53,6 +53,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         public string SiteContactPhone { get; set; }
 
         [Property]
+        public string MaintenaceProvider { get; set; }
+
+        [Property]
         public string SupportPhone { get; set; }
 
         // tech - site manager
@@ -84,6 +87,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
 
         [Property]
         public decimal? GpsLongitude { get; set; }
+
+        [Property]
+        public string WherehouseAddress { get; set; }
 
     }
 }

@@ -45,6 +45,11 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         }
 
         [Property]
+        public string FailureDetails {
+            get; set;
+        }
+
+        [Property]
         public bool PartsRequired {
             get; set;
         }

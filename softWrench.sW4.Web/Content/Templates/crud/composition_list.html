@@ -184,6 +184,7 @@
                                                data-show-meridian="{{column.rendererParameters['showmeridian']}}"
                                                data-allow-past="{{column.rendererParameters['allowpast']}}"
                                                data-allow-future="{{column.rendererParameters['allowfuture']}}"
+                                               ng-enabled="isModifiableEnabled(column,compositionitem)"
                                                class="form-control">
                                         <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
                                             <i class="datetime-class"></i>
@@ -204,6 +205,7 @@
                                                maxlength="{{column.rendererParameters['maxlength']}}"
                                                placeholder="{{column.rendererParameters['placeholder']}}"
                                                ng-init="initField(column,compositionitem)"
+                                               ng-enabled="isModifiableEnabled(column,compositionitem)"
                                                dynamic-name="column.attribute" />
                                         <span class="input-group-addon" ng-if="column.rendererParameters['append']!=null">{{column.rendererParameters['append']}}</span>
                                     </div>
