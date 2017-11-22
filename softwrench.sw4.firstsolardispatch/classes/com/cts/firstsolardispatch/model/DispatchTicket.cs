@@ -5,7 +5,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
 using NHibernate.Type;
-using softwrench.sw4.batch.api.entities;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Entities.Attachment;
 
@@ -13,6 +12,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
 
     [Class(Table = "DISP_TICKET", Lazy = false)]
     public class DispatchTicket : IBaseEntity {
+        public const string ByToken = "from DispatchTicket where AccessToken = ?";
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public int? Id {
@@ -89,6 +90,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Key(1, Column = "ownerid")]
         [OneToMany(2, ClassType = typeof(DocLink))]
         public virtual IList<DocLink> Attachments { get; set; }
+
+        /// <summary>
+        /// Token used to change status without requiring the user to be authenticated
+        /// </summary>
+        [Property]
+        public string AccessToken { get; set; }
     }
 
 

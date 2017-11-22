@@ -5,6 +5,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
 
     [Class(Table = "GFED_SITE", Lazy = false)]
     public class GfedSite : IBaseEntity {
+        public const string FromGFedId = "from GfedSite where GfedId = ?";
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public int? Id {
@@ -53,17 +55,29 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Property]
         public string SupportPhone { get; set; }
 
+        // tech - site manager
         [Property]
         public string PrimaryContact { get; set; }
 
+        // tech - site manager
         [Property]
         public string PrimaryContactPhone { get; set; }
 
+        // tech - site manager
+        [Property]
+        public string PrimaryContactEmail { get; set; }
+
+        // RPM
         [Property]
         public string EscalationContact { get; set; }
 
+        // RPM
         [Property]
         public string EscalationContactPhone { get; set; }
+
+        // RPM
+        [Property]
+        public string EscalationContactEmail { get; set; }
 
         [Property]
         public decimal? GpsLatitude { get; set; }

@@ -163,11 +163,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\firstsolardispatch\action\DispatchEmailController.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\action\DispatchEmailTestController.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\dataset\FirstSolarDispatchTicketDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\dataset\FirstSolarInverterDataSet.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\config\FirstSolarDispatchConfigurations.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\BaseHandler.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\FirstSolarPartNeededHandler.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\FirstSolarInverterHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3224Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3242Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3250Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3218Migration.cs" />
@@ -176,6 +180,9 @@
     <Compile Include="classes\com\cts\firstsolardispatch\model\Inverter.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\PartNeeded.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\DispatchTicket.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchSchedullerService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchStatusService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -197,7 +204,7 @@
     </Content>
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
-
+    <Content Include="web_content\firstsolardispatch\htmls\templates\dispatch.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchbutton.html" />
     <Content Include="web_content\firstsolardispatch\images\branding.png" />
     <Content Include="web_content\firstsolardispatch\images\footer.jpg" />

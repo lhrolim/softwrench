@@ -34,6 +34,8 @@
 
           <filters>
             <optionfilter attribute="status" displaycode="false" style="width:300px" whereclause="status in (!@#value)" >
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Draft" value="DRAFT"/>
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Scheduled" value="SCHEDULED"/>
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Dispatched" value="DISPATCHED"/>
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Accepted" value="ACCEPTED"/>
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Rejected" value="REJECTED"/>
@@ -70,7 +72,8 @@
             <field attribute="#originalstatus" hidden="true"/>
             <optionfield label="Status" attribute="status">
               <filter clientfunction="fsdTicketService.filterStatus"/>
-
+              <option label="Draft" value="DRAFT"/>
+              <option label="Scheduled" value="SCHEDULED"/>
               <option label="Dispatched" value="DISPATCHED"/>
               <option label="Accepted" value="ACCEPTED"/>
               <option label="Rejected" value="REJECTED"/>
@@ -140,7 +143,7 @@
             </composition>
           </section>
 
-          <section showexpression="@gfedid != null">
+          <section showexpression="@gfedid != null &amp;&amp; (@status == 'DRAFT' || @status == 'SCHEDULED')">
             <header displacement="ontop" label="Dispatch" params="fieldset=true" />
             <!--            <field label="Choose the desired Dispatch Response Time">-->
             <!--              <renderer type="label"/>-->
@@ -149,7 +152,7 @@
 
               <section>
                 <renderer type="default" params="class=col-md-3"/>
-                <optionfield attribute="immediatedispatch" label="Choose the desired Dispatch Response Time" default="immediate">
+                <optionfield attribute="immediatedispatch" label="Choose the desired Dispatch Response Time" default="true">
                   <renderer type="radio" params="vertical=true"/>
                   <option label="Immediate" value="true"/>
                   <option label="Delayed" value="false"/>

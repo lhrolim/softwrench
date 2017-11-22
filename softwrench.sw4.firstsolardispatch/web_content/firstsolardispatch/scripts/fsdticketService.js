@@ -37,28 +37,24 @@
             const dm = this.crudContextHolderService.rootDataMap();
             
             if (!dm["id"]) {
-                return value === "DISPATCHED";
+                return value === "DRAFT";
             }
             const currentStatus = dm["#originalstatus"];
             if (currentStatus === value) {
                 return true;
             }
 
-            if (currentStatus === "REJECTED") {
-                return false;
-            }
             if (currentStatus === "ACCEPTED") {
                 return value === "ARRIVED";
             }
             if (currentStatus === "ARRIVED") {
                 return value === "RESOLVED";
             }
-
             if (currentStatus === "DISPATCHED") {
                 return value.equalsAny("ACCEPTED", "REJECTED");
             }
 
-            return value === "DISPATCHED";
+            return false;
 
         }
     }

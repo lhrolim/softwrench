@@ -8,11 +8,13 @@ using cts.commons.persistence.Transaction;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.handlers;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
-using softwrench.sW4.audit.classes.Services;
+using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services;
 using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
+using softWrench.sW4.Data.API.Response;
+using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -21,10 +23,11 @@ using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.dataset {
     public class FirstSolarDispatchTicketDataSet : SWDBApplicationDataset {
-        private const string StatusAuditAction = "dispatcher_status";
+        public const string StatusAuditAction = "dispatcher_status";
 
         [Import]
         public ISWDBHibernateDAO Dao { get; set; }
@@ -34,6 +37,15 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
 
         [Import]
         public IAuditManager AuditManager { get; set; }
+
+        [Import]
+        public DispatchSchedullerService SchedullerService { get; set; }
+
+        [Import]
+        public DispatchEmailService DispatchEmailService { get; set; }
+
+        [Import]
+        public DispatchStatusService StatusService { get; set; }
 
 
         protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
@@ -81,16 +93,28 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var crudoperationData = (CrudOperationData)operationWrapper.OperationData();
-            var ticket = GetOrCreate<DispatchTicket>(operationWrapper, true);
+            var isCreation = OperationConstants.CRUD_CREATE.Equals(operationWrapper.OperationName);
+            var dispatchingBase = crudoperationData.GetBooleanAttribute("#dispatching");
+            var dispatching = (dispatchingBase != null && dispatchingBase.Value);
 
-            var dispatching = crudoperationData.GetBooleanAttribute("#dispatching");
+            var ticket = GetOrCreate<DispatchTicket>(operationWrapper, false);
+            var oldStatus = ticket.Status;
+            EntityBuilder.PopulateTypedEntity((CrudOperationData) operationWrapper.OperationData(), ticket);
+
+            if (isCreation || dispatching) {
+                ticket.Status = dispatching ? ticket.ImmediateDispatch ? DispatchTicketStatus.DISPATCHED : DispatchTicketStatus.SCHEDULED : DispatchTicketStatus.DRAFT;
+            }
+            var hasStatusChange = oldStatus != ticket.Status || isCreation;
+            await StatusService.ValidateStatusChange(oldStatus, ticket.Status, ticket);
+
+            if (ticket.AccessToken == null) {
+                ticket.AccessToken = TokenUtil.GenerateDateTimeToken();
+            }
 
             var user = SecurityFacade.CurrentUser().DBUser;
             ticket.ReportedBy = user;
-            var hasStatusChange = crudoperationData.GetStringAttribute("#originalstatus") !=
-                                  crudoperationData.GetStringAttribute("status");
 
-            if (ticket.ImmediateDispatch) {
+            if (ticket.ImmediateDispatch && dispatching) {
                 ticket.DispatchExpectedDate = DateTime.Now;
             }
 
@@ -108,8 +132,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             //saving the ticket first in order to obtain a valid id
             ticket = await Dao.SaveAsync(ticket);
             if (hasStatusChange) {
-                AuditManager.CreateAuditEntry(StatusAuditAction, ApplicationName(), crudoperationData.Id,
-                    crudoperationData.UserId, ticket.Status.ToString(), DateTime.Now);
+                AuditManager.CreateAuditEntry(StatusAuditAction, ApplicationName(), ticket.Id.ToString(), ticket.Id.ToString(), ticket.Status.LabelName(), DateTime.Now);
             }
 
 
@@ -120,7 +143,22 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             InverterHandler.HandleInverters(crudoperationData, ticket, operationWrapper.ApplicationMetadata.Schema);
 
             ticket = await Dao.SaveAsync(ticket);
-            return new TargetResult(ticket.Id.ToString(), null, DataMap.BlankInstance("_dispatchticket"));
+
+            var targetResult = new TargetResult(ticket.Id.ToString(), null, DataMap.BlankInstance("_dispatchticket")) {
+                ReloadMode = ReloadMode.MainDetail
+            };
+
+            if (!hasStatusChange || !dispatching) return targetResult;
+
+            if (ticket.ImmediateDispatch) {
+                var site = await Dao.FindSingleByQueryAsync<GfedSite>(GfedSite.FromGFedId, ticket.GfedId);
+                DispatchEmailService.SendEmail(ticket, site);
+                //SchedullerService.ScheduleDispatch(ticket);
+            } else {
+                //SchedullerService.ScheduleDispatch(ticket);
+            }
+
+            return targetResult;
         }
 
         //        public IEnumerable<IAssociationOption> FilterAvailableStatus(AssociationPostFilterFunctionParameters postFilter){

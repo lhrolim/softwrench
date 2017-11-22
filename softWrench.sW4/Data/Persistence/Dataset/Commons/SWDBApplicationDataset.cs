@@ -19,11 +19,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
 
         protected T GetOrCreate<T>(OperationWrapper operationWrapper, bool populate) where T : new() {
             if (!OperationConstants.CRUD_UPDATE.Equals(operationWrapper.OperationName)) {
-                return EntityBuilder.PopulateTypedEntity((CrudOperationData)operationWrapper.OperationData(), new T());
+                return populate ? EntityBuilder.PopulateTypedEntity((CrudOperationData)operationWrapper.OperationData(), new T()) : new T();
             }
             var id = int.Parse(operationWrapper.Id);
             var item = SWDAO.FindByPK<T>(typeof(T), id);
-            return EntityBuilder.PopulateTypedEntity((CrudOperationData)operationWrapper.OperationData(), item);
+            return populate ? EntityBuilder.PopulateTypedEntity((CrudOperationData)operationWrapper.OperationData(), item) : item;
         }
 
 
