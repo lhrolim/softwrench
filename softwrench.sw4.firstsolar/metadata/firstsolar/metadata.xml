@@ -199,7 +199,7 @@
     <entity name="labtrans" idAttribute="labtransid">
       <attributes>
         <attribute name="warranty" type="varchar"/>
-        <attribute name="wodescription" type="varchar" query="(select description from workorder where wonum = !@refwo)"/>
+        <attribute name="wodescription" type="varchar" query="(select description from workorder where wonum = !@refwo and siteid = !@siteid)"/>
       </attributes>
       <relationships>
         <relationship to="warranty">
