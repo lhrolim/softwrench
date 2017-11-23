@@ -1416,6 +1416,16 @@
             getDatumForTopSuggestion: function getDatumForTopSuggestion() {
                 return this.getDatumForSuggestion(this._getSuggestions().first());
             },
+
+            getDatumForTopSuggestionOrNull: function getDatumForTopSuggestionOrNull() {
+                var suggestions = this._getSuggestions();
+                if (suggestions && suggestions.length === 1) {
+                    return this.getDatumForSuggestion(this._getSuggestions().first());
+                }
+                return null;
+            },
+
+
             update: function update(query, input) {
                 _.each(this.datasets, updateDataset);
                 function updateDataset(dataset) {
@@ -1530,6 +1540,10 @@
 //                this.dropdown.open();
             },
             _onBlurred: function onBlurred() {
+                if (this.autoselect && this.isActivated) {
+                    this.isActivated = false;
+                    this._autocomplete(true);    
+                }
                 this.isActivated = false;
                 this.dropdown.empty();
                 //cts:luiz --> little tweak to avoid closing the dropdown before it´s needed leading to a bad status
@@ -1545,6 +1559,8 @@
                 } else if (this.autoselect && topSuggestionDatum) {
                     this._select(topSuggestionDatum);
                     $e.preventDefault();
+                } else {
+                    this._autocomplete(true);
                 }
             },
             _onTabKeyed: function onTabKeyed(type, $e) {
@@ -1613,10 +1629,17 @@
                 hint = this.input.getHint();
                 query = this.input.getQuery();
                 isCursorAtEnd = laxCursor || this.input.isCursorAtEnd();
-                if (hint && query !== hint && isCursorAtEnd) {
-                    datum = this.dropdown.getDatumForTopSuggestion();
-                    datum && this.input.setInputValue(datum.value);
-                    this.eventBus.trigger("autocompleted", datum.raw, datum.datasetName);
+                if (hint != null && query !== hint && isCursorAtEnd) {
+                    datum = this.dropdown.getDatumForCursor();
+                    if (datum == null) {
+                        datum = this.dropdown.getDatumForTopSuggestion();    
+                    }
+                    if (datum) {
+                        this.input.setInputValue(datum.value);
+                        this.eventBus.trigger("autocompleted", datum.raw, datum.datasetName);
+                    } else {
+                        this.input.setInputValue("");
+                    }
                 }
             },
             _select: function select(datum) {

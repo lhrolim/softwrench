@@ -192,7 +192,7 @@
                         $rootScope.$digest();
                     }
                 } else if (e.which === 13) {
-                    datamap[scope.attribute]
+//                    datamap[scope.attribute]
                     e.stopImmediatePropagation();
                 }
 
