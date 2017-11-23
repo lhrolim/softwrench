@@ -101,6 +101,7 @@
     <Compile Include="classes\ProblemManager.cs" />
     <Compile Include="classes\ProblemStatus.cs" />
     <Compile Include="DB_Migration\20160601_SWWEB_2529.cs" />
+    <Compile Include="DB_Migration\MigrationSwweb3279.cs" />
     <Compile Include="DB_Migration\20171113_SWWEB_3262.cs" />
     <Compile Include="DB_Migration\Migration20150424Swweb1166Part2.cs" />
     <Compile Include="DB_Migration\20150424_SWWEB_1166.cs" />
