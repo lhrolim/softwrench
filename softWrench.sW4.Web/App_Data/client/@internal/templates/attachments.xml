@@ -57,7 +57,8 @@
           <field label="Application" attribute="ownertable" >
             <renderer type="icon" params="expression={'COMMLOG':'fa-envelope','SR':''};width=10%;showattribute=true"/>
           </field>
-          
+
+          <field hidden="true" attribute="docinfo_.description"/>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="docinfo_.urltype"/>
           <field  attribute="document" hidden="true"/>

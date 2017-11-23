@@ -140,7 +140,7 @@
         <relationship to="DOCLINKS" collection="true" qualifier="wkpgallattachments">
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
-          <relationshipAttribute query="(docinfo_.urlparam1 like 'swwpk%')"/>
+      
         </relationship>
         <relationship to="relatedrecord" collection="true" qualifier="wkpgrelatedwos">
           <relationshipAttribute from="wonum" to="recordkey" primary="true"/>

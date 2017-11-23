@@ -9,6 +9,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
+using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
@@ -25,6 +26,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         private const string DomEmailAttachmentSource = "Daily Outage Meeting Email Attachment";
         private const string InterconnectDocsAttachmentSource = "Interconnect Document";
         private const string OperationProcAttachmentSource = "Operation Procedure File";
+        private const string WorkOrder = "Work Order";
 
         private readonly Dictionary<string, string> _testsI18NDict = new Dictionary<string, string>();
 
@@ -123,15 +125,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
 
             var attachList = new List<Dictionary<string, object>>();
-            allAttachs.ResultList.ForEach(attach => {
-                attach["#attachdocument"] = attach["docinfo_.description"];
+            allAttachs.ResultList.ForEach(attach =>
+            {
+                attach["#attachdocument"] = AttachmentHandler.BuildParsedURLName(attach);
                 attach["#attachcreateddate"] = attach["createdate"];
                 attach["id"] = attach["doclinksid"]; // workaround to show expand button
-
-
+                
                 var baseFilter = attach["docinfo_.urlparam1"];
                 if (baseFilter == null) {
-                    attach["#attachsource"] = UnknownSource;
+                    attach["#attachsource"] = WorkOrder;
                     attachList.Add(attach);
                     return;
                 }
@@ -148,18 +150,20 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                         attach["#attachsource"] = InterconnectDocsAttachmentSource;
                     } else if ("operationproc".Equals(test)) {
                         attach["#attachsource"] = OperationProcAttachmentSource;
+                    } else if(_testsI18NDict.ContainsKey(test)) { 
+                        attach["#attachsource"] = _testsI18NDict[test];
                     } else {
-                        attach["#attachsource"] = _testsI18NDict.ContainsKey(test) ? _testsI18NDict[test] : UnknownSource;
-                    }
+                        attach["#attachsource"] = UnknownSource;
+                    } 
                 } else if (filter.StartsWith("swwpkgco:")) {
                     attach["#attachsource"] = CallOutEmailAttachmentSource;
                 } else if (filter.StartsWith("swwpkgme:")) {
                     attach["#attachsource"] = MaintenanceEngEmailAttachmentSource;
                 } else if (filter.StartsWith("swwpkgdo:")) {
                     attach["#attachsource"] = DomEmailAttachmentSource;
-                } else {
-                    attach["#attachsource"] = UnknownSource;
-                }
+                } else { 
+                    attach["#attachsource"] = WorkOrder;
+                } 
 
                 attachList.Add(attach);
             });

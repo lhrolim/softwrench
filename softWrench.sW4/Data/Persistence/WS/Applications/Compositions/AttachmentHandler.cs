@@ -283,17 +283,29 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             return _facade.Lookup<int>(ConfigurationConstants.Maximo.MaxFileNameLength);
         }
 
+        /// <summary>
+        /// Parser for document names. 
+        /// Hierarchy: document description (app), document description (composition), file url (app), file url (composition).
+        /// Normalization of url files: remove path, keeps file name.
+        /// </summary>
+        /// <param name="attachmentDataMap"></param>
+        /// <returns></returns>
         [NotNull]
         public static string BuildParsedURLName(IDictionary<string, object> attachmentDataMap) {
+
             var docInfoURL = "";
-            if (attachmentDataMap.ContainsKey("urlname")) {
+
+            if (attachmentDataMap.ContainsKey("description")) {
+                docInfoURL = (string)attachmentDataMap["description"];
+            } else if(attachmentDataMap.ContainsKey("docinfo_.description")) {
+                if (attachmentDataMap["docinfo_.description"] != null) 
+                    docInfoURL = (string)attachmentDataMap["docinfo_.description"];
+            } else if (attachmentDataMap.ContainsKey("urlname")) {
                 //either comes from the application itself, or else, the composition
                 docInfoURL = (string)attachmentDataMap["urlname"];
             } else {
                 docInfoURL = (string)attachmentDataMap["docinfo_.urlname"];
             }
-
-
 
             var lastIndexOf = docInfoURL.LastIndexOf("\\", StringComparison.Ordinal);
             if (lastIndexOf != -1) {
