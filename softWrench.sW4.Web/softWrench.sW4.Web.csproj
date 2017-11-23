@@ -210,9 +210,6 @@
     <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.user, Version=1.4.6522.20442, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.user.1.4.6522.20442\lib\net461\softwrench.sw4.user.dll</HintPath>
-    </Reference>
     <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
       <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
     </Reference>
@@ -1621,6 +1618,10 @@
     <ProjectReference Include="..\softwrench.sw4.umc\softwrench.sw4.umc.csproj">
       <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
       <Name>softwrench.sw4.umc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
+      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
+      <Name>softwrench.sw4.user</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>

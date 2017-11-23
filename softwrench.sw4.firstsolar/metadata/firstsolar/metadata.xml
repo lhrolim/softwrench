@@ -199,6 +199,7 @@
     <entity name="labtrans" idAttribute="labtransid">
       <attributes>
         <attribute name="warranty" type="varchar"/>
+        <attribute name="wodescription" type="varchar" query="(select description from workorder where wonum = !@refwo)"/>
       </attributes>
       <relationships>
         <relationship to="warranty">
@@ -1471,11 +1472,13 @@
       <schemas>
         <detail stereotype="detail" title="Labor Reporting" platform="mobile" redeclaring="false">
           <customization position="+regularhrs">
+            <field attribute="wodescription" hidden="true"/>
             <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO WARRANTY" requiredexpression="true"/>
           </customization>
         </detail>
 
         <schema id="compositionlist" stereotype="compositionlist" title="Labor List" platform="web" redeclaring="false">
+          
           <customization position="linecost"/>
           <customization position="gldebitacct"/>
           <customization position="genapprservreceipt"/>
@@ -1512,6 +1515,7 @@
           <field attribute="enterdate" label="Date" qualifier="featured">
           <renderer type="date"/>
           </field>
+          <field attribute="wodescription" label="Description" qualifier="excerpt"/>
           <field attribute="#runninglabor" hidden="true"/>
 
         </list>

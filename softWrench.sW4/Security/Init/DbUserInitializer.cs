@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
@@ -8,7 +9,10 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Scheduler;
 using softWrench.sW4.Security.Services;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
 using softwrench.sw4.user.classes.entities;
+using softwrench.sw4.user.classes.entities.security;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Security.Init {
@@ -20,6 +24,54 @@ namespace softWrench.sW4.Security.Init {
         [Transactional(DBType.Swdb)]
         public virtual void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             CreateUser();
+
+            if (ApplicationConfiguration.IsDevPR()) {
+                if (_dao.FindSingleByQuery<User>(User.UserByUserName, "tcottier") == null) {
+                    var profile = CreateGeneralSecurityGroup();
+                    CreateTCottierUser(profile);
+                }
+
+            }
+        }
+
+        private void CreateTCottierUser(UserProfile profile) {
+            var tcottier = new User(null, "tcottier", true) {
+                MaximoPersonId = "TCOTTIER",
+                Password = AuthUtils.GetSha1HashData("password"),
+                SiteId = ApplicationConfiguration.DefaultSiteId,
+                OrgId = ApplicationConfiguration.DefaultOrgId,
+                CreationType = UserCreationType.Integration,
+                CreationDate = DateTime.Now,
+                Profiles = new HashSet<UserProfile> { profile }
+            };
+            _dao.Save(tcottier);
+        }
+
+        private UserProfile CreateGeneralSecurityGroup() {
+            var all = new UserProfile {
+                Name = "all",
+                Description = "Auto generated profile for all applications"
+            };
+            //TODO: shouldn´t be necessary, but right now equals of Application Permission would throw exception
+            all = _dao.Save(all);
+
+            var apps = MetadataProvider.FetchTopLevelApps(null, null);
+            var appPermissions = new HashSet<ApplicationPermission>();
+
+            all.ApplicationPermissions = appPermissions;
+            foreach (var app in apps) {
+                var permission = new ApplicationPermission {
+                    ApplicationName = app.ApplicationName,
+                    AllowCreation = true,
+                    AllowUpdate = true,
+                    AllowRemoval = true,
+                    Profile = all
+                };
+                appPermissions.Add(permission);
+            }
+            _dao.BulkSave(appPermissions);
+            return all;
+            //            return _dao.Save(all);
         }
 
 

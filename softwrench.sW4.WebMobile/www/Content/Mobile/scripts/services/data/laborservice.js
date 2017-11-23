@@ -66,9 +66,10 @@
 
         const getLabTransMetadata = () => crudContextService.currentCompositionTabByName("labtrans");
 
-        const insertTsLaborDataEntry = (labor, wonum, runningLabor = false) =>{
+        const insertTsLaborDataEntry = (labor, datamap, runningLabor = false) =>{
             //TODO: check for client
-            labor["refwo"] = wonum;
+            labor["refwo"] = datamap.wonum;
+            labor["wodescription"] =datamap["description"];
             fsLaborOfflineService.insertTsLaborDataEntry(labor, runningLabor);
         }
 
@@ -122,7 +123,7 @@
                         if (parentIndex >= 0) context.itemlist[parentIndex] = savedParent;
                     }
                     return labor;
-                }).then(insertTsLaborDataEntry(labor,parent.datamap.wonum,starting));
+                }).then(insertTsLaborDataEntry(labor,parent.datamap,starting));
         }
 
         function doStartLaborTransaction() {
