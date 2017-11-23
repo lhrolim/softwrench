@@ -12,6 +12,7 @@ using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
 using Newtonsoft.Json.Linq;
@@ -32,6 +33,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
+using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 using r = softWrench.sW4.Util.ReflectionUtil;
 using w = softWrench.sW4.Data.Persistence.WS.Internal.WsUtil;
 
@@ -60,6 +62,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         private string _baseMaximoPath;
 
         private readonly MaximoHibernateDAO _maxDAO;
+        private string[] _allowedFiles;
 
         public AttachmentHandler(MaximoHibernateDAO maxDAO, DataSetProvider dataSetProvider, AttachmentDao attachmentDao, IConfigurationFacade facade) {
             _maxDAO = maxDAO;
@@ -68,6 +71,27 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             _facade = facade;
         }
 
+        public string[] AllowedFiles {
+            get {
+                if (_allowedFiles != null) {
+                    return _allowedFiles;
+                }
+
+                // SWWEB-1091 to extract the vbalue out from MAXIMO
+                // var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
+                //TODO: Asnc
+                var ext = AsyncHelper.RunSync(() => _maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions"));
+
+                if (!string.IsNullOrWhiteSpace(ext)) {
+                    _allowedFiles = ext.Split(',');
+                    return _allowedFiles;
+                }
+
+                _allowedFiles = new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
+                return _allowedFiles;
+
+            }
+        }
 
         //        public delegate byte[] Base64Delegate(string attachmentData);
 
@@ -217,18 +241,18 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
         }
 
 
-        public static bool Validate(string attachmentPath, string attachmentData, byte[] binaryData = null) {
-            var allowedFiles = ApplicationConfiguration.AllowedFilesExtensions;
+        public bool Validate(string attachmentPath, string attachmentData, byte[] binaryData = null) {
+
 
             if (attachmentPath != null && attachmentPath.IndexOf('.') != -1) {
                 var extension = attachmentPath.Substring(attachmentPath.LastIndexOf('.') + 1).ToLower();
-                if (!allowedFiles.Any(s => s.Equals(extension, StringComparison.OrdinalIgnoreCase))) {
-                    throw new Exception(string.Format("Invalid Attachment extension. Accepted extensions are: {0}.", string.Join(",", allowedFiles)));
+                if (!AllowedFiles.Any(s => s.Equals(extension, StringComparison.OrdinalIgnoreCase))) {
+                    throw new Exception(string.Format("Invalid Attachment extension. Accepted extensions are: {0}.", string.Join(",", AllowedFiles)));
                 }
             }
 
             var maxAttSizeInBytes = ApplicationConfiguration.MaxAttachmentSize * 1024 * 1024;
-            var size = attachmentData == null ? (binaryData == null ? 0 : binaryData.Length) : attachmentData.Length;
+            var size = attachmentData?.Length ?? (binaryData?.Length ?? 0);
             Log.InfoFormat("Attachment size: {0}", size);
             if (size > maxAttSizeInBytes) {
                 var mbSize = size / 1024 / 1024;
@@ -441,7 +465,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var pureBase64String = !data.StartsWith("data:");
 
             var dtos = new List<AttachmentDTO>(attachmentsPath.Length);
-            for (int i = 0, j = 0; i < attachmentsPath.Length; i++, j += 2) {
+            for (int i = 0, j = 0;i < attachmentsPath.Length;i++, j += 2) {
                 var attachmentTitle = attachmentsTitle != null ? attachmentsTitle[i] : null;
                 var attachmentDesc = attachmentsDesc != null ? attachmentsDesc[i] : null;
                 var attachmentOfflinehash = attachmnetsOfflinehash != null ? attachmnetsOfflinehash[i] : null;
@@ -497,6 +521,8 @@ BuildMaximoURL() {
 
         public void HandleEvent(RefreshMetadataEvent eventToDispatch) {
             _baseMaximoURL = null;
+            _allowedFiles = null;
+            _allowedFiles = AllowedFiles;
         }
     }
 }

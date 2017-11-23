@@ -30,7 +30,7 @@ namespace softWrench.sW4.Util {
         private static string _environment;
         private static readonly DateTime _upTime = DateTime.Now;
 
-        private static readonly MaxPropValueDao _maxPropValueDao = new MaxPropValueDao();
+        
 
         private static readonly IDictionary<DBType, ConnectionStringSettings> _connectionStringCache = new Dictionary<DBType, ConnectionStringSettings>();
 
@@ -268,20 +268,6 @@ namespace softWrench.sW4.Util {
 
         #region Attachments
 
-        public static string[] AllowedFilesExtensions {
-            get {
-                // SWWEB-1091 to extract the vbalue out from MAXIMO
-                // var ext = MetadataProvider.GlobalProperty("allowedAttachmentExtensions");
-                //TODO: Asnc
-                var ext = AsyncHelper.RunSync(() => _maxPropValueDao.GetValue("mxe.doclink.doctypes.allowedFileExtensions"));
-
-                if (!string.IsNullOrWhiteSpace(ext)) {
-                    return ext.Split(',');
-                }
-
-                return new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
-            }
-        }
 
         /// <summary>
         /// Gets the maximum screenshot size in megabytes
