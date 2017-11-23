@@ -1489,6 +1489,10 @@
         <detail stereotype="detail" title="Labor Reporting" platform="web" redeclaring="false">
           <customization position="gldebitacct"/>
           <customization position="+regularhrs">
+            <optionfield attribute="transtype" requiredexpression="true" label="Work Type" default="WORK">
+              <option value="WORK" label="Work" />
+              <option value="TRAV" label="Travel" />
+            </optionfield>
             <association label="Warranty" target="warranty" labelfield="warranty_.description" default="NO WARRANTY" requiredexpression="true"/>
           </customization>
         </detail>
