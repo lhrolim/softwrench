@@ -20,7 +20,8 @@ namespace softwrench.sw4.Hapag.Data.WS.Ism.Base {
             var attachmentString = jsonObject.GetAttribute("newattachment") as string;
             var attachmentPath = jsonObject.GetAttribute("newattachment_path") as string;
             var attachmentList = new List<Attachment>();
-            if (attachmentString != null && AttachmentHandler.Validate(attachmentPath, attachmentString)) {
+
+            if (attachmentString != null) {
                 var b64PartOnly = FileUtils.GetB64PartOnly(attachmentString);
                 AttachmentHandler.ValidateNotEmpty(b64PartOnly);
 
