@@ -18,8 +18,9 @@
             return $q.reject(error);
         };
 
-        function invokeCustomServicePromise(result,queryArray){
-            return $q.when(dispatcherService.invokeService(`${result.data.clientName}.dataSynchronizationHook`, 'modifyQueries', [result.data, queryArray]));
+        function invokeCustomServicePromise(result, queryArray) {
+            dispatcherService.invokeService(`${result.data.clientName}.dataSynchronizationHook`, 'modifyQueries', [result.data, queryArray]);
+            return queryArray;
         }
 
 
@@ -42,11 +43,11 @@
 
             securityService.overrideCurrentUserProperties(userProperties);
 
-            const queryArray = [];
+            let queryArray = [];
 
             if (result.data.isEmpty) {
                 log.info("no new data returned from the server");
-                return invokeCustomServicePromise(result,queryArray).then(customServiceDownloadItems => {
+                return invokeCustomServicePromise(result, queryArray).then(customServiceDownloadItems => {
                     //interrupting async calls
                     return !!customServiceDownloadItems ? customServiceDownloadItems : 0;
                 })
@@ -54,7 +55,7 @@
             }
 
             log.info("receiving new topLevel data from the server");
-            
+
             angular.forEach(topApplicationData, application => {
                 //multiple applications can be returned on a limit scenario where it´s the first sync, or on a server update.
                 const newDataMaps = application.newdataMaps;
@@ -62,7 +63,7 @@
                 const insertUpdateDatamap = application.insertOrUpdateDataMaps;
                 const deletedIds = application.deletedRecordIds;
                 log.debug("{0} topleveldata: inserting:{1} | updating:{2} | deleting: {3}".format(application.applicationName, newDataMaps.length, updatedDataMaps.length, deletedIds.length));
-                
+
                 angular.forEach(newDataMaps, newDataMap => {
                     const id = persistence.createUUID();
 
@@ -112,10 +113,10 @@
             const numberOfDownloadedItems = queryArray.length;
             return offlineCompositionService.generateSyncQueryArrays(compositionData)
                 .then(compositionQueriesToAppend => queryArray.concat(compositionQueriesToAppend))
-                .then(() => {
-                    return invokeCustomServicePromise(result,queryArray);
+                .then((queryArray) => {
+                    return invokeCustomServicePromise(result, queryArray);
                 })
-                .then(() => swdbDAO.executeQueries(queryArray))
+                .then((queryArray) => swdbDAO.executeQueries(queryArray))
                 .then(() => numberOfDownloadedItems);
         };
 
