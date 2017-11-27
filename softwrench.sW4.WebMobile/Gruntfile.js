@@ -157,6 +157,9 @@ module.exports = function (grunt) {
         "tests/**/*.js"
     ];
 
+    var testFixtures = {pattern: 'tests/resources/**/*.json', watched: true, served: true, included: false};
+
+
     var ngMockScript = ["bower_components/angular-mocks/angular-mocks.js"];
 
     var allScripts = []
@@ -630,7 +633,9 @@ module.exports = function (grunt) {
             options: {
                 configFile: "karma.conf.js",
                 logLevel: "WARN",
-                files: ["overrides/cordova.js"].concat(allScripts),
+                files: ["overrides/cordova.js", // fixtures
+                testFixtures, "bower_components/karma-read-json/karma-read-json.js"]
+                .concat(allScripts),
                 browsers: ["PhantomJS"],
                 singleRun: true
             },
@@ -748,6 +753,7 @@ module.exports = function (grunt) {
     grunt.registerTask("tagsrelease", ["tags:buildReleaseScripts", "tags:buildReleaseVendorScripts", "tags:buildReleaseLinks", "tags:buildReleaseVendorLinks"]);
     grunt.registerTask("concatall", ["concat:appScripts", "concat:vendorScripts", "concat:appStyles", "concat:vendorStyles"]);
     grunt.registerTask("minify", ["uglify:release", "cssmin:release"]);
+    grunt.registerTask("tdd", ["karma:tdd"]);
 
     grunt.registerTask("preparerelease", "prepares the project for release build", [
         "cleanall", // cleans destination folders

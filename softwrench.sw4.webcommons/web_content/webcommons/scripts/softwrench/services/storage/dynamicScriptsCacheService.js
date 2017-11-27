@@ -177,7 +177,7 @@
                     evaluatedClass["$inject"] = scriptInjections;
                 }
 
-                log.info(`registering script ${scriptName}`);
+                log.warn(`registering script ${scriptName}`);
 
                 return $provide.service(scriptName, evaluatedClass);
             }

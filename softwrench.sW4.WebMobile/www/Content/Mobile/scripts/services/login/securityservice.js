@@ -218,10 +218,20 @@
          * @param {Object} properties 
          */
         const overrideCurrentUserProperties = function(properties) {
+            if (!properties){
+                return;
+            }
+
             const current = currentFullUser();
-            setUserProperties(current, properties);
-            setHasChanged(current, false);
-            localStorageService.put(config.authkey, current);
+
+            if (current){
+                //mostly for unit tests
+                setUserProperties(current, properties);
+                setHasChanged(current, false);
+                localStorageService.put(config.authkey, current);
+            }
+
+            
         }
 
         /**
