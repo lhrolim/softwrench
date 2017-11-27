@@ -48,6 +48,9 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        //ensures that no filter search is considered, so that case normalizations are not applied, for instance
+        public bool PreventFilterSearch { get; set; }
+
         /// <summary>
         /// this field can reflect a SearchSort translated on the server side by taking into consideration the attributeToServer attribute;
         /// 
@@ -374,7 +377,7 @@ namespace softWrench.sW4.Data.Search {
                     _valuesDictionary[paramName + "_begin"] = new SearchParameter(">=" + splittedInterval[0]);
                     _valuesDictionary[paramName + "_end"] = new SearchParameter("<=" + splittedInterval[1]);
                 } else {
-                    _valuesDictionary[paramName] = new SearchParameter(rawValue);
+                    _valuesDictionary[paramName] = new SearchParameter(rawValue, PreventFilterSearch);
                 }
 
 

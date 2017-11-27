@@ -234,9 +234,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             if (paginatedSearch != null && (!string.IsNullOrEmpty(paginatedSearch.SearchParams) || !string.IsNullOrEmpty(paginatedSearch.SearchSort))) {
                 searchRequestDto = paginatedSearch;
             } else if (paginatedSearch != null && paginatedSearch.PageSize > 0) {
-                searchRequestDto = new PaginatedSearchRequestDto();
+                searchRequestDto = new PaginatedSearchRequestDto() { PreventFilterSearch = true};
             } else {
-                searchRequestDto = new SearchRequestDto();
+                searchRequestDto = new SearchRequestDto() { PreventFilterSearch = true };
             }
             
             var lookupContext = parameter.Ctx;

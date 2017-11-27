@@ -5,17 +5,20 @@ namespace softWrench.sW4.Data.Search {
 
     public class SearchParameter {
 
-        public SearchParameter(string rawValue) {
+        public SearchParameter(string rawValue, bool preventFilterSearch = false) {
             RawValue = rawValue;
-            Refresh(rawValue);
+            Refresh(rawValue, preventFilterSearch);
         }
 
-        public void Refresh(string newValue) {
+        public void Refresh(string newValue, bool preventFilterSearch = false) {
             object value;
             bool searchFilter = false;
             SearchOperator = ParseSearchOperator(newValue, out value, out searchFilter);
             Value = value;
-            FilterSearch = searchFilter;
+            if (!preventFilterSearch) {
+                FilterSearch = searchFilter;
+            }
+
         }
 
         private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
