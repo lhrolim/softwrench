@@ -1,0 +1,37 @@
+﻿<html style="box-sizing:border-box;">
+<head style="box-sizing:border-box;">
+    <title style="box-sizing:border-box;">New Ticket</title>
+</head>
+
+<body>
+    <div>Schedule:</div>
+    <div>4 Hour Response Deadline – {{fourhourdeadline}}</div>
+    <div>On‐site Deadline – {{onsitedeadline}}</div>
+    <br /><br />
+
+    <div>Scope:</div>
+    <div>
+        {% for inverter in inverters %}
+            <div>{{inverter.description}}</div>
+            <div>{{inverter.details}}</div>
+        {% endfor %}
+    </div>
+    <br /><br />
+
+    <div>Response:</div>
+    <div>Do you ACCEPT this Scope?</div>
+    {% if accepted == false %}
+        <a class="btn btn-success" href="{{accepturl}}" target="_blank">Accept</a><br />
+        {% if allowRejection %}
+        <a class="btn btn-danger" href="{{rejecturl}}" target="_blank">Reject</a>
+        {% endif %}
+    {% endif %}
+    <br /><br />
+    
+    {% if accepted %}
+        <div>Post Accepted Actions:</div>
+        <a class="btn btn-success" href="{{arrivedurl}}" target="_blank">Mark as Arrived on Site</a><br />
+        <a class="btn btn-danger" href="{{resolvedurl}}" target="_blank">Resolve</a>
+    {% endif %}
+</body>
+</html>

@@ -1,173 +1,58 @@
 ﻿<html style="box-sizing:border-box;" >
 <head style="box-sizing:border-box;" >
-    <title style="box-sizing:border-box;" >New Service Call Out</title>
-    <!-- Latest compiled and minified CSS -->
-
-
-    <style style="box-sizing:border-box;" >
-        fieldset {
-            min-width: 0;
-            padding: 0;
-            margin: 0;
-            border: 0;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-
-        label {
-            display: inline-block;
-            max-width: 100%;
-            margin-bottom: 5px;
-            
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .row {
-            margin-right: -15px;
-            margin-left: -15px;
-        }
-
-        .col-xs-12 {
-            width: 100%;
-            float: left;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .col-xs-4 {
-            width: 33.33333%;
-            float: left;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
-
-        .col-xs-8 {
-            width: 66.66666667%;
-            float: left;
-            font-weight: bold;
-            color: black;
-            
-            
-        }
-
-        .emaillabel {
-            color: black;
-            width: 100%;
-            font-weight: bold;
-        }
-
-        .emailsection {
-            
-            
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            padding: 15px;
-        }
-
-        .alert {
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-        }
-
-        .alert-warning {
-            color: #8a6d3b;
-            background-color: #fcf8e3;
-            border-color: #faebcc;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 6px 12px;
-            margin-bottom: 0;
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 1.42857143;
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            -ms-touch-action: manipulation;
-            touch-action: manipulation;
-            cursor: pointer;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            background-image: none;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            text-decoration: none;
-        }
-
-        .btn-success {
-            color: #fff;
-            background-color: #5cb85c;
-            border-color: #4cae4c;
-        }
-
-        .btn-danger {
-            color: #fff;
-            background-color: #ac2925;
-            border-color: #761c19;
-        }
-    </style>
+    <title style="box-sizing:border-box;" >New Ticket</title>
 </head>
 
 <body style="box-sizing:border-box;margin-top:0;margin-bottom:0;margin-right:auto;margin-left:auto;padding-top:20px;padding-bottom:20px;padding-right:20px;padding-left:20px;font-style:normal;font-variant:normal;font-weight:normal;font-size:14px;font-family:Arial, Helvetica, sans-serif;line-height:24px;" >
-    <!-- TODO replace hard coded img url with client specific header -->
-<!--    <img width="600" height="150" src="{{headerurl}}" style="box-sizing:border-box;" >-->
-
-    <p style="box-sizing:border-box;" >
-        A new ticket was addressed to you
-    <p style="box-sizing:border-box;" />
-
-    <p  class="alert alert-warning" style="box-sizing:border-box;margin-top:20px;padding-top:15px;padding-bottom:15px;padding-right:15px;padding-left:15px;margin-bottom:20px;border-width:1px;border-style:solid;border-radius:4px;color:#8a6d3b;background-color:#fcf8e3;border-color:#faebcc;" >
-        Do not reply directly to this email, instead use the following actions
-    <p style="box-sizing:border-box;" />
-
-
-
-    <p style="box-sizing:border-box;" >
-        <a class="btn btn-success" href="{{accepturl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none; font-size:20px; color: #fff; background-color: #5cb85c; border-color: #4cae4c;" >Accept</a>
-        <a class="btn btn-danger" href="{{rejecturl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none;font-size:20px; color: #fff; background-color: #ac2925; border-color: #761c19;" >Reject</a>
-        <a class="btn btn-success" href="{{arrivedurl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none;font-size:20px; color: #fff; background-color: #5cb85c; border-color: #4cae4c;" >Mark as Arrived on Site</a>
-        <a class="btn btn-success" href="{{resolvedurl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none;font-size:20px; color: #fff; background-color: #5cb85c; border-color: #4cae4c;" >Resolve</a>
-    </p>
-
-    <p style="box-sizing:border-box;margin-top:20px;" >
-        Follows the ticket details
-    <p style="box-sizing:border-box;" />
-
 
     <div class="field  col-xs-12 emailsection" style="box-sizing:border-box;width:100%;float:left;border-width:1px;border-style:solid;border-color:#e0e0e0;border-radius:4px;padding-top:15px;padding-bottom:15px;padding-right:15px;padding-left:15px;" >
-        <div schema="schema" datamap="datamap" displayables="fieldMetadata.displayables" orientation="vertical" data-id="" renderer-parameters="fieldMetadata.rendererParameters" hideempty="hideempty" forprint="forprint" class="ng-isolate-scope" style="box-sizing:border-box;" >
+        <div style="box-sizing:border-box;">
 
 
-            <fieldset class="form-group  col-xs-12 row" style="box-sizing:border-box;min-width:0;font-weight:bold;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
-                Ticket#:  <span style="box-sizing:border-box;font-weight:normal;">{{id}}</span>
-            </fieldset>
-            <p style="box-sizing:border-box;" ></p>
-            <fieldset class="form-group  col-xs-12 row" style="box-sizing:border-box;min-width:0;font-weight:bold;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
-                Site Name:  <span style="box-sizing:border-box;font-weight:normal;">{{site}}</span>
-            </fieldset>
-            <p style="box-sizing:border-box;" ></p>
-            <fieldset class="form-group  col-xs-12 row" style="box-sizing:border-box;min-width:0;font-weight:bold;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:15px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
-                Reported by:  <span style="box-sizing:border-box;font-weight:normal;">{{reportedby}}</span>
-            </fieldset>
-            <p style="box-sizing:border-box;" ></p>
+
+            <div style="text-decoration: underline">Schedule:</div>
+            <div style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:30px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >                
+                <div style="box-sizing:border-box">4 Hour Response Deadline – {{fourhourdeadline}}</div>
+                <div style="box-sizing:border-box">On‐site Deadline – {{onsitedeadline}}</div>
+            </div>
+
+            <div style="text-decoration: underline">Comments:</div>
+            <div style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:30px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                <div style="box-sizing:border-box">{{comments}}</div>
+            </div>
+
+            <div style="text-decoration: underline">Scope:</div>
+            <div style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-bottom:30px;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                {% for inverter in inverters %}
+                    <div style="box-sizing:border-box;font-weight:bold;">{{inverter.description}}</div>
+                    <div style="box-sizing:border-box;margin-left: 20px">{{inverter.details}}</div>
+                {% endfor %}
+            </div>
+
+            <div style="text-decoration: underline">Response:</div>
+            <div style="box-sizing:border-box;min-width:0;padding-top:0;padding-bottom:0;margin-top:0;border-width:0;margin-right:-15px;margin-left:-15px;width:100%;float:left;padding-right:15px;padding-left:15px;" >
+                <div style="box-sizing:border-box">Do you ACCEPT this Scope?</div>
+            </div>
+            
+            {% if accepted == false %}
+            <p style="box-sizing:border-box;margin-bottom:30px;margin-left:30px;display: inline-block;" >
+                <a class="btn btn-success" href="{{accepturl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none; font-size:20px; color: #fff; background-color: #5cb85c; border-color: #4cae4c;" >Accept</a>
+                {% if allowRejection %}
+                <a class="btn btn-danger" href="{{rejecturl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none;font-size:20px; color: #fff; background-color: #ac2925; border-color: #761c19;" >Reject</a>
+                {% endif %}
+            </p>
+            {% endif %}
+            
+            {% if accepted %}
+            <div style="text-decoration: underline">Post Accepted Actions:</div>
+            <p style="box-sizing:border-box;margin-bottom:30px;margin-left:30px;display: inline-block;" >
+                <a class="btn btn-success" href="{{arrivedurl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none;font-size:20px; color: #fff; background-color: #5cb85c; border-color: #4cae4c;" >Mark as Arrived on Site</a>
+                <a class="btn btn-success" href="{{resolvedurl}}" target="_blank" style="box-sizing:border-box;display:inline-block;padding-top:6px;padding-bottom:6px;padding-right:12px;padding-left:12px;margin-bottom:0;font-size:14px;font-weight:400;line-height:1.42857143;text-align:center;white-space:nowrap;vertical-align:middle;-ms-touch-action:manipulation;touch-action:manipulation;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-image:none;border-width:1px;border-style:solid;border-radius:4px;text-decoration:none;border: none;font-size:20px; color: #fff; background-color: #5cb85c; border-color: #4cae4c;" >Resolve</a>
+            </p>
+            {% endif %}
 
         </div>
     </div>
-    <p style="box-sizing:border-box;" >
-
-    </p>
 
 </body>
 </html>

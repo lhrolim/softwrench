@@ -5,11 +5,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
+using cts.commons.Util;
 using Newtonsoft.Json.Linq;
+using NHibernate.Util;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.handlers;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services;
+using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email;
 using softwrench.sW4.audit.Interfaces;
+using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
@@ -20,7 +26,9 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.API;
+using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -42,7 +50,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         public DispatchSchedullerService SchedullerService { get; set; }
 
         [Import]
-        public DispatchEmailService DispatchEmailService { get; set; }
+        public DispatchEmailCompositeService DispatchEmailService { get; set; }
 
         [Import]
         public DispatchStatusService StatusService { get; set; }
@@ -51,11 +59,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var baseData = await base.FetchDetailDataMap(application, user, request);
             baseData.SetAttribute("#originalstatus", baseData.GetAttribute("status"));
-            if (baseData.ContainsAttribute("immediatedispatch",true))
-            {
+            if (baseData.ContainsAttribute("immediatedispatch", true)) {
                 baseData.SetAttribute("immediatedispatch", baseData.GetAttribute("immediatedispatch").ToString().ToLower());
             }
-            
+
 
             return baseData;
         }
@@ -63,6 +70,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
             var compData = await base.GetCompositionData(application, request, currentData);
 
+            if (compData.ResultObject != null && compData.ResultObject.ContainsKey("inverters_")) {
+                var inverters = compData.ResultObject["inverters_"].ResultList;
+                var inverterDataSet = DataSetProvider.GetInstance().LookupDataSet("_Inverter", "detail");
+                var inverterApp = MetadataProvider.Application("_Inverter").StaticFromSchema("detail");
+                inverters.ForEach(inverter => LoadInverterParts(inverter, inverterDataSet, inverterApp));
+            }
 
             if (request.CompositionList != null && !request.CompositionList.Contains("#statushistory_")) {
                 return compData;
@@ -89,6 +102,19 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             return compData;
         }
 
+        private static void LoadInverterParts(IDictionary<string, object> inverter, IDataSet inverterDataSet, ApplicationMetadata inverterApp) {
+            var inverterDatamap = new DataMap("_Inverter", inverter, "id");
+            var inverterRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { inverterDatamap }) {
+                Key = new ApplicationMetadataSchemaKey("detail", SchemaMode.input, ClientPlatform.Web),
+                CompositionList = new List<string>() { "parts_" },
+                ExtraParameters = inverter
+            };
+            var inverterCompData = AsyncHelper.RunSync(() => inverterDataSet.GetCompositionData(inverterApp, inverterRequest, null));
+            if (inverterCompData?.OriginalCruddata != null && inverterCompData.OriginalCruddata.ContainsKey("parts_")) {
+                inverter.Add("parts_", inverterCompData.OriginalCruddata["parts_"]);
+            }
+        }
+
 
         [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
@@ -99,7 +125,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
 
             var ticket = GetOrCreate<DispatchTicket>(operationWrapper, false);
             var oldStatus = ticket.Status;
-            EntityBuilder.PopulateTypedEntity((CrudOperationData) operationWrapper.OperationData(), ticket);
+            EntityBuilder.PopulateTypedEntity((CrudOperationData)operationWrapper.OperationData(), ticket);
 
             if (isCreation || dispatching) {
                 ticket.Status = dispatching ? ticket.ImmediateDispatch ? DispatchTicketStatus.DISPATCHED : DispatchTicketStatus.SCHEDULED : DispatchTicketStatus.DRAFT;
@@ -121,6 +147,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             if (hasStatusChange) {
                 ticket.StatusReportedBy = user;
                 ticket.StatusDate = DateTime.Now;
+                if (DispatchTicketStatus.ARRIVED.Equals(ticket.Status)) {
+                    ticket.ArrivedTime = DateTime.Now;
+                }
             }
 
             ticket.GpsLatitude = ConvertDecimal(crudoperationData, "gpslatitude");
@@ -148,15 +177,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
                 ReloadMode = ReloadMode.MainDetail
             };
 
-            if (!hasStatusChange || !dispatching) return targetResult;
+            if (!hasStatusChange || !dispatching)
+                return targetResult;
 
             if (ticket.ImmediateDispatch) {
-                var site = await Dao.FindSingleByQueryAsync<GfedSite>(GfedSite.FromGFedId, ticket.GfedId);
-                DispatchEmailService.SendEmail(ticket, site);
-                //SchedullerService.ScheduleDispatch(ticket);
-            } else {
-                //SchedullerService.ScheduleDispatch(ticket);
-            }
+                await DispatchEmailService.SendEmails(ticket);
+                // await DispatchSmsEmailService.SendEmail(ticket, 0);
+            } 
 
             return targetResult;
         }

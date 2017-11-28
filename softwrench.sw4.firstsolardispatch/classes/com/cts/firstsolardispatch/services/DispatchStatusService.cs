@@ -22,7 +22,6 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             if (old == DISPATCHED) {
                 if (newone == ACCEPTED) return;
                 if (newone == REJECTED) {
-                    if (ticket.DispatchExpectedDate == null) return;
                     var diff = DateTime.Now - ticket.DispatchExpectedDate.Value;
                     // less than 4 hours
                     if (diff.TotalMilliseconds < 4 * 1000 * 3600) {

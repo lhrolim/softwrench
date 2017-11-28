@@ -6,6 +6,7 @@ namespace softWrench.sW4.Util {
         public static readonly string WsProvider = ApplicationConfiguration.WsProvider;
 
         public static readonly string MultiTenantPrefix = "multitenantprefix";
+        public static readonly string DevTeamEmail = "devteam@controltechnologysolutions.com";
 
         public const string AUTH_LOG = "AUTH.LOG";
         public const string SQL_LOG = "MAXIMO.SQL";

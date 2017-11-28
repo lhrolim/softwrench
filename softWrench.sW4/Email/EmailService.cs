@@ -90,10 +90,20 @@ namespace softWrench.sW4.Email {
         /// Sends email in a fire-and-forget way.
         /// </summary>
         /// <param name="emailData"></param>
-        public virtual void SendEmailAsync(EmailData emailData) {
+        public virtual void SendEmailAsync(EmailData emailData, Action<bool> cbck = null) {
             Log.DebugFormat("sending email asynchronoysly");
             // Send the email message asynchronously
-            Task.Run(() => SendEmail(emailData));
+            Task.Run(() => {
+                try {
+                    SendEmail(emailData);
+                    cbck?.Invoke(true);
+                } catch (Exception) {
+                    cbck?.Invoke(false);
+                    throw;
+                }
+
+
+            });
         }
 
         /// <summary>
@@ -107,7 +117,7 @@ namespace softWrench.sW4.Email {
                     var tryAgain = CheckEmailClientMailboxBusy(ex.StatusCode);
 
                     if (!tryAgain) {
-                        for (int i = 0; i < ex.InnerExceptions.Length; i++) {
+                        for (int i = 0;i < ex.InnerExceptions.Length;i++) {
                             tryAgain = CheckEmailClientMailboxBusy(ex.InnerExceptions[i].StatusCode);
                             if (tryAgain) {
                                 break;

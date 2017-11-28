@@ -171,6 +171,7 @@
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\BaseHandler.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\FirstSolarPartNeededHandler.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\handlers\FirstSolarInverterHandler.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3222Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3238Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3224Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3242Migration.cs" />
@@ -181,9 +182,14 @@
     <Compile Include="classes\com\cts\firstsolardispatch\model\Inverter.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\PartNeeded.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\DispatchTicket.cs" />
-    <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\BaseDispatchGenericEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\BaseDispatchEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchEmailCompositeService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchEscalationService.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchSchedullerService.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchStatusService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchSmsEmailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -205,6 +211,7 @@
     </Content>
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchsms.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatch.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchbutton.html" />
     <Content Include="web_content\firstsolardispatch\images\branding.png" />
