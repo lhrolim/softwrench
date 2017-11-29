@@ -161,7 +161,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
 
             var relList = new List<string> { attachsRelationship };
             var wonum = package.Wonum;
-            var woCompositions = await dataset.GetWoCompositions(package.WorkorderId.ToString(), wonum, siteId, relList);
+            var woCompositions = await dataset.GetWoCompositions(package.WorkorderId.ToString(), wonum, siteId, relList, null);
 
             EntityRepository.SearchEntityResult attachs = null;
 //            if (woCompositions.ResultObject != null && woCompositions.ResultObject.Any()) {
@@ -177,7 +177,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var dataset = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarWorkPackageDataSet>();
 
             var relList = new List<string> { relationship };
-            var woCompositions = AsyncHelper.RunSync(() => dataset.GetWoCompositions(package.WorkorderId + "", package.Wonum, siteId, relList));
+            var woCompositions = AsyncHelper.RunSync(() => dataset.GetWoCompositions(package.WorkorderId + "", package.Wonum, siteId, relList, null));
             var attachs = woCompositions.ResultObject.First(pair => relationship.Equals(pair.Key)).Value;
             AsyncHelper.RunSync(() => InnerHandleEmail(request, package, siteId, filterPrefix, attachs, emailService));
         }

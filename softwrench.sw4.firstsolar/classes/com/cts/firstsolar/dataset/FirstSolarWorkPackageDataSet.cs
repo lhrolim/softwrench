@@ -569,7 +569,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             deleted.ForEach(item => originalList.Remove(item));
         }
 
-        public async Task<CompositionFetchResult> GetWoCompositions(string woId, string woNum, string woSite, List<string> compositions) {
+        public async Task<CompositionFetchResult> GetWoCompositions(string woId, string woNum, string woSite, List<string> compositions, CompositionFetchRequest request) {
+            
             var user = SecurityFacade.CurrentUser();
             //TODO: generic solution
             //using the base default schema, regardless of the logged user
@@ -580,7 +581,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
 
             var woData = new JObject { { "workorderid", woId }, { "wonum", woNum }, { "siteid", woSite } };
-            return await base.GetCompositionData(appData, CompositionHandler.WoCompositionRequest(woId, compositions), woData);
+            return await base.GetCompositionData(appData, CompositionHandler.WoCompositionRequest(woId, compositions, request), woData);
         }
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application,
@@ -622,7 +623,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 request.CompositionList.Count == 1) {
                 return compList;
             }
-
+            
             var relList = new List<string> {
 
                 FSWPackageConstants.AttachsRelationship,
@@ -638,10 +639,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 relList.Add(FSWPackageConstants.WorklogsRelationship);
             }
 
-
-            //attachments and worklogs distribution
-            var woCompList = await GetWoCompositions(woId, woNum, woSite, relList);
-
+                //attachments and worklogs distribution
+           var woCompList = await GetWoCompositions(woId, woNum, woSite, relList, request);
+          
             CompositionHandler.HandleAttachmentsTab(woCompList, compList);
             CompositionHandler.HandleWorkLogs(woCompList, compList);
             CompositionHandler.HandleAttachments(woCompList, compList);

@@ -46,7 +46,7 @@
         };
 
         $scope.shouldShowSort = function (column, orientation) {
-            if ($scope.hideFilter()) {
+            if ($scope.hideFilter() || column.attribute.startsWith('#')) {
                 return false;
             }
             return !!column.attribute && ($scope.searchSort.field === column.attribute || $scope.searchSort.field === column.rendererParameters["sortattribute"]) && $scope.searchSort.order === orientation;

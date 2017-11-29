@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Persistence.Relational.Collection;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Search;
@@ -16,7 +17,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.dataset {
 
         private readonly RestEntityRepository _restRepository;
 
-        public ToshibaRestCollectionResolver(RestEntityRepository restRepository, EntityRepository respository,IContextLookuper lookuper): base(respository,lookuper) {
+        public ToshibaRestCollectionResolver(RestEntityRepository restRepository, EntityRepository respository,IContextLookuper lookuper, FilterDTOHandlerComposite filterDTOHandlerComposite) : base(respository,lookuper, filterDTOHandlerComposite) {
             _restRepository = restRepository;
         }
 

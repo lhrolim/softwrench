@@ -461,5 +461,10 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public void ClearDictionary()
+        {
+            _valuesDictionary= null;
+        }
+
     }
 }

@@ -16,15 +16,17 @@ using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.Collection {
     public class CollectionResolver : ISingletonComponent {
-        public CollectionResolver(EntityRepository.EntityRepository repository, IContextLookuper contextLookuper) {
+        public CollectionResolver(EntityRepository.EntityRepository repository, IContextLookuper contextLookuper, FilterDTOHandlerComposite filterDTOHandlerComposite) {
             EntityRepository = repository;
             ContextLookuper = contextLookuper;
+            _filterDTOHandlerComposite = filterDTOHandlerComposite;
         }
 
 
@@ -32,7 +34,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
         protected readonly ILog Log = LogManager.GetLogger(typeof(CollectionResolver));
 
-
+        private FilterDTOHandlerComposite _filterDTOHandlerComposite;
 
         protected IContextLookuper ContextLookuper { get; }
 
@@ -273,6 +275,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             paginatedDTO.PageNumber = paginatedSearch.PageNumber;
             paginatedDTO.PageSize = paginatedSearch.PageSize;
             paginatedDTO.TotalCount = paginatedSearch.TotalCount;
+
+            _filterDTOHandlerComposite.HandleDTO(parameter.CompositionSchema.Schemas.List, paginatedDTO);
+
             return searchRequestDto;
         }
 

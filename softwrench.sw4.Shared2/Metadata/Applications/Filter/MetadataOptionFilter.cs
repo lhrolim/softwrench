@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
     public class MetadataOptionFilter : BaseMetadataFilter {
@@ -47,13 +48,13 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Filter {
             Options = options;
             AllowBlank = allowBlank;
             DisplayCode = displayCode;
-            Lazy = lazy;
+            Lazy = lazy && provider != null; //granting that filters without a provider are marked as eager
             Preselected = preselected;
             AdvancedFilterSchemaId = advancedFilterSchemaId;
-        }
+        }           
 
         public override bool IsValid() {
-            return base.IsValid() && Provider != null;
+            return base.IsValid() && (Provider != null || Options.Any());
         }
     }
 }

@@ -210,6 +210,9 @@
                         paginatedSearch: paginatedSearch || buildPaginatedSearchDTO(null, pageSize)
                     };
                     parameters.compositionList = compositionNames;
+                    
+                    //validate if the framework is loading all the schema defined compositions
+                    parameters.isSchemaLoading = compositions == null;
 
                     if (compositions && compositions.length > 0) {
                         parameters.compositionList = compositions;
@@ -217,7 +220,7 @@
                     return {
                         application: applicationName,
                         request: parameters,
-                        data: fieldsTosubmit
+                        data: fieldsTosubmit,
                     };
                 };
 
@@ -323,6 +326,7 @@
                     // browser limits simultaneous client requests (usually 6).
                     // doing in a single request so it doesn't impact static files fetching and page loading              
                     const dto = buildFetchRequestDTO(schema, datamap);
+
                     return doPopulateWithCompositionData(dto, datamap, showLoading);
                 };
 

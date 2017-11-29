@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using cts.commons.portable.Util;
 
 namespace softWrench.sW4.Data.Search {
@@ -24,6 +27,7 @@ namespace softWrench.sW4.Data.Search {
         private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
             searchFilter = false;
             var searchOperator = SearchOperator.EQ;
+            
             rawValue = HandleNullScenario(rawValue);
             if (rawValue.Contains(">=") && rawValue.Contains("<=")) {
                 searchOperator = SearchOperator.BETWEEN;
@@ -40,15 +44,24 @@ namespace softWrench.sW4.Data.Search {
             } else if (rawValue.StartsWith("!%")) {
                 searchOperator = SearchOperator.NCONTAINS;
             } else if (rawValue.Contains(",")) {
-                searchOperator = rawValue.StartsWith("%") || rawValue.EndsWith("%") ? SearchOperator.ORCONTAINS : SearchOperator.OR;
+                searchOperator = rawValue.Contains("%") ? SearchOperator.ORCONTAINS : SearchOperator.OR;
             } else if (rawValue.StartsWith("%")) {
                 searchOperator = rawValue.EndsWith("%") ? SearchOperator.CONTAINS : SearchOperator.ENDWITH;
             } else if (rawValue.EndsWith("%")) {
                 searchOperator = SearchOperator.STARTWITH;
             } else if (rawValue.Equals("!@BLANK", StringComparison.OrdinalIgnoreCase)) {
                 searchOperator = SearchOperator.BLANK;
+            } else if ("=NULL".Equals(rawValue)) {
+                searchOperator = SearchOperator.NULLONLY;
             }
+
             value = searchOperator.NormalizedValue(rawValue);
+            if (value is IEnumerable<string>)
+            {
+                var list = (List<string>) value;
+                NullOr = list.Remove("NULL") || list.Remove("null");
+            }
+
             if (!value.Equals(rawValue)) {
                 searchFilter = true;
             }
@@ -62,7 +75,8 @@ namespace softWrench.sW4.Data.Search {
             } else if (rawValue.StartsWith("=" + SearchUtils.NullOrPrefix)) {
                 NullOr = true;
                 rawValue = rawValue.Substring(SearchUtils.NullOrPrefix.Length + 1);
-            }
+            } 
+            
             return rawValue;
         }
 
@@ -137,6 +151,12 @@ namespace softWrench.sW4.Data.Search {
         public bool IsBlankDate {
             get {
                 return IsDate && SearchOperator.BLANK == SearchOperator;
+            }
+        }
+
+        public bool IsNullOnly {
+            get {
+                return SearchOperator.NULLONLY == SearchOperator;
             }
         }
 

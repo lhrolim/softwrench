@@ -201,6 +201,8 @@
                 if (!showTime) {
                     dateFormat = dateFormat.replace('HH:mm', '');
                     dateFormat =dateFormat.replace('hh:mm', '');
+                    dateFormat =dateFormat.replace('a', '');
+                   
                 }
                 if (!showMinutes) {
                     dateFormat = dateFormat.replace(':mm', ':00');
@@ -213,6 +215,7 @@
                     //the format and the showtime flag are somehow conflitant, let´s adjust the format
                     dateFormat = dateFormat.replace('HH:mm', '');
                     dateFormat = dateFormat.replace('hh:mm', '');
+                    dateFormat =dateFormat.replace('a', '');
                 }
                 if (!showMinutes) {
                     dateFormat = dateFormat.replace(':mm', ':00');

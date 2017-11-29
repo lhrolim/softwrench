@@ -13,6 +13,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Context;
+using softWrench.sW4.Data.Filter;
 
 namespace softwrench.sW4.test.Data.Persistence.Relational.Collection {
 
@@ -23,19 +24,21 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.Collection {
         private ApplicationMetadata _srAppMetadata;
 
         private Mock<IContextLookuper> lookuperMock = TestUtil.CreateMock<IContextLookuper>();
+        private Mock<FilterDTOHandlerComposite> filterMock = TestUtil.CreateMock<FilterDTOHandlerComposite>();
 
         [TestInitialize]
         public override void Init() {
             base.Init();
             _srAppMetadata = MetadataProvider.Application("servicerequest").StaticFromSchema("editdetail");
             _srMetadata = SlicedEntityMetadataBuilder.GetInstance(MetadataProvider.Entity("sr"), _srAppMetadata.Schema);
-            TestUtil.ResetMocks(lookuperMock);
+            TestUtil.ResetMocks(lookuperMock, filterMock);
         }
 
         [TestMethod]
-        public void TestAllowNull() {
-            
-            var resolver = new CollectionResolver(null, lookuperMock.Object);
+        public void TestAllowNull()
+        {
+
+            var resolver = new CollectionResolver(null, lookuperMock.Object, filterMock.Object);
 
             var contextToUse = new ContextHolder();
 

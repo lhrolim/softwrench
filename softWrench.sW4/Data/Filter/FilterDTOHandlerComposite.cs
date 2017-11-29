@@ -27,7 +27,11 @@ namespace softWrench.sW4.Data.Filter {
             get; set;
         }
 
-        public void HandleDTO(ApplicationSchemaDefinition schema, PaginatedSearchRequestDto searchDto) {
+        public void HandleDTO(ApplicationSchemaDefinition schema, PaginatedSearchRequestDto searchDto) { 
+
+            if (searchDto == null)
+                return;
+
             FilterWhereClauseHandler.HandleDTO(schema, searchDto);
             QuickSearchWhereClauseHandler.HandleDTO(schema, searchDto);
             SortHandler.HandleSearchDTO(schema, searchDto);

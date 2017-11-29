@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using cts.commons.portable.Util;
 
 namespace softWrench.sW4.Data.Search {
     public static class SearchOperatorExtensions {
@@ -19,6 +20,14 @@ namespace softWrench.sW4.Data.Search {
                 case SearchOperator.BETWEEN: return " between ";
                 default: return " = ";
             }
+        }
+
+        private static string RemoveOperator(string searchOperator, string value) {
+            if (value.StartsWith(searchOperator)) {
+                return value.Remove(0, searchOperator.Length);
+            }
+
+            return value;
         }
 
         public static object NormalizedValue(this SearchOperator searchOperator, string rawValue)
@@ -48,12 +57,14 @@ namespace softWrench.sW4.Data.Search {
                     }
                     return rawValue1;
                 case SearchOperator.ENDWITH:
+                    rawValue1 = RemoveOperator("=", rawValue1);
                     if (!rawValue1.StartsWith("%")) {
                         rawValue1 = "%" + rawValue1;
                     }
 
                     return rawValue1;
                 case SearchOperator.STARTWITH:
+                    rawValue1 = RemoveOperator("=", rawValue1);
                     if (!rawValue1.EndsWith("%")) {
                         rawValue1 = rawValue1 + "%";
                     }
@@ -77,11 +88,11 @@ namespace softWrench.sW4.Data.Search {
                 case SearchOperator.OR:
                 case SearchOperator.ORCONTAINS:
                     rawValue1 = rawValue1.Replace("=", "");
-                    rawValue1 = rawValue1.Replace("%", "");
+                   
                     var normalizedValue = rawValue1.Split(',');
                     ICollection<string> result = new List<string>();
                     foreach (var value in normalizedValue) {
-                        if (!string.IsNullOrEmpty(value)) {
+                       if (!string.IsNullOrEmpty(value)) {
                             result.Add(value);
                         }
                     }

@@ -29,6 +29,10 @@ namespace softWrench.sW4.Data.API.Composition {
         /// </summary>
         public PaginatedSearchRequestDto PaginatedSearch { get; set; }
 
+        /// <summary>
+        /// True if the framework is loading all the schema defined compositions
+        /// </summary>
+        public bool IsSchemaLoading { get; set; }
 
     }
 }

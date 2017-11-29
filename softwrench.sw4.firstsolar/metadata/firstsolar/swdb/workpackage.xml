@@ -648,11 +648,28 @@
           </section>
         </schema>
 
+        <!-- Schema for filter exhibition. Schema consumed in the qyery is on metadata.xml -->
         <schema id="attachmentlist" stereotype="compositionlist">
+
+          <filters>
+            <filter attribute="#parsedurl" label="Document" style="width:300px" whereclause="description like (!@#value)" />
+            <optionfilter attribute="#attachsource" style="width:300px" whereclause="@firstSolarWorkPackageCompositionHandler.AttachmentSourceWhereClause" >
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Daily Outage Meeting Email Attachment" value="swwpkgdo:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Interconnect Document" value="swwpkg:interconnect" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Engineering Email Attachment" value="swwpkgme:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Operation Procedure File" value="swwpkg:operationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Relay Event File" value="swwpkg:relayevent" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Subcontractor Email Attachment" value="swwpkgco:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Walk Down Photo" value="swwpkg:walkdown" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Work Order" value="NULL" />
+            </optionfilter>
+            <datefilter attribute="createdate" label="Created Date" style="width:300px" />
+          </filters>
+          
           <field attribute="id" hidden="true"/>
           <field attribute="#parsedurl" label="Document"/>
           <field attribute="#attachsource" label="Source"/>
-          <field attribute="#attachcreateddate" label="Created Date">
+          <field attribute="createdate" label="Created Date">
             <renderer type="datetime"/>
           </field>
           <properties>

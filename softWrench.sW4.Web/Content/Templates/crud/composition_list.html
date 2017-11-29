@@ -37,10 +37,10 @@
                     ng-init="columnFilter = filterForColumn(column)">
                     <span ng-show="isFieldRequired(column,column.requiredExpression)" class="requiredfieldmark">* </span>
 
-                    <span ng-if="!!columnFilter && !hideFilter()" ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
+                    <span ng-if="!!columnFilter && shouldShowSort(column)" ng-click="sort(column)" class="add-on part" rel="tooltip" data-container="body" data-original-title="{{sortLabel(column)}}">
                         {{i18NLabel(column)}}
                     </span>
-                    <span ng-if="!columnFilter || hideFilter()" class="add-on part" data-container="body">
+                    <span ng-if="!columnFilter || !shouldShowSort(column)" class="add-on part" data-container="body">
                         {{i18NLabel(column)}}
                     </span>
                     <div class="fa fa-sort-amount-asc part" ng-show="shouldShowSort(column,'asc')"

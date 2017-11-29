@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
+using softWrench.sW4.Data.Filter;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Security.Context;
@@ -25,7 +26,7 @@ namespace softwrench.sw4.offlineserver.services {
         private const string NewRowstampTemplate = "Cast({0}.rowstamp AS {2})  > {1}";
         private const string AllNewTemplate = "{0} in ({1})";
 
-        public OffLineCollectionResolver(EntityRepository repository, IContextLookuper contextLookuper) : base(repository, contextLookuper) {
+        public OffLineCollectionResolver(EntityRepository repository, IContextLookuper contextLookuper, FilterDTOHandlerComposite filterDTOHandlerComposite) : base(repository, contextLookuper, filterDTOHandlerComposite) {
         }
 
         protected override void BuildParentQueryConstraint(CollectionMatchingResultWrapper matchingResultWrapper,

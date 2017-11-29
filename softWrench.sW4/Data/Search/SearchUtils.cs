@@ -155,12 +155,23 @@ namespace softWrench.sW4.Data.Search {
                         // this next line would be the ideal, but it will be complicade passing this parameters to BaseHibernateDAO. 
                         //statement.Append(GetDefaultParam(operatorPrefix, param + i)); 
                         // TODO: refactor later
-                        statement.Append(operatorPrefix + "'%" + value + "%'");
+                        if (!value.Contains('%')) {
+                            statement.Append(operatorPrefix + "'%" + value + "%'");
+                        }
+                        else {
+                            statement.Append(operatorPrefix + "'" + value + "'");
+                        }
+                        
                         statement.Append(" OR ");
                     }
                     statement.Remove(statement.Length - 4, 4); // remove the last " OR "
+
+                    if (searchParameter.NullOr) {
+                        statement.Append(" OR " + parameterData.Item3 + " IS NULL ");
+                    }
+
                     statement.Append(" )");
-                } else if (searchParameter.IsBlankNumber || searchParameter.IsBlankDate) {
+                } else if (searchParameter.IsBlankNumber || searchParameter.IsBlankDate || searchParameter.IsNullOnly) {
                     //https://controltechnologysolutions.atlassian.net/browse/YGSI-15
                     statement.Append("( " + parameterData.Item1 + " IS NULL )");
                 } else {

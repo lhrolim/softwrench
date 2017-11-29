@@ -2238,6 +2238,22 @@
     <application name="attachment" title="Attachment" entity="DOCLINKS">
       <schemas>
         <schema id="workpackagelist" stereotype="compositionlist" platform="web">
+          
+          <!-- Filters included for work package filter execute query through the framework (workpackage.xml schema: attachmentlist). -->
+          <filters>
+            <filter attribute="#parsedurl" label="Document" style="width:300px" whereclause="description like (!@#value)" />
+            <optionfilter attribute="#attachsource" style="width:300px" whereclause="@firstSolarWorkPackageCompositionHandler.AttachmentSourceWhereClause" >
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Relay Event File" value="swwpkg:relayevent" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Walk Down Photo" value="swwpkg:walkdown" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Interconnect Document" value="swwpkg:interconnect" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Operation Procedure File" value="swwpkg:operationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Subcontractor Email Attachment" value="swwpkgco:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Engineering Email Attachment" value="swwpkgme:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Daily Outage Meeting Email Attachment" value="swwpkgdo:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Work Order" value="NULL" />
+            </optionfilter>
+          </filters>
+          
           <field hidden="true" attribute="ownerid"/>
           <field attribute="docinfoid" hidden="true" />
           <field attribute="doclinksid" hidden="true" />
