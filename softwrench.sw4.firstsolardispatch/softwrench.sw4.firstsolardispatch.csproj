@@ -184,6 +184,9 @@
     <Compile Include="classes\com\cts\firstsolardispatch\model\DispatchTicket.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\email\BaseDispatchGenericEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\email\BaseDispatchEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\BaseDispatchStatusEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchArrivedEmailService.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchAcceptedEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchEmailCompositeService.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\email\DispatchEmailService.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\services\DispatchEscalationService.cs" />
@@ -211,6 +214,8 @@
     </Content>
     <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolardispatch\htmls\templates\dispatcharrived.html" />
+    <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchaccepted.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchsms.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatch.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchbutton.html" />

@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.dataset;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services;
+using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email;
 using softwrench.sw4.webcommons.classes.api;
 using softwrench.sW4.audit.classes.Model;
 using softwrench.sW4.audit.classes.Services;
@@ -21,6 +22,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
 
         [Import]
         public DispatchStatusService StatusService { get; set; }
+
+        [Import]
+        public DispatchAcceptedEmailService DispatchAcceptedEmailService { get; set; }
+
+        [Import]
+        public DispatchArrivedEmailService DispatchArrivedEmailService { get; set; }
 
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> ChangeStatus(string token, string status) {
@@ -42,6 +49,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
                 var entry = new AuditEntry(FirstSolarDispatchTicketDataSet.StatusAuditAction, "_dispatchticket",
                     ticket.Id.ToString(), ticket.Id.ToString(), ticket.Status.LabelName(), "", DateTime.Now);
                 AuditManager.SaveAuditEntry(entry);
+                if (DispatchTicketStatus.ACCEPTED.Equals(newStatus)) {
+                    await DispatchAcceptedEmailService.SendEmail(ticket);
+                }
+                if (DispatchTicketStatus.ARRIVED.Equals(newStatus)) {
+                    await DispatchArrivedEmailService.SendEmail(ticket);
+                }
             }
 
             return View("GenericRequest", new EmailRequestModel { Id = ticket.Id, Status = ticket.Status.LabelName() });

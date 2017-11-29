@@ -31,10 +31,33 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
             return BaseDispatch(service, "\\Desktop\\dispatchsms.html");
         }
 
+        [System.Web.Http.HttpGet]
+        public ActionResult DispatchAccepted() {
+            var service = SimpleInjectorGenericFactory.Instance.GetObject<DispatchAcceptedEmailService>();
+            return BaseStatusDispatch(service, "\\Desktop\\dispatchaccepted.html");
+        }
+
+        [System.Web.Http.HttpGet]
+        public ActionResult DispatchArrived() {
+            var service = SimpleInjectorGenericFactory.Instance.GetObject<DispatchArrivedEmailService>();
+            return BaseStatusDispatch(service, "\\Desktop\\dispatcharrived.html");
+        }
+
         private ActionResult BaseDispatch(BaseDispatchEmailService service, string path) {
             var ticket = Dao.FindAll<DispatchTicket>(typeof(DispatchTicket)).First();
             var site = Dao.FindAll<GfedSite>(typeof(GfedSite)).First();
-            var html = service.BuildMessage(ticket, site,true);
+            var html = service.BuildMessage(ticket, site, true);
+            return BaseDispatchGeneric(html, path);
+        }
+
+        private ActionResult BaseStatusDispatch(BaseDispatchStatusEmailService service, string path) {
+            var ticket = Dao.FindAll<DispatchTicket>(typeof(DispatchTicket)).First();
+            var site = Dao.FindAll<GfedSite>(typeof(GfedSite)).First();
+            var html = service.BuildMessage(ticket, site);
+            return BaseDispatchGeneric(html, path);
+        }
+
+        private ActionResult BaseDispatchGeneric(string html, string path) {
             var file = new StreamWriter(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + path);
             file.WriteLine(html);
             file.Close();

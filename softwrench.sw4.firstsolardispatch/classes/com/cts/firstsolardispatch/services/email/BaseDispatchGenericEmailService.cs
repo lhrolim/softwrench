@@ -26,14 +26,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
         protected abstract string GetTemplateFilePath();
 
-        public class DispatchOptions {
-            public bool SendSms { get; set; }
-            public int Hour { get; set; }
-
-            public DispatchOptions(bool sendSms, int hour) {
-                SendSms = sendSms;
-                Hour = hour;
-            }
+        protected string BuildMessage(object templateData) {
+            BuildTemplate();
+            return Template.Render(Hash.FromAnonymousObject(templateData));
         }
     }
 }

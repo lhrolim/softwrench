@@ -21,13 +21,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
         public async Task SendEmail(DispatchTicket ticket) {
             var hour = ticket.CalculateHours();
-            if (hour == ticket.CalculateLastSentHours()) {
+            if (hour == ticket.CalculateLastSentHours() && !(hour == 0 && ticket.ImmediateDispatch)) {
                 //not sending the same email twice for this hour timespan
                 return;
             }
             var dao = SimpleInjectorGenericFactory.Instance.GetObject<ISWDBHibernateDAO>();
             var site = await dao.FindSingleByQueryAsync<GfedSite>(GfedSite.FromGFedId, ticket.GfedId);
-            var subject = "[#{0}] PE Dispatch (Hour {1}) – {2}".Fmt(ticket.Id,hour, site.FacilityName);
+            var subject = "[#{0}] PE Dispatch (Hour {1}) – {2}".Fmt(ticket.Id, hour, site.FacilityName);
             if (!ApplicationConfiguration.IsProd()) {
                 subject = "[{0}]".Fmt(ApplicationConfiguration.Profile) + subject;
             }
@@ -51,7 +51,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             });
         }
 
-        private object BuildInverterInfo(Inverter inverter) {
+        private static object BuildInverterInfo(Inverter inverter) {
             var sb = new StringBuilder();
             var maximoDao = SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>();
             var assetDescription = maximoDao.FindSingleByNativeQuery<string>("select description from asset where assetnum = ? and siteid = ?", inverter.AssetNum, inverter.Siteid);
@@ -62,7 +62,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             };
         }
 
-        private string BuildTo(GfedSite site, int hour) {
+        private static string BuildTo(GfedSite site, int hour) {
             var toList = new List<string>();
 
 
@@ -84,16 +84,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         }
 
         public string BuildMessage(DispatchTicket ticket, GfedSite site, bool allowRejection) {
-            BuildTemplate();
-
             var redirectService = SimpleInjectorGenericFactory.Instance.GetObject<RedirectService>();
             var accepturl = redirectService.GetActionUrl("DispatchEmail", "ChangeStatus", "token={0}&status=ACCEPTED".Fmt(ticket.AccessToken));
             var rejecturl = redirectService.GetActionUrl("DispatchEmail", "ChangeStatus", "token={0}&status=REJECTED".Fmt(ticket.AccessToken));
             var arrivedurl = redirectService.GetActionUrl("DispatchEmail", "ChangeStatus", "token={0}&status=ARRIVED".Fmt(ticket.AccessToken));
             var resolvedurl = redirectService.GetActionUrl("DispatchEmail", "ChangeStatus", "token={0}&status=RESOLVED".Fmt(ticket.AccessToken));
-            bool accepted = DispatchTicketStatus.ACCEPTED.Equals(ticket.Status) || DispatchTicketStatus.ARRIVED.Equals(ticket.Status);
-
-            var msg = Template.Render(Hash.FromAnonymousObject(new {
+            var accepted = DispatchTicketStatus.ACCEPTED.Equals(ticket.Status) || DispatchTicketStatus.ARRIVED.Equals(ticket.Status);
+            var data = new {
                 accepted,
                 accepturl,
                 rejecturl,
@@ -105,8 +102,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
                 site = site.FacilityName,
                 comments = ticket.Comments,
                 inverters = BuildInverterInfo(ticket)
-            }));
-            return msg;
+            };
+            return BuildMessage(data);
         }
 
 

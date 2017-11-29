@@ -55,6 +55,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
         [Import]
         public DispatchStatusService StatusService { get; set; }
 
+        [Import]
+        public DispatchAcceptedEmailService DispatchAcceptedEmailService { get; set; }
+
+        [Import]
+        public DispatchArrivedEmailService DispatchArrivedEmailService { get; set; }
+
 
         protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var baseData = await base.FetchDetailDataMap(application, user, request);
@@ -138,7 +144,11 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             }
 
             var user = SecurityFacade.CurrentUser().DBUser;
-            ticket.ReportedBy = user;
+            var refetchEmail = true;
+            if (ticket.ReportedBy?.Id == null) {
+                ticket.ReportedBy = user;
+                refetchEmail = false;
+            }
 
             if (ticket.ImmediateDispatch && dispatching) {
                 ticket.DispatchExpectedDate = DateTime.Now;
@@ -177,13 +187,25 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
                 ReloadMode = ReloadMode.MainDetail
             };
 
+            if (hasStatusChange) {
+                if ((DispatchTicketStatus.ACCEPTED.Equals(ticket.Status) || DispatchTicketStatus.ARRIVED.Equals(ticket.Status)) && refetchEmail && ticket.ReportedBy.Id != null) {
+                    ticket.ReportedBy = await SecurityFacade.GetInstance().FetchUser(ticket.ReportedBy.Id.Value); // workaround to fetch the email again
+                }
+                if (DispatchTicketStatus.ACCEPTED.Equals(ticket.Status)) {
+                    await DispatchAcceptedEmailService.SendEmail(ticket);
+                }
+                if (DispatchTicketStatus.ARRIVED.Equals(ticket.Status)) {
+                    await DispatchArrivedEmailService.SendEmail(ticket);
+                }
+            }
+
             if (!hasStatusChange || !dispatching)
                 return targetResult;
 
             if (ticket.ImmediateDispatch) {
                 await DispatchEmailService.SendEmails(ticket);
                 // await DispatchSmsEmailService.SendEmail(ticket, 0);
-            } 
+            }
 
             return targetResult;
         }
