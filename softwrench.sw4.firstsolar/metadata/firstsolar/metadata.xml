@@ -820,7 +820,7 @@
         </schema>
 
         <schema id="adetail" redeclaring="false">
-          <customization position="+reportdate">
+          <customization position="+#reportdateplaceholder">
             <field attribute="woeq10" label="#Dispatcher Id" helpicon="right" tooltip="The dispatcher ticket id that originated this workorder"/>
           </customization>
           <customization position="owner"/>

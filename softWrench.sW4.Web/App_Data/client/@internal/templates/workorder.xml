@@ -592,9 +592,12 @@
               <association label="Reported By" target="reportedby" labelfield="reportedbyperson_.displayname" default="@personid" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
               </association>
+              
               <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
                 <renderer type="datetime" />
               </field>
+              <!-- Used to allow a customization on the real reported date since there´s a hidden field that would position the field on the wrong place-->
+              <field attribute="#reportdateplaceholder" hidden="true"/>
             </section>
 
           </section>
