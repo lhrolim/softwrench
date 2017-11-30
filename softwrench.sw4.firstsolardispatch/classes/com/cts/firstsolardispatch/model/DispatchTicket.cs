@@ -8,7 +8,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using NHibernate.Mapping.Attributes;
 using NHibernate.Type;
-using NHibernate.Util;
 using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Data.Entities.Attachment;
 
@@ -18,7 +17,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
     public class DispatchTicket : IBaseEntity {
         public const string ByToken = "from DispatchTicket where AccessToken = ?";
 
-        public const string EscalationQuery = "from DispatchTicket where Status in ('Scheduled','Dispatched')";
+        public const string EscalationQuery = "from DispatchTicket where Status in ('Scheduled','Dispatched') and DispatchExpectedDate is not null and DispatchExpectedDate < ?";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -125,7 +124,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
 
         public int CalculateLastSentHours() {
             if (!LastSent.HasValue || !DispatchExpectedDate.HasValue) {
-                return 0;
+                return int.MinValue;
             }
 
             var ts = LastSent.Value - DispatchExpectedDate.Value;

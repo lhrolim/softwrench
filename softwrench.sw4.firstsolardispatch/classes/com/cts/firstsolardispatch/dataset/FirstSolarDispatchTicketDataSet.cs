@@ -205,8 +205,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
                 return targetResult;
 
             if (ticket.ImmediateDispatch) {
-                await DispatchEmailService.SendEmails(ticket);
-                // await DispatchSmsEmailService.SendEmail(ticket, 0);
+                await DispatchEmailService.SendEmails(ticket, true);
             }
 
             return targetResult;

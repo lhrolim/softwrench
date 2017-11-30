@@ -19,9 +19,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             return ticket.Inverters?.Select(BuildInverterInfo).ToList() ?? new List<object>();
         }
 
-        public async Task SendEmail(DispatchTicket ticket) {
+        public async Task SendEmail(DispatchTicket ticket, bool force = false) {
             var hour = ticket.CalculateHours();
-            if (hour == ticket.CalculateLastSentHours() && !(hour == 0 && ticket.ImmediateDispatch)) {
+            if (hour == ticket.CalculateLastSentHours() && !force) {
                 //not sending the same email twice for this hour timespan
                 return;
             }

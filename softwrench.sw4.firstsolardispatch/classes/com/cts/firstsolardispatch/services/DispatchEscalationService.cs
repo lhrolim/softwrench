@@ -33,7 +33,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         }
 
         public override async Task ExecuteJob() {
-            var tickets = Dao.FindByQuery<DispatchTicket>(DispatchTicket.EscalationQuery);
+            var tickets = Dao.FindByQuery<DispatchTicket>(DispatchTicket.EscalationQuery, DateTime.Now);
             foreach (var ticket in tickets) {
                 await EmailService.SendEmails(ticket);
             }

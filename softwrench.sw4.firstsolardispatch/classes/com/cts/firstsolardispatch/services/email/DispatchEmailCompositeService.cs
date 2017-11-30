@@ -16,9 +16,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         [Import]
         public DispatchSmsEmailService DispatchSmsEmailService { get; set; }
 
-        public async Task SendEmails(DispatchTicket ticket) {
-            await DispatchEmailService.SendEmail(ticket);
-//            await DispatchSmsEmailService.SendEmail(ticket, hour);
+        public async Task SendEmails(DispatchTicket ticket, bool force = false) {
+            await DispatchEmailService.SendEmail(ticket, force);
+            // await DispatchSmsEmailService.SendEmail(ticket, force);
         }
 
     }
