@@ -111,7 +111,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
 
             user = _hapagHelper.HandleExternalUser(user);
 
-            SecurityFacade.ClearUserFromCache(user.Login, user);
+            SecurityFacade.ClearUserFromCache(user.Login);
         }
 
         public async Task Sync() {
