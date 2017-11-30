@@ -21,6 +21,7 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Entities.Attachment;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
@@ -176,6 +177,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
 
 
             var newTickets = HandleFileExplorerDocLinks(ticket, crudoperationData, "attachments_");
+
             foreach (var newTicket in newTickets) {
                 ticket.Attachments.Add(newTicket);
             }

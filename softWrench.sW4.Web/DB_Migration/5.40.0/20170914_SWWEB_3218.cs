@@ -50,4 +50,24 @@ namespace softWrench.sW4.Web.DB_Migration._5._40._0 {
 
         }
     }
+
+    [Migration(20171130632)]
+
+    public class Migration20171130Swweb32382 : Migration {
+
+        public override void Up() {
+
+            if (!MigrationContext.IsMySql)
+            {
+                Delete.Index("IX_SW_DOCINFO_checksum").OnTable("SW_DOCINFO");
+//                Delete.Column("checksum").FromTable("SW_DOCINFO");
+//                Alter.Table("SW_DOCINFO").AlterColumn("checksum").AsString(MigrationUtil.StringLarge);
+            } 
+        }
+
+        public override void Down() {
+
+        }
+    }
+
 }
