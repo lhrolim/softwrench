@@ -75,12 +75,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return anyNewCallOut;
         }
 
-        public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend) {
-            await AttachmentsHandler.HandleEmails(package, siteId, FSWPackageConstants.CallOutAttachsRelationship, FilterPrefix, calloutsToSend, CallOutEmailService);
+        public async Task HandleEmails(WorkPackage package, WorkOrderData workOrderData, IEnumerable<CallOut> calloutsToSend) {
+            await AttachmentsHandler.HandleEmails(package, workOrderData, FSWPackageConstants.CallOutAttachsRelationship, FilterPrefix, calloutsToSend, CallOutEmailService);
         }
 
-        public void HandleEmail(CallOut callOut, WorkPackage package, string siteId) {
-            AttachmentsHandler.HandleEmail(callOut, package, siteId, FilterPrefix, FSWPackageConstants.CallOutAttachsRelationship, CallOutEmailService);
+        public void HandleEmail(CallOut callOut, WorkPackage package, WorkOrderData workOrderData) {
+            AttachmentsHandler.HandleEmail(callOut, package, workOrderData, FilterPrefix, FSWPackageConstants.CallOutAttachsRelationship, CallOutEmailService);
         }
 
         private CallOut HandleCallout(CrudOperationData crudoperationData, CallOut callOut, WorkPackage workpackage, CrudOperationData woData) {

@@ -67,7 +67,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         [System.Web.Http.HttpPost]
         public async Task<ActionResult> EngeneeringEvaluationEmail([FromBody] EvaluationEmailModel model) {
             var wp = await DAO.FindByPKAsync<WorkPackage>(model.WpId);
-            await FirstSolarWorkPackageEvaluationEmailHandler.SendEmail(model, wp, model.SiteId);
+            var workOrderData = new WorkOrderData {
+                SiteId = model.SiteId
+            };
+            await FirstSolarWorkPackageEvaluationEmailHandler.SendEmail(model, wp, workOrderData);
             return null;
         }
     }

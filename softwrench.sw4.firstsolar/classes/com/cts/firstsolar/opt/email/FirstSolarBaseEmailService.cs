@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
@@ -21,9 +22,10 @@ using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data;
 using softWrench.sW4.Security.Services;
+using cts.commons.portable.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
-    public abstract class FirstSolarBaseEmailService <T> : ISingletonComponent{
+    public abstract class FirstSolarBaseEmailService<T> : ISingletonComponent {
         protected readonly IEmailService EmailService;
         protected Template Template;
         protected readonly RedirectService RedirectService;
@@ -38,7 +40,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         [Import]
         public ISWDBHibernateDAO Dao { get; set; }
 
-        protected FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) {
+        [Import]
+        public IMaximoHibernateDAO MaximoDao { get; set; }
+
+        public FirstSolarBaseEmailService(IEmailService emailService, RedirectService redirectService, IApplicationConfiguration appConfig, IConfigurationFacade configurationFacade) {
             Log.Debug("init Log");
             EmailService = emailService;
             RedirectService = redirectService;
@@ -48,8 +53,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             HeaderImageUrl = HandleHeaderImage();
         }
 
-        public abstract Task<T> SendEmail(T request, WorkPackage package,string siteId, List<EmailAttachment> attachs = null);
-            
+        public async Task<T> SendEmail(T request, WorkPackage package, WorkOrderData workOrderData,
+            List<EmailAttachment> attachs = null) {
+            if (ValidateSendMail(package.WorkorderId,workOrderData.WorkType)) {
+                return await DoSendEmail(request, package, workOrderData, attachs);
+            }
+            return await Task.FromResult(request);
+
+        }
+
+        public abstract Task<T> DoSendEmail(T request, WorkPackage package, WorkOrderData workOrderData,
+            List<EmailAttachment> attachs = null);
 
         public virtual string HandleEmailRecipient(AttributeHolder data, string attributeName) {
             var stringOrArray = data.GetAttribute(attributeName);
@@ -133,5 +147,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
         protected static string SafePlaceholder(string value) {
             return string.IsNullOrEmpty(value) ? "&nbsp;" : value.Replace("\n", "<br/>");
         }
+
+        private string GetWoWorkType(long woId) {
+            var wos = MaximoDao.FindByNativeQuery("select worktype from workorder where workorderid = '{0}'".Fmt(woId));
+            return wos.First()["worktype"];
+        }
+
+        private bool ValidateSendMail(long woid, string worktype) {
+            if (string.IsNullOrEmpty(worktype)) {
+                worktype = GetWoWorkType(woid);
+            }
+            return string.IsNullOrWhiteSpace(worktype) || !"PM".Equals(worktype.ToUpper());
+        }
+    }
+
+    public class WorkOrderData {
+
+        public string SiteId { get; set; }
+        public string WorkType { get; set; }
     }
 }

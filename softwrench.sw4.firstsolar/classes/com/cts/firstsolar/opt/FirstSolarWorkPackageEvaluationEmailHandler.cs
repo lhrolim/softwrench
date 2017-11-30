@@ -36,7 +36,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         [Transactional(DBType.Swdb)]
-        public override async Task<EvaluationEmailModel> SendEmail(EvaluationEmailModel model, WorkPackage wp, string siteId, List<EmailAttachment> attachs = null)
+        public override async Task<EvaluationEmailModel> DoSendEmail(EvaluationEmailModel model, WorkPackage wp, WorkOrderData workOrderData, List<EmailAttachment> attachs = null)
         {
             var subject = "[{0}] A new engineering evaluation has been created".Fmt(wp.Wpnum);
 

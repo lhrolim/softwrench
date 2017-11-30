@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using NHibernate.Util;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -396,21 +397,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
             var tupleResult = await SavePackage(operationWrapper);
 
-            var siteId = "";
-            var json = operationWrapper.JSON;
-            JToken token;
-            json.TryGetValue("#workorder_.siteid", out token);
-            if (token != null) {
-                siteId = token.Value<string>();
-            }
-
+           
             var workPackage = tupleResult.Item1;
 
             var data = (CrudOperationData)operationWrapper.GetOperationData;
 
+            var workOrderData = new WorkOrderData {
+                SiteId = data.GetStringAttribute("#workorder_.siteid")
+                    , WorkType = data.GetStringAttribute("#workorder_.worktype")
+            };
             if (!"COMP".EqualsIc(data.GetStringAttribute("#workorder_.status"))) {
                 //as per SWWEB-3230
-                await HandleEmails(workPackage, siteId, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4,
+                await HandleEmails(workPackage, workOrderData, tupleResult.Item2, tupleResult.Item3, tupleResult.Item4,
                     operationWrapper.OperationName.Equals(OperationConstants.CRUD_CREATE));
             }
 
@@ -662,7 +660,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return Dao.FindByPK<WorkPackage>(typeof(WorkPackage), id);
         }
 
-        private async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
+        private async Task HandleEmails(WorkPackage package, WorkOrderData workOrderData, IEnumerable<CallOut> calloutsToSend, IEnumerable<MaintenanceEngineering> maintenanceEngineersToSend, IEnumerable<DailyOutageMeeting> domsToSend, bool isCreation) {
             var gfedService = SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>();
             //TODO:review
             var to = await gfedService.BuildToFromGfed(package);
@@ -672,11 +670,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
                 }
             }
             await gfedService.LoadGfedData(package, calloutsToSend?.ToList());
-            await CallOutHandler.HandleEmails(package, siteId, calloutsToSend);
-            await MaintenanceEngineeringHandler.HandleEmails(package, siteId, maintenanceEngineersToSend);
-            await DailyOutageMeetingHandler.HandleEmails(package, siteId, domsToSend);
+            await CallOutHandler.HandleEmails(package, workOrderData, calloutsToSend);
+            await MaintenanceEngineeringHandler.HandleEmails(package, workOrderData, maintenanceEngineersToSend);
+            await DailyOutageMeetingHandler.HandleEmails(package, workOrderData, domsToSend);
             if (isCreation) {
-                await WpCreationEmailHandler.SendEmail(package, package, siteId);
+                await WpCreationEmailHandler.SendEmail(package, package, workOrderData);
             }
         }
 

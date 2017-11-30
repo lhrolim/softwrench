@@ -76,12 +76,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             return anyNewDom;
         }
 
-        public async Task HandleEmails(WorkPackage package, string siteId, IEnumerable<DailyOutageMeeting> domsToSend) {
+        public async Task HandleEmails(WorkPackage package, WorkOrderData workOrderData, IEnumerable<DailyOutageMeeting> domsToSend) {
             if (package.CreatedDate != null) {
                 var lostTotal = await SimpleInjectorGenericFactory.Instance.GetObject<FirstSolarCustomGlobalFedService>().LoadGfedTotalLostEnergy(package.WorkorderId, package.CreatedDate.Value);
                 package.MwhLostTotal = lostTotal.ToString(new CultureInfo("en-US"));
             }
-            await AttachmentsHandler.HandleEmails(package, siteId, FSWPackageConstants.DailyOutageMeetingAttachsRelationship, FilterPrefix, domsToSend, EmailService);
+            await AttachmentsHandler.HandleEmails(package, workOrderData, FSWPackageConstants.DailyOutageMeetingAttachsRelationship, FilterPrefix, domsToSend, EmailService);
         }
 
         private static DailyOutageMeeting GetOurCreateDailyOutageMeeting(AttributeHolder crudoperationData, ICollection<DailyOutageMeeting> existingDom) {

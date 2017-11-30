@@ -18,12 +18,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             Log.Debug("init Log");
 
         }
-
-        public override async Task<IFsEmailRequest> SendEmail(IFsEmailRequest request, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
+        
+        public override async Task<IFsEmailRequest> DoSendEmail(IFsEmailRequest request, WorkPackage package, WorkOrderData workOrderData, List<EmailAttachment> attachs = null) {
+            
             Validate.NotNull(request, "toSend");
             Log.InfoFormat("sending {0} email for {1} to {2}", RequestI18N(), request.Id, request.Email);
 
-            var emailData = BuildEmailData(request, package, siteId, attachs);
+            var emailData = BuildEmailData(request, package, workOrderData.SiteId, attachs);
             EmailService.SendEmail(emailData);
 
             var emailStatus = new WorkPackageEmailStatus {
@@ -41,8 +42,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
 
             return await Dao.SaveAsync(request);
         }
-
-   
+        
         public abstract void HandleReject(IFsEmailRequest request, WorkPackage package);
        
     }

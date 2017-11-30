@@ -42,9 +42,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             Log.Debug("init Log");
         }
 
-        public override async Task<DailyOutageMeeting> SendEmail(DailyOutageMeeting dom, WorkPackage package, string siteId, List<EmailAttachment> attachs = null) {
+        public override async Task<DailyOutageMeeting> DoSendEmail(DailyOutageMeeting dom, WorkPackage package, WorkOrderData workOrderData, List<EmailAttachment> attachs = null) {
+
             Validate.NotNull(dom, "toSend");
-            var emailData = BuildEmailData(dom, package, siteId, attachs);
+            var emailData = BuildEmailData(dom, package, workOrderData.SiteId, attachs);
             if (emailData == null) {
                 Log.InfoFormat("failed to sent {0} email for {1} to {2}, probably missing '/FirstSolar/OPT/DefaultDailyOutageMeetingToEmail' config", RequestI18N(), dom.Id);
                 dom.Status = RequestStatus.Error;
