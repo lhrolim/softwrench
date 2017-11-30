@@ -122,13 +122,19 @@ angular.module('sw_layout')
 
         //afterchange
         afteritemchange: function (event) {
-            if (event.fields['linetype'].equalIc("sparepart")) {
-                event.fields['#description'] = event.fields['sparepart_.description'];
+            const dm = event.fields;
+            if (dm['linetype'].equalIc("sparepart")) {
+                dm['#description'] = dm['sparepart_.description'];
             } else {
-                event.fields['#description'] = event.fields['item_.description'];
+                dm['#description'] = dm['item_.description'];
             }
 
             doItemLookup(event);
+            if (!!dm['storeloc']) {
+                //store loc already selected
+                doItemAssociation(event);
+            }
+
         },
 
         //afterchange

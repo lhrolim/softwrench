@@ -110,7 +110,8 @@
           <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
         </relationship>
         <relationship to="location" qualifier="storeroom">
-          <relationshipAttribute from="siteid" to="siteid" primary="true" />
+          <relationshipAttribute from="storeloc" to="location" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
           <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
         </relationship>
         <relationship to="invbalances" qualifier="invbal" >
@@ -118,6 +119,7 @@
           <relationshipAttribute from="location" to="location" />
           <relationshipAttribute from="siteid" to="siteid" />
         </relationship>
+        
         <relationship to="chartofaccounts" >
           <relationshipAttribute from="gldebitacct" to="glaccount" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />

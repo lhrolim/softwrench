@@ -15,7 +15,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var filter = preParams.BASEDto;
             var siteId = preParams.OriginalEntity.GetAttribute("siteid");
             var facilityQuery = FirstSolarFacilityUtil.BaseFacilityQuery("invbalances.location");
-            filter.AppendWhereClause($"(ITEMNUM IN (SELECT ITEMNUM FROM invbalances WHERE siteid =  '{siteId}' and  ({facilityQuery}) ) )");
+            var storeLocQuery = "1=1";
+            var storeLocNumber =  preParams.OriginalEntity.GetStringAttribute("storeloc");
+            if (storeLocNumber != null){
+                storeLocQuery = $"location = '{storeLocNumber}'";
+            }
+            filter.AppendWhereClause($"(ITEMNUM IN (SELECT ITEMNUM FROM invbalances WHERE siteid =  '{siteId}' and  ({facilityQuery}) and ({storeLocQuery}) ) )");
+
             return filter;
         }
 
