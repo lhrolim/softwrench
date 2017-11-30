@@ -281,6 +281,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             if (ApplicationConfiguration.IsUnitTest) {
                 targetResult.ResultObject = user;
             }
+            if (targetResult.UserId == null || targetResult.SiteId==null) {
+                targetResult.UserId = user.MaximoPersonId;
+                targetResult.SiteId = user.SiteId;
+            }
 
             return targetResult;
         }
