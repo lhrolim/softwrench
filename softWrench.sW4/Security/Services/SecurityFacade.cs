@@ -254,8 +254,12 @@ namespace softWrench.sW4.Security.Services {
                 if (inMemoryUser == null) {
                     throw UnauthorizedException.NotAuthenticated(currLogin);
                 }
-                Log.DebugFormat("retrieving user {0} from cache", inMemoryUser.Login);
-                return inMemoryUser;
+                if (!inMemoryUser.NeedsRevalidation) {
+                    Log.DebugFormat("retrieving user {0} from cache", inMemoryUser.Login);
+                    return inMemoryUser;
+                }
+                Users.Remove(currLogin);
+
             }
 
 
@@ -305,23 +309,33 @@ namespace softWrench.sW4.Security.Services {
             return currentUser;
         }
 
-        //TODO: this could lead to concurrency problems
-        public static void ClearUserFromCache(string login = null, InMemoryUser userToPut = null) {
+        /// <summary>
+        /// Marks Users cached to be cleaned appropriately  
+        /// </summary>
+        /// <param name="login">login of the user</param>
+        /// <param name="profile">an optional profile to check for</param>
+        public static void ClearUserFromCache(string login = null,  UserProfile profile = null) {
             //this means, an action that affects all the users, like updating a profile
             if (login == null) {
-                Users.Clear();
+                foreach (var user in Users.Values) {
+                    if (user.Profiles.Contains(profile)) {
+                        //marking that a revalidation is required in order to avoid concurrency issues
+                        user.NeedsRevalidation = true;
+                    }
+                }
+
+                //                Users.Clear();
             } else if (Users.ContainsKey(login)) {
-                Users.Remove(login);
-            }
-            if (userToPut != null) {
-                Users[login] = userToPut;
+                //marking that a revalidation is required in order to avoid concurrency issues
+                Users[login].NeedsRevalidation = true;
             }
         }
 
 
-        public void SaveUserProfile(UserProfile profile) {
-            _userProfileManager.SaveUserProfile(profile);
-            ClearUserFromCache();
+        public UserProfile SaveUserProfile(UserProfile profile) {
+            profile = _userProfileManager.SaveUserProfile(profile);
+            ClearUserFromCache(null,  profile);
+            return profile;
         }
 
 

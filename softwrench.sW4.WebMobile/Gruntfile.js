@@ -160,7 +160,7 @@ module.exports = function (grunt) {
     var testFixtures = {pattern: 'tests/resources/**/*.json', watched: true, served: true, included: false};
 
 
-    var ngMockScript = ["bower_components/angular-mocks/angular-mocks.js"];
+    var ngMockScript = ["bower_components/angular-mocks/angular-mocks.js","bower_components/karma-read-json/karma-read-json.js"];
 
     var allScripts = []
         .concat(vendorScripts).concat(ngMockScript)
@@ -666,7 +666,7 @@ module.exports = function (grunt) {
                     },
                     preprocessors: getKarmaPreprocessorsConfig(testScripts),
                     files: ["overrides/cordova.js"]
-                        .concat(vendorScripts).concat(ngMockScript)
+                        .concat(vendorScripts).concat(ngMockScript).concat(testFixtures)
                         .concat(solutionScripts.map(function (s) { return "www/Content/public/" + s; }))
                         .concat(testScripts)
                 }
@@ -682,6 +682,7 @@ module.exports = function (grunt) {
                     preprocessors: getKarmaPreprocessorsConfig(testScripts),
                     files: [
                         "overrides/cordova.js",
+                        testFixtures,
                         "www/Content/public/vendor/vendor.min.js"
                     ].concat(ngMockScript).concat(["www/Content/public/app.min.js"]).concat(testScripts)
                 }

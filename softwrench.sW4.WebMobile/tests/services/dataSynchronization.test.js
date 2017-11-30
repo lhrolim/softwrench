@@ -1,8 +1,8 @@
-describe("data synchronization suite",()=>{
+describe("data synchronization suite", function(){
 
     var dataSynchronizationService;
 
-    var offlineCompositionService,dispatcherService,$q,swdbDAO, entities, attachmentDataSynchronizationService;
+    var offlineCompositionService,dispatcherService,$q,swdbDAO, entities, attachmentDataSynchronizationService,$rootScope;
 
 
     beforeEach(module("softwrench"));
@@ -29,7 +29,7 @@ describe("data synchronization suite",()=>{
     it("should append composition queries to array",(done)=>{
 
 
-        var data = readJSON('tests/resources/jsons/syncdata/sampleresponse.json');
+        var data = readJSON('tests/resources/jsons/syncdata/pullnewdata/sampleresponse.json');
 
         let compositionCount =0;
 
@@ -59,6 +59,17 @@ describe("data synchronization suite",()=>{
             expect(results.numberOfDownloadedItems).toEqual(topApplicationCount);
             //379
             expect(topApplicationCount + compositionCount).toEqual(results.queryArray.length);
+        }).finally(done);
+        $rootScope.$digest();
+    });
+
+    it ("empty test scenario",(done)=>{
+        var data = readJSON('tests/resources/jsons/syncdata/pullnewdata/emptydata_response.json');
+        dataSynchronizationService.generateQueriesPromise({data}).then((results)=>{
+            //53
+            expect(results.numberOfDownloadedItems).toEqual(0);
+            //379
+            expect(0).toEqual(results.queryArray.length);
         }).finally(done);
         $rootScope.$digest();
     });

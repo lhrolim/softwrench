@@ -1,0 +1,60 @@
+﻿{
+    "clientName": "firstsolar",
+    "topApplicationData": [
+        {
+            "applicationName": "_configuration",
+            "insertOrUpdateDataMaps": [],
+            "newdataMaps": [],
+            "updatedDataMaps": [],
+            "deletedRecordIds": [],
+            "textIndexes": [],
+            "numericIndexes": [],
+            "dateIndexes": [],
+            "isEmpty": true,
+            "isEmptyExceptDeletion": true,
+            "hasNewEntries": false,
+            "newCount": 0,
+            "updateCount": 0
+        }
+    ],
+    "compositionData": [],
+    "userProperties": {
+        "sync.availablefacilities": [
+            "ACS",
+            "AES",
+            "AVV",
+            "BWS",
+            "CCS",
+            "CGL",
+            "CID",
+            "KNS",
+            "KSS",
+            "LHS",
+            "NSS",
+            "ORS",
+            "SLS",
+            "TPZ"
+        ],
+        "sync.facilities": [
+            "ACS",
+            "AES",
+            "AVV",
+            "BWS",
+            "CCS",
+            "CGL",
+            "CID",
+            "KNS",
+            "KSS",
+            "LHS",
+            "NSS",
+            "ORS",
+            "SLS",
+            "TPZ"
+        ],
+        "siteid": "1803",
+        "orgid": "EAGLESA",
+        "laborcode": "TCOTTIER"
+    },
+    "facilitiesUpdated": false,
+    "isEmpty": true
+}

@@ -33,7 +33,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private readonly SWDBHibernateDAO _dao;
 
-        private readonly MaximoHibernateDAO maximoHibernateDAO;
+        private readonly MaximoHibernateDAO _maximoHibernateDAO;
 
         private readonly UserProfileManager _userProfileManager;
 
@@ -42,7 +42,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
         public UserProfileController(SWDBHibernateDAO dao, UserProfileManager userProfileManager, MaximoHibernateDAO maximoHibernateDAO) {
             _dao = dao;
             _userProfileManager = userProfileManager;
-            this.maximoHibernateDAO = maximoHibernateDAO;
+            _maximoHibernateDAO = maximoHibernateDAO;
         }
 
 
@@ -122,7 +122,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         [HttpPost]
         public IGenericResponseResult Save(UserProfile screenUserProfile) {
-            var profile = _userProfileManager.SaveUserProfile(screenUserProfile);
+            var profile = SecurityFacade.GetInstance().SaveUserProfile(screenUserProfile);
             var listDto = new List<ApplicationPermissionResultDTO>();
             foreach (var appPermission in profile.ApplicationPermissions) {
                 listDto.Add(new ApplicationPermissionResultDTO() {
@@ -210,8 +210,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
                     continue;
                 }
                 user.Profiles.Add(newProfile);
+                SecurityFacade.ClearUserFromCache(user.UserName);
             }
-            SWDBHibernateDAO.GetInstance().BulkSave(users);
+            _dao.BulkSave(users);
             return new BlankApplicationResponse() {
                 SuccessMessage = "{0} users successfully updated".Fmt(usersEnum.Count())
             };
@@ -227,8 +228,6 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 };
             }
 
-            var first = usernames.First();
-
             var results = GetListOfPersonIds(usernames);
 
 
@@ -240,8 +239,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
                     continue;
                 }
                 user.Profiles.Remove(profile);
+                SecurityFacade.ClearUserFromCache(user.UserName);
             }
-            SWDBHibernateDAO.GetInstance().BulkSave(users);
+            _dao.BulkSave(users);
             return new BlankApplicationResponse() {
                 SuccessMessage = "{0} users successfully updated".Fmt(usersEnum.Count())
             };
@@ -262,7 +262,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
                 results = usernames;
             } else {
                 var personIds =
-                    maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
+                    _maximoHibernateDAO.FindByNativeQuery("select personid from person where personuid in (:p0)", usernames);
                 foreach (var personId in personIds) {
                     results.Add(personId["personid"]);
                 }
@@ -290,7 +290,7 @@ namespace softWrench.sW4.Web.Controllers.Security {
             if (currentUser == null || string.IsNullOrWhiteSpace(currentUser.MaximoPersonId)) {
                 return null;
             }
-            return maximoHibernateDAO.FindSingleByNativeQuery<string>(PrimaryEmailQuery, currentUser.MaximoPersonId);
+            return _maximoHibernateDAO.FindSingleByNativeQuery<string>(PrimaryEmailQuery, currentUser.MaximoPersonId);
         }
 
         private static void SetBasicPermissions(bool allowCreation, bool allowUpdate, bool allowView,
@@ -315,26 +315,9 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
 
         public class UserProfileListDto {
-            private ICollection<UserProfile> _profiles;
-            private ICollection<Role> _roles;
+            public ICollection<UserProfile> Profiles { get; set; }
 
-            public ICollection<UserProfile> Profiles {
-                get {
-                    return _profiles;
-                }
-                set {
-                    _profiles = value;
-                }
-            }
-
-            public ICollection<Role> Roles {
-                get {
-                    return _roles;
-                }
-                set {
-                    _roles = value;
-                }
-            }
+            public ICollection<Role> Roles { get; set; }
         }
 
 

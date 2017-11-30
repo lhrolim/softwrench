@@ -6,7 +6,7 @@
         //#region Utils
 
         const countAll = app => dao.countByQuery("DataEntry", `application='${app}'`);
-        
+
         const countPending = app => dao.countByQuery("DataEntry", `application='${app}' and pending = 1`);
 
         const countDirty = app => dao.countByQuery("DataEntry", `application='${app}' and isDirty=1 and (hasProblem = 0 or hasProblem is null)`);
@@ -21,7 +21,10 @@
                 .then(a => {
                     const titleLookupTable = _.indexBy(a, "name");
                     return dao.executeStatement("select application,count(id) from AssociationData group by application")
-                        .then(c => c.map(i => ({ application: i.application, count: i["count(id)"], title: titleLookupTable[i.application].title })));
+                        .then(c => c
+                            //excluding applications which are not present. TODO: delete them. Scenario, removing a profile from an existing user
+                            .filter(i => titleLookupTable[i.application])
+                            .map(i => ({ application: i.application, count: i["count(id)"], title: titleLookupTable[i.application].title })));
                 });
         }
 
@@ -98,7 +101,7 @@
             return $q.all([topLevelApplicationState(), associationState()])
                 .spread((applications, associations) => ({ applications, associations }));
         }
-        
+
         /**
          * Fetches the app's configuration (server and client info).
          * 
@@ -112,7 +115,7 @@
                     'server': serverConfig,
                     'client': { 'version': appVersion }
                 })
-            );
+                );
         }
 
         /**

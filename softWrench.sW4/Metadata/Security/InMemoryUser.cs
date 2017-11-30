@@ -291,6 +291,12 @@ namespace softWrench.sW4.Metadata.Security {
             get; set;
         }
 
+        /// <summary>
+        /// a temporary flag indicating that this InMemoryUser should be revalidated upon next SecurityFacade.CurrentUser call. 
+        /// This may happen due to a number fo reasons, such as a profile update a user saving operation, etc.
+        /// </summary>
+        public bool NeedsRevalidation { get; set; }
+
         public bool IsSwAdmin() {
             return Login.Equals("swadmin") || (IsInRolInternal(Role.SysAdmin, false) && IsInRolInternal(Role.ClientAdmin, false));
         }

@@ -134,9 +134,10 @@
 
             if (data.isEmpty) {
                 log.info("no new data returned from the server");
-                return invokeCustomServicePromise(result, queryArray).then(customServiceDownloadItems => {
+                return invokeCustomServicePromise(result, queryArray).then(queryArray => {
                     //interrupting async calls
-                    return !!customServiceDownloadItems ? customServiceDownloadItems : 0;
+                    const numberOfDownloadedItems= 0;
+                    return { queryArray, numberOfDownloadedItems };
                 })
 
             }
@@ -293,6 +294,6 @@
 
     dataSynchronizationService.$inject = ["$http", "$q", "$log", "swdbDAO", "dispatcherService", "offlineRestService", "metadataModelService", "rowstampService", "offlineCompositionService", "offlineEntities", "searchIndexService", "securityService", "applicationStateService", "configurationService", "settingsService"];
 
-    mobileServices.factory('dataSynchronizationService', dataSynchronizationService);
+    mobileServices.service('dataSynchronizationService', dataSynchronizationService);
 
 })(mobileServices, angular, _);

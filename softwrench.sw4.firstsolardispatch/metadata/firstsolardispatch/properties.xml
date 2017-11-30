@@ -76,7 +76,7 @@
   </environment>
 
   <environment key="prod">
-    <property key="basewsURL" value="http://10.37.19.119:9080/maximo/meaweb/wsdl/" />
+    <property key="basewsURL" value="http://10.37.19.119:9080/meaweb/wsdl/" />
     <property key="maximo_DB_url" value="Data Source=10.37.19.66;Initial Catalog=FSDPMAX;User Id=fsmaximo;password=FSMAX1M0;" />
     <property key="swdb_url" value="Data Source=10.37.19.66;Initial Catalog=SWDB_FSDP;User Id=sw;password=softwrench;" />
     <property key="ldapServer" value="10.50.100.10"/>
