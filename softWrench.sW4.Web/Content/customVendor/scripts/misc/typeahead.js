@@ -1472,6 +1472,7 @@
             }
             this.isActivated = false;
             this.autoselect = !!o.autoselect;
+            this.allowCustomValue = o.allowCustomValue || false;
             this.minLength = _.isNumber(o.minLength) ? o.minLength : 1;
             this.$node = buildDom(o.input, o.withHint);
             $menu = this.$node.find(".tt-dropdown-menu");
@@ -1637,7 +1638,7 @@
                     if (datum) {
                         this.input.setInputValue(datum.value);
                         this.eventBus.trigger("autocompleted", datum.raw, datum.datasetName);
-                    } else {
+                    } else if (!this.allowCustomValue){
                         this.input.setInputValue("");
                     }
                 }
@@ -1770,6 +1771,7 @@
                         withHint: _.isUndefined(o.hint) ? true : !!o.hint,
                         minLength: o.minLength,
                         autoselect: o.autoselect,
+                        allowCustomValue: o.allowCustomValue,
                         datasets: datasets
                     });
                     $input.data(typeaheadKey, typeahead);

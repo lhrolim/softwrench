@@ -23,7 +23,7 @@
           </field>
           <field attribute="assigneelabel" hidden="true" />
           <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname">
-            <renderer type="lookup" params="lookup.usescopeschema=true"/>
+            <renderer type="lookup" params="lookup.usescopeschema=true;allowcustomvalue=true"/>
           </association>
           <field attribute="duedate" label="Due Date">
             <renderer type="datetime" params="editable=true;position=top"/>

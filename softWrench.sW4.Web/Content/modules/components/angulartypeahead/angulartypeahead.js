@@ -141,7 +141,7 @@
 
 
             //initing typeahead itself
-            element.typeahead({ minLength: minLength, highlight: true, autoselect:true }, {
+            element.typeahead({ minLength: minLength, highlight: true, autoselect: true, allowCustomValue: "true" === scope.allowCustomValue }, {
                 displayKey: function (item) {
                     return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true" });
                 },
@@ -194,13 +194,19 @@
                 } else if (e.which === 13) {
 //                    datamap[scope.attribute]
                     e.stopImmediatePropagation();
-                }
-
-                else {
+                } else if (scope.allowCustomValue) {
+                    const datamap = scope.datamap;
+                    if (datamap) {
+                        datamap[scope.attribute] = scope.searchText;
+                    }
+                }else {
                     //if filter is applied, let´s not show recently used filters
                     //scope digest is enough if we´re not clearing nor selecting an entry (i.e, not changing the datamap)
                     scope.$digest();
                 }
+
+
+
             });
         }
 
