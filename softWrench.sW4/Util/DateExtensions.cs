@@ -272,14 +272,8 @@ namespace softWrench.sW4.Util {
             return AddBusinessDays(current, -days);
         }
 
-        public static DateTime LastDayOfMonth(this DateTime now) {
-            if (now.Month == 12) {
-                return new DateTime(now.Year, now.Month, 31);
-            }
-
-            var monthEnd = new DateTime(now.Year, now.Month + 1, 1);
-            monthEnd = monthEnd.AddDays(-1);
-            return monthEnd;
+        public static DateTime LastDayOfMonth(this DateTime dateTime) {
+            return new DateTime(dateTime.Year, dateTime.Month, DateTime.DaysInMonth(dateTime.Year, dateTime.Month));
         }
 
         public static DateComparisonExpression IsOlderThan(this DateTime? date, int number, DateTime? toCompare = null) {
