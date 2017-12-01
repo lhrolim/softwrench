@@ -1,6 +1,7 @@
 ﻿using System;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softWrench.sW4.Util;
 
 namespace softwrench.sW4.test.Util {
 
@@ -45,6 +46,17 @@ namespace softwrench.sW4.test.Util {
         [TestMethod]
         public void ProcessWeekFutureManyTest() {
             BaseTest(3, new DateTime(1987, 12, 6));
+        }
+
+        [TestMethod]
+        public void LastDayOfMonthTest() {
+            var now = new DateTime(2017, 12, 01);
+            var lastDayOfMonth = now.LastDayOfMonth();
+            Assert.AreEqual(31, lastDayOfMonth.Day);
+
+            now = new DateTime(2017, 11, 05);
+            lastDayOfMonth = now.LastDayOfMonth();
+            Assert.AreEqual(30, lastDayOfMonth.Day);
         }
     }
 }

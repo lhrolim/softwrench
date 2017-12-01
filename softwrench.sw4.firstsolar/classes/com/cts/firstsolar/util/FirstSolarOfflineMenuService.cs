@@ -2,6 +2,7 @@
 using cts.commons.portable.Util;
 using cts.commons.simpleinjector;
 using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
     public class FirstSolarOfflineMenuService : ISingletonComponent {
@@ -32,8 +33,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         public string BuildMonthTitle() {
             var now = DateTime.Now;
 
-            var monthEnd = new DateTime(now.Year,now.Month+1,1);
-            monthEnd = monthEnd.AddDays(-1);
+            var monthEnd = now.LastDayOfMonth();
 
             var monthBegin = new DateTime(now.Year, now.Month, 1);
 

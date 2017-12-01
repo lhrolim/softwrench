@@ -201,18 +201,18 @@ namespace softWrench.sW4.Util {
             if (ConversionKind.MaximoToUser == kind || ConversionKind.MaximoToServer == kind) {
                 offset = -1 * offset;
             }
-            Log.Debug(string.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
+            Log.Debug(String.Format("Input date: {0}  Input kind: {1}  Input offset: {2}  Output offset: {3}", date, kind, clientOffset, maximoOffset));
             try {
                 date = date.AddMinutes(offset);
             } catch (Exception e) {
-                Log.Error("error when trying to convert the date {0} to offset {1}. Maximo Off:{2} User Off:{3}".Fmt(date.ToString(CultureInfo.InvariantCulture),offSet, maximoOffset, clientOffset),e);
+                Log.Error("error when trying to convert the date {0} to offset {1}. Maximo Off:{2} User Off:{3}".Fmt(date.ToString(CultureInfo.InvariantCulture), offSet, maximoOffset, clientOffset), e);
             }
 
             if (WsUtil.Is75OrNewer()) {
                 //TODO: is this ever needed again?
                 date = DateTime.SpecifyKind(date, DateTimeKind.Unspecified);
             }
-            Log.Debug(string.Format("Output date: {0}", date));
+            Log.Debug(String.Format("Output date: {0}", date));
             return date;
         }
 
@@ -252,7 +252,7 @@ namespace softWrench.sW4.Util {
         public static DateTime AddBusinessDays(this DateTime current, int days) {
             var sign = Math.Sign(days);
             var unsignedDays = Math.Abs(days);
-            for (var i = 0; i < unsignedDays; i++) {
+            for (var i = 0;i < unsignedDays;i++) {
                 do {
                     current = current.AddDays(sign);
                 }
@@ -270,6 +270,16 @@ namespace softWrench.sW4.Util {
         /// <returns>A <see cref="DateTime"/> increased by a given number of business days.</returns>
         public static DateTime SubtractBusinessDays(this DateTime current, int days) {
             return AddBusinessDays(current, -days);
+        }
+
+        public static DateTime LastDayOfMonth(this DateTime now) {
+            if (now.Month == 12) {
+                return new DateTime(now.Year, now.Month, 31);
+            }
+
+            var monthEnd = new DateTime(now.Year, now.Month + 1, 1);
+            monthEnd = monthEnd.AddDays(-1);
+            return monthEnd;
         }
 
         public static DateComparisonExpression IsOlderThan(this DateTime? date, int number, DateTime? toCompare = null) {
@@ -311,9 +321,5 @@ namespace softWrench.sW4.Util {
                 return _date < _toCompare;
             }
         }
-
-
-
-
     }
 }
