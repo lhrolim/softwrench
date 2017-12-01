@@ -25,9 +25,7 @@
           <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname">
             <renderer type="lookup" params="lookup.usescopeschema=true;allowcustomvalue=true"/>
           </association>
-          <field attribute="duedate" label="Due Date">
-            <renderer type="datetime" params="editable=true;position=top"/>
-          </field>
+
           <field attribute="completed" label="Completed" >
             <renderer type="checkbox" params="editable=true; width=10%"/>
           </field>
@@ -40,10 +38,6 @@
           <association label="Assignee" target="assignee" labelfield="assignee_.displayname" extraprojectionvalues="displayname">
             <renderer type="lookup" params="lookup.usescopeschema=true"/>
           </association>
-
-          <field attribute="duedate" label="Due Date">
-            <renderer type="datetime"/>
-          </field>
 
           <field attribute="completed" label="Completed" >
             <renderer type="checkbox"/>

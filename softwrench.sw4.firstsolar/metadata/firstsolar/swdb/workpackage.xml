@@ -114,7 +114,7 @@
           <section orientation="horizontal">
             <header label="Outage Actions"  params="fieldset=true"/>
             <composition inline="true" relationship="outageActions" label="" outputschema="" detailschema="" printschema="" fetchtype="eager" >
-              <collectionproperties listschema="list" autocommit="true" allowcreation="true" allowupdate="true" orderbyfield="duedate asc"/>
+              <collectionproperties listschema="list" autocommit="true" allowcreation="true" allowupdate="true" orderbyfield="actiontime asc"/>
               <renderer type="TABLE" params="mode=batch;composition.inline.addTitle=Action"/>
             </composition>
           </section>
