@@ -795,6 +795,14 @@
 
         </schema>
 
+        <schema id="wppmlist" parentschema="wplist" title="Work Packages PM" stereotype="list" redeclaring="false">
+          <properties>
+            <!--reusing same service-->
+            <property key="schema.aliasurl" value="/web/workorder/wppmlist"/>
+          </properties>
+
+        </schema>
+
         <schema id="cmbuilddash" parentschema="aworkpackagebuilddash">
           <section id="colorcode">
             <field attribute="#colorcode">

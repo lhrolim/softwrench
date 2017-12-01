@@ -58,6 +58,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar {
                     }
                 });
 
+            WhereClauseFacade.Register("workorder", "workorder.outreq = 1 and worktype = 'PM'" + SiteClause(true),
+                new WhereClauseRegisterCondition {
+                    AppContext = new softWrench.sW4.Security.Context.ApplicationLookupContext {
+                        Schema = "wppmlist"
+                    }
+                });
+
         }
 
         public string WorkorderCreationLookup() {

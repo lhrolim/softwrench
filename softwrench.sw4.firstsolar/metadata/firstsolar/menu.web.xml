@@ -17,6 +17,7 @@
   </container>
   <container id="workpackage" title="Work Packages" icon="fa fa-arrow-circle-down" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.pmmaintenance;applicationToFilter=_WorkPackage" hasmainaction="true">
     <application id="WP" icon="fa fa-table" title="Work Package Grid" ref="workorder" schema="wplist" tooltip="Click to view your Work Packages"/>
+    <application id="WPPM" icon="fa fa-table" title="Work Package (PM) Grid" ref="workorder" schema="wppmlist" tooltip="Click to view your Work Packages PM"/>
     <application id="NWP" icon="fa fa-plus" title="New Work Package" ref="_workpackage" schema="newdetail" tooltip="Click to Create a New Work Package"/>
   </container>
  

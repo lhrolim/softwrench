@@ -205,6 +205,12 @@ namespace softWrench.sW4.Web.Controllers {
                 return InnerGetSchema(appMetadata, schemaInfo.newDetailSchema, schemaInfo.DetailNewApplicationName);
             }
 
+            var matchingSchema = appMetadata.SchemasList.FirstOrDefault(a => a.SchemaId.EqualsIc(extra));
+
+            if (matchingSchema != null) {
+                return matchingSchema;
+            }
+
             // tries to find the detail schema
             return GetDetailSchema(appMetadata);
         }

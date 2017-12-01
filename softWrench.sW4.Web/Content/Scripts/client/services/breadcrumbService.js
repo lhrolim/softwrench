@@ -229,12 +229,12 @@
 
                 log.trace(`analyzing ${isLeafTxt} ${leaf.id} with title ${leaf.title}`);
 
-                if (currentTitle === "Work Packages" && leaf.id === "workorder") {
+                if ((currentTitle === "Work Packages" || currentTitle === "Work Packages PM" ) && leaf.id === "workorder") {
                     //TODO: rewrite this component from scratch
                     return;
                 }
 
-                if (currentTitle === "Work Order Grid" && leaf.schema === "wplist") {
+                if (currentTitle === "Work Order Grid" && (leaf.schema === "wplist" || leaf.schema === "wppmlist")) {
                     //TODO: rewrite this component from scratch
                     return;
                 }
@@ -271,7 +271,7 @@
 
                 //if the lcurrent leaf is likely the parent
                 var possibleParent = leaf.application === applicationName;
-                possibleParent = possibleParent && ((leaf.schema.toLowerCase().indexOf("list") > -1 || leaf.schema.toLowerCase().indexOf("grid") > -1) && leaf.schema!== "wplist");
+                possibleParent = possibleParent && ((leaf.schema.toLowerCase().indexOf("list") > -1 || leaf.schema.toLowerCase().indexOf("grid") > -1) && (leaf.schema !== "wplist" && leaf.schema !== "wppmlist"));
                 possibleParent = possibleParent && leaf.title !== schemaTitle;
 
                 if ((isParent || possibleParent) && childPages.length === 0) {

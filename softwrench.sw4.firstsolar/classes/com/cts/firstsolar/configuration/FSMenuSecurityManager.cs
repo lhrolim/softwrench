@@ -23,7 +23,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
     public class FSMenuSecurityManager : MenuSecurityManager {
 
         protected override bool IsApplicationMenuSecured(ApplicationMenuItemDefinition leaf, MergedUserProfile mergedUserProfile, ClientPlatform platform) {
-            if (leaf.Application.EqualsIc("workorder") && leaf.Schema.EqualsIc("wplist")) {
+            if (leaf.Application.EqualsIc("workorder") && leaf.Schema.EqualsAny("wplist","wppmlist")) {
                 var application = mergedUserProfile.GetPermissionByApplication("_WorkPackage");
                 if (application == null) {
                     //not allowed by default, no permission rule
