@@ -108,7 +108,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             attachs.Add(BuildPdfReport(hash));
 
             var cc = dom.Cc;
-            if (ApplicationConfiguration.IsProd() && "tier1".Equals(package.Tier)) {
+            if (ApplicationConfiguration.IsProd() && "1".Equals(package.Tier)) {
                 cc = string.IsNullOrWhiteSpace(cc) ? FirstSolarConstants.TierOneCcEmails : cc + ", " + FirstSolarConstants.TierOneCcEmails;
             }
 
