@@ -83,11 +83,11 @@
     <Reference Include="cts.commons, Version=1.4.6533.18386, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.1.4.6533.18386\lib\net461\cts.commons.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.5.6533.21915, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.5.6533.21915\lib\net461\cts.commons.persistence.dll</HintPath>
+    <Reference Include="cts.commons.persistence, Version=1.5.6544.27290, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.5.6544.27290\lib\net461\cts.commons.persistence.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.4.6533.21529, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.4.6533.21529\lib\net461\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.4.6544.25865, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.4.6544.25865\lib\net461\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.3.6429.38357, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.web.1.3.6429.38357\lib\net46\cts.commons.web.dll</HintPath>
@@ -207,8 +207,8 @@
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6544.26584, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6544.26584\lib\net461\softwrench.sw4.dashboard.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.problem, Version=1.1.6536.22070, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.problem.1.1.6536.22070\lib\net461\softwrench.sw4.problem.dll</HintPath>
+    <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
     <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
       <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
@@ -1269,8 +1269,6 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Views\Help\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
-    <Content Include="Views\DispatchEmailTest\Index.cshtml" />
-    <Content Include="Views\DispatchEmail\GenericRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">

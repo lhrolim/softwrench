@@ -61,6 +61,8 @@ namespace cts.commons.persistence {
             if (_applicationConfiguration.IsLocal()) {
                 //overriding to allow better debugging
                 properties.Add(NHibernate.Cfg.Environment.CommandTimeout, "600");
+            } else {
+                properties.Add(NHibernate.Cfg.Environment.CommandTimeout, "" + _applicationConfiguration.ConnectionTimeout);
             }
             properties.Add(NHibernate.Cfg.Environment.CurrentSessionContextClass, "managed_web");
             configuration.SetProperties(properties);
@@ -79,7 +81,7 @@ namespace cts.commons.persistence {
 
             //nhibernate is always readonly
             var openSession = _sessionFactory.OpenSession();
-            if (_isReadOnly){
+            if (_isReadOnly) {
                 openSession.FlushMode = NHibernate.FlushMode.Manual;
             }
             return openSession;

@@ -25,5 +25,7 @@ namespace cts.commons.simpleinjector.app
         bool IsLocal();
 
         bool IsUnitTest { get; }
+
+        int ConnectionTimeout { get; }
     }
 }

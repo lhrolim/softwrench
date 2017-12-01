@@ -18,6 +18,7 @@ using cts.commons.simpleinjector.Events;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Entities;
+using static System.Int16;
 
 namespace softWrench.sW4.Util {
     public class ApplicationConfiguration : ISWEventListener<ClientChangeEvent> {
@@ -30,7 +31,7 @@ namespace softWrench.sW4.Util {
         private static string _environment;
         private static readonly DateTime _upTime = DateTime.Now;
 
-        
+
 
         private static readonly IDictionary<DBType, ConnectionStringSettings> _connectionStringCache = new Dictionary<DBType, ConnectionStringSettings>();
 
@@ -112,6 +113,14 @@ namespace softWrench.sW4.Util {
             return _environment;
         }
 
+
+        public static int NhibernateCommandTimeout {
+            get {
+                var declaredtimeout = ConfigurationManager.AppSettings["nhibernatecommandtimeout"];
+                return declaredtimeout == null ? 30 : Parse(declaredtimeout);
+            }
+        }
+
         #region MaximoProperties
 
 
@@ -120,7 +129,7 @@ namespace softWrench.sW4.Util {
         /// </summary>
         public static string ExternalSystemName => MetadataProvider.GlobalProperty("externalSystemName", true);
 
-     
+
 
 
 
@@ -164,8 +173,7 @@ namespace softWrench.sW4.Util {
 
         //TODO: remove these static calls
 
-        public static string GetPropertyHandlingTestScenario(string configKey, string propertyName)
-        {
+        public static string GetPropertyHandlingTestScenario(string configKey, string propertyName) {
             if (SimpleInjectorGenericFactory.Instance != null && !IsUnitTest) {
                 //some unit tests might not have an instance defined
                 return SimpleInjectorGenericFactory.Instance.GetObject<IConfigurationFacade>().Lookup<string>(configKey, propertyName);
@@ -519,15 +527,15 @@ namespace softWrench.sW4.Util {
             var type = connectionStringSettings.ProviderName;
             switch (type) {
                 case "System.Data.SQL":
-                return DBMS.MSSQL;
+                    return DBMS.MSSQL;
                 case "System.Data.SqlClient":
-                return DBMS.MSSQL;
+                    return DBMS.MSSQL;
                 case "System.Data.OracleClient":
-                return DBMS.ORACLE;
+                    return DBMS.ORACLE;
                 case "Oracle.DataAccess.Client":
-                return DBMS.ORACLE;
+                    return DBMS.ORACLE;
                 case "IBM.Data.DB2":
-                return DBMS.DB2;
+                    return DBMS.DB2;
             }
             return DBMS.MYSQL;
         }
@@ -551,6 +559,7 @@ namespace softWrench.sW4.Util {
         }
 
         public static DateTime UpTime => _upTime;
+
     }
 
 }

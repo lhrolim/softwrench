@@ -44,5 +44,7 @@ namespace cts.commons.simpleinjector.app {
                 return false;
             }
         }
+
+        public int ConnectionTimeout => 30;
     }
 }

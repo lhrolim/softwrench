@@ -46,5 +46,7 @@ namespace softWrench.sW4.Util {
                 return ApplicationConfiguration.IsUnitTest;
             }
         }
+
+        public int ConnectionTimeout => ApplicationConfiguration.NhibernateCommandTimeout;
     }
 }
