@@ -1,0 +1,8 @@
+﻿Some sites have anomalies refering to the related locations/assets:
+
+BCE2 - no locations where found on production - siteid 1801, orgid ORG4 and prefix BCE randomly added to our base;
+CFS1 -  no locations where found on production - siteid and orgid copied from CFN1 and prefix CFS randomly added to our base;
+PBX2 -  no locations where found on production - siteid and orgid copied from PBX1 and prefix PBX2 randomly added to our base;
+PBX3 -  no locations where found on production - siteid and orgid copied from PBX1 and prefix PBX3 randomly added to our base;
+PMR1 - no locations where found on production - siteid 1803, orgid ORG6 and prefix PMR randomly added to our base;
+PMW1 - no locations where found on production - siteid 1803, orgid ORG6 and prefix PMW randomly added to our base;

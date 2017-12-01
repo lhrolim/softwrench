@@ -47,6 +47,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         public string Country { get; set; }
 
         [Property]
+        public string SingleLineAddress { get; set; }
+
+        [Property]
         public string SiteContact { get; set; }
 
         [Property]
@@ -70,6 +73,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Property]
         public string PrimaryContactEmail { get; set; }
 
+        // tech - site manager
+        [Property]
+        public string PrimaryContactSmsEmail { get; set; }
+
         // RPM
         [Property]
         public string EscalationContact { get; set; }
@@ -81,6 +88,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         // RPM
         [Property]
         public string EscalationContactEmail { get; set; }
+
+        // RPM
+        [Property]
+        public string EscalationContactSmsEmail { get; set; }
 
         [Property]
         public decimal? GpsLatitude { get; set; }

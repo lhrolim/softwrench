@@ -89,7 +89,7 @@
 
             <section orientation="horizontal" parameters="">
               <section id="gfed">
-                <association label="Site" target="gfedid" labelfield="site_.facilityname" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix,maintenaceprovider,wherehouseaddress" >
+                <association label="Site" target="gfedid" labelfield="site_.facilityname" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,singlelineaddress,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix,maintenaceprovider,wherehouseaddress">
                   <renderer type="lookup" params="application=_GfedSite;schemaId=ticketLookupList;"/>
                   <event type="afterchange" service="fsdTicketService" method="siteSelected"/>
                 </association>

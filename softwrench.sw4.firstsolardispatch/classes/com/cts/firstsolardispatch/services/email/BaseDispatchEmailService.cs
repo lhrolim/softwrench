@@ -31,7 +31,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             if (!ApplicationConfiguration.IsProd()) {
                 subject = "[{0}]".Fmt(ApplicationConfiguration.Profile) + subject;
             }
-            var to = BuildTo(site, hour);
+            var to = ApplicationConfiguration.IsProd() ? BuildTo(site, hour) : SwConstants.DevTeamEmail;
             if (string.IsNullOrEmpty(to)) {
                 return;
             }
@@ -65,7 +65,6 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         private static string BuildTo(GfedSite site, int hour) {
             var toList = new List<string>();
 
-
             if (!string.IsNullOrEmpty(site.PrimaryContactEmail)) {
                 toList.Add(site.PrimaryContactEmail);
             }
@@ -74,10 +73,6 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             }
             if (hour > 1 && ApplicationConfiguration.IsProd()) {
                 toList.Add("frank.kelly@firstsolar.com");
-            }
-
-            if (!toList.Any() && (ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsQA())) {
-                toList.Add(SwConstants.DevTeamEmail);
             }
 
             return string.Join("; ", toList);

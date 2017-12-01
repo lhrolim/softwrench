@@ -18,4 +18,20 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         }
 
     }
+
+    [Migration(201712011700)]
+    public class Swweb3224Migration2 : Migration {
+
+        public override void Up() {
+            Alter.Table("GFED_SITE")
+                .AddColumn("singlelineaddress").AsString(MigrationUtil.StringMedium).Nullable()
+                .AddColumn("primarycontactsmsemail").AsString(MigrationUtil.StringMedium).Nullable()
+                .AddColumn("escalationcontactsmsemail").AsString(MigrationUtil.StringMedium).Nullable();
+        }
+
+        public override void Down() {
+
+        }
+
+    }
 }
