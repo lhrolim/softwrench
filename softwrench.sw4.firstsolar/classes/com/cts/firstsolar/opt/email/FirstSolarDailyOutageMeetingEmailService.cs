@@ -96,8 +96,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt.email {
             var isNew = dom.ActualSendTime == null;
             var baseSubject = "[{0}] Daily Outage Meeting".Fmt(package.Wpnum);
             var sufix = isNew ? "" : " Updated";
-            var subject = "{0}{1}".Fmt(baseSubject, sufix);
-
+            var subject = "{0}{1}, Tier {2}, {3}".Fmt(baseSubject, sufix, package.Tier, package.FacilityName);
+            
             var hash = BuildTemplateHash(dom, package);
 
             var msg = GenerateEmailBody(dom, package, siteId, hash);

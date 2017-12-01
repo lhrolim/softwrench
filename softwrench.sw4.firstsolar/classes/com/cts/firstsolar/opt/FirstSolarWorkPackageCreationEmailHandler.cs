@@ -38,8 +38,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         [Transactional(DBType.Swdb)]
         public override async Task<WorkPackage> DoSendEmail(WorkPackage wp, WorkPackage package, WorkOrderData workOrderData, List<EmailAttachment> attachs = null) {
             
-            var subject = "[{0}] A new Work Package has been created".Fmt(wp.Wpnum);
-
+            var subject = "[{0}] A new Work Package has been created, Tier {1}, {2}".Fmt(wp.Wpnum, wp.Tier, wp.FacilityName);
             WorkPackageEmailStatus emailStatus = null;
             EmailData emailData = null;
 
