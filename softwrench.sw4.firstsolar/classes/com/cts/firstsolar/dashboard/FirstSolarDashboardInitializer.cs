@@ -120,7 +120,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard {
                 new DashboardGridPanel
                 {
                     Alias = IncomingPanelCmAlias,
-                    Title = "Incoming Maximo Work Order Queue",
+                    Title = "Outage Required Work Orders",
                     Application = "workorder",
                     AppFields = "wonum,description,planner,facilityname,asset_.description,reportdate",
                     DefaultSortField = "reportdate desc",
