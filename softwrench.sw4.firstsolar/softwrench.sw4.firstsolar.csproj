@@ -44,8 +44,8 @@
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons, Version=1.4.6533.17451, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.4.6533.17451\lib\net461\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.4.6533.18386, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.4.6533.18386\lib\net461\cts.commons.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.persistence, Version=1.5.6544.27290, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.persistence.1.5.6544.27290\lib\net461\cts.commons.persistence.dll</HintPath>

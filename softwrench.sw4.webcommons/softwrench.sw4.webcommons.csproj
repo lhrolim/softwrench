@@ -37,8 +37,8 @@
     <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons, Version=1.4.6533.17451, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.4.6533.17451\lib\net461\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.4.6533.18386, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.4.6533.18386\lib\net461\cts.commons.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.4.6544.25865, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.4.6544.25865\lib\net461\cts.commons.simpleinjector.dll</HintPath>
