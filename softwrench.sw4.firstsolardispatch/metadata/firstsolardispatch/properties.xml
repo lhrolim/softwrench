@@ -86,7 +86,7 @@
     <property key="mifcredentials.password" value="$@$Adm1n2"/>
     <!--    <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>  -->
-    <property key="iiscontextpath" value="http://173.193.44.3/fsdp" />
+    <property key="iiscontextpath" value="http://173.193.44.3/powerelectronics" />
   </environment>
   
 </Properties>
