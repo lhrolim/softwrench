@@ -92,7 +92,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
             var ccEmail = (string)null;
             if (isProdOrUat) {
                 ccEmail = "brent.galyon@firstsolar.com";
-                if (ApplicationConfiguration.IsProd() && "tier1".Equals(wp.Tier)) {
+                if (ApplicationConfiguration.IsProd() && "1".Equals(wp.Tier)) {
                     ccEmail = FirstSolarConstants.TierOneCcEmails + ", " + ccEmail;
                 }
             }
