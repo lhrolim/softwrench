@@ -156,6 +156,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
             }
+           
             if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
             }
@@ -163,6 +164,10 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (applicationToFilter != null) {
                 dashboards = dashboards.Where(d => d.Application == null || d.Application.EqualsIc(applicationToFilter));
             }
+            if(preferredDashboardId == null && dashboards.Any()) {
+                preferredDashboardId = dashboards.First().Id;
+            }
+
 
             var dto = new ManageDashBoardsDTO {
                 Permissions = new ManageDashBoardsDTO.ManageDashboardsPermissionDTO {

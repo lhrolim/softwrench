@@ -80,14 +80,14 @@
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons, Version=1.4.6533.17451, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.1.4.6533.17451\lib\net461\cts.commons.dll</HintPath>
+    <Reference Include="cts.commons, Version=1.4.6533.18386, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.1.4.6533.18386\lib\net461\cts.commons.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.persistence, Version=1.5.6533.21915, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.persistence.1.5.6533.21915\lib\net461\cts.commons.persistence.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.simpleinjector, Version=1.4.6533.17767, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.simpleinjector.1.4.6533.17767\lib\net461\cts.commons.simpleinjector.dll</HintPath>
+    <Reference Include="cts.commons.simpleinjector, Version=1.4.6533.21529, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.simpleinjector.1.4.6533.21529\lib\net461\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
     <Reference Include="cts.commons.web, Version=1.3.6429.38357, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.web.1.3.6429.38357\lib\net46\cts.commons.web.dll</HintPath>
@@ -204,8 +204,8 @@
     <Reference Include="softwrench.sW4.batches, Version=1.3.6533.37322, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.batches.1.3.6533.37322\lib\net461\softwrench.sW4.batches.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6514.20944, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6514.20944\lib\net461\softwrench.sw4.dashboard.dll</HintPath>
+    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6544.26584, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6544.26584\lib\net461\softwrench.sw4.dashboard.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.1.6536.22070, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.1.6536.22070\lib\net461\softwrench.sw4.problem.dll</HintPath>
