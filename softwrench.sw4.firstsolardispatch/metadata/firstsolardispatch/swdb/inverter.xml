@@ -10,7 +10,7 @@
       <relationships>
         <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
-          <relationshipAttribute from="siteid" to="siteid" />
+          <relationshipAttribute from="siteid" to="fssiteid" />
         </relationship>
         <relationship to="_DispatchTicket_" qualifier="dispatchticket">
           <relationshipAttribute from="ticketid" to="id" primary="true"/>
