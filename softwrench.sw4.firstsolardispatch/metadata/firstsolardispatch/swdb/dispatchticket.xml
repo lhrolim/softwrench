@@ -13,7 +13,7 @@
           <relationshipAttribute from="id" to="ticketid" primary="true"/>
         </relationship>
 
-        <relationship to="_GfedSite_" qualifier="site">
+        <relationship to="GfedSite_" qualifier="site">
           <relationshipAttribute from="gfedid" to="gfedid" primary="true"/>
         </relationship>
       </relationships>
