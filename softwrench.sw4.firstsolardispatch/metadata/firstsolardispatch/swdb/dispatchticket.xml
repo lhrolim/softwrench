@@ -9,7 +9,7 @@
   <entities>
     <entity name="DispatchTicket" idAttribute="id">
       <relationships>
-        <relationship to="_Inverter_" qualifier="inverters" collection="true">
+        <relationship to="Inverter_" qualifier="inverters" collection="true">
           <relationshipAttribute from="id" to="ticketid" primary="true"/>
         </relationship>
 
