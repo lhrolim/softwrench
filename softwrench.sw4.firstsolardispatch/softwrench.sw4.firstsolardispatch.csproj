@@ -196,6 +196,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="gfedsql\20171205-1520.sql" />
     <Content Include="gfedsql\20171201-2000.sql" />
     <Content Include="gfedsql\siteAnomalies.txt" />
     <Content Include="metadata\firstsolardispatch\swdb\partneeded.xml">
