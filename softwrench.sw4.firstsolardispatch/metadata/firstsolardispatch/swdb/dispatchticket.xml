@@ -102,7 +102,7 @@
             </section>
             <section orientation="horizontal" parameters="">
               <renderer type="default" params="childinputsize=medium" />
-              <field attribute="maintenaceprovider" label="Maintenace Provider" enableexpression="@gfedid != null"/>
+              <field attribute="maintenaceprovider" label="Maintenance Provider" enableexpression="@gfedid != null"/>
               <section>
                 <field attribute="sitecontact" label="Site Contact" enableexpression="@gfedid != null"/>
                 <field attribute="sitecontactphone" enableexpression="@gfedid != null"/>
