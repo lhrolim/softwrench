@@ -104,7 +104,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Bag(0, Table = "SW_DOCLINK", Cascade = "all", Lazy = CollectionLazy.False, Where = "OwnerTable = '_DispatchTicket' ", Inverse = true)]
         [Key(1, Column = "ownerid")]
         [OneToMany(2, ClassType = typeof(DocLink))]
-        public virtual IList<DocLink> Attachments { get; set; } = new List<DocLink>(); 
+        public virtual IList<DocLink> Attachments { get; set; } = new List<DocLink>();
 
         /// <summary>
         /// Token used to change status without requiring the user to be authenticated
@@ -169,6 +169,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
             }
             var culture = new CultureInfo("en-US");
             return date.Value.ToString(format, culture);
+        }
+
+        public string EmailMemoryKey() {
+            return "email"+ this.GetType().Name + Id;
         }
 
 
