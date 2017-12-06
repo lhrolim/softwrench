@@ -88,7 +88,9 @@ angular.module('sw_components')
                 position = metadata && metadata.rendererParameters && metadata.rendererParameters["position"] ? metadata.rendererParameters["position"] : position;
 
                 var startDate = false;
+                var useCurrent = false;
                 if (!allowpast) {
+                    useCurrent = true;
                     if (!showTime) {
                         startDate = new Date();
                         startDate.setHours(0, 0, 0, 0);
@@ -136,7 +138,7 @@ angular.module('sw_components')
                         sideBySide: true,
                         showClose: showCloseButton,
                         toolbarPlacement: 'top',
-                        useCurrent: false,
+                        useCurrent: useCurrent,
                         widgetPositioning: {
                             vertical: position
                         }
