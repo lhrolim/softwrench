@@ -210,8 +210,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
 
             if (ticket.ImmediateDispatch) {
                 MemoryContextLookuper.SetMemoryContext(ticket.EmailMemoryKey(), true);
-                await DispatchEmailService.SendEmails(ticket, true);
-                MemoryContextLookuper.RemoveFromMemoryContext(ticket.EmailMemoryKey());
+                try {
+                    await DispatchEmailService.SendEmails(ticket, true);
+                } finally {
+                    MemoryContextLookuper.RemoveFromMemoryContext(ticket.EmailMemoryKey());
+                }
+
+
             }
 
             return targetResult;
