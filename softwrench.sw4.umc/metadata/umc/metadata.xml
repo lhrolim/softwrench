@@ -151,6 +151,7 @@
           <field attribute="phoneext" label="Phone Extension" requiredexpression="true">
             <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone extension is a sequence of four numbers.;valpattern=^\d{4}$"/>
           </field>
+          <field attribute="location" label="Location" requiredexpression="true"/>
           <field attribute="description" label="Request Summary" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
