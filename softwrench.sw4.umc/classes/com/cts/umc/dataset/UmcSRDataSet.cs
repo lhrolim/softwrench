@@ -32,7 +32,7 @@ namespace softWrench.sW4.umc.classes.com.cts.umc.dataset {
             var email = json.StringValue("email");
             var phoneext = json.StringValue("phoneext");
             var reqsummary = json.StringValue("description");
-            var location = json.StringValue("location");
+            var location = json.StringValue("customlocation");
             return $"<b>Name:</b> {name}<br/><b>Email:</b> {email}<br/><b>Phone Extension:</b> {phoneext}<br/><br/><b>Request Summary:</b><br/>{reqsummary}<br/><br/><b>Location:</b><br/>{location}";
         }
 

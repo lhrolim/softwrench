@@ -5,7 +5,7 @@
   <reference id="qservicereq"/>
   <reference id="workorder"/>
   
-  <container title="Preventive Maintenances" tooltip="Click to access your pms" icon="fa fa-shield" id="pm">
+  <container title="Preventive Maintenance" tooltip="Click to access your pms" icon="fa fa-shield" id="pm">
     <application id="PMS" icon="fa fa-table" title="PM Updater" ref="pm" schema="list" tooltip="Click to view your Preventive Maintenance Grid"/>
     <application id="BATCH" icon="fa fa-table" title="Update History" ref="_pmbatch" schema="list" tooltip="Click to view the status of your applied batch operations"/>
   </container>
