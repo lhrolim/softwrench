@@ -164,7 +164,7 @@
         var service = {
             gridDataChanged: gridDataChanged,
             loadBufferFromDatamap: loadBufferFromDatamap,
-            selectAllChanged: selectAllChanged,
+            selectAllChanged,
             selectionChanged: selectionChanged,
             toggleSelection: toggleSelection,
             updateRowState: updateRowState,

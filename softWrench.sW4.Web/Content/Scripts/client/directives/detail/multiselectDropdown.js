@@ -1,7 +1,7 @@
 var app = angular.module('sw_layout');
 
 app.directive('multiselectDropdown', function (contextService, $log, $timeout, commandService, dispatcherService, crudContextHolderService) {
-    var log = $log.getInstance('sw4.multiselectDropdown');
+    const log = $log.getInstance('sw4.multiselectDropdown');
 
     return {
         templateUrl: contextService.getResourceUrl('/Content/Templates/directives/multiselectDropdown.html'),
@@ -10,7 +10,8 @@ app.directive('multiselectDropdown', function (contextService, $log, $timeout, c
             commands: '@',
             datamap: '=',
             ngModel: '=',
-            schema: '='
+            schema: '=',
+            panelid: '='
         },
         //link: function (scope, element, attrs) {
         //},
@@ -24,7 +25,7 @@ app.directive('multiselectDropdown', function (contextService, $log, $timeout, c
             };
 
             $scope.toggleSelected = function () {
-                var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
+                const selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
                 if (!$scope.showOnlySelected && Object.keys(selectionBuffer).length == 0) {
                     return;
                 }
@@ -39,7 +40,7 @@ app.directive('multiselectDropdown', function (contextService, $log, $timeout, c
                     return true;
                 }
 
-                var selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
+                const selectionBuffer = crudContextHolderService.getSelectionModel().selectionBuffer;
                 return Object.keys(selectionBuffer).length > 0;
             };
 
@@ -47,14 +48,41 @@ app.directive('multiselectDropdown', function (contextService, $log, $timeout, c
                 return $scope.showOnlySelected ? 'fa-check-square-o' : 'fa-square-o';
             };
 
-            $scope.checkToggle = function() {
-                $timeout(function() {
-                    $scope.checkboxFn();
-                }, false);
+            $scope.checkToggle = function () {
+                const gridData = crudContextHolderService.gridData();
+                const selectionValue = crudContextHolderService.getSelectionModel($scope.panelid).selectAllValue;
+                if (selectionValue) {
+                    $timeout(function () {
+                        $scope.checkboxFn();
+                    }, false);
+                    return;
+                }
+
+                bootbox.prompt({
+                    title: "Selection Mode",
+                    inputType: 'select',
+                    inputOptions: [{
+                        text: `Current Page (${gridData.pageSize} items)`  ,
+                        value: 'current',
+                    },
+                    {
+                        text: `All Pages (${gridData.totalCount} items)`,
+                        value: 'all',
+                    },
+
+                    ],
+                    callback: function (result) {
+                        if (!result) return;
+                        const all = result === "all";
+                        $timeout(function () {
+                            $scope.checkboxFn({ "all":all });
+                        }, false);
+                    }
+                });
             };
 
-            $scope.commandIcon = function(command) {
-                var icon = command.icon;
+            $scope.commandIcon = function (command) {
+                const icon = command.icon;
                 if (icon == null) {
                     return null;
                 }
@@ -66,7 +94,7 @@ app.directive('multiselectDropdown', function (contextService, $log, $timeout, c
             };
 
             $scope.commandLabel = function (command) {
-                var label = command.label;
+                const label = command.label;
 
                 if (label == null) {
                     return null;

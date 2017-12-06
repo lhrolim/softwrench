@@ -103,6 +103,7 @@
     <Compile Include="entities\BatchStatusType.cs" />
     <Compile Include="entities\IBatch.cs" />
     <Compile Include="entities\MultiItemBatch.cs" />
+    <Compile Include="migration\MigrationSwweb3253.cs" />
     <Compile Include="services\IBatchOptionProvider.cs" />
     <Compile Include="services\IBatchSubmissionService.cs" />
     <Compile Include="services\IBatchSubmissionConverter.cs" />

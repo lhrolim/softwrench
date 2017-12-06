@@ -100,9 +100,6 @@
     <Reference Include="softwrench.sW4.audit, Version=2.2.6516.28948, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.audit.2.2.6516.28948\lib\net461\softwrench.sW4.audit.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6533.17494, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6533.17494\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
-    </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
@@ -161,6 +158,7 @@
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchConfigurationException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\exception\BatchException.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\migration\Migration201506062320BatOffLine.cs" />
+    <Compile Include="com\cts\softwrench\sw4\batches\services\BatchRestoreService.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionData.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\BatchSubmissionItem.cs" />
     <Compile Include="com\cts\softwrench\sw4\batches\services\OldBatchCleanUpJob.cs" />
@@ -184,6 +182,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
+      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
+      <Name>softwrench.sw4.batches.api</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

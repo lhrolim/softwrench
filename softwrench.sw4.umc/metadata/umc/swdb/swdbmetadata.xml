@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  <templates>
+    <template path="@userprofile.xml"/>
+    <template path="@dashboard.xml"/>
+    <template path="@audit.xml"/>
+    <template path="@swhelp.xml"/>
+    <template path="@batch.xml"/>
+    <template path="@swerror.xml"/>
+    <template path="@configuration.xml"/>
+    <template path="@dynamic.xml"/>
+    <template path="@mappingtool.xml"/>
+    <template path="@whereclause.xml"/>
+    <template path="@doclink.xml"/>
+  </templates>
+
+  <entities>
+    <!--This is a batch only for workorders-->
+    <entity name="PmBatch"  whereclause="Application = 'pm' " idAttribute="Id" parententity="MultiItemBatch">
+      <attributes>
+        <attribute name="pmcount" type="int" query="@umcPmBatchService.PmCountQuery"/>
+      </attributes>
+    </entity>
+  </entities>
+
+  <applications>
+    <application entity="PmBatch" name="pmbatch" title="Preventive Maintenance Batch Update">
+      <schemas>
+        <list title="Update History">
+          <commandbars>
+            <commandgroup position="gridtop" removeundeclared="true">
+            </commandgroup>
+          </commandbars>
+          <event type="onload" service="umcPdService" method="configurePolling"/>
+          <!--<event type="onload" service="wobatchService" method="configurePolling"/>-->
+          <field attribute="id" label="Batch ID">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="alias" label="Alias">
+            <renderer type="default" params="width=30%"/>
+          </field>
+          <field attribute="status" label="Status">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="updatedate" label="Updated">
+            <renderer type="datetime" params="width=25%"/>
+          </field>
+          <field attribute="pmcount" label="PM Count">
+            <renderer type="default" params="width=15%"/>
+          </field>
+          <field attribute="itemids" label="Preventive Maintenances" hidden="true"/>
+        </list>
+        
+        <detail>
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+          <section orientation="horizontal">
+            <field attribute="id" label="Batch ID" readonly="true"/>
+            <field attribute="alias" label="Alias" readonly="true"/>
+          </section>
+          <section orientation="horizontal">
+            <field attribute="pmcount" label="PM Count" readonly="true"/>
+            <field attribute="status" label="Status" readonly="true"/>
+          </section>
+          <field attribute="ld" label="Long Description" readonly="true">
+            <renderer type="richtext"/>
+          </field>
+
+          <composition fetchtype="lazy" detailschema=""  relationship="#pmupdated" printschema="" inline="true" label="Update List">
+            <collectionproperties allowcreation="false" listschema="pmupdatedlist" allowupdate="false"/>
+          </composition>
+        </detail>
+        
+        <schema id="pmupdatedlist" stereotype="compositionlist">
+          <field attribute="pmuid" hidden="true"/>
+          <field attribute="pmnum" label="PM#"/>
+          <field attribute="updated" label="Updated">
+            <renderer type="checkbox"/>
+          </field>
+        </schema>
+      </schemas>
+    </application>
+  </applications>
+</metadata>

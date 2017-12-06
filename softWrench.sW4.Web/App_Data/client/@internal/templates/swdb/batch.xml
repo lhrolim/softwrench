@@ -3,7 +3,7 @@
 
   <entities>
     <!--This is a batch only for workorders-->
-    <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="Batch">
+    <entity name="WOBatch"  whereclause="Application = 'WORKORDER' " idAttribute="Id" parententity="MultiItemBatch">
       <attributes>
         <attribute name="wocount" type="int" query="@woBatchWhereClauseProvider.WoCountQuery"/>
       </attributes>

@@ -240,7 +240,7 @@
                         associationService.updateFromServerSchemaLoadResult(data.associationOptions, { panelid: $scope.panelid }, true);
 
                         if (!initialLoad) {
-                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope,$scope.panelid);
+                            checkpointService.createGridCheckpointFromGridData($scope.schema, $scope, $scope.panelid);
                         }
 
                         $scope.gridDataChanged($scope.datamap);
@@ -253,7 +253,7 @@
                                 idValue = item[$scope.schema.properties["list.crawl.idfield"]];
                             }
 
-                            const listitem = { id: idValue};
+                            const listitem = { id: idValue };
                             if (!!applicationField) listitem.application = item[applicationField.attribute];
                             if (!!detailShemaIdField) listitem.detailSchemaId = item[detailShemaIdField.attribute];
 
@@ -369,7 +369,7 @@
                             $scope.cleanup(searchData, searchOperator, searchSort);
                         }
 
-                        $scope.selectPage(pagetogo, newPageSize, printMode, { addPreSelectedFilters, numberOfPages, schemaFilterId });
+                        $scope.selectPage(pagetogo, newPageSize, printMode, { avoidspin, addPreSelectedFilters, numberOfPages, schemaFilterId });
                     };
 
                     $scope.getGridCommandPosition = function (propertyName, defaultProperty) {
@@ -480,12 +480,10 @@
                         }
                     }
 
+                    $scope.buildSearchDto = function (pageNumber, pageSize, printMode = false, extraparameters = {}) {
 
-                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters = {}) {
-
-                        if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
-                            $scope.paginationData.pageNumber = pageNumber;
-                            return $q.when();
+                        if (extraparameters instanceof SearchDTO) {
+                            return extraparameters;
                         }
 
                         var totalCount = 0;
@@ -505,22 +503,30 @@
                             pageSize = 100;
                         }
 
-                        var searchDTO;
 
-                        if (extraparameters instanceof SearchDTO) {
-                            searchDTO = extraparameters;
-                        } else {
-                            searchDTO =
-                                searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, sortModel().sortColumns);
-                            searchDTO.pageNumber = pageNumber;
-                            searchDTO.totalCount = totalCount;
-                            searchDTO.pageSize = pageSize;
-                            searchDTO.numberOfPages = extraparameters.numberOfPages;
-                            searchDTO.schemaFilterId = extraparameters.schemaFilterId;
-                            searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
-                            searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
-                            searchDTO.addPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
+                        const searchDTO =
+                            searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, filterFixedWhereClause, null, $scope.searchTemplate, null, sortModel().sortColumns);
+                        searchDTO.pageNumber = pageNumber;
+                        searchDTO.totalCount = totalCount;
+                        searchDTO.pageSize = pageSize;
+                        searchDTO.numberOfPages = extraparameters.numberOfPages;
+                        searchDTO.schemaFilterId = extraparameters.schemaFilterId;
+                        searchDTO.paginationOptions = $scope.paginationData.paginationOptions;
+                        searchDTO.quickSearchDTO = $scope.vm.quickSearchDTO;
+                        searchDTO.addPreSelectedFilters = extraparameters.addPreSelectedFilters ? true : false;
+
+                        return searchDTO;
+                    }
+
+                    $scope.selectPage = function (pageNumber, pageSize, printMode, extraparameters = {}) {
+
+                        if (pageNumber === undefined || pageNumber <= 0 || pageNumber > $scope.paginationData.pageCount) {
+                            $scope.paginationData.pageNumber = pageNumber;
+                            return $q.when();
                         }
+
+
+                        var searchDTO = $scope.buildSearchDto(pageNumber, pageSize, printMode, extraparameters);
 
                         // Check for custom param provider
                         $scope.handleCustomParamProvider(searchDTO);
@@ -536,6 +542,7 @@
 
                         $rootScope.printRequested = printMode;
                         return searchService.searchWithData($scope.schema.applicationName, $scope.searchData, listSchemaId, {
+                            avoidspin: extraparameters.avoidspin,
                             searchDTO: searchDTO,
                             printMode: printMode,
                             schemaFieldsToDisplay: $scope.fieldstodisplay,
@@ -618,8 +625,30 @@
                     }
 
                     // called when the state of select all checkbox changes from user action
-                    $scope.selectAllChanged = function () {
-                        gridSelectionService.selectAllChanged($scope.datamap, $scope.schema, $scope.panelid);
+                    $scope.selectAllChanged = function (mode) {
+                        if (mode.all) {
+                            const totalCount = crudContextHolderService.gridData().totalCount;
+                            if (totalCount > 1000) {
+                                return alertService.alert(
+                                    "Cannot select more than 1000 items at once. Please narrow your search criteria");
+                            }
+
+
+                            const searchDTO = $scope.buildSearchDto(1, crudContextHolderService.gridData().totalCount);
+
+                            return searchService.searchWithData($scope.schema.applicationName, $scope.searchData, $scope.schema.schemaId, {
+                                searchDTO: searchDTO,
+                                printMode: false,
+                                metadataid: $scope.metadataid
+                            }).then(data => {
+                                if ($scope.datamap) $scope.datamap.forEach(row => row["_#selected"] = true);
+                                gridSelectionService.selectAllChanged(data.data.resultObject, $scope.schema, $scope.panelid);
+                            });
+                        } else {
+                            gridSelectionService.selectAllChanged($scope.datamap, $scope.schema, $scope.panelid);
+                        }
+
+
                     }
 
                     $scope.shouldShowGridNavigation = function () {

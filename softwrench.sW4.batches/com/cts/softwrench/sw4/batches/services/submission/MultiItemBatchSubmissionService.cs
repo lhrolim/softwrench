@@ -88,27 +88,47 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             var applicationMetadata = MetadataProvider
             .Application(multiItemBatch.Application).ApplyPolicies(new ApplicationMetadataSchemaKey(multiItemBatch.Schema), SecurityFacade.CurrentUser(), ClientPlatform.Web);
 
-            BatchReport report = null;
-            var submissionData = BuildSubmissionData(multiItemBatch, jsonOb, converter, applicationMetadata);
-            if (options.GenerateReport) {
-                report = UpdateDBEntries(submissionData, multiItemBatch);
-                if (report == null) {
-                    //no report means that we don´t need to submit anything and the batch was deleted
-                    return null;
+            var report = LocateExistingReport(multiItemBatch);
+
+
+            var submissionData = BuildSubmissionData(multiItemBatch, report, jsonOb, converter, applicationMetadata);
+
+            if (report == null) {
+                if (options.GenerateReport) {
+                    report = UpdateDBEntries(submissionData, multiItemBatch);
+                    if (report == null) {
+                        //no report means that we don´t need to submit anything and the batch was deleted
+                        return null;
+                    }
+                } else {
+                    report = new BatchReport {
+                        CreationDate = DateTime.Now,
+                        OriginalMultiItemBatch = multiItemBatch,
+                    };
                 }
             } else {
-                report = new BatchReport {
-                    CreationDate = DateTime.Now,
-                    OriginalMultiItemBatch = multiItemBatch,
-                };
+                var reportKey = report.GetReportKey();
+                var runingBatch = _contextLookuper.GetFromMemoryContext<BatchReport>(reportKey);
+                if (runingBatch != null) {
+                    _log.WarnFormat("batch {0} already running", reportKey);
+                    return null;
+                }
             }
+
             if (!options.Synchronous) {
                 //new thread to give a fast response to the user
                 Task.Factory.NewThread(array => DoExecuteBatch(submissionData, report, options), submissionData);
-                return null;
+                return new TargetResult(report.OriginalMultiItemBatch.Id.ToString(), report.OriginalMultiItemBatch.Alias, null);
             }
             return DoExecuteBatch(submissionData, report, options);
 
+        }
+
+        private BatchReport LocateExistingReport(MultiItemBatch multiItemBatch) {
+            if (multiItemBatch.Id == null) {
+                return null;
+            }
+            return _dao.FindSingleByQuery<BatchReport>(BatchReport.ByBatchId, multiItemBatch.Id);
         }
 
         public TargetResult CreateAndSubmit(string application, string schema, JObject datamap, string itemids = "", string alias = null, BatchOptions options = null) {
@@ -200,7 +220,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
 
             //some of the originally selected entries might be removed, so let´s update the batch entries (besides of the status and date)
             multiItemBatch.ItemIds = string.Join(",", submissionData.RemainingIds);
-            multiItemBatch.DataMapJsonAsString = submissionData.RemainingArray.ToString();
+            //            multiItemBatch.DataMapJsonAsString = submissionData.RemainingArray.ToString();
             multiItemBatch.Status = BatchStatus.SUBMITTING;
             multiItemBatch.UpdateDate = DateTime.Now;
             _dao.Save(multiItemBatch);
@@ -218,11 +238,14 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
         private TargetResult DoExecuteBatch(BatchSubmissionData submissionData, BatchReport report, BatchOptions options) {
             var reportKey = report.GetReportKey();
             _contextLookuper.SetMemoryContext(reportKey, report);
+            var problems = false;
             foreach (var itemToSubmit in submissionData.ItemsToSubmit) {
                 try {
                     _maximoEngine.Execute(itemToSubmit.CrudData);
-                    report.AppendSentItem(itemToSubmit.CrudData.Id);
+
                 } catch (Exception e) {
+                    _log.Error(e);
+                    problems = true;
                     if (options.GenerateProblems) {
                         var problem = new BatchItemProblem {
                             DataMapJsonAsString = itemToSubmit.OriginalLine.ToString(),
@@ -236,16 +259,21 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                         }
                         report.ProblemItens.Add(problem);
                         _dao.Save(report);
-                    } else {
-                        throw e;
+                    }
+                } finally {
+                    report.AppendSentItem(itemToSubmit.CrudData.Id);
+                    if (report.NumberOfSentItens % 30 == 0) {
+                        //storing batch report data to account for a server crash preventing it from starting from scratch
+                        report = _dao.Save(report);
                     }
                 }
             }
+            report.OriginalMultiItemBatch.Status = problems ? BatchStatus.COMPLETE_WITH_PROBLEMS : BatchStatus.COMPLETE;
+            _dao.Save(report.OriginalMultiItemBatch);
+
             if (options.GenerateReport) {
                 _contextLookuper.RemoveFromMemoryContext(reportKey);
                 _dao.Save(report);
-                report.OriginalMultiItemBatch.Status = BatchStatus.COMPLETE;
-                _dao.Save(report.OriginalMultiItemBatch);
                 if (options.SendEmail) {
                     _batchReportEmailService.SendEmail(report);
                 }
@@ -254,7 +282,7 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
             return new BatchResult(null);
         }
 
-        private BatchSubmissionData BuildSubmissionData(MultiItemBatch batch, JObject jsonOb, IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> converter, ApplicationMetadata applicationMetadata) {
+        private BatchSubmissionData BuildSubmissionData(MultiItemBatch batch, BatchReport report, JObject jsonOb, IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> converter, ApplicationMetadata applicationMetadata) {
             if (jsonOb == null) {
                 jsonOb = JObject.Parse(batch.DataMapJsonAsString);
             }
@@ -273,12 +301,16 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.submiss
                     continue;
                 }
                 var crudData = converter.Convert(originalLine, applicationMetadata);
-                submissionData.AddItem(new BatchSubmissionItem {
-                    CrudData = crudData,
-                    OriginalLine = originalLine
-                });
-                submissionData.RemainingArray.Add(row);
-                submissionData.RemainingIds.Add(crudData.Id);
+
+                if (report == null || !report.AlreadySent(crudData.Id)) {
+                    submissionData.AddItem(new BatchSubmissionItem {
+                        CrudData = crudData,
+                        OriginalLine = originalLine
+                    });
+                    submissionData.RemainingArray.Add(row);
+                    submissionData.RemainingIds.Add(crudData.Id);
+                }
+
             }
             return submissionData;
         }

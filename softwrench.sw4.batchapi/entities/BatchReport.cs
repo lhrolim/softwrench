@@ -9,7 +9,7 @@ namespace softwrench.sw4.batch.api.entities {
     [Class(Table = "BAT_REPORT", Lazy = false)]
     public class BatchReport : IBaseEntity {
 
-        public const string ByBatchId = "from BatchReport where OriginalBatch.Id =?";
+        public const string ByBatchId = "from BatchReport where OriginalMultiItemBatch.Id =?";
 
 
         [Id(0, Name = "Id")]
@@ -34,8 +34,15 @@ namespace softwrench.sw4.batch.api.entities {
         [Property]
         public virtual String SentItemIds { get; set; }
 
+        public virtual bool AlreadySent(string id) {
+            if (SentItemIds == null) {
+                return false;
+            }
+            return SentItemIds.Contains("," + id + ",");
+        }
+
         public Int32 NumberOfSentItens {
-            get { return SentItemIds == null ? 0 : SentItemIds.GetNumberOfItems(",") + 1; }
+            get { return SentItemIds == null ? 0 : SentItemIds.GetNumberOfItems(",") - 1; }
         }
 
         public Int32 NumberOfProblemItens {
@@ -44,9 +51,9 @@ namespace softwrench.sw4.batch.api.entities {
 
         public void AppendSentItem(string id) {
             if (String.IsNullOrEmpty(SentItemIds)) {
-                SentItemIds += id;
+                SentItemIds += "," + id + ",";
             } else {
-                SentItemIds += "," + id;
+                SentItemIds += id + ",";
             }
         }
 

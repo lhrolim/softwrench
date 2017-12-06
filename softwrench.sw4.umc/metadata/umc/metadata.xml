@@ -24,7 +24,7 @@
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 
-    
+
         <relationship to="problemlist" qualifier="problemlist">
           <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
@@ -35,6 +35,34 @@
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
       <attributes>
         <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
+      </attributes>
+    </entity>
+    <entity name="pm" idAttribute="pmuid" useridAttribute="pmnum">
+      <relationships>
+        <relationship to="longdescription" qualifier="ld" lazy="true">
+          <relationshipAttribute from="pmuid" to="ldkey" primary="true"/>
+          <relationshipAttribute to="ldownertable" literal="PM" quoteLiteral="true" />
+          <relationshipAttribute to="ldownercol" literal="DESCRIPTION" quoteLiteral="true" />
+        </relationship>
+        <relationship to="jobplan" qualifier="jp" lazy="true">
+          <relationshipAttribute from="jpnum" to="jpnum" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true" />
+        </relationship>
+        <relationship to="asset" >
+          <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
+          <relationshipAttribute from="siteid" to="siteid" />
+        </relationship>
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="integration_interface" value="SWPM"/>
+      </connectorParameters>
+    </entity>
+    <entity name="jobplan" idAttribute="jobplanid" useridAttribute="jpnum">
+      <attributes>
+        <attribute name="jobplanid" type="bigint" required="true" />
+        <attribute name="jpnum" type="varchar" required="true" />
+        <attribute name="description" type="varchar" required="false" />
+        <attribute name="status" type="varchar" required="true" />
       </attributes>
     </entity>
   </entities>
@@ -114,19 +142,19 @@
 
         <schema id="nologinnewdetail" stereotype="detailnew" title="Service Request Details">
           <reference id="srhiddens"/>
-            <field attribute="name" label="Full Name" requiredexpression="true"/>
-            <field attribute="email" label="Email Address" requiredexpression="true">
-              <renderer type="default" params="valtype=custom;valmessage=An '@umcsn.com' email is required.;valflags=i">
-                <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@umcsn\.com$"/>
-              </renderer>
-            </field>
-            <field attribute="phoneext" label="Phone Extension" requiredexpression="true">
-              <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone extension is a sequence of four numbers.;valpattern=^\d{4}$"/>
-            </field>
+          <field attribute="name" label="Full Name" requiredexpression="true"/>
+          <field attribute="email" label="Email Address" requiredexpression="true">
+            <renderer type="default" params="valtype=custom;valmessage=An '@umcsn.com' email is required.;valflags=i">
+              <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@umcsn\.com$"/>
+            </renderer>
+          </field>
+          <field attribute="phoneext" label="Phone Extension" requiredexpression="true">
+            <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone extension is a sequence of four numbers.;valpattern=^\d{4}$"/>
+          </field>
           <field attribute="description" label="Request Summary" requiredexpression="true">
             <renderer type="richtext"/>
           </field>
-          
+
           <commandbars>
             <commandgroup position="detail.primary">
               <removecommand id="cancel"/>
@@ -144,7 +172,7 @@
         <schema id="newdetail" parentschema="adetail" stereotype="detailnew" title="New Service Request" redeclaring="false">
           <customization position="siteid"/>
         </schema>
-        
+
       </schemas>
     </application>
 
@@ -163,7 +191,7 @@
             </field>
           </customization>
         </schema>
-        
+
         <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request" redeclaring="false">
           <customization position="description">
             <field attribute="description" label="Work Request" requiredexpression="true">
@@ -190,10 +218,10 @@
             </field>
           </customization>
           <customization position="siteid"/>
-        </schema>          
+        </schema>
       </schemas>
     </application>
-    
+
     <application name="workorder" title="Work Order" entity="workorder" role="workorders">
       <schemas>
         <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web" redeclaring="true">
@@ -263,7 +291,7 @@
             </commandgroup>
           </commandbars>
         </schema>
-        
+
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
           <customization position="description">
             <field attribute="description" label="Work Request" requiredexpression="true">
@@ -277,7 +305,7 @@
           </customization>
         </schema>
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
-          
+
           <customization position="failurecode"/>
           <customization position="problemcode"/>
 
@@ -303,7 +331,7 @@
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew" redeclaring="false">
-       
+
         </schema>
 
         <schema id="workordercreationmodal" title="Fill In Workorder Details" stereotype="detail.modal" platform="web" redeclaring="false">
@@ -315,7 +343,7 @@
               <renderer type="textarea"/>
             </field>
           </customization>
-          
+
         </schema>
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
@@ -325,7 +353,7 @@
             </field>
           </customization>
         </schema>
-        
+
       </schemas>
     </application>
 
@@ -336,7 +364,7 @@
             <field hidden="true" attribute="transtype" defaultexpression="71"/>
           </customization>
         </schema>
-        
+
       </schemas>
     </application>
 
@@ -354,12 +382,12 @@
               <renderer type="default" params="maxlength=100"/>
             </field>
           </customization>
-          
+
           <customization position="wld_.ldtext">
             <field attribute="wld_.ldtext" label="Details/Location" >
               <renderer type="richtext"/>
             </field>
-          </customization>          
+          </customization>
         </detail>
 
         <detail stereotype="compositiondetail" title="Work Log" platform="mobile" redeclaring="false">
@@ -373,10 +401,10 @@
             <field attribute="wld_.ldtext" label="Work Request" >
               <renderer type="richtext"/>
             </field>
-          </customization>          
+          </customization>
         </detail>
-        
-      </schemas>      
+
+      </schemas>
     </application>
 
     <application entity="woactivity" name="woactivity" title="WO Activity">
@@ -398,13 +426,101 @@
               <renderer type="textarea"/>
             </field>
           </customization>
-          
+
         </detail>
-        
+
       </schemas>
-      
+
     </application>
-    
+
+    <application entity="pm" name="pm" title="Preventive Maintenance">
+      <schemas>
+        <list title="PM Updater">
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="pmnum" label="PM#">
+            <renderer type="default" params="width=20%"/>
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="width=30%"/>
+          </field>
+          <field attribute="assetnum" label="Asset"/>
+          <field attribute="jpnum" label="Job Plan"/>
+          <field attribute="status" label="Status"/>
+
+
+          <properties>
+            <property key="list.selectionstyle" value="multiple"/>
+          </properties>
+
+          <commandbars>
+            <commandgroup position="gridtop">
+              <removecommand id="export"/>
+              <removecommand id="print"/>
+              <command id="editld" icon="fa-edit" label="Batch Update" enableexpression="service:umcPdService.isCommandEnabled" service="umcPdService" method="openUpdateLdModal" parameters="datamap" cssclasses="large-button"/>
+            </commandgroup>
+          </commandbars>
+        </list>
+
+        <schema id="editetail" stereotype="detail" title="Preventive Maintenance Details">
+          <field attribute="pmuid" hidden="true"/>
+          <field attribute="siteid" hidden="true"/>
+          <field attribute="orgid" hidden="true"/>
+          <field attribute="pmnum" label="PM#" readonly="true"/>
+          <field attribute="description" label="Summary" requiredexpression="true"/>
+          <field attribute="ld_.ldtext" label="Description">
+            <renderer type="richtext"/>
+          </field>
+
+          <section orientation="horizontal">
+            <association label="Asset" target="assetnum" labelfield="asset_.description" extraprojectionvalues="location" >
+              <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList;"/>
+            </association>
+            <association label="Job Plan" target="jpnum" labelfield="jp_.jpnum" extraprojectionvalues="jpnum,description">
+              <renderer type="lookup" params="application=jobplan;schemaId=list;"/>
+            </association>
+            <optionfield attribute="status" label="Status" defaultexpression="DRAFT" requiredexpression="true">
+              <option value="DRAFT" label="Draft"/>
+              <option value="ACTIVE" label="Active"/>
+              <option value="INACTIVE" label="Inactive"/>
+            </optionfield>
+          </section>
+        </schema>
+
+
+        <schema id="viewdetail" stereotype="detail" title="Preventive Maintenance Details">
+          <field attribute="pmnum" hidden="true"/>
+          <field attribute="DESCRIPTION_LONGDESCRIPTION" label="Description"/>
+        </schema>
+
+        <schema id="updateld" stereotype="detail.modal" title="Preventive Maintenance Batch Update">
+          <!--          <optionfield attribute="selectionmode" label="Selection Mode">-->
+          <!--            <renderer type="radio"/>-->
+          <!--            <option label="Current Page" value="currentselection" help="Applies the batch only to the current selected items"/>-->
+          <!--            <option label="All Items Matching the Criteria" value="currentpage" help=""/>-->
+          <!--          </optionfield>-->
+
+          <field attribute="commonld" label="Long Description" requiredexpression="true">
+            <renderer type="richtext" params="height=400"/>
+          </field>
+          <field attribute="alias" label="Batch Identifier" helpicon="right" tooltip="An optional alias to help identifying this operation later"/>
+        </schema>
+
+        <schema id="pmsimplelist" stereotype="list">
+          <field attribute="pmuid"/>
+          <field attribute="pmnum"/>
+        </schema>
+      </schemas>
+    </application>
+    <application entity="jobplan" name="jobplan" title="Job Plan">
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="jobplanid" hidden="true"/>
+          <field attribute="status" hidden="true"/>
+          <field attribute="jpnum" label="Job Plan"/>
+          <field attribute="description" label="Summary"/>
+        </schema>
+      </schemas>
+    </application>
   </applications>
 
 </metadata>

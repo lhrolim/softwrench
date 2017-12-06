@@ -94,6 +94,7 @@
                 tabRecordCount: {},
                 lazytabData:{},
                 compositionLoadComplete: false,
+                gridData: {},
                 gridSelectionModel: {
                     selectionBuffer: {}, // buffer of all selected row
                     selectionBufferIdCollumn: null, // preset of columns name to be used as buffer key
@@ -363,8 +364,17 @@
             const context = this.getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;
+            context.gridData = {
+                totalCount: applicationListResult.totalCount,
+                pageSize : applicationListResult.pageSize
+            }
             //we need this because the crud_list.js may not be rendered it when this event is dispatched, in that case it should from here when it starts
             this.contextService.insertIntoContext("grid_refreshdata", { data: applicationListResult, panelid }, true);
+        }
+
+        gridData(panelid) {
+            const context = this.getContext(panelid);
+            return context.gridData;
         }
 
         lookupDataLoaded(lookupResult) {

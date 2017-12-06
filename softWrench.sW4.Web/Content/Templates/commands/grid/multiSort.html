@@ -10,7 +10,7 @@
     <div class="add-column">
         <label><i class="fa fa-plus"></i></label>
         <select class="btn btn-default" ng-model="selected" ng-change="addColumn(selected)" ng-options="column.name for column in notAddedViewColumns()">
-            <option value="" disabled selected hidden>Add Column</option>
+            <option value="" disabled selected hidden>Sort Criteria</option>
         </select>
     </div>
     <div class="applicationcommand btn btn-default reset-order" ng-click="resetSortOrder()" ng-if="vm.showDefaultSortOrder">

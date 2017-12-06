@@ -144,7 +144,7 @@
             <thead id="listgridthread" class="listgrid-thead">
                 <tr class="header-row">
                     <th ng-show="schema.properties['list.selectionstyle'] === 'multiple'" class="select-multiple">
-                        <multiselect-dropdown data-checkbox-fn="selectAllChanged()" data-commands="multiselect.dropdown" data-datamap="datamap" data-schema="schema" ng-model="selectionModel.selectAllValue"/>
+                        <multiselect-dropdown data-checkbox-fn="selectAllChanged({all: all})" data-commands="multiselect.dropdown" data-datamap="datamap" data-schema="schema" ng-model="selectionModel.selectAllValue" panelid="panelid"/>
                     </th>
                     <th ng-show="schema.properties['list.selectionstyle'] === 'single'" class="select-single">
                         <!--Singleselect-->

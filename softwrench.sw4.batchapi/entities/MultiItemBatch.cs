@@ -12,6 +12,7 @@ namespace softwrench.sw4.batch.api.entities {
     public class MultiItemBatch : IBatch {
 
         public static string ActiveBatchesofApplication = "from MultiItemBatch where Application =? and Status = 'INPROG' ";
+        public static string SubmittingBatches = "from MultiItemBatch where Status = 'SUBMITTING' ";
         public static string OldSubmittedBatches = "from MultiItemBatch where Application =? and Status = 'COMPLETE' ";
 
         [Id(0, Name = "Id")]

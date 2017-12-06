@@ -505,7 +505,7 @@
 
                         }
                         if (hasMultipleSelector && !disableddetails) {
-                            html += "<td ng-show=\"selectionModel.selectionMode\" class=\"edit-detail\">";
+                            html += "<td ng-show=\"selectionModel.selectionMode && schema.properties['list.disableddetails'] !== 'true'\" class=\"edit-detail\">";
                             html += "<i class=\"fa fa-edit\" onclick='griditemclick({0},null,this,true)' rel=\"tooltip\" data-original-title=\"View Details\" ></i>".format(i, j);
                             html += "</td>";
                         }

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using cts.commons.simpleinjector;
+using cts.commons.simpleinjector.Core.Order;
 using cts.commons.simpleinjector.Events;
 using cts.commons.Util;
 
 namespace softwrench.sw4.api.classes.application {
-    public abstract class ApplicationFiltereableProvider<T> : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent> where T : IBaseApplicationFiltereable {
+    public abstract class ApplicationFiltereableProvider<T> : ISingletonComponent, ISWEventListener<ApplicationStartedEvent>, ISWEventListener<ContainerReloadedEvent>, IPriorityOrdered where T : IBaseApplicationFiltereable {
 
         private readonly IDictionary<ApplicationFiltereableKey, T> _defaultStorage = new Dictionary<ApplicationFiltereableKey, T>();
 
@@ -117,5 +118,6 @@ namespace softwrench.sw4.api.classes.application {
             return _defaultStorage;
         }
 
+        public int Order => 5;
     }
 }

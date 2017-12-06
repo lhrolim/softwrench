@@ -10,7 +10,7 @@ using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Batches {
     public abstract class ABatchSubmissionConverter : IBatchSubmissionConverter<ApplicationMetadata, OperationWrapper> {
-        private readonly EntityMetadata _entityMetadata;
+        protected readonly EntityMetadata EntityMetadata;
         public abstract string ApplicationName();
         public abstract string ClientFilter();
         public abstract string SchemaId();
@@ -27,7 +27,7 @@ namespace softWrench.sW4.Data.Batches {
                 }
 
                 var entityName = application.Entity;
-                _entityMetadata = MetadataProvider.Entity(entityName);
+                EntityMetadata = MetadataProvider.Entity(entityName);
             }
         }
 
@@ -53,7 +53,7 @@ namespace softWrench.sW4.Data.Batches {
         }
 
         public virtual OperationWrapper Convert(JObject row, ApplicationMetadata applicationMetadata) {
-            var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, applicationMetadata, row, null);
+            var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), EntityMetadata, applicationMetadata, row, null);
             return new OperationWrapper(crudOperationData, OperationConstants.CRUD_CREATE);
         }
     }

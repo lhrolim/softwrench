@@ -523,11 +523,12 @@
                     return $http.get(urlToUse, {
                         headers: {
                             currentmetadata: extraParameters.metadataid,
-                            panelid: extraParameters.panelid
+                            panelid: extraParameters.panelid,
+                            avoidspin: extraParameters.avoidspin
                         }
                     });
                 } else {
-                    return $http.get(urlToUse);
+                    return $http.get(urlToUse, { avoidspin: extraParameters.avoidspin});
                 }
             }
         };
