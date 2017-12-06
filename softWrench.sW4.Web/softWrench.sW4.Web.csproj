@@ -1263,6 +1263,8 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Views\Help\Index.cshtml" />
     <Content Include="Scripts\jquery-2.1.1.min.map" />
+    <Content Include="Views\DispatchEmailTest\Index.cshtml" />
+    <Content Include="Views\DispatchEmail\GenericRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">
@@ -1654,7 +1656,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>8080</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8080/umc</IISUrl>
+          <IISUrl>http://localhost:8080/sw4</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
           <IISAppRootUrl>http://localhost:8080/sw4</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

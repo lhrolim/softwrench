@@ -163,7 +163,7 @@
               <section orientation="horizontal">
                 <renderer type="default" params="class=col-md-4 verticaloffset"/>
                 <field attribute="dispatchexpecteddate" label="Enter Date &amp; Time" enableexpression="@immediatedispatch === 'false'" requiredexpression="@immediatedispatch === 'false'">
-                  <renderer type="datetime" params="position=top;allowpast=false;showtime=true"/>
+                  <renderer type="datetime" params="position=top;allowpast=false;showtime=true;class=innerverticaloffset"/>
                 </field>
                 <section resourcepath="/Content/Customers/firstsolardispatch/htmls/templates/dispatchbutton.html"/>
               </section>
