@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
+using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email;
 using softWrench.sW4.Scheduler;
@@ -18,6 +19,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
         [Import]
         public DispatchEmailCompositeService EmailService { get; set; }
+
+        [Import] public IMemoryContextLookuper ContextLookuper { get; set; }
 
 
         public override string Name() {
@@ -35,12 +38,16 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         public override async Task ExecuteJob() {
             var tickets = Dao.FindByQuery<DispatchTicket>(DispatchTicket.EscalationQuery, DateTime.Now);
             foreach (var ticket in tickets) {
-                await EmailService.SendEmails(ticket);
+                if (!ContextLookuper.GetFromMemoryContext<bool>(ticket.EmailMemoryKey())) {
+                    //to prevent email to be triggered at the same time it is scheduled
+                    await EmailService.SendEmails(ticket);
+                }
+
             }
 
         }
 
-       
+
 
 
         public override bool RunAtStartup() {

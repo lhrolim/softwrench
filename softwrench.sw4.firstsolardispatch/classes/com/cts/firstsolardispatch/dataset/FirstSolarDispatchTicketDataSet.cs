@@ -8,6 +8,7 @@ using cts.commons.persistence.Transaction;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
 using NHibernate.Util;
+using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.handlers;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services;
@@ -61,6 +62,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
 
         [Import]
         public DispatchArrivedEmailService DispatchArrivedEmailService { get; set; }
+
+        [Import]
+        public IMemoryContextLookuper MemoryContextLookuper { get; set; }
 
 
         protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
@@ -205,7 +209,14 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
                 return targetResult;
 
             if (ticket.ImmediateDispatch) {
-                await DispatchEmailService.SendEmails(ticket, true);
+                MemoryContextLookuper.SetMemoryContext(ticket.EmailMemoryKey(), true);
+                try {
+                    await DispatchEmailService.SendEmails(ticket, true);
+                } finally {
+                    MemoryContextLookuper.RemoveFromMemoryContext(ticket.EmailMemoryKey());
+                }
+
+
             }
 
             return targetResult;
