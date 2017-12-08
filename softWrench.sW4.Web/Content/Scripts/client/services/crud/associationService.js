@@ -236,8 +236,11 @@
                     return this.$q.when(itemValue);
                 }
 
-                if (this.contextService.get("anonymous", false, true) || options.avoidPromise) {
-                    log.debug("cannot load extra association texts running on anonymous mode");
+                const isAnonymous = this.contextService.get("anonymous", false, true);
+                if (isAnonymous || options.avoidPromise) {
+                    if (isAnonymous) {
+                        log.debug("cannot load extra association texts running on anonymous mode");    
+                    }
                     if (options.avoidPromise) {
                         return itemValue;
                     }

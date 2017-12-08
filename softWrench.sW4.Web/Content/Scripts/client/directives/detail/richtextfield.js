@@ -173,7 +173,7 @@
                     log.trace("loop to check tinymce's editor is in the screen");
                     const tinyMceFrame = element[0].querySelector("iframe");
                     if (!tinyMceFrame) {
-                        log.debug("tinymce's iframe not yet present. skipping");
+                        log.trace("tinymce's iframe not yet present. skipping");
                         return;
                     }
                     const contentId = $(tinyMceFrame.contentWindow.document.body).attr("data-id");
