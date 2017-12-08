@@ -1,16 +1,21 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using System.Globalization;
 using System.IO;
 using cts.commons.simpleinjector;
 using DotLiquid;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.config;
 using softWrench.sW4.Configuration.Services;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email {
     public abstract class BaseDispatchGenericEmailService : ISingletonComponent {
 
         protected Template Template;
+
+        [Import]
+        public IConfigurationFacade ConfigFacade { get; set; }
 
         protected void BuildTemplate() {
             if (Template != null && !ApplicationConfiguration.IsLocal()) return;
@@ -20,8 +25,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
      
         protected string GetFrom() {
-            var configFacade = SimpleInjectorGenericFactory.Instance.GetObject<ConfigurationFacade>();
-            return configFacade.Lookup<string>(FirstSolarDispatchConfigurations.DefaultFromEmailKey);
+            return ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.DefaultFromEmailKey);
         }
 
         protected abstract string GetTemplateFilePath();
@@ -29,6 +33,19 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         protected string BuildMessage(object templateData) {
             BuildTemplate();
             return Template.Render(Hash.FromAnonymousObject(templateData));
+        }
+
+        protected string GetBbc() {
+            var bbc = SwConstants.DevTeamEmail + "; ";
+            bbc += ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.BbcEmailsToNotify);
+
+            return bbc;
+        }
+
+        protected  string GetSmsEmails() {
+            var sms = ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.SmsEmailsToNotify);
+
+            return sms;
         }
     }
 }

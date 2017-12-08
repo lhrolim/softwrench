@@ -38,7 +38,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             var from = GetFrom();
             var msg = BuildMessage(ticket, site, hour <= 4);
             var emailData = new EmailData(@from, to, subject, msg);
-            emailData.BCc += SwConstants.DevTeamEmail;
+            emailData.BCc = GetBbc();
 
             var emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>();
             emailService.SendEmailAsync(emailData, async success => {
@@ -62,21 +62,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             };
         }
 
-        private static string BuildTo(GfedSite site, int hour) {
-            var toList = new List<string>();
-
-            if (!string.IsNullOrEmpty(site.PrimaryContactEmail)) {
-                toList.Add(site.PrimaryContactEmail);
-            }
-            if (!string.IsNullOrEmpty(site.EscalationContactEmail) && hour > 0) {
-                toList.Add(site.EscalationContactEmail);
-            }
-            if (hour > 1 && ApplicationConfiguration.IsProd()) {
-                toList.Add("frank.kelly@firstsolar.com");
-            }
-
-            return string.Join("; ", toList);
-        }
+        public abstract string BuildTo(GfedSite site, int hour); 
 
         public string BuildMessage(DispatchTicket ticket, GfedSite site, bool allowRejection) {
             var redirectService = SimpleInjectorGenericFactory.Instance.GetObject<RedirectService>();

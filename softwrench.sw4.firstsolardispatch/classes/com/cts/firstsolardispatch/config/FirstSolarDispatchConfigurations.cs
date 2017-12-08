@@ -12,6 +12,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
     public class FirstSolarDispatchConfigurations : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
 
         public const string DefaultFromEmailKey = "/FirstSolar/DISP/DefaultFromEmail";
+        public const string BbcEmailsToNotify = "/FirstSolar/DISP/BbcEmailsToNotify";
+        public const string SmsEmailsToNotify = "/FirstSolar/DISP/SmsEmailsToNotify";
 
         [Import]
         public IConfigurationFacade ConfigurationFacade { get; set; }
@@ -23,6 +25,18 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
             ConfigurationFacade.Register(DefaultFromEmailKey, new PropertyDefinition {
                 Description = "Default email to be used as 'from' on the dispatch emails.",
                 StringValue = "noreply@controltechnologysolutions.com",
+                PropertyDataType = PropertyDataType.STRING
+            });
+
+            ConfigurationFacade.Register(BbcEmailsToNotify, new PropertyDefinition {
+                Description = "Email adresses to be used as 'bbc' on the dispatch emails.",
+                StringValue = "brent.galyon@firstsolar.com",
+                PropertyDataType = PropertyDataType.STRING
+            });
+
+            ConfigurationFacade.Register(SmsEmailsToNotify, new PropertyDefinition {
+                Description = "Cell phone numbers to be used on the dispatch sms.",
+                StringValue = "4802254926@txt.att.net", 
                 PropertyDataType = PropertyDataType.STRING
             });
         }
