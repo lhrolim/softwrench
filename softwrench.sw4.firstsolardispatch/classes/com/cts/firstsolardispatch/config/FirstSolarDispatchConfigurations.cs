@@ -29,13 +29,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
             });
 
             ConfigurationFacade.Register(BbcEmailsToNotify, new PropertyDefinition {
-                Description = "Email adresses to be used as 'bbc' on the dispatch emails.",
+                Description = "Email addresses to be used as 'bbc' on the dispatch emails.",
                 StringValue = "brent.galyon@firstsolar.com",
                 PropertyDataType = PropertyDataType.STRING
             });
 
             ConfigurationFacade.Register(SmsEmailsToNotify, new PropertyDefinition {
-                Description = "Cell phone numbers to be used on the dispatch sms.",
+                Description = "Email addresses to be used as 'bbc' on the dispatch sms.",
                 StringValue = "4802254926@txt.att.net", 
                 PropertyDataType = PropertyDataType.STRING
             });
