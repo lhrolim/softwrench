@@ -116,12 +116,12 @@
                     $scope.doStartPrint(compositionData, shouldPageBreak, shouldPrintMain, printCallback);
                 });
 
-                $scope.$on(JavascriptEventConstants.PrintReadyForDetailedList, function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain) {
+                $scope.$on(JavascriptEventConstants.PrintReadyForDetailedList, function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain, printSchema) {
                     $scope.isList = false;
                     var compositionstoprint = [];
                     $scope.shouldPageBreak = shouldPageBreak;
                     $scope.shouldPrintMain = shouldPrintMain;
-                    $scope.printSchema = $scope.schema.printSchema != null ? $scope.schema.printSchema : $scope.schema;
+                    $scope.printSchema = printSchema;
 
                     $.each(compositionsToExpand, function (key, value) {
                         var compositionToPrint = {};
@@ -152,6 +152,7 @@
 
                 $scope.$on(JavascriptEventConstants.PrintSectionRendered, function () {
                     const promise = printService.awaitToPrint();
+
                     promise.then(() => {
                         if (sessionStorage.mockprint) {
                             return;
@@ -172,6 +173,7 @@
                 if (sessionStorage.mockprint && contextService.isDev()) {
                     $scope.doStartPrint([], true, true, true);
                 }
+                
             }
         };
     });

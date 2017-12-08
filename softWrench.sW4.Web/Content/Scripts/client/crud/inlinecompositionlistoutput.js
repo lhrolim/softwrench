@@ -91,8 +91,9 @@
                         //workaround for swweb-3247 --> removing self relationships for now
                         //TODO: fix this 
                         const avoidCompositionLoadForPrint = relationship.startsWith("#");
+                        const hasData = $scope.parentdata[relationship];
                         
-                        if ($scope.forprint && !avoidCompositionLoadForPrint) {
+                        if ($scope.forprint && !avoidCompositionLoadForPrint && !hasData) {
                             $log.get("inlinecomposition#init",["print"]).debug("registering inlinecomposition print awaitable");
                             $scope.printDefered = $q.defer();
                             printAwaitableService.registerAwaitable($scope.printDefered.promise);

@@ -175,6 +175,20 @@ namespace softWrench.sW4.Metadata {
             schema.DeclaredFilters.Merge(app.AppFilters);
             schema.RelatedCompositions = BuildRelatedCompositionsList(schema);
             schema.NewSchemaRepresentation = LocateNewSchema(schema.ApplicationName);
+
+            schema.PrintDetailedListSchemaId = LocatePrintDetailedListSchemaId(schema);
+            schema.PrintListSchemaId = schema.GetProperty(ApplicationSchemaPropertiesCatalog.PrintListSchemaId);
+        }
+
+        private static string LocatePrintDetailedListSchemaId(ApplicationSchemaDefinition schema) {
+
+            var property = schema.GetProperty(ApplicationSchemaPropertiesCatalog.PrintDetailedListSchemaId);
+            if(!string.IsNullOrEmpty(property)) {
+                return property;
+            }
+
+            var locatePrintDetailedSchema = LocateRelatedDetailSchema(schema);
+            return locatePrintDetailedSchema?.SchemaId ;
         }
 
         public static IEnumerable<AssociationOption> BuildRelatedCompositionsList(ApplicationSchemaDefinition schema) {

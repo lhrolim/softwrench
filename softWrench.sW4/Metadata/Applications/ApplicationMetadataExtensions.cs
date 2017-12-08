@@ -55,7 +55,7 @@ namespace softWrench.sW4.Metadata.Applications {
                     resultingSchema = SchemaByStereotype(application, schemaId);
                     return resultingSchema;
                 }
-                if (schemaId.Equals(ApplicationMetadataConstants.SyncSchema)) {
+                if (ApplicationMetadataConstants.SyncSchema.Equals(schemaId))  {
                     //using list for now
                     var instance = application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List)) ??
                                    application.SchemaForPlatform(new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.Detail));

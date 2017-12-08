@@ -293,7 +293,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 if (!String.IsNullOrWhiteSpace(searchValue)) {
                     searchValues.Add(searchValue);
                     if (lookupAttribute.To != null) {
-                        key.AppendEntry(lookupAttribute.To, searchValue);
+                        key.AppendEntry(lookupAttribute.To.ToLower(), searchValue);
                     }
                 }
             }
@@ -315,6 +315,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             CollectionMatchingResultWrapper matchingResultWrapper, string targetCollectionAttribute) {
             foreach (var resultCollection in resultCollections.ResultList) {
                 var resultkey = new CollectionMatchingResultKey();
+
                 foreach (var key in matchingResultWrapper.Keys) {
                     var result = resultCollection[key];
                     if (result != null) {
@@ -341,7 +342,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             internal readonly ISet<string> Keys = new HashSet<string>();
 
             internal void AddKey(string key) {
-                Keys.Add(key);
+                Keys.Add(key.ToLower());
             }
 
             public virtual CollectionMatchingResultKey FetchKey(AttributeHolder entity) {

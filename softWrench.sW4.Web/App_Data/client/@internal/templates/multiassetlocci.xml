@@ -91,6 +91,9 @@
           <!--<properties>
             <property key="expansible" value="false"/>
           </properties>-->
+          <field attribute="recordkey" hidden="true"></field>
+          <field attribute="recordclass" hidden="true"></field>
+          <field attribute="worksiteid" hidden="true"></field>
           <field attribute="multiid" hidden="true" defaultexpression="null"></field>
           <field attribute="siteid" hidden="true"></field>
           <field attribute="isprimary" hidden="true"></field>
@@ -121,6 +124,9 @@
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
           </properties>
+          <field attribute="recordkey" hidden="true"></field>
+          <field attribute="recordclass" hidden="true"></field>
+          <field attribute="worksiteid" hidden="true"></field>
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
             <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList"/>
@@ -142,6 +148,9 @@
         </schema>
 
         <schema id="detail" stereotype="compositiondetail" platform="web">
+          <field attribute="recordkey" hidden="true"></field>
+          <field attribute="recordclass" hidden="true"></field>
+          <field attribute="worksiteid" hidden="true"></field>
           <field attribute="siteid" hidden="true"></field>
           <association target="assetnum" labelfield="asset_.assetnum" label="Asset">
             <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList"/>

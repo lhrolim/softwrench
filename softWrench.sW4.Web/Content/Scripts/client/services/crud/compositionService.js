@@ -244,6 +244,12 @@
                     return compositions;
                 };
 
+                function getInlineCompositions(cachedCompositions) {
+                    return Object.keys(cachedCompositions)
+                        .map(key=> { return {key, value: cachedCompositions[key]} })
+                        .filter(o => o.value.inline).map(o => o.key);
+                };
+
                 function getLazyCompositions(schema, datamap) {
                     if (!schema || !schema["cachedCompositions"]) {
                         return null;
@@ -505,6 +511,7 @@
                     searchCompositionList,
                     isCompositionLodaded,
                     getCompositions,
+                    getInlineCompositions,
                     getLazyCompositions,
                     getCompositionDetailItem,
                     isCompositionListItem,

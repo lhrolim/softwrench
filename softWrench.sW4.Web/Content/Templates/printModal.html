@@ -45,9 +45,12 @@
                             <input type="radio" value="pages" ng-model="listOptions.pageOption">
                             Pages
                             <input type="number" min="1" max="{{lastPage}}" class="thin-input" ng-model="listOptions.startPage" ng-change="pageRangeChange()">
-                            to 
+                            to
                             <input type="number" min="1" max="{{lastPage}}" class="thin-input" ng-model="listOptions.endPage" ng-change="pageRangeChange()">
                         </label>
+                    </div>
+                    <div>
+                        <label><input type="checkbox" ng-model="listOptions.isDetailed"> Print Details</label>
                     </div>
                 </div>
                 <!-- #endregion-->

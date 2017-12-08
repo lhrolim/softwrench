@@ -36,7 +36,9 @@ namespace softWrench.sW4.Data.Search {
             if (dto.MultiSearchSort != null) {
                 dto.TranslatedMultiSearchSort = new List<SortOrder>();
                 foreach (var searchSort in dto.MultiSearchSort) {
-                    dto.TranslatedMultiSearchSort.Add(searchSort);
+                    if (searchSort?.ColumnName != null) {
+                        dto.TranslatedMultiSearchSort.Add(searchSort);
+                    }
                 }
             }
 

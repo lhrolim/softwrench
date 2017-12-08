@@ -259,6 +259,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             newSchema.RelatedCompositions = schema.RelatedCompositions;
             newSchema.NewSchemaRepresentation = schema.NewSchemaRepresentation;
             newSchema.IdDisplayable = schema.IdDisplayable;
+            newSchema.PrintDetailedListSchemaId = schema.PrintDetailedListSchemaId;
+            newSchema.PrintDetailSchemaId = schema.PrintDetailSchemaId;
+            newSchema.PrintListSchemaId = schema.PrintListSchemaId;
             return newSchema;
         }
 
@@ -285,6 +288,9 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
             newSchema.RelatedCompositions = schema.RelatedCompositions;
             newSchema.NewSchemaRepresentation = CheckCreationAllowed(schema, profile);
             newSchema.IdDisplayable = schema.IdDisplayable;
+            newSchema.PrintDetailedListSchemaId = schema.PrintDetailedListSchemaId;
+            newSchema.PrintDetailSchemaId = schema.PrintDetailSchemaId;
+            newSchema.PrintListSchemaId = schema.PrintListSchemaId;
             return newSchema;
         }
 

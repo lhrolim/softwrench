@@ -134,6 +134,21 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        /// <summary>
+        /// Schema to be consumed for Detailed List Printing.
+        /// </summary>
+        public string PrintDetailedListSchemaId { get; set; }
+        
+        /// <summary>
+        /// Schema to be consumed for List Printing.
+        /// </summary>
+        public string PrintListSchemaId { get; set; }
+
+        /// <summary>
+        /// Schema to be consumed for Detail Printing.
+        /// </summary>
+        public string PrintDetailSchemaId { get; set; }
+
         public ApplicationCommandSchema CommandSchema {
             get; set;
         }

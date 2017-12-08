@@ -125,7 +125,11 @@
         /// Property to specify the schema navigated to on list click
         /// </summary>
         public const string ListClickSchema = "list.click.schema";
+        
 
+        public static string PrintDetailedListSchemaId = "list.print.detailedlistschemaid";
+        public static string PrintListSchemaId = "list.print.listschemaid";
+        
         /// <summary>
         /// Specify a different order by field to be applied by default to the grid, instead of the entity id
         /// </summary>
@@ -338,6 +342,11 @@
         public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
+        /// Allows schema id to be used on printinfg detail.
+        /// </summary>
+        public static string PrintDetailSchemaId = "detail.print.schemaid";
+
+        /// <summary>
         /// If "true" show detail toolbar even to anonymous user.
         /// </summary>
         public static string DetailShowToolbarToAnonymous = "detail.show.toolbar.anonymous";
@@ -396,8 +405,6 @@
         /// <see cref="MetadataProvider.FetchAvailableAppsAndEntities"/>
         /// </summary>
         public static string SchemaRelatedEntities = "schema.whereclause.related";
-
-
-
+        
     }
 }

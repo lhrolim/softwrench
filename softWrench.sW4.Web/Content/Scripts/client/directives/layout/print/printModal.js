@@ -23,7 +23,8 @@ app.directive('printModal', function ($log, contextService) {
             };
 
             $scope.print = function () {
-                if ($scope.isList) {
+                if ($scope.isList && !$scope.listOptions.isDetailed) {
+
                     printService.printList($scope.paginationData, $scope.printSchema, $scope.listOptions);
                     return;
                 }

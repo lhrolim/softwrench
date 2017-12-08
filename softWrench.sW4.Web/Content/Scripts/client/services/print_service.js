@@ -5,8 +5,8 @@
 
 angular.module('sw_layout')
     .service('printService', [
-        "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", "printAwaitableService",
-        function ($rootScope, $http, $timeout, $log, $q, tabsService, fixHeaderService, redirectService, searchService, alertService, printAwaitableService) {
+        "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService", "fixHeaderService", "redirectService", "searchService", "alertService", "printAwaitableService", "schemaCacheService", "crudContextHolderService", "compositionService",
+        function ($rootScope, $http, $timeout, $log, $q, tabsService, fixHeaderService, redirectService, searchService, alertService, printAwaitableService, schemaCacheService, crudContextHolderService, compositionService) {
 
      var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
         var resultObj = {};
@@ -77,7 +77,6 @@ angular.module('sw_layout')
                 searchPrintGrid(1, paginationData.totalCount);
                 return;
             }
-
             
             if (printOptions.startPage > printOptions.endPage || 
                 printOptions.startPage < 1 || printOptions.endPage < 1 || 
@@ -155,28 +154,39 @@ angular.module('sw_layout')
             });
         },
 
-        printDetailedList: function (schema, datamap, printOptions) {
+        locatePrintSchema: function (schema, printMode) {
+            //list, detailedList, detail
+            var schemaId = schema.schemaId;
 
-            var printSchema = schema.printSchema != null ? schema.printSchema : schema;
+            if (printMode === 'detailedList') {
+                schemaId = schema.printDetailedListSchemaId; //TODO: create property on server ApplicationSchemaDefinition
+            } else if (printMode === 'list' && schema.printListSchemaId) {
+                schemaId = schema.printListSchemaId;
+            } else if (printMode === 'detail' && schema.printDetailSchemaId) {
+                schemaId = schema.printDetailSchemaId;
+            }
 
-            if (printSchema.hasNonInlineComposition && printOptions === undefined) {
-                //this case, we have to choose which extra compositions to choose, so we will open the print modal
-                //open print modal...
-                $rootScope.$broadcast(JavascriptEventConstants.PrintShowModal, printSchema);
-                return;
+            return schemaCacheService.fetchSchema(schema.applicationName, schemaId);
+        },
+        
+        buildDetailedSearchParameter: function (printSchema) {
+            var ids = [];
+
+            const selectionModel = crudContextHolderService.getSelectionModel();
+            const selectionBuffer = selectionModel.selectionBuffer;
+
+            var countSelected = Object.keys(selectionBuffer).length;
+            if (countSelected > 30) {
+                alertService.alert("Maximum allowed to detailed print is 30. You requested " + countSelected);
+                return null;
             }
 
 
-            var ids = [];
-
-            $.grep(datamap, function (element) {
-                if (element.fields['checked'] == true) {
-                    ids.push(element.fields[printSchema.idFieldName]);
-                }
+            angular.forEach(selectionBuffer, (entry, id) => {
+                if (!selectionBuffer.hasOwnProperty(id)) return;
+                ids.push(id);
             });
 
-            var applicationName = printSchema.name;
-            var printSchemaId = printSchema.schemaId;
             var parameters = {};
             var searchData = {};
             var searchOperator = {};
@@ -187,29 +197,48 @@ angular.module('sw_layout')
             parameters.searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator, {});
 
 
-            parameters.searchDTO.compositionsToFetch = [];
-            var compositionsToFetch = {};
-            $.each(printOptions.compositionsToExpand, function (key, obj) {
-                if (obj.value == true) {
-                    parameters.searchDTO.compositionsToFetch.push(key);
-                    compositionsToFetch[key] = obj;
-                }
-            });
-
+            parameters.searchDTO.compositionsToFetch = compositionService.getInlineCompositions(printSchema.cachedCompositions);
+            
+            
             parameters.printmode = true;
+            
+            return parameters;
+        },
 
-            var getDetailsUrl = redirectService.getApplicationUrl(applicationName, printSchemaId, '', '', parameters);
+        printDetailedList: function (schema, datamap, printOptions) {
 
-            var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;
-            var shouldPrintMain = printOptions == undefined ? true : printOptions.shouldPrintMain;
+           return this.locatePrintSchema(schema, 'detailedList').then(printSchema => {
+                if (printSchema.hasNonInlineComposition && printOptions === undefined) {
+                    //this case, we have to choose which extra compositions to choose, so we will open the print modal
+                    //open print modal...
+                    $rootScope.$broadcast(JavascriptEventConstants.PrintShowModal, printSchema);
+                    return;
+                }
 
-            $http.get(getDetailsUrl).then(function (response) {
-                const data = response.data;
-                $rootScope.$broadcast(JavascriptEventConstants.PrintReadyForDetailedList, data.resultObject, compositionsToFetch, shouldPageBreak, shouldPrintMain);
+               var parameters = this.buildDetailedSearchParameter(printSchema);
+               if (parameters === null) {
+                   return;
+               }
+               
+                var getDetailsUrl =
+                    redirectService.getApplicationUrl(schema.applicationName, printSchema.schemaId, '', '', parameters);
+
+                var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;
+                var shouldPrintMain = printOptions == undefined ? true : printOptions.shouldPrintMain;
+
+                $http.get(getDetailsUrl).then(function(response) {
+                    const data = response.data;
+                    $rootScope.$broadcast(JavascriptEventConstants.PrintReadyForDetailedList,
+                        data.resultObject,
+                        {},
+                        shouldPageBreak,
+                        shouldPrintMain,
+                        printSchema);
+                });
+
+                // to remove the crud_body grid from printing page
+                $('#listgrid').addClass('hiddenonprint');
             });
-
-            // to remove the crud_body grid from printing page
-            $('#listgrid').addClass('hiddenonprint');
         },
 
 
