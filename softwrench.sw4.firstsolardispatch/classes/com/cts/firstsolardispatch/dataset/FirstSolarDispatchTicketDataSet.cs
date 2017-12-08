@@ -205,6 +205,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
                 }
             }
 
+            if (DispatchTicketStatus.DRAFT.Equals((ticket.Status))) {
+                targetResult.SuccessMessage = "Dipatch Ticket in Draft status, awaiting for Dispatch.";
+            }
+
             if (!hasStatusChange || !dispatching)
                 return targetResult;
 
