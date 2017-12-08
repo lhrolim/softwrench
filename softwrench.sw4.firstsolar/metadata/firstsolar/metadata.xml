@@ -1297,7 +1297,7 @@
 
       <schemas>
 
-        <schema id="list" platform="mobile" redeclaring="false">
+        <schema id="list" platform="mobile" redeclaring="false" >
           <properties>
             <property key="application.originalschema" value="list"/>
           </properties>
@@ -1921,6 +1921,11 @@
           </customization>
 
           <customization position="location">
+            <association label="Secondary Org ID" target="secondorg" labelfield="2organization_.description"></association>
+            <association label="Secondary Site ID" target="secondsite" labelfield="2site_.description" extraprojectionvalues="orgid" dependantfields="secondorg">
+              <dataprovider prefilterfunction="FilterSites"/>
+              <event type="afterchange" service="personService" method="onSiteSelected" />
+            </association>
             <reference id="facilities"/>
           </customization>
         </schema>
@@ -1933,12 +1938,18 @@
 
         </schema>
 
-
-
-
-
         <schema id="myprofiledetail" redeclaring="false">
+          <customization position="personid">
+            <field attribute="maxuser_.loginid" label="FS Id" readonly="true"/>
+            <field attribute="personid" label="Person Id" requiredexpression="true" readonly="true"/>
+          </customization>
+
           <customization position="location">
+            <association label="Secondary Org ID" target="secondorg" labelfield="2organization_.description"></association>
+            <association label="Secondary Site ID" target="secondsite" labelfield="2site_.description" extraprojectionvalues="orgid" dependantfields="secondorg">
+              <dataprovider prefilterfunction="FilterSites"/>
+              <event type="afterchange" service="personService" method="onSiteSelected" />
+            </association>
             <reference id="facilities"/>
           </customization>
         </schema>

@@ -37,7 +37,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
     public class BasePersonDataSet : MaximoApplicationDataSet {
 
-        private readonly ISWDBHibernateDAO _swdbDAO;
+        protected readonly ISWDBHibernateDAO SWDBDAO;
         private readonly UserSetupEmailService _userSetupEmailService;
         private readonly UserLinkManager _userLinkManager;
         private readonly UserStatisticsService _userStatisticsService;
@@ -62,7 +62,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public BasePersonDataSet(ISWDBHibernateDAO swdbDAO, UserSetupEmailService userSetupEmailService, UserLinkManager userLinkManager, UserStatisticsService userStatisticsService,
             UserProfileManager userProfileManager, UserManager userManager, SecurityFacade securityFacade) {
-            _swdbDAO = swdbDAO;
+            SWDBDAO = swdbDAO;
             _userSetupEmailService = userSetupEmailService;
             _userLinkManager = userLinkManager;
             _userStatisticsService = userStatisticsService;
@@ -78,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             if (application.Schema.SchemaId == "userselectlist" || application.Schema.SchemaId == "userremovelist") {
                 var inclusion = application.Schema.SchemaId.EqualsIc("userselectlist") ? " NOT IN " : " IN ";
                 var profileId = searchDto.CustomParameters["profileId"];
-                var validUsernamesList = await _swdbDAO.FindByNativeQueryAsync("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId));
+                var validUsernamesList = await SWDBDAO.FindByNativeQueryAsync("SELECT MAXIMOPERSONID FROM SW_USER2 WHERE MAXIMOPERSONID IS NOT NULL AND ID {0} (SELECT USER_ID FROM SW_USER_USERPROFILE WHERE PROFILE_ID = {1})".FormatInvariant(inclusion, profileId));
                 if (!validUsernamesList.Any()) {
                     throw new BlankListException();
                 } else {
@@ -135,10 +135,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             UserStatistics statistics = null;
             UserActivationLink activationLink = null;
             if (personId != null) {
-                swUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, personId);
+                swUser = await SWDBDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, personId);
                 if (swUser == null) {
                     //lets try with username then
-                    swUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByUserName, personId);
+                    swUser = await SWDBDAO.FindSingleByQueryAsync<User>(User.UserByUserName, personId);
                     if (swUser == null) {
                         swUser = new User {
                             MaximoPersonId = personId,
@@ -148,7 +148,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                     } else {
                         swUser.MaximoPersonId = personId;
                     }
-                    swUser = _swdbDAO.Save(swUser);
+                    swUser = SWDBDAO.Save(swUser);
                 } else {
                     statistics = _userStatisticsService.LocateStatistics(swUser);
                     activationLink = await _userLinkManager.GetLinkByUser(swUser);
@@ -196,7 +196,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public virtual string SwActive(FilterWhereClauseParameters parameters) {
             var active = parameters.InputString.Equals("%1%");
-            var maximoIds = _swdbDAO.FindByQuery<string>(User.ActivePersons);
+            var maximoIds = SWDBDAO.FindByQuery<string>(User.ActivePersons);
             if (!maximoIds.Any()) {
                 return active ? "1=0" : null;
             }
@@ -208,7 +208,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         public virtual string SwLocked(FilterWhereClauseParameters parameters) {
             var locked = parameters.InputString.Equals("%1%");
-            var maximoIds = _swdbDAO.FindByQuery<string>(User.LockedPersons);
+            var maximoIds = SWDBDAO.FindByQuery<string>(User.LockedPersons);
             if (!maximoIds.Any()) {
                 return locked ? "1=0" : null;
             }
@@ -314,7 +314,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             var isLocked = json.StringValue("locked").EqualsAny("1", "true");
             var signature = json.StringValue("#signature");
-            var dbUser = await _swdbDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, username);
+            var dbUser = await SWDBDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, username);
 
             var user = dbUser ?? new User(null, username, isactive) {
                 FirstName = firstName,
@@ -328,7 +328,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var userPreferences = user.UserPreferences;
             if (userPreferences == null) {
                 if (user.Id != null) {
-                    userPreferences = await _swdbDAO.FindSingleByQueryAsync<UserPreferences>(UserPreferences.PreferenesByUserId, user.Id);
+                    userPreferences = await SWDBDAO.FindSingleByQueryAsync<UserPreferences>(UserPreferences.PreferenesByUserId, user.Id);
                 }
                 if (userPreferences == null) {
                     user.UserPreferences = new UserPreferences {
@@ -371,7 +371,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
 
         public String UnregisteredUsers(FilterWhereClauseParameters parameters) {
-            var personIds = _swdbDAO.FindByNativeQuery("select maximopersonid from sw_user2 where creationtype='self' and isactive = :p0 order by creationdate", false).Select(a => a["maximopersonid"]);
+            var personIds = SWDBDAO.FindByNativeQuery("select maximopersonid from sw_user2 where creationtype='self' and isactive = :p0 order by creationdate", false).Select(a => a["maximopersonid"]);
             var enumerable = personIds as IList<string> ?? personIds.ToList();
             if (!enumerable.Any()) {
                 return "1!=1";
@@ -395,7 +395,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return isSysAdmin || !hasProfileChange;
         }
 
-        public SearchRequestDto FilterSites(AssociationPreFilterFunctionParameters parameters) {
+        public virtual SearchRequestDto FilterSites(AssociationPreFilterFunctionParameters parameters) {
             var searchDto = parameters.BASEDto;
             var orgId = parameters.OriginalEntity.GetStringAttribute("locationorg");
             if (!string.IsNullOrEmpty(orgId)) {

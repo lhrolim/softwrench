@@ -314,7 +314,7 @@ namespace softWrench.sW4.Security.Services {
         /// </summary>
         /// <param name="login">login of the user</param>
         /// <param name="profile">an optional profile to check for</param>
-        public static void ClearUserFromCache(string login = null,  UserProfile profile = null) {
+        public static void ClearUserFromCache(string login = null, UserProfile profile = null) {
             //this means, an action that affects all the users, like updating a profile
             if (login == null) {
                 foreach (var user in Users.Values) {
@@ -334,7 +334,7 @@ namespace softWrench.sW4.Security.Services {
 
         public UserProfile SaveUserProfile(UserProfile profile) {
             profile = _userProfileManager.SaveUserProfile(profile);
-            ClearUserFromCache(null,  profile);
+            ClearUserFromCache(null, profile);
             return profile;
         }
 
@@ -384,7 +384,10 @@ namespace softWrench.sW4.Security.Services {
 
 
         public void HandleEvent(UserSavedEvent userEvent) {
-            Users.Remove(userEvent.Login);
+            if (userEvent.Login != null) {
+                Users[userEvent.Login].NeedsRevalidation = true;
+            }
+
         }
     }
 }

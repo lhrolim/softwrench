@@ -10,6 +10,7 @@ using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util;
 using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
@@ -42,7 +43,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
 
         private const string WOAssignedWhereClause =
-        @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+        @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid :siteid and historyflag = 0 and istask = 0
             and 
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
                 and a.laborcode = '@user.properties['laborcode']')
@@ -53,7 +54,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         ///  Facility filters will be applied on top of this to narrow the list
         /// </summary>
         private const string WOGroupByBaseWhereClause =
-          @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+          @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid :siteid and historyflag = 0 and istask = 0
             and {0}
             and not
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid 
@@ -65,7 +66,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         /// Brings all workorders where there´s not a single assignment created for it
         /// </summary>
         private const string UnassignedWhereClause =
-                @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+                @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid :siteid and historyflag = 0 and istask = 0
             and {0}
             and not
             exists (select 1 from assignment a where workorder.wonum = a.wonum and workorder.siteid = a.siteid and workorder.orgid = a.orgid)";
@@ -89,17 +90,17 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         /// USed exclusively for dashboards, refers to assignment entity
         /// </summary>
         private const string PastMyWhereClauseForDashboard =
-            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid :siteid and historyflag = 0 and istask = 0
             and cast (assignment.scheduledate as date) < cast (getdate() as date)
             and assignment.laborcode = '@user.properties['laborcode']'";
 
 
         private const string FutureDashMyWhereClause =
-            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid :siteid and historyflag = 0 and istask = 0
             and cast (assignment.scheduledate as date) > cast (getdate() as date) and assignment.laborcode = '@user.properties['laborcode']'";
 
         private const string AssignedDashWhereClause =
-            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid = @siteid and historyflag = 0 and istask = 0
+            @"workorder.status not in ('comp','can','close') and workorder.status in ('APPR','INPRG','WAPPR') and workorder.siteid :siteid and historyflag = 0 and istask = 0
             and assignment.laborcode = '@user.properties['laborcode']'
           ";
 
@@ -317,7 +318,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         public string AssignedByGroup() {
             var user = SecurityFacade.CurrentUser();
             var sb = new StringBuilder();
-            sb.Append(DefaultValuesBuilder.ConvertAllValues(WOAssignedWhereClause, user));
+
+            var baseQuery = WOAssignedWhereClause;
+
+            baseQuery = ReplaceSiteId(user, baseQuery);
+
+
+            sb.Append(DefaultValuesBuilder.ConvertAllValues(baseQuery, user));
             if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
                 var locationQuery = BaseQueryUtil.GenerateOrLikeString("workorder.location", facilities.Select(f => f + "%"), true);
@@ -326,12 +333,32 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return sb.ToString();
         }
 
+        //TODO: move to default valuesbuilder
+        private static string ReplaceSiteId(InMemoryUser user, string baseQuery) {
+            var secondSite = user.UserPreferences?.GetGenericProperty(FirstSolarConstants.SecondarySite)?.Value;
+            var sites = new List<string> { user.SiteId };
+            if (!string.IsNullOrEmpty(secondSite)) {
+                sites.Add(secondSite);
+            }
+            if (sites.Count > 1) {
+                baseQuery = baseQuery.Replace(":siteid", $" in ({BaseQueryUtil.GenerateInString(sites)})");
+            } else {
+                //using = in order to keep the 99% scenario faster
+                baseQuery = baseQuery.Replace(":siteid", $" = '{user.SiteId}'");
+            }
+            return baseQuery;
+        }
+
 
         private string DoBuildQuery(string queryToUse, string columnName) {
             var user = SecurityFacade.CurrentUser();
             var locationQuery = _firstSolarFacilityUtil.BaseFacilityQuery(columnName);
-
             var baseQuery = queryToUse.Fmt(locationQuery);
+            
+            baseQuery = ReplaceSiteId(user, baseQuery);
+
+            
+
             return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
         }
 

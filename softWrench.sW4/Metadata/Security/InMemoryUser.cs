@@ -141,6 +141,7 @@ namespace softWrench.sW4.Metadata.Security {
 
         public string OrgId { get; set; }
 
+
         public ISet<PersonGroupAssociation> PersonGroups { get; }
 
         public string Department { get; }

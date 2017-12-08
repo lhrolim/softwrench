@@ -9,6 +9,7 @@ using softwrench.sw4.api.classes.fwk.context;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email;
 using softWrench.sW4.Scheduler;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services {
     public class DispatchEscalationService : ASwJob {
@@ -36,6 +37,11 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
         }
 
         public override async Task ExecuteJob() {
+            if (!ApplicationConfiguration.IsClient("firstsolardispatch")) {
+                //to prevent local environments to dispatch emails while running other customers
+                return;
+            }
+
             var tickets = Dao.FindByQuery<DispatchTicket>(DispatchTicket.EscalationQuery, DateTime.Now);
             foreach (var ticket in tickets) {
                 if (!ContextLookuper.GetFromMemoryContext<bool>(ticket.EmailMemoryKey())) {

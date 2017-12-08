@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -34,6 +34,16 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
         protected override async Task<RedisLookupDTO> BuildRedisDTO(ApplicationMetadata appMetadata, IDictionary<string, CacheRoundtripStatus> completeCacheEntries) {
             var user = SecurityFacade.CurrentUser();
             var lookupDTO = await base.BuildRedisDTO(appMetadata, completeCacheEntries);
+            if (user.Genericproperties.ContainsKey(FirstSolarConstants.SecondarySite)) {
+                var secondSite = user.Genericproperties[FirstSolarConstants.SecondarySite] as string;
+                if (string.Compare(user.SiteId, secondSite, StringComparison.Ordinal) < 1) {
+                    lookupDTO.ExtraKeys["siteid"] = user.SiteId + "," + secondSite;
+                } else {
+                    lookupDTO.ExtraKeys["siteid"] = secondSite + "," + user.SiteId;
+                }
+
+
+            }
             if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
                 if (appMetadata.Name.EqualsAny("offlineasset", "offlinelocation", "locancestor")) {
@@ -43,7 +53,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.offline {
             }
             return lookupDTO;
         }
-        
+
         protected override IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
             if (request.ItemsToDownload == null) {
                 return base.GetTopLevelAppsToCollect(request, user);

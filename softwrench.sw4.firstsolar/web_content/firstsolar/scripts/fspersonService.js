@@ -8,9 +8,12 @@
             const datamap = event.fields;
             const personid = datamap["personid"];
             const siteid = datamap["locationsite"];
+            const secondSite = datamap["secondsite"];
+
             const parameters = {
                 maximoPersonId: personid,
-                siteid: siteid
+                siteid,
+                secondSite
             }
             restService.getPromise("FirstSolarAdvancedSearch", "GetAvailableFacilities", parameters).then((result) => {
                 const options = result.data;

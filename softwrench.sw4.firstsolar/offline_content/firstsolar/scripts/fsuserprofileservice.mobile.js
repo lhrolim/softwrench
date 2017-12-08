@@ -7,7 +7,9 @@
             facilities: {
                 available: "sync.availablefacilities",
                 selected: "sync.facilities"
-            }
+            },
+            secondorgid: "sync.secondaryorg",
+            secondsiteid: "sync.secondarysite"
         };
         //#endregion
 
@@ -54,6 +56,9 @@
                 options: facilityOptions,
                 selected: selectedFacilities.join(";")
             }
+
+            userVm.secondorgid = user.properties[config.secondorgid];
+            userVm.secondsiteid = user.properties[config.secondsiteid];
             
             return userVm;
         }

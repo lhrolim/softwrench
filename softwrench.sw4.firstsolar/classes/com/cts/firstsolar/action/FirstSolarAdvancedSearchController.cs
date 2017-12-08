@@ -69,8 +69,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
 
         [HttpGet]
-        public IEnumerable<IAssociationOption> GetAvailableFacilities([FromUri] string maximoPersonId, [FromUri] string siteid) {
-            return _userFacilityBuilder.GetAvailableFacilities(maximoPersonId, siteid);
+        public IEnumerable<IAssociationOption> GetAvailableFacilities([FromUri] string maximoPersonId, [FromUri] string siteid, [FromUri] string secondSite) {
+            return _userFacilityBuilder.GetAvailableFacilities(maximoPersonId, siteid,secondSite);
         }
 
 

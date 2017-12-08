@@ -41,14 +41,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 return;
             }
             var user = userEvent.InMemoryUser;
-            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId, user.SiteId);
+            AdjustUserFacilityProperties(user.Genericproperties, user.MaximoPersonId, user.SiteId, user.UserPreferences?.GetGenericProperty(FirstSolarConstants.SecondarySite)?.Value);
         }
 
-        public List<string> GetFacilityList(string maximoPersonId, string siteid) {
+        public List<string> GetFacilityList(string maximoPersonId, string siteid, string secondarysiteId = null) {
             List<string> facilityList;
             if (FacilitiesCache.ContainsKey(maximoPersonId)) {
                 var siteIdDict = FacilitiesCache[maximoPersonId];
-                facilityList = FilterBySiteId(siteIdDict, siteid);
+                facilityList = FilterBySiteId(siteIdDict, siteid, secondarysiteId);
                 Log.InfoFormat("Facilities from user {0} already on cache, available facilities for siteid {1}: {2}", maximoPersonId, siteid, string.Join(", ", facilityList));
             } else {
                 Log.InfoFormat("Fetching facilities for user {0}", maximoPersonId);
@@ -63,14 +63,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                     siteIdDict[dbSiteId].Add(facility);
                 });
                 FacilitiesCache[maximoPersonId] = siteIdDict;
-                facilityList = FilterBySiteId(siteIdDict, siteid);
+                facilityList = FilterBySiteId(siteIdDict, siteid, secondarysiteId);
                 Log.InfoFormat("Available facilities for user {0} and siteid {1}: {2} ", maximoPersonId, siteid, string.Join(", ", facilityList));
             }
             return facilityList;
         }
 
-        public IDictionary<string, object> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId, string siteid) {
-            var facilityList = GetFacilityList(maximoPersonId, siteid);
+        public IDictionary<string, object> AdjustUserFacilityProperties(IDictionary<string, object> genericproperties, string maximoPersonId, string siteid, string secondarySiteid) {
+            var facilityList = GetFacilityList(maximoPersonId, siteid, secondarySiteid);
             // set/updates the available facilities
             if (genericproperties.ContainsKey(FirstSolarConstants.AvailableFacilitiesProp)) {
                 genericproperties[FirstSolarConstants.AvailableFacilitiesProp] = facilityList;
@@ -129,9 +129,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return filteredFacilities;
         }
 
-        public IEnumerable<IAssociationOption> GetAvailableFacilities(string maximoPersonId, string siteid) {
+        public IEnumerable<IAssociationOption> GetAvailableFacilities(string maximoPersonId, string siteid, string secondSite) {
             var options = new List<IAssociationOption>();
-            var facilityList = GetFacilityList(maximoPersonId, siteid);
+            var facilityList = GetFacilityList(maximoPersonId, siteid, secondSite);
             facilityList.ForEach(facility => {
                 options.Add(new AssociationOption(facility, facility));
             });
@@ -180,7 +180,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             FacilitiesCache.Clear();
         }
 
-        private static List<string> FilterBySiteId(IDictionary<string, List<string>> siteIdDict, string siteid) {
+        private static List<string> FilterBySiteId(IDictionary<string, List<string>> siteIdDict, string siteid, string secondarySiteid) {
+            var mainSiteList = DoFilterBySite(siteIdDict, siteid);
+            if (!string.IsNullOrEmpty(secondarySiteid)){
+                mainSiteList.AddRange(DoFilterBySite(siteIdDict,secondarySiteid));
+            }
+            return mainSiteList;
+        }
+
+        private static List<string> DoFilterBySite(IDictionary<string, List<string>> siteIdDict, string siteid) {
             if (!string.IsNullOrEmpty(siteid)) {
                 return siteIdDict.ContainsKey(siteid) ? siteIdDict[siteid] : new List<string>();
             }
