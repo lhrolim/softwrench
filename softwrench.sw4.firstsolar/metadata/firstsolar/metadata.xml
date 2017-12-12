@@ -2118,22 +2118,23 @@
             <option label="MATERIAL" value="MATERIAL"/>
           </optionfield>
 
-          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'">
+          <association target="storeloc" labelfield="offlinelocation_.location" showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" label="Storeroom">
+            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
+            <event type="afterchange" service="materialService" method="storeRoomSelected"/>
+          </association>
+
+          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'" >
             <event type="afterchange" service="materialService" method="categorySelected"/>
             <option label="Stocked" value="STK"/>
             <option label="Non-stocked" value="NS"/>
             <option label="Special Purchase" value="SP"/>
+            <option label="Any Category" value="ANY"/>
           </optionfield>
 
           <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
-                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
-                       label="Item" enableexpression="@category != null">
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" label="Item" enableexpression="@storeloc != null">
             <dataprovider whereClause="@materialService.getAvailableItemsWhereClause"/>
             <event type="afterchange" service="materialService" method="itemSelected"/>
-          </association>
-
-          <association target="storeloc" labelfield="offlinelocation_.location" showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'" label="Storeroom" enableexpression="@itemnum != null">
-            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
           </association>
 
           <association target="warranty" labelfield="warranty_.description" requiredexpression="true" label="Warranty">
@@ -2165,26 +2166,28 @@
           <optionfield attribute="linetype" label="Type" default="ITEM">
             <option label="ITEM" value="ITEM"/>
             <option label="MATERIAL" value="MATERIAL"/>
-            <event type="afterchange" service="materialService" method="lineSelected"/>
-          </optionfield>
-
-          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'">
-            <option label="Stocked" value="STK"/>
-            <option label="Non-stocked" value="NS"/>
-            <option label="Special Purchase" value="SP"/>
-            <event type="afterchange" service="materialService" method="categorySelected"/>
+            <event type="afterchange" service="fsMaterialService" method="lineSelected"/>
           </optionfield>
 
 
           <association label="Storeroom" target="storeloc" labelfield="storeroom_.description" showexpression="@linetype == 'ITEM' || @linetype == 'SPAREPART'" requiredexpression="true">
             <renderer type="lookup"/>
+            <event type="afterchange" service="fsMaterialService" method="storeRoomSelected"/>
           </association>
+
+          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'">
+            <option label="Stocked" value="STK"/>
+            <option label="Non-stocked" value="NS"/>
+            <option label="Special Purchase" value="SP"/>
+            <option label="Any Category" value="ANY"/>
+            <event type="afterchange" service="fsMaterialService" method="categorySelected"/>
+          </optionfield>
 
 
           <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'" requiredexpression="true" dependantfields="storeloc" enableexpression="@storeloc != null">
             <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
-            <event type="afterchange" service="matusetranService" method="afteritemchange"/>
+            <event type="afterchange" service="fsMaterialService" method="itemSelected"/>
           </association>
 
       

@@ -1,0 +1,16 @@
+{
+    "files.exclude": {
+        "node_modules/": true,
+        "platforms/": true,
+        ".history/" : true,
+        "dist/" : true
+    },
+    "workbench.iconTheme": "vscode-icons",
+    "window.zoomLevel": 0,
+    "editor.formatOnSave": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
+    "explorer.openEditors.visible": 0,
+    "javascript.format.enable": true,
+    "editor.codeLens": true,
+    "editor.minimap.enabled": false
+}

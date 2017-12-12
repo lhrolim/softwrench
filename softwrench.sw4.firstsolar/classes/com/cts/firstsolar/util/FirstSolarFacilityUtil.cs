@@ -43,5 +43,19 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             return "1!=1";
         }
 
+        public string BaseStoreroomFacilityQuery(string columnName) {
+            var user = SecurityFacade.CurrentUser();
+            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                Log.WarnFormat("current user {0}  has no facilities selected", user.Login);
+                return "1!=1";
+            }
+
+            var sb = new StringBuilder();
+            var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
+            var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => "% " + f), true);
+            sb.AppendFormat("({0})", locationQuery);
+            return sb.ToString();
+        }
+
     }
 }

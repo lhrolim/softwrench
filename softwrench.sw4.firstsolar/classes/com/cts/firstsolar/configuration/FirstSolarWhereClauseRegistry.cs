@@ -195,6 +195,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
             var offLineCondition = new WhereClauseRegisterCondition() { Alias = "offline", OfflineOnly = true, Global = true };
             var techWorkorderCondition = new WhereClauseRegisterCondition { Alias = "techworkorder", Global = true, AppContext = new ApplicationLookupContext { ParentApplication = "workorder" } };
+            // right now there is not matusetrans on fsoc workorders, so parent app matusetrans is enough to filter for techs
+            var techMatusetransCondition = new WhereClauseRegisterCondition { Alias = "techworkorder", Global = true, AppContext = new ApplicationLookupContext { ParentApplication = "matusetrans" } };
+
             var fsocWorkorderCondition = new WhereClauseRegisterCondition { Alias = "fsocworkorder", Global = true, AppContext = new ApplicationLookupContext { ParentApplication = "fsocworkorder" } };
 
             _whereClauseFacade.Register("workorder", "@firstSolarWhereClauseRegistry.AssignedByGroup", offLineCondition);
@@ -220,12 +223,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
             _whereClauseFacade.Register("locancestor", "@firstSolarWhereClauseRegistry.LocAncestorWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("offlineinventory", "@firstSolarWhereClauseRegistry.InventoryWhereClauseByFacility", offLineCondition);
+            _whereClauseFacade.Register("offlineitem", "@firstSolarWhereClauseRegistry.ItemWhereClauseByFacility", offLineCondition);
             _whereClauseFacade.Register("synstatus", "value in ('WOEN','COMP')", offLineCondition);
             _whereClauseFacade.Register("labor", UserLaborWhereClause, offLineCondition);
             _whereClauseFacade.Register("laborcraftrate", UserLaborCraftWhereClause, offLineCondition);
 
 
             _whereClauseFacade.Register("location", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", techWorkorderCondition);
+            _whereClauseFacade.Register("location", "@firstSolarWhereClauseRegistry.LocationWhereClauseByFacility", techMatusetransCondition);
             _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", techWorkorderCondition);
             _whereClauseFacade.Register("asset", "@firstSolarWhereClauseRegistry.AssetWhereClauseByFacility", fsocWorkorderCondition);
             _whereClauseFacade.Register("inventory", "@firstSolarWhereClauseRegistry.InventoryWhereClauseByFacility", techWorkorderCondition);
@@ -362,22 +367,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
         }
 
-
-
-
         public string LocationWhereClauseByFacility() {
             var user = SecurityFacade.CurrentUser();
             if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
-                return "";
+                return "(1!=1)";
             }
             var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location");
-
-            var facilities = ((IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp]).ToList();
-            return facilities.Contains("AVV") || facilities.Contains("avv") ? @" ({0}) or (location.type = 'storeroom' and location.description like 'avra%')".Fmt(byFacility) : byFacility;
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
+            return $"({byFacility} or (location.type = 'storeroom' and {byStoreRoomFAcility}))";
         }
-
-
-
 
         public string AssetWhereClauseByFacility() {
             return DoBuildQuery(AssetQuery, "asset.location");
@@ -388,7 +386,23 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
         public string InventoryWhereClauseByFacility() {
-            return _firstSolarFacilityUtil.BaseFacilityQuery("inventory.location");
+            var user = SecurityFacade.CurrentUser();
+            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                return "(1!=1)";
+            }
+
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
+            return $"( inventory.location in (select location.location from locations location where {byStoreRoomFAcility}))";
+        }
+
+        public string ItemWhereClauseByFacility() {
+            var user = SecurityFacade.CurrentUser();
+            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+                return "(1!=1)";
+            }
+
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
+            return $"offlineitem.itemtype = 'ITEM' and offlineitem.status = 'ACTIVE' and offlineitem.rotating = 0 and offlineitem.itemnum in (select inventory.itemnum from inventory inventory where inventory.location in (select location.location from locations location where {byStoreRoomFAcility}))";
         }
     }
 }

@@ -3,6 +3,8 @@ using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.Workorder;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using System.ComponentModel.Composition;
+using cts.commons.portable.Util;
+using softWrench.sW4.Data.Entities;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarWorkorderMaterialsDataSet : WorkorderMaterialsDataSet {
@@ -13,15 +15,12 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         public override SearchRequestDto filterItems(AssociationPreFilterFunctionParameters preParams) {
             var filter = preParams.BASEDto;
-            var siteId = preParams.OriginalEntity.GetAttribute("siteid");
-            var facilityQuery = FirstSolarFacilityUtil.BaseFacilityQuery("invbalances.location");
-            var storeLocQuery = "1=1";
-            var storeLocNumber =  preParams.OriginalEntity.GetStringAttribute("storeloc");
-            if (storeLocNumber != null){
-                storeLocQuery = $"location = '{storeLocNumber}'";
-            }
-            filter.AppendWhereClause($"(ITEMNUM IN (SELECT ITEMNUM FROM invbalances WHERE siteid =  '{siteId}' and  ({facilityQuery}) and ({storeLocQuery}) ) )");
+            var entity = preParams.OriginalEntity as Entity;
+            var storeLoc =  preParams.OriginalEntity.GetStringAttribute("storeloc");
 
+            var category = entity?.GetUnMappedAttribute("category");
+            var categoryClause = !string.IsNullOrEmpty(category) && !"any".EqualsIc(category) ? $" and inventory.category = '{category}'" : "";
+            filter.AppendWhereClause($"(item.itemnum IN (SELECT inventory.itemnum from inventory inventory where inventory.location = '{storeLoc}' {categoryClause}))");
             return filter;
         }
 

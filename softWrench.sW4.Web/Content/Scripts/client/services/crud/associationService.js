@@ -408,7 +408,7 @@
 
                     if (zeroEntriesFound && (associationMetadata.rendererType == "lookup" || associationMetadata.rendererType == "autocompleteserver")) {
                         //this should never be blocked, but the server might still be returning 0 entries due to a reverse association mapping
-                        this.crudContextHolderService.blockOrUnblockAssociation(associationKey, false);
+                        this.crudContextHolderService.blockOrUnblockAssociations(associationKey, false);
                     }
 
                     if (associationMetadata.reverse && !zeroEntriesFound) {

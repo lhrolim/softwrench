@@ -1,7 +1,7 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    function materialService(dao) {
+    function materialService(dao, crudContextHolderService) {
         //#region Utils
 
         const cleanItemData = (datamap) => {
@@ -26,7 +26,7 @@
          * textindex03 = offlinelocation.status
          */
         const getStoreRoomWhereClause = function() {
-            return "textindex02='STOREROOM' and textindex03='OPERATING' and textindex01 in (select textindex02 from AssociationData where application='offlineinventory' and textindex01 = @itemnum and textindex03 = @category)";
+            return "textindex02='STOREROOM' and textindex03='OPERATING'";
         };
 
         /**
@@ -36,8 +36,13 @@
          * textindex02 = offlineinventory.location
          * textindex03 = offlineinventory.category
          */
-        const getAvailableItemsWhereClause = () =>
-            "textindex01 in (select textindex01 from AssociationData where application='offlineinventory' and textindex02 in (select textindex01 from AssociationData where application='offlinelocation' and textindex02='STOREROOM' and textindex03='OPERATING') and textindex03 = @category)";
+        const getAvailableItemsWhereClause = () => {
+            const dm = crudContextHolderService.getCompositionDetailItem();
+            if(dm.category !== "ANY"){
+                return "textindex01 in (select textindex01 from AssociationData where application='offlineinventory' and textindex02 = @storeloc and textindex03 = @category)"
+            }
+            return "textindex01 in (select textindex01 from AssociationData where application='offlineinventory' and textindex02 = @storeloc)"
+        };
         
         /**
          * Clears datamap.
@@ -69,7 +74,6 @@
             const description = datamap["offlineitem_.description"];
             datamap["#description"] = description;
             datamap["description"] = description;
-            datamap["storeloc"] = null;
         }
 
         /**
@@ -82,7 +86,16 @@
             if (!datamap["itemnum"]) return;
             datamap["itemnum"] = "null$ignorewatch";
             cleanItemData(datamap);
-            datamap["storeloc"] = null;
+        }
+
+        /**
+         * Clear item data.
+         * 
+         * @param {events.afterchange} event
+         */
+        function storeRoomSelected(event){
+            const datamap = event.datamap;
+            cleanItemData(datamap);
         }
 
         //#endregion
@@ -92,6 +105,7 @@
             lineSelected,
             itemSelected,
             categorySelected,
+            storeRoomSelected,
             getStoreRoomWhereClause,
             getAvailableItemsWhereClause
         };
@@ -101,7 +115,7 @@
 
     //#region Service registration
 
-    angular.module("sw_mobile_services").factory("materialService", ["swdbDAO", materialService]);
+    angular.module("sw_mobile_services").factory("materialService", ["swdbDAO", "crudContextHolderService", materialService]);
 
     //#endregion
 

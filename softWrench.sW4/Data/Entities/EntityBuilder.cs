@@ -87,6 +87,10 @@ namespace softWrench.sW4.Data.Entities {
                     var type = GetType(metadata, attribute);
                     try {
                         var valueFromJson = GetValueFromJson(type, property.Value, metadata.IsSwDb);
+                        var stringValue = valueFromJson as string;
+                        if (stringValue !=  null && (stringValue == "$null$ignorewatch" || stringValue == "null$ignorewatch")) {
+                            valueFromJson = null;
+                        }
                         attributes.Add(property.Name, valueFromJson);
                     } catch (Exception e) {
                         Log.Error("error casting object", e);
@@ -98,7 +102,7 @@ namespace softWrench.sW4.Data.Entities {
                     entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));
                 } else {
                     var value = property.Value.Type == JTokenType.Null ? null : property.Value.ToString();
-                    if (value == "$null$ignorewatch") {
+                    if (value == "$null$ignorewatch" || value == "null$ignorewatch") {
                         value = null;
                     }
                     if (entity.UnmappedAttributes.ContainsKey(property.Name)) {
