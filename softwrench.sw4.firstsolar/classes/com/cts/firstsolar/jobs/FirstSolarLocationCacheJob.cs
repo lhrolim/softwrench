@@ -5,16 +5,19 @@ using cts.commons.persistence;
 using cts.commons.portable.Util;
 using cts.commons.Util;
 using log4net;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration;
 using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Entities;
+using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Scheduler;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
@@ -25,13 +28,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
         private readonly IDatamapRedisManager _redisManager;
         private readonly EntityRepository _repository;
         private readonly IConfigurationFacade _configFacade;
+        private readonly FirstSolarWhereClauseRegistry _wcRegistry;
         private readonly ILog _log = LogManager.GetLogger(typeof(FirstSolarLocationCacheJob));
 
-        public FirstSolarLocationCacheJob(IMaximoHibernateDAO dao, IDatamapRedisManager redisManager, EntityRepository repository, IConfigurationFacade configFacade) {
+        public FirstSolarLocationCacheJob(IMaximoHibernateDAO dao, IDatamapRedisManager redisManager, EntityRepository repository, IConfigurationFacade configFacade, FirstSolarWhereClauseRegistry wcRegistry) {
             _dao = dao;
             _redisManager = redisManager;
             _repository = repository;
             _configFacade = configFacade;
+            _wcRegistry = wcRegistry;
         }
 
         public override string Name() {
@@ -83,7 +88,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.jobs {
                 PageSize = chunkLimit,
                 PageNumber = 1,
                 SearchSort = entity.IdFieldName + " asc",
-                WhereClause = " (location.siteid = '{0}' and location.orgid = '{1}' and location.location like '{2}%') ".Fmt(fsFacility.SiteId, fsFacility.OrgId, fsFacility.Facility)
+                WhereClause = _wcRegistry.LocationWhereClauseByFacility(new List<string> { fsFacility.Facility })
             };
 
             var lookupDTO = new RedisLookupDTO {

@@ -21,18 +21,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
         [Import]
         public IContextLookuper ContextLookuper { get; set; }
 
-        public string BaseFacilityQuery(string columnName) {
+        public string BaseFacilityQuery(string columnName, IEnumerable<string> facilities = null) {
             var user = SecurityFacade.CurrentUser();
             var sb = new StringBuilder();
 
 
-            if ((user.IsInRole(FirstSolarConstants.FacilityAdmin) || user.IsSwAdmin()) && !ContextLookuper.LookupContext().OfflineMode) {
+            if ((user.IsInRole(FirstSolarConstants.FacilityAdmin) || user.IsSwAdmin()) && !ContextLookuper.LookupContext().OfflineMode && facilities == null) {
                 Log.WarnFormat("current user {0} is a facility admin showing it all", user.Login);
                 return "1=1";
             }
 
-            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
-                var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
+            if (user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp) || facilities != null) {
+                facilities = facilities ?? (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
                 var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => f + "%"), true);
                 sb.AppendFormat("({0})", locationQuery);
                 return sb.ToString();
@@ -43,15 +43,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
             return "1!=1";
         }
 
-        public string BaseStoreroomFacilityQuery(string columnName) {
+        public string BaseStoreroomFacilityQuery(string columnName, IEnumerable<string> facilities = null) {
             var user = SecurityFacade.CurrentUser();
-            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp) && facilities == null) {
                 Log.WarnFormat("current user {0}  has no facilities selected", user.Login);
                 return "1!=1";
             }
 
             var sb = new StringBuilder();
-            var facilities = (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
+            facilities = facilities ?? (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
             var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => "% " + f), true);
             sb.AppendFormat("({0})", locationQuery);
             return sb.ToString();

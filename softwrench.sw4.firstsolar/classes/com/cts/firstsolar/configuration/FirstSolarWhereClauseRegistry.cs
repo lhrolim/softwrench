@@ -367,13 +367,13 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
         }
 
-        public string LocationWhereClauseByFacility() {
+        public string LocationWhereClauseByFacility(List<string> facilities = null) {
             var user = SecurityFacade.CurrentUser();
-            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
+            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp) && facilities == null) {
                 return "(1!=1)";
             }
-            var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location");
-            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
+            var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location", facilities);
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description", facilities);
             return $"({byFacility} or (location.type = 'storeroom' and {byStoreRoomFAcility}))";
         }
 
