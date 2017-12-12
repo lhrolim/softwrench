@@ -26,10 +26,10 @@
             <option value="shipment" label="Shipment"/>
             <event type="afterchange" service="fsdPartNeededService" method="deliveryMethodSelected"/>
           </optionfield>
-          <field attribute="expecteddate" label="Expected Date"  showexpression="@deliverymethod !== 'pickup'" enableexpression="@deliverymethod == 'shipment'">
+          <field attribute="expecteddate" label="Expected Date">
             <renderer type="datetime" params="editable=true;forceblankspaceifhidden=true;position=top"/>
           </field>
-          <field attribute="deliverylocation" label="Delivery Location" showexpression="@deliverymethod !== 'pickup'" enableexpression="@deliverymethod == 'shipment'">
+          <field attribute="deliverylocation" label="Delivery Location" >
             <renderer type="default" params="editable=true;forceblankspaceifhidden=true"/>
           </field>
         </schema>

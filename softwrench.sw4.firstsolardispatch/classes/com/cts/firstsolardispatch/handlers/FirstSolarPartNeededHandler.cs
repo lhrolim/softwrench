@@ -49,10 +49,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.h
         private PartNeeded HandlePart(CrudOperationData crudoperationData, PartNeeded part, Inverter inverter) {
             part = EntityBuilder.PopulateTypedEntity(crudoperationData, part);
             part.Inverter = inverter;
-            if (!"shipment".Equals(part.DeliveryMethod)) {
-                part.ExpectedDate = null;
-                part.DeliveryLocation = null;
-            }
+           
             part = Dao.Save(part);
             return part;
         }
