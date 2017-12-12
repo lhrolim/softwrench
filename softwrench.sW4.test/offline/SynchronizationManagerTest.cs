@@ -90,10 +90,12 @@ namespace softwrench.sW4.test.offline {
             var results = _syncManager.DatabaseApplicationsToCollect(true,dto, apps, false);
             var completeApplicationMetadataDefinitions = results as IList<CompleteApplicationMetadataDefinition> ?? results.ToList();
 
-            Assert.AreEqual(4, completeApplicationMetadataDefinitions.Count());
+            Assert.AreEqual(5, completeApplicationMetadataDefinitions.Count());
             Assert.AreEqual("assignment", completeApplicationMetadataDefinitions[0].ApplicationName);
             Assert.AreEqual("labor", completeApplicationMetadataDefinitions[1].ApplicationName);
             Assert.AreEqual("laborcraftrate", completeApplicationMetadataDefinitions[2].ApplicationName);
+            Assert.AreEqual("offlineinventory", completeApplicationMetadataDefinitions[3].ApplicationName);
+            Assert.AreEqual("offlineitem", completeApplicationMetadataDefinitions[4].ApplicationName);
         }
 
         [TestMethod]
