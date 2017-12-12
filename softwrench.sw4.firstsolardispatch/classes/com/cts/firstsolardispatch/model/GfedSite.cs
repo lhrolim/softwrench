@@ -61,6 +61,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Property]
         public string SupportPhone { get; set; }
 
+        [Property]
+        public string SupportEmail { get; set; }
+
         // tech - site manager
         [Property]
         public string PrimaryContact { get; set; }

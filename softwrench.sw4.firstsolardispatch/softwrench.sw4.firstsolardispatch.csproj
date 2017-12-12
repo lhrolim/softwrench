@@ -175,6 +175,7 @@
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3224Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3238Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3242Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3293Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3285Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3250Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3218Migration.cs" />
