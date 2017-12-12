@@ -39,7 +39,7 @@
             dm["sitecontactphone"] = formatPhone(fields["site_.sitecontactphone"]);
             dm["maintenaceprovider"] = fields["site_.maintenaceprovider"];
             dm["supportphone"] = formatPhone(fields["site_.supportphone"]);
-            dm["supportemail"] = formatPhone(fields["site_.supportemail"]);
+            dm["supportemail"] = fields["site_.supportemail"];
             dm["primarycontact"] = fields["site_.primarycontact"];
             dm["primarycontactphone"] = formatPhone(fields["site_.primarycontactphone"]);
             dm["escalationcontact"] = fields["site_.escalationcontact"];
