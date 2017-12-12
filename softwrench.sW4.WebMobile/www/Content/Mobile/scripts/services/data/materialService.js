@@ -95,6 +95,8 @@
          */
         function storeRoomSelected(event){
             const datamap = event.datamap;
+            if (!datamap["itemnum"]) return;
+            datamap["itemnum"] = "null$ignorewatch";
             cleanItemData(datamap);
         }
 

@@ -2319,6 +2319,7 @@
       </schemas>
       <properties>
         <property key="list.offline.text.indexlist" value="itemnum"/>
+        <property key="offline.sync.avoidcaching" value="true"/>
       </properties>
     </application>
 

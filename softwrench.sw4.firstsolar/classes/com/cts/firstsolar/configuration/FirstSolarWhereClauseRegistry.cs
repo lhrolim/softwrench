@@ -359,21 +359,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             var user = SecurityFacade.CurrentUser();
             var locationQuery = _firstSolarFacilityUtil.BaseFacilityQuery(columnName);
             var baseQuery = queryToUse.Fmt(locationQuery);
-            
+
             baseQuery = ReplaceSiteId(user, baseQuery);
 
-            
+
 
             return DefaultValuesBuilder.ConvertAllValues(baseQuery, user);
         }
 
-        public string LocationWhereClauseByFacility(List<string> facilities = null) {
+        public string LocationWhereClauseByFacility() {
             var user = SecurityFacade.CurrentUser();
-            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp) && facilities == null) {
+            if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 return "(1!=1)";
             }
-            var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location", facilities);
-            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description", facilities);
+            var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location");
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
             return $"({byFacility} or (location.type = 'storeroom' and {byStoreRoomFAcility}))";
         }
 
@@ -385,14 +385,18 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             return _firstSolarFacilityUtil.BaseFacilityQuery("locancestor.ancestor");
         }
 
+        private string BaseSelectFromStoreroom() {
+            var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location");
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
+            return $"select location.location from locations location where location.type = 'storeroom' and (({byFacility}) or ({byStoreRoomFAcility}))";
+        }
+
         public string InventoryWhereClauseByFacility() {
             var user = SecurityFacade.CurrentUser();
             if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 return "(1!=1)";
             }
-
-            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
-            return $"( inventory.location in (select location.location from locations location where {byStoreRoomFAcility}))";
+            return $"( inventory.location in ({BaseSelectFromStoreroom()}))";
         }
 
         public string ItemWhereClauseByFacility() {
@@ -400,9 +404,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 return "(1!=1)";
             }
-
-            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
-            return $"offlineitem.itemtype = 'ITEM' and offlineitem.status = 'ACTIVE' and offlineitem.rotating = 0 and offlineitem.itemnum in (select inventory.itemnum from inventory inventory where inventory.location in (select location.location from locations location where {byStoreRoomFAcility}))";
+            return $"offlineitem.itemtype = 'ITEM' and offlineitem.status = 'ACTIVE' and offlineitem.rotating = 0 and offlineitem.itemnum in (select inventory.itemnum from inventory inventory where inventory.location in ({BaseSelectFromStoreroom()}))";
         }
     }
 }
