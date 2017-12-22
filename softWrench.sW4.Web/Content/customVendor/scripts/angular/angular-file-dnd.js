@@ -1,7 +1,7 @@
 (function (angular) {
     "use strict";
 
-    angular.module("omr.angularFileDnD", []).directive("fileDropzone", ["attachmentService", "$rootScope", function (attachmentService, $rootScope) {
+    angular.module("omr.angularFileDnD", []).directive("fileDropzone", ["attachmentService", "$rootScope", "$q", function (attachmentService, $rootScope, $q) {
         return {
             require: "^?form",
             restrict: "A",
@@ -9,6 +9,7 @@
                 field: "=",
                 file: "=",
                 fileName: "=",
+                multiple: "@",
                 dropzoneHoverClass: "@"
             },
             link: function (scope, element, attrs, form) {
@@ -32,10 +33,10 @@
                 };
 
                 validMimeTypes = (!attrs.fileDropzone || attrs.fileDropzone.trim() === "")
-                                    ? null
-                                    : attrs.fileDropzone.split(",").map(function (e) {
-                                        return e.trim();
-                                    });
+                    ? null
+                    : attrs.fileDropzone.split(",").map(function (e) {
+                        return e.trim();
+                    });
 
                 checkSize = function (size) {
                     var _ref;
@@ -59,12 +60,9 @@
                 element.bind("dragleave", function () {
                     return element.removeClass(scope.dropzoneHoverClass);
                 });
-                return element.bind("drop", function (event) {
+
+                const processSingle = function (event) {
                     var file, name, reader, size, type;
-                    if (event != null) {
-                        event.preventDefault();
-                    }
-                    element.removeClass(scope.dropzoneHoverClass);
                     scope.field.rendererParameters["showImagePreview"] = false;
                     reader = new FileReader();
                     reader.onload = function (evt) {
@@ -91,6 +89,40 @@
                     size = file.size;
                     reader.readAsDataURL(file);
                     return false;
+                }
+
+                const innerProcessMultiple = function (fileMetadata) {
+                    const deferred = $q.defer();
+                    ((innerDeferred) => {
+                        const reader = new FileReader();
+                        reader.onload = (evt) => {
+                            if (!checkSize(fileMetadata.size) || !isTypeValid(fileMetadata.name.split(".").pop())) innerDeferred.reject();
+                            fileMetadata.data = evt.target.result;
+                            innerDeferred.resolve(fileMetadata);
+                        };
+                        reader.readAsDataURL(fileMetadata);
+                    })(deferred);
+                    return deferred.promise;
+                }
+
+                const processMultiple = function (event) {
+                    const fileMetadatas = getDataTransfer(event).files;
+                    $q.all(Array.from(fileMetadatas).map(innerProcessMultiple)).then(files => {
+                        scope.file = files.map(file => file.data);
+                        scope.fileName = files.map(file => file.name);
+                        if (form) {
+                            form.$setDirty();
+                        }
+                    });
+                    return false;
+                }
+
+                return element.bind("drop", function (event) {
+                    if (event != null) {
+                        event.preventDefault();
+                    }
+                    element.removeClass(scope.dropzoneHoverClass);
+                    scope.multiple === "true" ? processMultiple(event) : processSingle(event);
                 });
             }
         };

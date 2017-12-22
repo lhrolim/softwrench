@@ -48,7 +48,7 @@
                     dispatchedByModal: false,
                     originalDatamap: woDatamap,
                     refresh: true,
-                    successMessage: "File successfully saved."
+                    successMessage: `File ${datamap["docinfo_.description"]} successfully saved.`
                 }
                 return submitService.submit(results[0], woDatamap, params).then(data => {
                     const packageDatamap = crudContextHolderService.rootDataMap();
@@ -78,7 +78,7 @@
                     dispatchedByModal: false,
                     originalDatamap: woDatamap,
                     refresh: true,
-                    successMessage: "File successfully deleted."
+                    successMessage: `File ${compositionItem.label} successfully deleted.`
                 }
                 return submitService.submit(results[0], woDatamap, params).then(data => {
                     const packageDatamap = crudContextHolderService.rootDataMap();

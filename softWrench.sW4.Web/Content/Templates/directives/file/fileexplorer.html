@@ -1,13 +1,13 @@
 <div file-dropzone="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }} "
-     class="dropzone form-control" data-file-name="fileName" data-file="fileData"
-     data-dropzone-hover-class="file-over"
+     class="dropzone form-control" data-file-name="fileNames" data-file="fileData"
+     data-dropzone-hover-class="file-over" data-multiple="true"
      data-field="fieldMetadata" style="padding: 10px; text-align: left">
 
 
     <div style="padding-left: 10px">
         <i class="fa fa-dot-circle-o"></i>&ensp;Drag and drop a file here to upload, or
 
-        <input id="uploadInput" class="upload-input" type="file"
+        <input id="uploadInput" class="upload-input" type="file" multiple="true"
                fileread="fileData" data-file-read-field="fieldMetadata" path="fileNames"
                data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}"/>
 
