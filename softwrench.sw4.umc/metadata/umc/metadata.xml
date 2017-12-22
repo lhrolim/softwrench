@@ -14,6 +14,9 @@
 
   <entities>
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
+      <attributes>
+        <attribute name="lead2" type="varchar"/>
+      </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="crew">
           <relationshipAttribute from="crewid" to="value" primary="true"/>
@@ -23,7 +26,6 @@
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
-
 
         <relationship to="problemlist" qualifier="problemlist">
           <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
@@ -244,6 +246,9 @@
           <field attribute="wonum" label="WO#" >
             <renderer type="default" params="width=8%" />
           </field>
+          <field attribute="worktype" label="Work Type" >
+            <renderer type="default" params="width=8%" />
+          </field>
           <field attribute="description" label="Work Request">
             <renderer type="default" params="excelwidth=50" />
           </field>
@@ -255,6 +260,9 @@
           </field>
           <field attribute="asset_.description" label="Asset Description">
             <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="lead2" label="Employee" >
+            <renderer type="default" params="width=8%" />
           </field>
           <field attribute="siteid" label="Site" hidden="true"/>
           <field attribute="status" label="Status">
