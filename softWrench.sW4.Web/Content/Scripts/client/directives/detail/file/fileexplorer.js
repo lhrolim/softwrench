@@ -145,7 +145,7 @@
                                 processFile(scope.fileNames[index], value);
                             });
                         } else {
-                            processFile(scope.fileName, newValue);
+                            processFile(scope.fileName || scope.fileNames, newValue);
                         }
                     });
 

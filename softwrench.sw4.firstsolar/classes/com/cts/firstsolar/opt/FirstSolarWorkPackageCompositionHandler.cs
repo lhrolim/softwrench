@@ -26,10 +26,22 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         private const string CallOutEmailAttachmentSource = "Subcontractor Email Attachment";
         private const string MaintenanceEngEmailAttachmentSource = "Maintenance Engineering Email Attachment";
         private const string DomEmailAttachmentSource = "Daily Outage Meeting Email Attachment";
-        private const string InterconnectDocsAttachmentSource = "Interconnect Document";
         private const string OperationProcAttachmentSource = "Operation Procedure File";
+
+        private const string MaintenanceProcAttachmentSource = "Maintenance Procedure";
+        private const string ShutdownProcAttachmentSource = "00 Shutdown Procedures";
+        private const string IsolationProcAttachmentSource = "10 Isolation Procedures";
+        private const string RestorationProcAttachmentSource = "20 Restoration Procedures";
+        private const string StartupProcAttachmentSource = "30 Startup Procedures";
+        private const string LotoPermitAttachmentSource = "LOTO Permit";
+        private const string MethodOfProcAttachmentSource = "Method of Procedure";
+        private const string InterconnectDocsAttachmentSource = "Interconnect Document";
+        private const string SourcePwClPermitAttachmentSource = "Source of Power Clearance Permit";
+        private const string SwitchingOrderAttachmentSource = "Switching Order";
+
         private const string PartListAttachmentSource = "Part List"; //Planning/Schedule
         private const string ToolListAttachmentSource = "Tool List"; //Planning/Schedule
+
         private const string WorkOrder = "Work Order";
 
         private readonly Dictionary<string, string> _testsI18NDict = new Dictionary<string, string>();
@@ -154,6 +166,24 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                         attach["#attachsource"] = InterconnectDocsAttachmentSource;
                     } else if ("operationproc".Equals(test)) {
                         attach["#attachsource"] = OperationProcAttachmentSource;
+                    }else if ("maintenanceproc".Equals(test)) {
+                        attach["#attachsource"] = MaintenanceProcAttachmentSource;
+                    }else if ("shutdownproc".Equals(test)) {
+                        attach["#attachsource"] = ShutdownProcAttachmentSource;
+                    }else if ("isolationproc".Equals(test)) {
+                        attach["#attachsource"] = IsolationProcAttachmentSource;
+                    }else if ("restorationproc".Equals(test)) {
+                        attach["#attachsource"] = RestorationProcAttachmentSource;
+                    }else if ("startupproc".Equals(test)) {
+                        attach["#attachsource"] = StartupProcAttachmentSource;
+                    }else if ("lotopermit".Equals(test)) {
+                        attach["#attachsource"] = LotoPermitAttachmentSource;
+                    }else if ("methodofproc".Equals(test)) {
+                        attach["#attachsource"] = MethodOfProcAttachmentSource;
+                    }else if ("sourcepwclpermitproc".Equals(test)) {
+                        attach["#attachsource"] = SourcePwClPermitAttachmentSource;
+                    }else if ("switchingorder".Equals(test)) {
+                        attach["#attachsource"] = SwitchingOrderAttachmentSource;
                     } else if(_testsI18NDict.ContainsKey(test)) { 
                         attach["#attachsource"] = _testsI18NDict[test];
                     } else if ("partlist".Equals(test)) {

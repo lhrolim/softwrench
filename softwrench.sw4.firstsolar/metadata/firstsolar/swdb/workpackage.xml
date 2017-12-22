@@ -322,15 +322,6 @@
                 </section>
               </section>
             </section>
-
-            <section orientation="horizontal">
-              <composition inline="true" relationship="#interconnectfileexplorer_" label="Interconnect Documents" detailschema="">
-                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
-              </composition>
-              <composition inline="true" relationship="#operationprocfileexplorer_" label="Operation Procedures Files" detailschema="">
-                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
-              </composition>
-            </section>
           </section>
 
           <section id="compositions" ></section>
@@ -616,6 +607,69 @@
 
             </tab>
 
+            <tab label="Procedures" icon="fa-columns" id="procedures" countrelationship="">
+              <composition inline="true" relationship="#maintenanceprocfileexplorer_" label="Maintenance Procedure" detailschema="">
+                <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+              </composition>
+
+              <section>
+                <header label="Operating Procedure Package"  params="fieldset=true"/>
+                <composition inline="true" relationship="#operationprocfileexplorer_" label="Operation Procedures Files" detailschema="">
+                  <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                </composition>
+
+                <section orientation="horizontal">
+                  <composition inline="true" relationship="#shutdownprocfileexplorer_" label="00 Shutdown Procedures" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+
+                  <composition inline="true" relationship="#isolationprocfileexplorer_" label="10 Isolation Procedures" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+                </section>
+
+                <section orientation="horizontal">
+                  <composition inline="true" relationship="#restorationprocfileexplorer_" label="20 Restoration Procedures" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+
+                  <composition inline="true" relationship="#startupprocfileexplorer_" label="30 Startup Procedures" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+                </section>
+
+                <section orientation="horizontal">
+                  <composition inline="true" relationship="#lotopermitfileexplorer_" label="LOTO Permit" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+
+                  <composition inline="true" relationship="#methodofprocfileexplorer_" label="Method of Procedure" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+                </section>
+              </section>
+
+
+              <section>
+                <header label="Interconnect Documents"  params="fieldset=true"/>
+                <composition inline="true" relationship="#interconnectfileexplorer_" label="Interconnect Documents" detailschema="">
+                  <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                </composition>
+
+                <section orientation="horizontal">
+
+                  <composition inline="true" relationship="#sourcepwclpermitprocfileexplorer_" label="Source of Power Clearance Permit" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+
+                  <composition inline="true" relationship="#switchingorderfileexplorer_" label="Switching Order" detailschema="">
+                    <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                  </composition>
+                </section>
+
+              </section>
+            </tab>
+
 
 
             <tab label="Attachments" icon="fa-paperclip" id="attachments" enableexpression="@id!=null" countrelationship="#allattachments_">
@@ -664,12 +718,21 @@
           <filters>
             <filter attribute="#parsedurl" label="Document" style="width:300px" whereclause="description like (!@#value)" />
             <optionfilter attribute="#attachsource" style="width:300px" whereclause="@firstSolarWorkPackageCompositionHandler.AttachmentSourceWhereClause" >
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="00 Shutdown Procedures" value="swwpkg:shutdownproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="10 Isolation Procedures" value="swwpkg:isolationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="20 Restoration Procedures" value="swwpkg:restorationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="30 Startup Procedures" value="swwpkg:startupproc" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Daily Outage Meeting Email Attachment" value="swwpkgdo:%" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Interconnect Document" value="swwpkg:interconnect" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="LOTO Permit" value="swwpkg:lotopermit" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Engineering Email Attachment" value="swwpkgme:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Procedure" value="swwpkg:maintenanceproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Method of Procedure" value="swwpkg:methodofproc" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Operation Procedure File" value="swwpkg:operationproc" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Relay Event File" value="swwpkg:relayevent" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Source of Power Clearance Permit" value="swwpkg:sourcepwclpermitproc" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Subcontractor Email Attachment" value="swwpkgco:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Switching Order" value="swwpkg:switchingorder" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Walk Down Photo" value="swwpkg:walkdown" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Part List" value="swwpkg:partlist" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Tool List" value="swwpkg:toollist" />

@@ -2262,7 +2262,16 @@
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Relay Event File" value="swwpkg:relayevent" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Walk Down Photo" value="swwpkg:walkdown" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Interconnect Document" value="swwpkg:interconnect" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Source of Power Clearance Permit" value="swwpkg:sourcepwclpermitproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Switching Order" value="swwpkg:switchingorder" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Operation Procedure File" value="swwpkg:operationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="00 Shutdown Procedures" value="swwpkg:shutdownproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="10 Isolation Procedures" value="swwpkg:isolationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="20 Restoration Procedures" value="swwpkg:restorationproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="30 Startup Procedures" value="swwpkg:startupproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="LOTO Permit" value="swwpkg:lotopermit" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Method of Procedure" value="swwpkg:methodofproc" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Procedure" value="swwpkg:maintenanceproc" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Subcontractor Email Attachment" value="swwpkgco:%" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Engineering Email Attachment" value="swwpkgme:%" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Daily Outage Meeting Email Attachment" value="swwpkgdo:%" />
