@@ -373,6 +373,16 @@
                   <renderer type="textarea"/>
                 </field>
               </section>
+
+              <section orientation="horizontal">
+                <header displacement="ontop" label="Lists" params="fieldset=true"/>
+                <composition inline="true" relationship="#partlistfileexplorer_" label="Part List" detailschema="">
+                  <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                </composition>
+                <composition inline="true" relationship="#toollistfileexplorer_" label="Tool List" detailschema="">
+                  <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;fileexplorer.addfunction=fsworkpackagefilesService.saveFile;deletefunction=fsworkpackagefilesService.deleteFile"/>
+                </composition>
+              </section>
             </tab>
 
             <tab label="Daily Outage Update" icon="fa-clock-o" id="dailyoutage" showexpression="@#workorder_.worktype == null || @#workorder_.worktype !== 'PM'" enableexpression="@id!=null" countrelationship="" haslazydata="true">
@@ -661,6 +671,8 @@
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Relay Event File" value="swwpkg:relayevent" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Subcontractor Email Attachment" value="swwpkgco:%" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Walk Down Photo" value="swwpkg:walkdown" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Part List" value="swwpkg:partlist" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Tool List" value="swwpkg:toollist" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Work Order" value="NULL" />
             </optionfilter>
             <datefilter attribute="createdate" label="Created Date" style="width:300px" />

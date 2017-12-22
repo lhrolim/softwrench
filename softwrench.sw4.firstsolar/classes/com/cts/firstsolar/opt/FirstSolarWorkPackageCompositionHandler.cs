@@ -28,6 +28,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         private const string DomEmailAttachmentSource = "Daily Outage Meeting Email Attachment";
         private const string InterconnectDocsAttachmentSource = "Interconnect Document";
         private const string OperationProcAttachmentSource = "Operation Procedure File";
+        private const string PartListAttachmentSource = "Part List"; //Planning/Schedule
+        private const string ToolListAttachmentSource = "Tool List"; //Planning/Schedule
         private const string WorkOrder = "Work Order";
 
         private readonly Dictionary<string, string> _testsI18NDict = new Dictionary<string, string>();
@@ -154,6 +156,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
                         attach["#attachsource"] = OperationProcAttachmentSource;
                     } else if(_testsI18NDict.ContainsKey(test)) { 
                         attach["#attachsource"] = _testsI18NDict[test];
+                    } else if ("partlist".Equals(test)) {
+                        attach["#attachsource"] = PartListAttachmentSource;
+                    } else if ("toollist".Equals(test)) {
+                        attach["#attachsource"] = ToolListAttachmentSource;
                     } else {
                         attach["#attachsource"] = test;
                     } 

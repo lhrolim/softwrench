@@ -2266,6 +2266,8 @@
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Subcontractor Email Attachment" value="swwpkgco:%" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Maintenance Engineering Email Attachment" value="swwpkgme:%" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Daily Outage Meeting Email Attachment" value="swwpkgdo:%" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Part List" value="swwpkg:partlist" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Tool List" value="swwpkg:toollist" />
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Work Order" value="NULL" />
             </optionfilter>
           </filters>
