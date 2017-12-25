@@ -1,4 +1,5 @@
 using System;
+using cts.commons.portable.Util;
 using JetBrains.Annotations;
 using softWrench.sW4.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
@@ -17,8 +18,8 @@ namespace softWrench.sW4.Metadata.Applications {
 
 
         public ApplicationMetadataPolicyApplier([NotNull] CompleteApplicationMetadataDefinition application, ApplicationMetadataSchemaKey schemaKey, [NotNull] InMemoryUser user, ClientPlatform platform, string schemaFieldsToDisplay) {
-            if (application == null) throw new ArgumentNullException("application");
-            if (user == null) throw new ArgumentNullException("user");
+            if (application == null) throw new ArgumentNullException(nameof(application));
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
             _application = application;
             _user = user;
@@ -31,7 +32,11 @@ namespace softWrench.sW4.Metadata.Applications {
         private ApplicationMetadata ApplyImpl() {
             var schema = _application
                 .SchemaForPlatform(_schemaKey);
-            var securedSchema = schema.ApplyPolicy(_user.Roles, _platform,_schemaFieldsToDisplay, _user.MergedUserProfile);
+            if (schema == null) {
+                throw new InvalidOperationException("could not locate schema {0} for application {1}".Fmt(_schemaKey,_application));
+            }
+
+            var securedSchema = schema.ApplyPolicy(_user.Roles, _platform, _schemaFieldsToDisplay, _user.MergedUserProfile);
 
             return ApplicationMetadata.CloneSecuring(_application, securedSchema);
 

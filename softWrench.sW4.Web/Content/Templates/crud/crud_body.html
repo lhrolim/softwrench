@@ -3,6 +3,7 @@
         <crud-list datamap="datamap"
                    schema="schema"
                    is-list="isList"
+                   extraparameters="extraparameters"
                    ismodal="{{ismodal}}"
                    timestamp="{{timestamp}}"
                    />
@@ -12,7 +13,7 @@
         <div class="context clearfix header-menu" ng-if="showTopToolbar()" ng-class="schema.stereotypeAttr" ng-init="showdirbutons = showdirectionButtons()">
             <div class="row tool-row main-commands">
                 <div class="left">
-                    <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.primary','detail.primary')}}" schema="schema" class="detail-primary"/>
+                    <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'commandbar.top','detail.primary')}}" schema="schema" class="detail-primary"/>
                     <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema" class="detail-secondary"/>
                     <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator(getPosition(schema,'toolbar.detail.actions','actions'))">&nbsp;</div>
                     <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema"/>

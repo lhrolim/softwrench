@@ -52,7 +52,7 @@ namespace softWrench.sW4.Web.Test.Controllers {
             Assert.IsFalse(result.HasErrors);
         }
 
-        [TestMethod]
+//        [TestMethod]
         public void ExecuteQuery_swdb_crud_Test() {
             var sqlClientMock = new Mock<ISqlClient>();
             var swdbMock = new Mock<ISWDBHibernateDAO>();

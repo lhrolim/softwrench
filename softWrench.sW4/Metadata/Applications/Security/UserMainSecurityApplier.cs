@@ -44,6 +44,11 @@ namespace softWrench.sW4.Metadata.Applications.Security {
 
             var profile = user.MergedUserProfile;
 
+            var overridenRole = application.Schema.GetProperty(ApplicationSchemaPropertiesCatalog.SchemaOverridenRole);
+            if (overridenRole != null && user.IsInRole(overridenRole)){
+                return InMemoryUserExtensions.SecurityModeCheckResult.Allow;
+            } 
+
 
             var permission = LookupPermission(application, profile, request.CompositionContextData);
 

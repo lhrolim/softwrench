@@ -16,9 +16,10 @@
             this.fieldService = fieldService;
 
             validateOnlyOneOptionFound = (lookupObj) => {
-                if (lookupObj.options === null || lookupObj.options.length !== 1) {
+                if (lookupObj.options == null || lookupObj.options.length !== 1) {
                     // Exit if more than one record is returned
-                    this.alertService.alert("{0} is not a valid option for the {1} field".format(lookupObj.code, lookupObj.fieldMetadata.label));
+                    const label = lookupObj.fieldMetadata ? lookupObj.fieldMetadata.label : "";
+                    this.alertService.alert("{0} is not a valid option for the {1} field".format(lookupObj.code, label));
                     return this.$q.reject();
                 }
                 return lookupObj;

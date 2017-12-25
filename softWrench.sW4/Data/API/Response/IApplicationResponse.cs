@@ -7,7 +7,8 @@ namespace softWrench.sW4.Data.API.Response {
     public interface IApplicationResponse :IGenericResponseResult {
         string Type { get; }
         ApplicationSchemaDefinition Schema { get; set; }
-        String CachedSchemaId { get; set; }
+
+        string CachedSchemaId { get; set; }
 
         string Mode { get; set; }
 

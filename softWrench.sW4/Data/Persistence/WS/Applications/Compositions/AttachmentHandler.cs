@@ -396,7 +396,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web, null);
-            var response = await _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID, false, null);
+            var response = await _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID, false, null,null);
 
             var parent = response.ResultObject;
             if (parent != null) {

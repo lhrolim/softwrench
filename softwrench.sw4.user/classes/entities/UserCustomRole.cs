@@ -1,6 +1,7 @@
 ﻿using System;
 using cts.commons.persistence;
 using cts.commons.persistence.Util;
+using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 
 namespace softwrench.sw4.user.classes.entities {
@@ -11,8 +12,9 @@ namespace softwrench.sw4.user.classes.entities {
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
 
-        [Property(Column = "user_id")]
-        public virtual int? UserId { get; set; }
+        [JsonIgnore]
+        [ManyToOne(Column = "user_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+        public virtual User UserId { get; set; }
 
         [ManyToOne(Column = "role_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
         public virtual Role Role { get; set; }

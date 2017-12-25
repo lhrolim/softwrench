@@ -1,0 +1,166 @@
+﻿<schema id="detail" title="NOP Site Package Request Form">
+
+  <section>
+    <header displacement="ontop" label="Shutdown/Startup Procedures" params="fieldset=true"/>
+    <table attribute="shutstart100" label="100 – Emergency Package" dataset="[{optionslabel:'XXX1.EOP.100 – Emergency Site Shutdown'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="shutstart100130" label="100/130 – Site Shutdown Package" dataset="[{optionslabel:'XXX1.NOP.100 – Site Shutdown'},{optionslabel:'XXX1.NOP.130 – Site Startup'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="shutstart200230" label="200/230 – Unit Shutdown Package" dataset="[{optionslabel:'XXX1.NOP.200 – Unit X Shutdown'},{optionslabel:'XXX1.NOP.230 – Unit X Startup'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="shutstart300330" label="300/330 – Feeder Shutdown Package" dataset="[{optionslabel:'XXX1.NOP.300 – Block X Shutdown'},{optionslabel:'XXX1.NOP.330 – Block X Startup'},{optionslabel:'XXX1.NOP.300 – Cap Bank X Shutdown'},{optionslabel:'XXX1.NOP.330 – Cap Bank X Startup'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="shutstart400430" label="&lt;400/430&gt; – PVCS Shutdown Package" dataset="[{optionslabel:'XXX1.NOP.400 – PVCS Shutdown'},{optionslabel:'XXX1.NOP.430 – PVCS Startup'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+  </section>
+
+  <section>
+    <header displacement="ontop" label="Isolation/LOTO/Restoration Procedures" params="fieldset=true"/>
+    <table attribute="isolationgsu" label="210/215/220 – GSU Isolation Package" dataset="[{optionslabel:'XXX1.NOP.210 – GSU Isolation'},{optionslabel:'XXX1.NOP.215 – GSU LOTO'},{optionslabel:'XXX1.NOP.220 – GSU Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationhvbreaker" label="210/215/220 – HV Breaker Package" dataset="[{optionslabel:'XXX1.NOP.210 – Breaker Isolation'},{optionslabel:'XXX1.NOP.215 – Breaker LOTO'},{optionslabel:'XXX1.NOP.220 – Breaker Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationhvswitch" label="210/215/230 – HV Switch Package" dataset="[{optionslabel:'XXX1.NOP.210 – Switch Isolation'},{optionslabel:'XXX1.NOP.215 – Switch LOTO'},{optionslabel:'XXX1.NOP.220 – Switch Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationmvbreaker" label="310/315/320 – MV Breaker Package" dataset="[{optionslabel:'XXX1.NOP.310 – Breaker Isolation'},{optionslabel:'XXX1.NOP.315 – Breaker LOTO'},{optionslabel:'XXX1.NOP.320 – Breaker Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationmvswitch" label="310/315/320 – MV Switch Package" dataset="[{optionslabel:'XXX1.NOP.310 – Switch Isolation'},{optionslabel:'XXX1.NOP.315 – Switch LOTO'},{optionslabel:'XXX1.NOP.320 – Switch Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationracking" label="&lt;X10/X20&gt; - Racking Breaker Package" dataset="[{optionslabel:'XXX1.NOP.X10 – Racking Breaker X Isolation (Manual)'},{optionslabel:'XXX1.NOP.X20 – Racking Breaker X Restoration (Manual)'},{optionslabel:'XXX1.NOP.X10 – Racking Breaker X Isolation (Remote)'},{optionslabel:'XXX1.NOP.X20 – Racking Breaker X Restoration (Remote)'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationreactive" label="&lt;XXX/XXX/XXX&gt; – Reactive System Package" dataset="[{optionslabel:'XXX1.NOP.XXX – CAP Bank Isolation'},{optionslabel:'XXX1.NOP.XXX – CAP Bank LOTO'},{optionslabel:'XXX1.NOP.XXX – CAP Bank Restoration'},{optionslabel:'XXX1.NOP.XXX – DVAR Isolation'},{optionslabel:'XXX1.NOP.XXX – DVAR LOTO'},{optionslabel:'XXX1.NOP.XXX – DVAR Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+    <table attribute="isolationpvcs" label="410/415/420 – PVCS Shutdown Package" dataset="[{optionslabel:'XXX1.NOP.410 – PVCS Isolation'},{optionslabel:'XXX1.NOP.415 – PVCS LOTO'},{optionslabel:'XXX1.NOP.420 – PVCS Restoration'}]">
+      <columns>
+        <optionfield attribute="yesna">
+          <renderer type="radio" params="width=8%"/>
+          <option label="Yes" value="yes" />
+          <option label="N/A" value="na" />
+        </optionfield>
+        <field attribute="optionslabel" label="NOP Name">
+          <renderer type="label"/>
+        </field>
+      </columns>
+    </table>
+  </section>
+</schema>

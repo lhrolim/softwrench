@@ -5,12 +5,6 @@ using softWrench.sW4.SPF;
 
 namespace softWrench.sW4.Data.API.Response {
     public class GenericResponseResult<T> : IGenericResponseResult {
-
-        /// <summary>
-        /// Use this dictionary to append extra properties that could be used by application custom sections
-        /// </summary>
-        private IDictionary<string, object> _extraParameters = new Dictionary<string, object>();
-
         public GenericResponseResult() {
 
         }
@@ -33,11 +27,6 @@ namespace softWrench.sW4.Data.API.Response {
             throw new NotImplementedException();
         }
 
-        public IDictionary<string, object> ExtraParameters {
-            get { return _extraParameters; }
-            set { _extraParameters = value; }
-        }
-
-
+        public IDictionary<string, object> ExtraParameters { get; set; } = new Dictionary<string, object>();
     }
 }

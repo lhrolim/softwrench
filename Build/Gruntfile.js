@@ -589,7 +589,8 @@ module.exports = function (grunt) {
                     "<%= app.dist %>/scripts/app.js",
                     "../softWrench.sW4.Web/Content/Templates/**/*.html",
                     "<%= app.tests %>/angular_mock.js",
-                    "<%= app.tests %>/tests/**/*.js"
+                    "<%= app.tests %>/tests/**/*.js",
+                    "node_modules/babel-polyfill/dist/polyfill.min.js"
                 ]
             },
             target: {}

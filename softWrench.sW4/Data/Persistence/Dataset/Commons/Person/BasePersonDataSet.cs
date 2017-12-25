@@ -112,6 +112,22 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             return result;
         }
 
+        private void HandleCustomRoles(User user, DataMap profileDatamap) {
+            var roles = SWDBDAO.FindByQuery<Role>("from Role order by name");
+
+            var customRoles = new List<IDictionary<string, object>>();
+            foreach (var role in roles) {
+                IDictionary<string, object> dict = new Dictionary<string, object>();
+                dict["name"] = role.Name;
+                dict["description"] = role.Description;
+                dict["id"] = role.Id;
+                dict["_#selected"] = user.CustomRoles.Any(r => r.Role.Id == role.Id);
+                customRoles.Add(dict);
+            }
+            profileDatamap.SetAttribute("#customroles_", customRoles);
+        }
+
+
         [Transactional(DBType.Swdb)]
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             if (request.UserId != null && request.UserIdSitetuple == null) {
@@ -134,6 +150,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             var dataMap = detail.ResultObject;
             UserStatistics statistics = null;
             UserActivationLink activationLink = null;
+
             if (personId != null) {
                 swUser = await SWDBDAO.FindSingleByQueryAsync<User>(User.UserByMaximoPersonId, personId);
                 if (swUser == null) {
@@ -164,7 +181,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 dataMap.SetAttribute("locationorg", ApplicationConfiguration.DefaultOrgId);
                 dataMap.SetAttribute("locationsite", ApplicationConfiguration.DefaultSiteId);
             }
-
+            HandleCustomRoles(swUser, dataMap);
             dataMap.SetAttribute("#profiles", swUser.Profiles);
             var availableprofiles = _userProfileManager.FetchAllProfiles(true).ToList();
             foreach (var profile in swUser.Profiles) {
@@ -225,9 +242,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         /// <param name="operation"></param>
         /// <param name="isBatch"></param>
         /// <param name="userIdSite"></param>
+        /// <param name="operationDataCustomParameters"></param>
         /// <returns></returns>
         [Transactional(DBType.Swdb)]
-        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> operationDataCustomParameters) {
             var isactive = json.StringValue("isactive").EqualsAny("1", "true");
             var isLocked = json.StringValue("locked").EqualsAny("1", "true");
             var primaryEmail = json.StringValue("#primaryemail");
@@ -322,8 +340,34 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
                 MaximoPersonId = username,
                 CreationType = type
             };
+
+            if (user.Id == null) {
+                user = await SWDBDAO.SaveAsync(user);
+            }
+
             user.IsActive = isactive;
             user.Locked = isLocked;
+
+            var roles = json["#customroles_"];
+
+            user.CustomRoles = new HashSet<UserCustomRole>();
+
+            if (roles != null) {
+                foreach (var jToken in roles.ToArray()) {
+                    if ((bool)jToken["_#selected"]) {
+                        var userCustomRole = new UserCustomRole {
+                            Role = new Role {
+                                Id = (int?)jToken["id"],
+                                Name = (string)jToken["name"]
+                            },
+                            Exclusion = false,
+                            UserId = user
+                        };
+
+                        user.CustomRoles.Add(userCustomRole);
+                    }
+                }
+            }
 
             var userPreferences = user.UserPreferences;
             if (userPreferences == null) {
@@ -351,9 +395,6 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
             user.Profiles = screenSecurityGroups;
             return user;
-
-
-
         }
 
         private IDictionary<string, object> ToDictionary(InMemoryUser definition) {

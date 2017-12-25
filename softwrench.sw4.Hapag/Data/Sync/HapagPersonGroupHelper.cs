@@ -47,7 +47,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 var hapagModule = _hapagModules[personGroup.Name];
                 Log.DebugFormat("adding customrole {0} to user {1} from group {2}", hapagModule.Name, user.Id,
                     personGroup.Name);
-                addedRole = user.CustomRoles.Add(new UserCustomRole { Role = hapagModule, UserId = user.Id });
+                addedRole = user.CustomRoles.Add(new UserCustomRole { Role = hapagModule, UserId = user });
             }
             return addedProfile || addedRole;
         }

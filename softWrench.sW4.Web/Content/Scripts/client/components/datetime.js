@@ -6,14 +6,26 @@ angular.module('sw_components')
     "ngInject";
 
     function parseBooleanValue(attrValue) {
-        return attrValue == undefined || attrValue === "" ? true : attrValue.toLowerCase() === "true";
+        return (attrValue == undefined || attrValue === "") ? true : attrValue.toLowerCase() === "true";
     }
 
     function parseBooleanValueDefaultFalse(attrValue) {
-        return attrValue == undefined || attrValue === "" ? true : attrValue.toLowerCase() === "true";
+        return (attrValue == undefined || attrValue === "") ? false : attrValue.toLowerCase() === "true";
     }
 
-    function updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline) {
+    const safe = function (object, key) {
+        if (!object[key]) {
+            object[key] = {};
+        }
+        return object[key];
+    }
+
+    const getRowDm = function (datamap, tableData) {
+        const tableDm = safe(datamap, tableData.tableAttribute);
+        return safe(tableDm, tableData.rownIndex);
+    }
+
+    function updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline, tableData) {
         if (!metadata) {
             return;
         }
@@ -26,9 +38,10 @@ angular.module('sw_components')
                 if (originalUnformattedAttribute[0] !== "#") {
                     originalUnformattedAttribute = "#" + originalUnformattedAttribute;
                 }
-                const originalDM = crudContextHolderService.originalDatamap();
-                if (originalDM[originalUnformattedAttribute] === undefined) {
-                    originalDM[originalUnformattedAttribute] = value;
+                const baseOriginalDm = crudContextHolderService.originalDatamap();
+                const originalDm = tableData.isTableCell ? getRowDm(baseOriginalDm, tableData) : baseOriginalDm;
+                if (originalDm[originalUnformattedAttribute] === undefined) {
+                    originalDm[originalUnformattedAttribute] = value;
                     //                    //setting the original value for the first time
                     //                    datamap[originalUnformattedAttribute] = datamap[scope.fieldMetadata.attribute];
                 }
@@ -58,6 +71,15 @@ angular.module('sw_components')
             if (!ngModel) {
                 return;
             }
+
+            // crud table info
+            const isTableCell = parseBooleanValueDefaultFalse(attrs.tableCell);
+            const tableData = {
+                isTableCell,
+                rowIndex: scope.rowindex,
+                tableAttribute: scope.fieldMetadata && scope.fieldMetadata.attribute
+            }
+
             const showTime = parseBooleanValue(attrs.showTime);
             const showDate = parseBooleanValue(attrs.showDate);
             const showMinutes = parseBooleanValue(attrs.showMinutes);
@@ -65,20 +87,21 @@ angular.module('sw_components')
             var angularDateFormat = formatService.adjustDateFormatForAngular(attrs.formatString, showTime);
             attrs.language = (userLanguage !== '') ? userLanguage : 'en';
             const istimeOnly = showTime && !showDate;
-            var datamap = scope.datamap || scope.compositionitem;
-            const metadata = scope.fieldMetadata || scope.column;
-            const isFromCompositionInline = !!scope.column;
+            var datamap = isTableCell ? getRowDm(scope.datamap, tableData) : (scope.datamap || scope.compositionitem);
+            const metadata = isTableCell ? scope.column : (scope.fieldMetadata || scope.column);
+            const isFromCompositionInline = !!scope.column && !isTableCell;
+
             datetimeclassHandler(istimeOnly,element);
 
             scope.$watch(function () {
                 return ngModel.$modelValue;
             }, function (newValue) {
                 //let´s make sure that the view keeps getting update if the model changes via an api call
-                updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline);
+                updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline, tableData);
             });
 
             $timeout(function () {
-                updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline);
+                updateView(ngModel, metadata, element, datamap, angularDateFormat, isFromCompositionInline, tableData);
             });
 
             if (dateFormat !== '' && dateFormat != undefined) {
@@ -163,8 +186,8 @@ angular.module('sw_components')
                             scope.$apply(function() {
                                 ngModel.$modelValue = e.formattedDate;
                                 const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
-                                if (datamap != undefined && scope.fieldMetadata != undefined) {
-                                    datamap[scope.fieldMetadata.attribute] = value;
+                                if (datamap != undefined && metadata != undefined) {
+                                    datamap[metadata.attribute] = value;
                                 }
 //                                updateView(ngModel, scope, element, datamap, angularDateFormat);
                             });

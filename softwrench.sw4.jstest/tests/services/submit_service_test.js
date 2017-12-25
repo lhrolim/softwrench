@@ -27,7 +27,7 @@
             compositionService = _compositionService_;
             redirectService = _redirectService_;
             schemaCacheService = _schemaCacheService_;
-            
+
 
         });
     });
@@ -60,7 +60,7 @@
         const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
         const deferred = $q.defer();
         const datamap = { attr1: "x", id: "1" };
-        schemaCacheService.addSchemaToCache(SchemaPojo.WithId("editdetail","workorder"));
+        schemaCacheService.addSchemaToCache(SchemaPojo.WithId("editdetail", "workorder"));
 
 
         spyOn(validationService, "validatePromise").and.returnValue(deferred.promise);
@@ -77,14 +77,17 @@
                 compositionData: undefined,
                 platform: "web",
                 currentSchemaKey: "detail.input.web",
-                userId: undefined
+                userId: undefined,
+                customParameters:{"formname":"new", "applicationname":"_formdatamap"},
             }
         };
 
 
         $httpBackend.expectPUT("/api/data/sr/", JSON.stringify(submissionData)).respond(ResponsePojo.CrudUpdateBaseResponse());
 
-        submitService.submit(schemaWithOneRequiredField, datamap).then(() => {
+
+
+        submitService.submit(schemaWithOneRequiredField, datamap, { customParameters: { "formname": "new", "applicationname": "_formdatamap" } }).then(() => {
             //expecting exception to be thrown
             expect(validationService.validatePromise).toHaveBeenCalled();
             expect(crudContextHolderService.afterSave).toHaveBeenCalled();
@@ -103,10 +106,10 @@
 
         const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
         const deferred = $q.defer();
-        const datamap = { attr1: "x"};
+        const datamap = { attr1: "x" };
 
-        crudContextHolderService.rootDataMap(null,datamap);
-        crudContextHolderService.currentSchema(null,schemaWithOneRequiredField);
+        crudContextHolderService.rootDataMap(null, datamap);
+        crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
 
         spyOn(validationService, "validatePromise").and.returnValue(deferred.promise);
         spyOn(crudContextHolderService, "afterSave").and.callThrough();
@@ -162,8 +165,8 @@
         crudContextHolderService.rootDataMap(null, datamap);
         crudContextHolderService.currentSchema(null, schemaWithOneRequiredField);
 
-        crudContextHolderService.registerSaveFn(() => { return $q.when({modalfunctionresult:true}); });
-        crudContextHolderService.modalLoaded(schemaWithOneRequiredField,datamap);
+        crudContextHolderService.registerSaveFn(() => { return $q.when({ modalfunctionresult: true }); });
+        crudContextHolderService.modalLoaded(schemaWithOneRequiredField, datamap);
 
         spyOn(validationService, "validatePromise").and.returnValue($q.when());
 

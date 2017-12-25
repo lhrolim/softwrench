@@ -20,7 +20,16 @@
     <application id="WPPM" icon="fa fa-table" title="Work Package (PM) Grid" ref="workorder" schema="wppmlist" tooltip="Click to view your Work Packages PM"/>
     <application id="NWP" icon="fa fa-plus" title="New Work Package" ref="_workpackage" schema="newdetail" tooltip="Click to Create a New Work Package"/>
   </container>
- 
+
+  <application id="forms" icon="fa fa-download" title="CheckLists" ref="_FormDatamap" schema="list"  tooltip="Click Here to Select a form" role="formselection"/>
+
+  <!-- TODO: allow for generic templates to be accessed from dependent dlls-->
+  <container id="dynforms" title="Form Creator" icon="fa  fa-align-justify">
+    <application id="dfs" icon="fa fa-table" title="Forms" ref="_FormMetadata" schema="list" tooltip="Click to view your Forms"/>
+    <application id="ndf" icon="fa fa-plus" title="New Form" ref="_FormMetadata" schema="new" tooltip="Click to view your Forms"/>
+  </container>
+
+
 
 </Menu>
 

@@ -28,6 +28,9 @@ namespace softWrench.sW4.Data.Search {
             get; set;
         }
 
+        public bool HasSearchData => SearchParams != null || QuickSearchDTO!=null;
+        
+
         /// <summary>
         /// Receives the query to apply in the format :a || :b || :c || :d. 
         /// FWK shall locate corresponding SearchValues to replace it

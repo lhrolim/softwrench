@@ -28,7 +28,6 @@ namespace softwrench.sw4.Shared2.Metadata {
             }
             ExtensionParameters.Add(key, value);
         }
-
         
     }
 }

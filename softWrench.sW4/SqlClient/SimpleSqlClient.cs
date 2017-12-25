@@ -1,8 +1,11 @@
-﻿using cts.commons.persistence;
+﻿using System;
+using cts.commons.persistence;
 using softWrench.sW4.Data.Persistence;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using cts.commons.persistence.Transaction;
+using cts.commons.portable.Util;
+using cts.commons.Util;
 
 namespace softWrench.sW4.SqlClient {
 
@@ -13,6 +16,8 @@ namespace softWrench.sW4.SqlClient {
 
         private readonly ISWDBHibernateDAO _swdbDao;
         private readonly IMaximoHibernateDAO _maximodbDao;
+
+
         public SimpleSqlClient(ISWDBHibernateDAO swdbDao, IMaximoHibernateDAO maximodbDAO) {
             _swdbDao = swdbDao;
             _maximodbDao = maximodbDAO;
@@ -26,7 +31,19 @@ namespace softWrench.sW4.SqlClient {
 
         [Transactional(DBType.Swdb, DBType.Maximo)]
         public virtual int ExecuteUpdate(string query, DBType dbType) {
-            return GetDao(dbType).ExecuteSql(query, null);
+            var paramsToPass = new List<object>();
+
+//            if (parameters != null) {
+//                foreach (var parameter in parameters) {
+//                    if (parameter.StartsWith("@swc:")) {
+//                        paramsToPass.Add(CompressionUtil.Compress(parameter.Substring(5).GetBytes()));
+//                    } else {
+//                        paramsToPass.Add(parameter);
+//                    }
+//                }
+//            }
+
+            return GetDao(dbType).ExecuteSql(query, paramsToPass);
         }
 
         public bool IsDefinitionOrManipulation(string sql) {

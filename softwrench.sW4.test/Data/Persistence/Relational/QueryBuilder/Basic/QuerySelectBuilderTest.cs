@@ -9,6 +9,7 @@ using softWrench.sW4.Util;
 namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
     [TestClass]
     public class QuerySelectBuilderTest : BaseMetadataTest {
+
         [TestInitialize]
         public void Before() {
             if (!"hapag".Equals(ApplicationConfiguration.TestclientName)) {
@@ -75,6 +76,18 @@ namespace softwrench.sW4.test.Data.Persistence.Relational.QueryBuilder.Basic {
             dto.AppendProjectionField(new ProjectionField("location", "DISTINCT SUBSTR(REPLACE(location.Location,'test',''),1,LOCATE('/',REPLACE(location.Location,'test',''))-1)"));
             var result = QuerySelectBuilder.BuildSelectAttributesClause(MetadataProvider.Entity("location"), QueryCacheKey.QueryMode.Detail, dto);
             Assert.AreEqual(("select DISTINCT SUBSTR(REPLACE(location.Location,'test',''),1,LOCATE('/',REPLACE(location.Location,'test',''))-1) as location "), result);
+        }
+
+
+        /// <summary>
+        /// Testing the exception handling scenarios where a * should be used
+        /// </summary>
+        [TestMethod]
+        public void TestProjectionWithUnMatchedFields() {
+            var dto = new SearchRequestDto();
+            dto.AppendProjectionField(new ProjectionField("alias", "alias"));
+            var result = QuerySelectBuilder.BuildSelectAttributesClause(MetadataProvider.Entity("location"), QueryCacheKey.QueryMode.List, dto);
+            Assert.AreEqual(("select * "), result);
         }
     }
 }

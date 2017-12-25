@@ -21,7 +21,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public class OptionField : BaseApplicationFieldDefinition, IDataProviderContainer, IDependableField, IPCLCloneable, IExtraProjectionProvider {
 
         private readonly List<IAssociationOption> _options;
-        private readonly OptionFieldRenderer _renderer;
         private readonly FieldFilter _filter;
         private readonly string _providerAttribute;
         private readonly string _extraParameter;
@@ -33,14 +32,20 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
+        public OptionField() {
+
+        }
+
         public OptionField(string applicationName, string label, string attribute, string qualifier, string requiredExpression, bool isReadOnly, bool isHidden,
             OptionFieldRenderer renderer, FieldFilter filter, List<IAssociationOption> options, string defaultValue, bool sort, string showExpression, string helpIcon,
             string toolTip, string attributeToServer, ISet<ApplicationEvent> events, string providerAttribute, string dependantFields, string enableExpression,
             string evalExpression, string extraParameter, string defaultExpression, string searchOperation, string extraProjectionFields = null)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, helpIcon, toolTip, attributeToServer, events, enableExpression, defaultExpression, false, searchOperation) {
-            _renderer = renderer;
+            Renderer = renderer;
+            RendererParameters = Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary();
+            RendererType = Renderer?.RendererType.ToLower();
             _filter = filter;
-            _options = options;
+            Options = options;
             _providerAttribute = providerAttribute;
             _extraParameter = extraParameter;
             IsHidden = isHidden;
@@ -56,20 +61,21 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ExtraProjectionFields = ExtraProjectionProviderHelper.BuildExtraProjectionFields(extraProjectionFields);
             EnableExpression = enableExpression;
             EvalExpression = evalExpression;
-
         }
 
         public override bool IsHidden {
             get; set;
         }
 
-        public IDictionary<string, object> RendererParameters => _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary();
+        public OptionFieldRenderer Renderer { get; set; }
+
+        public IDictionary<string, object> RendererParameters { get; set; }
+
+        public override string RendererType { get; set; }
 
         public FieldFilter Filter => _filter;
 
         public IDictionary<string, object> FilterParameters => _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary();
-
-        public override string RendererType => _renderer.RendererType.ToLower();
 
 
         public string AssociationKey => _providerAttribute ?? Attribute;
@@ -80,7 +86,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string ExtraParameter => _extraParameter;
 
-        public List<IAssociationOption> Options => _options;
+        public List<IAssociationOption> Options { get; set; }
 
         public ISet<string> DependantFields => _dependantFields;
 
@@ -94,7 +100,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public object Clone() {
             var optionField = new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression,
-                IsReadOnly, IsHidden, _renderer, _filter,
+                IsReadOnly, IsHidden, Renderer, _filter,
                 _options,
                 DefaultValue, _sort, ShowExpression, HelpIcon, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
                 _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter, DefaultExpression,

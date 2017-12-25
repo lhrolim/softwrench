@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.web.Attributes;
@@ -44,7 +45,7 @@ namespace softWrench.sW4.Web.Controllers {
             var request = tabRequestWrapper.Request;
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(request.Key, user, ClientPlatform.Web);
 
-            _contextLookuper.FillContext(request.Key);
+            _contextLookuper.FillContext(request.Key, new Dictionary<string, object>());
 
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(applicationMetadata);
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entityMetadata, applicationMetadata, tabRequestWrapper.Data, request.Id);

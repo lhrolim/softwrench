@@ -48,7 +48,7 @@
                 /// </param>
                 /// <param name="parentdata">holds the parent datamap</param>
                 /// <param name="parentschema">holds the parent schema</param>
-                show: function (schemaorModalData, datamap ={}, properties ={}, savefn, cancelfn, parentdata, parentschema) {
+                show: function (schemaorModalData, datamap = {}, properties = {}, savefn, cancelfn, parentdata, parentschema) {
                     if (schemaorModalData.schema) {
                         //this happens if the directive was compiled after the event was thrown, i.e, the first time the modal is being included on the screen
                         //later calls won´t come here
@@ -63,9 +63,9 @@
                         properties.cssclass = "crud-lookup-modal";
                     } else {
                         if (!properties.removecrudmodalclass) {
-                            properties.cssclass += " crud-lookup-modal";    
+                            properties.cssclass += " crud-lookup-modal";
                         }
-                        
+
                     }
 
                     if (!properties.title) {
@@ -108,11 +108,13 @@
                 },
 
 
-                showPromise: function (schemaorModalData, datamap, properties, parentdata, parentschema) {
+                showPromise: function (schemaorModalData, datamap = {}, properties, parentdata, parentschema) {
                     var deferred = $q.defer();
 
                     const savefn = (datamap) => {
                         deferred.resolve(datamap);
+                        this.hide();
+
                     }
 
                     const cancelfn = (datamap) => {

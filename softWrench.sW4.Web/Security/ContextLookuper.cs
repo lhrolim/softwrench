@@ -42,7 +42,7 @@ namespace softWrench.sW4.Web.Security {
             return AddContext(context);
         }
 
-        public void FillContext(ApplicationMetadataSchemaKey key) {
+        public void FillContext(ApplicationMetadataSchemaKey key, IDictionary<string,object>CustomRequestParameters) {
 
             var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
 
@@ -55,6 +55,7 @@ namespace softWrench.sW4.Web.Security {
             appContext.Schema = key.SchemaId;
             appContext.Mode = key.Mode.ToString();
             context.ApplicationLookupContext = appContext;
+            context.CustomRequestParameters = CustomRequestParameters;
 
             SetContextData(context);
         }

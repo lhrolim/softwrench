@@ -87,11 +87,7 @@ namespace softWrench.sW4.Data.Entities {
                     var type = GetType(metadata, attribute);
                     try {
                         var valueFromJson = GetValueFromJson(type, property.Value, metadata.IsSwDb);
-                        var stringValue = valueFromJson as string;
-                        if (stringValue !=  null && (stringValue == "$null$ignorewatch" || stringValue == "null$ignorewatch")) {
-                            valueFromJson = null;
-                        }
-                        attributes.Add(property.Name, valueFromJson);
+                        attributes.Add(property.Name, CheckNullIgnore(valueFromJson));
                     } catch (Exception e) {
                         Log.Error("error casting object", e);
                         throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value), e);
@@ -101,10 +97,7 @@ namespace softWrench.sW4.Data.Entities {
                     var array = property.Value.ToObject<Object[]>();
                     entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));
                 } else {
-                    var value = property.Value.Type == JTokenType.Null ? null : property.Value.ToString();
-                    if (value == "$null$ignorewatch" || value == "null$ignorewatch") {
-                        value = null;
-                    }
+                    var value = CheckNullIgnore(property.Value.Type == JTokenType.Null ? null : property.Value.ToString());
                     if (entity.UnmappedAttributes.ContainsKey(property.Name)) {
                         Log.WarnFormat("key already present at the dictionary");
                     } else {
@@ -113,6 +106,18 @@ namespace softWrench.sW4.Data.Entities {
 
                 }
             }
+        }
+
+        private static string CheckNullIgnore(string stringValue) {
+            if (stringValue == "$null$ignorewatch" || stringValue == "null$ignorewatch") {
+                return null;
+            }
+            return stringValue;
+        }
+
+        private static object CheckNullIgnore(object value) {
+            var stringValue = value as string;
+            return stringValue != null ? CheckNullIgnore(stringValue) : value;
         }
 
         private static bool IsInlineTransientComposition(ApplicationMetadata applicationMetadata, string name) {

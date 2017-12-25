@@ -1,10 +1,12 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+﻿using System.Collections;
+using System.Collections.Generic;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 
 namespace softwrench.sW4.test.Util {
     public class TestContextLookuper : IContextLookuper {
-        public void FillContext(ApplicationMetadataSchemaKey key) {
+        public void FillContext(ApplicationMetadataSchemaKey key, IDictionary<string,object>customRequestParameters) {
         }
 
         public void SetMemoryContext(string key, object ob, bool userSpecific = false) {

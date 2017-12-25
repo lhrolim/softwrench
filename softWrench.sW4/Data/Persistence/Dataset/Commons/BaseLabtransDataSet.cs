@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
@@ -17,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
     public class BaseLabtransDataSet : MaximoApplicationDataSet {
 
         [Transactional(DBType.Maximo)]
-        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> customParameters) {
 
             TargetResult result;
 
@@ -31,14 +32,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 json.Remove("labtransid");
                 operation = "crud_create";
                 // Submit to create the new lab trans
-                result = await base.Execute(application, json, null, operation, isBatch, null);
+                result = await base.Execute(application, json, null, operation, isBatch, null, customParameters);
                 result.ResultObject = null;
                 result.SuccessMessage = "Labor successfully updated";
                 // Delete the original if it was an edit
                 MaximoHibernateDAO.GetInstance()
                     .ExecuteSql("delete from labtrans where labtransid = ? ", labtransId.ToString());
             } else {
-                result = await base.Execute(application, json, id, operation, isBatch, userIdSite);
+                result = await base.Execute(application, json, id, operation, isBatch, userIdSite, customParameters);
             }
 
             return result;

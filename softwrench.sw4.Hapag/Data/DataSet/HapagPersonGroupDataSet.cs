@@ -45,7 +45,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             complementSearchDTO.SearchSort = searchDto.SearchSort;            
             complementSearchDTO.ShouldPaginate = false;
             
-            ContextLookuper.FillContext(applicationSchemaKey); 
+            ContextLookuper.FillContext(applicationSchemaKey, new Dictionary<string, object>()); 
             var complementaryList = await base.GetList(complementApplicationMetadata, complementSearchDTO);
             resultObject = resultObject.Union(complementaryList.ResultObject);
 

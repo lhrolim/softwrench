@@ -91,7 +91,7 @@ namespace softWrench.sW4.Data.Relationship.Composition {
 
         private static ApplicationSchemaDefinition GetSyncSchema(ApplicationCompositionSchema compositionSchema,
             CompleteApplicationMetadataDefinition compositionApplication) {
-            if (!MetadataProvider.isMobileEnabled()) {
+            if (!MetadataProvider.IsMobileEnabled()) {
                 return null;
             }
 

@@ -46,6 +46,7 @@ angular.module('sw_layout')
 
         doExecuteService: function (scope, clientFunction, command,overridenDatamap) {
             const service = $injector.getInstance(command.service);
+            $('.no-touch [rel=tooltip]').tooltip('hide');
             if (service == undefined) {
                 //this should not happen, it indicates a metadata misconfiguration
                 return $q.when();

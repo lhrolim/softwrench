@@ -60,6 +60,7 @@ class SchemaPojo {
             properties: {},
             commandSchema: {},
             idFieldName: idFieldName,
+            stereotype :'detail',
             mode: "input",
             cachedCompositions: {}
         };

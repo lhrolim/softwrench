@@ -7,7 +7,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandSchema {
         public ApplicationCommandSchema(IDictionary<string, CommandBarDefinition> applicationCommands,
             IDictionary<string, CommandBarDefinition> commandBars, bool isTemplateParsing) {
-            if (!applicationCommands.Any()) {
+            if (applicationCommands == null || !applicationCommands.Any()) {
                 return;
             }
             OriginalApplicationCommands = applicationCommands;

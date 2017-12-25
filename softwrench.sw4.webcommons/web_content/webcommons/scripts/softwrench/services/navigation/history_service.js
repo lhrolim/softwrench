@@ -248,9 +248,17 @@
         }
 
         function updateState(state) {
-            const hash = `state=${Base64.encode(JSON.stringify(state))}`;
-            contextService.set("currentstateurl" + $location.path(), state.url);
-//            $location.hash(hash);
+            if (!isEmpty(state.extraParameters)) {
+                const hash = `state=${Base64.encode(JSON.stringify(state))}`;
+                contextService.set("currentstateurl" + $location.path(), state.url);
+                contextService.set("extraparameters", state.extraParameters);
+                $location.hash(hash);
+            } else {
+                $location.hash(null);
+                $location.url($location.path());
+            }
+            
+         
         }
 
         function getLocationState() {
@@ -324,13 +332,14 @@
 
         //#region Public methods for history
 
-        function addToHistory(url, { saveHistoryReturn, saveCancelReturn, aliasUrl } = { saveHistoryReturn: true, saveCancelReturn: false, aliasUrl: null }) {
-            const state = { url: url };
+        function addToHistory(url, { saveHistoryReturn, saveCancelReturn, aliasUrl, extraParameters } = { saveHistoryReturn: true, saveCancelReturn: false, aliasUrl: null, extraParameters: null }) {
+            const state = { url, extraParameters };
             if (saveHistoryReturn) {
                 state.BcHistoryIndex = addToBreadcrumbHistory(url);
             } else {
                 state.BcHistoryIndex = 0;
             }
+            
 
             // save the return for cancel button
             // for breadcrumb navigation breadcrumb history is used

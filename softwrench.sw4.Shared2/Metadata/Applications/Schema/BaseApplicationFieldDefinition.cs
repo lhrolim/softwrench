@@ -35,7 +35,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string DefaultExpression { get; set; }
         private IDictionary<String, ApplicationEvent> _events = new Dictionary<string, ApplicationEvent>();
 
-        public abstract string RendererType { get; }
+        public abstract string RendererType { get; set; }
         public string Type { get { return GetType().Name; } }
         public string Role {
             get { return Attribute; }

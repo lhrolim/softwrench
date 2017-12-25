@@ -110,6 +110,10 @@
                     return $http.post(urlToUse, requestDTO, { avoidspin: !showLoading })
                         .then(response => {
                             var data = response.data;
+                            if (data == null) {
+                                return $q.when();
+                            }
+
                             var parentModifiedFields = data.parentModifiedFields;
                             if (parentModifiedFields) {
                                 //server has replied that some fields should change on parent datamap as well
@@ -306,14 +310,18 @@
                 };
 
                 /**
+                 * 
                  * @deprecated use schemaService#hasEditableProperty instead
+                 * @param {any} listSchema
+                 * @return true whether there´s any non readonly field on screen
                  */
                 function hasEditableProperty(listSchema) {
                     return schemaService.hasEditableProperty(listSchema);
                 };
 
                 /**
-                 * @deprecated use compositionCommons#buildMergedDatamap instead 
+                 * @deprecated use compositionCommons#buildMergedDatamap instead
+                 * 
                  */
                 function buildMergedDatamap(datamap, parentdata) {
                     return compositionCommons.buildMergedDatamap(datamap, parentdata);

@@ -113,7 +113,7 @@ namespace softWrench.sW4.Metadata.Validator {
                     propertyType = propertyType.GetGenericArguments()[0];
                 }
 
-                
+
                 var entityAttribute = new EntityAttribute(attribute, propertyType.Name.ToLower(), false, true, connectorParameters, query);
                 if (entityAttribute.Type.EqualsIc("datetime") && memberInfo.ReadAttribute<UTCDateTime>() != null) {
                     entityAttribute.ConnectorParameters.Parameters.Add("utcdate", "true");
@@ -123,7 +123,7 @@ namespace softWrench.sW4.Metadata.Validator {
             return new Tuple<IEnumerable<EntityAttribute>, IEnumerable<EntityAssociation>, string, string>(resultAttributes, resultAssociations, idAttributeName, userIdAttributeName);
         }
 
-    
+
 
         private static EntityAttribute HandleManyToOneHiddenAttribute(PropertyInfo memberInfo, ManyToOneAttribute manyToOne) {
             var defaultInstance = Metadata.Entities.Connectors.ConnectorParameters.DefaultInstance();
@@ -184,12 +184,22 @@ namespace softWrench.sW4.Metadata.Validator {
         }
 
         private static EntityAssociation HandleManyToOneRelationship(PropertyInfo memberInfo, ManyToOneAttribute manyToOne, PropertyInfo idAttribute, string entityName) {
+            var type = memberInfo.PropertyType;
+            var props = type.FindPropertiesWithAttribute(typeof(IdAttribute));
+            var idAttributeName = "id";
+            if (props != null && props.Any()) {
+                var prop = props.First();
+                var idRelAttribute = prop.GetCustomAttribute<IdAttribute>();
+                idAttributeName = idRelAttribute.Name.ToLower();
+
+            }
+
             var qualifier = memberInfo.Name.ToLower();
             var to = (entityName.EndsWith("_") ? "_" : "") + memberInfo.PropertyType.Name.ToLower() + "_";
             //            //TODO: Add reverse customization
             //            string reverse = null;
             IList<EntityAssociationAttribute> attributes = new List<EntityAssociationAttribute>();
-            var idAttributeName = idAttribute?.Name.ToLower() ?? "id";
+
 
             attributes.Add(new EntityAssociationAttribute(idAttributeName, manyToOne.Column, null, true));
 

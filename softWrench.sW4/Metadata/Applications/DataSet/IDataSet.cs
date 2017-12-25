@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.application;
 using softwrench.sW4.Shared2.Data;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Association;
@@ -46,13 +47,15 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
         //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
-        Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch,[CanBeNull]Tuple<string,string>userIdSite );
+        Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch,[CanBeNull]Tuple<string,string>userIdSite, IDictionary<string,object>customParameters );
 
         Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData);
 
-        Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,
-            AssociationUpdateRequest request, JObject currentData);
+        Task<GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>> UpdateAssociations(ApplicationMetadata application,AssociationUpdateRequest request, JObject currentData);
 
 
+        ApplicationMetadata ApplyPolicies(string application, ApplicationMetadataSchemaKey requestKey, ClientPlatform platform, string schemaFieldsToDisplay = null);
+
+        ApplicationMetadata ApplyPoliciesWeb(string application, ApplicationMetadataSchemaKey requestKey, string schemaFieldsToDisplay = null);
     }
 }

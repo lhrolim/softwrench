@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+  
+  
+  <applications>
+    <application entity="FormDatamap" name="FormDatamap" title="FormData">
+      <schemas>
+        <schema id="list" stereotype="list" title="Forms">
+          <field attribute="id" hidden="true"/>
+          <field attribute="formmetadata_.formtitle" label="Form"/>
+          <field attribute="userid" label="Id"/>
+          <field attribute="datamap" hidden="true"/>
+          <field attribute="changedate" label="Change Date"/>
+          <field attribute="changeby_.username" label="Changed By"/>
+          <commandbars>
+            <commandgroup position="gridtop">
+              <command id="new" service="dynFormService" method="openFormsModal" showexpression="true"  cssclasses="large-button" icon="fa-plus"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+        <schema id="detail" stereotype="detail" title="Forms">
+          <field attribute="id" hidden="true"/>
+          <field attribute="userid" hidden="true"/>
+          <field attribute="datamap" hidden="true"/>
+          <field attribute="form_name" hidden="true"/>
+        </schema>
+      </schemas>
+    </application>
+
+  </applications>
+
+</metadata>

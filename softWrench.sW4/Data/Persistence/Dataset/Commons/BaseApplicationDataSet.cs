@@ -142,6 +142,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     request = DetailRequest.GetInstance(application, adapter);
                 } else if (adapter.SearchDTO != null) {
                     request = adapter.SearchDTO;
+                    if (request.CustomParameters == null && adapter.CustomParameters != null) {
+                        request.CustomParameters = adapter.CustomParameters;
+                    }
                 }
             }
 
@@ -152,7 +155,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return await GetApplicationDetail(application, user, (DetailRequest)request);
             }
             if (application.Schema.Stereotype == SchemaStereotype.List) {
-                return await GetList(application, PaginatedSearchRequestDto.DefaultInstance(application.Schema));
+                var dto = PaginatedSearchRequestDto.DefaultInstance(application.Schema);
+                dto.CustomParameters = request.CustomParameters;
+                return await GetList(application, dto);
             }
             if (application.Schema.Stereotype == SchemaStereotype.Detail || application.Schema.Stereotype == SchemaStereotype.DetailNew || request.Key.Mode == SchemaMode.input) {
                 //case of detail of new items
@@ -246,7 +251,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
             }
             if (compostionsToUse.Any()) {
+#pragma warning disable IDE0017 // Simplify object initialization
                 var preFetchedCompositionFetchRequest = new PreFetchedCompositionFetchRequest(new List<AttributeHolder> { dataMap });
+#pragma warning restore IDE0017 // Simplify object initialization
                 preFetchedCompositionFetchRequest.ExtraParameters = request.CustomParameters;
                 preFetchedCompositionFetchRequest.CompositionList = new List<string>(compostionsToUse.Keys);
                 return await GetCompositionData(application, preFetchedCompositionFetchRequest, null);
@@ -572,17 +579,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //        }
         public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
+            
             if (compositionData == null || compositionData.Operation == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
                 //not a composition deletion/update, no need for any further checking
                 return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                    new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                    new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
             }
 
             var clientComposition = compositionData.DispatcherComposition;
             var composition = application.Schema.Compositions().FirstOrDefault(f => f.Relationship.Equals(EntityUtil.GetRelationshipName(clientComposition)));
             if (composition == null) {
                 return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                  new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                  new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
             }
             var compositionListSchema = composition.Schema.Schemas.List;
             var compositionEntityName = compositionListSchema.EntityName;
@@ -591,7 +599,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (maximoWebServiceName == null) {
                 //let parent web-service handle it
                 return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                    new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                    new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
             }
 
             if (compositionEntity.ConnectorParameters.Parameters.ContainsKey("integration_interface_operations")) {
@@ -599,7 +607,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 if (!validOperations.Any(a => a.EqualsIc(compositionData.Operation))) {
                     //not to be handled by composed web-service either
                     return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                        new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                        new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
                 }
 
             }
@@ -615,7 +623,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (ds.GetType() != typeof(BaseApplicationDataSet)) {
                 //if there´s an overriden DataSet for the composition, let´s use it
                 var targetResult = await ds.Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
-                    operationData.Batch, new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                    operationData.Batch, new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
 
                 //let's make sure the success message receives the right userId, which is the parent userid
                 targetResult.UserId = operationData.UserId;
@@ -625,7 +633,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //otherwise let´s stick with the main app dataset
             return await Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
                 operationData.Batch,
-                new Tuple<string, string>(operationData.UserId, operationData.SiteId));
+                new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
 
         }
 
@@ -641,26 +649,29 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return val[0] as JObject;
         }
 
-        public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch, Tuple<string, string> userIdSite) {
+        public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> customParameters) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = BuildOperationWrapper(application, json, id, operation, entityMetadata);
             if (userIdSite != null) {
                 operationWrapper.UserId = userIdSite.Item1;
                 operationWrapper.SiteId = userIdSite.Item2;
             }
+            operationWrapper.CustomParameters = customParameters;
 
             if (isBatch) {
                 return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
             }
 
             var result = await DoExecute(operationWrapper);
+
+
             var operationData = operationWrapper.OperationData();
             var crudOperationData = operationData as CrudOperationData;
             if (crudOperationData == null) {
                 return result;
             }
 
-            if (result.ReloadMode == null && crudOperationData.ReloadMode.Equals(ReloadMode.None)) {
+            if (result == null || (result.ReloadMode == null && crudOperationData.ReloadMode.Equals(ReloadMode.None))) {
                 return result;
             }
             if (crudOperationData.ReloadMode.Equals(ReloadMode.FullRefresh)) {
@@ -716,6 +727,26 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             //                return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(BuildAssociationOptions(cruddata, application, request));
             //            }
             return new GenericResponseResult<IDictionary<string, BaseAssociationUpdateResult>>(await DoUpdateAssociation(application, request, cruddata));
+        }
+
+        public virtual ApplicationMetadata ApplyPolicies(string application, ApplicationMetadataSchemaKey requestKey, ClientPlatform platform, string schemaFieldsToDisplay = null) {
+            var user = SecurityFacade.CurrentUser();
+            var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(requestKey, user, platform, schemaFieldsToDisplay);
+
+            if (!applicationMetadata.Name.Equals(applicationMetadata.Schema.ApplicationName)) {
+                requestKey = applicationMetadata.Schema.GetSchemaKey();
+                // the application name could have changed ultimately due to a aliasurl property, or other kinds of redirect (ex: workpage grid pointing to workorder.wplist)
+                applicationMetadata = MetadataProvider
+                    .Application(applicationMetadata.Schema.ApplicationName)
+                    .ApplyPolicies(requestKey, user, ClientPlatform.Web, schemaFieldsToDisplay);
+            }
+
+            return applicationMetadata;
+
+        }
+
+        public virtual ApplicationMetadata ApplyPoliciesWeb(string application, ApplicationMetadataSchemaKey requestKey, string schemaFieldsToDisplay = null) {
+            return ApplyPolicies(application, requestKey, ClientPlatform.Web, schemaFieldsToDisplay);
         }
 
 

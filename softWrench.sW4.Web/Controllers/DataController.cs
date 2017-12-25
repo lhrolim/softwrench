@@ -76,23 +76,18 @@ namespace softWrench.sW4.Web.Controllers {
             }
             RequestUtil.ValidateMockError(Request);
 
-            var applicationMetadata = MetadataProvider
-                .Application(application)
-                .ApplyPolicies(request.Key, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
+
+            var dataset = DataSetProvider.LookupDataSet(application, request.Key.SchemaId);
+
+            var applicationMetadata = dataset.ApplyPolicies(application, request.Key, ClientPlatform.Web, request.SchemaFieldsToDisplay);
+
 
             var requestKey = request.Key;
 
 
             var securityModeCheckResult = _mainSecurityApplier.VerifyMainSecurityMode(user, applicationMetadata, request);
 
-            if (!applicationMetadata.Name.Equals(applicationMetadata.Schema.ApplicationName))
-            {
-                requestKey = applicationMetadata.Schema.GetSchemaKey();
-                // the application name could have changed ultimately due to a aliasurl property, or other kinds of redirect (ex: workpage grid pointing to workorder.wplist)
-                applicationMetadata = MetadataProvider
-                    .Application(applicationMetadata.Schema.ApplicationName)
-                    .ApplyPolicies(requestKey, user, ClientPlatform.Web, request.SchemaFieldsToDisplay);
-            }
+
 
             if (securityModeCheckResult.Equals(InMemoryUserExtensions.SecurityModeCheckResult.Block)) {
                 throw new SecurityException("You do not have permission to access this application. Please contact your administrator");
@@ -100,9 +95,9 @@ namespace softWrench.sW4.Web.Controllers {
 
             _auditManager.InitThreadTrail(new AuditTrail(application, $"{application}:get", user.SessionAuditId));
 
-            ContextLookuper.FillContext(requestKey);
-            
-            var response = await DataSetProvider.LookupDataSet(applicationMetadata.Name, applicationMetadata.Schema.SchemaId).Get(applicationMetadata, user, request);
+            ContextLookuper.FillContext(requestKey, request.CustomParameters);
+
+            var response = await dataset.Get(applicationMetadata, user, request);
             if (response == null) {
                 return new NotFoundResponse();
             }
@@ -229,11 +224,13 @@ namespace softWrench.sW4.Web.Controllers {
             var currentschemaKey = resolvedSchema ??
                                    SchemaUtil.GetSchemaKeyFromString(operationDataRequest.CurrentSchemaKey, platform);
 
-            ContextLookuper.FillContext(currentschemaKey);
+            ContextLookuper.FillContext(currentschemaKey, operationDataRequest.CustomParameters);
 
             var application = operationDataRequest.ApplicationName;
 
-            var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(currentschemaKey, user, platform);
+            var dataSet = DataSetProvider.LookupDataSet(application, currentschemaKey.SchemaId);
+
+            var applicationMetadata = dataSet.ApplyPolicies(application, currentschemaKey, platform);
 
 
             //mocked instance by default
@@ -243,7 +240,8 @@ namespace softWrench.sW4.Web.Controllers {
             if (!mockMaximo) {
                 //TODO : move this to the crud connector.
 
-                maximoResult = await DataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId)
+
+                maximoResult = await dataSet
                     .Execute(applicationMetadata, json, operationDataRequest);
 
                 _auditManager.SaveThreadTrail();

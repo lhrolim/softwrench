@@ -372,6 +372,61 @@
     </if>
   </target>
 
+  <target name="copycontent" depends="mkdir">
+    <if test="${IsWindows}">
+      <logtimestart/>
+    </if>
+    <copy todir="${deploypath}" includeemptydirs="false">
+      <fileset basedir="../softWrench.sW4.Web/">
+        <include name="**/*" />
+        <exclude name="**/*.cs"/>
+        <exclude name="*.dll"/>
+        <exclude name="*.suo"/>
+        <exclude name="*.csproj"/>
+        <exclude name="App_Data/client/**"/>
+        <!--        <exclude name="Content/Scripts/**"/>-->
+        <exclude name="**.csproj.*"/>
+        <exclude name=".nuget/**"/>
+        <exclude name="Dependencies/**"/>
+        <exclude name="bin/Dependencies/**"/>
+        <exclude name="bower_components/**"/>
+        <exclude name="node_modules/**"/>
+        <exclude name="obj/**"/>
+      </fileset>
+    </copy>
+
+   
+    <copy todir="${deploypath}/App_Data/Client/@internal">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/@internal">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    <copy todir="${deploypath}/App_Data/Client/otb">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/otb">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+
+    <copy todir="${deploypath}/App_Data/Client/${client}" failonerror="false">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/${client}">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+
+
+
+
+    <attrib readonly="false">
+      <fileset basedir="${deploypath}">
+        <include name="**"/>
+      </fileset>
+    </attrib>
+    <if test="${IsWindows}">
+      <logtimeend/>
+    </if>
+  </target>
+
+
   <target name="copydlls" depends="mkdir">
     <if test="${IsWindows}">
       <logtimestart/>
@@ -390,9 +445,12 @@
         <exclude name="Dependencies/**"/>
         <exclude name="bin/Dependencies/**"/>
         <exclude name="bower_components/**"/>
+        <exclude name="node_modules/**"/>
         <exclude name="obj/**"/>
       </fileset>
     </copy>
+    
+    
     <copy todir="${deploypath}/bin">
       <fileset basedir="../softWrench.sW4.Web/Dependencies">
         <include name="**/*" />
@@ -441,6 +499,7 @@
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
       <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="onlinefolder" value="${foldername}/online_content" />
+      <property name="metadatafolder" value="${foldername}/metadata" />
 
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
@@ -499,6 +558,17 @@
         </copy>
         <echo message="Copied files for ${projectname}" />
       </if>
+
+      <if test="${file::exists(sharedplaceholder) or file::exists(sharedcommonsplaceholder)}">
+        <copy todir="${deploypath}/Content/Shared/${projectname}">
+          <fileset basedir="../softWrench.sW4.${projectname}/web_content/${projectname}">
+            <include name="**/*" />
+            <exclude name="**/*.${platformtoexclude}.*"/>
+          </fileset>
+        </copy>
+        <echo message="Copied files for ${projectname}" />
+      </if>
+      
     </foreach>
     <if test="${IsWindows}">
       <logtimeend/>
@@ -629,6 +699,15 @@
     </if>
   </target>
 
+  <target name="webcompiledev" depends="copycontent,copylinkedfolders,webcompile">
+    <if test="${IsWindows}">
+      <logtimestart/>
+    </if>
+    <if test="${IsWindows}">
+      <logtimeend/>
+    </if>
+  </target>
+
 
   <!--  <target name="explodexmlfiles" depends="setenv,setclient">-->
   <!--    <property name="clientpropertyfile" value="../softwrench.sW4.${client}/metadata/${client}/properties.xml" />-->
@@ -738,6 +817,8 @@
       <property name="sharedplaceholder" value="${foldername}/shared.placeholder" />
       <property name="sharedcommonsplaceholder" value="${foldername}/shared_commons.placeholder" />
       <property name="onlinefolder" value="${foldername}/online_content" />
+      <property name="webcontentfolder" value="${foldername}/web_content" />
+      <property name="metadatafolder" value="${foldername}/metadata" />
 
       <property name="indexof" value="${string::last-index-of(foldername, '.') + 1}" />
       <property name="length" value="${string::get-length(foldername)}" />
@@ -782,15 +863,24 @@
         <echo message="${foldername}" />
         <echo message="${clientname}"/>
 
-        <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
-          <arg value="/c"/>
-          <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
-        </exec>
+        <if test="${directory::exists(webcontentfolder)}">
+          <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /J ${clientname} "${foldername}\web_content\${clientname}"'/>
+          </exec>
+        </if>
 
         <if test="${directory::exists(onlinefolder)}">
           <exec program="cmd" workingdir="../softwrench.sW4.Web/Content/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
             <arg value="/c"/>
             <arg line='mklink /J ${clientname}_online "${foldername}\online_content\${clientname}"'/>
+          </exec>
+        </if>
+
+        <if test="${directory::exists(metadatafolder)}">
+          <exec program="cmd" workingdir="../softwrench.sW4.Web/App_Data/Client/Shared" verbose="true" failonerror="false" resultproperty="customerlinkcreated">
+            <arg value="/c"/>
+            <arg line='mklink /J ${clientname} "${foldername}\metadata\${clientname}"'/>
           </exec>
         </if>
 
@@ -873,6 +963,7 @@
             <include name="**/*" />
           </fileset>
         </copy>
+        
 
         <if test="${directory::exists(offlinefolder)}">
           <copy todir="../softwrench.sw4.WebMobile/www/Content/Shared/${clientname}_offline">

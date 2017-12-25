@@ -144,6 +144,10 @@
                 cssclass += ' haschildren';
             }
 
+            if (fieldMetadata.resourcepath != null) {
+                cssclass += ' resourcesection';
+            }
+
             //add class if section is a tab section
             if (fieldMetadata.displayables != null && fieldMetadata.rendererParameters["tabsection"] === "true") {
                 cssclass += " tabsection";
@@ -205,11 +209,11 @@
         function getLabelClass (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
-            if (fieldMetadata.rendererType == 'checkbox') {
+            if (fieldMetadata.rendererType === 'checkbox') {
                 //console.log(fieldMetadata.rendererParameters.layout);
                 //console.log(fieldMetadata, datamap, schema, displayables, params);
-                if (fieldMetadata.rendererParameters.layout == 'left' || fieldMetadata.rendererParameters.layout == 'right') {
-                    return 'ng-hide';
+                if (fieldMetadata.rendererParameters.layout === 'left' || fieldMetadata.rendererParameters.layout === 'right') {
+                    return '';
                 }
             }
 

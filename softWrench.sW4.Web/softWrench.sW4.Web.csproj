@@ -204,6 +204,9 @@
     <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
+    <Reference Include="softwrench.sw4.user, Version=1.4.6557.14814, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.user.1.4.6557.14814\lib\net461\softwrench.sw4.user.dll</HintPath>
+    </Reference>
     <Reference Include="SpreadsheetLight, Version=3.4.1.0, Culture=neutral, PublicKeyToken=32fbb46dc1730c57, processorArchitecture=MSIL">
       <HintPath>..\packages\SpreadsheetLight.3.4.1\lib\SpreadsheetLight.dll</HintPath>
     </Reference>
@@ -222,7 +225,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="System.Diagnostics.FileVersionInfo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.FileVersionInfo.4.0.0\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
     </Reference>
@@ -508,11 +510,18 @@
     <Content Include="Content\bootstrap\bootstrap.css" />
     <Content Include="Content\bootstrap\bootstrap.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\Scripts\client\crud\crud_tree_node.js" />
+    <Content Include="Content\Scripts\client\crud\crud_tree.js" />
+    <Content Include="Content\Scripts\client\crud\crud_table.js" />
+    <Content Include="Content\templates\crud\crud_tree_node.html" />
+    <Content Include="Content\templates\crud\crud_tree.html" />
+    <Content Include="Content\templates\crud\crud_table.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\problem\templates\problemsection.html" />
     <None Include="Content\customVendor\scripts\jquery\jquery-ui.js.bck" />
+    <Content Include="App_Data\Client\Shared\placeholder.txt" />
     <Content Include="Content\Images\apple-touch-icon.png" />
     <Content Include="App_Data\Client\%40internal\templates\bulletinboard.xml" />
     <Content Include="App_Data\Client\%40internal\templates\classspec.xml" />
@@ -1559,7 +1568,6 @@
     <Content Include="Views\FirstSolarEmail\GenericRequest.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Client\shared\" />
     <Folder Include="Content\Scripts\softwrench\" />
     <Folder Include="Content\vendor\css\fonts\" />
     <Folder Include="Content\vendor\scripts\" />
@@ -1589,9 +1597,9 @@
       <Project>{2350e8f9-0d82-45c3-a268-57a732e85945}</Project>
       <Name>softwrench.sw4.chicago</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.firstsolardispatch\softwrench.sw4.firstsolardispatch.csproj">
-      <Project>{b5b6c7cb-3b3e-43cf-9def-a67d26f981ca}</Project>
-      <Name>softwrench.sw4.firstsolardispatch</Name>
+    <ProjectReference Include="..\softwrench.sw4.dynforms\softwrench.sw4.dynforms.csproj">
+      <Project>{825bf88c-0051-415e-82b7-6f9d91e36709}</Project>
+      <Name>softwrench.sw4.dynforms</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.firstsolar\softwrench.sw4.firstsolar.csproj">
       <Project>{4812b935-8303-4b80-9e32-8cd81abefc9f}</Project>
@@ -1621,10 +1629,6 @@
       <Project>{6e187557-8460-4992-9687-84373c5f3ed2}</Project>
       <Name>softwrench.sw4.umc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.user\softwrench.sw4.user.csproj">
-      <Project>{507c52b9-98a9-4e46-950b-9f54693325b1}</Project>
-      <Name>softwrench.sw4.user</Name>
-    </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.webcommons\softwrench.sw4.webcommons.csproj">
       <Project>{76afe652-82d1-43d4-977b-60546fa9a713}</Project>
       <Name>softwrench.sw4.webcommons</Name>
@@ -1643,6 +1647,24 @@
   </PropertyGroup>
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">

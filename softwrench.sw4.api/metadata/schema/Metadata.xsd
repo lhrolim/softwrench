@@ -340,6 +340,10 @@
           <element name="optionfield" type="tns:OptionField"
 						maxOccurs="unbounded" minOccurs="0">
           </element>
+          <element name="table" type="tns:Table" maxOccurs="unbounded" minOccurs="0">
+          </element>
+          <element name="tree" type="tns:Tree" maxOccurs="unbounded" minOccurs="0">
+          </element>
           <element name="properties" maxOccurs="unbounded"
 						minOccurs="0">
             <complexType>
@@ -576,6 +580,93 @@
       </annotation>
     </attribute>
   </complexType>
+
+  <complexType name="Table">
+    <choice minOccurs="1" maxOccurs="1">
+      <element name="columns" type="tns:Columns" maxOccurs="1" minOccurs="1"/>
+    </choice>
+    <attribute name="attribute" type="string"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="showexpression" type="string"></attribute>
+    <attribute name="dataset" type="string" use="optional">
+      <annotation>
+        <documentation>
+          Json array with the default values of the table.
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <complexType name="Columns">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="field" type="tns:Field" maxOccurs="unbounded" minOccurs="0"/>
+      <element maxOccurs="unbounded" minOccurs="0" ref="tns:section"/>
+      <element name="association" type="tns:Association" maxOccurs="unbounded" minOccurs="0"/>
+      <element name="composition" type="tns:Composition" maxOccurs="unbounded" minOccurs="0"/>
+      <element name="optionfield" type="tns:OptionField" maxOccurs="unbounded" minOccurs="0"/>
+    </choice>
+  </complexType>
+
+  <complexType name="Tree">
+    <choice minOccurs="1" maxOccurs="unbounded">
+      <element name="node" type="tns:TreeNode" maxOccurs="unbounded" minOccurs="1"/>
+      <choice minOccurs="0" maxOccurs="unbounded">
+        <element name="field" type="tns:Field" maxOccurs="unbounded" minOccurs="0"/>
+        <element name="optionfield" type="tns:OptionField" maxOccurs="unbounded" minOccurs="0"/>
+      </choice>
+    </choice>
+    <attribute name="attribute" type="string"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="showexpression" type="string"></attribute>
+    <attribute name="listtype" type="tns:TreeListingType">
+      <annotation>
+        <documentation>
+          Indicates type of listing of the child nodes.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="startindex" type="int">
+      <annotation>
+        <documentation>
+          The zero based start index pf child nodes. Default is zero.
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <complexType name="TreeNode">
+    <choice minOccurs="0" maxOccurs="unbounded">
+      <element name="node" type="tns:TreeNode" maxOccurs="unbounded" minOccurs="0"/>
+      <choice minOccurs="0" maxOccurs="1">
+        <element name="field" type="tns:Field" maxOccurs="1" minOccurs="0"/>
+        <element name="optionfield" type="tns:OptionField" maxOccurs="1" minOccurs="0"/>
+      </choice>
+    </choice>
+    <attribute name="attribute" type="string"></attribute>
+    <attribute name="label" type="string"></attribute>
+    <attribute name="showexpression" type="string"></attribute>
+    <attribute name="listtype" type="tns:TreeListingType">
+      <annotation>
+        <documentation>
+          Indicates type of listing of the child nodes.
+        </documentation>
+      </annotation>
+    </attribute>
+    <attribute name="startindex" type="int">
+      <annotation>
+        <documentation>
+          The zero based start index pf child nodes. Default is zero.
+        </documentation>
+      </annotation>
+    </attribute>
+  </complexType>
+
+  <simpleType name="TreeListingType">
+    <restriction base="string">
+      <enumeration value="number"></enumeration>
+      <enumeration value="letterdot"></enumeration>
+    </restriction>
+  </simpleType>
 
   <complexType name="Renderer">
     <choice minOccurs="0" maxOccurs="unbounded">

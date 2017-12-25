@@ -69,12 +69,18 @@ namespace softWrench.sW4.Web.Controllers {
             }
             var application = dto.Application;
             var request = dto.Request;
-            var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(request.Key, user, ClientPlatform.Web);
+            var dataSet = _dataSetProvider.LookupDataSet(application, dto.Request.Key.SchemaId);
 
-            _contextLookuper.FillContext(request.Key);
+            
 
-            var compositionData = await _dataSetProvider
-                .LookupDataSet(application, applicationMetadata.Schema.SchemaId)
+            var applicationMetadata = dataSet.ApplyPolicies(application, request.Key, ClientPlatform.Web);
+
+            
+
+            _contextLookuper.FillContext(request.Key, dto.Request?.ExtraParameters);
+
+            
+            var compositionData = await dataSet
                 .GetCompositionData(applicationMetadata, request, dto.Data);
 
             return compositionData;

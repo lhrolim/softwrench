@@ -1,0 +1,130 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+
+
+  <applications>
+    <application entity="FormMetadata" name="FormMetadata" title="Form">
+      <schemas>
+        <schema id="list" stereotype="list" title="Forms">
+          <field attribute="name" label="Name"/>
+          <field attribute="formtitle" label="Alias"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="formstatus" label="Status"/>
+        </schema >
+
+        <schema id="detail" stereotype="detail.redirecttolist" title="Form Details">
+          <field attribute="name" label="Identifier" requiredexpression="true" tooltip="The identifier of the form. Spaces are not allowed" helpicon="right" enableexpression="@rowstamp == null" showexpression="!false"/>
+
+          <field attribute="formtitle" label="Alias" tooltip="An alias in which this form would be later referred to. The identifier is usually not visible" helpicon="right" requiredexpression="true"/>
+          <!--          <field attribute="entity" label="Entity" tooltip="An optional field to be used in order to allow multiple forms to point to the same dataset. If not filled, the identier will be used" helpicon="right"/>-->
+          <field attribute="description" label="Description" tooltip="To provider further information about the form" helpicon="right" requiredexpression="true">
+            <renderer type="textarea"/>
+          </field>
+          <field attribute="formstatus" label="Status" defaultexpression="Draft" default="Draft" readonly="true"/>
+
+          <!--          <field attribute="listdefinition" label="List Schema" showexpression="service:userService.isSysAdmin">-->
+          <!--            <renderer type="textarea"/>-->
+          <!--          </field>-->
+
+          <field attribute="detaildefinition" label="Detail Schema" showexpression="service:userService.isSysAdmin">
+            <renderer type="textarea"/>
+          </field>
+
+          <field hidden="true" attribute="changedate"/>
+
+
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="print"/>
+            </commandgroup>
+
+            <commandgroup position="actions">
+              <command id="editdetail" label="Edit Form" icon="fa-edit" cssclasses="large-button" method="loadFormDetailEdition" service="dynFormService" />
+              <!--              <command id="editlist" label="Edit Grid" icon="fa-table" cssclasses="large-button" method="loadFormGridEdition" service="dynFormService"/>-->
+            </commandgroup>
+          </commandbars>
+
+        </schema>
+
+        <schema id="listselection" stereotype="list.modal.readonly" title="New Checklist">
+          <field attribute="name" hidden="true"/>
+          <field attribute="formtitle" label="Form"/>
+          <field attribute="description" label="Description"/>
+          <properties>
+            <property key="schema.security.overridenrole" value="formselection"/>
+            <property key="list.quicksearch.auto" value="true"/>
+            <property key="list.preventnoresultsnew" value="true"/>
+            <property key="list.click.service" value="dynFormService.redirectToForm"/>
+          </properties>
+        </schema>
+
+        <schema id="newformbuilder" stereotype="detail.noprint" title="New Form">
+          <properties>
+            <property key="dynforms.editionallowed" value="true"/>
+          </properties>
+        </schema>
+
+        <schema id="fieldEditModal" stereotype="detail.noprint" title="Field Selection">
+          <optionfield label="Type" attribute="fieldtype" >
+            <option label="Please Select..." value="pleaseselect"/>
+            <option label="Free Text" value="ApplicationFieldDefinition"/>
+            <option label="Options" value="OptionField"/>
+            <option label="Section" value="ApplicationSection"/>
+            <option label="Checklist Table" value="checklisttable"/>
+          </optionfield>
+
+          <section showexpression="@fieldtype !== 'pleaseselect'">
+            <field attribute="fattribute" label="Attribute" requiredexpression="true" helpicon="right" tooltip="Used to identifiy uniquely this field at the database. No spaces allowed"/>
+            <field attribute="flabel" label="Label" requiredexpression="true"/>
+          </section>
+
+          <section showexpression="@fieldtype == 'ApplicationFieldDefinition'">
+            <section orientation="horizontal">
+              <field attribute="frequired" label="Required">
+                <renderer type="checkbox"/>
+              </field>
+              <field attribute="freadonly" label="Read Only">
+                <renderer type="checkbox"/>
+              </field>
+              <field attribute="fmaxlength" label="Max Length">
+                <renderer type="numericinput" />
+              </field>
+            </section>
+          </section>
+
+          <section showexpression="@fieldtype == 'checklisttable'">
+
+            <field attribute="checklistcolumn" label="CheckList Column" requiredexpression="true"/>
+            
+            <table attribute="shutstart100" label="Rows" dataset="[{optionslabel:'XXX1.EOP.100 – Emergency Site Shutdown'}]">
+              <columns>
+                <field attribute="optionslabel" label="Checklist Row">
+                  <renderer type="default"/>
+                </field>
+              </columns>
+            </table>
+          </section>
+
+          <event type="beforesubmit.prevalidation" service="dynFormService" method="validateEditModal"/>
+
+        </schema>
+
+        <schema id="sectionenclosingmodal" stereotype="detail.noprint" title="Section Creation">
+          <field label="Label" attribute="headerlabel" requiredexpression="true"/>
+          <field attribute="freusable" label="share ?" tooltip="If true this section can be used on other forms later">
+            <renderer type="checkbox"/>
+          </field>
+          <field label="Section Id" attribute="sectionid" showexpression="@freusable === true" requiredexpression="true"/>
+        </schema>
+
+        <schema id="new" stereotype="detailnew.redirecttolist" parentschema="detail" title="Form Details">
+
+        </schema>
+
+      </schemas>
+    </application>
+
+  </applications>
+
+</metadata>

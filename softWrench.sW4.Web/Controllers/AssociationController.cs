@@ -93,12 +93,12 @@ namespace softWrench.sW4.Web.Controllers {
 
             var application = request.ParentKey.ApplicationName;
 
-            _contextLookuper.FillContext(request.ParentKey);
-            var applicationMetadata = MetadataProvider.Application(application).ApplyPoliciesWeb(request.ParentKey);
+            _contextLookuper.FillContext(request.ParentKey, request.SearchDTO?.CustomParameters);
 
+            var baseDataSet = _dataSetProvider.LookupDataSet(application, request.ParentKey.SchemaId);
+
+            var applicationMetadata = baseDataSet.ApplyPoliciesWeb(application, request.ParentKey);
             
-
-            var baseDataSet = _dataSetProvider.LookupDataSet(application, applicationMetadata.Schema.SchemaId);
 
             var cruddata = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), MetadataProvider.EntityByApplication(application),
                 applicationMetadata, currentData);
@@ -170,12 +170,12 @@ namespace softWrench.sW4.Web.Controllers {
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
-            _contextLookuper.FillContext(key);
-            var applicationMetadata = MetadataProvider
-                .Application(key.ApplicationName)
-                .ApplyPolicies(key, user, ClientPlatform.Web);
+            _contextLookuper.FillContext(key, new Dictionary<string, object>());
+            var baseDataSet = _dataSetProvider.LookupDataSet(key.ApplicationName, key.SchemaId);
 
-            var baseDataSet = _dataSetProvider.LookupDataSet(key.ApplicationName, applicationMetadata.Schema.SchemaId);
+            var applicationMetadata = baseDataSet.ApplyPolicies(key.ApplicationName,key, ClientPlatform.Web);
+
+            
 
 
             var entityMetadata = MetadataProvider.Entity(applicationMetadata.Entity);

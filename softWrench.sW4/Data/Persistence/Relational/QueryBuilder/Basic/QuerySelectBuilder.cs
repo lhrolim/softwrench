@@ -37,6 +37,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             var attributes = preAtributes ?? entityMetadata.Attributes(NoCollections) as IList<EntityAttribute> ?? entityMetadata.Attributes(NoCollections).ToList();
 
             var hasProjection = dto != null && dto.ProjectionFields.Count > 0;
+
+            var noFieldsApplied = true;
+
             if (hasProjection) {
                 foreach (ProjectionField field in dto.ProjectionFields) {
                     if (field.Name.StartsWith("#")) {
@@ -56,6 +59,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                         //this field is not mapped
                         continue;
                     }
+                    noFieldsApplied = false;
                     string aliasAttribute;
                     if (result != null && result.Item1.Query != null) {
                         aliasAttribute = AliasAttributeWithQuery(entityMetadata, field.Alias, result.Item1, result.Item2);
@@ -66,6 +70,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                 }
 
             } else {
+                noFieldsApplied = false;
                 for (var i = 0; i < attributes.Count; i++) {
                     var entityAttribute = attributes[i];
                     if (entityAttribute.Name.StartsWith("#null")) {
@@ -78,6 +83,10 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
                     }
                 }
             }
+            if (noFieldsApplied) {
+                return "select * ";
+            }
+
             return buffer.ToString().Substring(0, buffer.Length - SelectSeparator.Count()) + " ";
         }
 

@@ -10,22 +10,24 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.Web.Controllers.Routing {
     public class SuccessMessageHandler : IComponent {
         private static readonly I18NResolver Resolver = new I18NResolver();
-        public String FillSuccessMessage(ApplicationMetadata applicationMetadata, TargetResult maximoResult, string operation) {
+        public string FillSuccessMessage(ApplicationMetadata applicationMetadata, TargetResult maximoResult, string operation) {
             string successMessage = null;
             var applicationCommand = ApplicationCommandUtils.GetApplicationCommand(applicationMetadata, operation);
-            String userId = null;
-            if (maximoResult != null)
-            {
-                userId = maximoResult.UserId == null ? " " : " " + maximoResult.UserId + " ";    
+            string userId = null;
+            if (maximoResult != null) {
+                userId = maximoResult.UserId == null ? " " : " " + maximoResult.UserId + " ";
             }
-            if (maximoResult.SuccessMessage != null)
-            {
+            if (maximoResult?.SuccessMessage != null) {
                 successMessage = maximoResult.SuccessMessage;
             } else if (applicationCommand != null) {
                 successMessage = applicationCommand.SuccessMessage;
             } else {
                 //TODO: refactor this
                 var baseMessage = applicationMetadata.Title + (userId);
+                if (baseMessage.EndsWith(" ")) {
+                    baseMessage += " ";
+                }
+
                 switch (operation) {
                     case OperationConstants.CRUD_CREATE:
                         return baseMessage + Resolver.I18NValue("messagesection.success.created", "successfully created");
@@ -40,7 +42,7 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             return successMessage;
         }
 
-        public static String FillSuccessMessage(JobCommandEnum jobCommand) {
+        public static string FillSuccessMessage(JobCommandEnum jobCommand) {
             var successMessage = "Job ";
             switch (jobCommand) {
                 case JobCommandEnum.Execute:

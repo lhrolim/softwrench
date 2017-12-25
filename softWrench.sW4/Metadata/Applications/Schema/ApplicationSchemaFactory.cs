@@ -29,12 +29,15 @@ namespace softWrench.sW4.Metadata.Applications.Schema {
 
             var syncDisplayables = new List<IApplicationDisplayable>();
 
-            var definition = new ApplicationSchemaDefinition(entityName, applicationName, "", ApplicationMetadataConstants.SyncSchema, false,
+            var definition = new ApplicationSchemaDefinition(entityName, applicationName, "",
+                ApplicationMetadataConstants.SyncSchema, false,
                 "none", SchemaStereotype.None, SchemaMode.None,
-                ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, null, idFieldName, userIdFieldName, null);
-            definition.FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.SyncSchemaLazyFkResolverDelegate;
-            definition.ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver;
-            definition.LazyOfflineAssociationResolver = OffLineMetadataProvider.LazyEntityAssociatonResolver;
+                ClientPlatform.Mobile, false, syncDisplayables, null, null, null, null, null, idFieldName,
+                userIdFieldName, null) {
+                FkLazyFieldsResolver = ApplicationSchemaLazyFkHandler.SyncSchemaLazyFkResolverDelegate,
+                ComponentDisplayableResolver = ReferenceHandler.ComponentDisplayableResolver,
+                LazyOfflineAssociationResolver = OffLineMetadataProvider.LazyEntityAssociatonResolver
+            };
             return definition;
         }
 

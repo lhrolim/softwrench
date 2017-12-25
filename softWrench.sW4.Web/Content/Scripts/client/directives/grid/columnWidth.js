@@ -10,13 +10,68 @@
             scope: {
                 schema: '=',
                 inline: '=',
+                tableMetadata: '=',
             },
             link: function (scope, element, attr) {
                 log.debug('Render Listgrid CSS');
 
+                const buildWidth = function (displayable) {
+                    if (displayable.isHidden || !displayable.hasOwnProperty('attribute')) return null;
+
+                    //new row object
+                    const row = {};
+                    if (displayable.rendererParameters) {
+                        const width = removePercent(displayable.rendererParameters.width);
+
+                        //use provided width or default to 0
+                        if (width) {
+                            row.width = width;
+                        } else {
+                            row.width = 0;
+                        }
+                    } else {
+                        row.width = 0;
+                    }
+
+                    if (displayable.attribute) {
+                        row.class = safeCSSselector(displayable.attribute);
+                    } else {
+                        row.class = '';
+                    }
+
+                    return row;
+                }
+
+                const buildCss = function (widths) {
+                    //log.debug('Widths Found', widths);
+
+                    //balance remaining width between missing column widths
+                    balanceColumns(widths, 'width');
+
+                    log.debug('Widths Found', widths);
+
+                    //build css rules
+                    var css = '';
+                    const tableAttr = scope.tableMetadata ? scope.tableMetadata.attribute : null;
+                    css += getViewRules(widths, 'width', '768px', 'screen', scope.schema, tableAttr);
+                    css += buildMinWidthCSS(scope.schema, scope.inline, scope.schema.properties['list.width.min']);
+                    css += getViewRules(widths, 'width', '1px', 'print', scope.schema, tableAttr);
+
+                    if (css) {
+                        //log.debug(css);
+
+                        //output css rules to html
+                        element.html(css);
+                    } else {
+                        log.debug('No CSS Generated');
+                    }
+                }
+
                 scope.$watch('schema', function () {
                     //scope.counter = scope.counter + 1;
                     log.debug('schema', scope.schema);
+
+                    if (scope.tableMetadata) return;
 
                     //log.debug(scope.schema.displayables);
 
@@ -34,7 +89,10 @@
                         var column;
                         //build object for columns and responsive widths
                         for (let id in json) {
-                            if (!json.hasOwnProperty(id)) continue;
+                            if (!json.hasOwnProperty(id)) {
+                                continue;
+                            }
+
                             //convert metadata to html columns (add 2 for select columns and 1 for index base)
                             if (scope.schema.stereotype === 'List') {
                                 column = parseInt(id) + 3;
@@ -44,55 +102,42 @@
 
                             //log.debug(json[id]);
 
-                            //new row object
-                            const row = {};
-
                             //if the column has rendererParameters, else default to 0 width
-                            if (!json[id].isHidden && json[id].hasOwnProperty('attribute')) {
-                                if (json[id].rendererParameters) {
-                                    const width = removePercent(json[id].rendererParameters.width);
+                            let displayable = json[id];
 
-                                    //use provided width or default to 0
-                                    if (width) {
-                                        row.width = width;
-                                    } else {
-                                        row.width = 0;
-                                    }
-                                } else {
-                                    row.width = 0;
-                                }
 
-                                if (json[id].attribute) {
-                                    row.class = safeCSSselector(json[id].attribute);
-                                } else {
-                                    row.class = '';
-                                }
-
+                            //new row object
+                            const row = buildWidth(displayable);
+                            if (row) {
                                 widths[column] = row;
                             }
                         }
 
-                        //log.debug('Widths Found', widths);
+                        buildCss(widths);
+                    }, 0, false);
+                });
 
-                        //balance remaining width between missing column widths
-                        balanceColumns(widths, 'width');
-
-                        log.debug('Widths Found', widths);
-
-                        //build css rules
-                        var css = '';
-                        css += getViewRules(widths, 'width', '768px', 'screen', scope.schema);
-                        css += buildMinWidthCSS(scope.schema, scope.inline, scope.schema.properties['list.width.min']);
-                        css += getViewRules(widths, 'width', '1px', 'print', scope.schema);
-
-                        if (css) {
-                            //log.debug(css);
-
-                            //output css rules to html
-                            element.html(css);
-                        } else {
-                            log.debug('No CSS Generated');
+                scope.$watch('tableMetadata', function () {
+                    $timeout(function () {
+                        if (!scope.tableMetadata || !scope.tableMetadata.rows || scope.tableMetadata.rows.length === 0) {
+                            return;
                         }
+
+                        const metadataRow = scope.tableMetadata.rows[0];
+                        if (!metadataRow || metadataRow.length === 0) return;
+
+                        const widths = {};
+                        //build object for columns and responsive widths
+                        metadataRow.forEach((displayable, column) => {
+                            //new row object
+                            const row = buildWidth(displayable);
+                            if (row) {
+                                widths[column] = row;
+                            }
+                        });
+
+
+                        buildCss(widths);
                     }, 0, false);
                 });
             }
@@ -144,7 +189,7 @@
 
     window.balanceColumns = balanceColumns;
 
-    function getViewRules(widths, param, viewWidth, media, schema) {
+    function getViewRules(widths, param, viewWidth, media, schema, tableAttr) {
         var newCSS = '';
 
         //look for the viewWidth in each column
@@ -155,7 +200,7 @@
 
                 //get the css rule & add it other rules
                 if (columnWidth) {
-                    const temp = getCSSrule(column, widths[column]['class'], columnWidth, schema);
+                    const temp = getCSSrule(column, widths[column]['class'], columnWidth, schema, tableAttr);
                     if (temp) {
                         newCSS = newCSS + temp;
                     }
@@ -175,7 +220,7 @@
 
     window.getViewRules = getViewRules;
 
-    function getCSSrule(columnIndex, columnClass, columnWidth, schema) {
+    function getCSSrule(columnIndex, columnClass, columnWidth, schema, tableAttr) {
         var properties = '';
 
         if (columnWidth) {
@@ -189,32 +234,36 @@
             }
         }
 
-        return buildCSSrule(columnIndex, columnClass, properties, schema);
+        return buildCSSrule(columnIndex, columnClass, properties, schema, tableAttr);
     }
 
     window.getCSSrule = getCSSrule;
 
-    function buildCSSrule(columnIndex, columnClass, properties, schema) {
+    function buildCSSrule(columnIndex, columnClass, properties, schema, tableAttr) {
         if (!schema.properties['list.nowrap']) {
-            return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema) + '{' + properties + '}';
+            return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema, false, tableAttr) + '{' + properties + '}';
         } else {
             if (properties.indexOf('px') > 0) {
-                return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema, true) + '{' + properties + '}';
+                return buildCSSselector(columnIndex, columnClass, 'th', schema) + ',' + buildCSSselector(columnIndex, columnClass, 'td', schema, true, tableAttr) + '{' + properties + '}';
             }
         }
     }
 
     window.buildCSSrule = buildCSSrule;
 
-    function buildCSSselector(columnIndex, columnClass, element, schema, targetWrapper) {
+    function buildCSSselector(columnIndex, columnClass, element, schema, targetWrapper, tableAttr) {
         const gridtype = getGridType(schema);
-        var selector;
+        var selector = `#${gridtype}[data-application="${schema.applicationName}"][data-schema="${schema.schemaId}"]`;
+
+        if (tableAttr) {
+            selector += `[data-attribute="${safeCSSselector(tableAttr)}"]`;
+        }
 
         //if css class found, build selector using class, else use nth-child as a fallback
         if (columnClass) {
-            selector = '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + '.' + columnClass;
+            selector += ` ${element}.${columnClass}`;
         } else {
-            selector = '#' + gridtype + '[data-application="' + schema.applicationName + '"][data-schema="' + schema.schemaId + '"] ' + element + ':nth-child(' + columnIndex + ')';
+            selector += ` ${element}:nth-child(${columnIndex})`;
         }
 
         if (targetWrapper) {
@@ -251,14 +300,12 @@
     window.buildMinWidthCSS = buildMinWidthCSS;
 
     function getGridType(schema) {
-        var gridtype;
         if (schema.stereotype === 'List') {
-            gridtype = 'listgrid';
+            return 'listgrid';
         } else if (schema.stereotype === 'CompositionList') {
-            gridtype = 'compositionlistgrid';
+            return 'compositionlistgrid';
         }
-
-        return gridtype;
+        return "crudtable";
     }
 
     window.getGridType = getGridType;

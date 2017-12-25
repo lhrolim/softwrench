@@ -20,7 +20,7 @@
                         return !isFieldHidden(datamap, schema, e);
                     }).length === 0)) {
 
-                var enableControlFlag = fieldMetadata.header != null &&
+                const enableControlFlag = fieldMetadata.header != null &&
                     fieldMetadata.attribute !== null &&
                     fieldMetadata.header.parameters["enablecontrol"] === "true";
 
@@ -40,7 +40,7 @@
         };
 
         var isIdFieldAndNotReadOnly = function (fieldMetadata, schema) {
-            if (!isIdField(fieldMetadata, schema)) {
+            if (!isIdField(fieldMetadata, schema) || fieldMetadata.showExpression === "!false") {
                 return false;
             }
             return (schema.stereotype == "Detail" && schema.mode == "input" || schema.stereotype == "DetailNew") && !fieldMetadata.isReadOnly;
@@ -299,7 +299,160 @@
                 return -1;
             },
 
-            getVisibleDisplayableIdxByKey: function (schema, attribute, ignoreCache = false, includeSections = false) {
+            replaceOrRemoveDisplayableByKey: function (displayableContainer, itemOrKey, newdisplayable) {
+                /// <summary>
+                /// Get the index for the supplied attribute key, skipping hidden fields.
+                /// </summary>
+                if (!displayableContainer) {
+                    return false;
+                }
+
+                const displayables = displayableContainer.displayables;
+                var idxToRemove = -1;
+                const innerContainers = [];
+                for (let i = 0; i < displayables.length; i++) {
+                    const item = displayables[i];
+                    if (!isString(itemOrKey) && item === itemOrKey) {
+                        idxToRemove = i;
+                        break;
+                    }
+                    else if (item.attribute === itemOrKey || item.target === itemOrKey || item.role === itemOrKey) {
+                        idxToRemove = i;
+                        break;
+                    }
+                    if (item.displayables) {
+                        innerContainers.push(item);
+                    }
+                }
+
+                if (idxToRemove !== -1) {
+                    if (!newdisplayable) {
+                        displayables.splice(idxToRemove, 1);
+                    } else {
+                        displayables[idxToRemove] = newdisplayable;
+                    }
+
+                    return true;
+                }
+
+                for (let i = 0; i < innerContainers.length; i++) {
+                    const container = innerContainers[i];
+                    const removed = this.replaceOrRemoveDisplayableByKey(container, itemOrKey);
+                    if (removed) {
+                        return true;
+                    }
+                }
+                return false;
+
+            },
+
+
+            locateFirstOuterVerticalSection: function (container, currentField) {
+                const displayables = container.displayables;
+                for (let i = 0; i < displayables.length; i++) {
+                    const displayable = displayables[i];
+                    if (displayable.displayables) {
+                        const result = this.locateOuterSection(container, currentField);
+                        if (!result) {
+                            //field wasn´t present at this given section
+                            continue;
+                        }
+
+                        if (result.found) {
+                            //just returning from inner call invocations what was already found
+                            return result;
+                        }
+
+                        if (result.container.orientation !== "horizontal") {
+                            //either a vertical section or the root schema found, returning it!
+                            return { container: result.container, found: true, idx: result.idx };
+                        }
+                        //searching the parent of the given section
+                        return this.locateFirstOuterVerticalSection(container, result.container);
+
+                    }
+                    if (displayable === currentField) {
+                        return { container, idx: i, found: false };
+                    }
+
+                }
+                //nothing was found
+                return { container, idx: i, found: true };
+            },
+
+
+            locateCommonContainer: function (container, fields) {
+                const results = new Set();
+                let minIdx = 1000;
+
+                for (let i = 0; i < fields.length; i++) {
+                    const field = fields[i];
+                    const outerContainerResult = this.locateOuterSection(container, field);
+                    const outerContainer = outerContainerResult ? outerContainerResult.container : null;
+                    minIdx = outerContainerResult.idx < minIdx ? outerContainerResult.idx : minIdx;
+                    results.add(outerContainer);
+                }
+                const arr = Array.from(results);
+
+                if (results.size === 1) {
+                    const resultContainer = arr[0];
+                    if (resultContainer === container) {
+                        //schema was hit as the common container
+                        return { container, idx: minIdx }
+                    }
+
+                    const idx = this.getVisibleDisplayableIdxByKey(container, resultContainer, false, true);
+                    return { container: resultContainer, idx }
+                }
+                return this.locateCommonContainer(container, arr);
+
+            },
+
+            /**
+             * Given a container (schema or section) and a field, returns the container that encloses the given field (either a section or the root schema itself)
+             * @param {} container 
+             * @param {} currentField 
+             * @returns {} 
+             */
+            locateOuterSection: function (container, currentField) {
+                if (currentField && currentField.schemaId) {
+                    //no point in searching an outer section for a schema
+                    return { container: currentField, idx: 0 };
+                }
+
+                const displayables = container.displayables;
+                for (let i = 0; i < displayables.length; i++) {
+                    const displayable = displayables[i];
+                    if (displayable.displayables) {
+                        const result = this.locateOuterSection(displayable, currentField);
+                        if (result) {
+                            if (result.fieldLoop === true) {
+                                //the field was already found, and now we return the container itself
+                                return { idx: result.idx, fieldLoop: false, container: displayable };
+                            }
+                            return result;
+                        }
+                    }
+                    if (displayable === currentField) {
+                        return { fieldLoop: true, idx: i, container };
+                    }
+
+                }
+                //field not found on the given container
+                return null;
+
+            },
+
+            injectServerTypesIntoDisplayables: function (container) {
+                this.getLinearDisplayables(container, true, true, (displayable) => {
+                    const type = `softwrench.sW4.Shared2.Metadata.Applications.Schema.${displayable.type}, softwrench.sw4.Shared2`;
+                    displayable["$type"] = type;
+                    return Object.assign({ "$type": type }, displayable);
+                    //                    return displayable;
+                });
+            },
+
+            getVisibleDisplayableIdxByKey: function (schema, attributeOrField, ignoreCache = false, includeSections = false) {
                 /// <summary>
                 /// Get the index for the supplied attribute key, skipping hidden fields.
                 /// </summary>
@@ -310,21 +463,41 @@
                 const results = this.getLinearDisplayables(schema, ignoreCache, includeSections);
                 for (let i = 0; i < results.length; i++) {
                     const result = results[i];
-                    if (result.associationKey === attribute || result.target === attribute || result.attribute === attribute && !result.isHidden) {
+                    if (!isString(attributeOrField) && result === attributeOrField) {
+                        return i;
+                    }
+                    else if (result.associationKey === attributeOrField || result.target === attributeOrField || result.attribute === attributeOrField && !result.isHidden) {
                         return i;
                     }
                 }
                 return -1;
             },
 
-            getLinearDisplayables: function (container, ignoreCache = false, includeSections = false) {
+            sortBySchemaIdx: function(schema, fields) {
+                const idxArray = [];
+                fields.forEach(field => {
+                    const idx = this.getVisibleDisplayableIdxByKey(schema, field);
+                    idxArray.push({ idx, field });
+                });
+
+                idxArray.sort((a, b) => {
+                    return a.idx - b.idx;
+                });
+
+                return idxArray.map(a => a.field);
+
+            },
+
+
+
+            getLinearDisplayables: function (container, ignoreCache = false, includeSections = false, lambdaFn = null) {
                 /// <summary>
                 /// gets a list of all the displayables of the current schema/section in a linear mode, excluding any sections/tabs themselves.
                 /// </summary>
                 /// <param name="container">either a schema or a section</param>
                 /// <returns type=""></returns>
                 container.jscache = container.jscache || {};
-                if (container.jscache.alldisplayables && !ignoreCache) {
+                if (container.jscache.alldisplayables && !ignoreCache && !lambdaFn) {
                     return container.jscache.alldisplayables;
                 }
                 const displayables = container.displayables;
@@ -333,13 +506,21 @@
                     const displayable = displayables[i];
                     if (displayable.displayables) {
                         if (includeSections) {
+                            if (lambdaFn) {
+                                displayables[i] = lambdaFn(displayables[i]);
+                            }
                             result.push(displayable);
+
                         }
                         //at this point displayable is a section, calling recursively
-                        result = result.concat(this.getLinearDisplayables(displayable, ignoreCache, includeSections));
+                        result = result.concat(this.getLinearDisplayables(displayable, ignoreCache, includeSections, lambdaFn));
 
                     } else {
+                        if (lambdaFn) {
+                            displayables[i] = lambdaFn(displayables[i]);
+                        }
                         result.push(displayable);
+
                     }
                 }
                 container.jscache.alldisplayables = result;

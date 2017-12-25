@@ -23,6 +23,28 @@
     <command id="print" icon="fa-print" service="printService" method="printDetail" parameters="schema,datamap" label="Print" showexpression="$scope:shouldshowprint" cssclasses="large-button"/>
   </commandgroup>
 
+  <commandgroup position="spreadsheet" platform="web">
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Confirm" primary="true" cssclasses="large-button"/>
+    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" cssclasses="large-button"/>
+  </commandgroup>
+
+  <commandgroup position="detailnoprint" platform="web">
+    <command id="save" icon="fa-check" service="$scope" method="save" label="Save" cssclasses="large-button" tooltip="$scope:saveTooltip" enableexpression="$scope:enableSave"/>
+    <command id="cancel" icon="$scope:getCancelIcon" service="$scope" method="cancel" label="$scope:getCancelLabel" cssclasses="large-button"/>
+  </commandgroup>
+
+  <commandgroup position="dynformsedit" platform="web">
+    <command id="save" icon="fa-check" service="dynFormService" method="saveDetailForm" label="Save" cssclasses="large-button" tooltip="$scope:saveTooltip" enableexpression="$scope:enableSave"/>
+    <command id="cancel" icon="$scope:getCancelIcon" service="$scope" method="cancel" label="$scope:getCancelLabel" cssclasses="large-button"/>
+  </commandgroup>
+
+
+  <commandgroup position="dynformsactions" platform="web">
+    <command id="save" icon="fa-plus" service="dynFormService" method="createEnclosingSection" label="Create Section" cssclasses="large-button" tooltip="Create a new enclosing section for the selected fields" showexpression="service:dynFormService.isNotEditingSection"/>
+    <command id="save" icon="fa-check" service="dynFormService" method="finishSectionEdition" label="Finish Section" cssclasses="large-button" tooltip="Finishes selection of fields for the section" showexpression="service:dynFormService.isEditingSection"/>
+  </commandgroup>
+
+
 
   <commandgroup position="detail.secondary" platform="web">
 
@@ -34,7 +56,7 @@
 
   <!-- Modal commands-->
 
-  <commandgroup position="modal.detail.primary" platform="web">
+  <commandgroup position="modal.detail.primary" platform="web" removeundeclared="false">
     <command id="save" icon="fa-check" service="applicationService" method="save" label="Save" primary="true"/>
     <command id="cancel" icon="fa-times" service="dispatcherService" method="dispatchevent" label="Cancel" parameters="sw.modal.hide"/>
   </commandgroup>
@@ -75,11 +97,7 @@
     </togglecommand>-->
   </commandgroup>
 
-  <commandgroup position="spreadsheet" platform="web">
-    <command id="save" icon="fa-check" service="$scope" method="save" label="Confirm" primary="true" cssclasses="large-button"/>
-    <command id="cancel" icon="fa-times" service="$scope" method="cancel" label="Cancel" cssclasses="large-button"/>
-  </commandgroup>
-
+ 
   <commandgroup position="commlog" platform="web">
     <command id="reply" icon="fa-mail-reply" label="Reply" tooltip="Reply" service="commlogService" method="reply" parameters="schema,commLogDatamap"/>
     <command id="replyall" icon="fa-mail-reply-all" label="Reply All" tooltip="Reply All" service="commlogService" method="replyAll" parameters="schema,commLogDatamap"/>

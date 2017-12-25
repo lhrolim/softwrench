@@ -427,6 +427,7 @@
                 $scope.save = function (parameters ={}) {
                     const schemaToSave = parameters.schema || $scope.schema;
                     parameters.originaldatamap = parameters.originaldatamap || $scope.originalDatamap;
+                    parameters.customParameters = $scope.extraparameters;
                     return submitService.submit(schemaToSave, $scope.datamap, parameters);
                 };
 

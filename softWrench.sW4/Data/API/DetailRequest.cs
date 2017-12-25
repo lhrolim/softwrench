@@ -22,7 +22,7 @@ namespace softWrench.sW4.Data.API {
 
         public IDictionary<string, object> CustomParameters {
             get; set;
-        }
+        } = new Dictionary<string, object>();
 
         public Entity InitialValues {
             get; set;
@@ -105,8 +105,8 @@ namespace softWrench.sW4.Data.API {
             var request = new DetailRequest(adapter.Id, adapter.Faqid, adapter.Lang, adapter.Key) {
                 CustomParameters = adapter.CustomParameters
             };
-            if (adapter.SiteId != null && adapter.UserId != null){
-                request.UserIdSitetuple = new Tuple<string, string>(adapter.UserId,adapter.SiteId);
+            if (adapter.SiteId != null && adapter.UserId != null) {
+                request.UserIdSitetuple = new Tuple<string, string>(adapter.UserId, adapter.SiteId);
             }
             request.UserId = adapter.UserId;
 

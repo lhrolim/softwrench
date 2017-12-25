@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using cts.commons.portable.Util;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using softwrench.sw4.dynforms.classes.model.entity;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.model;
 using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Configuration.Definitions;
@@ -148,6 +149,45 @@ namespace softwrench.sW4.test.Metadata.Validator {
             Assert.AreEqual("docinfo_id", first.From);
             Assert.AreEqual("id", first.To);
             Assert.IsTrue(first.Primary);
+        }
+
+        [TestMethod]
+        public void TestManyToOneRelationshipWithIds() {
+            var service = new SWDBMetadataXmlSourceInitializer();
+            var entityMetadata = service.Convert(typeof(FormDatamap));
+            //cannot test api call without initializing metadata provider
+            var entityAttributes = entityMetadata.Schema.Attributes;
+            var associations = entityMetadata.Associations;
+            Assert.IsNotNull(associations);
+            var formMetadataRel = associations.FirstOrDefault(f => f.Qualifier.EqualsIc("formmetadata_"));
+            Assert.IsNotNull(formMetadataRel);
+
+            Assert.AreEqual("_formmetadata_", formMetadataRel.To);
+            //            Assert.AreEqual("_genericlistrelationship", genRelationship.EntityName);
+            Assert.IsFalse(formMetadataRel.Collection);
+            Assert.IsTrue(formMetadataRel.IsSwDbApplication);
+            var entityAssociationAttributes2 = formMetadataRel.Attributes;
+
+            var attributes = entityAssociationAttributes2 as IList<EntityAssociationAttribute> ?? entityAssociationAttributes2.ToList();
+
+            Assert.AreEqual(1, attributes.Count());
+            var first = attributes[0];
+            Assert.AreEqual("form_name", first.From);
+            Assert.AreEqual("name", first.To);
+            Assert.IsTrue(first.Primary);
+        }
+
+        [TestMethod]
+        public void TestId() {
+            var service = new SWDBMetadataXmlSourceInitializer();
+            var entityMetadata = service.Convert(typeof(FormMetadata));
+            var attributes = entityMetadata.Attributes(EntityMetadata.AttributesMode.NoCollections);
+            Assert.IsTrue(attributes.Any(a => a.Name.EqualsIc("name")));
+
+            entityMetadata = service.Convert(typeof(FormDatamap));
+
+            Assert.AreEqual(entityMetadata.IdFieldName, "formdatamapid");
+
         }
     }
 }

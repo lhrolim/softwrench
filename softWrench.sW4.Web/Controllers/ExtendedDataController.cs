@@ -43,7 +43,7 @@ namespace softWrench.sW4.Web.Controllers {
             if (null == user) {
                 throw new HttpResponseException(HttpStatusCode.Unauthorized);
             }
-            ContextLookuper.FillContext(request.Key);
+            ContextLookuper.FillContext(request.Key, request.CustomParameters);
             var applicationMetadata = MetadataProvider
                 .Application(application)
                 .ApplyPolicies(request.Key, user, ClientPlatform.Web);
@@ -104,7 +104,7 @@ namespace softWrench.sW4.Web.Controllers {
             var request = dto.Request;
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(request.Key, user, ClientPlatform.Web);
             
-            ContextLookuper.FillContext(request.Key);
+            ContextLookuper.FillContext(request.Key, dto.Request?.ExtraParameters);
             
             var compositionData = await DataSetProvider
                 .LookupDataSet(application, applicationMetadata.Schema.SchemaId)

@@ -92,7 +92,7 @@ angular.module('sw_layout')
             const firstRow = $('td', rows[0]);
 
             //if no records to display, make sure the header row matches the table width
-            if (firstRow.length === 0) {
+            if (firstRow.length === 0 || rows[0] === undefined) {
                 const headerRow = $('.header-row th', table);
                 table.hide();
                 headerRow.each(function () {
@@ -238,7 +238,7 @@ angular.module('sw_layout')
                 const inputPaddingAndBorder = input.outerWidth() - width;
                 const trWidth = theadArray[i];
                 const resultValue = trWidth - addonWidth - inputPaddingAndBorder;
-                $log.get('fixheader#updateFilterVisibility',["layout"]).debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
+                $log.get('fixheader#updateFilterVisibility',["layout","style"]).debug("result:{0} | Previous:{1} | tr:{2} | addon:{3} | Padding{4}".format(resultValue, width, trWidth, addonWidth, inputPaddingAndBorder));
                 input.width(resultValue);
             });
         },
@@ -250,7 +250,7 @@ angular.module('sw_layout')
                 $(".listgrid-table").addClass("affixed");
                 $(".listgrid-table").removeClass("unfixed");
                 const theadHeight = thead.height();
-                $log.get("fixheaderService#fixTableTop",["layout"]).debug("head height: " + theadHeight);
+                $log.get("fixheaderService#fixTableTop",["layout","style"]).debug("head height: " + theadHeight);
                 if (isIe9() && "true" != sessionStorage.mockie9) {
                     //if mocking ie9, lets keep default behaviour, otherwise will break all the grids
                     tableElement.css('margin-top', theadHeight + 19);
@@ -300,7 +300,7 @@ angular.module('sw_layout')
         },
 
         callWindowResize: window.debounce(()=> { // debouncing so it doesn't trigger resize all the time 
-            var log = $log.get('sw4.fixheader_service',["layout"]);
+            var log = $log.get('sw4.fixheader_service',["layout","style"]);
 
             //trigger resize to postition fixed header elements
             $timeout(()=> {
@@ -323,7 +323,7 @@ angular.module('sw_layout')
                     const isNewLowResolution = newWidth < resolutionBarrier - 15;
                     // lets add some margin to give the browser time to render the new table...
                     if ((isNewHighResolution && !highResolution) || (isNewLowResolution && highResolution)) {
-                        $log.get("crudlistdir#resize",["layout"]).debug('switching resolutions');
+                        $log.get("crudlistdir#resize",["layout","style"]).debug('switching resolutions');
                         fn.fixThead(null, {
                             resizing: true
                         });
@@ -353,7 +353,7 @@ angular.module('sw_layout')
         },
 
         unfix: function () {
-            const log = $log.get('sw4.fixheader_service#unfix',["layout"]);
+            const log = $log.get('sw4.fixheader_service#unfix',["layout","style"]);
             log.debug('unfix started');
             const table = $(".listgrid-table");
             table.removeClass("affixed");

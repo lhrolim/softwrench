@@ -674,7 +674,7 @@
 
             const customParams = $scope.getCustomParameters(compositionlistschema, item);
 
-            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema,$scope.relationship, customParams).then(result => {
+            return compositionService.getCompositionDetailItem(compositionId, $scope.compositiondetailschema, $scope.relationship, customParams).then(result => {
                 const datamap = result.resultObject;
 
                 var mergeddata = compositionCommons.buildMergedDatamap(datamap, angular.copy(item));
@@ -732,7 +732,7 @@
             // on batch the actual item is edited
             if ($scope.isBatch()) {
                 if (!$scope.detailData[compositionId]) {
-                    $scope.detailData[compositionId]= {
+                    $scope.detailData[compositionId] = {
                         expanded: false
                     }
                 }
@@ -820,7 +820,7 @@
                     return dispatcherService.invokeServiceByString(deletefunction, [item]).then(shouldRefresh => {
                         if (shouldRefresh) {
                             //TODO: make this more generic
-                            $scope.onAfterSave({}, false);    
+                            $scope.onAfterSave({}, false);
                         }
                     });
                 }
@@ -912,7 +912,7 @@
 
             $scope.compositionData().push(newItem);
             // check for cases that $scope.compositionData() === $scope.parentdata[$scope.relationship]
-            if (!$scope.parentdata || !$scope.parentdata[$scope.relationship] ||$scope.parentdata[$scope.relationship].indexOf(newItem) < 0) {
+            if (!$scope.parentdata || !$scope.parentdata[$scope.relationship] || $scope.parentdata[$scope.relationship].indexOf(newItem) < 0) {
                 safePush($scope.parentdata, $scope.relationship, newItem);
             }
 
@@ -1082,7 +1082,7 @@
             return $q.reject(data);
         };
 
-        
+
 
         $scope.onAfterSave = function (data, alwaysrefresh, forceReloadFirstPage) {
             if (alwaysrefresh) {

@@ -3,8 +3,8 @@
 
     angular.module("sw_layout").controller("BaseController", BaseController);
     //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-    BaseController.$inject = ["$scope", "$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService", "compositionService", "genericTicketService","$timeout"];
-    function BaseController($scope, $log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService, compositionService, genericTicketService,$timeout) {
+    BaseController.$inject = ["$scope", "$log", "i18NService", "fieldService", "commandService", "formatService", "layoutservice", "expressionService", "crudContextHolderService", "dispatcherService", "compositionService", "genericTicketService", "$timeout"];
+    function BaseController($scope, $log, i18NService, fieldService, commandService, formatService, layoutservice, expressionService, crudContextHolderService, dispatcherService, compositionService, genericTicketService, $timeout) {
 
         const blankArray = [];
 
@@ -22,8 +22,15 @@
             return i18NService.getI18nLabel(fieldMetadata, $scope.schema);
         };
 
-        $scope.i18NInputLabel = $scope.i18NInputLabel || function (fieldMetadata, avoidColon=false) {
+        $scope.i18NInputLabel = $scope.i18NInputLabel || function (fieldMetadata, avoidColon = false) {
             return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, avoidColon);
+        };
+
+        $scope.i18NInputLabelEvaluating = function (fieldMetadata, legendMode = false) {
+            if (!$scope.isLabelVisible(fieldMetadata, legendMode)) {
+                return null;
+            }
+            return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, false);
         };
 
         $scope.getBooleanClass = function (item, attribute) {
@@ -118,7 +125,7 @@
 
         $scope.i18nSectionLabel = function (section) {
             var label = i18NService.getI18nSectionHeaderLabel(section, section.header, $scope.schema);
-            if (label != undefined && label != "") {
+            if (label != undefined && label !== "") {
                 label = label.replace(':', '');
             }
             return label;
@@ -196,7 +203,7 @@
             return null;
         };
 
-        function applyFilter(filter, options, {compositionItem} = {}) {
+        function applyFilter(filter, options, { compositionItem } = {}) {
             if (options && filter && filter.clientFunction) {
                 const fn = dispatcherService.loadServiceByString(filter.clientFunction);
                 if (fn == null) {
@@ -204,13 +211,13 @@
                     return options;
                 }
 
-                const filterFunction = function({compositionItem} = {}) {
+                const filterFunction = function ({ compositionItem } = {}) {
                     return function (element) {
-                        return fn(element, {compositionItem});
+                        return fn(element, { compositionItem });
                     }
                 }
 
-                const filteredOptions = options.filter(filterFunction({compositionItem}));
+                const filteredOptions = options.filter(filterFunction({ compositionItem }));
 
                 const currentValues = filteredOptions.map(item => {
                     return item.value;
@@ -227,7 +234,7 @@
 
                 if (filteredOptions.length === 0) {
                     //need to return this very same array every time to avoid angular infinite digest loops
-                    
+
                     return blankArray;
                 }
                 return filteredOptions;
@@ -235,9 +242,9 @@
             return options;
         }
 
-        $scope.GetAssociationOptions = function (fieldMetadata, datamapValue, {compositionItem} = {}) {
+        $scope.GetAssociationOptions = function (fieldMetadata, datamapValue, { compositionItem } = {}) {
             if (fieldMetadata.type === "OptionField") {
-                return $scope.GetOptionFieldOptions(fieldMetadata, datamapValue, {compositionItem});
+                return $scope.GetOptionFieldOptions(fieldMetadata, datamapValue, { compositionItem });
             }
             var contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
 
@@ -248,25 +255,25 @@
             let panelId = $scope.ismodal === "true" ? "#modal" : $scope.panelid;
 
             const rawOptions = crudContextHolderService.fetchEagerAssociationOptions(fieldMetadata.associationKey, contextData, panelId, datamapValue);
-            return applyFilter(fieldMetadata.filter, rawOptions, {compositionItem});
+            return applyFilter(fieldMetadata.filter, rawOptions, { compositionItem });
         }
-        $scope.GetOptionFieldOptions = function (optionField, datamapValue, {compositionItem} = {}) {
+        $scope.GetOptionFieldOptions = function (optionField, datamapValue, { compositionItem } = {}) {
             if (optionField.providerAttribute == null) {
-                return applyFilter(optionField.filter, optionField.options, {compositionItem});
+                return applyFilter(optionField.filter, optionField.options, { compositionItem });
             }
             const contextData = $scope.ismodal === "true" ? { schemaId: "#modal" } : null;
-            const options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid,datamapValue);
+            const options = crudContextHolderService.fetchEagerAssociationOptions(optionField.providerAttribute, contextData, $scope.panelid, datamapValue);
             if (!options) {
                 return blankArray;
-            }else if (options.length === 1 && fieldService.isFieldRequired(optionField, $scope.datamap)) {
+            } else if (options.length === 1 && fieldService.isFieldRequired(optionField, $scope.datamap)) {
                 $scope.datamap[optionField.target] = options[0].value;
             }
-            return applyFilter(optionField.filter, options, {compositionItem});
+            return applyFilter(optionField.filter, options, { compositionItem });
         }
 
 
         $scope.getFieldClass = function (fieldMetadata) {
-           
+
 
             return layoutservice.getFieldClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
@@ -279,15 +286,15 @@
             return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
 
-        $scope.isReadOnlyField = function (fieldMetadata,datamap, staticCheck=false) {
+        $scope.isReadOnlyField = function (fieldMetadata, datamap, staticCheck = false) {
             const isDefaultReadOnly = fieldService.isFieldReadOnly(datamap, null, fieldMetadata, $scope, staticCheck);
             if (isDefaultReadOnly) {
                 return true;
             }
 
             if (genericTicketService.isClosed() && !!fieldMetadata.rendererType) {
-                return fieldMetadata.rendererType.equalsAny('checkbox',"datetime","imagepreview","lookup","richtext","textarea") ||
-                (fieldMetadata.rendererType === 'default' && !!fieldMetadata.dataType);
+                return fieldMetadata.rendererType.equalsAny('checkbox', "datetime", "imagepreview", "lookup", "richtext", "textarea") ||
+                    (fieldMetadata.rendererType === 'default' && !!fieldMetadata.dataType);
             }
             return false;
         }
@@ -322,9 +329,20 @@
         // legendevaluation is boolean indicating the mode we are calling this method, either for an ordinary field or for a header with legend
         ////
         $scope.isLabelVisible = function (fieldMetadata, legendEvaluationMode) {
+            if (fieldMetadata.rendererType === 'checkbox') {
+                //console.log(fieldMetadata.rendererParameters.layout);
+                //console.log(fieldMetadata, datamap, schema, displayables, params);
+                if (fieldMetadata.rendererParameters.layout === 'left' || fieldMetadata.rendererParameters.layout === 'right') {
+                    return false;
+                }
+            }
+
             //                if (!$scope.isVerticalOrientation()) {
             //                    return false;
             //                }
+            if (fieldMetadata.renderer && fieldMetadata.renderer.parameters && fieldMetadata.renderer.parameters.hidelabel === "true") {
+                return false;
+            }
             var header = fieldMetadata.header;
             if (!header) {
                 return !legendEvaluationMode && fieldMetadata.label;
@@ -395,6 +413,13 @@
         // method for defined <tab> on metadata
         $scope.shouldShowTab = function (tab) {
             return $scope.shouldShowComposition(tab);
+        }
+
+        $scope.safe = function (object, key) {
+            if (!object[key]) {
+                object[key] = {};
+            }
+            return object[key];
         }
     }
 

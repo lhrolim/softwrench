@@ -12,6 +12,7 @@
     var compositionService;
     var compositionListViewModel;
     var commandService;
+    var submitServiceCommons;
 
     var $httpBackend;
 
@@ -20,7 +21,7 @@
 
 
         angular.mock.module('sw_layout');
-        angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_,
+        angular.mock.inject(function (_$rootScope_, $controller, _validationService_, _modalService_, _$q_, _submitServiceCommons_,
             _crudContextHolderService_, _redirectService_, _applicationService_, _crud_inputcommons_, _compositionService_, _compositionListViewModel_, _$httpBackend_, _commandService_) {
             $rootScope = _$rootScope_;
             mockScope = $rootScope.$new();
@@ -30,6 +31,7 @@
             $q = _$q_;
             redirectService = _redirectService_;
             modalService = _modalService_;
+            submitServiceCommons = _submitServiceCommons_;
             applicationService = _applicationService_;
             crud_inputcommons = _crud_inputcommons_;
             compositionService = _compositionService_;
@@ -311,6 +313,7 @@
         spyOn(modalService, "showPromise").and.returnValue($q.when(compositionDatamap));
         spyOn(compositionService, "getCompositionDetailItem").and.returnValue($q.when({ resultObject: compositionDetailDatamap }));
         spyOn(compositionListViewModel, "doToggle").and.callThrough();
+        spyOn(submitServiceCommons, "handleExtraParams").and.callThrough();
 
         const schemaWithOneRequiredField = SchemaPojo.BaseWithSection();
 
@@ -330,6 +333,7 @@
 
             expect(compositionService.getCompositionDetailItem).toHaveBeenCalledWith("100", SchemaPojo.CompositionDetailSchema(),"worklog_", {});
             expect(compositionListViewModel.doToggle).toHaveBeenCalled();
+            expect(submitServiceCommons.handleExtraParams).toHaveBeenCalled();
             expect(mockScope.detailData["100"]).not.toBeUndefined();
 
             expect(mockScope.detailData["100"].expanded).toBeTruthy();

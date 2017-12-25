@@ -18,9 +18,16 @@ namespace softWrench.sW4.Data.API {
         public string Title { get; set; }
 
         /// <summary>
-        /// When passing a dictionary from the front end, the object should be structured like a C# Dictinary.
-        /// dictionary[n].key = key;
-        /// dictionary[n]value = value
+        /// When passing a dictionary from the front end, from the query string, the object should be structured like a C# Dictinary.
+        /// customParameters[0].key = key;
+        /// customParameters[0]value = value
+        /// customParameters[1].key = key;
+        /// customParameters[1]value = value
+        /// 
+        /// If the data comes from the body, however, the object can come using default javascript structure
+        /// 
+        /// 
+        /// 
         /// </summary>
         public IDictionary<string, object> CustomParameters { get; set; }
         public string CommandId { get; set; }

@@ -1,0 +1,285 @@
+﻿<schema id="detail" title="Technician Rounds">
+
+  <optionfield attribute="sites" label="Sites (check applicable)">
+    <renderer type="checkbox" params="maxrows=2;hide.optionfieldheader=true"/>
+    <option label="xxx1" value="1"/>
+    <option label="xxx1" value="2"/>
+    <option label="xxx1" value="3"/>
+    <option label="xxx1" value="4"/>
+    <option label="xxx1" value="5"/>
+    <option label="xxx1" value="6"/>
+    <option label="xxx1" value="7"/>
+    <option label="xxx1" value="8"/>
+    <option label="xxx1" value="9"/>
+    <option label="xxx1" value="10"/>
+  </optionfield>
+
+
+  <tree attribute="task1" label="Task 1 – Site Environment &amp; Security" listtype="number">
+    <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+      <node attribute="fencing" label="Fencing and security system is intact."/>
+      <node attribute="freeofdebris" label="Area is free of debris."/>
+      <node attribute="freeofweeds" label="Area is free of invasive weeds."/>
+      <node attribute="freeofwind" label="Area is free of wind or water erosion to site roads and fences."/>
+      <node attribute="propersigns" label="Proper signs are posted all gates."/>
+      <node attribute="pondsfreeofdebris" label="Storm water pond(s) are free of debris."/>
+      <node attribute="watercontaminates" label="72 hours after rain event, NOTE presence/absence of water/contaminates."/>
+      <node attribute="berncondition" label="Storm Water Retention berm(s) in good condition."/>
+      <node attribute="wastesored" label="Universal waste has been stored properly."/>
+      <node attribute="inventory" label="Spill response equipment inventory is sufficient.">
+        <field attribute="inventorywarn" defaultexpression="'(1st week of every month only)'">
+          <renderer type="label" params="color=red"/>
+        </field>
+      </node>
+      <node attribute="equipcondition" label="Spill response equipment is in good condition.">
+        <field attribute="equipconditionwarn" defaultexpression="'(1st week of every month only)'">
+          <renderer type="label" params="color=red"/>
+        </field>
+      </node>
+    </node>
+    <node attribute="inspect" label="INSPECT the following:" listtype="letterdot">
+      <node attribute="nestingactivity" label="ALL poles, overhead insulators and wires for signs of avian (bird) nesting activity. IF nesting activity is found: Document with photographs and a Maximo W/O. Notify Maintenance Manager."/>
+      <node attribute="animalissue" label="Abnormal animal/biological issues. (Create work-order/notify manager)"/>
+    </node>
+    <node attribute="complete" label="COMPLETE the following documentation:" listtype="letterdot">
+      <node attribute="wasteaccumulation" label="Weekly Hazardous and Universal Waste Accumulation Area Inspection and Waste Generation Counting Checklist"/>
+      <node attribute="onsitebinder" label="PLACE completed Weekly Hazardous and Universal Waste Accumulation Area Inspection and Waste Generation Counting Checklist in on-site designated binder."/>
+    </node>
+  </tree>
+
+  <tree attribute="task2" label="Task 2 – Array Inspection (25% per week)" listtype="number" startindex="3">
+    <field attribute="notearraylabel" defaultexpression="'Note Array(s) inspected:'">
+      <renderer type="label"/>
+    </field>
+    <field attribute="notearray" label=""/>
+    <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+      <node attribute="freeofdebris" label="General area is clean and free of debris."/>
+      <node attribute="combinergood" label="Combiner box is in good condition."/>
+      <node attribute="doorsecured" label="Combiner box door is secured."/>
+      <node attribute="trackers" label="Trackers are tracking."/>
+      <node attribute="sf6pressure" label="PVCS SF6 pressure is nominal (green)."/>
+    </node>
+    <node attribute="inspect" label="INSPECT the following:" listtype="letterdot">
+      <node attribute="drainage" label="General drainage problems."/>
+      <node attribute="moduletablewire" label="Module, table and wire damage."/>
+    </node>
+  </tree>
+
+  <tree attribute="task3" label="Task 3 – PCS Skid Inspection (25% per week)" listtype="number" startindex="5">
+    <field attribute="notearraylabel" defaultexpression="'Note Array(s) inspected:'">
+      <renderer type="label"/>
+    </field>
+    <field attribute="notearray" label=""/>
+    <node attribute="verifyinverter" label="VERIFY the following for Inverter(s):" listtype="letterdot">
+      <node attribute="noises" label="There are no abnormal noises or smells."/>
+      <node attribute="operating" label="Operating normally."/>
+      <node attribute="buildingclean" label="Building is clean and free of foreign debris."/>
+      <node attribute="nodust" label="No dust or water leaks."/>
+      <node attribute="fireextinguisher1" label="Fire extinguisher charge is nominal (green)."/>
+      <node attribute="doorsclosed1" label="All doors and panels are closed."/>
+      <node attribute="fireextinguisher2" label="Fire extinguisher charge is nominal (green)."/>
+      <node attribute="fireextinguisherdate" label="Fire extinguisher expiration date."/>
+      <node attribute="fansfunctional" label="All exhaust fans are functional."/>
+      <node attribute="invertersignage" label="Inverter signage is in good condition."/>
+      <node attribute="auxiliarypanel" label="Auxiliary panel signage is in good condition."/>
+      <node attribute="emergencylights" label="Emergency Lights are operational (30 seconds)."/>
+      <node attribute="exterior" label="Exterior is in good condition (including signage)."/>
+      <node attribute="doorsclosed2" label="All doors and panels are closed."/>
+    </node>
+    <node attribute="verifytransformer" label="VERIFY the following for Transformer(s):" listtype="letterdot">
+      <node attribute="surfacesleakage" label="Surfaces show no signs of leakage or weepage."/>
+      <node attribute="surfacesnotdamages" label="Surfaces are not damaged, rusted or deteriorated."/>
+      <node attribute="boltsrivets" label="Bolts, rivets or seams are not damaged."/>
+      <node attribute="supports" label="Supports have not deteriorated or buckled."/>
+      <node attribute="foundations" label="Foundations have not eroded or settled."/>
+      <node attribute="levelgauge" label="Level gauge is operational (Normal Range)."/>
+      <node attribute="pressuregauge" label="Pressure gauge is operational."/>
+      <node attribute="soil" label="Soil shows no evidence of oil presence. (Record in SPCC Log and Maximo entry)."/>
+    </node>
+  </tree>
+
+  <tree attribute="task4" label="Task 4 – Weather Station" listtype="number" startindex="7">
+    <node attribute="inspectsoiling" label="INSPECT Soiling Monitoring Modules and clean in accordance with:" listtype="letterdot">
+      <node attribute="mp300task1" label="MP.818300.1 – TASK 1"/>
+      <node attribute="mp300task2" label="MP.818300.1 – TASK 2"/>
+    </node>
+    <node attribute="inspectpyranometers" label="INSPECT and clean pyranometers in accordance with:" listtype="letterdot">
+      <node attribute="mp150task1" label="MP.818150.2 – TASK 1"/>
+      <node attribute="mp150task2" label="MP.818150.2 – TASK 2"/>
+    </node>
+    <node attribute="inspectweatherstations" label="INSPECT and clean weather station components in accordance with:" listtype="letterdot">
+      <node attribute="mp180task1" label="MP.818180.1 Weather Transmitter Maintenance (Vaisala – WXT520) – TASK 1"/>
+    </node>
+    <node attribute="inspectnoc" label="INSPECT local NOC reference module and VERIFY weather data reporting is accurate (Weekly)." listtype="letterdot"/>
+  </tree>
+
+  <tree attribute="task5" label="Task 5 – Switchyard" listtype="number" startindex="11">
+    <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+      <node attribute="freeofdebris" label="Area is free of debris, vegetation and weeds."/>
+      <node attribute="fence" label="Perimeter fence is in good condition with proper signage."/>
+      <node attribute="gateground" label="Gate ground to fence wire is intact."/>
+      <node attribute="conductors" label="Conductors show no signs of cracking, corrosion and/or discoloration."/>
+      <node attribute="ctspts" label="CTs and PTs show no signs of corrosion, discoloration and/or leakage."/>
+      <node attribute="capswitcher" label="Cap switcher SF6 Gas Pressure is nominal."/>
+      <node attribute="protectiverelays" label="Protective relays are free from alarms. Report all alarms to FSOC."/>
+      <node attribute="avrpss" label="AVR/PSS is online. If not, inform FSOC."/>
+      <node attribute="sccups" label="SCC UPS is operational."/>
+      <node attribute="hvac" label="HVAC for control enclosure, battery room and SCC is operational."/>
+      <node attribute="controlenclosure" label="Control enclosure, battery room and SCC are clean, in good physical condition with no active alarms."/>
+      <node attribute="eyewashstation" label="Eyewash station is clean and ready for operation."/>
+      <node attribute="stationservicepower" label="Station service power is on normal source."/>
+      <node attribute="buildingdoors" label="Building doors and gates are closed and locked."/>
+    </node>
+  </tree>
+
+  <tree attribute="gsutransformert1" label="GSU Transformer T1" listtype="number" startindex="12">
+    <node attribute="recordtransformer" label="RECORD the following transformer data:" listtype="letterdot">
+      <node attribute="oiltemp" label="Oil Temperature">
+        <field attribute="oiltempvalue" label=""/>
+      </node>
+      <node attribute="windtemp" label="Winding Temperature">
+        <field attribute="windtempvalue" label=""/>
+      </node>
+      <node attribute="oillevel" label="Oil Level">
+        <field attribute="oillevelvalue" label=""/>
+      </node>
+      <node attribute="tankpressure" label="Tank Pressure">
+        <field attribute="tankpressurevalue" label=""/>
+      </node>
+      <node attribute="tapposit" label="Tap Changer position">
+        <field attribute="tappositvalue" label=""/>
+      </node>
+      <node attribute="offcircuit" label="Off-Circuit Tap Changer position">
+        <field attribute="offcircuitvalue" label=""/>
+      </node>
+    </node>
+    <node attribute="recordcalisto" label="RECORD the following per Calisto:" listtype="letterdot">
+      <node attribute="h2o" label="H2O/Moisture">
+        <field attribute="h2ovalue" label=""/>
+      </node>
+      <node attribute="h2" label="H2">
+        <field attribute="h2value" label=""/>
+      </node>
+      <node attribute="co2" label="CO2">
+        <field attribute="co2value" label=""/>
+      </node>
+    </node>
+    <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+      <node attribute="oilleakage" label="No evidence of oil leakage."/>
+      <node attribute="noise" label="No abnormal noise(s) present."/>
+      <node attribute="breather" label="Breather Silica condition."/>
+      <node attribute="oillevel" label="Oil level is normal."/>
+      <node attribute="coolingauto" label="Cooling equipment, including fans, is operational and in AUTO."/>
+      <node attribute="coolingopen" label="Cooling system valves are in the OPEN position."/>
+      <node attribute="brushingoil" label="Bushing oil liquid level and color (change)."/>
+      <node attribute="porcelaincond" label="Bushings and surge arrestor porcelain condition."/>
+      <node attribute="containmentclean" label="Containment is clean and dry."/>
+    </node>
+  </tree>
+
+  <tree attribute="sparetransformer" label="Spare Transformer (Monthly)" listtype="number" startindex="15">
+    <node attribute="runfans" label="RUN fans for 30 minutes."/>
+    <node attribute="verifycontainment" label="VERIFY containment is clean and dry."/>
+    <node attribute="checkleakage" label="CHECK for leakage or weepage."/>
+  </tree>
+
+  <tree attribute="task6" label="Task 6 – Breaker Inspection (Monthly)" listtype="number" startindex="18">
+    <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+      <node attribute="oillevel" label="Hydraulic Oil Level is normal."/>
+      <node attribute="oilpressure" label="Hydraulic Oil Pressure is normal."/>
+    </node>
+    <node attribute="recordbreaker632" label="RECORD Breaker 632 values:" listtype="letterdot">
+      <node attribute="sf6pressure" label="SF6 Pressure">
+        <field attribute="sf6pressurevalue" label=""/>
+      </node>
+      <node attribute="operation" label="Operation Value">
+        <field attribute="operationvalue" label=""/>
+      </node>
+    </node>
+    <node attribute="recordbreakeroperations" label="RECORD breaker operations value (VCB) for the following breakers:" listtype="letterdot">
+      <node attribute="c300" label="300">
+        <field attribute="c300value" label=""/>
+      </node>
+      <node attribute="c301" label="301">
+        <field attribute="c301value" label=""/>
+      </node>
+      <node attribute="c302" label="302">
+        <field attribute="c302value" label=""/>
+      </node>
+      <node attribute="c303" label="303">
+        <field attribute="c303value" label=""/>
+      </node>
+      <node attribute="c304" label="304">
+        <field attribute="c304value" label=""/>
+      </node>
+      <node attribute="c305" label="305">
+        <field attribute="c305value" label=""/>
+      </node>
+    </node>
+  </tree>
+
+  <section>
+    <header displacement="ontop" label="Task 7 – Generator &amp; Associated Components Inspection (Monthly)"/>
+    <tree attribute="abovegroundtanks" label="Above Ground Tanks" listtype="number" startindex="21">
+      <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+        <node attribute="surfacesnotdamages" label="Surfaces are not damaged, rusted or deteriorated."/>
+        <node attribute="boltsrivets" label="Bolts, rivets or seams are not damaged."/>
+        <node attribute="supports" label="Supports have not deteriorated or buckled."/>
+        <node attribute="foundations" label="Foundations have not eroded or settled."/>
+        <node attribute="levelgauge" label="Level gauge alarms are operational."/>
+        <node attribute="leakageweepage" label="There is no evidence of leakage or weepage."/>
+      </node>
+    </tree>
+    <tree attribute="backupgenerator" label="Back-up Generator" listtype="number" startindex="22">
+      <node attribute="record" label="RECORD the following transformer data:" listtype="letterdot">
+        <node attribute="fuellevel" label="Fuel Level">
+          <field attribute="fuellevelvalue" label=""/>
+        </node>
+        <node attribute="runhours" label="Run Hours">
+          <field attribute="runhoursvalue" label=""/>
+        </node>
+      </node>
+    </tree>
+  </section>
+
+  <tree attribute="task8" label="Task 8 – Energy Storage System Inspection (Weekly)" listtype="number" startindex="23">
+    <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
+      <node attribute="batteryroom" label="No abnormal conditions are present in Battery Room."/>
+      <node attribute="batteryroomhvac" label="Battery Room HVAC is operational."/>
+      <node attribute="leakage" label="No leakage is present."/>
+      <node attribute="condensation" label="No condensation is present."/>
+      <node attribute="essoperational" label="ESS operational status as reported at SCC is 100%."/>
+      <node attribute="doorslocked" label="Doors are locked on exit."/>
+    </node>
+    <node attribute="inspect" label="INSPECT the following:" listtype="letterdot">
+      <node attribute="batteries" label="Batteries for bulges, cracks or other damage."/>
+      <node attribute="communications" label="Communications and power cabling connections are intact and not damaged."/>
+      <node attribute="wires" label="Wires for distortions or discoloration"/>
+      <node attribute="batteryenclosure" label="Battery enclosure for bent, rusty or distorted mechanical components."/>
+    </node>
+  </tree>
+
+  <table attribute="punchlist" label="Punch List" dataset="[{number:'1'},{number:'2'},{number:'3'},{number:'4'},{number:'5'},{number:'6'},{number:'7'},{number:'8'},{number:'9'},{number:'10'},{number:'11'},{number:'12'},{number:'13'},{number:'14'}]">
+    <columns>
+      <field attribute="number" label="#">
+        <renderer type="label" params="width=6%"/>
+      </field>
+      <field attribute="openissues" label="Open Issues"/>
+      <field attribute="wonum" label="Work Order #">
+        <renderer type="default" params="width=15%"/>
+      </field>
+    </columns>
+  </table>
+
+  <table attribute="versiontable" label="" dataset="[{version:'1.0',description:'First Edition.'},{},{},{},{},{},{}]">
+    <columns>
+      <field attribute="version" label="Version">
+        <renderer type="default" params="width=10%"/>
+      </field>
+      <field attribute="date" label="Date">
+        <renderer type="datetime" params="width=15%"/>
+      </field>
+      <field attribute="description" label="Brief Description"/>
+    </columns>
+  </table>
+</schema>

@@ -4,7 +4,7 @@
 
 
 
-    angular.module('sw_layout').service('submitServiceCommons', ["$injector", "schemaService", "fieldService", "checkpointService", function submitServiceCommons($injector, schemaService,fieldService, checkpointService) {
+    angular.module('sw_layout').service('submitServiceCommons', ["$injector", "schemaService", "fieldService", "checkpointService", function submitServiceCommons($injector, schemaService, fieldService, checkpointService) {
 
         function applyTransformationsForSubmission(schemaToSave, originalDatamap, fields) {
             //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
@@ -18,17 +18,17 @@
             return transformedFields;
         }
 
-            function applyTransformationsForAssociation(schemaToSave, fields) {
-                //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
-                //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
-                let transformedFields = angular.copy(fields);
-//                removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
-                transformedFields = this.removeExtraFields(transformedFields, true, schemaToSave);
-                translateFields(schemaToSave.displayables, transformedFields);
-//                handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
-//                this.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
-                return transformedFields;
-            }
+        function applyTransformationsForAssociation(schemaToSave, fields) {
+            //need an angular.copy to prevent beforesubmit transformation events from modifying the original datamap.
+            //this preserves the datamap (and therefore the data presented to the user) in case of a submission failure
+            let transformedFields = angular.copy(fields);
+            //                removeNullInvisibleFields(schemaToSave.displayables, transformedFields);
+            transformedFields = this.removeExtraFields(transformedFields, true, schemaToSave);
+            translateFields(schemaToSave.displayables, transformedFields);
+            //                handleDatamapForMIF(schemaToSave, originalDatamap, transformedFields);
+            //                this.insertAssocationLabelsIfNeeded(schemaToSave, transformedFields);
+            return transformedFields;
+        }
 
         function insertAssocationLabelsIfNeeded(schema, datamap) {
             if (schema.properties['addassociationlabels'] !== "true") {
@@ -81,7 +81,7 @@
 
         ///return if a field which is not on screen (but is not a hidden instance), and whose value is null from the datamap, avoiding sending useless (and wrong) data
         function removeNullInvisibleFields(displayables, datamap) {
-            var fn = this;
+            const fn = this;
             displayables.forEach(value => {
                 if (fieldService.isNullInvisible(value, datamap)) {
                     delete datamap[value.attribute];
@@ -90,10 +90,10 @@
                     removeNullInvisibleFields(value.displayables, datamap);
                 }
             });
-        }
+            }
 
 
-        function translateFields(displayables, datamap) {
+            function translateFields(displayables, datamap) {
             displayables.forEach(field => {
                 if (field.attributeToServer != null) {
                     datamap[field.attributeToServer] = datamap[field.attribute];
@@ -202,11 +202,29 @@
             }
         }
 
+        function handleExtraParams(extraparameters) {
+            if (!extraparameters) {
+                return {};
+            }
+
+            let i = 0;
+            const customParameters = {};
+            Object.keys(extraparameters).forEach(key => {
+                customParameters[i] = {};
+                customParameters[i]["key"] = key;
+                customParameters[i]["value"] = extraparameters[key];
+                i++;
+            });
+
+            return customParameters;
+        }
+
         const service = {
             addSchemaDataToParameters,
             applyTransformationsForSubmission,
             applyTransformationsForAssociation,
             createSubmissionParameters,
+            handleExtraParams,
             getFormToSubmitIfHasAttachement,
             insertAssocationLabelsIfNeeded,
             translateFields,

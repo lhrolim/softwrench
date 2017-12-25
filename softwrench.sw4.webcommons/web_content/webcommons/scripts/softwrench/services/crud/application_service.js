@@ -3,7 +3,7 @@
     'use strict';
 
 
-    
+
 
     function fillApplicationParameters(parameters, applicationName, schemaId, mode) {
         /// <returns type=""></returns>
@@ -20,7 +20,7 @@
         return parameters;
     };
 
-    function applicationService($q, $http, $rootScope,$injector, contextService, crudContextHolderService, userPreferencesService, alertService,submitServiceCommons) {
+    function applicationService($q, $http, $rootScope, $injector, contextService, crudContextHolderService, userPreferencesService, alertService, submitServiceCommons) {
 
         var buildApplicationURLForBrowser = function (applicationName, parameters) {
             var crudUrl = $(routes_homeurl)[0].value;
@@ -63,10 +63,9 @@
         }
 
 
-
-
         const defaultSaveParams = {
-            refresh:false
+            refresh: false,
+            skipValidation: false
         }
 
         /**
@@ -78,8 +77,8 @@
          * 
          * @returns {Promise} 
          */
-        function save({compositionData,nextSchemaObj,dispatchedByModal,refresh, selecteditem, originalDatamap,datamap} = defaultSaveParams) {
-            
+        function save({ compositionData, nextSchemaObj, dispatchedByModal, refresh, selecteditem, originalDatamap, datamap, extraparameters, operation, skipValidation } = defaultSaveParams) {
+
             if (dispatchedByModal == undefined) {
                 dispatchedByModal = crudContextHolderService.isShowingModal();
             }
@@ -96,16 +95,19 @@
                 dispatchedByModal,
                 refresh,
                 selecteditem,
-                originalDatamap
+                extraparameters,
+                originalDatamap,
+                skipValidation,
+                operation
             });
 
         }
 
-     
+
         function deleteCrud(confirmationMessage) {
             let confirmationPromise = $q.when();
             if (confirmationMessage) {
-                confirmationPromise =alertService.confirm(confirmationMessage);
+                confirmationPromise = alertService.confirm(confirmationMessage);
             }
             return confirmationPromise.then(r => {
                 const schema = crudContextHolderService.currentSchema();
@@ -125,7 +127,7 @@
                 const deleteParams = $.param(parameters);
                 const deleteUrl = removeEncoding(url("/api/data/" + applicationName + "/" + id + "?" + deleteParams));
                 return $http.delete(deleteUrl)
-                    .then(function(response) {
+                    .then(function (response) {
                         const data = response.data;
                         return $injector.get('redirectService').redirectFromServerResponse(data, "input");
                     });
@@ -203,7 +205,7 @@
             return $http.post(postUrl, jsonString);
         };
 
-       
+
 
         function invokeOperation(applicationName, schemaId, operation, datamap, extraParameters) {
             var parameters = extraParameters ? extraParameters : {};
@@ -227,7 +229,7 @@
 
         function getApplicationWithInitialDataPromise(applicationName, schemaId, parameters, initialData) {
             //TODO: refactor this code to pass data on body instead of query string
-            if (initialData && !isString(initialData)) {               
+            if (initialData && !isString(initialData)) {
                 initialData = angular.toJson(initialData);
             }
             const url = this.getApplicationUrl(applicationName, schemaId, null, null, parameters, initialData);
@@ -248,7 +250,7 @@
         return service;
 
     }
-    angular.module('webcommons_services').service('applicationService', ["$q", '$http', '$rootScope','$injector', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService","submitServiceCommons", applicationService]);
+    angular.module('webcommons_services').service('applicationService', ["$q", '$http', '$rootScope', '$injector', 'contextService', "crudContextHolderService", "userPreferencesService", "alertService", "submitServiceCommons", applicationService]);
 
 })(angular);
 

@@ -6,6 +6,7 @@ using FluentMigrator.Builders.Create.Table;
 using FluentMigrator.Exceptions;
 using FluentMigrator.Infrastructure;
 using softWrench.sW4.Util;
+using MigrationContext = softwrench.sw4.api.classes.migration.MigrationContext;
 
 namespace softWrench.sW4.Extension {
 
@@ -49,13 +50,32 @@ namespace softWrench.sW4.Extension {
             return createColumnAsTypeOrInSchemaSyntax.AsCustom(customClobType);
         }
 
+        /// <summary>
+        /// Method to create binary tables that work cross database
+        /// 
+        /// </summary>
+        /// <param name="tableWithColumnSyntax"></param>
+        /// <param name="nullable"></param>
+        /// <returns></returns>
+        public static ICreateTableColumnOptionOrWithColumnSyntax AsSwBinary(this ICreateTableColumnAsTypeSyntax tableWithColumnSyntax, bool nullable = true) {
+            if (!MigrationContext.IsMySql) {
+                var s = tableWithColumnSyntax.AsBinary(int.MaxValue);
+                if (nullable) {
+                    return s.Nullable();
+                }
+
+                return s;
+            }
+            return nullable ? tableWithColumnSyntax.AsBinary().Nullable() : tableWithColumnSyntax.AsBinary();
+        }
+
         public static ICreateTableColumnOptionOrWithColumnSyntax WithIdColumn(this ICreateTableWithColumnSyntax tableWithColumnSyntax, bool use64 = false) {
             var initialSyntax = tableWithColumnSyntax.WithColumn("ID");
             var typeSyntax = use64 ? initialSyntax.AsInt64() : initialSyntax.AsInt32();
             var tableCreationSyntax = typeSyntax
                 .NotNullable()
                 .PrimaryKey();
-            if (ApplicationConfiguration.IsOracle(DBType.Swdb)) {
+            if (softwrench.sw4.api.classes.migration.MigrationContext.IsOracle) {
                 //oracles does not allow identities
                 return tableCreationSyntax;
             }

@@ -86,11 +86,17 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             User = user;
             //we could have a custom next action/controller to be executed, although usually it would stay in the crud application context
             FillNextActionAndController(currentApplication, routerDTO);
-            NextApplication = RouteParameterManager.FillNextSchema(currentApplication, routerDTO, platform, user,Operation, resolvedNextSchemaKey);
-            DispatcherComposition = routerDTO.DispatcherComposition;
+            if (!targetResult.AvoidRedirection) {
+                NextApplication = RouteParameterManager.FillNextSchema(currentApplication, routerDTO, platform, user,
+                    Operation, resolvedNextSchemaKey);
+            } else {
+                NextApplication = currentApplication;
             }
 
-        
+            DispatcherComposition = routerDTO.DispatcherComposition;
+        }
+
+
 
 
         private void FillNextActionAndController(ApplicationMetadata currentApplication, RouterParametersDTO routerDTO) {

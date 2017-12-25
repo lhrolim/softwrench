@@ -233,7 +233,7 @@
                 if (!currentSchema || nextSchema.applicationName === currentSchema.applicationName) {
                     crudContextHolderService.updateCrudContext(nextSchema, serverResponse.resultObject);
                 } else {
-                    crudContextHolderService.applicationChanged(nextSchema, serverResponse.resultObject);
+                    crudContextHolderService.applicationChanged(nextSchema, serverResponse.resultObject,null,isEmpty(serverResponse.extraParameters));
                 }
             }
 
@@ -286,7 +286,7 @@
                     innerGoToApplicationGet(data, popupMode, redirectUrl, mode, applicationName, afterRedirectHook, parameters);
                     if (redirectUrl && !popupMode) {
                         let historyUrl = redirectUrl;
-                        historyService.addToHistory(historyUrl, { saveHistoryReturn: parameters.saveHistoryReturn, saveCancelReturn: true, aliasUrl: data.aliasURL });
+                        historyService.addToHistory(historyUrl, { saveHistoryReturn: parameters.saveHistoryReturn, saveCancelReturn: true, aliasUrl: data.aliasURL, extraParameters: data.extraParameters });
                     }
                     return $q.when(data);
                 });

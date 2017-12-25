@@ -216,6 +216,12 @@
             </section>
           </tab>
 
+          <tab label="Extra Roles" icon="fa-gear" id="extraroles" role="sysadmin">
+            <composition detailschema="" fetchtype="eager"  relationship="#customroles"  printschema="" inline="true">
+              <collectionproperties allowcreation="false" listschema="rolerepresentation"/>
+            </composition>
+          </tab>
+
           <tab label ="Preferences" icon="fa-cogs" id="preferences" >
             <field attribute="#signature" label="Email Signature">
               <renderer type="richtext"/>
@@ -361,6 +367,19 @@
           </field>
           <field attribute="displayname" label="Display Name" qualifier="title" hidden="true"/>
         </schema>
+
+
+        <schema id="rolerepresentation" stereotype="list.selection">
+          <field hidden="true" attribute="id"/>
+          <field label="Name" attribute="name" />
+          <field label="Description" attribute="description" />
+          <properties>
+            <property key="list.paginationsize" value="10"/>
+            <property key="list.paginationoptions" value="10"/>
+            <property key="compositions.disable.filter" value="true"/>
+          </properties>
+        </schema>
+        
       </schemas>
     </application>
   </applications>

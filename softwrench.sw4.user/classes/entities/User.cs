@@ -168,9 +168,7 @@ namespace softwrench.sw4.user.classes.entities {
         Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "user_id")]
         [OneToMany(2, ClassType = typeof(UserCustomRole))]
-        public ISet<UserCustomRole> CustomRoles {
-            get; set;
-        }
+        public ISet<UserCustomRole> CustomRoles {get; set;}
 
 
         [Set(0, Table = "SW_USER_CUSTOMDATACONSTRAINT",

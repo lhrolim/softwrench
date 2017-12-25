@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.api.classes.integration;
@@ -62,11 +63,14 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         public string OperationName { get; set; }
 
         public EntityMetadata EntityMetadata => _entityMetadata;
-         
+
 
         public string Id {
             get; private set;
         }
+
+        public bool IsCreation => OperationConstants.CRUD_CREATE.Equals(OperationName) || Id == null;
+        public IDictionary<string, object> CustomParameters { get; set; } = new Dictionary<string, object>();
 
         public IOperationData OperationData(Type type = null) {
             if (_operationData != null) {
@@ -74,7 +78,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             }
 
             var isCrud = OperationConstants.IsCrud(OperationName) || typeof(CrudOperationData) == type;
-            if (isCrud) {
+            if (isCrud || type== null) {
                 var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
                 if (UserId != null && crudOperationData.UserId == null) {
                     crudOperationData.UserId = UserId;

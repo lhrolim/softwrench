@@ -40,7 +40,7 @@ class FieldMetadataPojo {
         };
     }
 
-    static Section(displayables) {
+    static Section(displayables, orientation = "vertical") {
 
         if (!(displayables instanceof Array)) {
             displayables = [displayables];
@@ -48,6 +48,7 @@ class FieldMetadataPojo {
 
         return {
             displayables,
+            orientation,
             type:"ApplicationSection"
         };
     }

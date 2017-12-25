@@ -59,7 +59,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             }
         }
 
-        public List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
+        private List<IApplicationDisplayable> _displayables = new List<IApplicationDisplayable>();
+
         public ApplicationSectionOrientation OrientationEnum {
             get; set;
         }

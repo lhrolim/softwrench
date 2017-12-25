@@ -22,6 +22,7 @@
                 fieldstodisplay: '=',
                 previousschema: '=',
                 previousdata: '=',
+                extraparameters: '=',
                 ismodal: '@',
                 hidebars: '@',
                 checked: '=',
@@ -38,14 +39,14 @@
                 "fieldService", "commandService", "i18NService", "modalService", "multisortService",
                 "validationService", "submitService", "redirectService", "crudContextHolderService", "gridSelectionService",
                 "associationService", "statuscolorService", "contextService", "eventService", "iconService", "expressionService",
-                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService", "crudlistViewmodel",
+                "checkpointService", "schemaCacheService", "dispatcherService", "schemaService", "crudlistViewmodel", "submitServiceCommons",
                 function ($scope, $q, $rootScope, $filter, $injector, $log,
                     formatService, fixHeaderService, alertService, gridPreferenceService,
                     searchService, tabsService, userPreferencesService, printService,
                     fieldService, commandService, i18NService, modalService, multisortService,
                     validationService, submitService, redirectService, crudContextHolderService, gridSelectionService,
                     associationService, statuscolorService, contextService, eventService, iconService, expressionService,
-                    checkpointService, schemaCacheService, dispatcherService, schemaService, crudlistViewmodel) {
+                    checkpointService, schemaCacheService, dispatcherService, schemaService, crudlistViewmodel, submitServiceCommons) {
 
                     $scope.$name = "crudlist";
 
@@ -440,6 +441,13 @@
                         return safeCSSselector(name);
                     };
 
+                    $scope.getApplicationNameCheckingExtraParameters = function() {
+//                        if ($scope.extraparameters && $scope.extraparameters["applicationname"]) {
+//                            return "_FormDatamap";
+//                        }
+                        return $scope.schema.applicationName;
+                    }
+
                     $scope.renderListView = function (parameters) {
                         $scope.$parent.multipleSchema = false;
                         $scope.$parent.schemas = null;
@@ -459,6 +467,8 @@
                     };
 
                     $scope.handleCustomParamProvider = function (searchDTO) {
+                        searchDTO.CustomParameters = submitServiceCommons.handleExtraParams($scope.extraparameters)
+
                         if ($scope.schema.properties && $scope.schema.properties['schema.customparamprovider']) {
                             const customParamProviderString = $scope.schema.properties['schema.customparamprovider'];
                             const customParamProvider = dispatcherService.loadServiceByString(customParamProviderString);
@@ -613,7 +623,7 @@
                     };
 
                     $scope.filterForColumn = function (column) {
-                        const filter = $scope.schema.schemaFilters.filters.find(filter => filter.attribute === column.attribute);
+                        const filter = $scope.schema.schemaFilters && $scope.schema.schemaFilters.filters.find(filter => filter.attribute === column.attribute);
 
                         if (!!column && !!column.rendererType) {
                             if (!!filter) {
@@ -803,7 +813,8 @@
                     }
 
                     this.newEntry = function () {
-                        return redirectService.goToApplication($scope.schema.applicationName, $scope.schema.newSchemaRepresentation.schemaId);
+                        var customParameters = $scope.getCustomParameters($scope.schema, null);
+                        return redirectService.goToApplication($scope.schema.applicationName, $scope.schema.newSchemaRepresentation.schemaId,{ customParameters });
                     }
 
 

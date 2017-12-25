@@ -82,6 +82,7 @@
                             "ismodal = '{{ismodal}}'" +
                             "panelid = 'panelid'" +
                             "displayables='displayables'" +
+                            "extraparameters='extraparameters'"+
                             "blockedassociations='blockedassociations'" +
                             "section-parameters='sectionParameters'" +
                             "elementid='{{elementid}}'" +

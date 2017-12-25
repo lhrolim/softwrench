@@ -1,0 +1,66 @@
+﻿<div id="crudtable" data-application="{{schema.applicationName}}" data-schema="{{schema.schemaId}}" data-attribute="{{safeCSSselector(fieldMetadata.attribute)}}">
+    <!--build responsive css rules based on metadata-->
+    <style column-widths schema="schema" table-metadata="fieldMetadata"></style>
+    <table class="table">
+        <thead>
+        <tr>
+            <th ng-repeat="header in fieldMetadata.headers">{{header}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="(rowindex, row) in fieldMetadata.rows" ng-class="$odd ? 'odd' : 'even'">
+            <td ng-repeat="(columnIndex, column) in row" class="{{safeCSSselector(column.attribute)}}">
+                <ng-switch on="column.type">
+                    <div ng-switch-when="OptionField">
+                        <input type="checkbox"
+                               value="{{optionValue(column)}}"
+                               ng-checked="isOptionSelected(rowindex, column)"
+                               ng-click="changeSelection(rowindex, column)"/>
+
+                    </div>
+                    <div ng-switch-when="TableColumnPlaceHolder">
+                        <input type="checkbox"
+                               value="{{optionValue(row[column.parentIndex], column)}}"
+                               ng-checked="isOptionSelected(rowindex, row[column.parentIndex], column)"
+                               ng-click="changeSelection(rowindex, row[column.parentIndex], column)"/>
+                    </div>
+                    <div ng-switch-default>
+                        <ng-switch on="column.rendererType">
+                            <span ng-switch-when="label" ng-style="{ 'color' : column.rendererParameters['color'], 'font-weight' : column.rendererParameters['font-weight']}">
+                                {{datamap[fieldMetadata.attribute][rowindex][column.attribute] || column.defaultValue}}
+                            </span>
+                            <div ng-switch-when="datetime">
+                                <div id="datetimepicker" class="input-group" data-datepicker="true">
+                                    <input type="text" ng-model="datamap[fieldMetadata.attribute][rowindex][column.attribute]"
+                                           data-date-time
+                                           data-table-cell="true"
+                                           data-show-time="{{column.rendererParameters['showtime']}}"
+                                           data-show-date="{{column.rendererParameters['showdate']}}"
+                                           data-show-minutes="{{column.rendererParameters['showminutes']}}"
+                                           data-format-string="{{column.rendererParameters['format']}}"
+                                           data-allow-past="{{column.rendererParameters['allowpast']}}"
+                                           data-allow-future="{{column.rendererParameters['allowfuture']}}"
+                                           class="form-control">
+                                    <span class="input-group-addon" data-calendericon="true" rel="tooltip" data-original-title="{{i18N('calendar.date_tooltip','Open the calendar popup')}}" style="cursor: pointer;">
+                                        <i class="datetime-class"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <div ng-switch-default>
+                                <input type="text"
+                                       ng-model="datamap[fieldMetadata.attribute][rowindex][column.attribute]" class="hidden-phone form-control"
+                                       ng-model-options="{ debounce: 300 }"
+                                       data-field="{{column.attribute}}"
+                                       data-ng-maxlength="{{column.rendererParameters['maxlength']}}"
+                                       ng-maxlength="{{column.rendererParameters['maxlength']}}"
+                                       maxlength="{{column.rendererParameters['inputmaxlength']}}"
+                                       placeholder="{{column.rendererParameters['placeholder']}}"/>
+                            </div>
+                        </ng-switch>
+                    </div>
+                </ng-switch>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

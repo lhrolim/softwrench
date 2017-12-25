@@ -290,6 +290,15 @@ namespace softWrench.sW4.Metadata.Parsing {
         public const string OptionElementExtraProjection = "extraprojections";
         public const string OptionElementHelp = "help";
 
+        public const string TableElement = "table";
+        public const string TableElementDataset = "dataset";
+        public const string TableElementColumns = "columns";
+
+        public const string TreeElement = "tree";
+        public const string TreeNodeElement = "node";
+        public const string TreeListTypeAttribute = "listtype";
+        public const string TreeStartIndexAttribute = "startindex";
+
         public const string ReferenceElement = "reference";
 
         public const string SecurityElement = "security";

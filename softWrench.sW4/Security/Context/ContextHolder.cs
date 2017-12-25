@@ -71,6 +71,8 @@ namespace softWrench.sW4.Security.Context {
 
         private IDictionary<string, object> _parameters;
 
+        public IDictionary<string, object> CustomRequestParameters { get; set; } = new Dictionary<string, object>();
+
         public IDictionary<string, object> MetadataParameters {
             get {
                 if (_parameters == null) {

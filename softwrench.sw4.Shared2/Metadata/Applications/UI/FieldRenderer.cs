@@ -13,7 +13,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
         private const string WrongRenderer = "renderer {0} not found. Possible options are " +
                                              "radio,checkbox,numericinput,datetime,date,time,password,textarea,screenshot,upload,default,image,treeview,label,richtext,fieldwithbuttons,icon,color,yn,multipleupload,email,dndupload,code,colorcode";
 
-        public FieldRenderer() { }
+        public FieldRenderer() {
+            _parameters = new Dictionary<string, object>();
+        }
 
         private readonly string _parameterString;
 
@@ -59,6 +61,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.UI {
 
         public IDictionary<string, object> ParametersAsDictionary() {
             var parameters = PropertyUtil.ConvertToDictionary(_parameterString);
+            parameters = parameters ?? new Dictionary<string, object>();
             _splitedParameters?.ForEach(pair => parameters.Add(pair.Key, pair.Value));
             return parameters;
         }

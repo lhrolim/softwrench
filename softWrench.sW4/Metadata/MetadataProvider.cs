@@ -218,7 +218,7 @@ namespace softWrench.sW4.Metadata {
             foreach (var app in apps) {
                 var entityName = app.Entity;
                 var entityMetadata = Entity(entityName);
-                if (isMobileEnabled() && app.IsMobileSupported()) {
+                if (IsMobileEnabled() && app.IsMobileSupported()) {
                     var syncSchema = ApplicationSchemaFactory.GetSyncInstance(entityName, app.ApplicationName, app.IdFieldName,
                         app.UserIdFieldName);
                     app.AddSchema(ApplicationMetadataSchemaKey.GetSyncInstance(), syncSchema);
@@ -250,8 +250,14 @@ namespace softWrench.sW4.Metadata {
             LoggingUtil.DefaultLog.InfoFormat("Sliced metadata cache built in {0}", LoggingUtil.MsDelta(watch));
         }
 
-        public static IEnumerable<EntityMetadata> Entities() {
-            return _metadataXmlInitializer.Entities;
+        public static IEnumerable<EntityMetadata> Entities(bool isSwDb = false) {
+            if (_metadataXmlInitializer != null) {
+                return _metadataXmlInitializer.Entities;
+            }
+            if (isSwDb) {
+                return _swdbentityMetadata;
+            }
+            return _entityMetadata;
         }
 
 
@@ -381,7 +387,7 @@ namespace softWrench.sW4.Metadata {
             return _menus.ContainsKey(platform) ? _menus[platform] : null;
         }
 
-        public static bool isMobileEnabled() {
+        public static bool IsMobileEnabled() {
             return _menus.ContainsKey(ClientPlatform.Mobile);
         }
 

@@ -12,6 +12,9 @@ namespace softWrench.sW4.Metadata.Validator {
 
 
         private const string ClientMetadataPattern = "\\App_Data\\Client\\{0}\\";
+        private const string SharedMetadataPattern = "\\App_Data\\Client\\";
+        internal const string TestSharedPath = "\\Client\\";
+
         internal const string TemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\{0}";
         internal const string TemplatesSWDBInternalPath = "\\App_Data\\Client\\@internal\\templates\\swdb\\{0}";
         internal const string MenuTemplatesInternalPath = "\\App_Data\\Client\\@internal\\templates\\menu\\menutemplate.{0}.xml";
@@ -19,6 +22,7 @@ namespace softWrench.sW4.Metadata.Validator {
 
         internal const string TestTemplatesInternalPath = "\\Client\\@internal\\templates\\{0}";
         internal const string TestSWDBTemplatesInternalPath = "\\Client\\@internal\\templates\\swdb\\{0}";
+        
 
         private const string InternalMetadataPattern = "\\App_Data\\Client\\@internal\\{0}\\{1}.xml";
         private const string TestInternalMetadataPattern = "\\Client\\@internal\\{0}\\{1}.xml";
@@ -82,6 +86,15 @@ namespace softWrench.sW4.Metadata.Validator {
                 }
                 return @"" + baseDirectory + (isSWDB ? TemplatesSWDBInternalPath.Fmt(resource) : TemplatesInternalPath.Fmt(resource));
             }
+            
+            if (resource.StartsWith("shared", StringComparison.CurrentCultureIgnoreCase)) {
+                if (ApplicationConfiguration.IsUnitTest) {
+                    return @"" + baseDirectory + TestSharedPath + resource;
+                }
+
+                return @"" + baseDirectory + SharedMetadataPattern + resource;
+            }
+
             if (ApplicationConfiguration.IsUnitTest) {
                 return @"" + baseDirectory + TestMetadataPath.Fmt(ApplicationConfiguration.ClientName) + resource;
             }

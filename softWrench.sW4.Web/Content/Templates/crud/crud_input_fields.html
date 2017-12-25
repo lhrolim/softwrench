@@ -8,25 +8,30 @@
                       rel="input-form-repeat"
                       bodyrendered>
 
+            <span>
                 <label class="control-label"
-                       rel="{{showLabelTooltip(fieldMetadata)}}"
-                       data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                       ng-if="isLabelVisible(fieldMetadata,false)"
-                       ng-style="getLabelStyle(fieldMetadata)"
-                       ng-class="getLabelClass(fieldMetadata)">
+                       rel="{{showLabelTooltip(fieldMetadata)}}" ng-class="getLabelClass(fieldMetadata)"
+                       data-original-title="{{i18NLabelTooltip(fieldMetadata)}}">
                     <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
                     <icon class="fa fa-undo" ng-if="showUndoIcon(fieldMetadata)" ng-click="restoreDefault(fieldMetadata)" style="cursor: pointer" rel="tooltip" data-original-title="Restore to original value" data-html="true"></icon>
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
-                    <!--this will bring either label or header in case of section-->
-                    {{i18NInputLabel(fieldMetadata)}}
+                    <span ng-style="getLabelStyle(fieldMetadata)" >
+                        <!--this will bring either label or header in case of section-->
+                        {{i18NInputLabelEvaluating(fieldMetadata,false)}}
+                    </span>
+                    <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='label' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>      
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
-                </label>
+                </label>    
+                
+            </span>
+            
 
                 <legend ng-if="isLabelVisible(fieldMetadata,true)"
                         rel="tooltip"
                         data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                         class="legend-label" ng-style="{{headerStyle(fieldMetadata)}}">
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                    
                     <div ng-if="isSectionControlEnabled(fieldMetadata)">
                         <input type="checkbox"
                                name="datamap[fieldMetadata.attribute]"
@@ -37,7 +42,7 @@
                                ng-show="!hasPersistedFieldInsideSection(fieldMetadata)"
                                >
                         {{i18NInputLabel(fieldMetadata)}}
-
+                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='section' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>      
 
                         <section-element-input extraparameters="extraparameters"
                                                schema="schema"
@@ -53,6 +58,7 @@
                     </div>
                     <div ng-if="!isSectionControlEnabled(fieldMetadata)">
                         {{i18NInputLabel(fieldMetadata)}}
+                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='section' schema="schema"></dynform-detail-edit-bar-wrapper>      
                         <section-element-input extraparameters="extraparameters"
                                                field-metadata="fieldMetadata"
                                                schema="schema"
@@ -85,10 +91,8 @@
                            data-show-meridian="{{fieldMetadata.rendererParameters['showmeridian']}}"
                            class="form-control datetimereadonly"
                            value="{{getFormattedValue(datamap[fieldMetadata.attribute],fieldMetadata,datamap)}}" ng-readonly="true" readonly>
-                    <label ng-switch-when="label" class="form-control"
-                           ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">
-                        {{datamap[fieldMetadata.attribute]}}
-                    </label>
+                    <label ng-switch-when="label" class="form-control" style="border-width: 0px; box-shadow: none; white-space: pre-line;"
+                           ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">{{datamap[fieldMetadata.attribute] || fieldMetadata.defaultValue}}</label> <!-- space makes difference inside this label element do no add if not intended to show on screen -->
 
                     <textarea ng-switch-when="textarea"
                               ng-model="datamap[fieldMetadata.attribute]" class="form-control" cols="120"
@@ -130,7 +134,7 @@
                 <!--#endregion -->
 
                 <div ng-if="!isStaticReadOnlyField(fieldMetadata,datamap)"
-                     ng-show="fieldMetadata.attribute!=schema.idFieldName"
+                     ng-show="fieldMetadata.attribute!=schema.idFieldName || fieldMetadata.showExpression === '!false'"
                      ng-switch on="fieldMetadata.rendererType"
                      ng-class="getInputClass(fieldMetadata)">
 
@@ -170,7 +174,7 @@
                     <!--#region checkbox-->
                     <div ng-switch-when="checkbox">
                         <table ng-if="fieldMetadata.type === 'OptionField'" style="min-width: 200px;">
-                            <thead ng-if="fieldMetadata.label!=null">
+                            <thead ng-if="fieldMetadata.label!=null && fieldMetadata.rendererParameters['hide.optionfieldheader'] !== 'true'">
                                 <tr><td class="optionfieldheader">{{fieldMetadata.label}}</td></tr>
                             </thead>
                             <tr ng-repeat="optionArrays in getGroupedCheckboxOptions(fieldMetadata)">
@@ -574,6 +578,12 @@
                                                                  metadata="fieldMetadata"
                                                                  iscollection="fieldMetadata.collection"
                                                                  ismodal="{{ismodal}}" />
+                            </div>
+                            <div ng-switch-when="TableDefinition">
+                                <crud-table field-metadata="fieldMetadata" schema="schema" datamap="datamap" />
+                            </div>
+                            <div ng-switch-when="TreeDefinition">
+                                <crud-tree field-metadata="fieldMetadata" schema="schema" datamap="datamap" />
                             </div>
                             <div ng-switch-default>
                                 <div ng-switch on="fieldMetadata.isHidden">

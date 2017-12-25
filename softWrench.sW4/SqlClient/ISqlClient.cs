@@ -21,6 +21,7 @@ namespace softWrench.sW4.SqlClient {
         /// Executes the raw sql query
         /// </summary>
         /// <param name="query">the sql query</param>
+        /// <param name="parameters"></param>
         /// <param name="dbType"></param>
         /// <returns>The rows affected count</returns>
         int ExecuteUpdate(string query, DBType dbType);

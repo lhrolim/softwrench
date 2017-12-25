@@ -24,6 +24,7 @@
         "sw_scan",
         "sw_crudadmin",
         "sw_components",
+        "dynforms",
         "webcommons_services",
         "maximo_applications",
         "selectize",

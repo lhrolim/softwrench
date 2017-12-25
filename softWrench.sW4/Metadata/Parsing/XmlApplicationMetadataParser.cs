@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Presentation;
+using Newtonsoft.Json.Linq;
 using NHibernate.Linq;
 using NHibernate.Util;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
@@ -39,7 +40,7 @@ namespace softWrench.sW4.Metadata.Parsing {
     ///     Provides parsing and deserialization of
     ///     application metadata stored in a XML file.
     /// </summary>
-    internal sealed class XmlApplicationMetadataParser : IXmlMetadataParser<IEnumerable<CompleteApplicationMetadataDefinition>> {
+    public sealed class XmlApplicationMetadataParser : IXmlMetadataParser<IEnumerable<CompleteApplicationMetadataDefinition>> {
         private const string MissingRelationship = "application {0} references unknown relationship {1}";
         private const string MissingEntity = "application {0} references unknown entity {1}";
         private const string MissingParentSchema = "Error building schema {0} for application {1}.parentSchema {2} not found. Please assure its declared before the concrete schema";
@@ -571,7 +572,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             return resultDictionary;
         }
 
-        private void DoParseSchema(string applicationName, string applicationTitle, string entityName, string idFieldName, string userIdFieldName,
+        public ApplicationSchemaDefinition DoParseSchema(string applicationName, string applicationTitle, string entityName, string idFieldName, string userIdFieldName,
             XElement xElement, Dictionary<ApplicationMetadataSchemaKey, ApplicationSchemaDefinition> resultDictionary) {
             var localName = xElement.Name.LocalName;
             var id = xElement.Attribute(XmlMetadataSchema.SchemaIdAttribute).ValueOrDefault((string)null);
@@ -636,6 +637,7 @@ namespace softWrench.sW4.Metadata.Parsing {
                 isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                 userIdFieldName, unionSchema, ParseEvents(xElement, id));
             resultDictionary.AddE(key, schema, "application:{0} templateparsing:{1}".Fmt(schema.ApplicationName, _isTemplateParsing));
+            return schema;
         }
 
         private static ApplicationSchemaDefinition LookupParentSchema(string id, string applicationName, string parentSchemaValue, ClientPlatform? platform,
@@ -744,8 +746,9 @@ namespace softWrench.sW4.Metadata.Parsing {
                 return new ApplicationMetadataSchemaKey(split[1], SchemaMode.None, ClientPlatform.Web) { ApplicationName = split[0] };
             }
 
-            var key = new ApplicationMetadataSchemaKey(propertyValue, null, ClientPlatform.Web);
-            key.ApplicationName = application.ApplicationName;
+            var key = new ApplicationMetadataSchemaKey(propertyValue, null, ClientPlatform.Web) {
+                ApplicationName = application.ApplicationName
+            };
             return key;
         }
 
@@ -795,12 +798,130 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (xName == XmlMetadataSchema.OptionFieldElement) {
                 return ParseOptions(xElement, applicationName, schemaId);
             }
+            if (xName == XmlMetadataSchema.TableElement) {
+                return ParseTable(xElement, applicationName, schemaId, entityMetadata);
+            }
+            if (xName == XmlMetadataSchema.TreeElement) {
+                return ParseTree(xElement, applicationName, schemaId, entityMetadata);
+            }
             if (xName == XmlMetadataSchema.ReferenceElement) {
                 return ParseReference(xElement);
             }
             return null;
         }
 
+        private static TreeDefinition ParseTree(XElement tree, string applicationName, string schemaId, EntityMetadata entityMetadata) {
+            var attribute = tree.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
+            var label = tree.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
+            var showExpression = tree.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
+            var toolTip = tree.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
+            var listtype = tree.Attribute(XmlMetadataSchema.TreeListTypeAttribute).ValueOrDefault((string)null);
+            var startindex = tree.Attribute(XmlMetadataSchema.TreeStartIndexAttribute).ValueOrDefault((string)null);
+
+            var elements = tree.Elements().ToList();
+
+            var nodes = elements.Where(n => n.Name.LocalName == XmlMetadataSchema.TreeNodeElement).Select(node => ParseNode(node, applicationName, schemaId, entityMetadata));
+
+            var fields = elements.Where(n => n.Name.LocalName != XmlMetadataSchema.TreeNodeElement).Select((field) => FindDisplayable(applicationName, schemaId, entityMetadata.Name, field, entityMetadata));
+
+            return new TreeDefinition(attribute, label, toolTip, showExpression, listtype, startindex, nodes.ToList(), fields.ToList());
+        }
+
+        private static TreeNode ParseNode(XElement node, string applicationName, string schemaId, EntityMetadata entityMetadata) {
+            var attribute = node.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
+            var label = node.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
+            var showExpression = node.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
+            var toolTip = node.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
+            var listtype = node.Attribute(XmlMetadataSchema.TreeListTypeAttribute).ValueOrDefault((string)null);
+            var startindex = node.Attribute(XmlMetadataSchema.TreeStartIndexAttribute).ValueOrDefault((string)null);
+
+            List<TreeNode> nodes = null;
+            List<IApplicationDisplayable> fields = null;
+            var elements = node.Elements().ToList();
+            if (elements.Any()) {
+                nodes = elements.Where(n => n.Name.LocalName == XmlMetadataSchema.TreeNodeElement).Select(child => ParseNode(child, applicationName, schemaId, entityMetadata)).ToList();
+                fields = elements.Where(n => n.Name.LocalName != XmlMetadataSchema.TreeNodeElement).Select((field) => FindDisplayable(applicationName, schemaId, entityMetadata.Name, field, entityMetadata)).ToList();
+            }
+
+            return new TreeNode(attribute, label, toolTip, showExpression, listtype, startindex, nodes, fields);
+        }
+
+        private static TableDefinition ParseTable(XElement table, string applicationName, string schemaId, EntityMetadata entityMetadata) {
+            var attribute = table.Attribute(XmlMetadataSchema.FieldAttributeAttribute).Value;
+            var label = table.Attribute(XmlMetadataSchema.FieldAttributeLabel).ValueOrDefault("");
+            var showExpression = table.Attribute(XmlBaseSchemaConstants.BaseDisplayableShowExpressionAttribute).ValueOrDefault("true");
+            var toolTip = table.Attribute(XmlBaseSchemaConstants.BaseDisplayableToolTipAttribute).ValueOrDefault((string)null);
+            var datasetString = table.Attribute(XmlMetadataSchema.TableElementDataset).ValueOrDefault((string)null);
+
+            if (datasetString == null) {
+                throw new Exception("Table components requires dataset a right now. Just add a dataset attribute on metadate with a JSON array with default values.");
+            }
+
+            var dataset = (JArray)null;
+
+            try {
+                dataset = JArray.Parse(datasetString);
+            } catch (Exception e) {
+                throw new Exception("A dataset for a table component has to be a valid JSON array.", e);
+            }
+
+            var headers = new List<string>();
+            var rows = new List<List<IApplicationDisplayable>>();
+
+            var columns = table.Elements().FirstOrDefault(f => f.Name.LocalName == XmlMetadataSchema.TableElementColumns);
+
+            if (columns == null) {
+                throw new Exception("Table components requires a 'columns' element.");
+            }
+
+            var rowIdx = -1;
+            dataset.ForEach((token) => {
+                rowIdx++;
+                var rowValues = token as JObject;
+
+                var parsedColumns = columns.Elements().Select((column) => FindDisplayable(applicationName, schemaId, entityMetadata.Name, column, entityMetadata)).ToList();
+                var processedColumns = new List<IApplicationDisplayable>();
+
+                var idx = -1;
+                parsedColumns.ForEach((column) => {
+                    idx++;
+
+                    var field = column as ApplicationFieldDefinition;
+                    field?.Renderer.Parameters.Add("hidelabel", "true");
+
+                    if (rowValues != null) {
+                        if (field != null) {
+                            field.DefaultValue = rowValues.GetValue(field.Attribute)?.Value<string>();
+                        }
+                    }
+
+                    var optionField = column as OptionField;
+                    if (optionField == null) {
+                        processedColumns.Add(column);
+                        if (rowIdx == 0) headers.Add(column.Label);
+                        return;
+                    }
+
+                    var optionIdx = -1;
+                    optionField.Options.ForEach((option) => {
+                        optionIdx++;
+                        if (optionIdx == 0) {
+                            processedColumns.Add(column);
+                        } else {
+                            processedColumns.Add(new TableColumnPlaceHolder(optionField) {
+                                ParentIndex = idx,
+                                IndexOnParent = optionIdx,
+                                RendererParameters = optionField.RendererParameters
+                            });
+                        }
+                        if (rowIdx == 0) headers.Add(option.Label);
+                    });
+                });
+                rows.Add(processedColumns);
+            });
+
+            return new TableDefinition(attribute, label, toolTip, showExpression, headers, rows);
+        }
 
 
         private static IDictionary<string, string> ParseProperties(XElement xElement, string schemaId) {

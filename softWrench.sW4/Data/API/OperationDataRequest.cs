@@ -1,4 +1,6 @@
-﻿using softwrench.sW4.Shared2.Metadata.Applications;
+﻿using System.Collections;
+using System.Collections.Generic;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API.Composition;
 
 namespace softWrench.sW4.Data.API {
@@ -60,6 +62,8 @@ namespace softWrench.sW4.Data.API {
         public string SuccessMessage {
             get; set;
         }
+
+        public IDictionary<string,object> CustomParameters { get; set; }
 
         public CompositionOperationDTO CompositionData { get; set; }
 

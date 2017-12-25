@@ -141,7 +141,16 @@
 
 
             $scope.datamap = datamap;
-            const datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
+//            const datamapToUse = $.isEmptyObject(datamap) ? $scope.previousdata : datamap;
+            let datamapToUse = datamap;
+            if (!datamap) {
+                if ($scope.previousdata) {
+                    datamapToUse = $scope.previousdata;
+                } else {
+                    datamapToUse = {};
+                }
+            }
+            
             $scope.originalDatamap = angular.copy(datamapToUse);
 
             fieldService.fillDefaultValues(schema.displayables, datamap, { parentdata: modaldata.previousdata, parentschema: modaldata.previousschema });

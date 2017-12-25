@@ -90,11 +90,11 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
             _userSetupService.Setup(x => x.SendActivationEmail(It.Is(userComparison), "test@a.com", "test")).Returns(Task.CompletedTask);
 
             _passwordHistoryService.Setup(s => s.HandlePasswordHistory(It.IsAny<User>(), It.IsAny<string>())).Returns(Task.CompletedTask);
-
+            _swdbMock.Setup(s => s.SaveAsync(resultUser)).ReturnsAsync(resultUser);
 
             _maximoEngine.Setup(e => e.Execute(It.Is<OperationWrapper>(w => w.GetStringAttribute("personid").EqualsIc("personid") && w.OperationName.Equals(OperationConstants.CRUD_CREATE)))).Returns(() => resultObj);
 
-            var result = await personDs.Execute(_applicationMetadata, json, "-1", OperationConstants.CRUD_CREATE, false, null);
+            var result = await personDs.Execute(_applicationMetadata, json, "-1", OperationConstants.CRUD_CREATE, false, null,null);
 
 
             TestUtil.VerifyMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager, _passwordHistoryService);
@@ -129,7 +129,9 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
                                  w.OperationName.Equals(OperationConstants.CRUD_UPDATE))))
                 .Returns(() => resultObj);
 
-            var result = await personDs.Execute(_udpdateMetadata, json, "150", OperationConstants.CRUD_UPDATE, false, null);
+            _swdbMock.Setup(s => s.SaveAsync(resultUser)).ReturnsAsync(resultUser);
+
+            var result = await personDs.Execute(_udpdateMetadata, json, "150", OperationConstants.CRUD_UPDATE, false, null,null);
 
             TestUtil.VerifyMocks(_swdbMock, _maximoEngine, _userSetupService, _userManager);
 

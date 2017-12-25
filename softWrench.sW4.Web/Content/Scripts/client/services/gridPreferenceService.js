@@ -24,7 +24,7 @@
                 const gridpreferences = user.gridPreferences;
                 var result = [];
                 
-                const declaredQuickFilters = schema.schemaFilters.quickSearchFilters;
+                const declaredQuickFilters = schema.schemaFilters && schema.schemaFilters.quickSearchFilters;
                 if (declaredQuickFilters) {
                     declaredQuickFilters.forEach(d => {
                         d.deletable = false;

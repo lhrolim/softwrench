@@ -70,6 +70,11 @@
         public const string ClientAdminApplication = "application.security.clientadmin";
 
         /// <summary>
+        /// Indicates that a presence of the given role would be enough to allow the user to manipulate the given schema regardless of their application permissions. Useful to account for extra roles from users/security groups
+        /// </summary>
+        public const string SchemaOverridenRole = "schema.security.overridenrole";
+
+        /// <summary>
         /// Use this property to invoke a custom service upon click on the list page. Value should be on the format serviceName.methodName (ex: changeService.open), 
         /// and have 2 parameters:
         /// 1) datamap of the row 

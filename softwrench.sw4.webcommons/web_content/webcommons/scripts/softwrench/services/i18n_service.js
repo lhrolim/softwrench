@@ -147,7 +147,7 @@
 
         getI18nInputLabel: function (fieldMetadata, schema, avoidColon=false) {
             var label = this.getI18nLabel(fieldMetadata, schema);
-            if (label === "") {
+            if (label === "" || label == null) {
                 return "";
             }
             const lastChar = label.charAt(label.length - 1);

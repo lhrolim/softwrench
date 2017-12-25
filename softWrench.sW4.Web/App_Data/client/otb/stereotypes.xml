@@ -109,11 +109,23 @@
   <stereotype id="detailnew">
 
   </stereotype>
+  
+  
 
   <stereotype id="detail.noprint">
-    <property key="commandbar.top" value="spreadsheet"/>
+    <property key="commandbar.top" value="detailnoprint"/>
   </stereotype>
+
   
+
+  <stereotype id="detail.redirecttolist">
+    <property key="nextschema.schemaid" value="list"/>
+  </stereotype>
+
+  <stereotype id="detailnew.redirecttolist">
+    <property key="nextschema.schemaid" value="list"/>
+  </stereotype>
+
   <stereotype id="detailoutput">
     <property key="popup.window.titlestrategy" value="nameandid"/>
     <property key="show.printcommand" value="editonly"/>
@@ -137,6 +149,15 @@
   <stereotype id="filter">
     
   </stereotype>
+  
+  
+  <!--#region dynforms-->
+
+  <stereotype id="dynforms.editform">
+    <property key="commandbar.top" value="dynformsedit"/>
+  </stereotype>
+
+  <!--#endregion-->
   
   
   

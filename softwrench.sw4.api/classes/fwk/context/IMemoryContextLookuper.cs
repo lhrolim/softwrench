@@ -1,4 +1,6 @@
-﻿using cts.commons.simpleinjector;
+﻿using System.Collections;
+using System.Collections.Generic;
+using cts.commons.simpleinjector;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sw4.api.classes.fwk.context {
@@ -8,7 +10,7 @@ namespace softwrench.sw4.api.classes.fwk.context {
         /// Fills current thread invocation context
         /// </summary>
         /// <param name="key"></param>
-        void FillContext(ApplicationMetadataSchemaKey key);
+        void FillContext(ApplicationMetadataSchemaKey key, IDictionary<string,object>RequestParameters);
 
         
         /// <summary>

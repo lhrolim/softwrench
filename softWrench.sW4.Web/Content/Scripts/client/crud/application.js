@@ -5,7 +5,7 @@
 
     app.controller("ApplicationController", applicationController);
     function applicationController($scope, $http, $log, $timeout,
-        fixHeaderService, $rootScope, associationService, validationService, historyService,
+        fixHeaderService, $rootScope, associationService, validationService, historyService, submitServiceCommons,
         contextService, searchService, alertService, schemaService, userPreferencesService,
         checkpointService, focusService, detailService, crudContextHolderService, schemaCacheService, redirectService, crudlistViewmodel, $q) {
         "ngInject";
@@ -23,7 +23,7 @@
         });
 
         $scope.$on(JavascriptEventConstants.MoveFocus, function (event, datamap, schema, attribute) {
-            if (datamap[attribute] != null && datamap[attribute] != '') {
+            if (datamap[attribute] != null && datamap[attribute] !== '') {
                 focusService.moveFocus(datamap, schema, attribute);
             }
         });
@@ -385,6 +385,7 @@
             // this first if is more of an unexpected case
             if ($scope.schema == null || $scope.datamap == null || $scope.schema.stereotype === 'Detail' || $scope.schema.stereotype === 'DetailNew') {
                 log.debug('rendering list view from server');
+                parameters.customParameters = submitServiceCommons.handleExtraParams($scope.extraparameters);
                 $scope.renderListView(parameters);
             } else {
                 if (schema) {

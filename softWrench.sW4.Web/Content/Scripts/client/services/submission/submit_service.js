@@ -1,6 +1,6 @@
 ﻿
 class SubmitResult {
-        
+
     constructor(reason) {
         this.reason = reason;
     }
@@ -25,7 +25,7 @@ class SubmitResult {
     class submitService {
 
         constructor($rootScope, $log, $http, $q, fieldService, contextService, checkpointService,
-            alertService, schemaService,  submitServiceCommons, compositionService, eventService, crudContextHolderService, spinService, validationService, redirectService, modalService) {
+            alertService, schemaService, submitServiceCommons, compositionService, eventService, crudContextHolderService, spinService, validationService, redirectService, modalService) {
             this.$rootScope = $rootScope;
             this.$log = $log;
             this.$http = $http;
@@ -81,10 +81,10 @@ class SubmitResult {
         }
 
 
-      
 
-        setIdAfterCreation(serverData,schema,fields) {
-            const log = this.$log.get("submitService#setIdAfterCreation",["submit","save"]);
+
+        setIdAfterCreation(serverData, schema, fields) {
+            const log = this.$log.get("submitService#setIdAfterCreation", ["submit", "save"]);
             if (serverData && serverData.id && fields &&
                 /* making sure not to update when it's not creation */
                 (!fields.hasOwnProperty(schema.idFieldName) ||
@@ -97,20 +97,30 @@ class SubmitResult {
             }
         }
 
-        submitModal(schemaToSave,fields,modalSavefn) {
+        submitModal(schemaToSave, fields, modalSavefn) {
 
-            const log = this.$log.get("submitService#submitModal",["submit","save"]);
+            const log = this.$log.get("submitService#submitModal", ["submit", "save"]);
             log.debug("submitting modal fn");
             const errorForm = this.crudContextHolderService.crudForm("#modal").$error;
-            return this.validationService.validatePromise(schemaToSave, fields, errorForm).then(() => {
-                log.debug("modal form validated. applying modal informed save fn");
-                return this.$q.when(modalSavefn(fields, schemaToSave));
-            });
+            return this.validateSubmission(fields, schemaToSave, { errorForm })
+                .then((validationResult) => {
+                    if (!validationResult) {
+                        log.debug("validation rejected, returning");
+                        return this.$q.reject(SubmitResult.ClientValidationFailed);
+                    }
+
+                    log.debug("modal form validated. applying modal informed save fn");
+                    return this.$q.when(modalSavefn(fields, schemaToSave));
+                });
         }
 
-        submit(schemaToSave,datamap, parameters={}) {
+        submit(schemaToSave, datamap, parameters = {}) {
 
-            const log = this.$log.get("submitService#submit",["submit","save"]);
+            const log = this.$log.get("submitService#submit", ["submit", "save"]);
+            if (!parameters.customParameters && parameters.extraparameters) {
+                parameters.customParameters = parameters.extraparameters;
+            }
+
 
             const modalSavefn = this.modalService.getSaveFn(); //if there´s a custom modal service, let´s use it instead of the ordinary crud savefn
             const selecteditem = parameters.selecteditem;
@@ -121,7 +131,7 @@ class SubmitResult {
 
             if (modalSavefn && parameters.dispatchedByModal) {
                 //if there's a custom save fn registered by the modal, lets invoke it
-                return this.submitModal(schemaToSave,fields,modalSavefn);
+                return this.submitModal(schemaToSave, fields, modalSavefn);
             }
 
             log.debug("non-modal submission. validating");
@@ -141,19 +151,19 @@ class SubmitResult {
                     }
 
                     const resultObject = exceptionData.resultObject;
-                    this.setIdAfterCreation(resultObject,schema,datamap);
+                    this.setIdAfterCreation(resultObject, schemaToSave, datamap);
                     return this.$q.reject(err);
                 });
             });
         }
 
 
-        onServerResult(httpResult, {dispatcherComposition,panelId}) {
+        onServerResult(httpResult, { dispatcherComposition, panelId }) {
 
-            const log = this.$log.get("submitService#onServerResult",["submit","save"]);
+            const log = this.$log.get("submitService#onServerResult", ["submit", "save"]);
             log.debug("onserverresult function start");
 
-                
+
             const data = httpResult.data;
 
             if (data.fullRefresh) {
@@ -162,20 +172,20 @@ class SubmitResult {
                 return this.$q.when();
             }
 
-                
+
             const datamap = this.crudContextHolderService.rootDataMap(panelId);
             const schema = this.crudContextHolderService.currentSchema(panelId);
 
             if (data.type.equalsAny(ResponseConstants.BlankApplicationResponse)) {
-                this.crudContextHolderService.afterSave(panelId,datamap);
+                this.crudContextHolderService.afterSave(panelId, datamap);
                 return data;
             }
 
 
-            this.setIdAfterCreation(data,schema,datamap);
+            this.setIdAfterCreation(data, schema, datamap);
             const responseDataMap = data.resultObject;
 
-            
+
 
             // handle the case where the datamap had lazy compositions already fetched
             // and the response does not have them (for performance reasons)
@@ -189,8 +199,8 @@ class SubmitResult {
                 angular.extend(datamap, responseDataMap);
             }
 
-            this.crudContextHolderService.afterSave(panelId,datamap);
-            
+            this.crudContextHolderService.afterSave(panelId, datamap);
+
             if (data.type === ResponseConstants.ActionRedirectResponse) {
                 //we´ll not do a crud action on this case, so totally different workflow needed
                 this.redirectService.redirectToAction(null, data.controller, data.action, data.parameters);
@@ -200,14 +210,15 @@ class SubmitResult {
             }
 
             this.modalService.hide(true);
-            
+
             return data;
         }
 
-      
-        doSubmitToServer(transformedFields, schemaToSave,{originalDatamap,nextSchemaObj,compositionData,successMessage,customurl}) {
-                
-            const log = this.$log.get("submitService#doSubmitToServer",["submit","save"]);
+
+
+        doSubmitToServer(transformedFields, schemaToSave, { originalDatamap, nextSchemaObj, compositionData, successMessage, customurl, customParameters, operation }) {
+
+            const log = this.$log.get("submitService#doSubmitToServer", ["submit", "save"]);
             log.debug("doSubmit to server start... applying datamap transformations");
 
             originalDatamap = originalDatamap || this.crudContextHolderService.originalDatamap();
@@ -220,7 +231,12 @@ class SubmitResult {
             const id = transformedFields[schemaToSave.idFieldName];
 
             const submissionParameters = this.submitServiceCommons.createSubmissionParameters(transformedFields, schemaToSave, nextSchemaObj, id, compositionData, successMessage);
-            
+            if (!isEmpty(customParameters)) {
+                submissionParameters.customParameters = customParameters;
+            }
+            submissionParameters.operation = operation;
+
+
             const jsonWrapper = {
                 json: transformedFields,
                 requestData: submissionParameters
@@ -246,17 +262,25 @@ class SubmitResult {
             log.debug(jsonString);
 
             const urlToUse = customurl || url("/api/data/" + applicationName + "/");
-            const command = id == null ? this.$http.post : this.$http.put;
+
+            const command = (id == null || schemaToSave.stereotype.equalsIc("detailnew")) ? this.$http.post : this.$http.put;
+
+
 
             log.info(`Invoking server submission at ${urlToUse}`);
             return command(urlToUse, jsonString);
 
         }
 
-        validateSubmission(transformedFields,schemaToSave,{originalDatamap}) {
+        validateSubmission(transformedFields, schemaToSave, { originalDatamap, skipValidation, errorForm }) {
 
+            if (skipValidation) {
+                return this.$q.when(true);
+            }
 
-         const log = this.$log.get("submitService#validateSubmission", ["save","submit","validation"]);
+            
+
+            const log = this.$log.get("submitService#validateSubmission", ["save", "submit", "validation"]);
             originalDatamap = originalDatamap || this.crudContextHolderService.originalDatamap();
 
 
@@ -273,13 +297,14 @@ class SubmitResult {
                 log.debug("prevalidation finished.. dispatching validation service");
                 if (eventResult === false) {
                     log.debug('Validation failed, returning');
-                    return false;
+                    return this.$q.reject(false);
                 }
 
                 //todo: reconsider this event
                 this.$rootScope.$broadcast("sw_beforesubmitprevalidate_internal", transformedFields);
-                const crudForm = this.crudContextHolderService.crudForm();
-                return this.validationService.validatePromise(schemaToSave, transformedFields, crudForm.$error);
+                const crudForm =  errorForm ? errorForm :  this.crudContextHolderService.crudForm().$error;
+
+                return this.validationService.validatePromise(schemaToSave, transformedFields, crudForm);
             }).then(() => {
                 log.debug("validation finished.. dispatching post validation hook");
                 const postvalidation = this.eventService.beforesubmit_postvalidation(schemaToSave, transformedFields, eventParameters);
@@ -287,16 +312,16 @@ class SubmitResult {
                     if (eventResult === false) {
                         //this means that the custom postvalidator should call the continue method
                         log.debug('waiting on custom postvalidator to invoke the continue function');
-                        return false;
+                        return this.$q.reject(false);
                     }
                     log.debug("postvalidation finished");
                     return true;
                 });
-            }).catch(()=> false);
+            }).catch(() => false);
         }
 
     }
-    
+
 
     submitService.$inject = [
         '$rootScope', '$log', '$http', '$q', 'fieldService', 'contextService', 'checkpointService', 'alertService', 'schemaService', 'submitServiceCommons', 'compositionService',

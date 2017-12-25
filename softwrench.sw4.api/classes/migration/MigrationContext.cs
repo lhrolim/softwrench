@@ -10,24 +10,12 @@ namespace softwrench.sw4.api.classes.migration {
 
         public static string ServerType { get; set; }
 
-        public static bool IsOracle {
-            get {
-                return "oracle".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
-            }
-        }
+        public static bool IsOracle => "oracle".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
 
-        public static bool IsDb2 {
-            get {
-                return "db2".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
-            }
-        }
+        public static bool IsDb2 => "db2".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
 
-        public static bool IsMySql {
-            get {
-                return "mysql".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
-            }
-        }
+        public static bool IsMySql => "mysql".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
 
-
+        public static bool IsSQLServer => "mssql".Equals(ServerType, StringComparison.CurrentCultureIgnoreCase);
     }
 }

@@ -326,18 +326,20 @@
         }
 
     
-        applicationChanged(schema, rootDataMap, panelid) {
-            this.clearCrudContext(panelid);
+        applicationChanged(schema, rootDataMap, panelid, clearTabs = true) {
+            this.clearCrudContext(panelid, clearTabs);
             this.updateCrudContext(schema, rootDataMap, panelid);
             this.$rootScope.$broadcast(JavascriptEventConstants.AppChanged, schema, rootDataMap, panelid);
         }
 
-        clearCrudContext(panelid) {
+        clearCrudContext(panelid, clearTabs=true) {
             if (!panelid) {
                 let currentUseBackNavigation = this.usebackHistoryNavigation();
                 this._crudContext = angular.copy(this._originalContext);
                 this.usebackHistoryNavigation(currentUseBackNavigation);
-                this.setActiveTab(null);
+                if (clearTabs) {
+                    this.setActiveTab(null);    
+                }
                 return this._crudContext;
             }
             this._crudContexts[panelid] = angular.copy(this._originalContext);
@@ -360,7 +362,8 @@
         }
 
         gridLoaded(applicationListResult, panelid) {
-            this.disposeDetail(panelid, panelid==null);
+            //forcing tab cleaning except for dashboards or when there are extraparameters present at the result, which would be, in turn, stored at the browser state
+            this.disposeDetail(panelid, panelid==null && isEmpty(applicationListResult.extraParameters));
             const context = this.getContext(panelid);
             context.affectedProfiles = applicationListResult.affectedProfiles;
             context.currentSelectedProfile = applicationListResult.currentSelectedProfile;

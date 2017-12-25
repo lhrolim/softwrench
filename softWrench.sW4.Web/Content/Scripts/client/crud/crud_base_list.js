@@ -4,10 +4,10 @@
     angular.module("sw_layout").controller("BaseList", BaseList);
 
     //idea took from  https://www.exratione.com/2013/10/two-approaches-to-angularjs-controller-inheritance/
-    BaseList.$inject = ["$scope", "$log", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "dispatcherService", "controllerInheritanceService", "$q"];
-    function BaseList($scope, $log, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, dispatcherService, controllerInheritanceService, $q) {
+    BaseList.$inject = ["$scope", "$log", "formatService", "expressionService", "searchService", "fieldService", "i18NService", "commandService", "crudContextHolderService", "gridSelectionService", "dispatcherService", "controllerInheritanceService", "$q", "submitServiceCommons"];
+    function BaseList($scope, $log, formatService, expressionService, searchService, fieldService, i18NService, commandService, crudContextHolderService, gridSelectionService, dispatcherService, controllerInheritanceService, $q, submitServiceCommons) {
 
-        
+
 
         $scope.getFormattedValue = function (value, column, datamap) {
             const formattedValue = formatService.format(value, column, datamap);
@@ -19,7 +19,7 @@
             return formattedValue;
         };
 
-     
+
 
         $scope.isColumnEditable = function (column) {
             return column.rendererParameters['editable'] === "true";
@@ -178,8 +178,8 @@
                 commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm, column, $scope.schema, $scope.panelid);
                 if (!commandResult) {
                     return $q.when();
-                }else if (commandResult.then) {
-                    return commandResult.then(function() {
+                } else if (commandResult.then) {
+                    return commandResult.then(function () {
                         $scope.doShowDetail(rowdm, schemaid, mode, popupmode);
                     });
                 }
@@ -191,7 +191,7 @@
 
         $scope.doShowDetail = function (rowdm, schemaid, mode, popupmode, loadcompositiontab) {
             const id = rowdm[$scope.schema.idFieldName];
-            if (id == null || id == "-666") {
+            if (id == null || id === "-666") {
                 window.alert('error id is null');
                 return;
             }
@@ -228,7 +228,7 @@
                     let fieldValue = rowdm[fieldName];
                     // fieldValue not found: maybe a transientField --> find by matching attributeToServer 
                     if (!fieldValue) {
-                        const actualField = schema.displayables.find(function(field) {
+                        const actualField = schema.displayables.find(function (field) {
                             return field.attributeToServer === fieldName;
                         });
                         if (!!actualField) {
@@ -241,7 +241,18 @@
                     customParams[param]["value"] = fieldValue;
                 }
             }
+
+            var customParametersFromExtra = submitServiceCommons.handleExtraParams($scope.extraparameters);
+
+            for (var attrname in customParametersFromExtra) {
+                if (customParametersFromExtra.hasOwnProperty(attrname)) {
+                    customParams[attrname] = customParametersFromExtra[attrname];    
+                }
+                
+            }
+            //Object.assign, for some reason, not working on karma tests, babel not transpiling it...
             return customParams;
+
         }
 
 

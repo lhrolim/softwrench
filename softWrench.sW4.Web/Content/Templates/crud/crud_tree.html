@@ -1,0 +1,23 @@
+﻿<div>
+    <ng-switch ng-repeat="field in fieldMetadata.fields" on="field.type">
+        <ng-switch ng-switch-default on="field.rendererType">
+            <span ng-switch-when="label" ng-style="{ 'color' : field.rendererParameters['color'], 'font-weight' : field.rendererParameters['font-weight']}">
+                {{fieldsDatamap[field.attribute]}}
+            </span>
+            <input ng-switch-default
+                   style="display: inline; width: auto; margin-left: 10px;"
+                   type="text"
+                   ng-model="fieldsDatamap[field.attribute]" class="hidden-phone form-control"
+                   ng-model-options="{ debounce: 300 }"
+                   data-field="{{field.attribute}}"
+                   data-ng-maxlength="{{field.rendererParameters['maxlength']}}"
+                   ng-maxlength="{{field.rendererParameters['maxlength']}}"
+                   maxlength="{{field.rendererParameters['inputmaxlength']}}"
+                   placeholder="{{field.rendererParameters['placeholder']}}"/>
+        </ng-switch>
+    </ng-switch>
+    <div ng-repeat="(nodeindex, node) in fieldMetadata.nodes">
+        <crud-tree-node field-metadata="node" schema="schema" datamap="nodeDatamap(node)" listtype="fieldMetadata.listType" nodeindex="nodeindex" startindex="fieldMetadata.startIndex" level="0"/>
+    </div>
+
+</div>

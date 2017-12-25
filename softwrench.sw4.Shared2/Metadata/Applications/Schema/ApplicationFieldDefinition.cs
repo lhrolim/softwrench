@@ -14,9 +14,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public const string AttributeQualifierSeparator = ".";
 
-        private FieldRenderer _renderer;
         private FieldFilter _filter;
-
 
         private readonly ISet<ApplicationEvent> _eventsSet = new HashSet<ApplicationEvent>();
         public string EvalExpression {
@@ -47,13 +45,17 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ApplicationName = applicationName;
             Attribute = attributeName;
             Label = label;
+            RendererType = "default";
+            RendererParameters = new Dictionary<string, object>();
         }
 
         public ApplicationFieldDefinition(string applicationName, string attribute, string datatype, string label, string requiredExpression, bool isReadOnly, bool isIsHidden,
              FieldRenderer renderer, FieldFilter filter, IWidgetDefinition widgetDefinition, string defaultValue, string qualifier, string showExpression, string helpIcon, string toolTip,
              string attributeToServer, ISet<ApplicationEvent> events, string enableExpression, string evalExpression, string enableDefault, string defaultExpression, bool declaredAsQueryOnEntity, string searchOperation)
             : base(applicationName, label, attribute, requiredExpression, isReadOnly, defaultValue, qualifier, showExpression, helpIcon, toolTip, attributeToServer, events, enableExpression, defaultExpression, declaredAsQueryOnEntity, searchOperation) {
-            _renderer = renderer;
+            Renderer = renderer;
+            RendererType = Renderer == null ? "default" : Renderer.RendererType;
+            RendererParameters = Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary();
             _filter = filter;
             DataType = datatype;
             IsHidden = isIsHidden;
@@ -77,14 +79,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             get; set;
         }
 
-        public FieldRenderer Renderer {
-            get {
-                return _renderer;
-            }
-            set {
-                _renderer = value;
-            }
-        }
+        public FieldRenderer Renderer { get; set; }
 
         public FieldFilter Filter {
             get {
@@ -96,35 +91,16 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
 
-        public bool IsAssociated {
-            get {
-                return Attribute.Contains(AttributeQualifierSeparator);
-            }
-        }
+        public bool IsAssociated => Attribute.Contains(AttributeQualifierSeparator);
 
-        public override string RendererType {
-            get {
-                return _renderer.RendererType;
-            }
-        }
+        public override string RendererType { get; set; }
 
-        public IDictionary<string, object> RendererParameters {
-            get {
-                return _renderer == null ? new Dictionary<string, object>() : _renderer.ParametersAsDictionary();
-            }
-        }
-        public IDictionary<string, object> FilterParameters {
-            get {
-                return _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary();
-            }
-        }
+        public IDictionary<string, object> RendererParameters { get; set; }
+
+        public IDictionary<string, object> FilterParameters => _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary();
 
         [JsonIgnore]
-        public bool IsTextField {
-            get {
-                return DataType != null && DataType.EqualsAny("varchar", "string","text");
-            }
-        }
+        public bool IsTextField => DataType != null && DataType.EqualsAny("varchar", "string", "text");
 
         protected bool Equals(ApplicationFieldDefinition other) {
             return string.Equals(Attribute, other.Attribute);
@@ -159,7 +135,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public static ApplicationFieldDefinition DefaultColumnInstance(string applicationName, string attributeName, string label) {
             return new ApplicationFieldDefinition(applicationName, attributeName, null, label, "false", false, false,
-                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null,  null, null, null, null, null, null, null, false, null);
+                        new FieldRenderer(), new FieldFilter(), new HiddenWidgetDefinition(), null, null, null, null, null, null, null, null, null, null, null, false, null);
         }
 
         public bool IsTransient() {
