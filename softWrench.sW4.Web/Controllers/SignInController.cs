@@ -289,12 +289,15 @@ namespace softWrench.sW4.Web.Controllers {
 
         private LoginHandlerModel BuildLoginHandlerModel() {
             string loginMessage = null;
+            var clientName = ClientName();
             if (!IsLoginEnabled(ref loginMessage)) {
-                return new LoginHandlerModel(false, loginMessage, ClientName(), ProfileName());
+                return new LoginHandlerModel(false, loginMessage, clientName, ProfileName());
             }
-            return new LoginHandlerModel(true, IsHapagClient(), ClientName(), ProfileName()) {
+            return new LoginHandlerModel(true, IsHapagClient(), clientName, ProfileName()) {
                 HideForgotPassword = _configurationFacade.Lookup<bool>(ConfigurationConstants.User.HideForgotPassword),
-                HideNewUserRegistration = _configurationFacade.Lookup<bool>(ConfigurationConstants.User.HideNewUserRegistration)
+                HideNewUserRegistration = _configurationFacade.Lookup<bool>(ConfigurationConstants.User.HideNewUserRegistration),
+                //TODO: make it generic
+                PreventPoweredBy = clientName.Equals("firstsolardispatch")
             };
         }
     }

@@ -16,6 +16,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
         public bool UserNotActive { get; set; }
         public bool HideForgotPassword { get; set; }
         public bool HideNewUserRegistration { get; set; }
+        public bool PreventPoweredBy { get; set; }
         public ErrorDto Error { get; set; }
 
         public bool UserLocked {get; set;}
@@ -32,6 +33,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             _loginMessage = loginMessage;
             _clientName = clientName;
             _profileName = profileName;
+            PreventPoweredBy = clientName.Equals("firstsolardispatch");
         }
 
         public LoginHandlerModel(bool isLoginEnabled, bool incorrectLogin, string loginMessage, bool isHapagClient) {
@@ -49,6 +51,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             _isHapagClient = isHapagClient;
             _clientName = clientName;
             _profileName = profileName;
+            PreventPoweredBy = clientName.Equals("firstsolardispatch");
         }
 
         public LoginHandlerModel(bool isLoginEnabled, bool isHapagClient)
@@ -63,6 +66,7 @@ namespace softWrench.sW4.Web.Models.LoginHandler {
             _isHapagClient = isHapagClient;
             _clientName = clientName;
             _profileName = profileName;
+            PreventPoweredBy = clientName.Equals("firstsolardispatch");
         }
 
         public bool IsLoginEnabled {

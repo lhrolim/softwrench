@@ -13,8 +13,8 @@
     <meta charset="utf-8" />
     <base href="/">
     <link rel="Shortcut Icon" href="~/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="~/Content/Images/apple-touch-icon.png"/>
-    <link rel="icon" sizes="196x196" href="~/Content/Images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" href="~/Content/Images/apple-touch-icon.png" />
+    <link rel="icon" sizes="196x196" href="~/Content/Images/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- styles -->
     @foreach (var tag in StaticFileTagRenderer.RenderStyles()) {
@@ -337,18 +337,20 @@
                         </form>
 
                     </div>
-                        <div class="row divider bottom"></div>
-                        <div class="row logo byline">
-                            <div class="col-sm-offset-1 col-sm-10">
-                                @if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png"))) {
-                                    <img src="~/Content/Images/@Model.ClientName/logo-byline.png">
-                                } else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png"))) {
-                                    <img src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
-                                } else {
-                                    <img src="~/Content/Images/logo-byline.png">
-                                }
-                            </div>
+                    <div class="row divider bottom"></div>
+                    <div class="row logo byline">
+                        <div class="col-sm-offset-1 col-sm-10">
+                            @if (@Model.PreventPoweredBy) {
+
+                            } else if (System.IO.File.Exists(Request.MapPath("~/Content/Images/" + @Model.ClientName + "/logo-byline.png"))) {
+                                <img src="~/Content/Images/@Model.ClientName/logo-byline.png">
+                            } else if (System.IO.File.Exists(Request.MapPath("~/Content/Customers/" + @Model.ClientName + "/images/logo-byline.png"))) {
+                                <img src="~/Content/Customers/@Model.ClientName/images/logo-byline.png">
+                            } else {
+                                <img src="~/Content/Images/logo-byline.png">
+                            }
                         </div>
+                    </div>
                 }
             </div>
         </div>
