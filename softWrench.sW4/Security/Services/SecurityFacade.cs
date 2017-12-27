@@ -384,7 +384,7 @@ namespace softWrench.sW4.Security.Services {
 
 
         public void HandleEvent(UserSavedEvent userEvent) {
-            if (userEvent.Login != null) {
+            if (userEvent.Login != null && Users.ContainsKey(userEvent.Login)) {
                 Users[userEvent.Login].NeedsRevalidation = true;
             }
 

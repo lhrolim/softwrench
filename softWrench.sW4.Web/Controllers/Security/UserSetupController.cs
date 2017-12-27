@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using cts.commons.persistence;
 using cts.commons.Util;
+using log4net;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.Shared2.Util;
 using softwrench.sw4.user.classes.entities;
@@ -21,11 +22,13 @@ using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
+using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.SPF;
+using softWrench.sW4.Util;
 using softWrench.sW4.Web.Common;
 using softWrench.sW4.Web.Models.UserSetup;
 using SecurityException = System.Security.SecurityException;
@@ -44,6 +47,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
         private readonly UserManager _userManager;
         private readonly SecurityFacade _facade;
+
+        
 
 
 
@@ -237,6 +242,8 @@ namespace softWrench.sW4.Web.Controllers.Security {
         private readonly ISWDBHibernateDAO _swdao;
         private readonly IMaximoHibernateDAO _maxdao;
 
+        private ILog Log = LogManager.GetLogger(typeof(UserSetupWebApiController));
+
         private const string application = "person";
         private const string schemaId = "newPersonDetail";
 
@@ -321,9 +328,20 @@ namespace softWrench.sW4.Web.Controllers.Security {
             };
             var schemaKey = SchemaUtil.GetSchemaKeyFromString(schemaId, ClientPlatform.Web);
             var applicationMetadata = MetadataProvider.Application(application).ApplyPolicies(schemaKey, user, ClientPlatform.Web);
+            json["orgid"] = ApplicationConfiguration.DefaultOrgId;
+            json["siteid"] = ApplicationConfiguration.DefaultSiteId;
             var personDataSet = DataSetProvider.GetInstance().LookupDataSet(application, schemaId);
-            await personDataSet.Execute(applicationMetadata, json, operationRequest);
-            
+            try {
+                await personDataSet.Execute(applicationMetadata, json, operationRequest);
+            } catch (Exception e) {
+                Log.Error(e);
+                return new BlankApplicationResponse() {
+                    ErrorMessage = e.Message,
+                    ErrorDto = new ErrorDto(e.Message, e.StackTrace, e.StackTrace)
+
+                };
+
+            }
             // request user activation to the approvers
             var firstname = json.GetValue("firstname").Value<string>();
             var lastname = json.GetValue("lastname").Value<string>();
@@ -332,12 +350,18 @@ namespace softWrench.sW4.Web.Controllers.Security {
             // send notification email to the user 
             // (fire-and-forget for performance: Since the user will receive the message in the response anyway --> failure is an option)
             var email = json.GetValue("#primaryemail").Value<string>();
-            const string notification = "Your registration request has been submitted. You will receive an activation email shortly.";
+            const string notification =
+                "Your registration request has been submitted. You will receive an activation email shortly.";
             _userSetupEmailService.GenericMessageEmail(email, "[softWrench] Registration", notification, true);
 
             return new BlankApplicationResponse() {
                 SuccessMessage = notification
             };
+
+
+
+
+
         }
 
         private IEnumerable<string> PrimaryEmails(IEnumerable<string> personIds) {

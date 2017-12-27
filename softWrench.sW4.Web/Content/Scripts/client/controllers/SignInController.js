@@ -86,9 +86,14 @@
                 var request = buildRequestDto();
                 return $http.post(action, request)
                     .then(function (response) {
-                        alertMessage("success", response.data.successMessage);
-                        closeModal();
-                        clearViewModel();
+                        if (response.data.errorMessage) {
+                            alertMessage("error", response.data.errorMessage);
+                        } else {
+                            alertMessage("success", response.data.successMessage);
+                            closeModal();
+                            clearViewModel();
+                        }
+                        
                     })
                     .catch(function (error) {
                         const data = !!error.data ? error.data : error;

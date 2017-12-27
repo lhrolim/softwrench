@@ -12,8 +12,8 @@
   <property key="maxAttachmentSize" value="10"/> <!--in MB-->
   <property key="maxScreenshotSize" value="5"/> <!-- in MB-->
   <property key="allowedAttachmentExtensions" value="pdf,zip,txt,jpg,bmp,doc,docx,dwg,csv,xls,xlsx,ppt,xml,xsl,html,rtf,png"/>
-  <property key="defaultOrgId" value="DPORG"/>
-  <property key="defaultSiteId" value="FSDP"/>
+  <property key="defaultOrgId" value="EAGLESA"/>
+  <property key="defaultSiteId" value="1803"/>
   <property key="defaultStoreloc" value="CENTRAL"/>
   <property key="sourcemapping" value="maximo7.6"/>
   
@@ -84,6 +84,8 @@
     <property key="ldapBaseDn" value="CN=mxintadm,OU=USERS,OU=MAXIMO,DC=CTS,DC=com"/>
     <property key="mifcredentials.user" value="mxintadm"/>
     <property key="mifcredentials.password" value="$@$Adm1n2"/>
+    <property key="defaultOrgId" value="DPORG"/>
+    <property key="defaultSiteId" value="FSDP"/>
     <!--    <property key="mifcredentials.user" value="maxadmin"/>
     <property key="mifcredentials.password" value="maxadmin"/>  -->
     <property key="iiscontextpath" value="http://173.193.44.3/powerelectronics" />

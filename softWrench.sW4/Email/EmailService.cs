@@ -91,7 +91,7 @@ namespace softWrench.sW4.Email {
         /// </summary>
         /// <param name="emailData"></param>
         public virtual void SendEmailAsync(EmailData emailData, Action<bool> cbck = null) {
-            Log.DebugFormat("sending email asynchronoysly");
+            Log.InfoFormat("sending email asynchronoysly");
             // Send the email message asynchronously
             Task.Run(() => {
                 try {
@@ -112,7 +112,7 @@ namespace softWrench.sW4.Email {
         /// <param name="emailData">The email data</param>
         public virtual void SendEmail(EmailData emailData) {
             try {
-                Log.Debug("Sending email to {0} - cc to {1} - bcc to {2}".Fmt(emailData.SendTo, emailData.Cc, emailData.BCc));
+                Log.Info("Sending email to {0} - cc to {1} - bcc to {2}".Fmt(emailData.SendTo, emailData.Cc, emailData.BCc));
                 Policy.Handle<SmtpFailedRecipientsException>(ex => {
                     var tryAgain = CheckEmailClientMailboxBusy(ex.StatusCode);
 
