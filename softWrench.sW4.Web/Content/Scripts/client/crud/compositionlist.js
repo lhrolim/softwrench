@@ -1152,13 +1152,13 @@
             $scope.compositiondata = updatedCompositionData;
 
             //removing dirty flag
-            $scope.compositionData().forEach((item, index) => {
-                delete item[CompositionConstants.IsDirty];
-            });
-
-            initBatches(false);
-
-
+            let compositionData = $scope.compositionData();
+            if (compositionData) {
+                compositionData.forEach((item, index) => {
+                    delete item[CompositionConstants.IsDirty];
+                });    
+                initBatches(false);
+            }
         };
 
 

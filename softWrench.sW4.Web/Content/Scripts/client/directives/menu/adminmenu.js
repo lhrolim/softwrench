@@ -29,6 +29,7 @@
                 this.doAction(null, 'EntityMetadata', 'Refresh', null, null);
                 schemaCacheService.wipeSchemaCacheIfNeeded(true);
                 window.location.reload();
+
             }
 
             scope.loadApplication = function (applicationName, schemaId, mode, id) {

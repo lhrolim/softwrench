@@ -197,6 +197,7 @@
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3285Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3250Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3218Migration.cs" />
+    <Compile Include="classes\com\cts\firstsolardispatch\migration\Swweb3319Migration.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\DispatchTicketStatus.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\GfedSite.cs" />
     <Compile Include="classes\com\cts\firstsolardispatch\model\Inverter.cs" />

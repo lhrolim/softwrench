@@ -88,6 +88,7 @@
             dm["assetuid"] = fields["asset_.assetuid"];
             dm["manufacturer"] = fields["asset_.manufacturer"];
             dm["model"] = fields["asset_.pluscmodelnum"];
+            dm["assetdescription"] = fields["asset_.description"];
         }
 
         save() {

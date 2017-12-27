@@ -53,6 +53,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.h
 
         private Inverter HandleInverter(CrudOperationData crudoperationData, Inverter inverter, DispatchTicket ticket) {
             inverter = EntityBuilder.PopulateTypedEntity(crudoperationData, inverter);
+            inverter.AssetDescription = crudoperationData.GetStringAttribute("assetdescription");
             inverter.Ticket = ticket;
             var schema = MetadataProvider.Schema("_Inverter", "detail", ClientPlatform.Web);
 

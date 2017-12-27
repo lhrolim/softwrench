@@ -20,6 +20,11 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         }
 
         [Property]
+        public string AssetDescription {
+            get; set;
+        }
+
+        [Property]
         public string Siteid {
             get; set;
         }

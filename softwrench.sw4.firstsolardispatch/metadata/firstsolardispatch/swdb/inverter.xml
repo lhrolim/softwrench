@@ -7,6 +7,10 @@
 
   <entities>
     <entity name="Inverter" idAttribute="id">
+      <attributes>
+        <attribute name="assetdesc" query="'(' + assetnum + ')' + ' ' + coalesce(assetdescription,'')" type="varchar"/>
+      </attributes>
+      
       <relationships>
         <relationship to="asset">
           <relationshipAttribute from="assetnum" to="assetnum" primary="true"/>
@@ -29,7 +33,9 @@
       <schemas>
         <schema id="inverterline" stereotype="compositionlist" platform="web">
           <field attribute="id" hidden="true"/>
-          <field attribute="assetnum" label="Inverter ID#"/>
+          <field attribute="assetnum" hidden="true"/>
+          <field attribute="assetdescription" hidden="true"/>
+          <field attribute="assetdesc" label="Inverter ID#"/>
           <field attribute="manufacturer" label="Manufacturer"/>
           <field attribute="model" label="Model"/>
           <field attribute="partsrequired" label="Parts Required?">
@@ -46,12 +52,13 @@
         </schema>
 
         <schema id="adetail" stereotype="detail" abstract="true" platform="web">
+          
           <field attribute="id" hidden="true"/>
           <field attribute="siteid" hidden="true"/>
 
           <section orientation="horizontal">
             <renderer type="default" params="childinputsize=medium" />
-            <association label="Inverter" target="assetnum" labelfield="asset_.description" requiredexpression="true" extraprojectionvalues="assetuid,manufacturer,pluscmodelnum,description" hideDescription="true" >
+            <association label="Inverter" target="assetnum" labelfield="asset_.description" requiredexpression="true" extraprojectionvalues="assetuid,manufacturer,pluscmodelnum,description" >
               <renderer type="lookup" params="application=asset;schemaId=inverterLookupList;largemodal=true"/>
               <event type="afterchange" service="fsdInverterService" method="assetSelected"/>
               <dataprovider prefilterfunction="FilterAssets"/>
