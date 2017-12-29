@@ -29,5 +29,8 @@ namespace softWrench.sW4.Web.Models.UserSetup {
         public string ClientName { get; set; }
 
         public string Title { get; set; }
+
+        public bool PreventPoweredBy => ClientName.Equals("firstsolardispatch");
+
     }
 }

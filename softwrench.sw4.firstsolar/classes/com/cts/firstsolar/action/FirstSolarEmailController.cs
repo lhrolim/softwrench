@@ -76,6 +76,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
     }
 
     public class EmailRequestModel : IBaseLayoutModel {
+
+        public bool PreventPoweredBy => false;
+
         public string WoNum { get; set; }
         public string Action { get; set; }
         public string Token { get; set; }

@@ -20,7 +20,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     /// </summary>
     public class OptionField : BaseApplicationFieldDefinition, IDataProviderContainer, IDependableField, IPCLCloneable, IExtraProjectionProvider {
 
-        private readonly List<IAssociationOption> _options;
         private readonly FieldFilter _filter;
         private readonly string _providerAttribute;
         private readonly string _extraParameter;
@@ -28,6 +27,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private readonly bool _sort;
         private readonly ISet<ApplicationEvent> _eventsSet;
         private readonly string _dependantFieldsString;
+        public List<IAssociationOption> Options { get; set; }
+
         public string EvalExpression {
             get; set;
         }
@@ -51,9 +52,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             IsHidden = isHidden;
             _sort = sort;
             if (sort) {
-                if (_options != null) {
-                    _options.Sort();
-                }
+                Options?.Sort();
             }
             _eventsSet = events;
             _dependantFieldsString = dependantFields;
@@ -86,7 +85,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         public string ExtraParameter => _extraParameter;
 
-        public List<IAssociationOption> Options { get; set; }
+
 
         public ISet<string> DependantFields => _dependantFields;
 
@@ -101,7 +100,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public object Clone() {
             var optionField = new OptionField(ApplicationName, Label, Attribute, Qualifier, RequiredExpression,
                 IsReadOnly, IsHidden, Renderer, _filter,
-                _options,
+                Options,
                 DefaultValue, _sort, ShowExpression, HelpIcon, ToolTip, AttributeToServer, _eventsSet, ProviderAttribute,
                 _dependantFieldsString, EnableExpression, EvalExpression, _extraParameter, DefaultExpression,
                 SearchOperation) {

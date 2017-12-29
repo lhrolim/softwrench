@@ -69,5 +69,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
             get { return "firstsolardispatch"; }
             set { }
         }
+
+        public bool PreventPoweredBy => true;
     }
 }

@@ -89,12 +89,12 @@
 
             <section orientation="horizontal" parameters="">
               <section id="gfed">
-                <association label="Site" target="gfedid" labelfield="site_.facilityname" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,singlelineaddress,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,supportemail,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix,maintenaceprovider,wherehouseaddress">
+                <association label="Site" target="gfedid" labelfield="site_.facilitytitle" requiredexpression="true" extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,singlelineaddress,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,supportemail,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix,maintenaceprovider,wherehouseaddress">
                   <renderer type="lookup" params="application=_GfedSite;schemaId=ticketLookupList;"/>
                   <event type="afterchange" service="fsdTicketService" method="siteSelected"/>
                 </association>
               </section>
-              <field attribute="siteaddress" label="Site Adress" enableexpression="@gfedid != null"/>
+              <field attribute="siteaddress" label="Site Address" enableexpression="@gfedid != null"/>
               <section>
                 <field attribute="gpslatitude" label="GPS Coordinates" enableexpression="@gfedid != null"/>
                 <field attribute="gpslongitude" enableexpression="@gfedid != null"/>
@@ -206,7 +206,7 @@
         <schema id="editdetail" parentschema="adetail" title="Dispatch Ticket" platform="web" stereotype="detail">
           <section id="gfed">
             <field attribute="gfedid" hidden="true"/>
-            <field attribute="site_.facilityname" label="Site" readonly="true"/>
+            <field attribute="site_.facilitytitle" label="Site" readonly="true"/>
           </section>
         </schema>
 

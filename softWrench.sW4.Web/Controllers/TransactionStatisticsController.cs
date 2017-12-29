@@ -39,6 +39,8 @@ namespace softWrench.sW4.Web.Controllers {
 
     public class TransactionStatsReportModel : IBaseLayoutModel {
 
+        public bool PreventPoweredBy => false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionStatsReportModel"/> class.
         /// </summary>
