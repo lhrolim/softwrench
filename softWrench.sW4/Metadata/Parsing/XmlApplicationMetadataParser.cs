@@ -636,6 +636,7 @@ namespace softWrench.sW4.Metadata.Parsing {
             var schema = ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
                 isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                 userIdFieldName, unionSchema, ParseEvents(xElement, id));
+            
             resultDictionary.AddE(key, schema, "application:{0} templateparsing:{1}".Fmt(schema.ApplicationName, _isTemplateParsing));
             return schema;
         }

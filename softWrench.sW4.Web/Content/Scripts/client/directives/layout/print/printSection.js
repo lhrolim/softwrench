@@ -30,7 +30,7 @@
                 datamap: '=',
             },
 
-            controller: function ($scope, $rootScope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService, fixHeaderService, historyService) {
+            controller: function ($scope, $q, $rootScope, $timeout, $log, printService, tabsService, i18NService, compositionService, fieldService, fixHeaderService, printAwaitableService) {
                 $scope.compositionstoprint = [];
                 $scope.shouldPageBreak = true;
                 $scope.showPrintSection = false;
@@ -76,16 +76,129 @@
                     $scope.displayableID = prefix + " " + id;
                 }
 
+                $scope.footerLoaded = function () {
+                    if ($scope.footerLoadedeDeferred) {
+                        $scope.footerLoadedeDeferred.resolve();
+                        $scope.footerLoadedeDeferred = null;
+                    }
+                }
+
+                $scope.headerLoaded = function () {
+                    if ($scope.headerLoadedeDeferred) {
+                        $scope.headerLoadedeDeferred.resolve();
+                        $scope.headerLoadedeDeferred = null;
+                    }
+                }
+
+                $scope.printformId = function () {
+                    if (!$scope.printSchema) {
+                        return null;
+                    }
+                    return $scope.printSchema.applicationName + "_" + $scope.printSchema.schemaId;
+                }
+
+                $scope.applyCustomStyleRules = function (schema) {
+                    let styleProps = schema.properties["print.styleprops"];
+                    const head = document.head || document.getElementsByTagName('head')[0];
+                    const style = document.createElement('style');
+
+                    if ($scope.hasCustomStyleApplied) {
+                        const lastChild = document.head.lastElementChild;
+                        if (lastChild.type === "text/css") {
+                            //double checking to avoid removing a wrong element
+                            document.head.removeChild(lastChild);
+                            $scope.hasCustomStyleApplied = false;
+                        }
+                    } else if (!styleProps) {
+                        return;
+                    }
+
+                    if (!styleProps) {
+                        styleProps = "@page{ size:portrait }";
+                    } else {
+                        $scope.hasCustomStyleApplied = true;    
+                    }
+
+                    style.type = 'text/css';
+                    style.media = 'print';
+                    if (style.styleSheet) {
+                        style.styleSheet.cssText = styleProps;
+                    } else {
+                        style.appendChild(document.createTextNode(styleProps));
+                    }
+
+                    
+                    head.appendChild(style);
+                }
+
+                $scope.handleCustomTimeout = function (printSchema) {
+                    const customTimeout = printSchema.properties["print.timeout"];
+                    if (!customTimeout) {
+                        return;
+                    }
+
+                    if ($scope.customTimeoutDeferred) {
+                        $scope.customTimeoutDeferred.reject();
+                        $scope.customTimeoutDeferred = null;
+                    }
+                    $scope.customTimeoutDeferred = $q.defer();
+                    printAwaitableService.registerAwaitable($scope.customTimeoutDeferred.promise);
+                    $timeout(() => {
+                        $scope.customTimeoutDeferred.resolve();
+                    }, customTimeout);
+                }
+
+                $scope.handleHeaderAndFooter = function (schema) {
+                    $scope.hasCustomHeader = false;
+                    $scope.hasCustomFooter = false;
+                    $scope.customHeaderURL = null;
+                    $scope.customFooterURL = null;
+                    if ($scope.headerLoadedeDeferred) {
+                        $scope.headerLoadedeDeferred.reject();
+                        $scope.headerLoadedeDeferred = null;
+                    }
+
+                    if ($scope.footerLoadedeDeferred) {
+                        $scope.footerLoadedeDeferred.reject();
+                        $scope.footerLoadedeDeferred = null;
+                    }
+
+                    const customHeader = schema.properties["print.customheader"];
+                    const customFooter = schema.properties["print.customfooter"];
+                    if (customHeader) {
+                        $scope.hasCustomHeader = true;
+                        $scope.customHeaderURL = url(customHeader);
+                        $scope.headerLoadedeDeferred = $q.defer();
+                        printAwaitableService.registerAwaitable($scope.headerLoadedeDeferred.promise);
+                    }
+
+                    if (customFooter) {
+                        $scope.hasCustomFooter = true;
+                        $scope.customFooterURL = url(customFooter);
+                        $scope.footerLoadedeDeferred = $q.defer();
+                        printAwaitableService.registerAwaitable($scope.footerLoadedeDeferred.promise);
+                    }
+                }
+
                 $scope.printComposition = function (item, composition) {
                     return item[composition.key].length > 0;
                 };
 
-                $scope.doStartPrint = function (compositionData, shouldPageBreak, shouldPrintMain, printCallback, printDatamap) {
+
+
+                $scope.doStartPrint = function (compositionData, shouldPageBreak, shouldPrintMain, printCallback, printDatamap, printSchema) {
                     fixHeaderService.unfix();
                     var compositionstoprint = [];
                     $scope.shouldPageBreak = shouldPageBreak;
                     $scope.shouldPrintMain = shouldPrintMain;
+
+
                     $scope.printSchema = $scope.schema.printSchema != null ? $scope.schema.printSchema : $scope.schema;
+                    $scope.printSchema = printSchema || $scope.printSchema;
+
+                    $scope.handleHeaderAndFooter($scope.printSchema);
+                    $scope.applyCustomStyleRules($scope.printSchema);
+                    $scope.handleCustomTimeout($scope.printSchema);
 
                     $.each(compositionData, function (key, value) {
                         var compositionToPrint = {};
@@ -103,7 +216,9 @@
                         compositionstoprint.push(compositionToPrint);
                     });
                     $scope.compositionstoprint = compositionstoprint;
-                    $scope.printDatamap = printDatamap ? printDatamap : (Array.isArray($scope.datamap) ? $scope.datamap : new Array($scope.datamap));
+                    let datamapToUse = printDatamap ? printDatamap : $scope.datamap;
+
+                    $scope.printDatamap = Array.isArray(datamapToUse) ? datamapToUse : new Array(datamapToUse);
                     buildDisplayableID();
                     $scope.printCallback = printCallback;
                     $scope.showPrintSection = true;
@@ -111,9 +226,10 @@
                     fixHeaderService.fixThead($scope.schema);
                 }
 
-                $scope.$on(JavascriptEventConstants.ReadyToPrint, function (event, compositionData, shouldPageBreak, shouldPrintMain, printCallback) {
+                $scope.$on(JavascriptEventConstants.ReadyToPrint, function (event, compositionData, shouldPageBreak, shouldPrintMain, printCallback, printSchema, printDatamap) {
+
                     $scope.isList = false;
-                    $scope.doStartPrint(compositionData, shouldPageBreak, shouldPrintMain, printCallback);
+                    $scope.doStartPrint(compositionData, shouldPageBreak, shouldPrintMain, printCallback, printDatamap, printSchema);
                 });
 
                 $scope.$on(JavascriptEventConstants.PrintReadyForDetailedList, function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain, printSchema) {
@@ -173,7 +289,7 @@
                 if (sessionStorage.mockprint && contextService.isDev()) {
                     $scope.doStartPrint([], true, true, true);
                 }
-                
+
             }
         };
     });

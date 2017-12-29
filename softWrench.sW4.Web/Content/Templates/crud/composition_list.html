@@ -21,7 +21,7 @@
            ng-class="showTableHover() ? 'table-hover' : 'no-hover'; inline? 'table-inline' : ''" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
         <thead ng-if="showInlineHeader()">
             <tr class="hapag-table-header">
-                <th ng-if="hasDetailOutputSchema()">
+                <th ng-if="hasDetailOutputSchema()" class="hiddenonprint">
                     <!--batchMode-->
                 </th>
 
@@ -72,7 +72,7 @@
                 draggable="{{ draggableValue() }}"
                 composition-list-key="{{getCompositionListKey()}}"
                 composition-list-id="{{compositionitem[compositionlistschema.idFieldName]}}">
-                <td ng-if="hasDetailOutputSchema()" class="rowexpand">
+                <td ng-if="hasDetailOutputSchema()" class="rowexpand hiddenonprint">
                     <button class="btn btn-default" ng-click="toggleDetails(compositionitem,column,'arrow',$event,rowindex)" ng-show="expansionAllowed(compositionitem)">
                         <i class="fa fa-caret-right" ng-hide="isItemExpanded(compositionitem)"></i>
                         <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>

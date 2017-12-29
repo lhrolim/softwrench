@@ -66,6 +66,10 @@ app.directive('crudOutputFields', function (contextService) {
                 return label;
             };
 
+            $scope.getLabelOutputClass = function(fieldMetadata) {
+                return fieldMetadata.rendererParameters["outputclass"];
+            }
+
             $scope.getChildrenExpanded = function (attribute) {
                 var root = datamap[attribute];
                 var result = [];

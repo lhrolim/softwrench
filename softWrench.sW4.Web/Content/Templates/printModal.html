@@ -1,10 +1,11 @@
-﻿<div class="modal fade printModal" 
+﻿<div class="modal fade printModal"
      data-class="printModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="height: 100%">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
                 <!--#region detail-->
                 <div ng-if="!isList">
+                    
                     <div>
                         <input type="checkbox" ng-model="vm.shouldPrintMain" ng-checked="true">
                         {{i18N('printmodal.print','Print')}} {{printSchema.title}}
@@ -13,15 +14,16 @@
                     <div ng-repeat="composition in nonInlineCompositions(printSchema)">
                         <ng-switch on="composition.type">
                             <input type="checkbox"
-                                   ng-switch-when="ApplicationCompositionDefinition"
-                                   ng-checked="compositionstoprint[composition.relationship].value"
-                                   ng-model="compositionstoprint[composition.relationship].value">
+                                    ng-switch-when="ApplicationCompositionDefinition"
+                                    ng-checked="compositionstoprint[composition.relationship].value"
+                                    ng-model="compositionstoprint[composition.relationship].value">
                             <input type="checkbox" ng-switch-default
-                                   ng-model="compositionstoprint[composition.id].value"
-                                   ng-checked="false">
+                                    ng-model="compositionstoprint[composition.id].value"
+                                    ng-checked="false">
                         </ng-switch>
                         {{i18N('printmodal.printcomposition','Print {0}',[composition.label])}}
                     </div>
+                    
                     <div style="padding-top: 30px">
 
                         <input type="checkbox"
@@ -31,7 +33,6 @@
                     </div>
                 </div>
                 <!-- #endregion-->
-
                 <!--#region list-->
                 <div ng-if="isList">
                     <div class="radio">

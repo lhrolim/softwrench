@@ -106,7 +106,7 @@ app.directive('printModal', function ($log, contextService) {
                 //$scope.compositionstoprint = {};
                 $scope.vm.shouldPageBreak = true;
                 $scope.vm.shouldPrintMain = true;
-                
+
             };
 
             init();

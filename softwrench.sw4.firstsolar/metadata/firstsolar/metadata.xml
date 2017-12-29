@@ -23,7 +23,7 @@
   <entities>
 
 
- 
+
 
 
     <entity name="asset" idAttribute="assetuid">
@@ -42,8 +42,8 @@
         <attribute name="problemlist" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='PROBLEM' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
-<!--        <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
-<!--        <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
+        <!--        <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
+        <!--        <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
         <attribute name="daysleftcm" query="(DATEDIFF(day,GETDATE(),!@reportdate))" type="smallint"/>
         <attribute name="outreq" type="boolean"/>
@@ -102,7 +102,7 @@
           <relationshipAttribute from="location" to="location" primary="true"/>
         </relationship>
 
-     
+
 
         <relationship to="multiassetlocci" collection="true">
           <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
@@ -140,7 +140,7 @@
         <relationship to="DOCLINKS" collection="true" qualifier="wkpgallattachments">
           <relationshipAttribute from="workorderid" to="ownerid" primary="true"/>
           <relationshipAttribute to="ownertable" literal="WORKORDER" quoteLiteral="true"/>
-      
+
         </relationship>
         <relationship to="relatedrecord" collection="true" qualifier="wkpgrelatedwos">
           <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
@@ -289,8 +289,8 @@
       <schemas>
         <schema id="techdashboard" abstract="true" stereotype="list" platform="web">
           <field attribute="workorder_.workorderid" hidden="true"/>
-            <field attribute="workorder_wopriority" tooltip="Priority">
-              <renderer type="priorityicon" params="width=6%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
+          <field attribute="workorder_wopriority" tooltip="Priority">
+            <renderer type="priorityicon" params="width=6%;icon=fa-flag;headericon=true;changevalue=true;onclick=priorityService.setPriority"/>
           </field>
           <field attribute="workorder_.wonum" label="WO #">
             <renderer type="default" params="width=10%"/>
@@ -299,7 +299,7 @@
             <renderer type="default" params="width=15%"/>
           </field>
           <field attribute="workorder_.description" label="Description">
-<!--            <renderer type="default" params="width=40%"/>-->
+            <!--            <renderer type="default" params="width=40%"/>-->
           </field>
           <field attribute="schedstartnotime" label="Schedule Start Date" hidden="true">
             <renderer type="datetime" params="format=MM/dd/yyyy"/>
@@ -313,7 +313,7 @@
         </schema>
 
 
-        
+
         <list platform="mobile" title="WO - Assigned">
           <field attribute="wonum" label="Workorder Number" qualifier="title"/>
           <field attribute="laborcode" label="Labor" qualifier="featured"/>
@@ -695,9 +695,9 @@
           <field attribute="reportdate" label="Reported Date">
             <renderer type="datetime" params="width=10%" />
           </field>
-<!--          <field attribute="schedstart" label="Scheduled Start Date">-->
-<!--            <renderer type="datetime" params="width=15%" />-->
-<!--          </field>-->
+          <!--          <field attribute="schedstart" label="Scheduled Start Date">-->
+          <!--            <renderer type="datetime" params="width=15%" />-->
+          <!--          </field>-->
           <properties>
             <property key="list.colorscheme.service" value="fsDashboardService.getColorScheme"/>
             <property key="list.click.service" value="fsDashboardService.incomingDashClick"/>
@@ -777,7 +777,7 @@
           <section id="daysleft">
             <field attribute="worktype" label="Work Type">
               <renderer type="default" params="width=8%"/>
-              </field>
+            </field>
             <field attribute="asset_.isnerc" label="Nerc Asset?">
               <renderer type="checkbox" params="width=10%"/>
 
@@ -810,9 +810,9 @@
             </field>
           </section>
           <section id="daysleft">
-<!--            <field attribute="schedstart" label="Scheduled Start Date">-->
-<!--              <renderer type="datetime" params="width=15%" />-->
-<!--            </field>-->
+            <!--            <field attribute="schedstart" label="Scheduled Start Date">-->
+            <!--              <renderer type="datetime" params="width=15%" />-->
+            <!--            </field>-->
             <field attribute="daysleftcm" label="Days Left">
               <renderer type="numericinput" params="width=8%" />
             </field>
@@ -822,9 +822,37 @@
 
         <!--#region Online-->
         <schema id="list" redeclaring="false" platform="web">
+          <!--<properties>
+            <property key="list.click.schema" value="fsservicereport"/>
+            <property key="list.click.mode" value="output"/>
+          </properties>-->
           <customization position="+status">
             <field attribute="facilityname" label="Facility Name"/>
           </customization>
+        </schema>
+        <schema id="list2" redeclaring="false" platform="web" stereotype="list">
+          <properties>
+            <property key="list.click.schema" value="fsservicereport"/>
+            <property key="list.click.mode" value="output"/>
+          </properties>
+
+          <field attribute="workorderid" label="id" >
+            <renderer type="default" params="width=10%" />
+          </field>
+
+          <field attribute="wonum" label="WO#" >
+            <renderer type="default" params="width=10%" />
+          </field>
+          <field attribute="description" label="Summary">
+            <renderer type="default" params="excelwidth=50" />
+          </field>
+          <field attribute="location" label="Location">
+            <renderer type="default" params="width=15%" />
+          </field>
+          <field attribute="asset_.description" label="Asset Description">
+            <renderer type="default" params="width=25%" />
+          </field>
+          <field attribute="siteid" label="Site" hidden="true"/>
         </schema>
 
         <schema id="adetail" redeclaring="false">
@@ -886,11 +914,12 @@
                 <section id="attachmentsection"/>
               </section>
             </section>
-          </customization>          
+          </customization>
         </schema>
 
 
-        <schema id="editdetail" redeclaring="false" parentschema="adetail">
+        <schema id="editdetail" redeclaring="false" parentschema="adetail" >
+
           <customization position="worklog"/>
           <customization position="woactivity"/>
           <customization position="tooltrans"/>
@@ -898,7 +927,7 @@
 
           <customization position="siteidinnersection">
             <field attribute="siteid" hidden="true"/>
-            <!-- location_.facilityname to update when location changes-->
+            <!--location_.facilityname to update when location changes-->
             <field label="Facility Name" attribute="location_.facilityname" readonly="true"/>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="format=MM/dd/yyyy;"/>
@@ -910,11 +939,13 @@
 
           <commandbars>
             <commandgroup position="actions" removeundeclared="true">
+              <command id="printServiceReport" icon="fa-print" label="Print Service Report" service="fsWorkOrderService" method="printServiceReport"
+                        cssclasses="large-button"/>
               <command id="stopWorkflow" icon="fa-stop-circle-o" label="Complete Work Order" service="fsWorkOrderService" method="completeWorkOrder"
                        permissionexpression="@maximoVersionEvaluator.Is76" showexpression="@status != null &amp;&amp; @status.equalsAny('INPRG','APPR')" cssclasses="large-button"/>
-              <!-- Create new SR as Related Record -->
-              <!--              <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>-->
-              <!--              </container>-->
+              <!--Create new SR as Related Record 
+                            <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
+                            </container>-->
             </commandgroup>
           </commandbars>
         </schema>
@@ -1127,6 +1158,92 @@
             </commandgroup>
           </commandbars>
         </schema>
+
+        <schema id="fsservicereport" title="First Solar Service Report" platform="web" mode="output" redeclaring="false" stereotype="detail">
+
+          <field attribute="siteid" hidden="true"/>
+          <!--<field attribute="wonum" hidden="true"/>-->
+
+          <section orientation="horizontal" >
+            <section>
+              <header displacement="ontop" label="Customer" params="fieldset=true" />
+              <field attribute="location_.facilityname" label="" />
+            </section>
+
+            <section>
+              <header displacement="ontop" label="Plant Address" params="fieldset=true" />
+              <field attribute="location" label="" />
+            </section>
+
+          </section>
+
+          <section orientation="horizontal">
+            <section>
+              <header displacement="ontop" label="Job Details" params="fieldset=true" />
+              <field attribute="location_.facilitynam" label="Plant Name"  />
+              <field attribute="wonum" label="Workorder #"  />
+              <field attribute="reportdate" label="Issue Report Date" >
+                <renderer type="datetime" />
+              </field>
+              <field attribute="description" label="Short Description" />
+            </section>
+            <section>
+              <header displacement="ontop" label="Asset Details" params="fieldset=true" />
+              <field attribute="asset_.assetnum" label="Asset #"  />
+              <field attribute="asset_.assettype" label="Asset Type"  />
+              <field attribute="asset_.description" label="Asset Description"  />
+              <field attribute="asset_.manufacturer" label="Manufacturer"  />
+              <field attribute="asset_.pluscmodelnum" label="Model Number"  />
+              <field attribute="asset_.serialnum" label="Serial Number"  />
+            </section>
+          </section>
+
+          <section orientation="horizontal">
+            <header displacement="ontop" label="Long Description" params="fieldset=true" />
+            <field attribute="ld_.ldtext" requiredexpression="true">
+              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+            </field>
+          </section>
+
+
+          <section>
+            <renderer type="default" params="class=pagebreak-before"/>
+
+            <section>
+              <header displacement="ontop" label="Labor Hours Details" params="fieldset=true" />
+              <composition relationship="labtrans" label="" inline="true">
+                <collectionproperties  listschema="servicereportlabhours" allowupdate="false" />
+              </composition>
+            </section>
+
+            <field label="" attribute="#labortotalhours" defaultexpression="service:fsWorkOrderService.calculateTotalLaborHours">
+              <renderer type="default" params="outputclass=laborsum"/>
+            </field>
+
+            <section>
+              <header displacement="ontop" label="Material Used Details" params="fieldset=true" />
+              <composition relationship="matusetrans" label="" inline="true">
+                <collectionproperties allowupdate="false" listschema="servicereportmaterials" />
+              </composition>
+            </section>
+          </section>
+
+
+          <!--<section>
+            <field  attribute="text1" label="">
+              <renderer type="custom" params="resourcepath=Content/Customers/firstsolar/htmls/fsreportfooter.html"/>
+            </field>
+          </section>-->
+
+          <properties>
+            <property key="print.customfooter" value="/Content/Customers/firstsolar/htmls/servicereport/fsreportfooter.html"/>
+            <property key="print.customheader" value="/Content/Customers/firstsolar/htmls/servicereport/fsreportheader.html"/>
+            <property key="print.styleprops" value="@page{size:landscape; margin:0 }"/>
+            <property key="print.timeout" value="1500"/>
+          </properties>
+
+        </schema>
+
         <!--#endregion-->
 
         <!--#region Mobile -->
@@ -1489,7 +1606,7 @@
         </detail>
 
         <schema id="compositionlist" stereotype="compositionlist" title="Labor List" platform="web" redeclaring="false">
-          
+
           <customization position="linecost"/>
           <customization position="gldebitacct"/>
           <customization position="genapprservreceipt"/>
@@ -1524,7 +1641,7 @@
           </field>
           <field attribute="laborcode" hidden="true"/>
           <field attribute="enterdate" label="Date" qualifier="featured">
-          <renderer type="date"/>
+            <renderer type="date"/>
           </field>
           <field attribute="wodescription" label="Description" qualifier="excerpt"/>
           <field attribute="#runninglabor" hidden="true"/>
@@ -1539,7 +1656,7 @@
         <property key="mobile.application.readonly" value="true"/>
       </properties>
     </application>
-    
+
 
     <application name="otherworkorder" title="Work Order" entity="workorder" role="workorders">
       <components>
@@ -2095,8 +2212,8 @@
           </field>
         </list>
 
-        
-        
+
+
         <detail stereotype="compositiondetail" platform="mobile">
           <!-- declared just so it can be fetched in sync -->
           <association target="#inventory" labelfield="offlineinventory.itemnum"
@@ -2190,7 +2307,7 @@
             <event type="afterchange" service="fsMaterialService" method="itemSelected"/>
           </association>
 
-      
+
 
           <association target="warranty" labelfield="warranty_.description" requiredexpression="true" label="Warranty">
             <renderer type="autocompleteclient" params="showCode=false"/>
@@ -2207,6 +2324,16 @@
 
         </schema>
 
+        <schema id="servicereportmaterials"  stereotype="compositionlist" platform="web">
+          <field attribute="itemnum" label="Material Number"/>
+          <field attribute="description" label="Description"/>
+          <field attribute="transdate" label="Transaction Date" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+          </field>
+          <field attribute="qtyrequested" label="Quantity" />
+          <field attribute="" label="Total Cost" />
+          <field attribute="warranty_.description" label="Warranty" />
+        </schema>
 
       </schemas>
     </application>
@@ -2254,7 +2381,7 @@
     <application name="attachment" title="Attachment" entity="DOCLINKS">
       <schemas>
         <schema id="workpackagelist" stereotype="compositionlist" platform="web">
-          
+
           <!-- Filters included for work package filter execute query through the framework (workpackage.xml schema: attachmentlist). -->
           <filters>
             <filter attribute="#parsedurl" label="Document" style="width:300px" whereclause="description like (!@#value)" />
@@ -2280,7 +2407,7 @@
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Work Order" value="NULL" />
             </optionfilter>
           </filters>
-          
+
           <field hidden="true" attribute="ownerid"/>
           <field attribute="docinfoid" hidden="true" />
           <field attribute="doclinksid" hidden="true" />
@@ -2301,7 +2428,7 @@
             </field>
           </customization>
         </schema>
-        
+
       </schemas>
     </application>
 

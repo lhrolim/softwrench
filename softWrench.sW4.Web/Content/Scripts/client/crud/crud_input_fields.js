@@ -339,8 +339,14 @@
                             if (fieldMetadata.isReadOnly || fieldMetadata.enableExpression === "false" || !crudContextHolderService.getDetailDataResolved()) {
                                 return false;
                             }
+
+//                            if (fieldMetadata.type === "ApplicationCompositionDefinition") {
+//                                return false;
+//                            }
+
                             const originalDatamap = crudContextHolderService.originalDatamap($scope.panelId);
                             const datamap = crudContextHolderService.rootDataMap($scope.panelId);
+                            const value = datamap[fieldMetadata.attribute];
                             if (fieldMetadata.rendererType === "datetime") {
                                 //check datetime.js
 
@@ -350,23 +356,31 @@
                                 }
 
                                 if (!!originalDatamap[originalUnformatted]) {
-                                    return !originalDatamap[originalUnformatted].equalIc(datamap[fieldMetadata.attribute]);
+                                    return !originalDatamap[originalUnformatted].equalIc(value);
                                 }
                             }
+                            const original = originalDatamap[fieldMetadata.attribute];
                             if (fieldMetadata.rendererType === "checkbox") {
-                                return !booleanEquals(originalDatamap[fieldMetadata.attribute], datamap[fieldMetadata.attribute]);
+                                return !booleanEquals(original, value);
                             }
 
-                            const baseComparison = originalDatamap[fieldMetadata.attribute] !== datamap[fieldMetadata.attribute];
 
-                            if (fieldMetadata.rendererType === "ApplicationCompositionDefinition" && fieldMetadata.inline) {
-                                if (!baseComparison && !originalDatamap[fieldMetadata.attribute] && datamap[fieldMetadata.attribute] === []) {
-                                    //ignoring differences for an undefined vs blank array
-                                    return true;
-                                }
+                            if (fieldMetadata.type === "ApplicationCompositionDefinition" && fieldMetadata.inline) {
+                                //disabling support as for now
+                                //TODO: fix and fix of a decent way to do array comparison
+                                return false;
+
+//                                const arrayComparison = JSON.stringify(original) === JSON.stringify(value);
+//
+//
+//                                if (!arrayComparison && !original && value === []) {
+//                                    //ignoring differences for an undefined vs blank array
+//                                    return false;
+//                                }
                             }
 
-                            return baseComparison;
+                            return original !== value;
+
                         }
 
                         $scope.doToggleCheckBox = function (fieldMetadata, option, datamapKey) {

@@ -2,7 +2,7 @@
     <table class="table output" data-application="{{compositionlistschema.applicationName}}" data-schema="{{compositionlistschema.schemaId}}" id="compositionlistgrid">
 	    <thead>
 	        <tr>
-		        <th ng-if="hasDetailSchema()">
+		        <th ng-if="hasDetailSchema()" class="hiddenonprint">
 		        </th>
 		        <th class="{{safeCSSselector(column.attribute)}}"
 		            ng-repeat="column in compositionlistschema.displayables"
@@ -19,7 +19,7 @@
 	            ng-if="!isRowHidden(compositionlistschema, collectionproperties, compositionitem)"
 	            ng-class="$odd ? 'odd' : 'even'">
 		    
-		        <td ng-if="hasDetailSchema()" class="rowexpand">
+		        <td ng-if="hasDetailSchema()" class="rowexpand hiddenonprint">
 			        <button class="btn btn-default" ng-click="toggleDetails(compositionitem)" ng-show="expansionAllowed(compositionitem)">
 				        <i class="fa fa-caret-right" ng-show="!isItemExpanded(compositionitem)"></i>
 				        <i class="fa fa-caret-down" ng-show="isItemExpanded(compositionitem)"></i>

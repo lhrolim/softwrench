@@ -495,6 +495,25 @@
           <field attribute="assetnum" defaultexpression="$.parentdata.fields.assetnum" requiredexpression="false"  hidden="true" readonly="true" />
           
         </detail>
+
+        <schema id="servicereportlabhours"  stereotype="compositionlist" platform="web">
+          <field attribute="craft" label="Craft"/>
+          <field attribute="laborcode" label="Labor"/>
+          <field attribute="startdate" label="Start Date">
+            <renderer type="date" params="format=MM/dd/yyyy;showtime=false"/>
+          </field>
+          <field label="Start Time" attribute="starttime" >
+            <renderer type="time" params="format=HH:mm;showdate=false" />
+          </field>
+          <field label="Finish Date" attribute="finishdate">
+            <renderer type="date" params="format=MM/dd/yyyy;showtime=false" />
+          </field>
+          <field label="Finish Time" attribute="finishtime" >
+            <renderer type="time" params="format=HH:mm;showdate=false" />
+          </field>
+          <field attribute="regularhrs" label="Labor Hours" requiredexpression="true" default="8">
+          </field>
+        </schema>
       </schemas>
 
       <!-- #endregion -->

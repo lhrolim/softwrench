@@ -8,10 +8,22 @@
         }
     }
 
+
+
+
+
     #rootprintdiv {
         .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
-            width: 100% !important;
+            //width: 100% !important;
         }
+
+        div {
+            page-break-inside: avoid;
+        }
+    }
+    // #rootprintdiv > div:nth-child(2) > section > fieldset:nth-child(4) > div > ng-switch > div > div > div > section[orientation='horizontal'] > fieldset
+    #rootprintdiv section[orientation='horizontal'] > fieldset.form-group.hasheader.haschildren.col-xs-12.col-sm-6.col-md-6.row {
+        width: 50% !important;
     }
 
     #crudbodyform {
@@ -46,7 +58,7 @@
             white-space: normal !important;
 
             .cell-wrapper {
-                 width: initial !important;
+                width: initial !important;
             }
 
             &.select-multiple, &.edit-detail {
@@ -110,6 +122,39 @@
         padding-bottom: 40px;
     }
 
+    .workorder_fsservicereport {
+        .laborsum {
+            font-size: 14px !important;
+            font-weight: bold !important;
+            width: 60px !important;
+            border: 0px solid !important;
+            /*
+                text-align: center; 
+            margin-right: 210px !important;*/
+            position: absolute;
+            right: 9%;
+        }
+
+
+        .legend-label {
+            font-size: 18px !important;
+            color: rgb(129,0,0) !important
+            //display: none;
+        }
+
+        .control-label {
+            width: 28% !important;
+            text-align: left !important;
+            font-size: 14px !important;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .control-label + .field {
+            width: 72% !important;
+            margin-top: 5px;
+        }
+    }
+
     #rootprintdiv {
         .print-logo {
             img {
@@ -126,6 +171,9 @@
             margin: 10px 0 40px;
         }
 
+
+
+
         .form-group {
             margin-bottom: 0;
 
@@ -133,21 +181,26 @@
                 display: block;
             }
 
+
+
             .legend-label {
                 font-size: 14px;
                 font-weight: bold;
                 padding: 20px 0 0;
                 border-bottom: 1px solid #999;
-                display: none;
+                //display: none;
             }
 
+
+
+
             .control-label {
-                width: 30% !important;
+                width: 30%;
                 float: left;
                 padding-right: 20px;
                 text-align: right;
                 font-size: 12px;
-                padding-top: 5px;
+                padding-top: 2px;
             }
 
             .form-control {
@@ -166,7 +219,7 @@
             }
 
             .control-label + .field {
-                width: 70% !important;
+                width: 70%;
                 float: right;
                 margin-top: 5px;
             }
@@ -229,6 +282,12 @@
     }
 }
 
-@page {
+/**@page {
     margin: 36px;
 }
+
+@page {
+    size: landscape;
+    margin: 0;
+}*/
+

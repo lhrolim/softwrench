@@ -130,9 +130,15 @@
         /// Property to specify the schema navigated to on list click
         /// </summary>
         public const string ListClickSchema = "list.click.schema";
-        
 
+        /// <summary>
+        /// Allows schema id to be used on printing detailed list.
+        /// </summary>
         public static string PrintDetailedListSchemaId = "list.print.detailedlistschemaid";
+
+        /// <summary>
+        /// Allows schema id to be used on printing list.
+        /// </summary>
         public static string PrintListSchemaId = "list.print.listschemaid";
         
         /// <summary>
@@ -347,10 +353,10 @@
         public static string DetailFocusAllowMoveBackward = "detail.focus.allowmovingbackward";
 
         /// <summary>
-        /// Allows schema id to be used on printinfg detail.
+        /// Allows schema id to be used on printing detail.
         /// </summary>
         public static string PrintDetailSchemaId = "detail.print.schemaid";
-
+        
         /// <summary>
         /// If "true" show detail toolbar even to anonymous user.
         /// </summary>
@@ -410,6 +416,15 @@
         /// <see cref="MetadataProvider.FetchAvailableAppsAndEntities"/>
         /// </summary>
         public static string SchemaRelatedEntities = "schema.whereclause.related";
+
+
+        #region print
+
+        public static string PrintCustomHeader = "print.customheader";
+        public static string PrintCustomFooter = "print.customfooter";
         
+
+        #endregion
+
     }
 }

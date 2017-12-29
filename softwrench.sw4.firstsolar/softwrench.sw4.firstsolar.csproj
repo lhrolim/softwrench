@@ -306,6 +306,8 @@
     <Content Include="offline_content\firstsolar\templates\fslocationdrilldownbutton.html" />
     <Content Include="offline_content\firstsolar\templates\userprofile.html" />
     <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\firstsolar\htmls\servicereport\fsreportheader.html" />
+    <Content Include="web_content\firstsolar\htmls\servicereport\fsreportfooter.html" />
     <Content Include="web_content\firstsolar\htmls\templates\othertestsmodal.html" />
     <Content Include="web_content\firstsolar\htmls\templates\meetingpdf.html" />
     <Content Include="web_content\firstsolar\htmls\templates\meeting.html" />
@@ -320,6 +322,7 @@
     <Content Include="web_content\firstsolar\images\branding.png" />
     <Content Include="web_content\firstsolar\images\logo-pdf.png" />
     <Content Include="web_content\firstsolar\scripts\fsdailyoutagemeetingService.js" />
+    <Content Include="web_content\firstsolar\scripts\fsfooterreportcontroller.js" />
     <Content Include="web_content\firstsolar\scripts\fsmaterialService.js" />
     <Content Include="web_content\firstsolar\scripts\fsworkpackagerelatedrecordsservice.js" />
     <Content Include="web_content\firstsolar\scripts\fsdashboardService.js" />

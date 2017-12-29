@@ -1,30 +1,37 @@
-﻿<form id="printsectionform" class="form-horizontal hiddenonscreen">
+﻿<form id="printsectionform" class="form-horizontal hiddenonscreen {{printformId()}}" >
     <div class="form-group container">
         <div ng-if="showPrintSection">
 
 
             <div ng-if="isList">
-                <div id="rootprintdiv" list="true" printsectionrendered>
+                <div id="rootprintdiv" list="true" printsectionrendered >
                     <div ng-if="showPrintLogo" class="print-logo">
                         <img ng-src="{{ printLogo }}" />
                     </div>
 
                     <section class="container">
-                        <crud-list datamap="printDatamap" schema="printSchema" is-list="isList" ismodal="false" forprint="true"/>
+                        <crud-list datamap="printDatamap" schema="printSchema" is-list="isList" ismodal="false" forprint="true" />
                     </section>
                 </div>
             </div>
 
             <div ng-if="!isList">
                 <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered>
-                    <div ng-if="showPrintLogo" class="print-logo">
-                        <img ng-src="{{ printLogo }}" />
-                    </div>
-                    <div ng-show="shouldPrintMain">
+                    <div class="print-logo" ng-if="!hasCustomHeader">
+                        <img ng-src="{{ printLogo }}" ng-if="showPrintLogo" />
                         <h4>{{printSchema.title}} - {{displayableID}}</h4>
-                        <fieldset><legend class="legend-label">General</legend></fieldset>
+                    </div>
+                    
+                    <div ng-if="hasCustomHeader">
+                        <ng-include  src="customHeaderURL" onload="headerLoaded()" id="printheadersection" />    
+                    </div>
+
+                    
+                    <div ng-show="shouldPrintMain">
+                        <fieldset ng-show="showPrintSectionCompostions"><legend class="legend-label">General</legend></fieldset>
                         <crud-output-fields schema="printSchema" datamap="item" displayables="printSchema.displayables" orientation="vertical" forprint="true"></crud-output-fields>
                     </div>
+
                     <div ng-show="showPrintSectionCompostions">
                         <div ng-repeat="composition in compositionstoprint" ng-class="{'pagebreak-before': shouldPageBreak}">
                             <div ng-show="printComposition(item, composition)">
@@ -48,10 +55,18 @@
                                                 {{i18nValue('general.norecords','No records to display')}}
                                             </div>
                                         </div>
+                                    </div>
                                 </ng-switch>
                             </div>
+
                         </div>
                     </div>
+                    
+                    <div ng-if="hasCustomFooter">
+                        <ng-include  src="customFooterURL" onload="footerLoaded()" id="printfootersection" />    
+                    </div>
+                    
+
                 </div>
             </div>
         </div>
