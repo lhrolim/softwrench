@@ -401,6 +401,13 @@
         <include name="*.*" />
       </fileset>
     </copy>
+
+    <copy todir="${deploypath}/App_Data/Client/shared">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/shared">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+
     <copy todir="${deploypath}/App_Data/Client/otb">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/otb">
         <include name="*.*" />
@@ -462,6 +469,13 @@
         <include name="*.*" />
       </fileset>
     </copy>
+
+    <copy todir="${deploypath}/App_Data/Client/shared">
+      <fileset basedir="../softWrench.sW4.Web/App_Data/Client/shared">
+        <include name="*.*" />
+      </fileset>
+    </copy>
+    
     <copy todir="${deploypath}/App_Data/Client/otb">
       <fileset basedir="../softWrench.sW4.Web/App_Data/Client/otb">
         <include name="*.*" />
