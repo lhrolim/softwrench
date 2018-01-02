@@ -97,8 +97,14 @@ namespace softWrench.sW4.Security.Services {
                 //no need to sync to maximo, since there´s no such maximoPersonId
                 return UserFound(dbUser, userTimezoneOffset);
             }
+
+
             var maximoUser = await _userSyncManager.GetUserFromMaximoBySwUser(dbUser);
             if (maximoUser == null) {
+                if (dbUser.UserName.Equals("swadmin")) {
+                    return UserFound(dbUser, userTimezoneOffset);
+                }
+
                 Log.WarnFormat("maximo user {0} not found", dbUser.MaximoPersonId);
                 return null;
             }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Web.Mvc;
+using cts.commons.Util;
+using log4net;
 using softwrench.sw4.webcommons.classes.api;
 using softWrench.sW4.Util;
 using softWrench.sW4.Web.Controllers.Security;
@@ -14,6 +16,8 @@ namespace softWrench.sW4.Web.Common {
         private const string NoMenuLayout = "~/Views/Shared/_NoMenuLayout.cshtml";
         private const string RawLayout = "~/Views/Shared/Raw.cshtml";
         private const string ClientLayoutPattern = "~/Content/Customers/{0}/htmls/Shared/_Layout.cshtml";
+
+        
 
         public ClientAwareRazorViewEngine() {
             ViewLocationFormats = new string[] {
@@ -52,6 +56,7 @@ namespace softWrench.sW4.Web.Common {
 
             var noMenuAttribute = Attribute.GetCustomAttribute(controllerContext.Controller.GetType(), typeof(NoMenuController));
             if (noMenuAttribute != null) {
+                LoggingUtil.DefaultLog.DebugFormat("redirecting to nomenu controller, viewpath: {0}",viewPath);
                 return NoMenuLayout;
             }
 
