@@ -327,6 +327,11 @@
         /// </summary>
         public static string DetailTitleId = "detail.titleid";
 
+        /// <summary>
+        ///  If true disables secondary content support for a given schema
+        /// </summary>
+        public static string DetailDisableSecondaryContent = "detail.disablesecondarycontent";
+
 
         /// <summary>
         /// If true, the title of the detail schema will be shown
@@ -386,6 +391,8 @@
         /// The search schema id of current schema.
         /// </summary>
         public static string SearchSchemaId = "search.schemaid";
+
+
 
      
 

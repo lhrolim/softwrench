@@ -40,6 +40,10 @@
             return 'fa-square-o';
         }
 
+        $scope.secondaryContent = function(fieldMetadata,schema) {
+            return !!fieldMetadata.secondaryContent && schema.properties["detail.disablesecondarycontent"] !== "true";
+        }
+
 
         $scope.i18NOptionField = function (option, fieldMetadata, schema) {
             return i18NService.getI18nOptionField(option, fieldMetadata, schema);

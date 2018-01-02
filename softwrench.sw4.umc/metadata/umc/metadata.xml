@@ -312,11 +312,18 @@
               <renderer type="richtext"/>
             </field>
           </customization>
+
+          <properties>
+            <property key="detail.disablesecondarycontent" value="true"/>
+          </properties>
+     
+
         </schema>
+
         <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
 
-          <customization position="failurecode"/>
-          <customization position="problemcode"/>
+          <!--<customization position="failurecode"/>-->
+          <!--<customization position="problemcode"/>-->
 
           <customization position="+hiddenfield">
             <section orientation="horizontal">
