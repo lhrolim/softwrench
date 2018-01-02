@@ -191,7 +191,7 @@ namespace softwrench.sw4.dynforms.classes.dataset {
         }
 
         public override async Task<CompositionFetchResult> GetCompositionData(ApplicationMetadata application, CompositionFetchRequest request, JObject currentData) {
-            return null;
+            return await Task.FromResult<CompositionFetchResult>(null);
         }
 
 

@@ -35,7 +35,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             return Template.Render(Hash.FromAnonymousObject(templateData));
         }
 
-        protected string GetBbc() {
+        protected string GetBcc() {
             var bbc = SwConstants.DevTeamEmail + "; ";
             bbc += ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.BbcEmailsToNotify);
 

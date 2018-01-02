@@ -11,7 +11,7 @@ using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email {
     public abstract class BaseDispatchStatusEmailService : BaseDispatchGenericEmailService {
-        
+
         protected void SendEmail(DispatchTicket ticket, GfedSite site, string subject) {
             if (string.IsNullOrEmpty(ticket.ReportedBy?.Email) && string.IsNullOrEmpty(ticket.ReportedBy?.Person?.Email)) {
                 return;
@@ -20,8 +20,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             var to = ticket.ReportedBy?.Email ?? ticket.ReportedBy?.Person?.Email;
             var from = GetFrom();
             var msg = BuildMessage(ticket, site);
-            var emailData = new EmailData(from, to, subject, msg);
-            emailData.BCc = GetBbc();
+            var emailData = new EmailData(from, to, subject, msg) { BCc = GetBcc() };
 
             var emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>();
             emailService.SendEmailAsync(emailData);

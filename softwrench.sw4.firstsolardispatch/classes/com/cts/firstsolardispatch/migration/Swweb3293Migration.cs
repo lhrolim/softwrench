@@ -15,12 +15,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
             Alter.Table("GFED_SITE")
                 .AddColumn("supportemail").AsString(MigrationUtil.StringMedium).Nullable();
 
-            if (!ApplicationConfiguration.IsLocal()) {
-                return;
-            }
 
             Execute.Sql("UPDATE dbo.GFED_SITE SET supportemail = 'fssupport@power-electronics.com' where supportemail is null");
-            Execute.Sql("UPDATE dbo.GFED_SITE SET supportphone = '866-794-7138' where (supportphone is null or supportphone like '(000); 000 0000')");
+            Execute.Sql("UPDATE dbo.GFED_SITE SET supportphone = '8667947138' where (supportphone is null or supportphone like '(000); 000 0000')");
 
         }
 

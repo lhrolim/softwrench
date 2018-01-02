@@ -11,9 +11,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
 
     public class FirstSolarDispatchConfigurations : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
 
-        public const string DefaultFromEmailKey = "/FirstSolar/DISP/DefaultFromEmail";
-        public const string BbcEmailsToNotify = "/FirstSolar/DISP/BbcEmailsToNotify";
-        public const string SmsEmailsToNotify = "/FirstSolar/DISP/SmsEmailsToNotify";
+        public const string DefaultFromEmailKey = "/FirstSolarDispatch/DefaultFromEmail";
+        public const string BbcEmailsToNotify = "/FirstSolarDispatch/BccEmailsToNotify";
+        public const string SmsEmailsToNotify = "/FirstSolarDispatch/SmsEmailsToNotify";
 
         [Import]
         public IConfigurationFacade ConfigurationFacade { get; set; }

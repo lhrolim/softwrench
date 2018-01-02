@@ -38,7 +38,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             var from = GetFrom();
             var msg = BuildMessage(ticket, site, hour <= 4);
             var emailData = new EmailData(@from, to, subject, msg);
-            emailData.BCc = GetBbc();
+            emailData.BCc = GetBcc();
 
             var emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>();
             emailService.SendEmailAsync(emailData, async success => {
