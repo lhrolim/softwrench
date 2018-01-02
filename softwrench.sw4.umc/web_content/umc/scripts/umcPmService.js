@@ -59,6 +59,7 @@
                 json.data.push({ id, pmnum: entry.pmnum });
             });
             json.longDescription = dm["commonld"];
+            json.notes = dm["notes"];
             json.alias = dm["alias"];
             return this.alertService.confirm(`Are you sure you want to update these ${json.data.length} pms`)
                 .then(() => {

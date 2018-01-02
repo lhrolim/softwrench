@@ -44,6 +44,7 @@ namespace softwrench.sw4.umc.classes.com.cts.umc.controller {
                     { "pmuid", data["id"] },
                     { "pmnum", data["pmnum"] },
                     { "DESCRIPTION_LONGDESCRIPTION", batchData.LongDescription },
+                    { "NOTES", batchData.Notes },
                     { "siteid", "UMCSITE"},
                     { "orgid", "UMCORG"}
                 };
@@ -67,6 +68,11 @@ namespace softwrench.sw4.umc.classes.com.cts.umc.controller {
             public string Alias {
                 get; set;
             }
+
+            public string Notes {
+                get; set;
+            }
+
         }
     }
 }

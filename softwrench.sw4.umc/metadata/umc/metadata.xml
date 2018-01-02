@@ -44,6 +44,10 @@
       </attributes>
     </entity>
     <entity name="pm" idAttribute="pmuid" useridAttribute="pmnum">
+      <attributes>
+        <attribute name="notes" type="vachar"/>
+      </attributes>
+      
       <relationships>
         <relationship to="longdescription" qualifier="ld" lazy="true">
           <relationshipAttribute from="pmuid" to="ldkey" primary="true"/>
@@ -526,6 +530,7 @@
           <field attribute="commonld" label="Long Description" requiredexpression="true">
             <renderer type="richtext" params="height=400"/>
           </field>
+          <field attribute="notes" label="Notes" helpicon="right" tooltip="Additional notes regarding the selected pms"/>
           <field attribute="alias" label="Batch Identifier" helpicon="right" tooltip="An optional alias to help identifying this operation later"/>
         </schema>
 
