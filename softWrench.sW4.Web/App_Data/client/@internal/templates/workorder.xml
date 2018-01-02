@@ -103,12 +103,12 @@
         <relationship to="failurelistonly" qualifier="failurelist" >
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
-          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+<!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
         </relationship>
         <relationship to="problemlist" qualifier="problemlist">
           <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
-          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+<!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
         </relationship>
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
@@ -519,9 +519,9 @@
           <field attribute="tophiddenfield" hidden="true"/>
 
           <section orientation="horizontal">
-            <renderer type="default" params="childinputsize=large" />
+            <renderer type="default" />
             <field attribute="description" label="Summary" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+              <renderer type="default" params="maxlength=100;" />
             </field>
             <section id="statussection" />
             <section id="siteidsection"/>

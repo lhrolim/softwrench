@@ -11,6 +11,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Util;
 using softwrench.sW4.TestBase;
+using EntityUtil = softwrench.sW4.Shared2.Util.EntityUtil;
 
 namespace softwrench.sW4.test.Metadata {
     [TestClass]
@@ -247,6 +248,31 @@ namespace softwrench.sW4.test.Metadata {
             Assert.AreEqual(3,compositions.Count);
 
 
+        }
+
+        [TestMethod]
+        public void TestEntityMerging() {
+
+            if (ApplicationConfiguration.TestclientName != "firstsolar") {
+                ApplicationConfiguration.TestclientName = "firstsolar";
+                MetadataProvider.StubReset();
+            }
+
+            var entity = MetadataProvider.Entity("workorder");
+            var failureList = entity.Associations.FirstOrDefault(f => f.Qualifier.EqualsIc("failurelistonly_"));
+            Assert.IsNotNull(failureList);
+            Assert.AreEqual(3,failureList.Attributes.Count());
+
+            failureList = entity.Associations.FirstOrDefault(f => f.Qualifier.EqualsIc("failurelist_"));
+            Assert.IsNotNull(failureList);
+            Assert.AreEqual(3, failureList.Attributes.Count());
+
+
+            var app = MetadataProvider.Application("workorder").Schema(new ApplicationMetadataSchemaKey("editdetail"));
+            var associations = app.Associations();
+            var failureListAss = associations.FirstOrDefault(f => EntityUtil.IsRelationshipNameEquals(f.AssociationKey, "failurelist_"));
+            Assert.IsNotNull(failureListAss);
+            Assert.AreEqual(3, failureListAss.EntityAssociation.Attributes.Count());
         }
 
 
