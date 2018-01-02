@@ -532,7 +532,7 @@
                     <div ng-switch-default>
                         <ng-switch on="fieldMetadata.type">
                             <div ng-switch-when="ApplicationSection">
-                                <div ng-if="fieldMetadata.secondaryContent">
+                                <div ng-if="secondaryContent(fieldMetadata,schema)">
                                     <crud-expandable-section extraparameters="extraparameters"
                                                              schema="schema"
                                                              datamap="datamap"
@@ -546,7 +546,7 @@
                                 </div>
 
 
-                                <div ng-if="!fieldMetadata.secondaryContent">
+                                <div ng-if="!secondaryContent(fieldMetadata,schema)">
                                     <div ng-if="fieldMetadata.resourcepath != null"
                                          ng-include="contextPath(fieldMetadata.resourcepath)" href="#" style="width: 100%" />
                                     <div ng-if="fieldMetadata.resourcepath == null">
