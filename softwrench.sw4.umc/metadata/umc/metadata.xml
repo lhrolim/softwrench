@@ -32,6 +32,10 @@
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 
+        <relationship to="person" qualifier="lead">
+          <relationshipAttribute from="lead" to="personid" primary="true"/>
+        </relationship>
+
       </relationships>
     </entity>
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
@@ -311,6 +315,10 @@
             <field label="Details/Location" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
+          </customization>
+
+          <customization position="+reportdate">
+            <association target="lead" labelfield="lead_.displayname" label="Employee"/>
           </customization>
 
           <properties>

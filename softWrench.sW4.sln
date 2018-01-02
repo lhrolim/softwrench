@@ -116,6 +116,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.firstsolardi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.problem", "softwrench.sw4.problem\softwrench.sw4.problem.csproj", "{8062DCE9-1422-4CA7-8004-FFA7794A6516}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.swgas", "softwrench.sw4.swgas\softwrench.sw4.swgas.csproj", "{F55CA327-E991-4CAA-AFC7-ADA7285308E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Android = Ad-Hoc|Android
@@ -130,6 +132,7 @@ Global
 		Ad-Hoc|Windows-ARM = Ad-Hoc|Windows-ARM
 		Ad-Hoc|Windows-x64 = Ad-Hoc|Windows-x64
 		Ad-Hoc|Windows-x86 = Ad-Hoc|Windows-x86
+		Ad-Hoc|x64 = Ad-Hoc|x64
 		AppStore|Android = AppStore|Android
 		AppStore|Any CPU = AppStore|Any CPU
 		AppStore|iOS = AppStore|iOS
@@ -142,6 +145,7 @@ Global
 		AppStore|Windows-ARM = AppStore|Windows-ARM
 		AppStore|Windows-x64 = AppStore|Windows-x64
 		AppStore|Windows-x86 = AppStore|Windows-x86
+		AppStore|x64 = AppStore|x64
 		CD_ROM|Android = CD_ROM|Android
 		CD_ROM|Any CPU = CD_ROM|Any CPU
 		CD_ROM|iOS = CD_ROM|iOS
@@ -154,6 +158,7 @@ Global
 		CD_ROM|Windows-ARM = CD_ROM|Windows-ARM
 		CD_ROM|Windows-x64 = CD_ROM|Windows-x64
 		CD_ROM|Windows-x86 = CD_ROM|Windows-x86
+		CD_ROM|x64 = CD_ROM|x64
 		Debug|Android = Debug|Android
 		Debug|Any CPU = Debug|Any CPU
 		Debug|iOS = Debug|iOS
@@ -166,6 +171,7 @@ Global
 		Debug|Windows-ARM = Debug|Windows-ARM
 		Debug|Windows-x64 = Debug|Windows-x64
 		Debug|Windows-x86 = Debug|Windows-x86
+		Debug|x64 = Debug|x64
 		Distribution|Android = Distribution|Android
 		Distribution|Any CPU = Distribution|Any CPU
 		Distribution|iOS = Distribution|iOS
@@ -178,6 +184,7 @@ Global
 		Distribution|Windows-ARM = Distribution|Windows-ARM
 		Distribution|Windows-x64 = Distribution|Windows-x64
 		Distribution|Windows-x86 = Distribution|Windows-x86
+		Distribution|x64 = Distribution|x64
 		DVD-5|Android = DVD-5|Android
 		DVD-5|Any CPU = DVD-5|Any CPU
 		DVD-5|iOS = DVD-5|iOS
@@ -190,6 +197,7 @@ Global
 		DVD-5|Windows-ARM = DVD-5|Windows-ARM
 		DVD-5|Windows-x64 = DVD-5|Windows-x64
 		DVD-5|Windows-x86 = DVD-5|Windows-x86
+		DVD-5|x64 = DVD-5|x64
 		Release|Android = Release|Android
 		Release|Any CPU = Release|Any CPU
 		Release|iOS = Release|iOS
@@ -202,6 +210,7 @@ Global
 		Release|Windows-ARM = Release|Windows-ARM
 		Release|Windows-x64 = Release|Windows-x64
 		Release|Windows-x86 = Release|Windows-x86
+		Release|x64 = Release|x64
 		SingleImage|Android = SingleImage|Android
 		SingleImage|Any CPU = SingleImage|Any CPU
 		SingleImage|iOS = SingleImage|iOS
@@ -214,6 +223,7 @@ Global
 		SingleImage|Windows-ARM = SingleImage|Windows-ARM
 		SingleImage|Windows-x64 = SingleImage|Windows-x64
 		SingleImage|Windows-x86 = SingleImage|Windows-x86
+		SingleImage|x64 = SingleImage|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
@@ -230,6 +240,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Ad-Hoc|x64.Build.0 = Release|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -244,6 +256,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|x64.ActiveCfg = Release|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.AppStore|x64.Build.0 = Release|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|Any CPU.Build.0 = Debug|Any CPU
@@ -258,6 +272,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|x64.ActiveCfg = Release|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.CD_ROM|x64.Build.0 = Release|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|Android.Build.0 = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -275,6 +291,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|x64.ActiveCfg = Debug|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Debug|x64.Build.0 = Debug|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -289,6 +307,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|x64.ActiveCfg = Debug|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Distribution|x64.Build.0 = Debug|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -303,6 +323,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|x64.ActiveCfg = Debug|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.DVD-5|x64.Build.0 = Debug|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|Android.ActiveCfg = Release|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -317,6 +339,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|x64.ActiveCfg = Release|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.Release|x64.Build.0 = Release|x64
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|Any CPU.Build.0 = Debug|Any CPU
@@ -331,6 +355,8 @@ Global
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|x64.ActiveCfg = Release|x64
+		{CE228C26-938D-4D6F-95FA-12CC5241AFB5}.SingleImage|x64.Build.0 = Release|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -345,6 +371,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Ad-Hoc|x64.Build.0 = Release|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -359,6 +387,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|x64.ActiveCfg = Release|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.AppStore|x64.Build.0 = Release|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|Any CPU.Build.0 = Debug|Any CPU
@@ -373,6 +403,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|x64.ActiveCfg = Release|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.CD_ROM|x64.Build.0 = Release|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|Android.Build.0 = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -389,6 +421,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|x64.ActiveCfg = Debug|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Debug|x64.Build.0 = Debug|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -403,6 +437,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|x64.ActiveCfg = Debug|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Distribution|x64.Build.0 = Debug|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -417,6 +453,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|x64.ActiveCfg = Debug|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.DVD-5|x64.Build.0 = Debug|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|Android.ActiveCfg = Release|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -431,6 +469,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|x64.ActiveCfg = Release|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.Release|x64.Build.0 = Release|x64
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|Any CPU.Build.0 = Debug|Any CPU
@@ -445,6 +485,8 @@ Global
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|x64.ActiveCfg = Release|x64
+		{8F237B59-E434-4A10-9B53-B982CAC34551}.SingleImage|x64.Build.0 = Release|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -459,6 +501,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Ad-Hoc|x64.Build.0 = Release|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -473,6 +517,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|x64.ActiveCfg = Release|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.AppStore|x64.Build.0 = Release|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|Any CPU.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|Any CPU.Build.0 = Debug|Any CPU
@@ -487,6 +533,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|x64.ActiveCfg = Release|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.CD_ROM|x64.Build.0 = Release|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|Android.Build.0 = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -503,6 +551,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|x64.ActiveCfg = Debug|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Debug|x64.Build.0 = Debug|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -517,6 +567,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|x64.ActiveCfg = Debug|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Distribution|x64.Build.0 = Debug|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -531,6 +583,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|x64.ActiveCfg = Debug|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.DVD-5|x64.Build.0 = Debug|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|Android.ActiveCfg = Release|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -545,6 +599,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|x64.ActiveCfg = Release|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.Release|x64.Build.0 = Release|x64
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|Any CPU.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|Any CPU.Build.0 = Debug|Any CPU
@@ -559,6 +615,8 @@ Global
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|x64.ActiveCfg = Release|x64
+		{6EAAA8C9-D79D-4978-AD16-FCC90DE5951D}.SingleImage|x64.Build.0 = Release|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -573,6 +631,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Ad-Hoc|x64.Build.0 = Release|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -587,6 +647,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|x64.ActiveCfg = Release|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.AppStore|x64.Build.0 = Release|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|Any CPU.Build.0 = Debug|Any CPU
@@ -601,6 +663,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|x64.ActiveCfg = Release|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.CD_ROM|x64.Build.0 = Release|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|Android.Build.0 = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -616,6 +680,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|x64.ActiveCfg = Debug|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Debug|x64.Build.0 = Debug|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -630,6 +696,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|x64.ActiveCfg = Debug|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Distribution|x64.Build.0 = Debug|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -644,6 +712,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|x64.ActiveCfg = Debug|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.DVD-5|x64.Build.0 = Debug|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|Android.ActiveCfg = Release|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -658,6 +728,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|x64.ActiveCfg = Release|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.Release|x64.Build.0 = Release|x64
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|Any CPU.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|Any CPU.Build.0 = Debug|Any CPU
@@ -672,6 +744,8 @@ Global
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|x64.ActiveCfg = Release|x64
+		{E3764769-6D4D-4986-BAF4-02D1B479D961}.SingleImage|x64.Build.0 = Release|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -686,6 +760,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Ad-Hoc|x64.Build.0 = Release|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -700,6 +776,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|x64.ActiveCfg = Release|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.AppStore|x64.Build.0 = Release|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -714,6 +792,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|x64.ActiveCfg = Release|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.CD_ROM|x64.Build.0 = Release|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|Android.Build.0 = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -729,6 +809,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|x64.ActiveCfg = Debug|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Debug|x64.Build.0 = Debug|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -743,6 +825,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|x64.ActiveCfg = Debug|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Distribution|x64.Build.0 = Debug|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -757,6 +841,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|x64.ActiveCfg = Debug|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.DVD-5|x64.Build.0 = Debug|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|Android.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -771,6 +857,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|x64.ActiveCfg = Release|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.Release|x64.Build.0 = Release|x64
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -785,6 +873,8 @@ Global
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|x64.ActiveCfg = Release|x64
+		{D6D3839E-07FE-4FAC-B0EE-1D2D2D0C0EFA}.SingleImage|x64.Build.0 = Release|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -799,6 +889,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Ad-Hoc|x64.Build.0 = Release|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -813,6 +905,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|x64.ActiveCfg = Release|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.AppStore|x64.Build.0 = Release|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -827,6 +921,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|x64.ActiveCfg = Release|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.CD_ROM|x64.Build.0 = Release|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|Android.Build.0 = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -842,6 +938,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|x64.ActiveCfg = Debug|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Debug|x64.Build.0 = Debug|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -856,6 +954,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|x64.ActiveCfg = Debug|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Distribution|x64.Build.0 = Debug|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -870,6 +970,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|x64.ActiveCfg = Debug|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.DVD-5|x64.Build.0 = Debug|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|Android.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -884,6 +986,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|x64.ActiveCfg = Release|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.Release|x64.Build.0 = Release|x64
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -898,6 +1002,8 @@ Global
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|x64.ActiveCfg = Release|x64
+		{76AFE652-82D1-43D4-977B-60546FA9A713}.SingleImage|x64.Build.0 = Release|x64
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -912,6 +1018,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Ad-Hoc|x64.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -926,6 +1033,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.AppStore|x64.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -940,6 +1048,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.CD_ROM|x64.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|Android.Build.0 = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -955,6 +1064,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -969,6 +1079,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -983,6 +1094,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|Android.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -997,6 +1109,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.Release|x64.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1011,6 +1124,7 @@ Global
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{9B568DF3-6A78-4A01-B080-8E88C8DAB0F7}.SingleImage|x64.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1025,6 +1139,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Ad-Hoc|x64.Build.0 = Release|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1039,6 +1155,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|x64.ActiveCfg = Release|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.AppStore|x64.Build.0 = Release|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1053,6 +1171,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|x64.ActiveCfg = Release|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.CD_ROM|x64.Build.0 = Release|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|Android.Build.0 = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1068,6 +1188,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|x64.ActiveCfg = Debug|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Debug|x64.Build.0 = Debug|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1082,6 +1204,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|x64.ActiveCfg = Debug|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Distribution|x64.Build.0 = Debug|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1096,6 +1220,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|x64.ActiveCfg = Debug|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.DVD-5|x64.Build.0 = Debug|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|Android.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1110,6 +1236,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|x64.ActiveCfg = Release|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.Release|x64.Build.0 = Release|x64
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|Android.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1124,6 +1252,8 @@ Global
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|Windows-x64.ActiveCfg = Debug|Any CPU
 		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|Windows-x86.ActiveCfg = Debug|Any CPU
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|x64.ActiveCfg = Release|x64
+		{34DA20D1-31F3-4FB6-B9CF-81DD300F56F0}.SingleImage|x64.Build.0 = Release|x64
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1138,6 +1268,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1152,6 +1283,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1166,6 +1298,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|Android.Build.0 = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1181,6 +1314,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1195,6 +1329,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1209,6 +1344,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|Android.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1223,6 +1359,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.Release|x64.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1237,6 +1374,7 @@ Global
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{3C826D52-6795-4243-8D0E-CF8CBCB47891}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1251,6 +1389,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1265,6 +1404,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1279,6 +1419,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -1293,6 +1434,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1307,6 +1449,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1321,6 +1464,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|Android.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1335,6 +1479,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.Release|x64.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1349,6 +1494,7 @@ Global
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{75C4B153-E741-4D16-9F10-96B2F6335331}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1363,6 +1509,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1377,6 +1524,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1391,6 +1539,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -1405,6 +1554,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1419,6 +1569,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1433,6 +1584,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Android.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1447,6 +1599,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.Release|x64.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1461,6 +1614,7 @@ Global
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{A89DC757-B0BD-4BA0-9436-E4AE87F31BF1}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1475,6 +1629,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1489,6 +1644,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1503,6 +1659,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -1517,6 +1674,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1531,6 +1689,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1545,6 +1704,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|Android.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1559,6 +1719,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.Release|x64.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1573,6 +1734,7 @@ Global
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{8248B6CE-335F-4611-89D2-1A79DA5192C2}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1587,6 +1749,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Ad-Hoc|x64.Build.0 = Release|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1601,6 +1765,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|x64.ActiveCfg = Release|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.AppStore|x64.Build.0 = Release|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1615,6 +1781,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|x64.ActiveCfg = Release|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.CD_ROM|x64.Build.0 = Release|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -1629,6 +1797,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|x64.ActiveCfg = Debug|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Debug|x64.Build.0 = Debug|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1643,6 +1813,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|x64.ActiveCfg = Debug|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Distribution|x64.Build.0 = Debug|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1657,6 +1829,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|x64.ActiveCfg = Debug|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.DVD-5|x64.Build.0 = Debug|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|Android.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1671,6 +1845,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|x64.ActiveCfg = Release|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.Release|x64.Build.0 = Release|x64
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1685,6 +1861,8 @@ Global
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|x64.ActiveCfg = Release|x64
+		{1A476897-DD39-49EB-8AB1-F1EED8CE9AB2}.SingleImage|x64.Build.0 = Release|x64
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
@@ -1699,6 +1877,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|Any CPU.Build.0 = Release|Any CPU
@@ -1713,6 +1892,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
@@ -1727,6 +1907,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Any CPU.Build.0 = Debug|Any CPU
@@ -1741,6 +1922,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|Any CPU.Build.0 = Debug|Any CPU
@@ -1755,6 +1937,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
@@ -1769,6 +1952,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Android.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Any CPU.Build.0 = Release|Any CPU
@@ -1783,6 +1967,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Windows-x64.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.Release|x64.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|Any CPU.Build.0 = Release|Any CPU
@@ -1797,6 +1982,7 @@ Global
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
 		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{CBF64EA8-97DF-43B4-97CB-477769F9941C}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -1821,6 +2007,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Ad-Hoc|x64.Build.0 = Release|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|Android.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -1845,6 +2033,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|x64.ActiveCfg = Release|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.AppStore|x64.Build.0 = Release|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -1869,6 +2059,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|x64.ActiveCfg = Release|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.CD_ROM|x64.Build.0 = Release|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|Android.Build.0 = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1893,6 +2085,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|x64.ActiveCfg = Debug|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Debug|x64.Build.0 = Debug|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|Android.Build.0 = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1917,6 +2111,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|x64.ActiveCfg = Debug|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Distribution|x64.Build.0 = Debug|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -1941,6 +2137,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|x64.ActiveCfg = Debug|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.DVD-5|x64.Build.0 = Debug|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|Android.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|Android.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -1965,6 +2163,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|x64.ActiveCfg = Release|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.Release|x64.Build.0 = Release|x64
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|Android.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -1989,6 +2189,8 @@ Global
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|x64.ActiveCfg = Release|x64
+		{4812B935-8303-4B80-9E32-8CD81ABEFC9F}.SingleImage|x64.Build.0 = Release|x64
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -2013,6 +2215,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|Android.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -2037,6 +2240,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -2061,6 +2265,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|Android.Build.0 = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2085,6 +2290,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|Android.Build.0 = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2109,6 +2315,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2133,6 +2340,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|Android.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|Android.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -2157,6 +2365,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.Release|x64.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|Android.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2181,6 +2390,7 @@ Global
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{3ECF0937-DD18-4B53-98AB-C75CC46A5AB4}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -2205,6 +2415,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|Android.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -2229,6 +2440,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -2253,6 +2465,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Debug|Android.Build.0 = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2277,6 +2490,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|Android.Build.0 = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2301,6 +2515,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2325,6 +2540,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Release|Android.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Release|Android.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -2349,6 +2565,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.Release|x64.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|Android.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2373,6 +2590,7 @@ Global
 		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{83D9B360-0879-487F-B03C-62044846192C}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -2397,6 +2615,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|Android.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -2421,6 +2640,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -2445,6 +2665,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|Android.Build.0 = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2469,6 +2690,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|Android.Build.0 = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2493,6 +2715,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2517,6 +2740,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|Android.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|Android.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -2541,6 +2765,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.Release|x64.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|Android.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2565,6 +2790,7 @@ Global
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{2350E8F9-0D82-45C3-A268-57A732E85945}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -2589,6 +2815,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Ad-Hoc|x64.Build.0 = Release|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|Android.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -2613,6 +2841,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|x64.ActiveCfg = Release|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.AppStore|x64.Build.0 = Release|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -2637,6 +2867,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|x64.ActiveCfg = Release|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.CD_ROM|x64.Build.0 = Release|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|Android.Build.0 = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2661,6 +2893,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|x64.ActiveCfg = Debug|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Debug|x64.Build.0 = Debug|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|Android.Build.0 = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2685,6 +2919,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|x64.ActiveCfg = Debug|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Distribution|x64.Build.0 = Debug|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2709,6 +2945,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|x64.ActiveCfg = Debug|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.DVD-5|x64.Build.0 = Debug|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|Android.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|Android.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -2733,6 +2971,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|x64.ActiveCfg = Release|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.Release|x64.Build.0 = Release|x64
 		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|Android.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2757,6 +2997,8 @@ Global
 		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|x64.ActiveCfg = Release|x64
+		{6E187557-8460-4992-9687-84373C5F3ED2}.SingleImage|x64.Build.0 = Release|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -2781,6 +3023,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Ad-Hoc|x64.Build.0 = Release|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|Android.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -2805,6 +3049,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|x64.ActiveCfg = Release|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.AppStore|x64.Build.0 = Release|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -2829,6 +3075,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|x64.ActiveCfg = Release|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.CD_ROM|x64.Build.0 = Release|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|Android.Build.0 = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2853,6 +3101,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|x64.ActiveCfg = Debug|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Debug|x64.Build.0 = Debug|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|Android.Build.0 = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2877,6 +3127,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|x64.ActiveCfg = Debug|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Distribution|x64.Build.0 = Debug|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -2901,6 +3153,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|x64.ActiveCfg = Debug|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.DVD-5|x64.Build.0 = Debug|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|Android.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|Android.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -2925,6 +3179,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|x64.ActiveCfg = Release|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.Release|x64.Build.0 = Release|x64
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|Android.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -2949,6 +3205,8 @@ Global
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|x64.ActiveCfg = Release|x64
+		{1EBF5C08-8505-4ACF-833A-CD95A85A19C4}.SingleImage|x64.Build.0 = Release|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -2973,6 +3231,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Ad-Hoc|x64.Build.0 = Release|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|Android.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -2997,6 +3257,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|x64.ActiveCfg = Release|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.AppStore|x64.Build.0 = Release|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -3021,6 +3283,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|x64.ActiveCfg = Release|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.CD_ROM|x64.Build.0 = Release|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|Android.Build.0 = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3045,6 +3309,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|x64.ActiveCfg = Debug|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Debug|x64.Build.0 = Debug|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|Android.Build.0 = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3069,6 +3335,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|x64.ActiveCfg = Debug|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Distribution|x64.Build.0 = Debug|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3093,6 +3361,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|x64.ActiveCfg = Debug|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.DVD-5|x64.Build.0 = Debug|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|Android.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|Android.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -3117,6 +3387,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|x64.ActiveCfg = Release|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.Release|x64.Build.0 = Release|x64
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|Android.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -3141,6 +3413,8 @@ Global
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|x64.ActiveCfg = Release|x64
+		{CCEC5CEB-EF32-47CA-9B87-0068651B2A1B}.SingleImage|x64.Build.0 = Release|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -3165,6 +3439,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Ad-Hoc|x64.Build.0 = Release|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|Android.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -3189,6 +3465,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|x64.ActiveCfg = Release|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.AppStore|x64.Build.0 = Release|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -3213,6 +3491,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|x64.ActiveCfg = Release|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.CD_ROM|x64.Build.0 = Release|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|Android.Build.0 = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3237,6 +3517,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|x64.ActiveCfg = Debug|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Debug|x64.Build.0 = Debug|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|Android.Build.0 = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3261,6 +3543,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|x64.ActiveCfg = Debug|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Distribution|x64.Build.0 = Debug|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3285,6 +3569,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|x64.ActiveCfg = Debug|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.DVD-5|x64.Build.0 = Debug|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|Android.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|Android.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -3309,6 +3595,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|x64.ActiveCfg = Release|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.Release|x64.Build.0 = Release|x64
 		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|Android.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -3333,6 +3621,8 @@ Global
 		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|x64.ActiveCfg = Release|x64
+		{BB222B54-5670-4853-ACF9-64BB36094021}.SingleImage|x64.Build.0 = Release|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -3357,6 +3647,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Ad-Hoc|x64.Build.0 = Release|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|Android.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -3381,6 +3673,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|x64.ActiveCfg = Release|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.AppStore|x64.Build.0 = Release|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -3405,6 +3699,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|x64.ActiveCfg = Release|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.CD_ROM|x64.Build.0 = Release|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|Android.Build.0 = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3429,6 +3725,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|x64.ActiveCfg = Debug|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Debug|x64.Build.0 = Debug|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|Android.Build.0 = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3453,6 +3751,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|x64.ActiveCfg = Debug|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Distribution|x64.Build.0 = Debug|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3477,6 +3777,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|x64.ActiveCfg = Debug|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.DVD-5|x64.Build.0 = Debug|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|Android.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|Android.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -3501,6 +3803,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|x64.ActiveCfg = Release|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.Release|x64.Build.0 = Release|x64
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|Android.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -3525,6 +3829,8 @@ Global
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|x64.ActiveCfg = Release|x64
+		{507C52B9-98A9-4E46-950B-9F54693325B1}.SingleImage|x64.Build.0 = Release|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -3549,6 +3855,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Ad-Hoc|x64.Build.0 = Release|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|Android.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -3573,6 +3881,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|x64.ActiveCfg = Release|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.AppStore|x64.Build.0 = Release|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -3597,6 +3907,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|x64.ActiveCfg = Release|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.CD_ROM|x64.Build.0 = Release|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|Android.Build.0 = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3621,6 +3933,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|x64.ActiveCfg = Debug|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Debug|x64.Build.0 = Debug|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|Android.Build.0 = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3645,6 +3959,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|x64.ActiveCfg = Debug|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Distribution|x64.Build.0 = Debug|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3669,6 +3985,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|x64.ActiveCfg = Debug|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.DVD-5|x64.Build.0 = Debug|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|Android.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|Android.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -3693,6 +4011,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|x64.ActiveCfg = Release|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.Release|x64.Build.0 = Release|x64
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|Android.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -3717,6 +4037,8 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|x64.ActiveCfg = Release|x64
+		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43}.SingleImage|x64.Build.0 = Release|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -3741,6 +4063,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Ad-Hoc|x64.Build.0 = Release|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|Android.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -3765,6 +4089,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|x64.ActiveCfg = Release|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.AppStore|x64.Build.0 = Release|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -3789,6 +4115,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|x64.ActiveCfg = Release|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.CD_ROM|x64.Build.0 = Release|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|Android.Build.0 = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3813,6 +4141,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|x64.ActiveCfg = Debug|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Debug|x64.Build.0 = Debug|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|Android.Build.0 = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3837,6 +4167,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|x64.ActiveCfg = Debug|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Distribution|x64.Build.0 = Debug|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -3861,6 +4193,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|x64.ActiveCfg = Debug|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.DVD-5|x64.Build.0 = Debug|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|Android.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|Android.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -3885,6 +4219,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|x64.ActiveCfg = Release|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.Release|x64.Build.0 = Release|x64
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|Android.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -3909,6 +4245,8 @@ Global
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|x64.ActiveCfg = Release|x64
+		{34D2E894-C3AA-4F6E-B562-7A91D3078793}.SingleImage|x64.Build.0 = Release|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -3933,6 +4271,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Ad-Hoc|x64.Build.0 = Release|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|Android.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -3957,6 +4297,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|x64.ActiveCfg = Release|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.AppStore|x64.Build.0 = Release|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -3981,6 +4323,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|x64.ActiveCfg = Release|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.CD_ROM|x64.Build.0 = Release|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|Android.Build.0 = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4005,6 +4349,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|x64.ActiveCfg = Debug|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Debug|x64.Build.0 = Debug|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|Android.Build.0 = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4029,6 +4375,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|x64.ActiveCfg = Debug|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Distribution|x64.Build.0 = Debug|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4053,6 +4401,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|x64.ActiveCfg = Debug|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.DVD-5|x64.Build.0 = Debug|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|Android.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|Android.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -4077,6 +4427,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|x64.ActiveCfg = Release|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.Release|x64.Build.0 = Release|x64
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|Android.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -4101,6 +4453,8 @@ Global
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|x64.ActiveCfg = Release|x64
+		{653D15FD-96CA-4E5D-B147-39AD01E59006}.SingleImage|x64.Build.0 = Release|x64
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -4125,6 +4479,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Ad-Hoc|x64.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|Android.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -4149,6 +4504,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.AppStore|x64.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -4173,6 +4529,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.CD_ROM|x64.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|Android.Build.0 = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4197,6 +4554,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|Android.Build.0 = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4221,6 +4579,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Distribution|x64.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4245,6 +4604,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.DVD-5|x64.ActiveCfg = Debug|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|Android.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|Android.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -4269,6 +4629,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.Release|x64.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|Android.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -4293,6 +4654,7 @@ Global
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{3B4ED6C6-BA78-45CD-8AF9-964F3DC409E6}.SingleImage|x64.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -4317,6 +4679,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Ad-Hoc|x64.Build.0 = Release|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|Android.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -4341,6 +4705,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|x64.ActiveCfg = Release|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.AppStore|x64.Build.0 = Release|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -4365,6 +4731,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|x64.ActiveCfg = Release|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.CD_ROM|x64.Build.0 = Release|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|Android.Build.0 = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4389,6 +4757,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|x64.ActiveCfg = Debug|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Debug|x64.Build.0 = Debug|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|Android.Build.0 = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4413,6 +4783,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|x64.ActiveCfg = Debug|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Distribution|x64.Build.0 = Debug|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4437,6 +4809,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|x64.ActiveCfg = Debug|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.DVD-5|x64.Build.0 = Debug|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|Android.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|Android.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -4461,6 +4835,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|x64.ActiveCfg = Release|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.Release|x64.Build.0 = Release|x64
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|Android.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -4485,6 +4861,8 @@ Global
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|x64.ActiveCfg = Release|x64
+		{11D87C06-FF14-4372-92F3-FF0F9BFB0EA5}.SingleImage|x64.Build.0 = Release|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -4509,6 +4887,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Ad-Hoc|x64.Build.0 = Release|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|Android.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -4533,6 +4913,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|x64.ActiveCfg = Release|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.AppStore|x64.Build.0 = Release|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -4557,6 +4939,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|x64.ActiveCfg = Release|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.CD_ROM|x64.Build.0 = Release|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|Android.Build.0 = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4581,6 +4965,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|x64.ActiveCfg = Debug|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Debug|x64.Build.0 = Debug|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|Android.Build.0 = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4605,6 +4991,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|x64.ActiveCfg = Debug|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Distribution|x64.Build.0 = Debug|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4629,6 +5017,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|x64.ActiveCfg = Debug|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.DVD-5|x64.Build.0 = Debug|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|Android.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|Android.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -4653,6 +5043,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|x64.ActiveCfg = Release|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.Release|x64.Build.0 = Release|x64
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|Android.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -4677,6 +5069,8 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|x64.ActiveCfg = Release|x64
+		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964}.SingleImage|x64.Build.0 = Release|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -4701,6 +5095,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Ad-Hoc|x64.Build.0 = Release|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|Android.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -4725,6 +5121,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|x64.ActiveCfg = Release|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.AppStore|x64.Build.0 = Release|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -4749,6 +5147,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|x64.ActiveCfg = Release|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.CD_ROM|x64.Build.0 = Release|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|Android.Build.0 = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4773,6 +5173,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|x64.ActiveCfg = Debug|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Debug|x64.Build.0 = Debug|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|Android.Build.0 = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4797,6 +5199,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|x64.ActiveCfg = Debug|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Distribution|x64.Build.0 = Debug|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4821,6 +5225,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|x64.ActiveCfg = Debug|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.DVD-5|x64.Build.0 = Debug|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|Android.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|Android.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -4845,6 +5251,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|x64.ActiveCfg = Release|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.Release|x64.Build.0 = Release|x64
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|Android.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -4869,6 +5277,8 @@ Global
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|x64.ActiveCfg = Release|x64
+		{825BF88C-0051-415E-82B7-6F9D91E36709}.SingleImage|x64.Build.0 = Release|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -4893,6 +5303,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Ad-Hoc|x64.Build.0 = Release|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|Android.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -4917,6 +5329,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|x64.ActiveCfg = Release|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.AppStore|x64.Build.0 = Release|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -4941,6 +5355,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|x64.ActiveCfg = Release|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.CD_ROM|x64.Build.0 = Release|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|Android.Build.0 = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4965,6 +5381,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|x64.ActiveCfg = Debug|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Debug|x64.Build.0 = Debug|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|Android.Build.0 = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -4989,6 +5407,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|x64.ActiveCfg = Debug|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Distribution|x64.Build.0 = Debug|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -5013,6 +5433,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|x64.ActiveCfg = Debug|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.DVD-5|x64.Build.0 = Debug|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|Android.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|Android.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -5037,6 +5459,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|x64.ActiveCfg = Release|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.Release|x64.Build.0 = Release|x64
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|Android.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -5061,6 +5485,8 @@ Global
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|x64.ActiveCfg = Release|x64
+		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA}.SingleImage|x64.Build.0 = Release|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|Android.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
@@ -5085,6 +5511,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Ad-Hoc|x64.Build.0 = Release|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|Android.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|Android.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
@@ -5109,6 +5537,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|Windows-x64.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|x64.ActiveCfg = Release|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.AppStore|x64.Build.0 = Release|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|Android.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|Android.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
@@ -5133,6 +5563,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|x64.ActiveCfg = Release|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.CD_ROM|x64.Build.0 = Release|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|Android.ActiveCfg = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|Android.Build.0 = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -5157,6 +5589,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|Windows-x64.Build.0 = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|x64.ActiveCfg = Debug|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Debug|x64.Build.0 = Debug|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|Android.ActiveCfg = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|Android.Build.0 = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
@@ -5181,6 +5615,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|x64.ActiveCfg = Debug|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Distribution|x64.Build.0 = Debug|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|Android.ActiveCfg = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|Android.Build.0 = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
@@ -5205,6 +5641,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|x64.ActiveCfg = Debug|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.DVD-5|x64.Build.0 = Debug|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|Android.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|Android.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -5229,6 +5667,8 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|Windows-x64.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|Windows-x86.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|x64.ActiveCfg = Release|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.Release|x64.Build.0 = Release|x64
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Android.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Android.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
@@ -5253,6 +5693,216 @@ Global
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|x64.ActiveCfg = Release|x64
+		{8062DCE9-1422-4CA7-8004-FFA7794A6516}.SingleImage|x64.Build.0 = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Android.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Android.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|iOS.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|iOS.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|iPhone.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|iPhoneSimulator.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Mixed Platforms.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows Phone (Universal).ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows Phone (Universal).Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows Phone 8.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows Phone 8.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-AnyCPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-AnyCPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-ARM.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-ARM.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-x64.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-x64.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-x86.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|Windows-x86.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|x64.ActiveCfg = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Ad-Hoc|x64.Build.0 = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Android.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Android.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Any CPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Any CPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|iOS.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|iOS.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|iPhone.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|iPhone.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|iPhoneSimulator.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Mixed Platforms.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows Phone (Universal).ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows Phone (Universal).Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows Phone 8.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows Phone 8.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-AnyCPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-AnyCPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-ARM.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-ARM.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-x64.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-x64.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-x86.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|Windows-x86.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|x64.ActiveCfg = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.AppStore|x64.Build.0 = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Android.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Android.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Any CPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Any CPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|iOS.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|iOS.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|iPhone.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|iPhone.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|iPhoneSimulator.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Mixed Platforms.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows Phone (Universal).ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows Phone (Universal).Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows Phone 8.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows Phone 8.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-AnyCPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-AnyCPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-ARM.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-ARM.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-x64.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-x64.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-x86.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|Windows-x86.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|x64.ActiveCfg = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.CD_ROM|x64.Build.0 = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Android.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Android.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|iOS.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|iOS.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows Phone (Universal).ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows Phone (Universal).Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows Phone 8.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows Phone 8.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-AnyCPU.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-AnyCPU.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-ARM.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-ARM.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-x64.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-x64.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-x86.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|Windows-x86.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|x64.ActiveCfg = Debug|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Debug|x64.Build.0 = Debug|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Android.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Android.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Any CPU.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|iOS.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|iOS.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|iPhone.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|iPhone.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows Phone (Universal).ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows Phone (Universal).Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows Phone 8.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows Phone 8.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-AnyCPU.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-AnyCPU.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-ARM.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-ARM.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-x64.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-x64.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-x86.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|Windows-x86.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|x64.ActiveCfg = Debug|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Distribution|x64.Build.0 = Debug|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Android.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Android.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Any CPU.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|iOS.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|iOS.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|iPhone.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|iPhone.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows Phone (Universal).ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows Phone (Universal).Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows Phone 8.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows Phone 8.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-AnyCPU.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-AnyCPU.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-ARM.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-ARM.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-x64.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-x64.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-x86.ActiveCfg = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|Windows-x86.Build.0 = Debug|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|x64.ActiveCfg = Debug|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.DVD-5|x64.Build.0 = Debug|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Android.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Android.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|iOS.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|iOS.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|iPhone.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows Phone (Universal).ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows Phone (Universal).Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows Phone 8.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows Phone 8.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-AnyCPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-AnyCPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-ARM.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-ARM.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-x64.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-x64.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-x86.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|Windows-x86.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|x64.ActiveCfg = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.Release|x64.Build.0 = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Android.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Android.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Any CPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Any CPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|iOS.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|iOS.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|iPhone.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|iPhone.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|iPhoneSimulator.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Mixed Platforms.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows Phone (Universal).ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows Phone (Universal).Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows Phone 8.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows Phone 8.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-AnyCPU.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-AnyCPU.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-ARM.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-ARM.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-x64.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-x64.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-x86.ActiveCfg = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|Windows-x86.Build.0 = Release|Any CPU
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|x64.ActiveCfg = Release|x64
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9}.SingleImage|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -5285,6 +5935,7 @@ Global
 		{A5E4CB59-33C1-4072-8D97-2CEE10C4F964} = {937C72D2-3D57-4CCA-A900-D923237DB610}
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA} = {83D14F98-4C2C-4DFD-986E-CE555983AADF}
 		{8062DCE9-1422-4CA7-8004-FFA7794A6516} = {937C72D2-3D57-4CCA-A900-D923237DB610}
+		{F55CA327-E991-4CAA-AFC7-ADA7285308E9} = {83D14F98-4C2C-4DFD-986E-CE555983AADF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {05D26242-AD6A-4E68-BB69-5F14F02F1B46}
