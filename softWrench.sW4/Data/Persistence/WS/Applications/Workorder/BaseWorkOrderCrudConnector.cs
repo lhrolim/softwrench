@@ -107,12 +107,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 // We might need to update the client database and cycle the server: update MAXVARS set VARVALUE=1 where VARNAME='SUPPRESSACTCHECK';
                 // Actual date must be in the past - thus we made it a minute behind the current time.   
                 // More info: http://www-01.ibm.com/support/docview.wss?uid=swg1IZ90431
-                WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-1).FromServerToRightKind());
+                WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
             } else if (maxStatusValue.ContainsKey("MAXVALUE") && maxStatusValue["MAXVALUE"].Equals("COMP")) {
                 // Actual date must be in the past - thus we made it a minute behind the current time.   
                 WsUtil.SetValueIfNull(wo, "ACTSTART", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
                 WsUtil.SetValueIfNull(wo, "ACTFINISH", DateTime.Now.AddMinutes(-3).FromServerToRightKind());
             }
+            if (crudData.ContainsKey("#forcestatusreturn")) {
+                return true;
+            }
+
             return false;
         }
 

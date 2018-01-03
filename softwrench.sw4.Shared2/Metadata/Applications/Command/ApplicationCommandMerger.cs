@@ -7,14 +7,14 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Command {
     public class ApplicationCommandMerger {
 
         public static IDictionary<string, CommandBarDefinition> MergeCommandsWithCustomizedSchema(
-            IDictionary<string, CommandBarDefinition> schemaCommands, IDictionary<string, CommandBarDefinition> originalCommandBars) {
+            IDictionary<string, CommandBarDefinition> schemaCommands, IDictionary<string, CommandBarDefinition> originalCommandBars, IDictionary<string, CommandBarDefinition> globalCommandBars) {
             if (schemaCommands == null) {
                 return originalCommandBars;
             }
             foreach (var barKey in schemaCommands.Keys) {
                 if (!originalCommandBars.ContainsKey(barKey)) {
                     //no need to merge here
-                    originalCommandBars[barKey] = schemaCommands[barKey];
+                    originalCommandBars[barKey] = MergeCommands(schemaCommands,globalCommandBars)[barKey];
                     continue;
                 }
                 var commandBar = originalCommandBars[barKey];

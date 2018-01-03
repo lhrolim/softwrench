@@ -92,6 +92,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
                 case s.CLOSED:
                 return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED)).ToHashSet();
 
+                case s.CLOSE:
+                    return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.CANCELLED)).ToHashSet();
+
                 case s.APPR:
                     return filterAvailableStatus.Where(l => l.Value.EqualsAny(s.COMP, s.CLOSED)).ToHashSet();
 

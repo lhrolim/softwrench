@@ -25,10 +25,13 @@
                      */
                     changeStatus: function (datamap, schemaId, newStatus) {
                         const schema = crudContextHolderService.currentSchema();
-                        const dm = {};
                         if (newStatus) {
-                            dm["newStatus"] = newStatus;
-                            dm["crud"] = datamap;
+
+                            const dm = {
+                                ["newStatus"]: newStatus,
+                                ["crud"]: datamap
+                            };
+
                             return applicationService.invokeOperation(schema.applicationName, schemaId, "ChangeStatus", dm).then(function (httpResponse) {
                                 datamap["status"] = newStatus;
                             });
@@ -38,7 +41,7 @@
 
                     //afterchange
                     adjustOrgId: function (event) {
-                        event.orgid = event.fields.extrafields["site_.orgid"];
+                        event.fields.orgid = event.fields.extrafields["site_.orgid"];
                     },
 
                     changePriority: function (datamap, schemaId, priorityField, newPriority) {

@@ -630,9 +630,11 @@ namespace softWrench.sW4.Metadata.Parsing {
             if (schemaProperties.TryGetValue("list.print.schema", out printSchemaValue) && printSchemaValue != null) {
                 printSchema = LookupSchema(id, applicationName, printSchemaValue, platform, resultDictionary);
             }
-            ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement);
-
             var key = new ApplicationMetadataSchemaKey(id, modeAttr, platformAttr);
+            key.ApplicationName = applicationName;
+            ApplicationCommandSchema applicationCommandSchema = ParseCommandSchema(xElement,key);
+
+            
             var schema = ApplicationSchemaFactory.GetInstance(entityName, applicationName, applicationTitle, title, id, redeclaring, stereotypeAttr, stereotype, mode, platform,
                 isAbstract, displayables, filters, schemaProperties, parentSchema, printSchema, applicationCommandSchema, idFieldName,
                 userIdFieldName, unionSchema, ParseEvents(xElement, id));
@@ -663,9 +665,9 @@ namespace softWrench.sW4.Metadata.Parsing {
             return schema;
         }
 
-        private ApplicationCommandSchema ParseCommandSchema(XElement xElement) {
+        private ApplicationCommandSchema ParseCommandSchema(XElement xElement, ApplicationMetadataSchemaKey key) {
             var commandsSchemaEl = xElement.Elements().FirstOrDefault(f => f.IsNamed(XmlCommandSchema.CommandToolBarElements));
-            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars, _isTemplateParsing);
+            return new ApplicationCommandSchema(XmlCommandBarMetadataParser.DoParse(commandsSchemaEl), _commandBars, _isTemplateParsing,key);
         }
 
         private static IList<ICommandDisplayable> ParseCommands(XElement commandsSchemaEl) {

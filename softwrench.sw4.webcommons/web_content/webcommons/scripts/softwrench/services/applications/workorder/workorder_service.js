@@ -7,7 +7,7 @@
 
         function setLocationFromAsset() {
             const dm = crudContextHolderService.rootDataMap();
-            if (dm.location == null && dm.extrafields.asset_.location != null) {
+            if (dm.location == null && dm.extrafields && dm.extrafields.asset_.location != null) {
                 dm.location = dm.extrafields.asset_.location;
             }
         }
@@ -46,6 +46,11 @@
             return redirectService.goToApplication("_workpackage", "newdetail", {}, { workorderid, wonum });
         }
 
+        function newWo() {
+
+            return redirectService.goToApplicationView("workorder", "newdetail", null, null, {});
+        }
+
         function createRelatedSr(schema, datamap) {
             var composition = 'relatedrecord_';
             // Make related record for workorder to SR and add to datamap, setting #createSr to true so related record handler will make the SR before the related record
@@ -82,6 +87,7 @@
 
         const service = {
             goToDetail,
+            newWo,
             openNewDetailModal,
             setLocationFromAsset,
             createRelatedSr,

@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.problem.classes;
@@ -13,6 +14,7 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 using softWrench.sW4.Util.DeployValidation;
 using softWrench.sw4.problem;
+using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Data.Persistence.Engine {
@@ -26,8 +28,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
 
         public MaximoConnectorEngine(EntityRepository entityRepository, IProblemManager problemManager, IContextLookuper lookuper)
-            : base(entityRepository)
-        {
+            : base(entityRepository) {
             _problemManager = problemManager;
             _lookuper = lookuper;
             //            _syncHandler = syncHandler;
@@ -59,22 +60,32 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             try {
                 return customOperatorEngine.InvokeCustomOperation(operationWrapper);
             } catch (System.Exception e) {
-
-                var crudConnector = (IMaximoCrudConnector)connector;
-                var proxy = crudConnector.CreateProxy(entityMetadata);
-                var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
-                var maximoTemplateData = crudConnector.CreateExecutionContext(proxy, crudOperationData);
-                var xml = crudConnector.GenerateXml(maximoTemplateData);
+                LoggingUtil.DefaultLog.Error(e);
+                var crudConnector = connector as IMaximoCrudConnector;
+                string operationXml = null;
+                if (crudConnector != null) {
+                    //custom operations do now allow us to get the XML
+                    operationXml = GetOperationXml(operationWrapper, crudConnector, entityMetadata);
+                }
 
                 if (operationWrapper.OperationData().ProblemData != null) {
                     var operationData = operationWrapper.OperationData();
-                    return HandleDefaultProblem(operationData, e, xmlCurrentData: xml, jsonOriginalData: operationWrapper.JSON);
+                    return HandleDefaultProblem(operationData, e, xmlCurrentData: operationXml, jsonOriginalData: operationWrapper.JSON);
                 }
             }
 
             return customOperatorEngine.InvokeCustomOperation(operationWrapper);
         }
 
+        private static string GetOperationXml(OperationWrapper operationWrapper, IMaximoCrudConnector crudConnector,
+            EntityMetadata entityMetadata)
+        {
+            var proxy = crudConnector.CreateProxy(entityMetadata);
+            var crudOperationData = (CrudOperationData) operationWrapper.OperationData(null);
+            var maximoTemplateData = crudConnector.CreateExecutionContext(proxy, crudOperationData);
+            var xml = crudConnector.GenerateXml(maximoTemplateData);
+            return xml;
+        }
 
 
         private TargetResult DoExecuteCrud(OperationWrapper operationWrapper, IMaximoConnector connector) {
@@ -85,7 +96,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 return null;
             }
 
-            var crudConnector = new MaximoCrudConnectorEngine((IMaximoCrudConnector)connector,this);
+            var crudConnector = new MaximoCrudConnectorEngine((IMaximoCrudConnector)connector, this);
             var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
             operationWrapper.UserId = crudOperationData.UserId;
             switch (operationName) {
@@ -103,21 +114,20 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         }
 
         private TargetResult HandleDefaultProblem(IOperationData operationData,
-            System.Exception e, string xmlCurrentData, JObject jsonOriginalData)
-        {
+            System.Exception e, string xmlCurrentData, JObject jsonOriginalData) {
             var context = _lookuper.LookupContext();
             var problemData = operationData.ProblemData;
             //default problem handling
             var problem = Problem.BaseProblem(operationData.ApplicationMetadata.Name,
                 operationData.ApplicationMetadata.Schema.SchemaId, operationData.Id, operationData.UserId, e.StackTrace,
-                e.Message, problemData.ProblemKey, xmlCurrentData, new JSonXmlProblemData(xmlCurrentData,jsonOriginalData));
+                e.Message, problemData.ProblemKey, xmlCurrentData, new JSonXmlProblemData(xmlCurrentData, jsonOriginalData));
             problem.ClientPlatform = context.OfflineMode ? ClientPlatform.Mobile : ClientPlatform.Web;
             problem.ProblemHandler = problemData.ProblemHandler;
 
 
             problem = _problemManager.RegisterOrUpdateProblem(SecurityFacade.CurrentUser().UserId.Value, problem, null);
             if (operationData.ProblemData.PropagateException) {
-                throw new ProblemExceptionWrapper(e,problem);
+                throw new ProblemExceptionWrapper(e, problem);
             }
             return null;
         }
@@ -143,8 +153,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             private readonly IMaximoCrudConnector _crudConnector;
             private MaximoConnectorEngine _outer;
 
-            public MaximoCrudConnectorEngine(IMaximoCrudConnector crudConnector, MaximoConnectorEngine outer)
-            {
+            public MaximoCrudConnectorEngine(IMaximoCrudConnector crudConnector, MaximoConnectorEngine outer) {
                 _crudConnector = crudConnector;
                 _outer = outer;
             }

@@ -94,11 +94,12 @@ body > .container, .no-menu-container {
     .commandbar .print {
         display: inline-block;
     }
+
+    .form-horizontal .control-label {
+        padding-top: 0px !important;
+    }
 }
 
-.modalsmall {
-    width: 700px;
-}
 
 .modalmedium {
     width: 1000px;
@@ -132,9 +133,9 @@ body > .container, .no-menu-container {
     height: 20px;
 }
 
-.grid-color-code { 
-    width: 20px; 
-    height: 20px; 
+.grid-color-code {
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     behavior: url(PIE.htc);
 }
@@ -312,7 +313,7 @@ fieldset {
 }
 
 
-.extra-height-modal{
+.extra-height-modal {
     min-height: 600px !important;
     height: 600px !important;
 }
@@ -329,10 +330,10 @@ fieldset {
     float: left;
     margin-bottom: 9px;
     margin-right: 9px;
-    cursor:pointer;
+    cursor: pointer;
 }
 
-.iconset{
+.iconset {
     padding: 10px;
 }
 
@@ -343,10 +344,10 @@ fieldset {
     padding: 10px 0;
     border: none;
     background: 0 0;
-     text-decoration: none !important;
+    text-decoration: none !important;
 }
 
-.item-icon{
+.item-icon {
     font-size: 32px;
 }
 
@@ -361,7 +362,7 @@ fieldset {
     top: 20px;
 }
 
-.item-refresh{
+.item-refresh {
     position: relative;
     top: 10px;
     font-size: 10px;
@@ -374,10 +375,10 @@ fieldset {
     right: -20px;
     font-size: 14px;
     color: gray;
-    cursor:initial !important;
+    cursor: initial !important;
 }
 
-.optionfieldheader{
+.optionfieldheader {
     padding-bottom: 10px;
     padding-left: 10px;
 }

@@ -321,7 +321,7 @@
             </field>
           </customization>
 
-          <customization position="+reportdate">
+          <customization position="+#reportdateplaceholder">
             <association target="lead" labelfield="lead_.displayname" label="Employee"/>
           </customization>
 
@@ -356,6 +356,44 @@
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </customization>
+        
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="inprg" icon="fa-hourglass-2" label="Mark In Progress" position="right"
+                       tooltip="Change Status to In Progress"
+                       service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,INPRG"
+                       cssclasses="large-button"
+                       showexpression="@status == 'NEW' || (@status &amp;&amp; !@status.equalsAny('INPRG','CLOSE','COMP'))"
+              />
+
+              <command id="appr" icon="fa-thumbs-up" label="Approve"
+                       cssclasses="large-button"
+                       tooltip="Change Status to Approved"
+                       service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,APPR"
+                       showexpression="@status &amp;&amp; @status.equalsAny('WAPPR')"
+              />
+
+              <command id="comp" icon="fa-check" label="Complete"
+                       cssclasses="large-button"
+                       tooltip="Change Status to Completed"
+                       service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,COMP"
+                       showexpression="@status &amp;&amp; @status.equalsAny('APPR','INPRG')"
+              />
+
+              <command id="closed" icon="fa-close" label="Close"
+                       cssclasses="large-button"
+                       tooltip="Change Status to Closed"
+                       service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,CLOSE"
+                       showexpression="@status != 'CLOSED' "
+              />
+            </commandgroup>
+
+            <commandgroup position="detail.primary" removeundeclared="false">
+              <command id="createWO" icon="fa-plus" service="workorderService" method="newWo" label="New" tooltip="New Work Order" cssclasses="large-button" position="-save"/>
+            </commandgroup>
+            
+          </commandbars>
+        
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew" redeclaring="false">

@@ -401,6 +401,7 @@
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\MaxSrStatus.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\ServiceRequest\TicketStatusHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\SlaHolderService.cs" />
+    <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\ChangeStatusWoTicketHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\MeterReadingOperationHandler.cs" />
     <Compile Include="Data\Persistence\Dataset\Commons\Ticket\Workorder\WorkorderToolTransDataSet.cs" />
     <Compile Include="Data\Persistence\Engine\Exception\AfterCreationException.cs" />

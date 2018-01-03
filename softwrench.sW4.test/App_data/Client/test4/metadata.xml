@@ -8,11 +8,11 @@
 
     <!--ServiceRequest-->
     <template path="@servicerequest.xml"/>
-    
+
     <template path="@quickservicerequest.xml"/>
-    
-    
-    
+
+
+
 
     <!--Incident-->
     <template path="@incident.xml"/>
@@ -93,13 +93,13 @@
               <field attribute="description" label="Summary" requiredexpression="true">
                 <renderer type="default" params="maxlength=100" />
               </field>
-              
+
             </section>
           </customization>
         </schema>
       </schemas>
     </application>
-    
+
 
     <application name="relatedrecord" title="Related Records" entity="relatedrecord" redeclaring="false" >
       <properties>
@@ -128,6 +128,60 @@
       </schemas>
     </application>
 
+    <application name="workorder" title="Work Order" entity="workorder" role="workorders">
+      <schemas>
+
+        <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
+
+
+          <properties>
+            <property key="detail.disablesecondarycontent" value="true"/>
+          </properties>
+
+
+        </schema>
+
+        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
+
+          <!--<customization position="failurecode"/>-->
+          <!--<customization position="problemcode"/>-->
+
+          <customization position="+hiddenfield">
+            <section orientation="horizontal">
+              <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
+                <renderer type="lookup" />
+              </association>
+              <association label="Problem Code" enableexpression="@failurecode!=null" target="problemcode" labelfield="problemlist_.description" extraprojectionvalues="failurelist" requiredexpression="true" >
+                <renderer type="lookup"  />
+                <dataprovider prefilterfunction="FilterProblemCodes" />
+              </association>
+            </section>
+          </customization>
+          <customization position="worktype">
+            <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc" requiredexpression="true">
+              <renderer type="lookup" params="inputsize=small"/>
+            </association>
+          </customization>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="Pending" icon="fa-hourglass-2" label="Pending" position="right"
+                       tooltip="Change Status to Pending"
+                       service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,PENDING"
+                       showexpression="@status == 'NEW'"
+              />
+            </commandgroup>
+            <commandgroup position="detail.primary" removeundeclared="false">
+              <command id="createWO" icon="fa-plus" service="workorderService" method="newWo" label="New" tooltip="New Work Order" cssclasses="large-button" position="-save"/>
+            </commandgroup>
+
+          </commandbars>
+
+        </schema>
+
+
+      </schemas>
+    </application>
 
 
   </applications>
