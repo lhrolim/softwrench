@@ -5,7 +5,7 @@
             <div class="modal-body">
                 <!--#region detail-->
                 <div ng-if="!isList">
-                    
+
                     <div>
                         <input type="checkbox" ng-model="vm.shouldPrintMain" ng-checked="true">
                         {{i18N('printmodal.print','Print')}} {{printSchema.title}}
@@ -14,16 +14,16 @@
                     <div ng-repeat="composition in nonInlineCompositions(printSchema)">
                         <ng-switch on="composition.type">
                             <input type="checkbox"
-                                    ng-switch-when="ApplicationCompositionDefinition"
-                                    ng-checked="compositionstoprint[composition.relationship].value"
-                                    ng-model="compositionstoprint[composition.relationship].value">
+                                   ng-switch-when="ApplicationCompositionDefinition"
+                                   ng-checked="compositionstoprint[composition.relationship].value"
+                                   ng-model="compositionstoprint[composition.relationship].value">
                             <input type="checkbox" ng-switch-default
-                                    ng-model="compositionstoprint[composition.id].value"
-                                    ng-checked="false">
+                                   ng-model="compositionstoprint[composition.id].value"
+                                   ng-checked="false">
                         </ng-switch>
                         {{i18N('printmodal.printcomposition','Print {0}',[composition.label])}}
                     </div>
-                    
+
                     <div style="padding-top: 30px">
 
                         <input type="checkbox"
@@ -35,24 +35,31 @@
                 <!-- #endregion-->
                 <!--#region list-->
                 <div ng-if="isList">
-                    <div class="radio">
-                        <label><input type="radio" value="current" ng-model="listOptions.pageOption">Current Page</label>
-                    </div>
-                    <div class="radio">
-                        <label><input type="radio" value="all" ng-model="listOptions.pageOption">All Pages</label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" value="pages" ng-model="listOptions.pageOption">
-                            Pages
-                            <input type="number" min="1" max="{{lastPage}}" class="thin-input" ng-model="listOptions.startPage" ng-change="pageRangeChange()">
-                            to
-                            <input type="number" min="1" max="{{lastPage}}" class="thin-input" ng-model="listOptions.endPage" ng-change="pageRangeChange()">
-                        </label>
-                    </div>
                     <div>
                         <label><input type="checkbox" ng-model="listOptions.isDetailed"> Print Details</label>
                     </div>
+                    
+                    <div class="radio">
+                        <label><input type="radio" value="currentselection" ng-model="listOptions.pageOption" ng-show="showcurrentselection">Current Selection</label>
+                    </div>
+
+                    <div class="radio">
+                        <label><input type="radio" value="current" ng-model="listOptions.pageOption">Current Page</label>
+                    </div>
+
+                    <div class="radio">
+                        <label><input type="radio" value="all" ng-model="listOptions.pageOption" ng-enabled="!listOptions.isDetailed">All Pages</label>
+                    </div>
+                    <div class="radio"> 
+                        <label>
+                            <input type="radio" value="pages" ng-model="listOptions.pageOption" ng-enabled="!listOptions.isDetailed">
+                            Pages
+                            <input type="number" min="1" max="{{lastPage}}" class="thin-input" ng-model="listOptions.startPage" ng-change="pageRangeChange()" ng-enabled="!listOptions.isDetailed">
+                            to
+                            <input type="number" min="1" max="{{lastPage}}" class="thin-input" ng-model="listOptions.endPage" ng-change="pageRangeChange()" ng-enabled="!listOptions.isDetailed">
+                        </label>
+                    </div>
+
                 </div>
                 <!-- #endregion-->
 

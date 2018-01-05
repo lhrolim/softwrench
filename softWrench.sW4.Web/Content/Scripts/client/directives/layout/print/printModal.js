@@ -67,9 +67,30 @@ app.directive('printModal', function ($log, contextService) {
                 $scope.printSchema = schema;
                 $scope.paginationData = paginationData;
 
+
                 if (isList) {
+                    let pageOption = "current";
+
+                    const selectionModel = crudContextHolderService.getSelectionModel();
+                    const selectionBuffer = selectionModel.selectionBuffer;
+                    const countSelected = Object.keys(selectionBuffer).length;
+
+                    if (schema.properties["list.selectionstyle"] === "multiple") {
+                        $scope.showcurrentselection = true;
+                        if (countSelected > 0) {
+                            pageOption = "currentselection";    
+                        }
+                    }
+
+                    let isDetailed = false;
+
+                    if (schema.properties["list.print.detailedbydefault"] === "true") {
+                        isDetailed = true;
+                    }
+
                     $scope.listOptions = {
-                        pageOption: "current",
+                        pageOption,
+                        isDetailed,
                         startPage: 1,
                         endPage: paginationData.pageCount
                     };

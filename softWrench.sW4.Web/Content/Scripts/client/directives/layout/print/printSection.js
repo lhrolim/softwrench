@@ -94,7 +94,8 @@
                     if (!$scope.printSchema) {
                         return null;
                     }
-                    return $scope.printSchema.applicationName + "_" + $scope.printSchema.schemaId;
+                    const result = $scope.printSchema.applicationName + "_" + $scope.printSchema.schemaId;
+                    return result;
                 }
 
                 $scope.applyCustomStyleRules = function (schema) {
@@ -132,7 +133,7 @@
                 }
 
                 $scope.handleCustomTimeout = function (printSchema) {
-                    const customTimeout = printSchema.properties["print.timeout"];
+                    let customTimeout = printSchema.properties["print.timeout"];
                     if (!customTimeout) {
                         return;
                     }
@@ -145,7 +146,7 @@
                     printAwaitableService.registerAwaitable($scope.customTimeoutDeferred.promise);
                     $timeout(() => {
                         $scope.customTimeoutDeferred.resolve();
-                    }, customTimeout);
+                    }, customTimeout, false);
                 }
 
                 $scope.handleHeaderAndFooter = function (schema) {
@@ -234,27 +235,7 @@
 
                 $scope.$on(JavascriptEventConstants.PrintReadyForDetailedList, function (event, detailedListData, compositionsToExpand, shouldPageBreak, shouldPrintMain, printSchema) {
                     $scope.isList = false;
-                    var compositionstoprint = [];
-                    $scope.shouldPageBreak = shouldPageBreak;
-                    $scope.shouldPrintMain = shouldPrintMain;
-                    $scope.printSchema = printSchema;
-
-                    $.each(compositionsToExpand, function (key, value) {
-                        var compositionToPrint = {};
-                        compositionToPrint.schema = value.schema;
-                        compositionToPrint.key = key;
-                        if (value.schema.type === 'ApplicationTabDefinition') {
-                            compositionToPrint.title = value.schema.label;
-                        } else {
-                            compositionToPrint.title = compositionService.getTitle($scope.printSchema, key);
-                        }
-                        compositionstoprint.push(compositionToPrint);
-                    });
-
-                    $scope.compositionstoprint = compositionstoprint;
-                    $scope.printDatamap = detailedListData;
-                    $scope.showPrintSection = true;
-                    $scope.showPrintSectionCompostions = compositionstoprint.length > 0;
+                    $scope.doStartPrint(compositionsToExpand, shouldPageBreak, shouldPrintMain, null, detailedListData, printSchema);
                 });
 
                 $scope.$on(JavascriptEventConstants.PrintReadyForList, function (event, datamap) {
@@ -271,6 +252,7 @@
 
                     promise.then(() => {
                         if (sessionStorage.mockprint) {
+                            printService.hidePrintModal();
                             return;
                         }
                         if ($scope.printCallback) {
@@ -287,7 +269,7 @@
                 });
 
                 if (sessionStorage.mockprint && contextService.isDev()) {
-                    $scope.doStartPrint([], true, true, true);
+                    $scope.doStartPrint([], true, true, null);
                 }
 
             }

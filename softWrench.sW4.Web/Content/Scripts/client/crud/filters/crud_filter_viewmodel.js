@@ -18,6 +18,10 @@
             var searchText = searchData ? searchData[attribute] : '';
             var prefix = operator.title;
 
+            if (operator.id == null) {
+                return null;
+            }
+
             if (operator.id === 'CUSTOM') {
                 return "Custom";
             }

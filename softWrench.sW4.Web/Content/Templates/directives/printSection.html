@@ -16,18 +16,21 @@
             </div>
 
             <div ng-if="!isList">
-                <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered>
+                <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered ng-class="{'pagebreak-after': shouldPageBreak}">
+                    
+                    
+
                     <div class="print-logo" ng-if="!hasCustomHeader">
-                        <img ng-src="{{ printLogo }}" ng-if="showPrintLogo" />
+                        <img ng-src="{{ printLogo }}" ng-if="showPrintLogo"/>
                         <h4>{{printSchema.title}} - {{displayableID}}</h4>
                     </div>
-                    
+
                     <div ng-if="hasCustomHeader">
-                        <ng-include  src="customHeaderURL" onload="headerLoaded()" id="printheadersection" />    
+                        <ng-include src="customHeaderURL" onload="headerLoaded()" id="printheadersection"/>
                     </div>
 
-                    
-                    <div ng-show="shouldPrintMain">
+
+                    <div ng-show="shouldPrintMain" id="rootprintmain">
                         <fieldset ng-show="showPrintSectionCompostions"><legend class="legend-label">General</legend></fieldset>
                         <crud-output-fields schema="printSchema" datamap="item" displayables="printSchema.displayables" orientation="vertical" forprint="true"></crud-output-fields>
                     </div>
@@ -61,11 +64,10 @@
 
                         </div>
                     </div>
-                    
+
                     <div ng-if="hasCustomFooter">
-                        <ng-include  src="customFooterURL" onload="footerLoaded()" id="printfootersection" />    
+                        <ng-include src="customFooterURL" onload="footerLoaded()" id="printfootersection"/>
                     </div>
-                    
 
                 </div>
             </div>

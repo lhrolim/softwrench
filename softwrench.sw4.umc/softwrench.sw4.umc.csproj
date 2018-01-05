@@ -185,6 +185,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="web_content\umc\htmls\SubmitSuccess.html" />
+    <Content Include="web_content\umc\htmls\woreport\umcreportheader.html" />
+    <Content Include="web_content\umc\images\report_logo.jpeg" />
     <Content Include="web_content\umc\scripts\aaa_umcmodule.js" />
     <Content Include="web_content\umc\scripts\umcPmService.js" />
     <Content Include="web_content\umc\scripts\umcRequestController.js" />

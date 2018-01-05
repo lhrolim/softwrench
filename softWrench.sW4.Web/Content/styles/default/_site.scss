@@ -90,13 +90,18 @@ body > .container, .no-menu-container {
     }
 }
 
+@media not print {
+    .form-horizontal .control-label {
+        padding-top: 0px !important;
+    }
+
+    
+
+}
+
 @media all and (min-width: 768px) {
     .commandbar .print {
         display: inline-block;
-    }
-
-    .form-horizontal .control-label {
-        padding-top: 0px !important;
     }
 }
 

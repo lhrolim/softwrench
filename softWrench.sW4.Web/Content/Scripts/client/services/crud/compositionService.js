@@ -249,6 +249,10 @@
                 };
 
                 function getInlineCompositions(cachedCompositions) {
+                    if (!cachedCompositions) {
+                        return [];
+                    }
+
                     return Object.keys(cachedCompositions)
                         .map(key=> { return {key, value: cachedCompositions[key]} })
                         .filter(o => o.value.inline).map(o => o.key);

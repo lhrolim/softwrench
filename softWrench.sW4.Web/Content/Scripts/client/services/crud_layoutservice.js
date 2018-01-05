@@ -15,7 +15,9 @@
             }
 
             //use full-width fields on xsmall screen
-            var classes = ' col-xs-12';
+            var classes = ' col-xs-' + 12;
+            classes += ' col-xsp-' + 12 / maxColumns;
+
 
             if (maxColumns === 1) {
                 //don't add any other column class for full-width fields
@@ -24,7 +26,7 @@
                 classes += ' newrow';
             } else {
                 //add the small screen columns
-                classes += ' col-sm-6';
+                classes += ' col-sm-' + 12 / maxColumns;
 
                 //calculate the medium screen columns
                 classes += ' col-md-' + 12 / maxColumns;

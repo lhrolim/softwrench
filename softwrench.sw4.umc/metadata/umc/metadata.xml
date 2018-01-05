@@ -16,6 +16,7 @@
     <entity name="workorder" idAttribute="workorderid" useridAttribute="wonum" whereclause="!@woclass like 'WORKORDER'">
       <attributes>
         <attribute name="lead2" type="varchar"/>
+        <attribute name="wonum_sum" type="varchar" query="wonum + ': ' + coalesce(!@description,'')"/>
       </attributes>
       <relationships>
         <relationship to="alndomain" qualifier="crew">
@@ -27,13 +28,23 @@
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 
+        <relationship to="causelist">
+          <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+
+        <relationship to="remedylist">
+          <relationshipAttribute from="fr2code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="orgid" to="orgid"/>
+        </relationship>
+
         <relationship to="problemlist" qualifier="problemlist">
           <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
         </relationship>
 
-        <relationship to="person" qualifier="lead">
-          <relationshipAttribute from="lead" to="personid" primary="true"/>
+        <relationship to="person" qualifier="employee">
+          <relationshipAttribute from="lead2" to="personid" primary="true"/>
         </relationship>
 
       </relationships>
@@ -296,6 +307,8 @@
             <property key="list.defaultorderby" value="workorder.statusdate desc"/>
             <property key="list.noresultsnewschema" value="newdetail"/>
             <property key="list.search.compositionstoexclude" value="assetmeter,locationmeter"/>
+            <property key="list.print.detailedlistschemaid" value="umcreport"/>
+            <property key="list.print.detailedbydefault" value="true"/>
             <!--<property key="list.click.mode" value="@status == 'CLOSE' ? 'output' : 'input'"/>-->
           </properties>
 
@@ -322,7 +335,7 @@
           </customization>
 
           <customization position="+#reportdateplaceholder">
-            <association target="lead" labelfield="lead_.displayname" label="Employee"/>
+            <association target="lead2" labelfield="employee_.displayname" label="Employee"/>
           </customization>
 
           <properties>
@@ -393,6 +406,10 @@
             </commandgroup>
             
           </commandbars>
+
+          <properties>
+            <property key="detail.print.schemaid" value="umcreport"></property>
+          </properties>
         
         </schema>
 
@@ -420,6 +437,89 @@
           </customization>
         </schema>
 
+
+        <schema id="umcreport" stereotype="detail" mode="output">
+
+          <section>
+
+            <field attribute="wonum_sum">
+              <renderer type="default" params="outputclass=wonum_sum"/>
+            </field>
+
+            <field attribute="ld_.ldtext">
+              <renderer type="richtext" params="class=bottom-border"/>
+            </field>
+          </section>
+
+          <section>
+            <renderer type="default" params="class=bottom-border"/>
+            
+            <association label="Asset" labelfield="asset_.description" target="asset"/>
+            <association label="Location" labelfield="location_.description" target="location"/>
+            <association label="Job Plan" labelfield="jobplan_.jpnum" target="jobplan"/>
+          </section>
+
+          <section orientation="horizontal">
+            <section>
+              <field attribute="wonum" label="WO"/>
+              <field attribute="siteid" label="Site"/>
+              <field attribute="status" label="Status"/>
+              <field label="Parent" attribute="parent"/>
+              <field label="Work Type" attribute="worktype">
+                <renderer type="default" params="classexpression={'PM':'redbg'}"></renderer>
+              </field>
+              <field label="Trade" attribute="trade"/>
+              <field label="Employee" attribute="employee_.displayname"/>
+              <field label="Classification" attribute="classification"/>
+              <field label="Risk Total" attribute=""/>
+            </section>
+            <section>
+              <field attribute="targstartdate" label="Target Start">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showmeridian=true"/>
+              </field>
+
+              <field attribute="actstart" label="Actual Start">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showmeridian=true"/>
+              </field>
+              
+              <field attribute="reportdate" label="Report Date">
+                <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showmeridian=true"/>
+              </field>
+
+              <field label="Priority" attribute="wopriority"/>
+              <field label="Contract" attribute="contract"/>
+              
+              <field label="Failure Class" attribute="failurecode_.description"/>
+              <field label="Problem Code" attribute="problemlist_.description"/>
+              <field label="Cause" attribute="#causelist_.failurelist"/>
+              <field label="Remedy" attribute="#remedylist_.failurelist"/>
+              
+            </section>
+            
+            <section>
+              <field attribute="targcompdate" label="Target Finish">
+                <renderer type="datetime" params="format=MM/dd/yyyy;showmeridian=true"/>
+              </field>
+              <field attribute="actfinish" label="Actual Finish">
+                <renderer type="datetime" params="format=MM/dd/yyyy;showmeridian=true"/>
+              </field>
+              <field attribute="reportedby" label="Reported By"/>
+              <field attribute="pmtype" label="PM Type"/>
+            </section>
+            
+            
+            
+          </section>
+          
+
+          <properties>
+            <property key="print.styleprops" value="@page{size:landscape; margin-left:0;margin-right:0; margin-top:0  }"/>
+            <property key="print.customheader" value="/Content/Customers/umc/htmls/woreport/umcreportheader.html"/>
+          </properties>
+
+        </schema>
+        
+        
       </schemas>
     </application>
 
@@ -550,6 +650,9 @@
               <option value="INACTIVE" label="Inactive"/>
             </optionfield>
           </section>
+
+          <field attribute="notes" label="Notes"/>
+          
         </schema>
 
 

@@ -1,6 +1,7 @@
 ﻿@media print {
     body {
         overflow: visible !important;
+        -webkit-print-color-adjust: exact;
 
         & > .container {
             display: block;
@@ -11,16 +12,34 @@
 
 
 
+    #rootprintmain {
+        div {
+            page-break-inside: avoid;
+        }
+    }
 
     #rootprintdiv {
         .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12 {
             //width: 100% !important;
         }
 
-        div {
-            page-break-inside: avoid;
+        .col-xsp-6 {
+            width: 50% !important;
+        }
+
+        .col-xsp-4 {
+            width: 33.33333333% !important;
+        }
+
+        .col-xsp-3 {
+            width: 25% !important;
         }
     }
+
+    #rootprintmain{
+
+    }
+
     // #rootprintdiv > div:nth-child(2) > section > fieldset:nth-child(4) > div > ng-switch > div > div > div > section[orientation='horizontal'] > fieldset
     #rootprintdiv section[orientation='horizontal'] > fieldset.form-group.hasheader.haschildren.col-xs-12.col-sm-6.col-md-6.row {
         width: 50% !important;
@@ -122,6 +141,31 @@
         padding-bottom: 40px;
     }
 
+    .workorder_umcreport {
+        .wonum_sum {
+            border-bottom: none !important;
+            color: rgb(68,77,103) !important;
+            font-weight: bold !important;
+            font-size: 16px !important;
+            padding-top: 10px !important;
+        }
+
+        .bottom-border {
+            border-bottom: 2px solid rgb(2,2,2);
+            margin-bottom: 15px !important;
+        }
+
+        .form-group {
+            padding-left: 0px !important;
+            padding-right: 0px !important;
+        }
+
+        .redbg {
+            background-color: red !important;
+        }
+
+    }
+
     .workorder_fsservicereport {
         .laborsum {
             font-size: 14px !important;
@@ -135,7 +179,7 @@
             right: 9%;
         }
 
-
+         
         .legend-label {
             font-size: 18px !important;
             color: rgb(129,0,0) !important
@@ -147,6 +191,7 @@
             text-align: left !important;
             font-size: 14px !important;
             border-bottom: 1px solid #ccc;
+            padding-top: 2px !important;
         }
 
         .control-label + .field {
@@ -155,132 +200,131 @@
         }
     }
 
-    #rootprintdiv {
-        .print-logo {
-            img {
-                max-height: 100px;
-                width: auto;
-            }
-        }
-
-        .no-results {
-            display: none !important;
-        }
-
-        h4 {
-            margin: 10px 0 40px;
-        }
-
-
-
-
-        .form-group {
-            margin-bottom: 0;
-
-            .input-group {
-                display: block;
+        #rootprintdiv {
+            .print-logo {
+                img {
+                    max-height: 100px;
+                    width: auto;
+                }
             }
 
+            .no-results {
+                display: none !important;
+            }
 
-
-            .legend-label {
-                font-size: 14px;
-                font-weight: bold;
-                padding: 20px 0 0;
-                border-bottom: 1px solid #999;
-                //display: none;
+            h4 {
+                margin: 10px 0 40px;
             }
 
 
 
 
-            .control-label {
-                width: 30%;
-                float: left;
-                padding-right: 20px;
-                text-align: right;
-                font-size: 12px;
-                padding-top: 2px;
-            }
+            .form-group {
+                margin-bottom: 0;
 
-            .form-control {
-                font-weight: normal;
-                border-bottom: 1px solid #ccc;
-                border-radius: 0;
-                padding: 0;
-                height: auto;
-                min-height: 18px;
-                float: right;
-                font-size: 12px;
-            }
+                .input-group {
+                    display: block;
+                }
 
-            .field {
-                width: 100%;
-            }
 
-            .control-label + .field {
-                width: 70%;
-                float: right;
-                margin-top: 5px;
-            }
 
-            .richtextbox, .image-holder {
-                min-height: initial;
-            }
+                .legend-label {
+                    font-size: 14px;
+                    font-weight: bold;
+                    padding: 20px 0 0;
+                    border-bottom: 1px solid #999;
+                    //display: none;
+                }
 
-            .richtext {
-                margin-bottom: 5px;
 
-                .ta-toolbar {
-                    display: none;
+
+
+                .control-label {
+                    width: 30%;
+                    float: left;
+                    padding-right: 20px;
+                    text-align: right;
+                    font-size: 12px;
                 }
 
                 .form-control {
-                    width: 100% !important;
-                    overflow: visible;
+                    font-weight: normal;
+                    border-bottom: 1px solid #ccc;
+                    border-radius: 0;
+                    padding: 0;
+                    height: auto;
+                    min-height: 18px;
+                    float: right;
+                    font-size: 12px;
                 }
 
-                .ta-scroll-window {
-                    p:last-child {
-                        margin-bottom: 0;
+                .field {
+                    width: 100%;
+                }
+
+                .control-label + .field {
+                    width: 70%;
+                    float: right;
+                    margin-top: 5px;
+                }
+
+                .richtextbox, .image-holder {
+                    min-height: initial;
+                }
+
+                .richtext {
+                    margin-bottom: 5px;
+
+                    .ta-toolbar {
+                        display: none;
                     }
 
-                    & > .ta-bind {
-                        height: auto;
-                        min-height: initial;
-                        padding: 0;
+                    .form-control {
+                        width: 100% !important;
+                        overflow: visible;
+                    }
+
+                    .ta-scroll-window {
+                        p:last-child {
+                            margin-bottom: 0;
+                        }
+
+                        & > .ta-bind {
+                            height: auto;
+                            min-height: initial;
+                            padding: 0;
+                        }
                     }
                 }
             }
         }
-    }
 
-    .container header {
-        position: initial;
-    }
+        .container header {
+            position: initial;
+        }
 
-    .toolbar-primary {
-        position: initial;
-        top: initial !important;
-    }
+        .toolbar-primary {
+            position: initial;
+            top: initial !important;
+        }
 
-    .listgrid-thead, .container.desktop .listgrid-thead {
-        position: initial;
-        top: initial !important;
-    }
+        .listgrid-thead, .container.desktop .listgrid-thead {
+            position: initial;
+            top: initial !important;
+        }
 
-    .listgrid-table {
-        margin-top: initial !important;
-    }
+        .listgrid-table {
+            margin-top: initial !important;
+        }
 
-    .content {
-        margin-top: initial !important;
-    }
+        .content {
+            margin-top: initial !important;
+        }
 
-    .tooltip {
-        display: none;
+        .tooltip {
+            display: none;
+        }
     }
-}
 
 /**@page {
     margin: 36px;

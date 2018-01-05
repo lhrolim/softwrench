@@ -427,8 +427,22 @@
 
         #region print
 
+        /// <summary>
+        /// Path to an html which shall be printed as a header
+        /// </summary>
         public static string PrintCustomHeader = "print.customheader";
+        /// <summary>
+        /// Path to an html which shall be printed as a footer
+        /// </summary>
         public static string PrintCustomFooter = "print.customfooter";
+        /// <summary>
+        /// css props to apply to this schema in particular. It will be appended dinamically on the screen
+        /// Ex: @page{size:landscape; margin:0 }
+        /// </summary>
+        public static string PrintStyleProps = "print.styleprops";
+        //a custom timeout to call before printing the page. Useful when there are images to be fetched on the header/footer, since the fwk is still not handling them
+        //TODO: handle generically at the fwk
+        public static string PrintTimeout = "print.timeout";
         
 
         #endregion

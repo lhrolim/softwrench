@@ -5,7 +5,7 @@
 
     angular.module('sw_layout')
         .service('printService', [
-            "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService","fieldService", "fixHeaderService", "redirectService", "searchService", "alertService", "printAwaitableService", "schemaCacheService", "crudContextHolderService", "compositionService",
+            "$rootScope", "$http", "$timeout", "$log", "$q", "tabsService", "fieldService", "fixHeaderService", "redirectService", "searchService", "alertService", "printAwaitableService", "schemaCacheService", "crudContextHolderService", "compositionService",
             function ($rootScope, $http, $timeout, $log, $q, tabsService, fieldService, fixHeaderService, redirectService, searchService, alertService, printAwaitableService, schemaCacheService, crudContextHolderService, compositionService) {
 
                 var mergeCompositionData = function (datamap, nonExpansibleData, expansibleData) {
@@ -16,8 +16,8 @@
                     if (nonExpansibleData == undefined) {
                         return resultObj;
                     }
-                    for (var i = 0; i < nonExpansibleData.length; i++) {
-                        var value = nonExpansibleData[i];
+                    for (let i = 0; i < nonExpansibleData.length; i++) {
+                        const value = nonExpansibleData[i];
                         if (value.tabObject != undefined) {
                             //this would happen in case of a tab being printed wherease we don´t have the fields on datamap
                             resultObj[value.key] = value.tabObject;
@@ -97,6 +97,12 @@
 
                     printDetail: function (schema, datamap, printOptions) {
                         var log = $log.getInstance("print_service#printDetail", ["print"]);
+                        if (schema.properties["detail.print.schemaid"]) {
+                            printOptions = printOptions || {};
+                            printOptions.printSchemaId = schema.properties["detail.print.schemaid"];
+                            printOptions.shouldPrintMain = true;
+                        }
+
                         if (schema.hasNonInlineComposition && printOptions === undefined) {
                             //this case, we have to choose which extra compositions to choose, so we will open the print modal
                             //open print modal...
@@ -144,7 +150,7 @@
                                     $.each(printOptions.compositionsToExpand,
                                         function (key, obj) {
                                             if (obj.value == true) {
-                                                var compositionData = datamap[key];
+                                                const compositionData = datamap[key];
                                                 //TODO: CompositionData might be undefined or not
                                                 if (compositionData == undefined || compositionData.length == 0) {
                                                     emptyCompositions[key] = [];
@@ -168,16 +174,17 @@
                                 if (!isSameSchema) {
                                     //bringing datamap from another schema
 
-                                    var parameters = this.buildDetailedSearchParameter(printSchema);
-                                    parameters.id = datamap[schema.idFieldName];
+                                    const parameters = {
+                                        "id": datamap[schema.idFieldName],
+                                        printmode: true
+                                    }
 
-                                    var getDetailsUrl =
-                                        redirectService.getApplicationUrl(schema.applicationName, printSchema.schemaId, '', '', parameters);
+                                    const getDetailsUrl = redirectService.getApplicationUrl(schema.applicationName, printSchema.schemaId, '', '', parameters);
                                     return $http.get(getDetailsUrl).then(function (response) {
                                         const data = response.data;
                                         const datamap = data.resultObject;
                                         fieldService.fillDefaultValues(printSchema.displayables, datamap);
-                                        
+
                                         return $rootScope.$broadcast(JavascriptEventConstants.ReadyToPrint,
                                             mergeCompositionData(datamap, notExpansibleCompositions, emptyCompositions),
                                             shouldPageBreak,
@@ -191,7 +198,7 @@
 
                                 } else {
                                     log.info('calling expanding compositions on service; params: {0}'.format(params));
-                                    var urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(params)));
+                                    const urlToInvoke = removeEncoding(url("/api/generic/Composition/ExpandCompositions?" + $.param(params)));
                                     return $http.get(urlToInvoke).then(function (response) {
                                         const result = response.data;
                                         var compositions = result.resultObject;
@@ -201,7 +208,7 @@
                                             });
 
                                         log.debug('sw_readytoprintevent dispatched after server return');
-                                        var compositionsToPrint = mergeCompositionData(datamap, notExpansibleCompositions, compositions);
+                                        const compositionsToPrint = mergeCompositionData(datamap, notExpansibleCompositions, compositions);
                                         $rootScope.$broadcast(JavascriptEventConstants.ReadyToPrint,
                                             compositionsToPrint,
                                             shouldPageBreak,
@@ -241,7 +248,7 @@
                         const selectionModel = crudContextHolderService.getSelectionModel();
                         const selectionBuffer = selectionModel.selectionBuffer;
 
-                        var countSelected = Object.keys(selectionBuffer).length;
+                        const countSelected = Object.keys(selectionBuffer).length;
                         if (countSelected > 30) {
                             alertService.alert("Maximum allowed to detailed print is 30. You requested " + countSelected);
                             return null;
@@ -249,24 +256,28 @@
 
 
                         angular.forEach(selectionBuffer, (entry, id) => {
-                            if (!selectionBuffer.hasOwnProperty(id)) return;
+                            if (!selectionBuffer.hasOwnProperty(id)) {
+                                return;
+                            }
                             ids.push(id);
                         });
 
-                        var parameters = {};
-                        var searchData = {};
-                        var searchOperator = {};
+                        const parameters = {
+                            printmode: true
+                        };
 
-                        searchData[printSchema.idFieldName] = ids.join(',');
-                        searchOperator[printSchema.idFieldName] = searchService.getSearchOperationById('EQ');
+                        const searchData = {
+                            [printSchema.idFieldName]: ids.join(',')
+                        };
+                        const searchOperator = {
+                            [printSchema.idFieldName]: searchService.getSearchOperationById('EQ')
+                        };
+
 
                         parameters.searchDTO = searchService.buildSearchDTO(searchData, {}, searchOperator, {});
-
-
                         parameters.searchDTO.compositionsToFetch = compositionService.getInlineCompositions(printSchema.cachedCompositions);
 
 
-                        parameters.printmode = true;
 
                         return parameters;
                     },
@@ -289,7 +300,7 @@
                             var getDetailsUrl =
                                 redirectService.getApplicationUrl(schema.applicationName, printSchema.schemaId, '', '', parameters);
 
-                            var shouldPageBreak = printOptions == undefined ? true : printOptions.shouldPageBreak;
+                            var shouldPageBreak = true;
                             var shouldPrintMain = printOptions == undefined ? true : printOptions.shouldPrintMain;
 
                             $http.get(getDetailsUrl).then(function (response) {
