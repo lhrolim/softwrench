@@ -115,7 +115,7 @@
                 //no initial value present
                 return;
             }
-            associationService.getLabelText(scope.provider, scope.datamap[scope.attribute], { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true", isEager: !!scope.fieldMetadata.providerAttribute })
+            associationService.getLabelText(scope.provider, scope.datamap[scope.attribute], { hideDescription: scope.hideDescription, hideValue: scope.hideValue, allowTransientValue: scope.allowCustomValue === "true", isEager: !!scope.fieldMetadata.providerAttribute })
                 .then(function (label) {
                     scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
                     element.typeahead('val', label);
@@ -143,7 +143,7 @@
             //initing typeahead itself
             element.typeahead({ minLength: minLength, highlight: true, autoselect: true, allowCustomValue: "true" === scope.allowCustomValue }, {
                 displayKey: function (item) {
-                    return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, allowTransientValue: scope.allowCustomValue === "true" });
+                    return associationService.parseLabelText(item, { hideDescription: scope.hideDescription, hideValue: scope.hideValue, allowTransientValue: scope.allowCustomValue === "true" });
                 },
                 source: sourceFn
             });
@@ -363,6 +363,8 @@
                 searchText: '=',
 
                 hideDescription: '@',
+                //if true, only the description would be shown after the selection happens
+                hideValue: '@',
                 mode: '@',
 
 

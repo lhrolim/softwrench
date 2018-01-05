@@ -2,6 +2,9 @@
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
   <entities>
     <entity name="GfedSite" idAttribute="id">
+      <attributes>
+        <attribute name="facilitytitlewithvalue" query="'('+facilityname + ')' + ' ' +  facilitytitle" type="string"/>
+      </attributes>
     </entity>
   </entities>
 
@@ -11,6 +14,7 @@
         <schema id="ticketLookupList" stereotype="list.singleselection.modal" platform="web">
           <field attribute="id" hidden="true"/>
           <field attribute="gfedid" hidden="true"/>
+          <field attribute="facilitytitlewithvalue" hidden="true"/>
           <field attribute="facilityname" label="Site Name"/>
           <field attribute="facilitytitle"  label="Description"/>
         </schema>

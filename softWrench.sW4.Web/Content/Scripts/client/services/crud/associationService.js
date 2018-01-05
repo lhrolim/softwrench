@@ -179,9 +179,14 @@
 
             options = options || {};
             const hideDescription = options.hideDescription || false;
+            const hideValue = options.hideValue || false;
             if ("true" === hideDescription || true === hideDescription || item.label == null) {
                 return item.value;
             }
+            if ("true" === hideValue || true === hideValue) {
+                return item.label;
+            }
+
             const result = "(" + item.value + ")" + " - " + item.label;
             return result;
         }
@@ -199,7 +204,7 @@
          * 
          * @returns {} 
          */
-        getLabelText(associationKey, itemValue, options = {avoidPromise:false,hideDescription:false,isEager:false}) {
+        getLabelText(associationKey, itemValue, options = {avoidPromise:false,hideDescription:false,hideValue:false,isEager:false}) {
             const log = this.$log.get("associationService#getLabelText", ["association"]);
 
             if (options.isEager) {

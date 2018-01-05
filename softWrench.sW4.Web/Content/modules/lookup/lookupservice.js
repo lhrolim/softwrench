@@ -109,6 +109,7 @@
             this.associationService.getLabelText(associationKey, newValue, {
                 hideDescription: fieldMetadata.hideDescription,
                 allowTransientValue: fieldMetadata.rendererParameters["allowcustomvalue"] === "true",
+                hideValue: fieldMetadata.rendererParameters["hidevalue"] === "true",
                 isEager: !!fieldMetadata.providerAttribute
             }).then(function (label) {
                 var key = fieldMetadata.applicationPath;
