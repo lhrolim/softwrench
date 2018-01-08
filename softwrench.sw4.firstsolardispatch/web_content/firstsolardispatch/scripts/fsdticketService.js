@@ -42,8 +42,12 @@
             dm["supportemail"] = fields["site_.supportemail"];
             dm["primarycontact"] = fields["site_.primarycontact"];
             dm["primarycontactphone"] = formatPhone(fields["site_.primarycontactphone"]);
+            dm["primarycontactemail"] = fields["site_.primarycontactemail"];
             dm["escalationcontact"] = fields["site_.escalationcontact"];
             dm["escalationcontactphone"] = formatPhone(fields["site_.escalationcontactphone"]);
+            dm["escalationcontactemail"] = fields["site_.escalationcontactemail"];
+
+
             dm["site_.siteid"] = fields["site_.siteid"];
             dm["site_.locationprefix"] = fields["site_.locationprefix"];
         }

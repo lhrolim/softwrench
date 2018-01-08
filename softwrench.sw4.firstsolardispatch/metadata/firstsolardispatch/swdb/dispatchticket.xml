@@ -90,7 +90,7 @@
             <section orientation="horizontal" parameters="">
               <section id="gfed">
                 <association label="Site" target="gfedid" labelfield="site_.facilitytitlewithvalue" requiredexpression="true" 
-                             extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,singlelineaddress,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,supportemail,facilitytitlewithvalue,primarycontact,primarycontactphone,escalationcontact,escalationcontactphone,siteid,locationprefix,maintenaceprovider,wherehouseaddress">
+                             extraprojectionvalues="facilityname,facilitytitle,address,city,state,postalcode,singlelineaddress,gpslatitude,gpslongitude,sitecontact,sitecontactphone,supportphone,supportemail,facilitytitlewithvalue,primarycontact,primarycontactphone,primarycontactemail,escalationcontact,escalationcontactphone,escalationcontactemail,siteid,locationprefix,maintenaceprovider,wherehouseaddress">
                   <renderer type="lookup" params="application=_GfedSite;schemaId=ticketLookupList;hidevalue=true"/>
                   <event type="afterchange" service="fsdTicketService" method="siteSelected"/>
                 </association>
@@ -132,10 +132,16 @@
               <section>
                 <field attribute="primarycontact" label="Primary Contact" enableexpression="@gfedid != null"/>
                 <field attribute="primarycontactphone" enableexpression="@gfedid != null"/>
+                <field attribute="primarycontactemail" enableexpression="@gfedid != null">
+                  <renderer type="email"/>
+                </field>
               </section>              
               <section>
                 <field attribute="escalationcontact" label="Escalation Contact" enableexpression="@gfedid != null"/>
                 <field attribute="escalationcontactphone" enableexpression="@gfedid != null"/>
+                <field attribute="escalationcontactemail" enableexpression="@gfedid != null">
+                  <renderer type="email"/>
+                </field>
               </section>
             </section>
           </section>

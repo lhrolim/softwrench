@@ -68,6 +68,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         public string PrimaryContact { get; set; }
 
         [Property]
+        public string PrimaryContactEmail { get; set; }
+
+        [Property]
         public string PrimaryContactPhone { get; set; }
 
         [Property]
@@ -75,6 +78,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
 
         [Property]
         public string EscalationContactPhone { get; set; }
+
+        [Property]
+        public string EscalationContactEmail { get; set; }
 
         [Property]
         public decimal? GpsLatitude { get; set; }

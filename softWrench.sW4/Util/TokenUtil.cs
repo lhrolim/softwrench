@@ -10,12 +10,15 @@ using cts.commons.Util;
 namespace softWrench.sW4.Util {
     public class TokenUtil {
 
-        public static string GenerateDateTimeToken() {
+        public static string GenerateDateTimeToken(bool shortVersion = false) {
 
             var token = "" + new Random(100).Next(10000);
             token += DateTime.Now.TimeInMillis().ToString(CultureInfo.InvariantCulture);
-            token += AuthUtils.GetSha1HashData(token);
-
+            if (shortVersion) {
+                token = AuthUtils.GetMd5HashData(token);
+            } else {
+                token += AuthUtils.GetMd5HashData(token);
+            }
             return token;
         }
 

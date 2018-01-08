@@ -145,7 +145,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
             StatusService.ValidateStatusChange(oldStatus, ticket.Status, ticket);
 
             if (ticket.AccessToken == null) {
-                ticket.AccessToken = TokenUtil.GenerateDateTimeToken();
+                ticket.AccessToken = TokenUtil.GenerateDateTimeToken(true);
             }
 
             var user = SecurityFacade.CurrentUser().DBUser;

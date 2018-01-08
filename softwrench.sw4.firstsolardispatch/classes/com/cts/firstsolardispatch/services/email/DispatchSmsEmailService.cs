@@ -123,9 +123,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             }
 
             var redirectService = SimpleInjectorGenericFactory.Instance.GetObject<RedirectService>();
-            msgs.Add(new Tuple<string, string>("", "<" + redirectService.GetActionUrl("DispatchEmail", "Accept", "token={0}".Fmt(ticket.AccessToken) + ">")));
+            msgs.Add(new Tuple<string, string>("", "<" + redirectService.GetActionUrl("DispatchEmail", "Ac", "token={0}".Fmt(ticket.AccessToken) + ">")));
             if (hour <= 4) {
-                msgs.Add(new Tuple<string, string>("", redirectService.GetActionUrl("DispatchEmail", "Reject", "token={0}".Fmt(ticket.AccessToken))));
+                msgs.Add(new Tuple<string, string>("", redirectService.GetActionUrl("DispatchEmail", "Rj", "token={0}".Fmt(ticket.AccessToken))));
             }
 
 
