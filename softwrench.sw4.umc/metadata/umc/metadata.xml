@@ -325,7 +325,7 @@
         <schema id="adetail" title="Work Order Details" abstract="true" stereotype="detail" platform="web" redeclaring="false">
           <customization position="description">
             <field attribute="description" label="Work Request" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+              <renderer type="default" params="maxlength=200;inputsize=xlarge" />
             </field>
           </customization>
           <customization position="ld_.ldtext">
