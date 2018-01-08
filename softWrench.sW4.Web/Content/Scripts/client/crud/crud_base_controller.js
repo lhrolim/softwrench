@@ -26,9 +26,11 @@
             return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, avoidColon);
         };
 
+        $scope.showLabel
+
         $scope.i18NInputLabelEvaluating = function (fieldMetadata, legendMode = false) {
             if (!$scope.isLabelVisible(fieldMetadata, legendMode)) {
-                return null;
+                return "";
             }
             return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, false);
         };
@@ -349,7 +351,7 @@
             }
             var header = fieldMetadata.header;
             if (!header) {
-                return !legendEvaluationMode && fieldMetadata.label;
+                return !legendEvaluationMode && fieldMetadata.type !=="ApplicationSection";
             }
             var isVisible = expressionService.evaluate(header.showExpression, $scope.datamap);
             var isFieldSet = header.parameters != null && "true" === header.parameters['fieldset'];

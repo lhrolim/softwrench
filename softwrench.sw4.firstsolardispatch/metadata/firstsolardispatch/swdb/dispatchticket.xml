@@ -131,8 +131,8 @@
               <renderer type="default" params="childinputsize=medium" />
               <section>
                 <field attribute="primarycontact" label="Primary Contact" enableexpression="@gfedid != null"/>
-                <field attribute="primarycontactphone" enableexpression="@gfedid != null"/>
-                <field attribute="primarycontactemail" enableexpression="@gfedid != null">
+                <field attribute="primarycontactphone" label="" enableexpression="@gfedid != null"/>
+                <field attribute="primarycontactemail" label="" enableexpression="@gfedid != null">
                   <renderer type="email"/>
                 </field>
               </section>              
