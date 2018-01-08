@@ -82,7 +82,9 @@ namespace softwrench.sw4.offlineserver.services {
             var tasks = new List<Task>();
 
             foreach (var topLevelApp in topLevelApps) {
-                tasks.Add(ResolveApplication(request, user, topLevelApp, result, rowstampMap));
+                tasks.Add(Task.Run(async () => {
+                    await ResolveApplication(request, user, topLevelApp, result, rowstampMap);
+                }));
             }
 
             await Task.WhenAll(tasks.ToArray());
@@ -246,7 +248,9 @@ namespace softwrench.sw4.offlineserver.services {
                         var schemaKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List, SchemaMode.None, ClientPlatform.Mobile);
                         var userAppMetadata = association.ApplyPolicies(schemaKey, user, ClientPlatform.Mobile);
                         var rowstamp = BuildRowstamp(rowstampMap, results, association);
-                        tasks[i++] = InnerGetAssocData(association, userAppMetadata, rowstamp, results);
+                        tasks[i++] = Task.Run(async () => {
+                            await InnerGetAssocData(association, userAppMetadata, rowstamp, results);
+                        });
                     }
 
                     await Task.WhenAll(tasks);
@@ -340,17 +344,21 @@ namespace softwrench.sw4.offlineserver.services {
                 Log.DebugFormat("initing another round of cache lookup, since we still have some space");
 
                 var i = 0;
-                var cacheTasks = new Task<RedisLookupResult<JSONConvertedDatamap>>[Math.Min(completeApplicationMetadataDefinitions.Count - j, maxThreads)];
+                var cacheTasks = new Task[Math.Min(completeApplicationMetadataDefinitions.Count - j, maxThreads)];
 
+                var redisResults = new List<RedisLookupResult<JSONConvertedDatamap>>();
                 while (i < cacheTasks.Length && j < completeApplicationMetadataDefinitions.Count) {
                     var association = completeApplicationMetadataDefinitions[j++];
                     var schemaKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List, SchemaMode.None, ClientPlatform.Mobile);
                     var userAppMetadata = association.ApplyPolicies(schemaKey, user, ClientPlatform.Mobile);
                     var lookupDTO = await BuildRedisDTO(userAppMetadata, completeCacheEntries);
-                    cacheTasks[i++] = _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO);
+                    
+                    cacheTasks[i++] = Task.Run(async () =>{
+                        redisResults.Add(await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO));
+                    }); 
                 }
 
-                var redisResults = await Task.WhenAll(cacheTasks);
+                await Task.WhenAll(cacheTasks);
                 foreach (var redisResult in redisResults) {
                     //each application might span multiple chunks of data, although it would be abnormal (ex: change in the chunk size)
                     results.AddJsonFromRedisResult(redisResult, "true".Equals(redisResult.Schema.GetProperty(OfflineConstants.CheckDatabaseAfterCache)));
@@ -407,20 +415,15 @@ namespace softwrench.sw4.offlineserver.services {
 
         }
 
-        private static ClientStateJsonConverter.AppRowstampDTO LocateAppRowstamp(CompleteApplicationMetadataDefinition topLevelApp, List<ClientStateJsonConverter.AppRowstampDTO> rowstampDTO)
-        {
+        private static ClientStateJsonConverter.AppRowstampDTO LocateAppRowstamp(CompleteApplicationMetadataDefinition topLevelApp, List<ClientStateJsonConverter.AppRowstampDTO> rowstampDTO) {
             ClientStateJsonConverter.AppRowstampDTO appRowstampDTO = null;
 
-            if (rowstampDTO.Count == 1)
-            {
+            if (rowstampDTO.Count == 1) {
                 appRowstampDTO = rowstampDTO[0];
-            }
-            else
-            {
+            } else {
                 appRowstampDTO = rowstampDTO.FirstOrDefault(f => f.ApplicationName == topLevelApp.ApplicationName);
             }
-            if (appRowstampDTO == null)
-            {
+            if (appRowstampDTO == null) {
                 appRowstampDTO = new ClientStateJsonConverter.AppRowstampDTO();
             }
             return appRowstampDTO;
@@ -477,7 +480,7 @@ namespace softwrench.sw4.offlineserver.services {
         protected virtual IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
             var applicationName = request.ApplicationName;
 
-            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).Where(a=> !a.IsPropertyTrue(OfflineConstants.IgnoreAsTopApp));
+            var topLevelApps = MetadataProvider.FetchTopLevelApps(ClientPlatform.Mobile, user).Where(a => !a.IsPropertyTrue(OfflineConstants.IgnoreAsTopApp));
 
             if (applicationName == null) {
                 //no application in special was requested, lets return them all.

@@ -75,7 +75,9 @@ namespace softwrench.sw4.activitystream.classes.Controller {
             foreach (var securityGroupsNotificationsQuery in _securityGroupsNotificationsQueries) {
                 _log.DebugFormat("Updating notifications for security group {0}", securityGroupsNotificationsQuery.Key);
                 var query = securityGroupsNotificationsQuery;
-                tasks[i++] = ExecuteNotificationsQuery(query.Key, query.Value, currentTime);
+                tasks[i++] = Task.Run(async ()=>{
+                   await ExecuteNotificationsQuery(query.Key, query.Value, currentTime);
+                });
             }
             await Task.WhenAll(tasks);
         }

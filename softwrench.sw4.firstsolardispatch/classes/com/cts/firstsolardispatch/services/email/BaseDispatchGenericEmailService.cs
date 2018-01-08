@@ -42,10 +42,6 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             return bbc;
         }
 
-        protected  string GetSmsEmails() {
-            var sms = ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.SmsEmailsToNotify);
-
-            return sms;
-        }
+        
     }
 }

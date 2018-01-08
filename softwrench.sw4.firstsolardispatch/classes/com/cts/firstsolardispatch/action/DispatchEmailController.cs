@@ -29,6 +29,16 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
         [Import]
         public DispatchArrivedEmailService DispatchArrivedEmailService { get; set; }
 
+
+        [System.Web.Http.HttpGet]
+        public async Task<ActionResult> Ac(string token, string status) {
+            return await ChangeStatus(token, "ACCEPTED");
+        }
+
+        public async Task<ActionResult> Rj(string token, string status) {
+            return await ChangeStatus(token, "REJECTED");
+        }
+
         [System.Web.Http.HttpGet]
         public async Task<ActionResult> ChangeStatus(string token, string status) {
             var ticket = await DAO.FindSingleByQueryAsync<DispatchTicket>(DispatchTicket.ByToken, token);

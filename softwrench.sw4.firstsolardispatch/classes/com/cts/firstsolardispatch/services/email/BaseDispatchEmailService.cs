@@ -19,7 +19,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             return ticket.Inverters?.Select(BuildInverterInfo).ToList() ?? new List<object>();
         }
 
-        public async Task SendEmail(DispatchTicket ticket, bool force = false) {
+        public virtual async Task SendEmail(DispatchTicket ticket, bool force = false) {
             var hour = ticket.CalculateHours();
             if (hour == ticket.CalculateLastSentHours() && !force) {
                 //not sending the same email twice for this hour timespan
@@ -31,14 +31,13 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             if (!ApplicationConfiguration.IsProd()) {
                 subject = "[{0}]".Fmt(ApplicationConfiguration.Profile) + subject;
             }
-            var to = ApplicationConfiguration.IsProd() ? BuildTo(site, hour) : SwConstants.DevTeamEmail;
+            var to = BuildTo(site, hour);
             if (string.IsNullOrEmpty(to)) {
                 return;
             }
             var from = GetFrom();
             var msg = BuildMessage(ticket, site, hour <= 4);
-            var emailData = new EmailData(@from, to, subject, msg);
-            emailData.BCc = GetBcc();
+            var emailData = new EmailData(@from, to, subject, msg) { BCc = GetBcc() };
 
             var emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>();
             emailService.SendEmailAsync(emailData, async success => {
@@ -46,10 +45,16 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
                 if (DispatchTicketStatus.SCHEDULED.Equals(ticket.Status)) {
                     ticket.Status = DispatchTicketStatus.SCHEDULED;
                 }
+                AfterSend(emailData);
                 await dao.SaveAsync(ticket);
 
             });
         }
+
+        protected virtual void AfterSend(EmailData emailData) {
+            //NOOP
+        }
+
 
         private static object BuildInverterInfo(Inverter inverter) {
             var sb = new StringBuilder();
@@ -62,9 +67,14 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             };
         }
 
-        public abstract string BuildTo(GfedSite site, int hour); 
+        public virtual string BuildTo(GfedSite site, int hour) {
+            if (!ApplicationConfiguration.IsProd()) {
+                return SwConstants.DevTeamEmail;
+            }
+            return null;
+        }
 
-        public string BuildMessage(DispatchTicket ticket, GfedSite site, bool allowRejection) {
+        public virtual string BuildMessage(DispatchTicket ticket, GfedSite site, bool allowRejection) {
             var redirectService = SimpleInjectorGenericFactory.Instance.GetObject<RedirectService>();
             var accepturl = redirectService.GetActionUrl("DispatchEmail", "ChangeStatus", "token={0}&status=ACCEPTED".Fmt(ticket.AccessToken));
             var rejecturl = redirectService.GetActionUrl("DispatchEmail", "ChangeStatus", "token={0}&status=REJECTED".Fmt(ticket.AccessToken));

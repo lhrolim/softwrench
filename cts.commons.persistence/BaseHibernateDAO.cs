@@ -208,9 +208,10 @@ namespace cts.commons.persistence {
 
         public async Task<IList<dynamic>> FindByNativeQueryAsync(string queryst, ExpandoObject parameters, IPaginationData paginationData = null,
             string queryAlias = null) {
-            var before = Stopwatch.StartNew();
+            
 
             return await RunTransactionalAsync(async (p) => {
+                var before = Stopwatch.StartNew();
                 var guid = Guid.NewGuid();
                 if (queryAlias == null) {
                     queryAlias = "";
@@ -221,6 +222,7 @@ namespace cts.commons.persistence {
                 query.SetResultTransformer(NhTransformers.ExpandoObject);
                 var result = await query.ListAsync<dynamic>();
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
+                before.Stop();
                 if (queryAlias != null) {
                     Observers.Where(o => o.IsTurnedOn()).ForEach(o => o.MarkQueryResolution(queryAlias, before.ElapsedMilliseconds));
                 }
@@ -333,8 +335,9 @@ namespace cts.commons.persistence {
         }
 
         public async Task<int> CountByNativeQueryAsync(string queryst, ExpandoObject parameters, string queryAlias = null) {
-            var before = Stopwatch.StartNew();
+            
             return await RunTransactionalAsync(async (p) => {
+                var before = Stopwatch.StartNew();
                 var guid = Guid.NewGuid();
                 if (queryAlias == null) {
                     queryAlias = "";
@@ -345,6 +348,7 @@ namespace cts.commons.persistence {
                 var result = Convert.ToInt32(await query.UniqueResultAsync());
 
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query. found {1} entries".Fmt(queryAlias ?? "", result)));
+                before.Stop();
                 if (queryAlias != null) {
                     Observers.Where(o => o.IsTurnedOn()).ForEach(o => o.MarkQueryResolution(queryAlias, before.ElapsedMilliseconds, result));
                 }

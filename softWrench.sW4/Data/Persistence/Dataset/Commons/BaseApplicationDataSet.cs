@@ -447,7 +447,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 }
                 var association = applicationAssociation;
 
-                tasks.Add(AssociationResolverWork(dataMap, schema, ctx, association, search, eagerFetchedOptions, lazyOptions));
+                tasks.Add(Task.Run(async () => {
+                    await AssociationResolverWork(dataMap, schema, ctx, association, search, eagerFetchedOptions, lazyOptions);
+                }));
+
+
 
             }
             #endregion
@@ -463,13 +467,26 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     //if there´s no provider, there´s nothing to do --> static list
                     continue;
                 }
-                tasks.Add(DoResolveEagerOptions(schema, dataMap, optionField, eagerFetchedOptions));
+
+                tasks.Add(Task.Run(async () => {
+                    await DoResolveEagerOptions(schema, dataMap, optionField, eagerFetchedOptions);
+                }));
+
             }
             #endregion
 
 
+            if (tasks.Any()) {
+                if (tasks.Count == 1) {
+                    var task = tasks.First();
+                    await task;
+                } else {
+                    await Task.WhenAll(tasks.ToArray());
+                }
 
-            await Task.WhenAll(tasks.ToArray());
+            }
+
+
 
             //let's handle eventual inline compositions afterwards to avoid an eventual thread explosion
             #region inlineCompositions
@@ -556,8 +573,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     if (compositionData != null) {
                         var compositeDataMap = new CompositeDatamap(compositionData);
                         var compositionRequest = new InlineCompositionAssociationPrefetcherRequest(request, composition.AssociationKey);
-                        var task = BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest);
-                        inlineCompositionTasks.Add(task);
+                        inlineCompositionTasks.Add(Task.Run(async () => await BuildAssociationOptions(compositeDataMap, listCompositionSchema, compositionRequest)));
                     }
                 }
             }
@@ -579,7 +595,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         //        }
         public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData) {
             var compositionData = operationData.CompositionData;
-            
+
             if (compositionData == null || compositionData.Operation == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
                 //not a composition deletion/update, no need for any further checking
                 return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
@@ -808,7 +824,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                     EntityUtil.IsRelationshipNameEquals(f.AssociationKey, associationToUpdate)));
                 if (association == null) {
                     var optionField = application.Schema.OptionFields().First(f => f.AssociationKey.EqualsIc(associationToUpdate));
-                    tasks.Add(DoResolveOptionFields(application, cruddata, optionField, resultObject));
+                    tasks.Add(Task.Run(async () => {
+                        await DoResolveOptionFields(application, cruddata, optionField, resultObject);
+                    }));
+
 
                 } else {
 
@@ -821,7 +840,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                         continue;
                     }
 
-                    tasks.Add(DoResolveOptionAssociations(application, cruddata, association, searchRequest, resultObject));
+                    tasks.Add(Task.Run(async () => {
+                        await DoResolveOptionAssociations(application, cruddata, association, searchRequest,
+                            resultObject);
+                    }));
                 }
             }
 

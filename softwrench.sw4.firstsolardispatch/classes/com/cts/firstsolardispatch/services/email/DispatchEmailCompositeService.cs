@@ -18,7 +18,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
         public async Task SendEmails(DispatchTicket ticket, bool force = false) {
             await DispatchEmailService.SendEmail(ticket, force);
-            // await DispatchSmsEmailService.SendEmail(ticket, force);
+            await DispatchSmsEmailService.SendEmail(ticket, force);
         }
 
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +16,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet.Filter {
 
         private const string WrongPreFilterMethod = "PrefilterFunction {0} of dataset {1} was implemented with wrong signature. See IDataSet documentation";
 
-        private static IDictionary<DataSetRelationshipCacheKey, MethodInfo> PrefilterAttributeCache = new Dictionary<DataSetRelationshipCacheKey, MethodInfo>();
+        private static readonly IDictionary<DataSetRelationshipCacheKey, MethodInfo> PrefilterAttributeCache = new ConcurrentDictionary<DataSetRelationshipCacheKey, MethodInfo>();
 
         public static SearchRequestDto ApplyPreFilterFunction<T>(IDataSet dataSet, BasePreFilterParameters<T> preFilterParam, string prefilterFunctionName)  {
             var mi = dataSet.GetType().GetMethod(prefilterFunctionName);

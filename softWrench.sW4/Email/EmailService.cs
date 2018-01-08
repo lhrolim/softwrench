@@ -260,7 +260,7 @@ namespace softWrench.sW4.Email {
             }
 
             var domain = emailaddress.Split('@')[1];
-            if (!domain.EqualsAny("controltechnologysolutions.com", "softwrenchsolutions.com", "amlabs.com.br", "gmail.com")) {
+            if (!domain.EqualsAny("controltechnologysolutions.com", "softwrenchsolutions.com", "amlabs.com.br", "gmail.com","vtext.com")) {
                 Log.WarnFormat("This email ( {0}) is not valid for this environment".Fmt(emailaddress));
                 return false;
             }

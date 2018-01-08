@@ -49,7 +49,7 @@
 
 
           <field attribute="id" label="Ticket#"/>
-          <field attribute="site_.facilitytitle" label="Site Name"/>
+          <field attribute="site_.facilitytitlewithvalue" label="Site Name"/>
           <field attribute="createddate" label="Created Date">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm"/>
           </field>
@@ -207,7 +207,7 @@
         <schema id="editdetail" parentschema="adetail" title="Dispatch Ticket" platform="web" stereotype="detail">
           <section id="gfed">
             <field attribute="gfedid" hidden="true"/>
-            <field attribute="site_.facilitytitle" label="Site" readonly="true"/>
+            <field attribute="site_.facilitytitlewithvalue" label="Site" readonly="true"/>
           </section>
         </schema>
 

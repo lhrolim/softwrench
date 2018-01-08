@@ -86,7 +86,9 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             foreach (var collectionAssociation in collectionAssociations) {
                 var internalParameter = BuildInternalParameter(parameters, collectionAssociation, results);
                 var perThreadPaginatedSearch = paginatedSearch == null ? null : (PaginatedSearchRequestDto)paginatedSearch.ShallowCopy();
-                tasks[i++] = FetchAsync(internalParameter, perThreadPaginatedSearch);
+                tasks[i++] = Task.Run(async () => {
+                    await FetchAsync(internalParameter, perThreadPaginatedSearch);
+                });
             }
             await Task.WhenAll(tasks);
             Log.Debug(LoggingUtil.BaseDurationMessageFormat(before, "Finish Collection Resolving for {0} Collections", String.Join(",", compositionSchemas.Keys)));
@@ -143,11 +145,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 searchRequestDto = PrefilterInvoker.ApplyPreFilterFunction(dataSet, preFilterParam, applicationCompositionSchema.PrefilterFunction);
                 //setting it to the baseDTO so that an eventual annotated method could be chained
                 preFilterParam.BASEDto = searchRequestDto;
-            } 
+            }
             searchRequestDto = PrefilterInvoker.ApplyAnnotatedPreFilterFunctionIfExists(dataSet, preFilterParam, collectionAssociation.Qualifier);
-            
 
-            
+
+
 
 
 
@@ -173,14 +175,18 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                 //    paginatedSearch.TotalCount = await GetCount(collectionEntityMetadata, dto, offLineMode);
                 //}, ctx);
 
-                var listTask = GetList(collectionEntityMetadata, searchRequestDto, offLineMode);
-                var countTask = GetCount(collectionEntityMetadata, searchRequestDto, offLineMode);
+
+
+                var listTask = Task.Run(async () => {
+                    queryResult = await GetList(collectionEntityMetadata, searchRequestDto, offLineMode);
+                });
+                var countTask = Task.Run(async () => {
+                    paginatedSearch.TotalCount = await GetCount(collectionEntityMetadata, searchRequestDto, offLineMode);
+                });
 
 
                 await Task.WhenAll(listTask, countTask);
 
-                queryResult = listTask.Result;
-                paginatedSearch.TotalCount = countTask.Result;
 
                 // add paginationData to result 
                 // creating a new pagination data in order to have everything calculated correctly
@@ -236,11 +242,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             if (paginatedSearch != null && (!string.IsNullOrEmpty(paginatedSearch.SearchParams) || !string.IsNullOrEmpty(paginatedSearch.SearchSort))) {
                 searchRequestDto = paginatedSearch;
             } else if (paginatedSearch != null && paginatedSearch.PageSize > 0) {
-                searchRequestDto = new PaginatedSearchRequestDto() { PreventFilterSearch = true};
+                searchRequestDto = new PaginatedSearchRequestDto() { PreventFilterSearch = true };
             } else {
                 searchRequestDto = new SearchRequestDto() { PreventFilterSearch = true };
             }
-            
+
             var lookupContext = parameter.Ctx;
             var printMode = lookupContext.PrintMode;
             var offLineMode = lookupContext.OfflineMode;
