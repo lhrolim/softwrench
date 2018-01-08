@@ -44,12 +44,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
 
             await Task.Run(() => {
-                foreach (var tuple in tuples){
+                foreach (var tuple in tuples) {
                     var emailData = new EmailData(@from, to, tuple.Item1, tuple.Item2) { BCc = GetBcc() };
 
                     var emailService = SimpleInjectorGenericFactory.Instance.GetObject<EmailService>();
                     emailService.SendEmail(emailData);
-                    
+
                     //to ensure the sms are dispatched in the correct order
                     Thread.Sleep(300);
                 }
@@ -134,12 +134,16 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
         }
 
+        protected override string GetBcc() {
+            var bbc = SwConstants.DevTeamEmail + "; ";
+            bbc += ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.BccSmsEmailsToNotify);
+            return bbc;
+        }
+
 
         public override string BuildTo(GfedSite site, int hour) {
             var toList = new List<string>();
-
-
-            toList.Add(ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.SmsEmailsToNotify));
+            toList.Add(ConfigFacade.Lookup<string>(FirstSolarDispatchConfigurations.ToSmsEmailsToNotify));
 
             if (ApplicationConfiguration.IsProd()) {
                 if (!string.IsNullOrEmpty(site.PrimaryContactSmsEmail)) {

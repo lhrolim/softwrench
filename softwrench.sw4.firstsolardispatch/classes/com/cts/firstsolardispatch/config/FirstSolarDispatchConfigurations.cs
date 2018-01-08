@@ -12,8 +12,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
     public class FirstSolarDispatchConfigurations : ISingletonComponent, ISWEventListener<ApplicationStartedEvent> {
 
         public const string DefaultFromEmailKey = "/FirstSolarDispatch/DefaultFromEmail";
-        public const string BbcEmailsToNotify = "/FirstSolarDispatch/BccEmailsToNotify";
-        public const string SmsEmailsToNotify = "/FirstSolarDispatch/SmsEmailsToNotify";
+        public const string BccEmailsToNotify = "/FirstSolarDispatch/BccEmailsToNotify";
+        public const string BccSmsEmailsToNotify = "/FirstSolarDispatch/BccSmsEmailsToNotify";
+        public const string ToSmsEmailsToNotify = "/FirstSolarDispatch/SmsEmailsToNotify";
 
         [Import]
         public IConfigurationFacade ConfigurationFacade { get; set; }
@@ -28,15 +29,20 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
                 PropertyDataType = PropertyDataType.STRING
             });
 
-            ConfigurationFacade.Register(BbcEmailsToNotify, new PropertyDefinition {
-                Description = "Email addresses to be used as 'bbc' on the dispatch emails.",
+            ConfigurationFacade.Register(BccEmailsToNotify, new PropertyDefinition {
+                Description = "Email addresses to be used as 'bcc' on the dispatch emails.",
                 StringValue = "brent.galyon@firstsolar.com",
                 PropertyDataType = PropertyDataType.STRING
             });
 
-            ConfigurationFacade.Register(SmsEmailsToNotify, new PropertyDefinition {
-                Description = "Email addresses to be used as 'bbc' on the dispatch sms.",
-                StringValue = "4802254926@txt.att.net", 
+            ConfigurationFacade.Register(BccSmsEmailsToNotify, new PropertyDefinition {
+                Description = "Email addresses to be used as 'bcc' on the dispatch sms.",
+                StringValue = ApplicationConfiguration.IsProd() ? "4802254926@txt.att.net" : null,  
+                PropertyDataType = PropertyDataType.STRING
+            });
+
+            ConfigurationFacade.Register(ToSmsEmailsToNotify, new PropertyDefinition {
+                Description = "Email addresses to send on the dispatch sms.",
                 PropertyDataType = PropertyDataType.STRING
             });
         }
