@@ -60,7 +60,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             var sb = new StringBuilder();
             var maximoDao = SimpleInjectorGenericFactory.Instance.GetObject<IMaximoHibernateDAO>();
             var assetDescription = maximoDao.FindSingleByNativeQuery<string>("select description from asset where assetnum = ? and siteid = ?", inverter.AssetNum, inverter.Siteid);
-            sb.Append(inverter.AssetNum).Append(" - Class ").Append(inverter.FailureClass).Append(" - ").Append(assetDescription).Append(" - ").Append(inverter.ErrorCodes);
+            sb.AppendFormat("({0}) {1}", inverter.AssetNum, inverter.AssetDescription).Append(" - Class ").Append(inverter.FailureClass);
+            if (!string.IsNullOrEmpty(inverter.ErrorCodes)) {
+                sb.Append(" - ").Append(inverter.ErrorCodes);
+            }
             return new {
                 description = sb.ToString(),
                 details = inverter.FailureDetails
