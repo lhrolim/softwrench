@@ -80,6 +80,9 @@
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
+    <Reference Include="cts.commons.persistence, Version=1.5.6582.17201, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\cts.commons.persistence.1.5.6582.17201\lib\net461\cts.commons.persistence.dll</HintPath>
+    </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.4.6544.25865, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.4.6544.25865\lib\net461\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
@@ -1568,10 +1571,6 @@
     <Folder Include="Views\SchedulerSetup\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
-      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
-      <Name>cts.commons.persistence</Name>
-    </ProjectReference>
     <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
       <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
       <Name>cts.commons.web</Name>
