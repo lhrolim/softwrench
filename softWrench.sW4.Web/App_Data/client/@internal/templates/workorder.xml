@@ -645,7 +645,7 @@
 
             </section>
 
-            <section orientation="horizontal">
+            <section orientation="horizontal" id="miscsection">
               <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
               <renderer type="default" params="childinputsize=medium" />
 

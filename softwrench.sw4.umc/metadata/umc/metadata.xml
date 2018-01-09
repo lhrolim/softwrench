@@ -147,7 +147,8 @@
         <schema id="adetail" title="Request Details" abstract="true" stereotype="detail" redeclaring="false">
           <customization position="description">
             <field attribute="description" label="Work Request" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+              <renderer type="default" params="maxlength=200;inputsize=xlarge" />
+              <renderer type="default" params="maxlength=200;inputsize=xlarge" />
             </field>
           </customization>
           <customization position="ld_.ldtext">
@@ -217,7 +218,7 @@
         <schema id="quicknewdetail" stereotype="detailnew" title="New Quick Request" redeclaring="false">
           <customization position="description">
             <field attribute="description" label="Work Request" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+              <renderer type="default" params="maxlength=200;inputsize=xlarge" />
             </field>
           </customization>
           <customization position="ld_.ldtext">
@@ -231,7 +232,7 @@
         <schema id="quickeditdetail" stereotype="detail" title="Quick Request Details" redeclaring="false">
           <customization position="description">
             <field attribute="description" label="Work Request" requiredexpression="true">
-              <renderer type="default" params="maxlength=100;inputsize=xlarge" />
+              <renderer type="default" params="maxlength=200;inputsize=xlarge" />
             </field>
           </customization>
           <customization position="ld_.ldtext">
@@ -369,6 +370,25 @@
               <renderer type="lookup" params="inputsize=small"/>
             </association>
           </customization>
+
+          <customization position="miscsection">
+            <section orientation="horizontal" id="miscsection">
+              <header displacement="ontop" label="Miscellaneous" params="fieldset=true" />
+              <renderer type="default" params="childinputsize=medium" />
+              <field label="Job Plan" attribute="jpnum" readonly="true">
+                <renderer type="default" />
+              </field>
+              <association label="GL Account" target="glaccount" labelfield="glcomponents_.comptext" >
+                <renderer type="modal" params="application=glcomponents;schema=detail;onsave=glcomponentService.getGLAccount;onload=glcomponentService.loadGLAccount;cssclass=crud-lookup-modal;title=Select GL Account;allowcustomvalue=true" />
+              </association>
+
+              <association label="On Behalf of" target="onbehalfof" labelfield="onbehalfofperson_.displayname">
+                <renderer type="lookup" />
+              </association>
+              <section id="attachmentsection"/>
+            </section>
+          </customization>
+          
         
           <commandbars>
             <commandgroup position="actions">
