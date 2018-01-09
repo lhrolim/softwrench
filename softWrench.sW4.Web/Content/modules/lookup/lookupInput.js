@@ -80,6 +80,7 @@
 
                             return modalService.showPromise(fieldSchema, modaldatamap, props, datamap, schema).then(selecteditems => {
                                 //TODO: document this custom function
+                                selecteditems = selecteditems == null ? [] : selecteditems.filter(a => a["_#selected"]);
                                 return savefn && savefn(datamap, fieldSchema, selecteditems, fieldMetadata, schema);
                             });
                         });

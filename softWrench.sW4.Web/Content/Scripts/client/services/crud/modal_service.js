@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .service('modalService', ["$rootScope", "$q", "crudContextHolderService", function ($rootScope, $q, crudContextHolderService) {
+        .service('modalService', ["$rootScope", "$q", "crudContextHolderService", "$timeout", function ($rootScope, $q, crudContextHolderService, $timeout) {
 
             return {
 
@@ -113,8 +113,7 @@
 
                     const savefn = (datamap) => {
                         deferred.resolve(datamap);
-                        this.hide();
-
+                        $timeout(() => { this.hide();},0,false);
                     }
 
                     const cancelfn = (datamap) => {

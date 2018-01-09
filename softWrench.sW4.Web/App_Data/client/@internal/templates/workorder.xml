@@ -94,6 +94,7 @@
           <relationshipAttribute from="wonum" to="RECORDKEY" primary="true"/>
           <relationshipAttribute from="woclass" to="RECORDCLASS" />
           <relationshipAttribute from="siteid" to="worksiteid" />
+          <relationshipAttribute to="isprimary" literal="0" />
         </relationship>
         <relationship to="relatedrecord" collection="true">
           <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
