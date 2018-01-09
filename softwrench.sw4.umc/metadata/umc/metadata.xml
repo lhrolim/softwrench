@@ -339,18 +339,6 @@
             <association target="lead2" labelfield="employee_.displayname" label="Employee"/>
           </customization>
 
-          <properties>
-            <property key="detail.disablesecondarycontent" value="true"/>
-          </properties>
-     
-
-        </schema>
-
-        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
-
-          <!--<customization position="failurecode"/>-->
-          <!--<customization position="problemcode"/>-->
-
           <customization position="+hiddenfield">
             <section orientation="horizontal">
               <association label="Failure Class" target="failurecode" labelfield="failurelist_.description" extraprojectionvalues="failurelist" orderbyfield="failurecode asc" requiredexpression="true">
@@ -388,6 +376,19 @@
               <section id="attachmentsection"/>
             </section>
           </customization>
+          
+          <properties>
+            <property key="detail.disablesecondarycontent" value="true"/>
+          </properties>
+     
+
+        </schema>
+
+        <schema id="editdetail" parentschema="adetail"  title="Work Order Details" platform="web" redeclaring="false">
+
+          <!--<customization position="failurecode"/>-->
+          <!--<customization position="problemcode"/>-->
+
           
         
           <commandbars>
