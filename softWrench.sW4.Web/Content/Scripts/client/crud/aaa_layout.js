@@ -222,7 +222,7 @@
                 $rootScope.menu = menuModel.menu;
                 $scope.menu = menuModel.menu;
                 $scope.isSysAdmin = menuModel.isSysAdmin;
-                $scope.isDynamicAdmin = menuModel.isDynamicAdmin;
+                $scope.isDynamicAdmin = menuModel.isDynamicAdmin || contextService.isLocal();
                 $scope.isClientAdmin = menuModel.isClientAdmin;
                 $scope.myprofileenabled = menuModel.myProfileEnabled;
                 $('.hapag-body').addClass('hapag-body-loaded');

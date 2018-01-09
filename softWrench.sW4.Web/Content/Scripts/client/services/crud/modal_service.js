@@ -113,6 +113,7 @@
 
                     const savefn = (datamap) => {
                         deferred.resolve(datamap);
+                        //timeout to enforce the promise resolution to take place before the hide method execution
                         $timeout(() => { this.hide();},0,false);
                     }
 

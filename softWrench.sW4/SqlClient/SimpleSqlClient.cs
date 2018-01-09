@@ -43,7 +43,7 @@ namespace softWrench.sW4.SqlClient {
 //                }
 //            }
 
-            return GetDao(dbType).ExecuteSql(query, paramsToPass);
+            return GetDao(dbType).ExecuteSql(query, null);
         }
 
         public bool IsDefinitionOrManipulation(string sql) {
