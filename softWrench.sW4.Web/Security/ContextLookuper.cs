@@ -42,7 +42,7 @@ namespace softWrench.sW4.Web.Security {
             return AddContext(context);
         }
 
-        public void FillContext(ApplicationMetadataSchemaKey key, IDictionary<string,object>CustomRequestParameters) {
+        public void FillContext(ApplicationMetadataSchemaKey key, IDictionary<string, object> CustomRequestParameters) {
 
             var context = (ContextHolder)ReflectionUtil.Clone(new ContextHolder(), LookupContext());
 
@@ -152,11 +152,22 @@ namespace softWrench.sW4.Web.Security {
                 return;
             }
 
+
+
             var uriProperty = MetadataProvider.GlobalProperty("iiscontextpath");
+
+
             if (string.IsNullOrWhiteSpace(uriProperty)) {
                 //falling back to a trailing whitespace version due to the fact that some releases got that
                 uriProperty = MetadataProvider.GlobalProperty("iiscontextpath ");
             }
+            if (ApplicationConfiguration.IsLocal()) {
+                uriProperty = "http://localhost:8080/sw4";
+                if (ApplicationConfiguration.IsClient("umc")) {
+                    uriProperty = "http://localhost:8080/umc";
+                }
+            }
+
 
             Uri uri;
             string context;
