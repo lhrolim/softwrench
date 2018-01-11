@@ -194,8 +194,8 @@
     <Reference Include="SimpleInjector.Diagnostics, Version=2.4.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.2.4.0\lib\net45\SimpleInjector.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6533.17494, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6533.17494\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.2.6585.37454, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.2.6585.37454\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
@@ -800,7 +800,7 @@
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityMetadata.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityMetadataBuilder.cs" />
     <Compile Include="Metadata\Entities\Sliced\SlicedEntityMetadataKey.cs" />
-    <Compile Include="Metadata\Entities\Types\Workorder.cs" />
+    <Compile Include="Metadata\Entities\Types\WorkorderConstants.cs" />
     <Compile Include="Metadata\Menu\DividerMenuItem.cs" />
     <Compile Include="Metadata\Menu\XmlMenuMetadataParser.cs" />
     <Compile Include="Metadata\Menu\ResourceMenuItem.cs" />

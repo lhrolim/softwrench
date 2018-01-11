@@ -77,7 +77,7 @@
          * 
          * @returns {Promise} 
          */
-        function save({ compositionData, nextSchemaObj, dispatchedByModal, refresh, selecteditem, originalDatamap, datamap, extraparameters, operation, skipValidation } = defaultSaveParams) {
+        function save({ schema,compositionData, nextSchemaObj, dispatchedByModal, refresh, selecteditem, originalDatamap, datamap, extraparameters, operation, skipValidation, customurl } = defaultSaveParams) {
 
             if (dispatchedByModal == undefined) {
                 dispatchedByModal = crudContextHolderService.isShowingModal();
@@ -85,7 +85,7 @@
 
             const panelId = dispatchedByModal ? "#modal" : null;
 
-            const schema = crudContextHolderService.currentSchema(panelId);
+            schema = schema || crudContextHolderService.currentSchema(panelId);
             datamap = datamap || crudContextHolderService.rootDataMap(panelId);
 
             //LUIZ -- TODO: review circular dependency
@@ -98,7 +98,8 @@
                 extraparameters,
                 originalDatamap,
                 skipValidation,
-                operation
+                operation,
+                customurl
             });
 
         }

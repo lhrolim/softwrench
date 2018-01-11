@@ -34,6 +34,7 @@ using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using softwrench.sw4.batch.api;
 using softwrench.sw4.batch.api.services;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Associations;
@@ -675,7 +676,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             operationWrapper.CustomParameters = customParameters;
 
             if (isBatch) {
-                return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON);
+                var batchOptions = OperationConstants.IsCrud(operation)
+                    ? null
+                    : new BatchOptions { BatchOperationName = operation };
+                return BatchSubmissionService.CreateAndSubmit(operationWrapper.ApplicationMetadata.Name, operationWrapper.ApplicationMetadata.Schema.SchemaId, operationWrapper.JSON, options: batchOptions);
             }
 
             var result = await DoExecute(operationWrapper);

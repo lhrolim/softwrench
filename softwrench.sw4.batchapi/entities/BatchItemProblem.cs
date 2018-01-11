@@ -29,6 +29,8 @@ namespace softwrench.sw4.batch.api.entities {
         [Property]
         public String ErrorMessage { get; set; }
 
+        public int? ProblemId { get; set; }
+
         /// <summary>
         /// this will hold only the editable fields, as the others should be fetched from the database
         /// </summary>

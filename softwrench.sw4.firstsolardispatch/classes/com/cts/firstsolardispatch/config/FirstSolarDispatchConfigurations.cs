@@ -16,6 +16,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
         public const string BccSmsEmailsToNotify = "/FirstSolarDispatch/BccSmsEmailsToNotify";
         public const string ToSmsEmailsToNotify = "/FirstSolarDispatch/SmsEmailsToNotify";
 
+        public const string ProductionFsiisEndpoint = "/FirstSolarDispatch/fsendpointurl";
+
         [Import]
         public IConfigurationFacade ConfigurationFacade { get; set; }
 
@@ -44,6 +46,12 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.c
             ConfigurationFacade.Register(ToSmsEmailsToNotify, new PropertyDefinition {
                 Description = "Email addresses to send on the dispatch sms.",
                 PropertyDataType = PropertyDataType.STRING
+            });
+
+            ConfigurationFacade.Register(ProductionFsiisEndpoint, new PropertyDefinition {
+                Description = "Full url of FS production site to create the workorders",
+                PropertyDataType = PropertyDataType.STRING,
+                CachedOnClient = true
             });
         }
     }

@@ -4,10 +4,14 @@
     let formatPhone;
 
     class fsdTicketService {
-        constructor(crudContextHolderService) {
+        constructor(crudContextHolderService, restService, configurationService, applicationService, alertService) {
             this.crudContextHolderService = crudContextHolderService;
+            this.restService = restService;
+            this.configurationService = configurationService;
+            this.applicationService = applicationService;
+            this.alertService = alertService;
 
-            formatPhone = function(phone) {
+            formatPhone = function (phone) {
                 if (!phone || phone.length !== 10) return phone;
                 return `(${phone.substr(0, 3)}) ${phone.substr(3, 3)}-${phone.substr(6, 4)}`;
             }
@@ -55,7 +59,7 @@
         filterStatus(item) {
             const value = item.value;
             const dm = this.crudContextHolderService.rootDataMap();
-            
+
             if (!dm["id"]) {
                 return value === "DRAFT";
             }
@@ -77,10 +81,55 @@
             return false;
 
         }
+
+        shouldShowCreateCommand() {
+            const dm = this.crudContextHolderService.rootDataMap();
+            return dm["status"] === "ACCEPTED";
+        }
+
+        doCreateWorkOrder(serverurl,dm, hashsignature) {
+            const parameters = {
+                _customurl: serverurl,
+            };
+
+            const jsonOb = {
+                json: dm,
+                messageToSign: dm.id,
+                hashSignature: hashsignature
+            }
+
+
+            return this.restService.post("FSDBackend", "CreateWorkorders", parameters, jsonOb).catch(e => {
+                this.alertService.alert(
+                    "Could not connect to the server. Please check your network connection or contact support");
+            });
+        }
+
+        createWorkOrder() {
+            const serverurl = this.configurationService.getConfigurationValue("/FirstSolarDispatch/fsendpointurl");
+            if (!serverurl) {
+                this.alertService("Please fill in /FirstSolarDispatch/fsendpointurl at the configuration application");
+                return false;
+            }
+            const dm = this.crudContextHolderService.rootDataMap();
+            
+
+            return this.restService.get("Security", "GenerateHashedKey", { message: dm.id }).then(result => {
+                return this.doCreateWorkOrder(serverurl, dm, result.data);
+            });
+            
+
+        }
+
+
+
     }
 
-    fsdTicketService.$inject = ["crudContextHolderService"];
 
-    angular.module("firstsolardispatch").clientfactory("fsdTicketService", fsdTicketService);
+
+
+    fsdTicketService.$inject = ["crudContextHolderService", "restService", "configurationService", "applicationService", "alertService"];
+
+    angular.module("sw_layout").service("fsdTicketService", fsdTicketService);
 
 })(angular);

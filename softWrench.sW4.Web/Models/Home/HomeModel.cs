@@ -58,21 +58,14 @@ namespace softWrench.sW4.Web.Models.Home {
             ClientName = clientName;
             ApplicationVersion = applicationVersion;
 
-            ConfigJSON = JsonConvert.SerializeObject(configs, Newtonsoft.Json.Formatting.None,
-            new JsonSerializerSettings() {
+            var jsonSerializerSettings = new JsonSerializerSettings {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-
-            UserJSON = JsonConvert.SerializeObject(user, Newtonsoft.Json.Formatting.None,
-            new JsonSerializerSettings() {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
+            };
+            ConfigJSON = JsonConvert.SerializeObject(configs, Newtonsoft.Json.Formatting.None,jsonSerializerSettings);
+            UserJSON = JsonConvert.SerializeObject(user, Newtonsoft.Json.Formatting.None,jsonSerializerSettings);
 
             if (MenuModel != null) {
-                MenuJSON = JsonConvert.SerializeObject(MenuModel, Newtonsoft.Json.Formatting.None,
-                    new JsonSerializerSettings() {
-                        ContractResolver = new CamelCasePropertyNamesContractResolver()
-                    });
+                MenuJSON = JsonConvert.SerializeObject(MenuModel, Newtonsoft.Json.Formatting.None,jsonSerializerSettings);
             }
 
             HasPopupLogo = hasLogoPopup;

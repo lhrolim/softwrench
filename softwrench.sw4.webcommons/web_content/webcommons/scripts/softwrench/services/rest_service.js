@@ -12,7 +12,8 @@ modules.rootCommons.service('restService', ["$http", "$log","$q", "contextServic
     "UserSetup/DoSetPassword",
     "UserSetupWebApi/ForgotPassword",
     "UserSetupWebApi/SendActivationEmail",
-    "UserSetupWebApi/NewUserRegistration"
+    "UserSetupWebApi/NewUserRegistration",
+    "FSDBackendController"
 
     ];
 
@@ -32,7 +33,12 @@ modules.rootCommons.service('restService', ["$http", "$log","$q", "contextServic
         getActionUrl: function (controller, action, parameters) {
             action = (action === undefined || action == null) ? 'get' : action;
             const params = parameters == null ? {} : parameters;
-            const serverUrl = contextService.getFromContext("serverurl");
+            let serverUrl = contextService.getFromContext("serverurl");
+            if (params["_customurl"]) {
+                serverUrl = params["_customurl"];
+                delete params["_customurl"];
+            }
+            
             if (serverUrl) {
                 return serverUrl + "/api/generic/" + controller + "/" + action + "?" + $.param(params, false);
             }

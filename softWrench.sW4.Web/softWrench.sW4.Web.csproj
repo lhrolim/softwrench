@@ -192,6 +192,12 @@
     <Reference Include="softwrench.sW4.audit, Version=2.2.6516.28948, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.audit.2.2.6516.28948\lib\net461\softwrench.sW4.audit.dll</HintPath>
     </Reference>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.2.6585.37454, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.2.6585.37454\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
+    </Reference>
+    <Reference Include="softwrench.sW4.batches, Version=1.4.6585.38965, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.batches.1.4.6585.38965\lib\net461\softwrench.sW4.batches.dll</HintPath>
+    </Reference>
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6544.26584, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6544.26584\lib\net461\softwrench.sw4.dashboard.dll</HintPath>
     </Reference>
@@ -360,6 +366,7 @@
     <Compile Include="Common\TestProxy.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Common\WebAPIUtil.cs" />
+    <Compile Include="Controllers\SecurityController.cs" />
     <Compile Include="Controllers\TabController.cs" />
     <Compile Include="Controllers\Application\Ticket\StatusBatchController.cs" />
     <Compile Include="Controllers\AssociationController.cs" />
@@ -1268,6 +1275,7 @@
     <Content Include="Scripts\jquery-2.1.1.min.map" />
     <Content Include="Views\DispatchEmailTest\Index.cshtml" />
     <Content Include="Views\DispatchEmail\GenericRequest.cshtml" />
+    <Content Include="Views\DispatchEmail\Accepted.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Client\%40internal\source\maximo7.1.xml">
@@ -1582,14 +1590,6 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sw4.batchapi\softwrench.sw4.batches.api.csproj">
-      <Project>{11d87c06-ff14-4372-92f3-ff0f9bfb0ea5}</Project>
-      <Name>softwrench.sw4.batches.api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
-      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
-      <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dynforms\softwrench.sw4.dynforms.csproj">
       <Project>{825bf88c-0051-415e-82b7-6f9d91e36709}</Project>

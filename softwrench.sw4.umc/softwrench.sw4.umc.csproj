@@ -116,11 +116,14 @@
     <Reference Include="softwrench.sW4.audit, Version=2.2.6516.28948, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.audit.2.2.6516.28948\lib\net461\softwrench.sW4.audit.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6533.17494, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6533.17494\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.2.6585.37454, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.2.6585.37454\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
+    <Reference Include="softwrench.sW4.batches, Version=1.4.6585.38965, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.batches.1.4.6585.38965\lib\net461\softwrench.sW4.batches.dll</HintPath>
+    </Reference>
+    <Reference Include="softwrench.sw4.problem, Version=1.1.6536.22070, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.problem.1.1.6536.22070\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.user, Version=1.4.6557.14814, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.user.1.4.6557.14814\lib\net461\softwrench.sw4.user.dll</HintPath>
@@ -184,6 +187,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="offline_content\audit\scripts\offline\audit.js" />
+    <Content Include="web_content\audit\readme.txt" />
+    <Content Include="web_content\problem\templates\problemsection.html" />
     <Content Include="web_content\umc\htmls\SubmitSuccess.html" />
     <Content Include="web_content\umc\htmls\woreport\umcreportheader.html" />
     <Content Include="web_content\umc\images\report_logo.jpeg" />
@@ -216,10 +222,6 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\softwrench.sW4.batches\softwrench.sW4.batches.csproj">
-      <Project>{653d15fd-96ca-4e5d-b147-39ad01e59006}</Project>
-      <Name>softwrench.sW4.batches</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
       <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>

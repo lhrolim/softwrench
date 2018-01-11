@@ -54,7 +54,11 @@ namespace softWrench.sW4.Data.Batches {
 
         public virtual OperationWrapper Convert(JObject row, ApplicationMetadata applicationMetadata) {
             var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), EntityMetadata, applicationMetadata, row, null);
-            return new OperationWrapper(crudOperationData, OperationConstants.CRUD_CREATE);
+            var operation = crudOperationData.Id == null
+                ? OperationConstants.CRUD_CREATE
+                : OperationConstants.CRUD_UPDATE;
+
+            return new OperationWrapper(crudOperationData, operation) { ApplicationMetadata = applicationMetadata };
         }
     }
 }

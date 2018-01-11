@@ -1,7 +1,6 @@
 ﻿using cts.commons.portable.Util;
 using log4net;
 using Newtonsoft.Json.Linq;
-using softwrench.sW4.Shared2.Metadata.Entity.Association;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Metadata.Applications;
@@ -24,13 +23,22 @@ namespace softWrench.sW4.Data.Entities {
         private static readonly ILog Log = LogManager.GetLogger(typeof(EntityBuilder));
 
 
+        public class EntityBuilderOptions {
+            public Func<string, JProperty, Tuple<UnmappedLambaMode, object>> UnMappedLambda { get; set; }
+        }
+
+        public enum UnmappedLambaMode {
+            ApplyDefault, ApplyUnmapped, ApplyAssociation, ApplyMapped
+        }
+
+
         [NotNull]
-        public static T BuildFromJson<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, JObject json, string id = null) where T : Entity {
+        public static T BuildFromJson<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, JObject json, string id = null, EntityBuilderOptions builderOptions = null) where T : Entity {
             if (id == null && applicationMetadata != null) {
                 //the id can be located inside the json payload, as long as the application metadata is provider
                 //this is not the case for new item compositions though
                 JToken token;
-                json.TryGetValue(applicationMetadata.IdFieldName, out token);
+                json.TryGetValue(applicationMetadata.IdFieldName, StringComparison.CurrentCultureIgnoreCase,out token);
                 if (token != null) {
                     id = token.ToString();
                 }
@@ -39,7 +47,7 @@ namespace softWrench.sW4.Data.Entities {
             var entity = GetInstance(entityType, metadata, applicationMetadata, id);
             OperationType operationType = id == null ? OperationType.Add : OperationType.AddChange;
             foreach (var property in json.Properties()) {
-                PopulateEntity<T>(metadata, applicationMetadata, property, entity, entityType, operationType);
+                PopulateEntity<T>(metadata, applicationMetadata, property, entity, entityType, operationType, builderOptions);
             }
             return (T)entity;
         }
@@ -57,8 +65,7 @@ namespace softWrench.sW4.Data.Entities {
         }
 
 
-        private static void PopulateEntity<T>(EntityMetadata metadata, ApplicationMetadata applicationMetadata,
-            JProperty property, Entity entity, Type entityType, OperationType operationType)
+        private static void PopulateEntity<T>(EntityMetadata metadata, ApplicationMetadata applicationMetadata, JProperty property, Entity entity, Type entityType, OperationType operationType, EntityBuilderOptions builderOptions)
             where T : Entity {
             var attributes = entity;
             var associationAttributes = entity.AssociationAttributes;
@@ -67,16 +74,19 @@ namespace softWrench.sW4.Data.Entities {
             var relationshipName = EntityUtil.GetRelationshipName(name);
             var collectionAssociation = listAssociations.FirstOrDefault(l => l.Qualifier == relationshipName);
             if (name.Contains(".")) {
-                HandleRelationship<T>(entityType, metadata, associationAttributes, property);
+                HandleRelationship<T>(entityType, metadata, associationAttributes, property, builderOptions);
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name == name);
                 if (attribute != null) {
                     attributes.Add(property.Name, GetValueFromJson(GetType(metadata, attribute), property.Value, metadata.IsSwDb));
                 }
             } else if (collectionAssociation != null) {
+                var collName = EntityUtil.GetRelationshipName(property.Name);
                 var collectionType = metadata.RelatedEntityMetadata(collectionAssociation.Qualifier);
-                HandleCollections<T>(entityType, metadata, applicationMetadata, collectionType, associationAttributes, property);
+                associationAttributes.Add(collName, HandleCollections<T>(metadata, collectionType, property));
             } else if (IsInlineTransientComposition(applicationMetadata, relationshipName)) {
-                HandleCollections<T>(entityType, metadata, applicationMetadata, metadata, associationAttributes, property);
+                var collName = EntityUtil.GetRelationshipName(property.Name);
+                associationAttributes.Add(collName, HandleCollections<T>(metadata, metadata, property));
+
             } else {
                 var attribute = metadata.Schema.Attributes.FirstOrDefault(a => a.Name.EqualsIc(name));
                 // if we´re on add mode, make sure the id isn´t setted 
@@ -90,22 +100,53 @@ namespace softWrench.sW4.Data.Entities {
                         attributes.Add(property.Name, CheckNullIgnore(valueFromJson));
                     } catch (Exception e) {
                         Log.Error("error casting object", e);
-                        throw new InvalidCastException("wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}".Fmt(attribute.Name, type, property.Value), e);
+                        throw new InvalidCastException(
+                            "wrong configuration for field {0} throwing cast exception. MetadataType:{1} / Value:{2}"
+                                .Fmt(attribute.Name, type, property.Value), e);
                     }
 
-                } else if (property.Value.Type == JTokenType.Array) {
-                    var array = property.Value.ToObject<Object[]>();
-                    entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));
                 } else {
-                    var value = CheckNullIgnore(property.Value.Type == JTokenType.Null ? null : property.Value.ToString());
-                    if (entity.UnmappedAttributes.ContainsKey(property.Name)) {
-                        Log.WarnFormat("key already present at the dictionary");
-                    } else {
-                        entity.UnmappedAttributes.Add(property.Name, value);
+                    var skipDefaultInvocation = false;
+                    if (builderOptions?.UnMappedLambda != null) {
+                        skipDefaultInvocation = HandleUnmappedLambda<T>(property, entity, builderOptions);
                     }
+
+                    if (!skipDefaultInvocation) {
+                        if (property.Value.Type == JTokenType.Array) {
+                            var array = property.Value.ToObject<Object[]>();
+                            entity.UnmappedAttributes.Add(property.Name, String.Join(", ", array));
+                        } else {
+                            var value = CheckNullIgnore(property.Value.Type == JTokenType.Null ? null : property.Value.ToString());
+                            if (entity.UnmappedAttributes.ContainsKey(property.Name)) {
+                                Log.WarnFormat("key already present at the dictionary");
+                            } else {
+                                entity.UnmappedAttributes.Add(property.Name, value);
+                            }
+
+                        }
+                    }
+
 
                 }
+
+
+
             }
+        }
+
+        private static bool HandleUnmappedLambda<T>(JProperty property, Entity entity, EntityBuilderOptions builderOptions) where T : Entity {
+            var resultObject = builderOptions.UnMappedLambda(property.Name, property);
+            var skipDefaultInvocation = true;
+            if (resultObject.Item1.Equals(UnmappedLambaMode.ApplyUnmapped)) {
+                entity.UnmappedAttributes.Add(property.Name, resultObject.Item2 as string);
+            } else if (resultObject.Item1.Equals(UnmappedLambaMode.ApplyMapped)) {
+                entity.SetAttribute(property.Name, resultObject.Item2);
+            } else if (resultObject.Item1.Equals(UnmappedLambaMode.ApplyAssociation)) {
+                entity.AssociationAttributes.Add(EntityUtil.GetRelationshipName(property.Name), resultObject.Item2);
+            } else {
+                skipDefaultInvocation = false;
+            }
+            return skipDefaultInvocation;
         }
 
         private static string CheckNullIgnore(string stringValue) {
@@ -134,38 +175,39 @@ namespace softWrench.sW4.Data.Entities {
                 return attribute.Type;
             }
             var targetMapping = metadata.Targetschema.TargetAttributes.FirstOrDefault(a => a.Name.Equals(attribute.Name, StringComparison.CurrentCultureIgnoreCase));
-            return targetMapping != null ? targetMapping.Type : attribute.Type;
+            return targetMapping?.Type ?? attribute.Type;
         }
 
 
-        private static void HandleCollections<T>(Type entityType, EntityMetadata metadata, ApplicationMetadata applicationMetadata, EntityMetadata collectionType,
-            IDictionary<string, object> associationAttributes, JProperty property) where T : Entity {
+        public static IList<T> HandleCollections<T>(EntityMetadata metadata, EntityMetadata collectionType, JProperty property) where T : Entity {
 
-            var array = (JArray)property.Value;
+            JArray array;
+
+            if (!(property.Value is JArray)) {
+                array = new JArray { property.Value };
+            } else {
+                array = (JArray)property.Value;
+            }
+
+
+
             IList<T> collection = new List<T>();
 
             foreach (var jToken1 in array) {
                 var jToken = (JObject)jToken1;
                 JToken idTkn;
                 string idValue = null;
-                string userIdValue = null;
-                if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, out idTkn)) {
+                if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, StringComparison.CurrentCultureIgnoreCase,out idTkn)) {
                     var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn, metadata.IsSwDb);
-                    idValue = valueFromJson == null ? null : valueFromJson.ToString();
+                    idValue = valueFromJson?.ToString();
                 }
-                if (jToken.TryGetValue(collectionType.Schema.UserIdAttribute.Name, out idTkn)) {
-                    var valueFromJson = GetValueFromJson(collectionType.Schema.UserIdAttribute.Type, idTkn, metadata.IsSwDb);
-                    userIdValue = valueFromJson == null ? null : valueFromJson.ToString();
-                }
-
-                var entity = BuildFromJson<T>(entityType, collectionType, null, jToken, idValue);
+                var entity = BuildFromJson<T>(typeof(T), collectionType, null, jToken, idValue);
                 collection.Add(entity);
             }
-            associationAttributes.Add(EntityUtil.GetRelationshipName(property.Name), collection);
+            return collection;
         }
 
-        private static void HandleRelationship<T>(Type entityType, EntityMetadata metadata,
-            IDictionary<string, object> associationAttributes, JProperty property) where T : Entity {
+        private static void HandleRelationship<T>(Type entityType, EntityMetadata metadata, IDictionary<string, object> associationAttributes, JProperty property, EntityBuilderOptions builderOptions) where T : Entity {
             string attributeName;
             var relationshipName = EntityUtil.GetRelationshipName(property.Name, out attributeName);
 
@@ -187,7 +229,7 @@ namespace softWrench.sW4.Data.Entities {
             }
 
             //TODO: last parameter might have been setted based on a flag sent from the json, indicating the correct relationship mode
-            PopulateEntity<T>(relationship, null, new JProperty(attributeName, property.Value), (Entity)relatedEntity, entityType, OperationType.Change);
+            PopulateEntity<T>(relationship, null, new JProperty(attributeName, property.Value), (Entity)relatedEntity, entityType, OperationType.Change, builderOptions);
         }
 
 
@@ -230,7 +272,7 @@ namespace softWrench.sW4.Data.Entities {
 
             }
             var array = value.ToObject<Object[]>();
-            for (var i = 0; i < array.Length; i++) {
+            for (var i = 0;i < array.Length;i++) {
                 if (array[i] != null) {
                     array[i] = ConversionUtil.ConvertFromMetadataType(type, array[i].ToString(), isSwdbEntity);
                 }

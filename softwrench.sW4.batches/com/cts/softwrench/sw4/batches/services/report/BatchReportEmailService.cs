@@ -27,26 +27,25 @@ namespace softwrench.sW4.batches.com.cts.softwrench.sw4.batches.services.report 
             _emailService = emailService;
             _redirectService = redirectService;
             _appConfig = appConfig;
-            var templatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//batches//emailreport.html";
-            var templateContent = File.ReadAllText(templatePath);
+            
+            if (!appConfig.IsUnitTest) {
+                var templatePath = AppDomain.CurrentDomain.BaseDirectory + "//Content//Templates//batches//emailreport.html";
+                var templateContent = File.ReadAllText(templatePath);
+                HandleHeaderImage();
+            }
 
-            HandleHeaderImage();
         }
 
-        private void HandleHeaderImage()
-        {
+        private void HandleHeaderImage() {
             //otb image
             _headerImageUrl = "Content/Images/header-email.jpg";
 
             var clientKey = _appConfig.GetClientKey();
             var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
 
-            if (File.Exists(baseDirectory + "//Content//Customers//" + clientKey + "//images//header-email.jpg"))
-            {
+            if (File.Exists(baseDirectory + "//Content//Customers//" + clientKey + "//images//header-email.jpg")) {
                 _headerImageUrl = "Content/Customers/" + clientKey + "/images/header-email.jpg";
-            }
-            else if (File.Exists(baseDirectory + "//Content//Images//" + clientKey + "//header-email.jpg"))
-            {
+            } else if (File.Exists(baseDirectory + "//Content//Images//" + clientKey + "//header-email.jpg")) {
                 _headerImageUrl = "Content/Images/" + clientKey + "/header-email.jpg";
             }
         }

@@ -148,8 +148,8 @@
     <Reference Include="softwrench.sw4.activitystream, Version=1.2.6449.32979, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6449.32979\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6533.17494, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6533.17494\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.2.6585.37454, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.2.6585.37454\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.Hapag, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.Hapag.1.0.0\lib\net46\softwrench.sw4.Hapag.dll</HintPath>

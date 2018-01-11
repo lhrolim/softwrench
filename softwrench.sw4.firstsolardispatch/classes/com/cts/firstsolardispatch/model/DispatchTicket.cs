@@ -43,6 +43,11 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
         [Property]
         public long GfedId { get; set; }
 
+//        [ManyToOne(Column = "gfedid", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
+//        public virtual GfedSite Gfed { get; set; }
+
+        public string SiteId { get; set; }
+
         [Property]
         public DateTime? CreatedDate { get; set; }
 

@@ -120,11 +120,11 @@
     <Reference Include="softwrench.sW4.audit, Version=2.2.6516.28948, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.audit.2.2.6516.28948\lib\net461\softwrench.sW4.audit.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.batch.api, Version=1.1.6533.17494, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.batch.api.1.1.6533.17494\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
+    <Reference Include="softwrench.sw4.batch.api, Version=1.2.6585.37454, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sw4.batch.api.1.2.6585.37454\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sW4.batches, Version=1.3.6533.37322, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.batches.1.3.6533.37322\lib\net461\softwrench.sW4.batches.dll</HintPath>
+    <Reference Include="softwrench.sW4.batches, Version=1.4.6585.38965, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.batches.1.4.6585.38965\lib\net461\softwrench.sW4.batches.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.dashboard, Version=1.4.6514.20944, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6514.20944\lib\net461\softwrench.sw4.dashboard.dll</HintPath>
@@ -189,6 +189,7 @@
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarEmailController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarAdvancedSearchController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\FirstSolarWorkorderBatchAction.cs" />
+    <Compile Include="classes\com\cts\firstsolar\action\FSDBackendController.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\BatchRedirectionHelper.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarDatamapConverterUtil.cs" />
     <Compile Include="classes\com\cts\firstsolar\action\util\FirstSolarWoValidationHelper.cs" />
@@ -220,6 +221,8 @@
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkorderMaterialsDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FirstSolarWorkPackageDataSet.cs" />
     <Compile Include="classes\com\cts\firstsolar\dataset\FSWPackageConstants.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dispatch\WorkorderFromDispatchConverter.cs" />
+    <Compile Include="classes\com\cts\firstsolar\dispatch\WorkOrderFromDispatchService.cs" />
     <Compile Include="classes\com\cts\firstsolar\FirstSolarOptWhereClauseRegistry.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageMaintenanceEngineeringMailJob.cs" />
     <Compile Include="classes\com\cts\firstsolar\jobs\FirstSolarWorkPackageCallOutMailJob.cs" />

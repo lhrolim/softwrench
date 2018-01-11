@@ -9,6 +9,7 @@ using cts.commons.portable.Util;
 using Castle.Core.Internal;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dashboard;
 using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset.advancedsearch;
+using softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dispatch;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
@@ -18,8 +19,10 @@ using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
+using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -34,6 +37,9 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         [Import]
         public EntityRepository EntityRepository { get; set; }
+
+        [Import]
+        public WorkOrderFromDispatchService WorkOrderFromDispatchService { get; set; }
 
         public FirstSolarWorkorderDataSet(ISWDBHibernateDAO swdbDao, FirstSolarAdvancedSearchHandler advancedSearchHandler) : base(swdbDao) {
             _advancedSearchHandler = advancedSearchHandler;
@@ -106,6 +112,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return parameter.BASEDto;
         }
 
+      
+
         #region maintenance dash
         private bool IsMaintenanceBuildDash() {
             var context = ContextLookuper.LookupContext();
@@ -114,7 +122,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         private bool IsWorkPackageGrid() {
             var context = ContextLookuper.LookupContext();
-            return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny("wplist","wppmlist");
+            return context?.ApplicationLookupContext?.Schema != null && context.ApplicationLookupContext.Schema.EqualsAny("wplist", "wppmlist");
         }
 
         private async Task<ApplicationListResult> InnerGetMaintenanceBuildDashList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {

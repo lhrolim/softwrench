@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BatchOptions.cs" />
+    <Compile Include="BatchResultData.cs" />
     <Compile Include="entities\Batch.cs" />
     <Compile Include="entities\BatchAttributes.cs" />
     <Compile Include="entities\BatchItem.cs" />

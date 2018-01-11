@@ -69,6 +69,8 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get; private set;
         }
 
+        public EntityBuilder.EntityBuilderOptions EntityBuilderOptions { get; set; }
+
         public bool IsCreation => OperationConstants.CRUD_CREATE.Equals(OperationName) || Id == null;
         public IDictionary<string, object> CustomParameters { get; set; } = new Dictionary<string, object>();
 
@@ -79,7 +81,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
             var isCrud = OperationConstants.IsCrud(OperationName) || typeof(CrudOperationData) == type;
             if (isCrud || type== null) {
-                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id);
+                var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id, EntityBuilderOptions);
                 if (UserId != null && crudOperationData.UserId == null) {
                     crudOperationData.UserId = UserId;
                 }
@@ -103,7 +105,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             if (!JSON.TryGetValue("crud", out crudFields)) {
                 throw new InvalidOperationException(string.Format(CrudFieldNotFound, OperationName, _entityMetadata.Name));
             }
-            ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, Id);
+            ((CrudOperationDataContainer)data).CrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, (JObject)crudFields, Id, EntityBuilderOptions);
             if (SiteId == null) {
                 //fallback logic to picksiteid from json
                 SiteId = ((CrudOperationDataContainer)data).CrudData.GetStringAttribute("siteid");

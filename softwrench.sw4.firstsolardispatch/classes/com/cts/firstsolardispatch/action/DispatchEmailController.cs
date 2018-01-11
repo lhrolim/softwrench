@@ -1,7 +1,12 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using cts.commons.Util;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.config;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.dataset;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model;
 using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services;
@@ -9,7 +14,10 @@ using softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.servi
 using softwrench.sw4.webcommons.classes.api;
 using softwrench.sW4.audit.classes.Model;
 using softwrench.sW4.audit.classes.Services;
+using softWrench.sW4.Configuration.Services.Api;
+using softWrench.sW4.Data.Configuration;
 using softWrench.sW4.Data.Persistence.SWDB;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.action {
     [NoMenuController]
@@ -28,6 +36,9 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
 
         [Import]
         public DispatchArrivedEmailService DispatchArrivedEmailService { get; set; }
+
+        [Import]
+        public IConfigurationFacade ConfigurationFacade { get; set; }
 
 
         [System.Web.Http.HttpGet]
@@ -50,7 +61,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
             DispatchTicketStatus newStatus;
             Enum.TryParse(status, true, out newStatus);
 
-            StatusService.ValidateStatusChange(oldStatus, newStatus, ticket, false);
+            StatusService.ValidateStatusChange(oldStatus, newStatus, ticket, ApplicationConfiguration.IsLocal());
 
             ticket.Status = newStatus;
             await DAO.SaveAsync(ticket);
@@ -67,7 +78,27 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
                 }
             }
 
+            if (ticket.Status.Equals(DispatchTicketStatus.ACCEPTED)) {
+                return View("Accepted", await BuildAcceptedModel(ticket));
+            }
+
             return View("GenericRequest", new EmailRequestModel { Id = ticket.Id, Status = ticket.Status.LabelName() });
+        }
+
+        private async Task<AcceptedEmailRequestModel> BuildAcceptedModel(DispatchTicket ticket) {
+            var hmacKey = await ConfigurationFacade.LookupAsync<string>(ConfigurationConstants.HashKey);
+            var hashKey = AuthUtils.HmacShaEncode(ticket.Id.ToString(), Encoding.ASCII.GetBytes(hmacKey));
+            var serverurl = await ConfigurationFacade.LookupAsync<string>(FirstSolarDispatchConfigurations.ProductionFsiisEndpoint);
+            var gfedSite = await DAO.FindSingleByQueryAsync<GfedSite>(GfedSite.FromGFedId, ticket.GfedId);
+            ticket.SiteId = gfedSite.SiteId;
+
+            var jsonSerializerSettings = new JsonSerializerSettings {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
+            var ticketJSON = JsonConvert.SerializeObject(ticket, Newtonsoft.Json.Formatting.None, jsonSerializerSettings);
+
+
+            return new AcceptedEmailRequestModel { Id = ticket.Id, Status = ticket.Status.LabelName(), HashKey = hashKey, ServerUrl = serverurl, TicketJSON = ticketJSON };
         }
     }
 
@@ -81,5 +112,15 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
         }
 
         public bool PreventPoweredBy => true;
+    }
+
+    public class AcceptedEmailRequestModel : EmailRequestModel {
+
+        public string HashKey { get; set; }
+
+        public string ServerUrl { get; set; }
+
+        public string TicketJSON { get; set; }
+
     }
 }

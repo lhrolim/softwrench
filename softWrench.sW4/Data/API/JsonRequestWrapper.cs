@@ -13,6 +13,15 @@ namespace softWrench.sW4.Data.API {
 
         public JObject Json { get; set; }
 
+        /// <summary>
+        /// Optional parameter for anonymous calls where this value would be signed at the backend for consistency checking
+        /// </summary>
+        public string MessageToSign { get; set; }
+
+        /// <summary>
+        /// The signature sent to be regenerated and validated
+        /// </summary>
+        public string HashSignature { get; set; }
 
 
     }

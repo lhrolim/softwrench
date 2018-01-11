@@ -215,6 +215,13 @@
             <field attribute="gfedid" hidden="true"/>
             <field attribute="site_.facilitytitlewithvalue" label="Site" readonly="true"/>
           </section>
+
+          <commandbars>
+            <commandgroup position="actions">
+              <command id="createwo" icon="fa-refresh" label="Create Work Order" service="fsdTicketService" method="createWorkOrder" cssclasses="large-button" showexpression="service:fsdTicketService.shouldShowCreateCommand"/>
+            </commandgroup>
+          </commandbars>
+          
         </schema>
 
       </schemas>

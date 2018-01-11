@@ -869,7 +869,7 @@
 
         <schema id="adetail" redeclaring="false">
           <customization position="+#reportdateplaceholder">
-            <field attribute="woeq10" label="#Dispatcher Id" helpicon="right" tooltip="The dispatcher ticket id that originated this workorder"/>
+            <field attribute="woeq10" label="#Inverter Id" helpicon="right" tooltip="The inverter id that originated this workorder"/>
           </customization>
           <customization position="owner"/>
           <customization position="ownergroup"/>

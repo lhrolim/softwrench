@@ -198,6 +198,18 @@ namespace softWrench.sW4.Data.Configuration {
                 DefaultValue = "false"
             });
 
+
+            facade.Register(ctes.HashKey, new PropertyDefinition {
+                Description = "The hmac sha1 hash key to be used on remote invocations across softwrench for this given instance",
+                PropertyDataType = PropertyDataType.STRING,
+            });
+
+            facade.Register(ctes.CustomerHashKeys, new PropertyDefinition {
+                Description = "[customer]=value colon separated list of hash keys that are allowed to be invoked at a givem back end API (ex: firstsolardispatch=xxx;hapag=yyy) etc",
+                PropertyDataType = PropertyDataType.STRING,
+            });
+
+
             #region maximoConfig
 
             facade.Register(ctes.Maximo.WsdlPath, new PropertyDefinition {

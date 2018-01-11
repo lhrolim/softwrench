@@ -52,6 +52,14 @@
         public const string MetadataChangeReportEmailId = "/Global/Metadata/NotificationEmail";
         public const string TransactionStatsReportDuration = "/Global/Transactions/Report/Period";
 
+
+        public const string HashKey = "/Global/Security/HashKey";
+        /// <summary>
+        /// [customer]=value colon separated list of hash keys that are allowed to be invoked at a givem back end API (ex: firstsolardispatch=xxx;hapag=yyy) etc
+        /// </summary>
+        public const string CustomerHashKeys = "/Global/Security/CustomerHashKeys";
+
+
         #region caching
 
         public class Cache
