@@ -31,6 +31,7 @@ angular.module('sw_components')
         }
 
         if (ngModel.$modelValue && angularDateFormat && ngModel.$modelValue.length < angularDateFormat.length) {
+            //fixing SWWEB-3334 --> prevent angular filter to take place until the required format is met
             return;
         }
 
