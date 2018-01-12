@@ -4,12 +4,13 @@
     let formatPhone;
 
     class fsdTicketService {
-        constructor(crudContextHolderService, restService, configurationService, applicationService, alertService) {
+        constructor(crudContextHolderService, restService, configurationService, applicationService, alertService, userService) {
             this.crudContextHolderService = crudContextHolderService;
             this.restService = restService;
             this.configurationService = configurationService;
             this.applicationService = applicationService;
             this.alertService = alertService;
+            this.userService = userService;
 
             formatPhone = function (phone) {
                 if (!phone || phone.length !== 10) return phone;
@@ -84,7 +85,7 @@
 
         shouldShowCreateCommand() {
             const dm = this.crudContextHolderService.rootDataMap();
-            return dm["status"] === "ACCEPTED";
+            return dm["status"] === "ACCEPTED" && this.userService.isSysAdmin();
         }
 
         doCreateWorkOrder(serverurl,dm, hashsignature) {
@@ -128,7 +129,7 @@
 
 
 
-    fsdTicketService.$inject = ["crudContextHolderService", "restService", "configurationService", "applicationService", "alertService"];
+    fsdTicketService.$inject = ["crudContextHolderService", "restService", "configurationService", "applicationService", "alertService", "userService"];
 
     angular.module("sw_layout").service("fsdTicketService", fsdTicketService);
 
