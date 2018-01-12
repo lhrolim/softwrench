@@ -237,7 +237,6 @@
     <Content Include="metadata\firstsolardispatch\swdb\dispatchticket.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatch.html" />
     <Content Include="web_content\firstsolardispatch\htmls\templates\dispatchaccepted.html" />

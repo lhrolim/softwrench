@@ -47,10 +47,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
 
         }
 
-      
+
 
         public virtual CrudOperationData CreateWoCrudData(CrudOperationData srCrudData) {
             var woCrudData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _woEntity, _woApplication, new JObject(), null);
+            if (srCrudData.AssociationAttributes.ContainsKey("ld_")) {
+                woCrudData.AssociationAttributes.Add("ld_", srCrudData.AssociationAttributes["ld_"]);
+            }
             woCrudData.SetAttribute("onbehalfof", srCrudData.GetStringAttribute("affectedperson"));
             woCrudData.SetAttribute("assetnum", srCrudData.GetStringAttribute("assetnum"));
             woCrudData.SetAttribute("cinum", srCrudData.GetStringAttribute("cinum"));
@@ -74,9 +77,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             return woCrudData;
         }
 
-        
 
-      
+
+
     }
 }
 

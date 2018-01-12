@@ -187,7 +187,6 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="offline_content\audit\scripts\offline\audit.js" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\problem\templates\problemsection.html" />
     <Content Include="web_content\umc\htmls\SubmitSuccess.html" />
