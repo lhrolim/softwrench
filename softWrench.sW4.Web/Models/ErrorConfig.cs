@@ -8,6 +8,7 @@ using softwrench.sw4.webcommons.classes.api;
 using softWrench.sW4.Exceptions;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Web.Controllers;
+using AuthorizeAttribute = System.Web.Http.AuthorizeAttribute;
 
 namespace softWrench.sW4.Web.Models {
     public static class ErrorConfig {
@@ -55,12 +56,14 @@ namespace softWrench.sW4.Web.Models {
             var user = SecurityFacade.CurrentUser();
             var noUser = user == null || "anonymous".Equals(user.Login);
 
-            if (noUser) {
+            var isNoMenu = IsNomenuController(wrapper);
+            var requiresAuth = RequiresAuthorization(wrapper);
+
+            if (noUser && requiresAuth) {
                 context.Server.TransferRequest("~/SignIn");
                 return;
             }
 
-            var isNoMenu = IsNomenuController(wrapper);
 
             var controller = isNoMenu ? (IController)SimpleInjectorGenericFactory.Instance.GetObject<NoMenuErrorController>() : SimpleInjectorGenericFactory.Instance.GetObject<ErrorController>();
             var routeData = new RouteData();
@@ -82,6 +85,20 @@ namespace softWrench.sW4.Web.Models {
             var controller = (ControllerBase)controllerFactory.CreateController(requestContext, controllerName);
             var noMenuAttribute = Attribute.GetCustomAttribute(controller.GetType(), typeof(NoMenuController));
             return noMenuAttribute != null;
+        }
+
+        private static bool RequiresAuthorization(HttpContextBase context) {
+            var urlRouteData = RouteTable.Routes.GetRouteData(context);
+            if (urlRouteData == null) {
+                return false;
+            }
+            var controllerName = urlRouteData.Values["controller"].ToString();
+            var requestContext = new RequestContext(context, urlRouteData);
+            var controllerFactory = ControllerBuilder.Current.GetControllerFactory();
+            var controller = (ControllerBase)controllerFactory.CreateController(requestContext, controllerName);
+            var authWebAttribte = Attribute.GetCustomAttribute(controller.GetType(), typeof(AuthorizeAttribute));
+            var authMvcAttribte = Attribute.GetCustomAttribute(controller.GetType(), typeof(System.Web.Mvc.AuthorizeAttribute));
+            return authWebAttribte != null || authMvcAttribte != null;
         }
     }
 }
