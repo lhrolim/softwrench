@@ -29,7 +29,11 @@ angular.module('sw_components')
         if (!metadata) {
             return;
         }
-        
+
+        if (ngModel.$modelValue && angularDateFormat && ngModel.$modelValue.length < angularDateFormat.length) {
+            return;
+        }
+
         const value = formatService.formatDate(ngModel.$modelValue, angularDateFormat);
          
         if (datamap) {
