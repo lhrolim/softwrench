@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Security.Context;
 using System;
+using softWrench.sW4.Util;
 using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 
 namespace softWrench.sW4.Configuration.Definitions {
@@ -114,7 +115,7 @@ namespace softWrench.sW4.Configuration.Definitions {
 
         public virtual ConditionMatchResult MatchesConditions(ContextHolder context, string clientName) {
             var result = new ConditionMatchResult(Module, UserProfile);
-            if (this.ClientName != null && !this.ClientName.Equals(clientName)) {
+            if (!ApplicationConfiguration.IsLocal() && this.ClientName != null && !this.ClientName.Equals(clientName)) {
                 //preventing wrong customers to match on multitenancy databases
                 result.Append(ConditionMatch.No);
                 return result;
