@@ -34,6 +34,7 @@ angular.module("sw_layout").directive("dashboard", ["contextService", function (
                 return $scope.onPanelRemove({ panelDataSource: panelDataSource, dashboard: $scope.dashboard });
             };
 
+
             $scope.panelMoved = function(panelDataSource) {
                 $log.get("dashboarddirective#panelMoved", ["dashboard"])
                     .debug("positions changed to",

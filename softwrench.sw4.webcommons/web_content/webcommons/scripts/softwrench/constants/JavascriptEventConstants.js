@@ -154,6 +154,8 @@ const COMPOSITION_BATCH_ADD_MULTIPLE = "sw.crud.composition.batch.add.multiple";
 
 const FORCE_RESIZE = "sw.layout.forceresize";
 
+const REEVAL_DISPLAYABLES = "sw.layout.dynforms.reevaldisplayables";
+
 
 
 //#endregion
@@ -392,6 +394,11 @@ class JavascriptEventConstants {
 
     static get ForceResize() {
         return FORCE_RESIZE;
+    }
+
+
+    static get ReevalDisplayables() {
+        return REEVAL_DISPLAYABLES;
     }
 
     //#endregion

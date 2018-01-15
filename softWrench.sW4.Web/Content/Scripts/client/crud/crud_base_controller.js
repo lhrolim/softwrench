@@ -197,6 +197,10 @@
             return $scope.orientation === 'vertical';
         };
 
+        $scope.isHorizontalOrientation = function () {
+            return $scope.orientation === 'horizontal';
+        };
+
 
         $scope.getSectionClass = function (fieldMetadata) {
             if (fieldMetadata.rendererType === "TABLE") {

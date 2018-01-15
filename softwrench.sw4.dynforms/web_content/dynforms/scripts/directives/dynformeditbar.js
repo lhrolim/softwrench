@@ -28,11 +28,15 @@
         }
 
         $scope.addField = function (direction) {
-            return dynFormService.addDisplayable($scope.fieldMetadata,direction);
+            return dynFormService.addDisplayable($scope.fieldMetadata, direction).then(r => {
+                return $scope.$emit(JavascriptEventConstants.ReevalDisplayables);
+            });
         }
 
         $scope.edit = function () {
-            return dynFormService.editDisplayable($scope.fieldMetadata);
+            return dynFormService.editDisplayable($scope.fieldMetadata).then(r => {
+                return $scope.$emit(JavascriptEventConstants.ReevalDisplayables);
+            });
         }
 
         $scope.isEditingSection = function() {
@@ -41,6 +45,10 @@
 
         $scope.toggleSectionSelection = function() {
             dynFormService.toggleSectionSelection($scope.fieldMetadata);
+        }
+
+        $scope.fieldMoved = function (fieldMetadata) {
+            console.log("ok");
         }
 
 

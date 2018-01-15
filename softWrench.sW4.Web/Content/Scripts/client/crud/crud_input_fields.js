@@ -75,13 +75,12 @@
 
 
                         element.append(
-                            "<crud-input-fields displayables='displayables'" +
+                            "<crud-input-fields displayables='displayables'"+
                             "schema='schema'" +
                             "datamap='datamap'" +
                             "is-dirty='isDirty'" +
                             "ismodal = '{{ismodal}}'" +
                             "panelid = 'panelid'" +
-                            "displayables='displayables'" +
                             "extraparameters='extraparameters'"+
                             "blockedassociations='blockedassociations'" +
                             "section-parameters='sectionParameters'" +
@@ -168,16 +167,30 @@
                         }
                         return "text";
                     }
+
+                    //dnd-list cannot be bound to a method: it requires a variable to work
+                    scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
+
+                    scope.$on(JavascriptEventConstants.ReevalDisplayables, () => {
+                        //whenever a field is added via a dynforms need to recalculate the cached fields 
+                        scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
+                    });
+
+                    scope.fieldMoved = () => {
+                        //the nonTabFieldsCached array will be automatically updated by the dnd-list directive however the original displayables need to be updated here
+                        scope.displayables = scope.nonTabFieldsCached;
+                    }
+
                 },
 
                 controller: ["$q", "$scope", "$http", "$element", "$injector", "$timeout", "$log", "alertService",
                     "printService", "compositionService", "commandService", "fieldService", "i18NService",
-                    "associationService", "expressionService", "styleService", "tabsService",
+                    "associationService", "expressionService", "styleService", "tabsService","focusService",
                     "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService",
                     "layoutservice", "attachmentService", "richTextService",
                     function ($q, $scope, $http, $element, $injector, $timeout, $log, alertService,
                         printService, compositionService, commandService, fieldService, i18NService,
-                        associationService, expressionService, styleService, tabsService,
+                        associationService, expressionService, styleService, tabsService, focusService,
                         cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
                         layoutservice, attachmentService, richTextService) {
 
@@ -685,6 +698,9 @@
                             return $scope.expandeddetails[key];
                         }
 
+                        $scope.isOnDynFormEdition = function() {
+                            return $scope.schema.properties["dynforms.editionallowed"] === "true";
+                        }
 
                         $scope.hasSameLineLabel = function (fieldMetadata) {
 
@@ -748,6 +764,22 @@
                         $scope.initField = function (fieldMetadata) {
                             crud_inputcommons.initField($scope, fieldMetadata, "datamap");
                         };
+
+                        $scope.blurField = function ($event, fieldMetadata) {
+//                            console.log($event);
+//                            $event.currentTarget.blur();
+                            $event.currentTarget.blur();
+                            var result = focusService.moveFocus($scope.datamap, $scope.schema, fieldMetadata.attribute);
+//                            if (!result) {
+//                                
+//                            }
+
+//                            var fields = $(this).parents('form:eq(0),body').find('input, textarea, select');
+//                            var index = fields.index(this);
+//                            if (index > -1 && (index + 1) < fields.length)
+//                                fields.eq(index + 1).focus();
+
+                        }
 
                         $scope.getValidationPattern = function (fieldMetadata) {
                             return validationService.getValidationPattern(fieldMetadata);

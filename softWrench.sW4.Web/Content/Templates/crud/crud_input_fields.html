@@ -1,50 +1,61 @@
 <form name="crudInputForm">
-    <section id="{{elementid}}" schemaid="{{schema.schemaId}}">
-        <div class="field-wrap" ng-if="!isTabSection()">
-            <fieldset ng-repeat="fieldMetadata in nonTabFields(displayables)"
+    <section id="{{elementid}}" schemaid="{{schema.schemaId}}" >
+        <div class="field-wrap" ng-if="!isTabSection()" dnd-list="nonTabFieldsCached">
+
+            <div class="dndPlaceholder col col-sm-3">
+                <div class="dndPlaceholder-content">
+                    Drop Field Here
+                </div>
+            </div>
+
+
+            <fieldset ng-repeat="fieldMetadata in nonTabFieldsCached"
+                      dnd-draggable="fieldMetadata"
+                      dnd-effect-allowed="all"
+                      dnd-moved="nonTabFieldsCached.splice($index, 1);fieldMoved()"
+                      dnd-horizontal-list="isHorizontalOrientation()"
+                      dnd-disable-if="!isOnDynFormEdition()"
                       class="form-group"
                       ng-class="getFieldClass(fieldMetadata)"
                       ng-show="!isFieldHidden(schema,fieldMetadata)"
                       rel="input-form-repeat"
                       bodyrendered>
 
-            <span>
-                <label class="control-label"
-                       rel="{{showLabelTooltip(fieldMetadata)}}" ng-class="getLabelClass(fieldMetadata)"
-                       data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                       ng-if="isLabelVisible(fieldMetadata,false)"
-                       >
-                    <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
-                    <icon class="fa fa-undo" ng-if="showUndoIcon(fieldMetadata)" ng-click="restoreDefault(fieldMetadata)" style="cursor: pointer" rel="tooltip" data-original-title="Restore to original value" data-html="true"></icon>
-                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
-                    <span ng-style="getLabelStyle(fieldMetadata)" >
-                        <!--this will bring either label or header in case of section-->
-                        &nbsp;{{i18NInputLabelEvaluating(fieldMetadata,false)}}
-                    </span>
-                    <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='label' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>      
-                    <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
-                </label>    
-                
-            </span>
-            
+                <span>
+                    <label class="control-label"
+                           rel="{{showLabelTooltip(fieldMetadata)}}" ng-class="getLabelClass(fieldMetadata)"
+                           data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
+                           ng-if="isLabelVisible(fieldMetadata,false)">
+                        <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                        <icon class="fa fa-undo" ng-if="showUndoIcon(fieldMetadata)" ng-click="restoreDefault(fieldMetadata)" style="cursor: pointer" rel="tooltip" data-original-title="Restore to original value" data-html="true"></icon>
+                        <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                        <span ng-style="getLabelStyle(fieldMetadata)">
+                            <!--this will bring either label or header in case of section-->
+                            &nbsp;{{i18NInputLabelEvaluating(fieldMetadata,false)}}
+                        </span>
+                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='label' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>
+                        <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
+                    </label>
+
+                </span>
+
 
                 <legend ng-if="isLabelVisible(fieldMetadata,true)"
                         rel="tooltip"
                         data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                         class="legend-label" ng-style="{{headerStyle(fieldMetadata)}}">
                     <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
-                    
+
                     <div ng-if="isSectionControlEnabled(fieldMetadata)">
                         <input type="checkbox"
                                name="datamap[fieldMetadata.attribute]"
                                value="{{option.value}}"
-                               style="top: 2px; position:relative"
+                               style="top: 2px; position: relative"
                                ng-checked="isChecked(fieldMetadata)"
                                ng-click="toggleSectionSelection(fieldMetadata)"
-                               ng-show="!hasPersistedFieldInsideSection(fieldMetadata)"
-                               >
+                               ng-show="!hasPersistedFieldInsideSection(fieldMetadata)">
                         {{i18NInputLabel(fieldMetadata)}}
-                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='section' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>      
+                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='section' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>
 
                         <section-element-input extraparameters="extraparameters"
                                                schema="schema"
@@ -60,7 +71,7 @@
                     </div>
                     <div ng-if="!isSectionControlEnabled(fieldMetadata)">
                         {{i18NInputLabel(fieldMetadata)}}
-                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='section' schema="schema"></dynform-detail-edit-bar-wrapper>      
+                        <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='section' schema="schema"></dynform-detail-edit-bar-wrapper>
                         <section-element-input extraparameters="extraparameters"
                                                field-metadata="fieldMetadata"
                                                schema="schema"
@@ -116,8 +127,7 @@
                     <div ng-switch-when="richtext" id="richtext">
                         <richtext-field data-content="datamap[fieldMetadata.attribute]"
                                         data-readonly="true"
-                                        height="{{fieldMetadata.rendererParameters['height']}}"
-                                        >
+                                        height="{{fieldMetadata.rendererParameters['height']}}">
                         </richtext-field>
                     </div>
 
@@ -411,11 +421,11 @@
 
                     <!--#region numericinput-->
                     <div ng-switch-when="numericinput">
-                        <span style="display:inline-block" ng-if="fieldMetadata.rendererParameters['prepend']!=null">
+                        <span style="display: inline-block" ng-if="fieldMetadata.rendererParameters['prepend']!=null">
                             {{fieldMetadata.rendererParameters['prepend']}}
                         </span>
-                        <div style="display:inline-block">
-                            <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float' || fieldMetadata.rendererParameters['numberType'] === 'decimal'"  
+                        <div style="display: inline-block">
+                            <input ng-if="fieldMetadata.rendererParameters['numberType'] === 'double' || fieldMetadata.rendererParameters['numberType'] === 'float' || fieldMetadata.rendererParameters['numberType'] === 'decimal'"
                                    data-field="{{fieldMetadata.attribute}}"
                                    step=".01"
                                    pattern="^\d+(?:\.\d{1,2})?$"
@@ -438,7 +448,7 @@
                                    max="{{setMaxNumericInput(datamap,fieldMetadata)}}"
                                    number-spinner />
                         </div>
-                        <span style="display:inline-block" ng-if="fieldMetadata.rendererParameters['append']!=null">
+                        <span style="display: inline-block" ng-if="fieldMetadata.rendererParameters['append']!=null">
                             {{fieldMetadata.rendererParameters['append']}}
                         </span>
                     </div>
@@ -621,11 +631,12 @@
                                                    ng-pattern="pattern"
                                                    ng-init="initField(fieldMetadata)"
                                                    ng-required="isFieldRequired(fieldMetadata)"
+                                                   ng-enter="blurField(event,fieldMetadata)"
                                                    dynamic-name="fieldMetadata.attribute" />
                                             <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
                                             <p ng-if="fieldMetadata.rendererParameters['valmessage']" ng-show="crudInputForm[fieldMetadata.attribute].$invalid && !crudInputForm[fieldMetadata.attribute].$pristine" style="color: red;">{{fieldMetadata.rendererParameters['valmessage']}}</p>
                                             <p ng-if="isFieldRequired(fieldMetadata)" ng-show="crudInputForm[fieldMetadata.attribute].$error.required && !crudInputForm[fieldMetadata.attribute].$pristine" style="color: red;">this field is required</p>
-                                            <p ng-if="fieldMetadata.rendererParameters['maxlength']" ng-show="crudInputForm[fieldMetadata.attribute].$error.maxlength && !crudInputForm[fieldMetadata.attribute].$pristine" style="color: red;">this field is limited to  {{fieldMetadata.rendererParameters['maxlength']}} characters</p>
+                                            <p ng-if="fieldMetadata.rendererParameters['maxlength']" ng-show="crudInputForm[fieldMetadata.attribute].$error.maxlength && !crudInputForm[fieldMetadata.attribute].$pristine" style="color: red;">this field is limited to {{fieldMetadata.rendererParameters['maxlength']}} characters</p>
                                         </div>
                                     </div>
                                 </div>

@@ -1,4 +1,4 @@
-﻿<span style="padding-left: 10px;" >
+﻿<span style="padding-left: 10px;">
     <icon class="fa fa-edit" rel="tooltip"
           ng-if="shouldShowIcon('edit')"
           ng-click="edit()"
@@ -17,14 +17,14 @@
           rel="tooltip" data-html="true" data-original-title="add field up" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
     <icon class="fa fa-arrow-circle-o-down"
           ng-if="shouldShowIcon('adddown')"
-          rel="tooltip" 
+          rel="tooltip"
           ng-click="addField('down')"
           data-html="true" data-original-title="add field down" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    <icon class="fa fa-remove" 
+    <icon class="fa fa-remove"
           ng-click="remove()"
           ng-if="shouldShowIcon('remove')"
           rel="tooltip" data-html="true" data-original-title="remove field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    
-    <input type="checkbox" ng-show="isEditingSection()" ng-click="toggleSectionSelection()"/>
+
+    <input type="checkbox" ng-show="isEditingSection()" ng-click="toggleSectionSelection()" />
 
 </span>

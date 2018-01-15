@@ -7,9 +7,8 @@
                element.bind("keypress", function (event) {
                    if (event.which === 13) {
                        scope.$apply(function () {
-                           scope.$eval(attrs.ngEnter);
+                           scope.$eval(attrs.ngEnter, { event });
                        });
-
                        event.preventDefault();
                    }
                });
