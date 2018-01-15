@@ -196,6 +196,8 @@
           <customization position="problemcode"></customization>
           <customization position="glaccount"></customization>
         </schema>
+
+        
       </schemas>
     </application>
     <application name="labtrans" entity="labtrans" title="Labor">

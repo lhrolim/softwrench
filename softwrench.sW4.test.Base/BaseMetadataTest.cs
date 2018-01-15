@@ -16,7 +16,7 @@ namespace softwrench.sW4.TestBase {
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\chicago", "Client\\chicago")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\entegra", "Client\\entegra")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\gric", "Client\\gric")]
-    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\bering", "Client\\bering")]
+    [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\swgas", "Client\\swgas")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\pae", "Client\\pae")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\apachegold", "Client\\apachegold")]
     [DeploymentItem(@"..\\..\\..\softwrench.sW4.web\App_Data\client\amex", "Client\\amex")]

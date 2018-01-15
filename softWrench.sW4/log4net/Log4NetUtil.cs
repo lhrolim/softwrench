@@ -48,7 +48,7 @@ namespace softWrench.sW4.log4net {
             //this would mean the folder was already specified via a custom environment property
             var needsFolderReplacement = !swFolder.EqualsIc("c:\\softwrench\\");
             var isDevOrQa = ApplicationConfiguration.IsDev() || ApplicationConfiguration.IsQA();
-            if (ApplicationConfiguration.IsLocal()) {
+            if (ApplicationConfiguration.IsLocal() && !needsFolderReplacement) {
                 //on local running instances, let´s not handle the logs at all
                 return;
             }
