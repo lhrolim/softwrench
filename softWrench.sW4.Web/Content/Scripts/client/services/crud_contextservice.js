@@ -332,7 +332,9 @@
             this.$rootScope.$broadcast(JavascriptEventConstants.AppChanged, schema, rootDataMap, panelid);
         }
 
-        clearCrudContext(panelid, clearTabs=true) {
+        clearCrudContext(panelid, clearTabs = true) {
+            const log = this.$log.get("crudContextService#clearCrudContext", ["context"]);
+            log.debug("clearing crud Context");
             if (!panelid) {
                 let currentUseBackNavigation = this.usebackHistoryNavigation();
                 this._crudContext = angular.copy(this._originalContext);
@@ -519,6 +521,12 @@
          * @returns an Array object with the eager options
          */
         fetchEagerAssociationOptions(associationKey, contextData, panelid, dmValue) {
+            if (contextData && "#modal" === contextData.schemaId) {
+                //dealing with legacy invocations
+                //TODO: refactor
+                panelid = "#modal";
+            }
+
             const context = this.getContext(panelid);
             //if (context.showingModal) {
             //    contextData = { schemaId: "#modal" };

@@ -43,7 +43,10 @@
                 $rootScope.$broadcast(DashboardEventConstants.AppFieldsLoaded);
                 //clearing jscache of checkbox fieldmetadata
                 const field = fieldService.getDisplayableByKey(schema,"fields");
-                field.jscache = null;
+                if (field) {
+                    field.jscache = null;    
+                }
+                
 
                 //data.resultObject.unshift({value:"#allfields",label:"All Fields"});
             });

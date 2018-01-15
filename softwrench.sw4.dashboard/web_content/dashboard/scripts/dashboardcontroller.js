@@ -433,7 +433,7 @@
                 const log = $log.get("dashboardcontroller#editpanel", ["dashboard"]);
 
 
-                modalService.show(schema, datamap, {
+                return modalService.show(schema, datamap, {
                     title: title, cssclass: "dashboardmodal", onloadfn: function (scope) {
                         log.debug("updating applications for dashboard");
                         crudContextHolderService.updateEagerAssociationOptions("applications", $scope.applications);

@@ -351,7 +351,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 AppContext = new ApplicationLookupContext {
                     MetadataId = metadataId
                 }
-            }, true);
+            }, true,false);
         }
 
         public IGenericResponseResult EditDashBoard(DashboardBasePanel dashBoardPanel) {
