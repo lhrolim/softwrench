@@ -175,6 +175,7 @@
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
                 "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${modalData.fieldtype}, softwrench.sw4.Shared2`,
                 attribute: modalData.fattribute,
+                role: modalData.fattribute,
                 label: modalData.flabel,
                 requiredExpression: modalData.frequired ? "true" : "false",
                 isReadOnly: modalData.freadonly,
