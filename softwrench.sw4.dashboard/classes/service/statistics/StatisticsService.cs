@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
+using log4net;
 using softwrench.sw4.dashboard.classes.startup;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Services.Api;
@@ -35,7 +36,9 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
         private readonly IWhereBuilder _whereBuilder;
         private readonly IContextLookuper _contextLookuper;
 
-        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao, 
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(StatisticsService));
+
+        public StatisticsService(IMaximoHibernateDAO maxdao, ISWDBHibernateDAO swdao,
             DataConstraintsWhereBuilder whereBuilder, StatisticsWhereBuilder statisticsWhereBuilder, IContextLookuper contextLookuper) {
             _maxdao = maxdao;
             _swdao = swdao;
@@ -67,11 +70,25 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
 
             return resultSet.Cast<IDictionary<string, object>>()
                 // cast so ExpandoObject's properties can be indexed by string key
-                .Select(item =>
-                {
+                .Select(item => {
                     var d = new Dictionary<string, object>(item, StringComparer.CurrentCultureIgnoreCase);
+                    Logger.DebugFormat("evaluating property name {0}",propertyName);
+                    if (Logger.IsDebugEnabled) {
+                        var lines = d.Select(kvp => kvp.Key + ": " + kvp.Value.ToString());
+                        Logger.Debug(string.Join(Environment.NewLine, lines));
+                    }
+                    if (!d.ContainsKey(propertyName)) {
 
-                    var fieldObjectValue = d[propertyName.ToUpper()];
+                        return null;
+                    }
+
+                    object fieldObjectValue;
+                    if (d.ContainsKey(propertyName)) {
+                        fieldObjectValue = d[propertyName];
+                    } else {
+                        fieldObjectValue = d[propertyName.ToUpper()];
+                    }
+
                     var fieldValue = fieldObjectValue?.ToString();
                     var fieldCountLong = d[ctes.FIELD_VALUE_VARIABLE_NAME] as long?;
                     var fieldCount = fieldCountLong ?? Convert.ToInt64(d[ctes.FIELD_VALUE_VARIABLE_NAME]);
@@ -85,15 +102,15 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
                         }
                     }
                     return new StatisticsResponseEntry(fieldValue, fieldCount, label);
-                });
+                }).Where(d => d != null);
         }
 
         public async Task<IEnumerable<StatisticsResponseEntry>> GetDataByAction(string action, StatisticsRequest request) {
             switch (action) {
                 case "device_value":
-                return await DeviceValuesMonthly(request);
+                    return await DeviceValuesMonthly(request);
                 default:
-                throw new InvalidOperationException(string.Format("No action that can provide statistical data for '{0}'", action));
+                    throw new InvalidOperationException(string.Format("No action that can provide statistical data for '{0}'", action));
             }
         }
 
@@ -103,7 +120,7 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
             var now = DateTime.Now.ToUniversalTime();
             var normalizedNow = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
             var months = new List<DateTime>(12);
-            for (var i = 11; i > 0; i--) {
+            for (var i = 11;i > 0;i--) {
                 months.Add(normalizedNow.AddMonths(-i));
             }
             months.Add(normalizedNow);
@@ -158,7 +175,7 @@ namespace softwrench.sw4.dashboard.classes.service.statistics {
             _contextLookuper.FillGridContext(request.Application, SecurityFacade.CurrentUser());
 
             var contextWhereClause = _whereBuilder.BuildWhereClause(request.Entity, new PaginatedSearchRequestDto() {
-                Key = new ApplicationMetadataSchemaKey() { ApplicationName  = request.Application },
+                Key = new ApplicationMetadataSchemaKey() { ApplicationName = request.Application },
                 Context = new ApplicationLookupContext() { MetadataId = request.WhereClauseMetadataId, }
             });
 

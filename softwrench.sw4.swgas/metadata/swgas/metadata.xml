@@ -196,6 +196,11 @@
           <customization position="problemcode"></customization>
           <customization position="glaccount"></customization>
         </schema>
+        <schema id="list" redeclaring="false">
+          <properties>
+            <property key="list.defaultorderby" value="workorder.reportdate desc"/>
+          </properties>
+        </schema>
 
         
       </schemas>

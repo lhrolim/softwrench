@@ -198,9 +198,6 @@
     <Reference Include="softwrench.sW4.batches, Version=1.4.6585.38965, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sW4.batches.1.4.6585.38965\lib\net461\softwrench.sW4.batches.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sw4.dashboard, Version=1.4.6589.16625, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sw4.dashboard.1.4.6589.16625\lib\net461\softwrench.sw4.dashboard.dll</HintPath>
-    </Reference>
     <Reference Include="softwrench.sw4.problem, Version=1.1.6532.36727, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.problem.1.1.6532.36727\lib\net461\softwrench.sw4.problem.dll</HintPath>
     </Reference>
@@ -1590,6 +1587,10 @@
     <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
       <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
       <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.dashboard\softwrench.sw4.dashboard.csproj">
+      <Project>{bb222b54-5670-4853-acf9-64bb36094021}</Project>
+      <Name>softwrench.sw4.dashboard</Name>
     </ProjectReference>
     <ProjectReference Include="..\softwrench.sw4.dynforms\softwrench.sw4.dynforms.csproj">
       <Project>{825bf88c-0051-415e-82b7-6f9d91e36709}</Project>
