@@ -250,14 +250,13 @@
         function updateState(state) {
             if (!isEmpty(state.extraParameters)) {
                 const hash = `state=${Base64.encode(JSON.stringify(state))}`;
-                contextService.set("currentstateurl" + $location.path(), state.url);
                 contextService.set("extraparameters", state.extraParameters);
                 $location.hash(hash);
             } else {
                 $location.hash(null);
                 $location.url($location.path());
             }
-            
+            contextService.set("currentstateurl" + $location.path(), state.url);
          
         }
 

@@ -23,6 +23,7 @@ using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
     public class BaseWhereClauseDataSet : SWDBApplicationDataset {
@@ -44,6 +45,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
         }
 
         public override async Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+
+            searchDto.AppendWhereClauseFormat("(clientname is null or clientname = '{0}')".Fmt(ApplicationConfiguration.ClientName));
+
             var originalResult = await base.GetList(application, searchDto);
             var originalList = originalResult.ResultObject;
             foreach (var datamap in originalList) {
