@@ -1,5 +1,5 @@
 <form name="crudInputForm">
-    <section id="{{elementid}}" schemaid="{{schema.schemaId}}" >
+    <section id="{{elementid}}" schemaid="{{schema.schemaId}}">
         <div class="field-wrap" ng-if="!isTabSection()" dnd-list="nonTabFieldsCached">
 
             <div class="dndPlaceholder col col-sm-3">
@@ -537,6 +537,9 @@
                     <div ng-switch-when="custom">
                         <div ng-include="contextPath(fieldMetadata.rendererParameters.resourcepath)" href="#" style="width: 100%" />
                     </div>
+
+                    <label ng-switch-when="label" class="form-control" style="border-width: 0px; box-shadow: none; white-space: pre-line;"
+                           ng-style="{ 'color' : fieldMetadata.rendererParameters['color'], 'font-weight' : fieldMetadata.rendererParameters['font-weight']}">{{datamap[fieldMetadata.attribute] || fieldMetadata.defaultValue}}</label> <!-- space makes difference inside this label element do no add if not intended to show on screen -->
 
                     <code-editor ng-switch-when="code" mode="{{codeEditorMode(fieldMetadata)}}" value="datamap[fieldMetadata.attribute]"></code-editor>
 

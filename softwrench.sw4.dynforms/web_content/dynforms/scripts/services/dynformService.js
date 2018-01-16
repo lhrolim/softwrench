@@ -171,20 +171,37 @@
                 }
             }
 
-            return {
+            let fieldType = modalData.fieldtype;
+            let rendererType = "default";
+            if (fieldType.indexOf("#") !== -1) {
+                const types = fieldType.split("#");
+                fieldType = types[0];
+                rendererType= types[1];
+            }
+
+            const rendererParameters = {};
+
+            const resultOb = {
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
-                "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${modalData.fieldtype}, softwrench.sw4.Shared2`,
+                "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${fieldType}, softwrench.sw4.Shared2`,
                 attribute: modalData.fattribute,
                 role: modalData.fattribute,
                 label: modalData.flabel,
                 requiredExpression: modalData.frequired ? "true" : "false",
                 isReadOnly: modalData.freadonly,
                 extraparameters: { "dynforms.editionallowed": true },
-                rendererParameters: {},
+                renderer: {
+                    rendererType,
+                    parameters: rendererParameters
+                },
+                rendererType,
+                rendererParameters: rendererParameters,
                 showExpression: "true",
                 enableExpression: modalData.freadonly ? "false" : "true",
-                "type": modalData.fieldtype
-            }
+                "type": fieldType
+            };
+
+            return resultOb;
         }
 
         editDisplayable(fieldMetadata) {

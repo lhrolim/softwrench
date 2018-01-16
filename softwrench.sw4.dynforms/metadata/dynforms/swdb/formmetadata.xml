@@ -69,6 +69,8 @@
           <optionfield label="Type" attribute="fieldtype" >
             <option label="Please Select..." value="pleaseselect"/>
             <option label="Free Text" value="ApplicationFieldDefinition"/>
+            <option label="Checkbox" value="ApplicationFieldDefinition#checkbox" help="A yes/no checkbox"/>
+            <option label="Label" value="ApplicationFieldDefinition#label"/>
             <option label="Options" value="OptionField"/>
             <option label="Section" value="ApplicationSection"/>
             <option label="Checklist Table" value="checklisttable"/>
@@ -89,6 +91,14 @@
               </field>
               <field attribute="fmaxlength" label="Max Length">
                 <renderer type="numericinput" />
+              </field>
+            </section>
+          </section>
+
+          <section showexpression="@fieldtype == 'ApplicationFieldDefinition#checkbox'">
+            <section orientation="horizontal">
+              <field attribute="frequired" label="Required">
+                <renderer type="checkbox"/>
               </field>
             </section>
           </section>
