@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
+using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using softwrench.sw4.dynforms.classes.model.entity;
 using softwrench.sw4.dynforms.classes.model.metadata;
@@ -9,6 +11,7 @@ using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -61,27 +64,64 @@ namespace softwrench.sw4.dynforms.classes.dataset {
         }
 
 
-        private static XmlApplicationMetadataParser GetParser() {
-            return _parser ?? (_parser = new XmlApplicationMetadataParser(MetadataProvider.Entities(true),
-                       MetadataProvider.CommandBars(), false, false));
+        public override Task<ApplicationListResult> GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+
+            if (application.Schema.SchemaId.Equals("listselection")) {
+                searchDto.AppendSearchEntry("formstatus", "!=DRAFT");
+            }
+
+            return base.GetList(application, searchDto);
         }
+
 
         /// <summary>
         /// Method for saving a form definition
         /// </summary>
         /// <param name="operationWrapper"></param>
         /// <returns></returns>
+        [Transactional(DBType.Swdb)]
         public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
 
             var crudOperationData = (CrudOperationData)operationWrapper.GetOperationData;
-            var formMetadata = operationWrapper.OperationName == OperationConstants.CRUD_CREATE ? new FormMetadata() : await SWDAO.FindByPKAsync<FormMetadata>(operationWrapper.Id);
+            var formMetadata = (operationWrapper.OperationName == OperationConstants.CRUD_CREATE || "clone".EqualsIc(operationWrapper.OperationName)) ? new FormMetadata() : await SWDAO.FindByPKAsync<FormMetadata>(operationWrapper.Id);
             formMetadata = EntityBuilder.PopulateTypedEntity(crudOperationData, formMetadata);
             if ("save_editform".EqualsIc(operationWrapper.OperationName)) {
                 await DynFormSchemaHandler.ReplaceDetailDisplayables(formMetadata.Name,
                     crudOperationData.GetStringAttribute("#newFieldsJSON"));
-                return new TargetResult(formMetadata.Name, formMetadata.Name, null) {AvoidRedirection = true};
+                return new TargetResult(formMetadata.Name, formMetadata.Name, null) { AvoidRedirection = true };
             }
 
+            if ("crud_delete".EqualsIc(operationWrapper.OperationName)) {
+                if (!formMetadata.FormStatus.EqualsIc("draft")) {
+                    throw new InvalidOperationException("Cannot delete an already published form");
+                }
+                await SWDAO.DeleteAsync(formMetadata.Definition);
+                await SWDAO.DeleteAsync(formMetadata);
+                DynFormSchemaHandler.RemoveFromCache(formMetadata.Name);
+                return new TargetResult(formMetadata.Name, formMetadata.Name, null);
+            }
+
+
+
+            formMetadata = await SaveAndValidate(formMetadata, crudOperationData);
+
+            if ("clone".EqualsIc(operationWrapper.OperationName)) {
+                var originalId = crudOperationData.GetStringAttribute("#originalid");
+                var definition = await SWDAO.FindSingleByQueryAsync<FormMetadataDefinition>(FormMetadataDefinition.ByMetadataId, originalId);
+
+                var clonedDefinition = new FormMetadataDefinition {
+                    DetailSerialized = definition.DetailSerialized,
+                    NewDetailSerialized = definition.NewDetailSerialized,
+                    Metadata = formMetadata
+                };
+
+                await SWDAO.SaveAsync(clonedDefinition);
+            }
+
+            return new TargetResult(formMetadata.Name, formMetadata.Name, null);
+        }
+
+        private async Task<FormMetadata> SaveAndValidate(FormMetadata formMetadata, CrudOperationData crudOperationData) {
             if (formMetadata.Name.Contains(" ")) {
                 throw new InvalidOperationException("white spaces are not allowed for the form identifier");
             }
@@ -99,8 +139,7 @@ namespace softwrench.sw4.dynforms.classes.dataset {
             if (listDefinition != null || detailDefinition != null) {
                 await DynFormSchemaHandler.SerializeValidateAndCache(formMetadata, detailDefinition, listDefinition);
             }
-
-            return new TargetResult(formMetadata.Name, formMetadata.Name, null);
+            return formMetadata;
         }
 
 

@@ -41,6 +41,9 @@
 
             <commandgroup position="actions">
               <command id="editdetail" label="Edit Form" icon="fa-edit" cssclasses="large-button" method="loadFormDetailEdition" service="dynFormService" />
+              <command id="cloneform" label="Clone" icon="fa-clone" cssclasses="large-button" method="clone" service="dynFormService" />
+              <command id="publish" label="Publish" icon="fa-feed" cssclasses="large-button" method="publish" service="dynFormService" showexpression="'DRAFT'.equalsIc(@formstatus)" tooltip="Set the status to publish allowing this form to be used as a checklist"/>
+              <command id="remove" label="Remove" icon="fa-times" cssclasses="large-button" method="remove" service="dynFormService" showexpression="'DRAFT'.equalsIc(@formstatus)" />
               <!--              <command id="editlist" label="Edit Grid" icon="fa-table" cssclasses="large-button" method="loadFormGridEdition" service="dynFormService"/>-->
             </commandgroup>
           </commandbars>

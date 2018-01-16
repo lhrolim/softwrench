@@ -122,6 +122,7 @@
 
         }
 
+
         function fetchSchema(applicationName, schemaId) {
             const schema = getCachedSchema(applicationName, schemaId);
             if (schema) {

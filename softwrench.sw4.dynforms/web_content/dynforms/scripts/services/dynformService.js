@@ -7,6 +7,11 @@
         schemaid: "listselection",
     }
 
+    const cloneModalInfo = {
+        app: "_FormMetadata",
+        schemaid: "detail",
+    }
+
 
     let isEditingSection = false;
     let currentSelectedFields = [];
@@ -61,22 +66,7 @@
 
         //#region Utils
         getFormSchema(info) {
-            const cachedSchema = this.schemaCacheService.getCachedSchema(info.app, info.schemaid);
-
-            if (!!cachedSchema) {
-                return this.$q.when(cachedSchema);
-            }
-
-            const parameters = {
-                applicationName: info.app,
-                targetSchemaId: info.schemaid
-            };
-
-            const promise = this.restService.getPromise("Metadata", "GetSchemaDefinition", parameters);
-            return promise.then(result => {
-                this.schemaCacheService.addSchemaToCache(result.data);
-                return result.data;
-            });
+            return this.schemaCacheService.fetchSchema(info.app, info.schemaid);
         }
 
         openFormsModal() {
@@ -134,7 +124,7 @@
             }
 
             if (direction === "edit") {
-//                const key = displayable.attribute ? displayable.attribute : displayable.target;
+                //                const key = displayable.attribute ? displayable.attribute : displayable.target;
                 this.fieldService.replaceOrRemoveDisplayableByKey(cs, currentField, displayable);
             }
             cs.jscache = {};
@@ -176,12 +166,12 @@
             if (fieldType.indexOf("#") !== -1) {
                 const types = fieldType.split("#");
                 fieldType = types[0];
-                rendererType= types[1];
+                rendererType = types[1];
             }
 
             const rendererParameters = {};
 
-            if (!modalData.fcheckontop && rendererType=== "checkbox") {
+            if (!modalData.fcheckontop && rendererType === "checkbox") {
                 rendererParameters["layout"] = "left";
             }
 
@@ -224,7 +214,7 @@
                     this.alertService.alert("Attribute names cannot contain spaces");
                 }
 
-                return that.doAddDisplayable(fieldMetadata,savedData, "edit");
+                return that.doAddDisplayable(fieldMetadata, savedData, "edit");
             });
         }
 
@@ -247,10 +237,44 @@
 
         loadFormDetailEdition() {
             const id = this.crudContextHolderService.rootDataMap()["name"];
-            this.redirectService.goToApplication("_FormMetadata", "newformbuilder", { id }).then(data => {
+            return this.redirectService.goToApplication("_FormMetadata", "newformbuilder", { id });
+        }
 
+        clone() {
+            const dm = this.crudContextHolderService.rootDataMap();
+            const originalId = dm["name"];
+            return this.getFormSchema(cloneModalInfo).then((schema) => {
+                const clonedDm = {
+                    name: originalId + "_clone",
+                    formtitle: dm["formtitle"] + "_clone",
+                    formstatus: 'Draft'
+                }
+                return this.modalService.showPromise(schema, clonedDm);
+            }).then(modalData => {
+                const id = modalData["name"];
+                modalData["#originalid"] = originalId;
+                //TODO: remove the need for this dispatchedByModal:false flag, but without it the real method isn´t invoked at the submitservice.js
+                return this.applicationService.save({ datamap: modalData, operation: "clone", dispatchedByModal:false }).then(r => {
+                    return this.applicationService.loadItem({ id });
+                });
             });
         }
+
+        publish() {
+            const dm = this.crudContextHolderService.rootDataMap();
+            dm["formstatus"] = "Published";
+            return this.applicationService.save({ datamap: dm, operation: "crud_update" });
+        }
+
+        remove() {
+
+            this.alertService.confirm("Are you sure you want to delete this form").then(r => {
+                return this.applicationService.save({ operation: "crud_delete" });    
+            })
+            
+            
+        }
+
 
         saveDetailForm() {
             const extraparameters = {
@@ -351,6 +375,8 @@
             //returning false to interrupt default detail workflow
             return false;
         }
+
+
 
 
     }

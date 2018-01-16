@@ -183,6 +183,18 @@ namespace softwrench.sw4.dynforms.classes.model.metadata {
         }
 
 
+        public void RemoveFromCache(string formName) {
+
+            //TODO: new and detail
+            var cacheKey = formName + ":detail";
+
+            if (_cachedSchemas.ContainsKey(cacheKey)) {
+                ApplicationSchemaDefinition existingSchema = null;
+                _cachedSchemas.TryRemove(cacheKey, out existingSchema);
+            }
+
+        }
+
 
         private void CacheSchema(string formName, bool list, ApplicationSchemaDefinition schema) {
 

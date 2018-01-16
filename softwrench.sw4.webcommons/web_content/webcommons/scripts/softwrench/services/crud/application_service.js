@@ -68,6 +68,17 @@
             skipValidation: false
         }
 
+
+        function loadItem({ id, schemaId, applicationName }) {
+            const currentSchema = crudContextHolderService.currentSchema(panelId);
+            schemaId = schemaId || currentSchema.schemaId;
+            applicationName = applicationName || currentSchema.applicationName;
+            //TODO: remove circular dependency between application_service and redirect_service
+            const redirectService = $injector.get('redirectService');
+            return redirectService.goToApplication(applicationName, schemaId, { id });
+        }
+
+
         /**
          * 
          * @param {} parameters 
@@ -241,9 +252,10 @@
             cancelDetail,
             getApplicationUrl,
             getPostPromise,
-            invokeOperation,
             getApplicationDataPromise,
             getApplicationWithInitialDataPromise,
+            invokeOperation,
+            loadItem,
             submitData,
             save,
             deleteCrud
