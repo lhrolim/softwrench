@@ -181,6 +181,10 @@
 
             const rendererParameters = {};
 
+            if (!modalData.fcheckontop && rendererType=== "checkbox") {
+                rendererParameters["layout"] = "left";
+            }
+
             const resultOb = {
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
                 "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${fieldType}, softwrench.sw4.Shared2`,
