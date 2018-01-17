@@ -118,7 +118,7 @@
       </properties>
 
       <filters>
-        <booleanfilter attribute="maxuser_.active" truelabel="Active" falselabel="Inactive" preselected="true"></booleanfilter>
+        <booleanfilter attribute="maxuser_.active" truelabel="Active" falselabel="Inactive" ></booleanfilter>
         <booleanfilter attribute="isactive" truelabel="Active" falselabel="Inactive" whereclause="@SwActive" />
         <booleanfilter attribute="locked" truelabel="Locked" falselabel="Not Locked" whereclause="@SwLocked"/>
         <quicksearchfilter id="unregistered" label="Unregistered Users" whereclause="@UnregisteredUsers"/>
