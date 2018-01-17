@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Metadata;
 
 namespace softWrench.sW4.Data.Entities {
@@ -38,7 +39,7 @@ namespace softWrench.sW4.Data.Entities {
                 //the id can be located inside the json payload, as long as the application metadata is provider
                 //this is not the case for new item compositions though
                 JToken token;
-                json.TryGetValue(applicationMetadata.IdFieldName, StringComparison.CurrentCultureIgnoreCase,out token);
+                json.TryGetValue(applicationMetadata.IdFieldName, StringComparison.CurrentCultureIgnoreCase, out token);
                 if (token != null) {
                     id = token.ToString();
                 }
@@ -53,13 +54,19 @@ namespace softWrench.sW4.Data.Entities {
         }
 
 
-        public static TYped PopulateTypedEntity<T, TYped>(T entity, TYped objectToPopulate) where T : Entity {
+        public static TYped PopulateTypedEntity<T, TYped>(T entity, TYped objectToPopulate) where T : AttributeHolder {
             foreach (var entry in entity) {
                 ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value, true);
             }
-            foreach (var entry in entity.UnmappedAttributes) {
-                ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value, true);
+
+            if (entity is Entity) {
+                var e = entity as Entity;
+                foreach (var entry in e.UnmappedAttributes) {
+                    ReflectionUtil.SetProperty(objectToPopulate, entry.Key, entry.Value, true);
+                }
             }
+
+
 
             return objectToPopulate;
         }
@@ -197,7 +204,7 @@ namespace softWrench.sW4.Data.Entities {
                 var jToken = (JObject)jToken1;
                 JToken idTkn;
                 string idValue = null;
-                if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, StringComparison.CurrentCultureIgnoreCase,out idTkn)) {
+                if (jToken.TryGetValue(collectionType.Schema.IdAttribute.Name, StringComparison.CurrentCultureIgnoreCase, out idTkn)) {
                     var valueFromJson = GetValueFromJson(collectionType.Schema.IdAttribute.Type, idTkn, metadata.IsSwDb);
                     idValue = valueFromJson?.ToString();
                 }

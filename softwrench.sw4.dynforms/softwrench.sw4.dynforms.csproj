@@ -163,15 +163,19 @@
   <ItemGroup>
     <Compile Include="classes\controller\FormMetadataController.cs" />
     <Compile Include="classes\dataset\FormDatamapDataSet.cs" />
+    <Compile Include="classes\dataset\FormMetadataOptionsDataSet.cs" />
     <Compile Include="classes\dataset\FormMetadataDataSet.cs" />
+    <Compile Include="classes\dataset\FormMetadataOptionsProvider.cs" />
     <Compile Include="classes\exception\FormNotFoundException.cs" />
     <Compile Include="classes\model\DynFormConstants.cs" />
+    <Compile Include="classes\model\entity\FormMetadataOptions.cs" />
     <Compile Include="classes\model\metadata\DynFormSchemaHandler.cs" />
     <Compile Include="classes\model\entity\FormDatamap.cs" />
     <Compile Include="classes\model\entity\FormDatamapIndex.cs" />
     <Compile Include="classes\model\entity\FormMetadata.cs" />
     <Compile Include="classes\model\entity\FormMetadataDefinition.cs" />
     <Compile Include="classes\model\metadata\DynFormIndexService.cs" />
+    <Compile Include="classes\model\migration\Swweb3356Migration.cs" />
     <Compile Include="classes\model\migration\Swweb3184Migration.cs" />
     <Compile Include="classes\model\migration\Swweb3183Migration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -182,13 +186,18 @@
     <Content Include="metadata\dynforms\swdb\formdatamap.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="metadata\dynforms\swdb\formmetadataoptions.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="metadata\dynforms\swdb\formmetadata.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="web_content\dynforms\htmls\metadataoptionsspreadsheet.html" />
     <Content Include="web_content\dynforms\htmls\dynformdetailblank.html" />
     <Content Include="web_content\dynforms\htmls\dynformdetaileditbar.html" />
     <Content Include="web_content\dynforms\scripts\aaa_dynformsmodule.js" />
     <Content Include="web_content\dynforms\scripts\directives\dynformeditbar.js" />
+    <Content Include="web_content\dynforms\scripts\metadataspreedsheetcontroller.js" />
     <Content Include="web_content\dynforms\scripts\services\dynformService.js" />
   </ItemGroup>
   <ItemGroup>

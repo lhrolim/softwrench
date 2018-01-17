@@ -571,7 +571,7 @@
                 return;
             }
             let context = this.getContext(panelid);
-            if (context.showingModal && !panelid) {
+            if (context.showingModal && panelid === undefined ) {
                 contextData = contextData || {};
                 contextData.schemaId = "#modal";
                 context = this.getContext("#modal");

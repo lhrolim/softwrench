@@ -25,7 +25,7 @@
             }
         };
 
-       
+
 
         //#endregion
 
@@ -290,6 +290,14 @@
             return flattenDisplayables(schema.displayables);
         }
 
+        function allNonHiddenDisplayables(datamap, schema) {
+            return flattenDisplayables(schema.displayables).filter(f => {
+                return !fieldService.isFieldHidden(datamap, schema.applicationName, f);
+            });
+        }
+
+
+
         function getSchema(application, schemaId) {
             const cachedSchema = schemaCacheService.getCachedSchema(application, schemaId);
             if (cachedSchema) {
@@ -309,6 +317,7 @@
 
         return {
             areTheSame: areTheSame,
+            allNonHiddenDisplayables,
             buildApplicationKey: buildApplicationKey,
             buildApplicationMetadataSchemaKey: buildApplicationMetadataSchemaKey,
             getId,

@@ -176,6 +176,8 @@
                         scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
                     });
 
+                    
+
                     scope.fieldMoved = () => {
                         //the nonTabFieldsCached array will be automatically updated by the dnd-list directive however the original displayables need to be updated here
                         scope.displayables = scope.nonTabFieldsCached;
@@ -183,12 +185,12 @@
 
                 },
 
-                controller: ["$q", "$scope", "$http", "$element", "$injector", "$timeout", "$log", "alertService",
+                controller: ["$q", "$scope", "$http","$rootScope", "$element", "$injector", "$timeout", "$log", "alertService",
                     "printService", "compositionService", "commandService", "fieldService", "i18NService",
                     "associationService", "expressionService", "styleService", "tabsService","focusService",
                     "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService",
                     "layoutservice", "attachmentService", "richTextService",
-                    function ($q, $scope, $http, $element, $injector, $timeout, $log, alertService,
+                    function ($q, $scope, $http, $rootScope, $element, $injector, $timeout, $log, alertService,
                         printService, compositionService, commandService, fieldService, i18NService,
                         associationService, expressionService, styleService, tabsService, focusService,
                         cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
@@ -216,7 +218,10 @@
                             return $scope.panelid || ($scope.ismodal === "true" ? "#modal" : null);
                         }
 
-
+                        $scope.doubleClickDispatched = function ($event) {
+                            $rootScope.$broadcast(JavascriptEventConstants.FormDoubleClicked, $event, false);
+                            $event.stopImmediatePropagation();
+                        }
 
                      
 
@@ -225,7 +230,7 @@
                             return "left".equalIc(fieldMetadata.rendererParameters['position']);
                         }
 
-
+                     
 
                         $scope.$on(JavascriptEventConstants.AssociationUpdated, function (event, associationoptions) {
                             $scope.associationsloaded = true;

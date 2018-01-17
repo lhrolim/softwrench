@@ -1,14 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Linq;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using softwrench.sw4.dynforms.classes.model.entity;
 using softwrench.sw4.dynforms.classes.model.metadata;
+using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Association;
+using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Entities;
 using softWrench.sW4.Data.Pagination;
@@ -17,6 +23,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Util;
@@ -153,6 +160,32 @@ namespace softwrench.sw4.dynforms.classes.dataset {
             return base.ApplyPolicies(application, requestKey, platform);
 
 
+        }
+
+        public override async Task<AssociationMainSchemaLoadResult> BuildAssociationOptions(AttributeHolder dataMap, ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request) {
+            if (!dataMap.ContainsKey("name") || !"newformbuilder".EqualsIc(schema.SchemaId)) {
+                return await base.BuildAssociationOptions(dataMap, schema, request);
+            }
+            var id = dataMap["name"];
+
+            var formMetadata = await SWDAO.FindByPKAsync<FormMetadata>(id);
+
+            schema = await DynFormSchemaHandler.LookupOrGenerateInitialSchema(formMetadata, false);
+            //redirecting to FormMetadata temporarily, so that we can use this "DoExecute" and also prevent client-side schema caching between the form edition and the form usage
+            schema.ApplicationName = ApplicationName();
+            schema.IdFieldName = "#name";
+            schema.Properties["commandbar.top"] = "dynformsedit";
+            schema.Properties["toolbar.detail.actions"] = "dynformsactions";
+            schema.Properties["dynforms.editionallowed"] = "true";
+            request.AssociationsToFetch = "#all";
+
+            return await base.BuildAssociationOptions(dataMap, schema, request);
+        }
+
+
+        public IEnumerable<IAssociationOption> GetAvailableOptions(OptionFieldProviderParameters parameters) {
+            var items = SWDAO.FindByNativeQuery(FormMetadataOptions.AliasQuery);
+            return items.Select(i => new AssociationOption(i["id"], i["alias"]));
         }
 
 

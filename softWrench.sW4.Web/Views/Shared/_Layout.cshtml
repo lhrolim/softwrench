@@ -62,7 +62,7 @@
                 </div>
             </div>
         </header>
-        <div class="content clearfix" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
+        <div class="content clearfix" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode" ng-dblclick="doubleClickDispatched($event)">
             @RenderBody()
         </div>
         <footer class="site-footer hiddenonprint">

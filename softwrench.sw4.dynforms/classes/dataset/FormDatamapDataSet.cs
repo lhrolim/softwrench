@@ -8,10 +8,13 @@ using cts.commons.portable.Util;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.dynforms.classes.model.entity;
 using softwrench.sw4.dynforms.classes.model.metadata;
+using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.API.Association;
+using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
@@ -82,6 +85,26 @@ namespace softwrench.sw4.dynforms.classes.dataset {
         }
 
 
+        public override async Task<AssociationMainSchemaLoadResult> BuildAssociationOptions(AttributeHolder dataMap, ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request) {
+            if (!dataMap.ContainsKey("form_name")) {
+                return await base.BuildAssociationOptions(dataMap, schema, request);
+            }
+            var id = dataMap["form_name"] as string;
+
+//            var formMetadata = await SWDAO.FindByPKAsync<FormMetadata>(id);
+
+            schema = await SchemaHandler.LookupSchema(new FormMetadata(id), false);
+            //redirecting to FormMetadata temporarily, so that we can use this "DoExecute" and also prevent client-side schema caching between the form edition and the form usage
+            schema.ApplicationName = ApplicationName();
+            schema.IdFieldName = "#name";
+            schema.Properties["commandbar.top"] = "dynformsedit";
+            schema.Properties["toolbar.detail.actions"] = "dynformsactions";
+            schema.Properties["dynforms.editionallowed"] = "true";
+            request.AssociationsToFetch = "#all";
+
+            return await base.BuildAssociationOptions(dataMap, schema, request);
+        }
+
         private ApplicationListResult ConvertToApplicationListresult(string formApplicationName, ApplicationListResult result, ApplicationSchemaDefinition schema) {
 
             foreach (var dm in result.ResultObject) {
@@ -130,6 +153,7 @@ namespace softwrench.sw4.dynforms.classes.dataset {
 
             result.ExtraParameters[FormNameParam] = formApplicationName;
             result.ExtraParameters["applicationname"] = ApplicationName();
+            result.ResultObject.SetAttribute("form_name",formApplicationName);
             return result;
         }
 

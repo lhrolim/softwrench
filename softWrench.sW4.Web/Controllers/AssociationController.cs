@@ -144,6 +144,20 @@ namespace softWrench.sW4.Web.Controllers {
             return null;
         }
 
+        [HttpPost]
+        public async Task<IEnumerable<IAssociationOption>> LoadEagerAssociation([FromUri] ApplicationMetadataSchemaKey key, string associationKey, JObject currentData) {
+
+            Log.DebugFormat("retrieving eager association option value for {0}:{1} app {2} ", associationKey, key.ApplicationName);
+            //TODO: make specific method for single association to increase performance/encapsulation
+            //NOTE: despite not passing explicetely the associationValue, it´s still used due to the primary association to query for only the exact value
+            var result = await DoGetAssociations(key, new SingleAssociationPrefetcherRequest() { AssociationsToFetch = associationKey }, currentData);
+            if (result.EagerOptions.ContainsKey(associationKey)) {
+                var eagerOptions = result.EagerOptions[associationKey];
+                return eagerOptions;
+            }
+            return null;
+        }
+
         /// <summary>
         /// 
         /// Brings all the association data of a given schema, including any eager list of options and all the prefetchedlazy options 

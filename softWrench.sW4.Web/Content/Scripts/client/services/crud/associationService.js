@@ -170,6 +170,40 @@
             });
         }
 
+        /**
+         * Used to load a eager association that for some reason was added into a form after the schema data has already been loaded
+         * 
+         * @param {any} associationKey
+         */
+        loadEagerAssociation(associationKey, {schema,datamap}) {
+
+            this.lazyAssociationsBeingResolved.push(associationKey);
+            const panelId = this.crudContextHolderService.isShowingModal() ? "#modal" : null;
+            datamap = datamap || this.crudContextHolderService.rootDataMap(panelId);
+            schema = schema || this.crudContextHolderService.currentSchema(panelId);
+            const fieldsTosubmit = this.submitServiceCommons.applyTransformationsForAssociation(schema, datamap);
+            const key = this.schemaService.buildApplicationMetadataSchemaKey(schema);
+            const lazyAssociationsBeingResolvedLocal = this.lazyAssociationsBeingResolved;
+            const updateEagerFn = this.crudContextHolderService.updateEagerAssociationOptions.bind(this.crudContextHolderService);
+
+            const parameters = {
+                key,
+                associationKey
+            };
+
+            return this.restService.postPromise("Association", "LoadEagerAssociation", parameters, fieldsTosubmit, { avoidspin: true }).then(function (httpResponse) {
+                if (httpResponse.data === "null" || httpResponse.data == null) {
+                    return null;
+                }
+                const idx = lazyAssociationsBeingResolvedLocal.indexOf(associationKey);
+                if (idx !== -1) {
+                    lazyAssociationsBeingResolvedLocal.splice(idx, 1);
+                }
+                updateEagerFn(associationKey, httpResponse.data);
+                return httpResponse.data;
+            });
+        }
+
 
         parseLabelText(item, options) {
             if (item == null) {

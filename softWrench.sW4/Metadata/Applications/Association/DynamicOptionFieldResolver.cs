@@ -8,6 +8,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sw4.Shared2.Data.Association;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using cts.commons.simpleinjector;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Util;
 
@@ -28,28 +29,9 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                 return null;
             }
 
-            var methodName = GetMethodName(attribute);
-            var dataSet = FindDataSet(schema.ApplicationName, schema.SchemaId, methodName);
-            var mi = dataSet.GetType().GetMethod(methodName);
-            if (mi == null) {
-                throw new InvalidOperationException(String.Format(MethodNotFound, methodName, dataSet.GetType().Name));
-            }
-            if (mi.GetParameters().Count() != 1 || mi.GetParameters()[0].ParameterType != typeof(OptionFieldProviderParameters)) {
-                throw new InvalidOperationException(String.Format(WrongMethod, methodName, dataSet.GetType().Name));
-            }
-            var application = ApplicationMetadata.FromSchema(schema);
-            IEnumerable<IAssociationOption> associationOptions;
-            if (ReflectionUtil.IsAsyncMethod(mi)) {
-                var result = (Task<IEnumerable<IAssociationOption>>)mi.Invoke(dataSet, new object[]{new OptionFieldProviderParameters{
-                                    OriginalEntity = originalEntity,
-                                    ApplicationMetadata = application,
-                                    OptionField = optionField
-                                }
-                            });
-                associationOptions = await result;
-            } else {
-                associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet, new object[] { new OptionFieldProviderParameters { OriginalEntity = originalEntity, ApplicationMetadata = application, OptionField = optionField } });
-            }
+
+
+            var associationOptions = await DoInvokeAtDataSet(schema, originalEntity, optionField, attribute);
 
 
             if (associationOptions != null && optionField.Sort) {
@@ -61,6 +43,57 @@ namespace softWrench.sW4.Metadata.Applications.Association {
                         associationOptions = enumerable.OrderBy(f => f.Label);
                     }
                 }
+            }
+            return associationOptions;
+        }
+
+        private async Task<IEnumerable<IAssociationOption>> DoInvokeAtDataSet(ApplicationSchemaDefinition schema, AttributeHolder originalEntity,
+            OptionField optionField, string attribute) {
+
+            var methodName = GetMethodName(attribute);
+            var application = ApplicationMetadata.FromSchema(schema);
+            if (methodName.Contains(".")) {
+                var result = GenericSwMethodInvoker.Invoke<IEnumerable<IAssociationOption>>(schema, attribute,
+                    new OptionFieldProviderParameters {
+                        OriginalEntity = originalEntity,
+                        ApplicationMetadata = application,
+                        OptionField = optionField
+                    });
+                return result;
+            }
+
+            var dataSet = FindDataSet(schema.ApplicationName, schema.SchemaId, methodName);
+            var mi = dataSet.GetType().GetMethod(methodName);
+            if (mi == null) {
+                throw new InvalidOperationException(String.Format(MethodNotFound, methodName, dataSet.GetType().Name));
+            }
+            if (mi.GetParameters().Count() != 1 || mi.GetParameters()[0].ParameterType != typeof(OptionFieldProviderParameters)) {
+                throw new InvalidOperationException(String.Format(WrongMethod, methodName, dataSet.GetType().Name));
+            }
+
+            IEnumerable<IAssociationOption> associationOptions;
+            if (ReflectionUtil.IsAsyncMethod(mi)) {
+                var result = (Task<IEnumerable<IAssociationOption>>)mi.Invoke(dataSet, new object[]
+                {
+                    new OptionFieldProviderParameters
+                    {
+                        OriginalEntity = originalEntity,
+                        ApplicationMetadata = application,
+                        OptionField = optionField
+                    }
+                });
+                associationOptions = await result;
+            } else {
+                associationOptions = (IEnumerable<IAssociationOption>)mi.Invoke(dataSet,
+                    new object[]
+                    {
+                        new OptionFieldProviderParameters
+                        {
+                            OriginalEntity = originalEntity,
+                            ApplicationMetadata = application,
+                            OptionField = optionField
+                        }
+                    });
             }
             return associationOptions;
         }

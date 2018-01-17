@@ -69,6 +69,17 @@
         </schema>
 
         <schema id="fieldEditModal" stereotype="detail.noprint" title="Field Selection">
+          <section orientation="horizontal" showexpression="@showposition">
+            <optionfield attribute="refposition" label="Position">
+              <option value="top" label="Top (of)"/>
+              <option value="down" label="Bottom (of)"/>
+              <option value="left" label="Left (of)"/>
+              <option value="right" label="Right (of)"/>
+            </optionfield>
+
+            <field attribute="reffield" label="Field"></field>
+          </section>
+
           <optionfield label="Type" attribute="fieldtype" >
             <option label="Please Select..." value="pleaseselect"/>
             <option label="Free Text" value="ApplicationFieldDefinition"/>
@@ -98,6 +109,27 @@
             </section>
           </section>
 
+
+          <section showexpression="@fieldtype == 'OptionField'">
+            <optionfield attribute="fprovider" label="Provider" providerattribute="availableOptions">
+              <renderer type="combo"/>
+            </optionfield>
+
+            <!--            <section orientation="horizontal">-->
+            <optionfield attribute="ofrenderer" label="Renderer" defaultexpression="'combo'">
+              <option value="combo" label="Drop Down"/>
+              <option value="lookup" label="Look Up"/>
+              <option value="radio" label="Radio"/>
+              <option value="checkbox" label="Check Box"/>
+            </optionfield>
+
+            <field attribute="frequired" label="Required">
+              <renderer type="checkbox"/>
+            </field>
+
+            <!--            </section>-->
+          </section>
+
           <section showexpression="@fieldtype == 'ApplicationFieldDefinition#checkbox'">
             <section orientation="horizontal">
               <field attribute="frequired" label="Required">
@@ -112,7 +144,7 @@
           <section showexpression="@fieldtype == 'checklisttable'">
 
             <field attribute="checklistcolumn" label="CheckList Column" requiredexpression="true"/>
-            
+
             <table attribute="shutstart100" label="Rows" dataset="[{optionslabel:'XXX1.EOP.100 – Emergency Site Shutdown'}]">
               <columns>
                 <field attribute="optionslabel" label="Checklist Row">

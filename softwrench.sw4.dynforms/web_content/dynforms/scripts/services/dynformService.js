@@ -20,7 +20,7 @@
 
     class dynFormService {
 
-        constructor($q, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService) {
+        constructor($q, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService, schemaService, associationService) {
             this.$q = $q;
             this.$rootScope = $rootScope;
             this.modalService = modalService;
@@ -31,6 +31,7 @@
             this.crudContextHolderService = crudContextHolderService;
             this.fieldService = fieldService;
             this.alertService = alertService;
+            this.associationService = associationService;
 
             function restoreData() {
                 currentSelectedFields = [];
@@ -47,6 +48,23 @@
 
             this.$rootScope.$on(JavascriptEventConstants.ApplicationRedirected, () => {
                 restoreData();
+            });
+
+            var that = this;
+
+            this.$rootScope.$on(JavascriptEventConstants.FormDoubleClicked, (aEvent, mouseEvent, layoutDispatch) => {
+                const cs = crudContextHolderService.currentSchema();
+                const dm = crudContextHolderService.rootDataMap();
+                if (cs.properties["dynforms.editionallowed"] !== "true") {
+                    //not on a edition schema mode
+                    return;
+                }
+                const fields = schemaService.allNonHiddenDisplayables(dm, cs);
+                const lastField = fields[fields.length - 1];
+                that.addDisplayable(lastField, 'down', true).then(r => {
+                    $rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
+                });
+
             });
 
             buildSectionHeader = (label) => {
@@ -128,14 +146,42 @@
                 this.fieldService.replaceOrRemoveDisplayableByKey(cs, currentField, displayable);
             }
             cs.jscache = {};
+            return displayable;
         }
 
-        addDisplayable(currentField, direction) {
+        addDisplayable(currentField, direction, showposition = false) {
             var that = this;
+            const schema = this.crudContextHolderService.currentSchema();
+            const rootDm = this.crudContextHolderService.rootDataMap();
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
-                return that.modalService.showPromise(schema, {}, { cssclass: 'largemodal' });
+                let dm = {}
+                if (showposition) {
+                    dm['showposition'] = showposition;
+                    dm['refposition'] = 'down';
+                    dm['reffield'] = currentField.role;
+                }
+
+                return that.modalService.showPromise(schema, dm, { cssclass: 'largemodal' });
             }).then(savedData => {
+                if (savedData['reffield']) {
+                    const selectedField = this.fieldService.getDisplayableByKey(schema, savedData['reffield']);
+                    if (!selectedField) {
+                        return this.alertService.alert(`Field ${savedData['reffield']} not found `);
+                    }
+                    currentField = selectedField;
+                    direction = savedData['refposition'];
+                }
+
                 return that.doAddDisplayable(currentField, savedData, direction);
+            }).then(resultDisplayable => {
+                if (resultDisplayable.type === "OptionField" && resultDisplayable.rendererType === "combo") {
+                    const fieldQualifier = resultDisplayable.qualifier;
+                    const provider = resultDisplayable.providerAttribute;
+
+                    return that.restService.get("FormMetadata", "EagerLoadOptions", { fieldQualifier }).then(httpResult => {
+                        that.crudContextHolderService.updateEagerAssociationOptions(provider, httpResult.data, null, null);
+                    });
+                }
             });
         }
 
@@ -175,6 +221,10 @@
                 rendererParameters["layout"] = "left";
             }
 
+            if (fieldType === "OptionField") {
+                rendererType = modalData["ofrenderer"];
+            }
+
             const resultOb = {
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
                 "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${fieldType}, softwrench.sw4.Shared2`,
@@ -194,6 +244,11 @@
                 enableExpression: modalData.freadonly ? "false" : "true",
                 "type": fieldType
             };
+
+            if (fieldType === "OptionField") {
+                resultOb.qualifier = modalData.fprovider;
+                resultOb.providerAttribute = "formMetadataOptionsProvider.GetAvailableOptions";
+            }
 
             return resultOb;
         }
@@ -229,8 +284,8 @@
         removeDisplayable(fieldMetadata) {
             const key = fieldMetadata.attribute ? fieldMetadata.attribute : fieldMetadata.target;
             const cs = this.crudContextHolderService.currentSchema();
-            this.alertService.confirm(`Are you sure you want to remove field ${key}`).then(() => {
-                this.fieldService.replaceOrRemoveDisplayableByKey(cs, key);
+            return this.alertService.confirm(`Are you sure you want to remove field ${key}`).then(() => {
+                return this.fieldService.replaceOrRemoveDisplayableByKey(cs, key);
             });
         }
 
@@ -254,7 +309,7 @@
                 const id = modalData["name"];
                 modalData["#originalid"] = originalId;
                 //TODO: remove the need for this dispatchedByModal:false flag, but without it the real method isn´t invoked at the submitservice.js
-                return this.applicationService.save({ datamap: modalData, operation: "clone", dispatchedByModal:false }).then(r => {
+                return this.applicationService.save({ datamap: modalData, operation: "clone", dispatchedByModal: false }).then(r => {
                     return this.applicationService.loadItem({ id });
                 });
             });
@@ -269,10 +324,10 @@
         remove() {
 
             this.alertService.confirm("Are you sure you want to delete this form").then(r => {
-                return this.applicationService.save({ operation: "crud_delete" });    
+                return this.applicationService.save({ operation: "crud_delete" });
             })
-            
-            
+
+
         }
 
 
@@ -382,7 +437,7 @@
     }
 
 
-    dynFormService["$inject"] = ["$q", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService"];
+    dynFormService["$inject"] = ["$q", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService"];
 
     angular.module("sw_layout").service("dynFormService", dynFormService);
 

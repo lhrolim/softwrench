@@ -2,6 +2,7 @@
 const HideModal = "sw.modal.hide";
 const crudSaved = "sw.crud.detail.savecompleted";
 const CrudSubmitData = "sw.crud.detail.submit";
+const FormDoubleClicked = "sw.crud.detail.doubleclick";
 
 const BodyRendered = "sw.crud.body.rendered";
 
@@ -292,6 +293,10 @@ class JavascriptEventConstants {
 
     static get CrudSubmitData() {
         return CrudSubmitData;
+    }
+
+    static get FormDoubleClicked() {
+        return FormDoubleClicked;
     }
 
 

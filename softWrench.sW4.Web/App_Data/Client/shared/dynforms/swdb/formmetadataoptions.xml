@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<metadata xmlns="http://www.controltechnologysolutions.com/metadata">
+
+
+
+  <applications>
+    <application entity="FormMetadataOptions" name="FormMetadataOptions" title="Options">
+      <schemas>
+        <schema id="list" stereotype="list.noexport" title="Forms">
+          <field attribute="id" hidden="true"/>
+          <field attribute="alias" label="Alias" requiredexpression="true"/>
+<!--          <field attribute="description" label="Description" />-->
+        </schema >
+
+        <schema id="detail" stereotype="detail.redirecttolist" title="Options">
+          <field attribute="alias" label="Alias"/>
+<!--          <field attribute="description" label="Description">-->
+<!--            <renderer type="textarea"/>-->
+<!--          </field>-->
+          <field hidden="true" attribute="list"/>
+          <section resourcepath="/Content/Shared/dynforms/htmls/metadataoptionsspreadsheet.html"/>
+
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <command id="save" service="dispatcherService" method="dispatchevent" parameters="metadataoptionsspreadsheet.save" cssclasses="large-button"/>
+              <removecommand id="print"/>
+            </commandgroup>
+          </commandbars>
+        </schema>
+
+
+
+        <schema id="detailnew" stereotype="detailnew" title="Options" parentschema="detail">
+        </schema>
+
+      </schemas>
+    </application>
+
+  </applications>
+
+</metadata>

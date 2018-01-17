@@ -86,6 +86,9 @@
             redirectService.goToApplicationView(applicationName, schemaId, mode, title, parameters);
         };
 
+        $scope.doubleClickDispatched = function ($event) {
+            $rootScope.$broadcast(JavascriptEventConstants.FormDoubleClicked, $event,true);
+        }
 
         //#region listeners
 

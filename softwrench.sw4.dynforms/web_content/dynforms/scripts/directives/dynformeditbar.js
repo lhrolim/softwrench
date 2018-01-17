@@ -17,7 +17,9 @@
         }
 
         $scope.remove = function () {
-            return dynFormService.removeDisplayable($scope.fieldMetadata);
+            return dynFormService.removeDisplayable($scope.fieldMetadata).then(r => {
+                return $scope.$emit(JavascriptEventConstants.ReevalDisplayables);
+            });
         }
 
         $scope.shouldShowBlankCommand = function () {
@@ -48,7 +50,7 @@
         }
 
         $scope.fieldMoved = function (fieldMetadata) {
-            console.log("ok");
+//            console.log("ok");
         }
 
 

@@ -21,7 +21,6 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public class OptionField : BaseApplicationFieldDefinition, IDataProviderContainer, IDependableField, IPCLCloneable, IExtraProjectionProvider {
 
         private readonly FieldFilter _filter;
-        private readonly string _providerAttribute;
         private readonly string _extraParameter;
         private readonly ISet<string> _dependantFields = new HashSet<string>();
         private readonly bool _sort;
@@ -47,7 +46,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             RendererType = Renderer?.RendererType.ToLower();
             _filter = filter;
             Options = options;
-            _providerAttribute = providerAttribute;
+            ProviderAttribute = providerAttribute;
             _extraParameter = extraParameter;
             IsHidden = isHidden;
             _sort = sort;
@@ -77,11 +76,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public IDictionary<string, object> FilterParameters => _filter == null ? new Dictionary<string, object>() : _filter.ParametersAsDictionary();
 
 
-        public string AssociationKey => _providerAttribute ?? Attribute;
+        public string AssociationKey => ProviderAttribute ?? Attribute;
 
         public string Target => Attribute;
 
-        public string ProviderAttribute => _providerAttribute;
+        public string ProviderAttribute { get; set; }
 
         public string ExtraParameter => _extraParameter;
 
@@ -110,7 +109,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         }
 
         public override string ToString() {
-            return string.Format("ProviderAttribute: {0}, Target: {1}", _providerAttribute, Target);
+            return string.Format("ProviderAttribute: {0}, Target: {1}", ProviderAttribute, Target);
         }
     }
 }

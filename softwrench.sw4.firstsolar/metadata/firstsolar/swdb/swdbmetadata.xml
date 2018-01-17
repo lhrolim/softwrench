@@ -16,6 +16,7 @@
     <template path="swdb/callout.xml"/>
     <template path="swdb/maintenanceengineer.xml"/>
     <template path="Shared/dynforms/swdb/formmetadata.xml"/>
+    <template path="Shared/dynforms/swdb/formmetadataoptions.xml"/>
     <template path="Shared/dynforms/swdb/formdatamap.xml"/>
   </templates>
   

@@ -27,6 +27,7 @@
   <container id="dynforms" title="Form Creator" icon="fa  fa-align-justify">
     <application id="dfs" icon="fa fa-table" title="Forms" ref="_FormMetadata" schema="list" tooltip="Click to view your Forms"/>
     <application id="ndf" icon="fa fa-plus" title="New Form" ref="_FormMetadata" schema="new" tooltip="Click to view your Forms"/>
+    <application id="dfos" icon="fa fa-table" title="Options Builder" ref="_FormMetadataOptions" schema="list" tooltip="Click to manage your list of options for the forms"/>
   </container>
 
 
