@@ -6,11 +6,11 @@
         ["$scope", "$rootScope", "$log", "crudContextHolderService", "checkListTableBuilderService", function ($scope, $rootScope, $log, crudContextHolderService, checkListTableBuilderService) {
 
 
-            $scope.vm = {
+            $scope.cl = {
             };
 
 
-            $scope.vm.gridoptions = {
+            $scope.cl.gridoptions = {
                 enableCellEditOnFocus: true,
                 enableFiltering: true,
                 enableSorting: false,
@@ -18,20 +18,18 @@
             }
 
 
-            $scope.vm.gridoptions.columnDefs =
+            $scope.cl.gridoptions.columnDefs =
                 [
                     { name: 'label', displayName: 'Item', enableHiding: false },
                 ];
 
 
-            $scope.vm.gridoptions.onRegisterApi = function (gridApi) {
+            $scope.cl.gridoptions.onRegisterApi = function (gridApi) {
                 $scope.gridApi = gridApi;
             };
 
             const loadData = () => {
-
-                $scope.vm.gridoptions.data = []
-
+                $scope.cl.gridoptions.data = [];
                 const dm = crudContextHolderService.rootDataMap("#modal");
                 if (!dm) {
                     return;
@@ -41,12 +39,14 @@
                 if (checklistrows) {
 
                     checklistrows.forEach(i => {
-                        $scope.vm.gridoptions.data.push({ "label": i });
+                        $scope.cl.gridoptions.data.push({ "label": i });
                     });
 
-                }
+                } 
+
+
                 for (let i = 0; i < 100; i++) {
-                    $scope.vm.gridoptions.data.push({ "label": null });
+                    $scope.cl.gridoptions.data.push({ "label": null });
                 }
 
 
@@ -55,7 +55,7 @@
 
             function restoreData() {
                 const grid = $scope.gridApi.grid;
-                $scope.vm.gridoptions.data = [];
+                $scope.cl.gridoptions.data = [];
                 grid.cellNav.focusedCells = [];
                 $scope.$broadcast("cellNav");
                 loadData();
@@ -69,14 +69,14 @@
 
             loadData();
 
-            $scope.$on("dynform.checklist.onsavemodal", (event, modalData,tableMetadata) => {
+            $scope.$on("dynform.checklist.onsavemodal", (event, modalData, tableMetadata) => {
                 const dm = crudContextHolderService.rootDataMap("#modal");
 
                 var grid = $scope.gridApi.grid;
-                const rowsToSave = grid.rows.map(r => r.entity).filter(r => (r.label != null)).map(i=> i.label);
+                const rowsToSave = grid.rows.map(r => r.entity).filter(r => (r.label != null)).map(i => i.label);
                 dm["#checklistrows"] = JSON.stringify(rowsToSave);
 
-                checkListTableBuilderService.convertArraysIntoRows(modalData,tableMetadata,rowsToSave);
+                checkListTableBuilderService.convertArraysIntoRows(modalData, tableMetadata, rowsToSave);
 
 
             });

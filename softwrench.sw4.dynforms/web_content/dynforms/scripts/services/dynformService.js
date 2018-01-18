@@ -20,8 +20,9 @@
 
     class dynFormService {
 
-        constructor($q, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService, schemaService, associationService, checkListTableBuilderService) {
+        constructor($q, $timeout, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService, schemaService, associationService, checkListTableBuilderService) {
             this.$q = $q;
+            this.$timeout = $timeout;
             this.$rootScope = $rootScope;
             this.modalService = modalService;
             this.schemaCacheService = schemaCacheService;
@@ -171,7 +172,14 @@
                     dm['reffield'] = currentField.role;
                 }
 
-                return that.modalService.showPromise(schema, dm, { cssclass: 'largemodal' });
+                return that.modalService.showPromise(schema, dm, {
+                    cssclass: 'largemodal', onloadfn: () => {
+                        this.$timeout(() => {
+                            this.$rootScope.$broadcast("dynform.checklist.loaddata");
+                        },100,false);
+
+                    }
+                });
             }).then(savedData => {
                 if (savedData['reffield']) {
                     const selectedField = this.fieldService.getDisplayableByKey(schema, savedData['reffield']);
@@ -289,7 +297,7 @@
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
                 return that.modalService.showPromise(schema, convertedDatamap, {
-                    cssclass: 'largemodal', onloadfn: ()=> {
+                    cssclass: 'largemodal', onloadfn: () => {
                         this.$rootScope.$broadcast("dynform.checklist.loaddata");
                     }
                 });
@@ -300,6 +308,14 @@
 
                 return that.doAddDisplayable(fieldMetadata, savedData, "edit");
             });
+        }
+
+        afterChangeType(event) {
+            const dm = this.crudContextHolderService.rootDataMap("#modal");
+            if (dm.fieldtype === "checklisttable") {
+                this.$rootScope.$broadcast("dynform.checklist.loaddata");
+            }
+
         }
 
         isEditingSection() {
@@ -368,7 +384,7 @@
             const cs = this.crudContextHolderService.currentSchema();
             //preserving first 2 items, which are the blank element section and the id
             //.net cannot convert flawlessly these items, so we´ll pass them as a JSON and use a custom deserialization process
-//            const newFields = cs.displayables.slice(2);
+            //            const newFields = cs.displayables.slice(2);
             const newFields = cs.displayables;
             //to ensure $type is present at all fields every time
             this.fieldService.injectServerTypesIntoDisplayables({ displayables: newFields });
@@ -477,7 +493,7 @@
     }
 
 
-    dynFormService["$inject"] = ["$q", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService"];
+    dynFormService["$inject"] = ["$q", "$timeout", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService"];
 
     angular.module("sw_layout").service("dynFormService", dynFormService);
 

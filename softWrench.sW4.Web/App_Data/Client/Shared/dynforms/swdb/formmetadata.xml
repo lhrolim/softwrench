@@ -75,6 +75,7 @@
               <option value="down" label="Bottom (of)"/>
               <option value="left" label="Left (of)"/>
               <option value="right" label="Right (of)"/>
+              
             </optionfield>
 
             <field attribute="reffield" label="Field"></field>
@@ -88,6 +89,7 @@
             <option label="Options" value="OptionField"/>
             <option label="Section" value="ApplicationSection"/>
             <option label="Checklist Table" value="checklisttable"/>
+            <event type="afterchange" service="dynFormService" method="afterChangeType" />
           </optionfield>
 
           <section showexpression="@fieldtype !== 'pleaseselect'">
