@@ -1,4 +1,5 @@
 ﻿const modalShown = "sw.modal.show";
+const modalClosed = "sw.modal.closed";
 const HideModal = "sw.modal.hide";
 const crudSaved = "sw.crud.detail.savecompleted";
 const CrudSubmitData = "sw.crud.detail.submit";
@@ -167,6 +168,10 @@ class JavascriptEventConstants {
 
     static get ModalShown() {
         return modalShown;
+    }
+
+    static get ModalClosed() {
+        return modalClosed;
     }
 
     //#region print

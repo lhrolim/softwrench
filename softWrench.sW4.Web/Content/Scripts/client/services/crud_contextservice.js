@@ -618,6 +618,7 @@
             this._crudContext.showingModal = false;
             this._crudContext._eagerassociationOptions["#modal"] = { "#global": {} };
             this.clearCrudContext("#modal");
+            this.$rootScope.$broadcast(JavascriptEventConstants.ModalClosed);
         }
 
         modalLoaded(datamap, schema) {

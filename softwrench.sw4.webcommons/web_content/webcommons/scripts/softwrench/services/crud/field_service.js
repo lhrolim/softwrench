@@ -337,7 +337,7 @@
 
                 for (let i = 0; i < innerContainers.length; i++) {
                     const container = innerContainers[i];
-                    const removed = this.replaceOrRemoveDisplayableByKey(container, itemOrKey);
+                    const removed = this.replaceOrRemoveDisplayableByKey(container, itemOrKey, newdisplayable);
                     if (removed) {
                         return true;
                     }
@@ -446,7 +446,32 @@
             injectServerTypesIntoDisplayables: function (container) {
                 this.getLinearDisplayables(container, true, true, (displayable) => {
                     const type = `softwrench.sW4.Shared2.Metadata.Applications.Schema.${displayable.type}, softwrench.sw4.Shared2`;
+                    const associationOptionType = `softwrench.sw4.Shared2.Data.Association.AssociationOption, softwrench.sw4.Shared2`;
+                    //TODO: updgrade newtonsoft.json so that this is no longer needed
                     displayable["$type"] = type;
+                    if (displayable.type === "TableDefinition") {
+                        var partialFakeContainerDisplayablesResult = [];
+                        displayable.rows.forEach(row => {
+                            var partialFakeContainerDisplayables = [];
+                            row.forEach(column => {
+                                partialFakeContainerDisplayables.push(column);
+                            });
+                            var ob = { displayables: partialFakeContainerDisplayables };
+                            this.injectServerTypesIntoDisplayables(ob);
+                            partialFakeContainerDisplayablesResult.push(ob.displayables);
+                        });
+                        displayable.rows = partialFakeContainerDisplayablesResult;
+
+                    }
+                    if (displayable.type === "OptionField" && displayable.options) {
+                        const injectedOptions = [];
+                        displayable.options.forEach(o => {
+                            o["$type"] = associationOptionType;
+                            injectedOptions.push(Object.assign({ "$type": associationOptionType }, o));
+                        });
+                        displayable.options = injectedOptions;
+                    }
+
                     return Object.assign({ "$type": type }, displayable);
                     //                    return displayable;
                 });
@@ -473,7 +498,7 @@
                 return -1;
             },
 
-            sortBySchemaIdx: function(schema, fields) {
+            sortBySchemaIdx: function (schema, fields) {
                 const idxArray = [];
                 fields.forEach(field => {
                     const idx = this.getVisibleDisplayableIdxByKey(schema, field);

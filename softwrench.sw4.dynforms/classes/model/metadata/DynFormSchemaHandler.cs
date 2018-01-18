@@ -96,9 +96,9 @@ namespace softwrench.sw4.dynforms.classes.model.metadata {
 
             var schema = await LookupSchema(formMetadata, false);
             //keeping the standard items intact
-            var baseDisplayables = schema.Displayables.Take(2).ToList();
-            baseDisplayables.AddRange(newDisplayables);
-            schema.Displayables = baseDisplayables;
+//            var baseDisplayables = schema.Displayables.Take(2).ToList();
+//            baseDisplayables.AddRange(newDisplayables);
+            schema.Displayables = newDisplayables;
             var detailSerialized = JsonConvert.SerializeObject(schema, _jsonSettings);
             formMetadata.Definition.DetailDefinitionStringValue = detailSerialized;
             await SWDAO.SaveAsync(formMetadata.Definition);

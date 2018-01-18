@@ -20,7 +20,7 @@
 
     class dynFormService {
 
-        constructor($q, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService, schemaService, associationService) {
+        constructor($q, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService, schemaService, associationService, checkListTableBuilderService) {
             this.$q = $q;
             this.$rootScope = $rootScope;
             this.modalService = modalService;
@@ -32,6 +32,7 @@
             this.fieldService = fieldService;
             this.alertService = alertService;
             this.associationService = associationService;
+            this.checkListTableBuilderService = checkListTableBuilderService;
 
             function restoreData() {
                 currentSelectedFields = [];
@@ -145,7 +146,16 @@
                 //                const key = displayable.attribute ? displayable.attribute : displayable.target;
                 this.fieldService.replaceOrRemoveDisplayableByKey(cs, currentField, displayable);
             }
+
+
+
+
             cs.jscache = {};
+
+
+
+
+
             return displayable;
         }
 
@@ -215,6 +225,12 @@
                 rendererType = types[1];
             }
 
+            if (fieldType === "checklisttable") {
+                const tableMetadata = this.checkListTableBuilderService.createTable(modalData);
+                this.$rootScope.$broadcast("dynform.checklist.onsavemodal", modalData, tableMetadata);
+                return tableMetadata;
+            }
+
             const rendererParameters = {};
 
             if (!modalData.fcheckontop && rendererType === "checkbox") {
@@ -260,10 +276,23 @@
                 fattribute: fieldMetadata.attribute,
                 flabel: fieldMetadata.label,
                 frequired: fieldMetadata.requiredExpression === "true",
-                freadonly: !!fieldMetadata.isReadOnly
+                freadonly: !!fieldMetadata.isReadOnly,
+                "#isEditing": true
             }
+            if (fieldMetadata.type === "TableDefinition") {
+                //TODO: allow other kinds of table
+                convertedDatamap.fieldtype = "checklisttable";
+                convertedDatamap.optionsLabel = fieldMetadata.headers[2];
+                convertedDatamap["#checklistrows"] =
+                    this.checkListTableBuilderService.convertRowsIntoArray(fieldMetadata);
+            }
+
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
-                return that.modalService.showPromise(schema, convertedDatamap, { cssclass: 'largemodal' });
+                return that.modalService.showPromise(schema, convertedDatamap, {
+                    cssclass: 'largemodal', onloadfn: ()=> {
+                        this.$rootScope.$broadcast("dynform.checklist.loaddata");
+                    }
+                });
             }).then(savedData => {
                 if (savedData.fattribute.indexOf(' ') >= 0) {
                     this.alertService.alert("Attribute names cannot contain spaces");
@@ -339,7 +368,8 @@
             const cs = this.crudContextHolderService.currentSchema();
             //preserving first 2 items, which are the blank element section and the id
             //.net cannot convert flawlessly these items, so we´ll pass them as a JSON and use a custom deserialization process
-            const newFields = cs.displayables.slice(2);
+//            const newFields = cs.displayables.slice(2);
+            const newFields = cs.displayables;
             //to ensure $type is present at all fields every time
             this.fieldService.injectServerTypesIntoDisplayables({ displayables: newFields });
             dm["#newFieldsJSON"] = JSON.stringify(newFields);
@@ -360,6 +390,10 @@
                 this.alertService.alert("attribute field cannot contain spaces");
                 return false;
             }
+            if (datamap["#isEditing"]) {
+                return true;
+            }
+
             const cs = this.crudContextHolderService.currentSchema();
             const displ = this.fieldService.getDisplayableByKey(cs, newAttribute);
             if (displ) {
@@ -367,6 +401,12 @@
                 return false;
             }
 
+        }
+
+        applyPostValidationRules(schema, datamap, parameters) {
+            if (datamap.fieldtype === "checklisttable") {
+                this.$rootScope.$broadcast("dynform.checklist.onsavemodal");
+            }
         }
 
         createEnclosingSection() {
@@ -437,7 +477,7 @@
     }
 
 
-    dynFormService["$inject"] = ["$q", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService"];
+    dynFormService["$inject"] = ["$q", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService"];
 
     angular.module("sw_layout").service("dynFormService", dynFormService);
 

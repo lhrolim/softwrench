@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 
-namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
+namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
     public class TreeNode : IApplicationIndentifiedDisplayable {
         public TreeNode() {
         }

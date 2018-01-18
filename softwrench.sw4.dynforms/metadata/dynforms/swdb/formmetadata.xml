@@ -142,19 +142,14 @@
           </section>
 
           <section showexpression="@fieldtype == 'checklisttable'">
-
-            <field attribute="checklistcolumn" label="CheckList Column" requiredexpression="true"/>
-
-            <table attribute="shutstart100" label="Rows" dataset="[{optionslabel:'XXX1.EOP.100 – Emergency Site Shutdown'}]">
-              <columns>
-                <field attribute="optionslabel" label="Checklist Row">
-                  <renderer type="default"/>
-                </field>
-              </columns>
-            </table>
+            <field attribute="yesLabel" label="Yes Label" requiredexpression="true" defaultexpression="'yes'"/>
+            <field attribute="noLabel" label="No Label" requiredexpression="true" defaultexpression="'N/A'"/>
+            <field attribute="optionsLabel" label="Options Label" requiredexpression="true" />
+            <section resourcepath="/Content/Shared/dynforms/htmls/checklisttablerowbuilder.html"/>
           </section>
 
           <event type="beforesubmit.prevalidation" service="dynFormService" method="validateEditModal"/>
+<!--          <event type="beforesubmit.postvalidation" service="dynFormService" method="applyPostValidationRules"/>-->
 
         </schema>
 

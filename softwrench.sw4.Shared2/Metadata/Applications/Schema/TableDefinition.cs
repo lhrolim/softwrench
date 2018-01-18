@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 
-namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
-    public class TableDefinition : IApplicationIndentifiedDisplayable {
+namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
+
+    public class TableDefinition : IApplicationAttributeDisplayable {
+
         public TableDefinition() {
         }
 
@@ -23,6 +25,10 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.Schema {
         public string ShowExpression { get; set; }
         public string ToolTip { get; set; }
         public string Label { get; set; }
+        public string Qualifier { get; }
+        public bool IsHidden { get; set; }
+        public string RequiredExpression { get; set; }
+        public string EnableExpression { get; set; }
         public bool IsReadOnly { get { return false; } set { } }
         public string Attribute { get; set; }
         public string Role { get; set; }

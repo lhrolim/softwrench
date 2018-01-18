@@ -1,5 +1,7 @@
 ﻿<schema id="detail" title="NOP Site Package Request Form">
 
+  <section resourcepath="/Content/Shared/dynforms/htmls/dynformdetailblank.html"/>
+
   <section>
     <header displacement="ontop" label="Shutdown/Startup Procedures" params="fieldset=true"/>
     <table attribute="shutstart100" label="100 – Emergency Package" dataset="[{optionslabel:'XXX1.EOP.100 – Emergency Site Shutdown'}]">
@@ -14,6 +16,7 @@
         </field>
       </columns>
     </table>
+    
     <table attribute="shutstart100130" label="100/130 – Site Shutdown Package" dataset="[{optionslabel:'XXX1.NOP.100 – Site Shutdown'},{optionslabel:'XXX1.NOP.130 – Site Startup'}]">
       <columns>
         <optionfield attribute="yesna">
