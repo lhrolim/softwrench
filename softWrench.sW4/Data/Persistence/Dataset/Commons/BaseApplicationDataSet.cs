@@ -883,7 +883,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         }
 
 
-        public IEnumerable<IAssociationOption> GetSWPriorityType(OptionFieldProviderParameters parameters) {
+        public virtual IEnumerable<IAssociationOption> GetSWPriorityType(OptionFieldProviderParameters parameters) {
             //create default priority list
             var list = new List<AssociationOption>
             {

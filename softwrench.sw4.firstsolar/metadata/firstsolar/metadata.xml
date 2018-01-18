@@ -842,30 +842,6 @@
             <field attribute="facilityname" label="Facility Name"/>
           </customization>
         </schema>
-        <schema id="list2" redeclaring="false" platform="web" stereotype="list">
-          <properties>
-            <property key="list.click.schema" value="fsservicereport"/>
-            <property key="list.click.mode" value="output"/>
-          </properties>
-
-          <field attribute="workorderid" label="id" >
-            <renderer type="default" params="width=10%" />
-          </field>
-
-          <field attribute="wonum" label="WO#" >
-            <renderer type="default" params="width=10%" />
-          </field>
-          <field attribute="description" label="Summary">
-            <renderer type="default" params="excelwidth=50" />
-          </field>
-          <field attribute="location" label="Location">
-            <renderer type="default" params="width=15%" />
-          </field>
-          <field attribute="asset_.description" label="Asset Description">
-            <renderer type="default" params="width=25%" />
-          </field>
-          <field attribute="siteid" label="Site" hidden="true"/>
-        </schema>
 
         <schema id="adetail" redeclaring="false">
           <customization position="+#reportdateplaceholder">
@@ -882,6 +858,13 @@
               <renderer type="lookup" />
             </association>
           </customization>
+
+          <customization position="wopriority">
+            <association label="Priority" target="wopriority" labelfield="realpriority_.description">
+              <renderer type="lookup" params="inputsize=small"/>
+            </association>
+          </customization>
+          
 
           <customization position="secondary">
             <section>
