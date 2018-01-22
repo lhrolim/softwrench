@@ -104,7 +104,6 @@
 
   <entity name="WOCHANGE">
     <attributes>
-      <const targetpath="Change/CustomerID" value="HLC-00"/>
 
     </attributes>
     <connectorParameters>
