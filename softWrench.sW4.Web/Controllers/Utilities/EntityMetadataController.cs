@@ -39,7 +39,7 @@ namespace softWrench.sW4.Web.Controllers.Utilities {
         }
 
         [HttpPut]
-        public void SaveMetadata(HttpRequestMessage request) {
+        public void SaveMetadata(System.Net.Http.HttpRequestMessage request) {
             var task = request
             .Content
             .ReadAsStreamAsync();

@@ -17,28 +17,95 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 ActionID = jsonObject.GetUnMappedAttribute("WoActivityId"),
                 ActionLogSummary = jsonObject.GetUnMappedAttribute("#tasksummary")
             };
-            var ownergroup = jsonObject.GetUnMappedAttribute("activityownergroup") as string;
-            var sequence = jsonObject.GetUnMappedAttribute("activitysequence") as string;
-            activity.FlexFields = ArrayUtil.PushRange(activity.FlexFields, BuildFlexFields(ownergroup,sequence));
+            var ownergroup = jsonObject.GetUnMappedAttribute("activityownergroup");
+            var sequence = jsonObject.GetUnMappedAttribute("activitysequence");
+            activity.FlexFields = ArrayUtil.PushRange(activity.FlexFields, BuildFlexFields(ownergroup, sequence));
             serviceIncident.Activity = ArrayUtil.Push(serviceIncident.Activity, activity);
+
+            if (jsonObject.ContainsAttribute("#selectedAction") &&
+                "FAIL".EqualsIc(jsonObject.GetAttribute("#selectedAction") as string)) {
+                serviceIncident.Activity = PushExtraActivitiesForFailure(serviceIncident.Activity, jsonObject);
+            }
+
             CheckIMACResolved(serviceIncident, jsonObject);
         }
 
-        private static List<FlexFieldsFlexField> BuildFlexFields(string ownergroup,string sequence) {
+        //HAP-1170
+        private Activity[] PushExtraActivitiesForFailure(Activity[] serviceIncidentActivity, CrudOperationData jsonObject) {
+            var activity = new Activity {
+                type = "WOActivity",
+                ActionID = jsonObject.GetUnMappedAttribute("WoActivityId"),
+                ActionLogSummary = "Check Customer Input"
+            };
+            var sequence = int.Parse(jsonObject.GetUnMappedAttribute("activitysequence"));
+
+
+            var flexFields = new List<FlexFieldsFlexField>{
+                new FlexFieldsFlexField{
+                    id = "0",
+                    mappedTo = "STATUS",
+                    Value = "WAPPR",
+                },
+                new FlexFieldsFlexField{
+                    id = "0",
+                    mappedTo = "WOSEQUENCE",
+                    Value = (sequence + 1).ToString()
+                },
+                new FlexFieldsFlexField{
+                    id = "0",
+                    mappedTo = "OWNERGROUP",
+                    Value = "I-EUS-DE-CSC-IMC-HLCIMAC"
+                }
+            };
+            //
+            activity.FlexFields = ArrayUtil.PushRange(activity.FlexFields, flexFields);
+            serviceIncidentActivity = ArrayUtil.Push(serviceIncidentActivity, activity);
+
+
+            activity = new Activity {
+                type = "WOActivity",
+                ActionID = jsonObject.GetUnMappedAttribute("WoActivityId"),
+                ActionLogSummary = jsonObject.GetUnMappedAttribute("#tasksummary")
+            };
+
+            flexFields = new List<FlexFieldsFlexField>{
+                new FlexFieldsFlexField{
+                    id = "0",
+                    mappedTo = "STATUS",
+                    Value = "WAPPR",
+                },
+                new FlexFieldsFlexField{
+                    id = "0",
+                    mappedTo = "WOSEQUENCE",
+                    Value = (sequence + 2).ToString()
+                },
+                new FlexFieldsFlexField{
+                    id = "0",
+                    mappedTo = "OWNERGROUP",
+                    Value = "C-HLC-WW-ITCALL"
+                }
+            };
+            //
+            activity.FlexFields = ArrayUtil.PushRange(activity.FlexFields, flexFields);
+            return ArrayUtil.Push(serviceIncidentActivity, activity);
+
+        }
+
+        private static List<FlexFieldsFlexField> BuildFlexFields(string ownergroup, string sequence) {
             var flexFields = new List<FlexFieldsFlexField>();
-            flexFields.Add(new FlexFieldsFlexField() {
+            flexFields.Add(new FlexFieldsFlexField {
                 id = "0",
                 mappedTo = "STATUS",
-                Value = "COMP"
+                Value = "COMP",
             });
-//
-            flexFields.Add(new FlexFieldsFlexField() {
+            //
+            flexFields.Add(new FlexFieldsFlexField {
                 id = "0",
                 mappedTo = "WOSEQUENCE",
                 Value = sequence
             });
 
-            flexFields.Add(new FlexFieldsFlexField() {
+            flexFields.Add(new FlexFieldsFlexField {
                 id = "0",
                 mappedTo = "OWNERGROUP",
                 Value = ownergroup
@@ -47,8 +114,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         }
 
         private static void CheckIMACResolved(ServiceIncident serviceIncident, CrudOperationData jsonObject) {
-            
-            var action = jsonObject.GetUnMappedAttribute("#selectedAction") as string;
+
+            var action = jsonObject.GetUnMappedAttribute("#selectedAction");
             if ("COMP".Equals(action)) {
 
                 var curSequence = Int32.Parse(jsonObject.GetUnMappedAttribute("activitysequence"));
@@ -69,6 +136,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             }
         }
 
-   
+
     }
 }

@@ -46,7 +46,7 @@ namespace softWrench.sW4.Web.Common {
             return true;
         }
 
-        public static void EvalMockingErrorModeActive(JObject json, HttpRequestMessage request) {
+        public static void EvalMockingErrorModeActive(JObject json, System.Net.Http.HttpRequestMessage request) {
             if (ApplicationConfiguration.IsProd()) {
                 return;
             }

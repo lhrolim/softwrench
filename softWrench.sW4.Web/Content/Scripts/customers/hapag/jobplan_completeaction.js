@@ -1,10 +1,11 @@
-﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService, schemaService) {
+﻿function JobPlanCompleteActionController($scope, $http, i18NService, contextService, schemaService, alertService) {
 
     "ngInject";
 
     var imacOptions = [
         { label: 'Select One', value: 'Select One' },
         { label: 'Completed', value: 'COMP' },
+        { label: 'Failed', value: 'FAIL' },
     ];
 
     var woactivityOptions = [
@@ -70,15 +71,89 @@
         }
     }
 
+    $scope.handleReasonReject = function (applicationName, compositionitem, schema, datamap, compositionschema) {
+        //implementing both HAP-1170 and HAP-1169
+        let label = applicationName === "imac" ? "Please enter the reason to set the task to FAIL." : "Please enter a valid Reason for rejecting the Change.";
+
+
+        bootbox.prompt({
+            inputType: 'textarea',
+            title: label,
+            buttons: {
+                confirm: {
+                    label: i18NService.get18nValue('general.save', 'Submit'),
+                    className: "commandButton",
+
+                },
+
+                cancel: {
+                    label: i18NService.get18nValue('_exportotoexcel.cancel', 'Cancel'),
+                    className: "btn btn-default",
+                    callback: function () {
+                        return null;
+                    }
+                }
+
+            },
+            callback: function (result) {
+                if (!result) {
+                    alertService.alert("Please inform your reason");
+                    return false;
+                }
+
+                var isValid = true;
+
+                if (result.length < 7) {
+                    isValid = false;
+                }
+
+                if (result.indexOf(' ') < 0) {
+                    isValid = false;
+                } else {
+                    var words = result.split(" ");
+                    for (var i=0; i< words.length; i++) {
+                        if (words[i].length < 2) {
+                            isValid = false;
+                        }
+                    }
+                }
+
+                if (!isValid) {
+                    alertService.alert("The reason must contains at least 7 characters, one space, and each word should have at least 2 characters");
+                    return false;
+                }
+
+                datamap.fields["#reasonreject"] = result;
+                $scope.doSubmit(applicationName, compositionitem, schema, datamap, compositionschema);
+
+
+            },
+            className: "rejectionmodal"
+        });
+    }
+
     $scope.submitAction = function (compositionitem, schema, datamap, compositionschema) {
-        var schemaId = compositionschema.applicationName;
+
         var applicationName = schema.applicationName;
-        var isJobPlan = schemaId == "woactivity";
+        datamap.fields['#selectedAction'] = $scope.actiontoexecute;
+        if (applicationName === "imac" && $scope.actiontoexecute === "FAIL") {
+            return $scope.handleReasonReject(applicationName, compositionitem, schema, datamap, compositionschema);
+        } else {
+            return $scope.doSubmit(applicationName, compositionitem, schema, datamap, compositionschema);
+        }
+
+
+
+    };
+
+    $scope.doSubmit = function (applicationName, compositionitem, schema, datamap, compositionschema) {
+        var schemaId = compositionschema.applicationName;
+        var isJobPlan = schemaId === "woactivity";
         datamap.fields['WoActivityId'] = compositionitem.wonum;
         datamap.fields['activityownergroup'] = compositionitem.ownergroup;
         datamap.fields['activitysequence'] = compositionitem.wosequence;
         datamap.fields['#tasksummary'] = compositionitem.description;
-        datamap.fields['#selectedAction'] = $scope.actiontoexecute;
+
         datamap.fields['#groupAction'] = getgroup(compositionitem, isJobPlan);
         var numberOfActions = datamap.fields["#numberofapprovalactions"];
         if (!isJobPlan) {
@@ -106,7 +181,7 @@
             }).error(function (result) {
                 contextService.deleteFromContext("skipmetadataonbrowser");
             });
-    };
+    }
 
     $scope.submitEnabled = function () {
         return $scope.actiontoexecute == null || $scope.actiontoexecute == 'Select One';
