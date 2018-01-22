@@ -96,11 +96,18 @@
 
             },
             callback: function (result) {
-                if (!result) {
+                if (result === null || result === undefined) {
+                    //true closes the modal
+                    return true;
+                }
+
+                if (result === "") {
                     alertService.alert("Please inform your reason");
+                    //false keeps it open
                     return false;
                 }
 
+                //validating according to the rules of HAP-1170
                 var isValid = true;
 
                 if (result.length < 7) {
