@@ -73,7 +73,7 @@
 
     $scope.handleReasonReject = function (applicationName, compositionitem, schema, datamap, compositionschema) {
         //implementing both HAP-1170 and HAP-1169
-        let label = applicationName === "imac" ? "Please enter the reason to set the task to FAIL." : "Please enter a valid Reason for rejecting the Change.";
+        var label = applicationName === "imac" ? "Please enter the reason to set the task to FAIL." : "Please enter a valid Reason for rejecting the Change.";
 
 
         bootbox.prompt({
@@ -82,8 +82,7 @@
             buttons: {
                 confirm: {
                     label: i18NService.get18nValue('general.save', 'Submit'),
-                    className: "commandButton",
-
+                    className: "commandButton"
                 },
 
                 cancel: {
