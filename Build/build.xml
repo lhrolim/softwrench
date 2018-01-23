@@ -582,6 +582,19 @@
         </copy>
         <echo message="Copied files for ${projectname}" />
       </if>
+
+
+      <if test="${(file::exists(sharedplaceholder) or file::exists(sharedcommonsplaceholder)) and directory::exists(metadatafolder)}">
+        <copy todir="${deploypath}/Content/App_Data/Client/Shared/${projectname}">
+          <fileset basedir="../softWrench.sW4.${projectname}/metadata/${projectname}">
+            <include name="**/*" />
+          </fileset>
+        </copy>
+        <echo message="Copied metadata files for ${projectname}" />
+      </if>
+      
+
+
       
     </foreach>
     <if test="${IsWindows}">
@@ -1074,6 +1087,9 @@
             <arg line='mklink /J ${clientname}_offline "${foldername}\offline_content\${clientname}"'/>
           </exec>
         </if>
+        
+        
+        
 
         <if test="${customerlinkcreated =='0'}">
           <echo message="created symbolic link for ${clientname}" />
