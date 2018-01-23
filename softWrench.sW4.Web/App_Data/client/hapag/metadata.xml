@@ -3089,6 +3089,19 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         </schema>
 
+        <schema id="RI104Export" stereotype="list">
+          <field label="Computer Name" attribute="computername">
+            <renderer type="default" params="minwidth=80px;excelwidth=50"/>
+          </field>
+          <field label="ITC_Name" attribute="primaryuser_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+          <field label="Person Id" attribute="aucisowner_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+        </schema>
+
+
         <schema id="RI102Export" stereotype="list">
           <field label="Country" attribute="location_pluspservaddr_.country">
             <renderer type="default" params="minwidth=100px;excelwidth=15"/>
