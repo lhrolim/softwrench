@@ -5,6 +5,9 @@ using softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change;
 using softWrench.sW4.Data.Persistence.WS.Ism.Entities.ISMServiceEntities;
 using softWrench.sW4.Util;
 using System;
+using softWrench.sW4.Data.Persistence.WS.Commons;
+using softWrench.sW4.Data.Persistence.WS.Ism.Base;
+using softWrench.sW4.Security.Services;
 
 namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
     class ImacCompleteActionCustomConnector : IsmImacCrudConnectorDecorator {
@@ -12,9 +15,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             base.BeforeUpdate(maximoTemplateData);
             var jsonObject = (CrudOperationData)maximoTemplateData.OperationData;
             var serviceIncident = (ServiceIncident)maximoTemplateData.IntegrationObject;
+
+            var taskId = jsonObject.GetUnMappedAttribute("WoActivityId");
             var activity = new Activity {
                 type = "WOActivity",
-                ActionID = jsonObject.GetUnMappedAttribute("WoActivityId"),
+                ActionID = taskId,
                 ActionLogSummary = jsonObject.GetUnMappedAttribute("#tasksummary")
             };
             var ownergroup = jsonObject.GetUnMappedAttribute("activityownergroup");
@@ -25,6 +30,20 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
             if (jsonObject.ContainsAttribute("#selectedAction") &&
                 "FAIL".EqualsIc(jsonObject.GetAttribute("#selectedAction") as string)) {
                 serviceIncident.Activity = PushExtraActivitiesForFailure(serviceIncident.Activity, jsonObject);
+                var user = SecurityFacade.CurrentUser();
+                var wlActivity = new Activity {
+                    ActionLogSummary = "Task {0} Failed".Fmt(taskId),
+                    ActionLog = jsonObject.GetUnMappedAttribute("#reasonreject"),
+                    type = "WorkLog",
+                    UserID = ISMConstants.AddEmailIfNeeded(user.MaximoPersonId),
+                    ActivityType = "CLIENTNOTE"
+                };
+
+                serviceIncident.Activity = ArrayUtil.Push(serviceIncident.Activity, wlActivity);
+
+
+
+
             }
 
             CheckIMACResolved(serviceIncident, jsonObject);

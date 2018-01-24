@@ -43,9 +43,11 @@ namespace softWrench.sW4.Metadata.Security {
             return new InMemoryUser { _login = login };
         }
 
-        private InMemoryUser() {
+        public InMemoryUser() {
             _roles = new List<Role>();
         }
+
+        
 
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, int? timezoneOffset) {
             DBUser = dbUser;

@@ -131,13 +131,16 @@ namespace softWrench.sW4.Security.Services {
         }
 
 
-        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true) {
+        public static InMemoryUser CurrentUser(Boolean fetchFromDB = true, bool throwAnonymousException = true) {
             if (ApplicationConfiguration.IsUnitTest) {
                 return InMemoryUser.TestInstance("test");
             }
 
             var currLogin = LogicalThreadContext.GetData<string>("user") ?? CurrentPrincipalLogin;
             if (currLogin == "") {
+                if (!throwAnonymousException) {
+                    return new InMemoryUser { Login = "Anonymous" };
+                }
                 throw new UnauthorizedAccessException();
             }
 

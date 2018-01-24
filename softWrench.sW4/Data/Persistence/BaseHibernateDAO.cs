@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
+using System.Threading.Tasks;
+using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Data.Persistence {
 
@@ -22,8 +24,23 @@ namespace softWrench.sW4.Data.Persistence {
     public abstract class BaseHibernateDAO : ISingletonComponent {
 
         private static readonly ILog HibernateLog = LogManager.GetLogger("PAGINATION.SQL");
+        private IContextLookuper _contextLookuper;
 
-        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false, string queryAlias=null) {
+
+        public IContextLookuper ContextLookuper {
+            get {
+                if (_contextLookuper == null) {
+                    _contextLookuper =
+                        SimpleInjectorGenericFactory.Instance.GetObject<IContextLookuper>(typeof(IContextLookuper));
+                }
+
+                return _contextLookuper;
+            }
+        }
+
+
+
+        public IQuery BuildQuery(string queryst, object[] parameters, ISession session, bool native = false, string queryAlias = null) {
             var result = HibernateUtil.TranslateQueryString(queryst, parameters);
             queryst = result.query;
             parameters = result.Parameters;
@@ -33,11 +50,11 @@ namespace softWrench.sW4.Data.Persistence {
                 query.SetFlushMode(FlushMode.Never);
             }
             query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
-            LogQuery(queryst,queryAlias, parameters);
+            LogQuery(queryst, queryAlias, parameters);
             if (result.Parameters == null) {
                 return query;
             }
-            for (var i = 0; i < result.Parameters.Length; i++) {
+            for (var i = 0;i < result.Parameters.Length;i++) {
                 if (queryst.Contains(":p" + i)) {
                     if (parameters[i] == null) {
                         query.SetParameter("p" + i, parameters[i], NHibernateUtil.String);
@@ -73,13 +90,13 @@ namespace softWrench.sW4.Data.Persistence {
             return query;
         }
 
-        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, PaginationData paginationData = null, string queryAlias=null) {
-            LogQuery(queryst, queryAlias,parameters);
+        public IQuery BuildQuery(string queryst, ExpandoObject parameters, ISession session, bool native = false, PaginationData paginationData = null, string queryAlias = null) {
+            LogQuery(queryst, queryAlias, parameters);
             if (paginationData != null && ApplicationConfiguration.IsDB2(ApplicationConfiguration.DBType.Maximo)) {
                 //nhibernate pagination breaks in some scenarios, at least in DB2, keeping others intact for now
                 queryst = NHibernatePaginationUtil.ApplyManualPaging(queryst, paginationData);
             }
-            LogPaginationQuery(queryst,queryAlias, parameters);
+            //            LogPaginationQuery(queryst,queryAlias, parameters);
 
             var query = native ? session.CreateSQLQuery(queryst) : session.CreateQuery(queryst);
             query.SetTimeout(MetadataProvider.GlobalProperties.QueryTimeout());
@@ -125,7 +142,7 @@ namespace softWrench.sW4.Data.Persistence {
                                 endDate = DateUtil.BeginOfDay(endDate.Value);
                             }
                         }
-                        
+
 
                         query.SetParameter(parameter.Key + "_start", startDate);
                         query.SetParameter(parameter.Key + "_end", endDate);
@@ -151,12 +168,13 @@ namespace softWrench.sW4.Data.Persistence {
             }
         }
 
-        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, PaginationData paginationData = null, string queryAlias=null) {
+        public IList<dynamic> FindByNativeQuery(String queryst, ExpandoObject parameters, PaginationData paginationData = null, string queryAlias = null) {
             var before = Stopwatch.StartNew();
             using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true, paginationData,queryAlias);
+                var query = BuildQuery(queryst, parameters, session, true, paginationData, queryAlias);
                 query.SetResultTransformer(NhTransformers.ExpandoObject);
                 var result = query.List<dynamic>();
+                LogPaginationQuery(queryst, queryAlias, before, parameters);
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
                 return result;
             }
@@ -169,8 +187,9 @@ namespace softWrench.sW4.Data.Persistence {
             var before = Stopwatch.StartNew();
 
             using (var session = GetSessionManager().OpenSession()) {
-                var query = BuildQuery(queryst, parameters, session, true,null,queryAlias);
+                var query = BuildQuery(queryst, parameters, session, true, null, queryAlias);
                 var result = (int)query.UniqueResult();
+                LogPaginationQuery(queryst, queryAlias, before, parameters);
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done count query".Fmt(queryAlias ?? "")));
                 return result;
             }
@@ -193,7 +212,7 @@ namespace softWrench.sW4.Data.Persistence {
                 public object TransformTuple(object[] tuple, string[] aliases) {
                     var expando = new ExpandoObject();
                     var dictionary = (IDictionary<string, object>)expando;
-                    for (int i = 0; i < tuple.Length; i++) {
+                    for (int i = 0;i < tuple.Length;i++) {
                         string alias = aliases[i];
                         if (alias != null) {
                             dictionary[alias] = tuple[i];
@@ -208,18 +227,28 @@ namespace softWrench.sW4.Data.Persistence {
         protected abstract ILog GetLog();
 
 
-        private void LogQuery(string queryst, string queryAlias,params object[] parameters) {
+        private void LogQuery(string queryst, string queryAlias, params object[] parameters) {
             if (!GetLog().IsDebugEnabled) {
                 return;
             }
-            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias,parameters));
+            GetLog().Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias, parameters));
         }
 
-        private void LogPaginationQuery(string queryst, string queryAlias, params object[] parameters) {
-            if (!HibernateLog.IsDebugEnabled) {
-                return;
-            }
-            HibernateLog.Debug(LoggingUtil.QueryStringForLogging(queryst, queryAlias,parameters));
+        protected void LogPaginationQuery(string queryst, string queryAlias, Stopwatch watch, params object[] parameters) {
+            //            if (!HibernateLog.IsDebugEnabled) {
+            //                return;
+            //            }
+            var module = ContextLookuper.LookupContext().Module;
+
+            Task.Run(() => {
+                var ellapsed = LoggingUtil.MsDelta(watch);
+                LogicalThreadContext.Properties["ellapsed"] = ellapsed;
+                LogicalThreadContext.Properties["qualifier"] = queryAlias;
+                LogicalThreadContext.Properties["username"] = SecurityFacade.CurrentUser(false, false).Login;
+                LogicalThreadContext.Properties["module"] = module;
+                HibernateLog.Info(LoggingUtil.QueryStringForLogging(queryst, null, parameters));
+            });
+
         }
 
         public interface ISessionManager {

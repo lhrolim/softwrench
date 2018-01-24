@@ -24,6 +24,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
+using softWrench.sW4.Web.Util;
 
 
 namespace softWrench.sW4.Web {
@@ -44,9 +45,10 @@ namespace softWrench.sW4.Web {
             ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
             ViewEngines.Engines.Add(new FixedWebFormViewEngine()); // to render the reports user controls (.ascx)            
 
-            ConfigureLogging();
+
             AreaRegistration.RegisterAllAreas();
             MetadataProvider.DoInit();
+            ConfigureLogging();
             EnableJsonCamelCasing();
             RegisterDataMapFormatter();
 
@@ -70,6 +72,7 @@ namespace softWrench.sW4.Web {
         private static void ConfigureLogging() {
             log4net.Config.XmlConfigurator.Configure();
             Log.Info("*****Starting web app****************");
+            Log4NetUtil.ConfigureAdoNetAppender();
         }
 
         private static void RegisterDataMapFormatter() {
@@ -159,6 +162,10 @@ namespace softWrench.sW4.Web {
 
             }
 
+        }
+
+        protected void Application_End(object sender, EventArgs e) {
+            LogManager.Shutdown();
         }
 
         /// <summary>

@@ -142,7 +142,7 @@
 
         var applicationName = schema.applicationName;
         datamap.fields['#selectedAction'] = $scope.actiontoexecute;
-        if (applicationName === "imac" && $scope.actiontoexecute === "FAIL") {
+        if ((applicationName === "imac" && $scope.actiontoexecute === "FAIL") || (applicationName === "change" && "REJECTED".equalsIc($scope.actiontoexecute))) {
             return $scope.handleReasonReject(applicationName, compositionitem, schema, datamap, compositionschema);
         } else {
             return $scope.doSubmit(applicationName, compositionitem, schema, datamap, compositionschema);

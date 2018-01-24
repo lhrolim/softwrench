@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Data.Persistence.SWDB {
 
@@ -23,7 +24,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
         public T Save<T>(T ob) where T : class {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (var transaction = session.BeginTransaction()) {
-                    ob =DoSave(ob, session);
+                    ob = DoSave(ob, session);
                     transaction.Commit();
                     return ob;
                 }
@@ -37,7 +38,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
             } else {
                 ob = session.Merge(ob);
             }
-            
+
             return ob;
         }
 
@@ -67,7 +68,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (session.BeginTransaction()) {
                     var ob = session.Load(type, id);
-                    for (int i = 0; i < toEager.Length; i++) {
+                    for (int i = 0;i < toEager.Length;i++) {
                         object property = ReflectionUtil.GetProperty(ob, toEager[i]);
                         NHibernateUtil.Initialize(property);
                     }
@@ -96,7 +97,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
             using (var session = SessionManager.Instance.OpenSession()) {
                 using (var transaction = session.BeginTransaction()) {
                     foreach (var item in items) {
-                        result.Add(DoSave(item,session));
+                        result.Add(DoSave(item, session));
                     }
                     transaction.Commit();
                     return result;
@@ -151,7 +152,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 using (var transaction = session.BeginTransaction()) {
                     var query = session.CreateSQLQuery(sql);
                     if (parameters != null) {
-                        for (int i = 0; i < parameters.Length; i++) {
+                        for (int i = 0;i < parameters.Length;i++) {
                             query.SetParameter(i, parameters[i]);
                         }
                     }
@@ -252,8 +253,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
         }
 
 
-
-
+       
 
     }
 }

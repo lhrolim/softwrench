@@ -5,6 +5,7 @@ using softWrench.sW4.Data.Persistence.SWDB;
 using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
+using softWrench.sW4.Security.Context;
 
 namespace softWrench.sW4.Data.Persistence {
 
@@ -45,7 +46,7 @@ namespace softWrench.sW4.Data.Persistence {
             public ISession OpenSession() {
                 //nhibernate is always readonly
                 var openSession = Instance.GetSessionFactory().OpenStatelessSession();
-//                openSession.FlushMode = FlushMode.Never;
+                //                openSession.FlushMode = FlushMode.Never;
                 return new SessionAdapter(openSession);
             }
 
@@ -92,5 +93,7 @@ namespace softWrench.sW4.Data.Persistence {
         protected override ISessionManager GetSessionManager() {
             return SessionManager.Instance;
         }
+
+        
     }
 }
