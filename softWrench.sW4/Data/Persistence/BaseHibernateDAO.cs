@@ -239,9 +239,10 @@ namespace softWrench.sW4.Data.Persistence {
             //                return;
             //            }
             var module = ContextLookuper.LookupContext().Module;
-
+            watch.Stop();
+            var ellapsed = watch.ElapsedMilliseconds;
             Task.Run(() => {
-                var ellapsed = LoggingUtil.MsDelta(watch);
+                
                 LogicalThreadContext.Properties["ellapsed"] = ellapsed;
                 LogicalThreadContext.Properties["qualifier"] = queryAlias;
                 LogicalThreadContext.Properties["username"] = SecurityFacade.CurrentUser(false, false).Login;

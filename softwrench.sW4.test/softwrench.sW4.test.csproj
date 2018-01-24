@@ -103,7 +103,6 @@
     <Compile Include="Metadata\MissingSchemaFieldsTest.cs" />
     <Compile Include="Metadata\MetadataPropertiesTest.cs" />
     <Compile Include="Metadata\MenuParsingTest.cs" />
-    <Compile Include="Resources\MifSRSample.cs" />
     <Compile Include="Scheduler\Jobs\R101ExtractorHelperTest.cs" />
     <Compile Include="ToStringELParserTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -288,6 +287,9 @@
       <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
       <Name>softWrench.sW4</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

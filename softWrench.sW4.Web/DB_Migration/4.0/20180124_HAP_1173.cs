@@ -19,7 +19,7 @@ namespace softWrench.sW4.Web.DB_Migration._4._0 {
                 .WithColumn("query").AsString(4000)
                 .WithColumn("username").AsString(255)
                 .WithColumn("module").AsString(255)
-                .WithColumn("ellapsed").AsString(50);
+                .WithColumn("ellapsed").AsInt64();
 
         }
 
