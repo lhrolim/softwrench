@@ -16,7 +16,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             var changeRequest = (ChangeRequest)maximoTemplateData.IntegrationObject;
             var selectedaction = jsonObject.GetAttribute("#selectedAction") as string;
             var groupaction = jsonObject.GetAttribute("#groupAction") as string;
-            ChangeApprovalsHandler(changeRequest, selectedaction, groupaction);
+            ChangeApprovalsHandler(changeRequest, selectedaction, groupaction, jsonObject);
             // add worklog beforewards,so that @@ gets appended in the beggining
             base.BeforeUpdate(maximoTemplateData);
         }
@@ -40,10 +40,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
             maximoTicket.Change.Description = description;
         }
 
-        private static void ChangeApprovalsHandler(ChangeRequest changeRequest, string selectedaction, string groupName) {
+        private static void ChangeApprovalsHandler(ChangeRequest changeRequest, string selectedaction, string groupName, CrudOperationData jsonObject) {
             string log;
             string actionid;
-            if (selectedaction == "Approved") {
+            var approved = selectedaction == "Approved";
+            if (approved) {
                 log = "Approved by group " + groupName;
                 actionid = "APPROVAL OBTAINED";
             } else {
@@ -59,6 +60,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
                 LogDateTimeSpecified = true,
                 LogDateTime = DateTime.Now
             };
+
+            if (!approved) {
+                var reason = jsonObject.GetAttribute("#reasonreject") as string;
+                changeLog.FlexFields = new[]{
+                    new FlexFieldsFlexField { mappedTo = "WLLongDesc", id = "0",Value = reason }
+                };
+            }
+
             worklogList.Add(changeLog);
             changeRequest.ChangeLog = ArrayUtil.PushRange(changeRequest.ChangeLog, worklogList);
         }
