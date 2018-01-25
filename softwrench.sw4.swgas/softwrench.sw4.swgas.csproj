@@ -49,10 +49,14 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\swgas\cts\swgas\dataset\SwgasSrDataSet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -81,9 +85,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="metadata\swgas\readme.txt" />
+    <Content Include="web_content\swgas\htmls\SubmitSuccess.html" />
     <Content Include="web_content\swgas\images\header-email.jpg" />
     <Content Include="web_content\swgas\images\logo-byline.png" />
     <Content Include="web_content\swgas\images\logo-main.png" />
+    <Content Include="web_content\swgas\scripts\aaa_swgmodule.js" />
+    <Content Include="web_content\swgas\scripts\swgasNoLoginSubmitService.js" />
+    <Content Include="web_content\swgas\scripts\swgasRequestController.js" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="metadata\swgas\statuscolors.json">
@@ -93,14 +101,27 @@
   <ItemGroup>
     <Folder Include="classes\swgas\cts\swgas\configuration\" />
     <Folder Include="classes\swgas\cts\swgas\connector\" />
-    <Folder Include="classes\swgas\cts\swgas\dataset\" />
     <Folder Include="classes\swgas\cts\swgas\migration\" />
-    <Folder Include="web_content\swgas\htmls\" />
-    <Folder Include="web_content\swgas\scripts\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="customer.placeholder" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="web_content\swgas\styles\branding.scss" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\softwrench.sw4.api\softwrench.sw4.api.csproj">
+      <Project>{d6d3839e-07fe-4fac-b0ee-1d2d2d0c0efa}</Project>
+      <Name>softwrench.sw4.api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">
+      <Project>{e3764769-6d4d-4986-baf4-02d1b479d961}</Project>
+      <Name>softwrench.sw4.Shared2</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\softWrench.sW4\softWrench.sW4.csproj">
+      <Project>{ce228c26-938d-4d6f-95fa-12cc5241afb5}</Project>
+      <Name>softWrench.sW4</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

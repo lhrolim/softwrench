@@ -43,6 +43,21 @@ namespace softWrench.sW4.Web {
                 );
             }
 
+            if ("swgas".Equals(ApplicationConfiguration.ClientName)) {
+                // route to make request anonymous to umc
+                routes.MapRoute(
+                    name: "SwgNoLoginRequest",
+                    url: "swgasrequest",
+                    defaults: new { controller = "SwgasRequest", action = "New" }
+                );
+                // route to succes page of umc request
+                routes.MapRoute(
+                    name: "SwgNoLoginSuccess",
+                    url: "swgasrequestsuccess",
+                    defaults: new { controller = "SwgasRequest", action = "Success" }
+                );
+            }
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

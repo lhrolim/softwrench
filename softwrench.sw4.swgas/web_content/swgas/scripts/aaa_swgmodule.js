@@ -1,0 +1,1 @@
+﻿angular.module('swgas', ['sw_layout']);

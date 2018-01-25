@@ -180,6 +180,37 @@
           <customization position="classstructureid"></customization>
           <customization position="saddresscode"></customization>
         </schema>
+
+        <schema id="nologinnewdetail" stereotype="detailnew" title="Service Request Details">
+          <reference id="srhiddens"/>
+          <field attribute="name" label="Full Name" requiredexpression="true"/>
+          <field attribute="email" label="Email Address" requiredexpression="true">
+            <renderer type="default" params="valtype=custom;valmessage=An '@swgas.com' email is required.;valflags=i">
+              <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@swgas\.com$"/>
+            </renderer>
+          </field>
+          <field attribute="phoneext" label="Phone Extension" requiredexpression="true">
+            <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone extension is a sequence of four numbers.;valpattern=^\d{4}$"/>
+          </field>
+          <field attribute="customlocation" label="Location" requiredexpression="true"/>
+          <field attribute="description" label="Request Summary" requiredexpression="true">
+            <renderer type="richtext"/>
+          </field>
+
+          <commandbars>
+            <commandgroup position="detail.primary">
+              <removecommand id="cancel"/>
+              <removecommand id="save"/>
+              <removecommand id="print"/>
+              <command id="submit" icon="fa-check" service="swgasNoLoginSubmitService" method="submit" label="Submit" cssclasses="large-button" tooltip="Submit Request" enableexpression="$scope:enableSave"/>
+            </commandgroup>
+          </commandbars>
+
+          <properties>
+            <property key="detail.show.toolbar.anonymous" value="true"/>
+          </properties>
+        </schema>
+
       </schemas>
     </application>
     <application entity="workorder" name="workorder" title="Work Order">

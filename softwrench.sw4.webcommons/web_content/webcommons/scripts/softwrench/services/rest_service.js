@@ -8,6 +8,7 @@ modules.rootCommons.service('restService', ["$http", "$log","$q", "contextServic
     "FirstSolarEmail",
     "FirstSolarWpGenericEmail",
     "UmcRequestController",
+    "SwgasRequestController",
     "UserSetup/DefinePassword",
     "UserSetup/DoSetPassword",
     "UserSetupWebApi/ForgotPassword",
