@@ -342,6 +342,7 @@
         <property key="list.offline.date.indexlist" value="schedstartnotime,scheduledate"/>
         <property key="offline.force.assoc.sync" value="true"/>
         <property key="offline.sync.avoidcaching" value="true"/>
+        <property key="offline.sync.avoidincremental" value="true"/>
         <property key="offline.sync.smalldataset" value="true"/>
       </properties>
 

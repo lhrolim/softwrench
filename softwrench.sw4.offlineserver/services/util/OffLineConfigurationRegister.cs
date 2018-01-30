@@ -53,6 +53,12 @@ namespace softwrench.sw4.offlineserver.services.util {
                 PropertyDataType = PropertyDataType.STRING,
                 StringValue = "",
             });
+
+            _configFacade.Register(OfflineConstants.AvoidIncrementalSync, new PropertyDefinition {
+                Description = "if true no incremental syncs should take place for the application data",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                StringValue = "false",
+            });
         }
     }
 }

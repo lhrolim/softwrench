@@ -352,10 +352,10 @@ namespace softwrench.sw4.offlineserver.services {
                     var schemaKey = new ApplicationMetadataSchemaKey(ApplicationMetadataConstants.List, SchemaMode.None, ClientPlatform.Mobile);
                     var userAppMetadata = association.ApplyPolicies(schemaKey, user, ClientPlatform.Mobile);
                     var lookupDTO = await BuildRedisDTO(userAppMetadata, completeCacheEntries);
-                    
-                    cacheTasks[i++] = Task.Run(async () =>{
+
+                    cacheTasks[i++] = Task.Run(async () => {
                         redisResults.Add(await _redisManager.Lookup<JSONConvertedDatamap>(lookupDTO));
-                    }); 
+                    });
                 }
 
                 await Task.WhenAll(cacheTasks);
@@ -507,7 +507,8 @@ namespace softwrench.sw4.offlineserver.services {
 
 
 
-        protected virtual SynchronizationApplicationResultData FilterData(string applicationName, ICollection<JSONConvertedDatamap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO, CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
+        protected virtual SynchronizationApplicationResultData FilterData(string applicationName, ICollection<JSONConvertedDatamap> topLevelAppData, ClientStateJsonConverter.AppRowstampDTO rowstampDTO,
+            CompleteApplicationMetadataDefinition topLevelApp, bool isQuickSync) {
             var watch = Stopwatch.StartNew();
 
             var result = new SynchronizationApplicationResultData(applicationName) {
@@ -525,11 +526,19 @@ namespace softwrench.sw4.offlineserver.services {
             //this is the full strategy implementation where the client passes the whole state on each synchronization
             var idRowstampDict = rowstampDTO.ClientState;
 
+            var avoidIncremental = _configFacade.Lookup<bool>(OfflineConstants.AvoidIncrementalSync);
+
             if (idRowstampDict == null || idRowstampDict.Count == 0) {
                 //this should happen for first synchronization, of for "full-forced-synchronization"
                 result.NewdataMaps = topLevelAppData;
                 return result;
             }
+
+            if (avoidIncremental) {
+                result.InsertOrUpdateDataMaps = topLevelAppData;
+                return result;
+            }
+
             //            var idRowstampDict = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
             foreach (var dataMap in topLevelAppData) {
                 var id = dataMap.Id;
@@ -537,6 +546,7 @@ namespace softwrench.sw4.offlineserver.services {
                     Log.DebugFormat("sync: adding inserteable item {0} for application {1}", dataMap.Id, applicationName);
                     result.NewdataMaps.Add(dataMap);
                 } else {
+                    //this is for composition handling, where we´d search all compositions considering the whole list of main entities
                     result.AlreadyExistingDatamaps.Add(dataMap.OriginalDatamap);
                     var rowstamp = idRowstampDict[id];
                     if (!rowstamp.Equals(dataMap.Approwstamp.ToString())) {
@@ -618,12 +628,21 @@ namespace softwrench.sw4.offlineserver.services {
 
             }
 
+
+
             if (rowstamps == null) {
                 rowstamps = new Rowstamps();
             }
 
 
+            var avoidIncremental = _configFacade.Lookup<bool>(OfflineConstants.AvoidIncrementalSync);
 
+            var cacheableItem = !"true".Equals(appMetadata.Schema.GetProperty(OfflineConstants.AvoidCaching));
+            var avoidIncrementalApp = "true".Equals(appMetadata.Schema.GetProperty(OfflineConstants.AvoidIncrementalApp));
+
+            if (avoidIncremental && !cacheableItem && avoidIncrementalApp ) {
+                rowstamps = new Rowstamps();
+            }
 
             if (itemsToDownload != null) {
                 var notEmpty = itemsToDownload.Where(item => !string.IsNullOrEmpty(item)).ToList();
@@ -648,7 +667,8 @@ namespace softwrench.sw4.offlineserver.services {
                 var dataMap = DataMap.Populate(appMetadata, entityMetadata, row);
                 dataMaps.Add(new JSONConvertedDatamap(dataMap));
             }
-            if (isAssociationData && !"true".Equals(appMetadata.Schema.GetProperty(OfflineConstants.AvoidCaching))) {
+
+            if (isAssociationData && cacheableItem) {
 
                 //updating cache entries
 

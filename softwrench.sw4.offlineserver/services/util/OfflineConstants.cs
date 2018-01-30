@@ -18,6 +18,8 @@ namespace softwrench.sw4.offlineserver.services.util {
 
         public const string EnableAudit = "/Global/Offline/Sync/Audit";
 
+        public const string AvoidIncrementalSync = "/Global/Offline/Sync/AvoidIncremental";
+
         public const string AllowedClientVersions = "/Global/Offline/Sync/AllowedVersions";
 
 
@@ -31,6 +33,8 @@ namespace softwrench.sw4.offlineserver.services.util {
         public const string CheckDatabaseAfterCache = "offline.sync.checkdatabase";
 
         public const string AvoidCaching = "offline.sync.avoidcaching";
+
+        public const string AvoidIncrementalApp = "offline.sync.avoidincremental";
 
 
         public const string ReadonlyApplication = "mobile.application.readonly";
@@ -52,3 +56,4 @@ namespace softwrench.sw4.offlineserver.services.util {
 
     }
 }
+
