@@ -8,6 +8,7 @@
     <template path="@quickservicerequest.xml"/>
     
     <!--WorkOrder-->
+    <template path="@inventory.xml"/>
     <template path="@workorder.xml"/>
 
     <template path="@tooltrans.xml"/>
@@ -151,6 +152,22 @@
           <relationshipAttribute from="orgid" to="orgid" />
           <relationshipAttribute to="glorder" literal="0" quoteLiteral="true"/>
         </relationship>
+        <relationship to="inventory" qualifier="offlineinventory">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE"/>
+        </relationship>
+        <relationship to="item" qualifier="offlineitem">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
+        </relationship>
+        <relationship to="location" qualifier="offlinelocation">
+          <relationshipAttribute from ="storeloc" to="location" primary="true" />
+          <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
+          <relationshipAttribute to="status" literal="OPERATING" quoteLiteral="true" />
+        </relationship>
       </relationships>
     </entity>
 
@@ -214,6 +231,12 @@
       </schemas>
     </application>
     <application entity="workorder" name="workorder" title="Work Order">
+
+      <properties>
+        <property key="list.offline.text.indexlist" value="wonum,asset_.description,status,description"/>
+        <property key="list.offline.date.indexlist" value="schedstart"/>
+      </properties>
+      
       <schemas>
         <schema id="newdetail" platform="web" redeclaring="false">
           <!--<customization position="classstructureid"></customization>-->
@@ -227,12 +250,82 @@
           <customization position="problemcode"></customization>
           <customization position="glaccount"></customization>
         </schema>
-        <schema id="list" redeclaring="false">
+        <schema id="list" redeclaring="false" platform="web">
           <properties>
             <property key="list.defaultorderby" value="workorder.reportdate desc"/>
           </properties>
         </schema>
 
+
+        <detail platform="mobile" title="Work Order">
+          <reference id="detailhiddensoffline"/>
+
+          <field attribute="owner" label="Owner"  readonly="true"/>
+
+          <reference id="statuslookup"/>
+          <field attribute="wopriority" label="Priority">
+            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
+            <number decimals="0" min="0" max="999" />
+          </field>
+
+          <field attribute="assetnum" label="Asset" requiredexpression="true">
+            <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
+          </field>
+          <association label="Location" target="location" labelfield="location.description" showexpression="false"/>
+
+          <!-- do not remove - added to force the sync of assets -->
+          <association label="Asset" target="assetnum" labelfield="asset.description" showexpression="false"/>
+
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
+          <field attribute="description" label="Description" />
+          <field label="Details" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+          <field label="Scheduled Start Date" attribute="schedstart" readonly="true">
+            <renderer type="date"/>
+          </field>
+
+          <composition relationship="labtrans" label="Labor">
+            <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
+            <event type="afterdelete" service="laborService" method="cancelPossibleTimer"/>
+            <collectionproperties allowupdate="false" allowcreation="@originalstatus!='CLOSED'" />
+          </composition>
+          <composition relationship="attachment" label="Attachments">
+            <collectionproperties prefilterfunction="BuildRelatedAttachmentsWhereClause"/>
+          </composition>
+
+          <composition relationship="matusetrans" label="Material" >
+            <collectionproperties allowupdate="false" allowcreation="@status!=='CLOSE'"/>
+          </composition>
+
+
+          <commandbars>
+            <commandgroup platform="mobile" position="mobile.fab" removeundeclared="false">
+              <container id="detail.container" icon="fa-bolt">
+                <!-- TODO: currently no support for merging command containers so repeating base commands -->
+                <command id="quicksync"
+                         service="itemActionService" method="quickSyncCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowQuickSyncForCurrentItem"
+                         icon="ion-loop" label="Quick Sync"/>
+                <command id="restoreitem"
+                         service="itemActionService" method="deleteOrRestoreCurrentItem"
+                         showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
+                         icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
+
+                <command id="startlabtrans" service="laborService" method="startLaborTransaction"
+                         showexpression="service:laborService.shouldAllowLaborStart"
+                         icon="ion-play" label="Start Labor Report" cssclasses="green"/>
+                <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
+                         showexpression="service:laborService.shouldAllowLaborFinish"
+                         icon="ion-stop" label="Finish Labor Report" cssclasses="red" />
+              </container>
+            </commandgroup>
+          </commandbars>
+
+        </detail>
+        
         
       </schemas>
     </application>
@@ -255,7 +348,90 @@
             <field label="GL Debit Account:" attribute="gldebitacct" default="0000-000-000-00000" hidden="true" />
           </customization>
         </detail>
+
+        <list stereotype="compositionlist" platform="mobile">
+          <field attribute="itemnum" label="Item#" />
+          <field attribute="description" label="Description" />
+          <field attribute="linetype" label="Type" />
+          <field attribute="storeloc" label="Storeroom" />
+          <field attribute="qtyrequested" label="Quantity" />
+          <field attribute="unitcost" showexpression="@linetype==='MATERIAL'" label="Unit Cost">
+            <renderer type="default" params="formatter=money"/>
+          </field>
+          <field attribute="transdate" label="Created Date" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+          </field>
+        </list>
+
+        <detail stereotype="compositiondetail" platform="mobile">
+          <!-- declared just so it can be fetched in sync -->
+          <association target="#inventory" labelfield="offlineinventory.itemnum"
+                       showexpression="false" enableexpression="false"
+                       label="#inventory" />
+
+          <field attribute="matusetransid" hidden="true" />
+          <field attribute="refwo" hidden="true" />
+          <field attribute="orgid" defaultexpression="$.parentdata.fields.orgid" hidden="true" />
+          <field attribute="siteid" defaultexpression="$.parentdata.fields.siteid" hidden="true" />
+
+          <field attribute="transdate" hidden="true" defaultexpression="@now" >
+            <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true"/>
+          </field>
+
+          <optionfield attribute="linetype" label="Type" default="ITEM">
+            <event type="afterchange" service="materialService" method="lineSelected"/>
+            <option label="ITEM" value="ITEM"/>
+            <option label="MATERIAL" value="MATERIAL"/>
+          </optionfield>
+
+          <association target="storeloc" labelfield="offlinelocation_.location"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
+                       label="Storeroom">
+            <dataprovider whereClause="@materialService.getStoreRoomWhereClause"/>
+            <event type="afterchange" service="materialService" method="storeRoomSelected"/>
+          </association>
+
+          <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
+                       showexpression="@linetype==='ITEM'" requiredexpression="@linetype==='ITEM'"
+                       label="Item" >
+            <dataprovider whereClause="@materialService.getAvailableItemsWhereClause"/>
+            <event type="afterchange" service="materialService" method="itemSelected"/>
+          </association>
+
+          <!--          <association target="warranty" labelfield="warranty_.description" requiredexpression="true" label="Warranty">-->
+          <!--            <renderer type="lookup" params="showCode=false"/>-->
+          <!--          </association>-->
+
+          <field attribute="description" label="Material Description" requiredexpression="true" showexpression="@linetype==='MATERIAL'"/>
+          <field attribute="unitcost" label="Unit Cost" qualifier="quantity" requiredexpression="@linetype==='MATERIAL'" showexpression="@linetype==='MATERIAL'">
+            <renderer type="numericinput" params="min=0;step=0.01" />
+          </field>
+
+          <field attribute="qtyrequested" label="Quantity" requiredexpression="true" qualifier="quantity" default="1">
+            <renderer type="numericinput" params="min=1;max=100;decimals=0;step=1"/>
+          </field>
+
+        </detail>
+
       </schemas>
     </application>
+
+
+    <application name="offlineitem" entity="item" title="Item">
+      <schemas>
+        <list platform="mobile">
+          <field attribute="itemnum" label="Item" />
+          <field attribute="description" label="Description"/>
+          <field attribute="status" label="Status"/>
+          <field attribute="itemtype" label="Type"/>
+          <field attribute="rotating" label="Rotating"/>
+          <field attribute="commoditygroup" label="Commodity Group"/>
+        </list>
+      </schemas>
+      <properties>
+        <property key="list.offline.text.indexlist" value="itemnum"/>
+      </properties>
+    </application>
+    
   </applications>
 </metadata>
