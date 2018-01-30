@@ -387,8 +387,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         private string BaseSelectFromStoreroom() {
             var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location");
-            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
-            return $"select location.location from locations location where location.type = 'storeroom' and (({byFacility}) or ({byStoreRoomFAcility}))";
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("d.ldtext");
+            return $"select location.location from locations location inner join longdescription d on (location.locationsid = d.ldkey and ldownertable = 'LOCATIONS') where location.type = 'storeroom' and (({byFacility}) or ({byStoreRoomFAcility}))";
         }
 
         public string InventoryWhereClauseByFacility() {

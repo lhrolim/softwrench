@@ -52,7 +52,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.util {
 
             var sb = new StringBuilder();
             facilities = facilities ?? (IEnumerable<string>)user.Genericproperties[FirstSolarConstants.FacilitiesProp];
-            var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => "% " + f), true);
+            var locationQuery = BaseQueryUtil.GenerateOrLikeString(columnName, facilities.Select(f => "%" + f + "%"), true);
             sb.AppendFormat("({0})", locationQuery);
             return sb.ToString();
         }
