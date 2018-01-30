@@ -267,7 +267,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             }
 
             var orderByField = parameter.CompositionSchema.CollectionProperties.OrderByField;
-            if (orderByField != null && string.IsNullOrEmpty(searchRequestDto.SearchSort)) {
+            if (!offLineMode && orderByField != null && string.IsNullOrEmpty(searchRequestDto.SearchSort)) {
+                //for offline requests it is useless to sort the lists since they will be sorted for real at the client side
                 searchRequestDto.SearchSort = orderByField;
                 searchRequestDto.SearchAscending = !orderByField.EndsWith("desc");
             }
