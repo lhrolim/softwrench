@@ -96,6 +96,9 @@ class LogHelper {
             sessionStorage[`log_${items}`] = 'warn';
         }
     }
+
+
+
 }
 
 
@@ -142,6 +145,30 @@ window.swlog = new LogHelper();
         }
         return true;
     }
+
+    function formatToMessage(arg) {
+        if (arg instanceof Error) {
+            if (arg.stack) {
+                arg = (arg.message && arg.stack.indexOf(arg.message) < 0)
+                    ? `Error: ${arg.message}\n${arg.stack}`
+                    : arg.stack;
+            } else if (arg.sourceURL) {
+                arg = `${arg.message}\n${arg.sourceURL}:${arg.line}`;
+            }
+            return arg;
+        }
+        if (!angular.isString(arg)) {
+            try {
+                const jsonValue = JSON.stringify(JSON.decycle(arg));
+                return jsonValue;
+            } catch (err) {
+                return arg;
+            }
+            
+        }
+        return arg;
+    }
+
 
     function getContextLevel(context, relatedContexts) {
         const methodLogLevel = sessionStorage[`log_${context}`];
@@ -208,9 +235,13 @@ window.swlog = new LogHelper();
                 if (!isEnabled) {
                     return [];
                 }
-                const currentargs = [].slice.call(arguments);
+
+                /* const message = [].slice.call(args).map(formatToMessage).join(" "); */
+
+                const currentargs = [].slice.call(arguments).map(formatToMessage);
                 const contextarg = [`[${level.toUpperCase()}] ${window.moment().format("DD/MM/YYYY hh:mm:ss:SSS a")}::[${context}]> `];
                 const modifiedArguments = contextarg.concat(currentargs);
+
 
                 loggingFunc.apply(null, modifiedArguments);
 

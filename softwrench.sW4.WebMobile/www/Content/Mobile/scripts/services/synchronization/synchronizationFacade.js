@@ -6,6 +6,15 @@
 
         //#region Utils
 
+
+        function buildIdsString  (deletedRecordIds) {
+            var ids = [];
+            angular.forEach(deletedRecordIds, function (id) {
+                ids.push("'{0}'".format(id));
+            });
+            return ids;
+        };
+
         function getDownloadDataCount(dataDownloadResult) {
             let count = 0;
             angular.forEach(dataDownloadResult, result => {
@@ -39,7 +48,9 @@
                 .map((entries, application) => {
                     // for some reason this query only works if there are no '' around the ids
                     var ids = _.pluck(entries, "id");
-                    return { query: entities.DataEntry.deleteInIdsStatement, args: [ids, application] };
+
+
+                    return { query: entities.DataEntry.deleteInIdsStatement.format(buildIdsString(ids)), args: [application] };
                 }) // [PreparedStatement]
                 .value();
 
@@ -361,6 +372,7 @@
                         })
                         .finally(() => {
                             loadingService.hide();
+                            menuModelService.updateAppsCount();
                             tracking.trackFullState("synchornizationFacace#syncItem post-quicksync");
                         });
                 });

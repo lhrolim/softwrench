@@ -133,6 +133,7 @@
                             loadingService.hide();
                             attachmentDataSynchronizationService.downloadAttachments();
                             indexCreatorService.createIndexAfterFirstSync();
+                            menuModelService.updateAppsCount();
                             if (!!contextService.get("restartneeded")) {
                                 //only if there are dynamic scripts loaded
                                 contextService.deleteFromContext("restartneeded");
