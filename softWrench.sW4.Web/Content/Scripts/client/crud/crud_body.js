@@ -113,6 +113,18 @@
                     const id = datamap[$scope.schema.userIdFieldName];
 
                     const element = document.createElement('textarea');
+
+                    element.style.position = 'fixed';
+                    element.style.top = 0;
+                    element.style.left = 0;
+                    element.style.width = '2em';
+                    element.style.height = '2em';
+                    element.style.padding = 0;
+                    element.style.border = 'none';
+                    element.style.outline = 'none';
+                    element.style.boxShadow = 'none';
+                    element.style.background = 'transparent';
+
                     element.value = id;
                     // Add it to the document so that it can be focused.
                     document.body.appendChild(element);
@@ -123,8 +135,7 @@
                     document.execCommand('copy');
                     // Remove the element to keep the document clear.
                     document.body.removeChild(element);
-                    event.stopImmediatePropagation();
-                    event.preventDefault();
+//                    event.stopImmediatePropagation();
                 }
 
                 $scope.$on(JavascriptEventConstants.TabsLoaded, function (event, firstTabId, panelId) {
