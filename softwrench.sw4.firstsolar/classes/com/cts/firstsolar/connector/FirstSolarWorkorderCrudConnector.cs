@@ -19,8 +19,7 @@ using softWrench.sW4.Util;
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
     public class FirstSolarWorkorderCrudConnector : BaseWorkOrderCrudConnector {
 
-        [Import]
-        public IContextLookuper ContextLookuper { get; set; }
+      
 
         [Import]
         public MaximoHibernateDAO MaxDAO { get; set; }

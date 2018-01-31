@@ -11,6 +11,7 @@ using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Data.Persistence.WS.Internal;
 using softWrench.sW4.Email;
 using softWrench.sW4.Metadata.Security;
+using softWrench.sW4.Security.Context;
 using softWrench.sW4.Security.Services;
 using softWrench.sW4.Util;
 
@@ -34,6 +35,9 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
         public EmailService EmailService {
             get; set;
         }
+
+        [Import]
+        public IContextLookuper ContextLookuper { get; set; }
 
         [Import]
         public AssignmentHandler AssignmentHandler {
@@ -60,6 +64,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Workorder {
                 if (shouldInterrupt) {
                     return;
                 }
+            } else if (ContextLookuper.LookupContext().OfflineMode) {
+                //https://controltechnologysolutions.atlassian.net/browse/SWOFF-369
+                crudData.SetAttribute("status",null);
+                WsUtil.NullifyValue(wo,"STATUS");
             }
 
 

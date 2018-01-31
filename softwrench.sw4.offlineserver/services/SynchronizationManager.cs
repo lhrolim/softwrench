@@ -534,10 +534,10 @@ namespace softwrench.sw4.offlineserver.services {
                 return result;
             }
 
-            if (avoidIncremental) {
-                result.InsertOrUpdateDataMaps = topLevelAppData;
-                return result;
-            }
+//            if (avoidIncremental) {
+//                result.InsertOrUpdateDataMaps = topLevelAppData;
+//                return result;
+//            }
 
             //            var idRowstampDict = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
             foreach (var dataMap in topLevelAppData) {
