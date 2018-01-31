@@ -108,6 +108,25 @@
                     });
                 });
 
+                $scope.addIdToClipboard = function (event) {
+                    const datamap = $scope.datamap;
+                    const id = datamap[$scope.schema.userIdFieldName];
+
+                    const element = document.createElement('textarea');
+                    element.value = id;
+                    // Add it to the document so that it can be focused.
+                    document.body.appendChild(element);
+                    // Focus on the element so that it can be copied.
+                    element.focus();
+                    element.setSelectionRange(0, element.value.length);
+                    // Execute the copy command.
+                    document.execCommand('copy');
+                    // Remove the element to keep the document clear.
+                    document.body.removeChild(element);
+                    event.stopImmediatePropagation();
+                    event.preventDefault();
+                }
+
                 $scope.$on(JavascriptEventConstants.TabsLoaded, function (event, firstTabId, panelId) {
                     if ($scope.panelid !== panelId || (!schemaService.areTheSame($scope.schema, crudContextHolderService.currentSchema()))) {
                         return;
