@@ -123,11 +123,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
         private static object GetPayRate(CrudOperationData crudData) {
             //TODO: review mapping
-            var craftrates = (IEnumerable<Entity>)crudData.GetRelationship("laborcraftrate_");
+            var craftrates = (CrudOperationData)crudData.GetRelationship("laborcraftrate_",true);
             object rate = null;
-            if (craftrates.Any()) {
-                var entity = craftrates.First();
-                rate = entity.GetAttribute("rate");
+            if (craftrates!=null) {
+                rate = craftrates.GetAttribute("rate");
             } else {
                 rate = SecurityFacade.CurrentUser().GetProperty("defaultcraftrate");
             }

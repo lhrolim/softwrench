@@ -21,6 +21,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         private readonly IWhereClauseFacade _whereClauseFacade;
         private FirstSolarFacilityUtil _firstSolarFacilityUtil;
+        private IContextLookuper _contextLookuper;
 
         /// <summary>
         /// Brings all assignments, where exists a workorder of interest, narrowing by the facility query that will be replaced at {0}
@@ -181,9 +182,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         private const string UserLaborCraftWhereClause = "laborcraftrate.laborcode='@user.properties['laborcode']' and laborcraftrate.orgid=@orgid";
 
 
-        public FirstSolarWhereClauseRegistry(IWhereClauseFacade whereClauseFacade, FirstSolarFacilityUtil firstSolarFacilityUtil) {
+        public FirstSolarWhereClauseRegistry(IWhereClauseFacade whereClauseFacade, FirstSolarFacilityUtil firstSolarFacilityUtil, IContextLookuper contextLookuper) {
             _whereClauseFacade = whereClauseFacade;
             _firstSolarFacilityUtil = firstSolarFacilityUtil;
+            _contextLookuper = contextLookuper;
         }
 
         [Transactional(DBType.Swdb)]
@@ -318,6 +320,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         public string UnassignedWorkorder() {
             return DoBuildQuery(UnassignedWhereClause, "workorder.location");
+        }
+
+        public string Fr1CodeQuery(string context) {
+            return _contextLookuper.LookupContext().OfflineMode ? "(select failurecode from failurereport fr where fr.wonum = workorder.wonum and fr.type = 'CAUSE' and fr.orgid = workorder.orgid and fr.siteid = workorder.siteid)" : "1";
+        }
+
+        public string Fr2CodeQuery(string context) {
+            return _contextLookuper.LookupContext().OfflineMode ? " (select failurecode from failurereport fr where fr.wonum = workorder.wonum and fr.type='REMEDY' and fr.orgid = workorder.orgid and fr.siteid = workorder.siteid)" : "1";
         }
 
         public string AssignedByGroup() {

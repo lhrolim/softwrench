@@ -42,8 +42,8 @@
         <attribute name="problemlist" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='PROBLEM' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
-        <!--        <attribute name="fr1code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
-        <!--        <attribute name="fr2code" query="(select failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='REMEDY' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
+        <attribute name="fr1code" query="@firstSolarWhereClauseRegistry.Fr1CodeQuery" type="varchar"/>
+        <attribute name="fr2code" query="@firstSolarWhereClauseRegistry.Fr2CodeQuery" type="varchar"/>
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
         <attribute name="daysleftcm" query="(DATEDIFF(day,GETDATE(),!@reportdate))" type="smallint"/>
         <attribute name="outreq" type="boolean"/>
@@ -1673,6 +1673,8 @@
           <field attribute="problemlist" hidden="true"></field>
           <field attribute="failurelist" hidden="true"></field>
           <field attribute="fr1list" hidden="true"></field>
+          <field attribute="fr1code" hidden="true"></field>
+          <field attribute="fr2code" hidden="true"></field>
         </componentdisplayable>
 
         <componentdisplayable id="offlineworktypes">
