@@ -82,8 +82,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (relatedAsset != null) {
                 //fill object with the entire extraprojection fields
                 result.ResultObject.SetAttribute("asset_", relatedAsset);
-                result.ResultObject.SetAttribute("asset_.location",
-                    ((MultiValueAssociationOption)relatedAsset).Extrafields["location"]);
+                var multiValueAssociationOption = (MultiValueAssociationOption)relatedAsset;
+                result.ResultObject.SetAttribute("asset_.location", multiValueAssociationOption.Extrafields["location"]);
+                if (multiValueAssociationOption.Extrafields.ContainsKey("primaryuser_.personid")) {
+                    result.ResultObject.SetAttribute("asset_.primaryuser_.personid", multiValueAssociationOption.Extrafields["primaryuser_.personid"]);
+                }
+
             }
             //look for any dependencies from the location field, this simulates the code dispatched when the user changes the location on the screen
             var locationDependentas = DoUpdateAssociation(application, new AssociationUpdateRequest { TriggerFieldName = "fromlocation" }, result.ResultObject);
@@ -237,8 +241,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 (string)parameters.OriginalEntity.GetAttribute("toitc"));
         }
 
-        public IEnumerable<IAssociationOption> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters)
-        {
+        public IEnumerable<IAssociationOption> GetCostCentersByPrimaryUser(OptionFieldProviderParameters parameters) {
             var subCustomer = (string)parameters.OriginalEntity.GetAttribute("fromlocation");
             var itcOfAsset = (string)parameters.OriginalEntity.GetAttribute("asset_.primaryuser_.personid");
             return LocationManager.FindCostCentersOfITC(subCustomer, itcOfAsset);
@@ -339,7 +342,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
                 if (!String.IsNullOrWhiteSpace(desc)) {
                     options.Add(new MultiValueAssociationOption(desc, desc,
-                        new Dictionary<string, object> { 
+                        new Dictionary<string, object> {
                             { "isSelected", isSelected }
                         }));
                 }
