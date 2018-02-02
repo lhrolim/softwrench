@@ -39,6 +39,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
             if (ContextLookuper.LookupContext().OfflineMode) {
                 var root = maximoTemplateData.IntegrationObject;
                 WsUtil.SetValue(root, "STATUS", "APPR");
+                WsUtil.SetValue(root, "WOEQ4", "1");
                 var nowServer = DateTime.Now.FromServerToRightKind();
                 WsUtil.SetValue(root, "SCHEDSTART", nowServer);
 

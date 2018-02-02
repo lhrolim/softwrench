@@ -70,7 +70,7 @@ const qaLocalData = {
 const fsVpnProdLocalData = {
     //set to true to allow starting the app at the login screen
     showlogin: false,
-    username: "FS107038",
+    username: "fs112894",
     password: "$@$Pass2",
     serverurl: {
         ripple: "http://10.2.8.65/softwrench/",
@@ -80,5 +80,5 @@ const fsVpnProdLocalData = {
 
 };
 
-window.localdevdata = localhostDevData;
+window.localdevdata = fsVpnLocalData;
 

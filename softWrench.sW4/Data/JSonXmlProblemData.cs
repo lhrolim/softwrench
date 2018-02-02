@@ -23,12 +23,6 @@ namespace softWrench.sW4.Data {
 
         }
 
-        public JSonXmlProblemData(string xmlCurrentData, string jsonOriginalData) {
-            Xml = xmlCurrentData;
-            Json = JsonConvert.SerializeObject(jsonOriginalData, Formatting.Indented); 
-        }
-
-
         public string Serialize() {
 
             dynamic root = new JObject();
