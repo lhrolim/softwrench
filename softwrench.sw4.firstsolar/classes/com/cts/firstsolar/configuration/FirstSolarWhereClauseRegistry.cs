@@ -383,8 +383,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 return "(1!=1)";
             }
             var byFacility = _firstSolarFacilityUtil.BaseFacilityQuery("location.location");
-            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("location.description");
-            return $"({byFacility} or (location.type = 'storeroom' and {byStoreRoomFAcility}))";
+            var byStoreRoomFAcility = _firstSolarFacilityUtil.BaseStoreroomFacilityQuery("d.ldtext");
+            return $"({byFacility} or (location.type = 'storeroom' and location.location in " +
+                   $"( select location.location from locations location inner join longdescription d on (location.locationsid = d.ldkey and ldownertable = 'LOCATIONS')" +
+                   $" and {byStoreRoomFAcility})))";
         }
 
         public string AssetWhereClauseByFacility() {
