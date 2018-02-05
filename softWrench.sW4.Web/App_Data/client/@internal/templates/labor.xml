@@ -12,6 +12,7 @@
         <attribute name="worksite" type="varchar"/>
         <attribute name="laborcode" type="varchar"/>
         <attribute name="personid" type="personid"/>
+        <attribute name="persondisplayname" query="(select displayname from person p where p.personid = !@personid)" type="varchar"/>
       </attributes>
       <relationships>
         <relationship to="person">
