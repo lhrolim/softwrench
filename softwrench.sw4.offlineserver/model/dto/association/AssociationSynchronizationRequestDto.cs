@@ -13,7 +13,6 @@ namespace softwrench.sw4.offlineserver.model.dto.association {
         //these are the cache entries that do not need to be fetched again
         public IDictionary<string, CacheRoundtripStatus> CompleteCacheEntries { get; set; } = new Dictionary<string, CacheRoundtripStatus>();
 
-        public bool InitialLoad { get; set; }
 
 
     }

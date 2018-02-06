@@ -140,6 +140,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         public void HandleEvent(PreSyncEvent eventToDispatch) {
             var user = SecurityFacade.CurrentUser();
+            if (eventToDispatch.Request == null) {
+                return;
+            }
+
             var userSyncData = eventToDispatch.Request.UserData;
             if (userSyncData == null) {
                 // did not send userdata: no changes made remotely -> keep server defined facilities
@@ -182,8 +186,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
         private static List<string> FilterBySiteId(IDictionary<string, List<string>> siteIdDict, string siteid, string secondarySiteid) {
             var mainSiteList = DoFilterBySite(siteIdDict, siteid);
-            if (!string.IsNullOrEmpty(secondarySiteid)){
-                mainSiteList.AddRange(DoFilterBySite(siteIdDict,secondarySiteid));
+            if (!string.IsNullOrEmpty(secondarySiteid)) {
+                mainSiteList.AddRange(DoFilterBySite(siteIdDict, secondarySiteid));
             }
             return mainSiteList;
         }

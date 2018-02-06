@@ -131,6 +131,8 @@ namespace softWrench.sW4.Security.Services {
             return SWDBHibernateDAO.GetInstance().FindByPK<User>(typeof(User), id, "Profiles", "CustomRoles", "CustomConstraints");
         }
 
+        
+
         public static User GetUserByUsername(string username) {
             User user = SWDBHibernateDAO.GetInstance().FindSingleByQuery<User>(User.UserByUserName, username) ?? null;
 
