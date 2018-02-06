@@ -323,11 +323,11 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         }
 
         public string Fr1CodeQuery(string context) {
-            return _contextLookuper.LookupContext().OfflineMode ? "(select failurecode from failurereport fr where fr.wonum = workorder.wonum and fr.type = 'CAUSE' and fr.orgid = workorder.orgid and fr.siteid = workorder.siteid)" : "1";
+            return _contextLookuper.LookupContext().OfflineMode ? "(select failurecode from failurereport fr where fr.wonum = workorder.wonum and fr.type = 'CAUSE' and fr.orgid = workorder.orgid and fr.siteid = workorder.siteid)" : "null";
         }
 
         public string Fr2CodeQuery(string context) {
-            return _contextLookuper.LookupContext().OfflineMode ? " (select failurecode from failurereport fr where fr.wonum = workorder.wonum and fr.type='REMEDY' and fr.orgid = workorder.orgid and fr.siteid = workorder.siteid)" : "1";
+            return _contextLookuper.LookupContext().OfflineMode ? " (select failurecode from failurereport fr where fr.wonum = workorder.wonum and fr.type='REMEDY' and fr.orgid = workorder.orgid and fr.siteid = workorder.siteid)" : "null";
         }
 
         public string AssignedByGroup() {
