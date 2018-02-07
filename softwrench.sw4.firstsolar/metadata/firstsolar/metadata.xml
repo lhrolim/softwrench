@@ -178,9 +178,19 @@
           <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
-          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
-          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>
+          <relationshipAttribute to="isactive" literal="1" />
+<!--          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>-->
         </relationship>
+
+        <relationship to="item">
+          <relationshipAttribute from="itemnum" to="itemnum" primary="true"/>
+          <relationshipAttribute from="itemsetid" to="itemsetid"/>
+          <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
+          <relationshipAttribute to="isactive" literal="1" />
+<!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
+          <!--          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>-->
+        </relationship>
+
         <relationship to="location" qualifier="offlinelocation">
           <relationshipAttribute from ="storeloc" to="location" primary="true" />
           <relationshipAttribute to="type" literal="STOREROOM" quoteLiteral="true" />
@@ -2238,12 +2248,12 @@
             <event type="afterchange" service="materialService" method="storeRoomSelected"/>
           </association>
 
-          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'" >
+          <optionfield attribute="category" label="Category" default="ANY" showexpression="@linetype==='ITEM'" >
             <event type="afterchange" service="materialService" method="categorySelected"/>
+            <option label="Any Category" value="ANY"/>
             <option label="Stocked" value="STK"/>
             <option label="Non-stocked" value="NS"/>
             <option label="Special Purchase" value="SP"/>
-            <option label="Any Category" value="ANY"/>
           </optionfield>
 
           <association target="itemnum" labelfield="offlineitem_.description" extraprojectionvalues="description"
@@ -2290,16 +2300,17 @@
             <event type="afterchange" service="fsMaterialService" method="storeRoomSelected"/>
           </association>
 
-          <optionfield attribute="category" label="Category" default="STK" showexpression="@linetype==='ITEM'">
+          <optionfield attribute="category" label="Category" default="ANY" showexpression="@linetype==='ITEM'">
+            <option label="Any Category" value="ANY"/>
             <option label="Stocked" value="STK"/>
             <option label="Non-stocked" value="NS"/>
             <option label="Special Purchase" value="SP"/>
-            <option label="Any Category" value="ANY"/>
             <event type="afterchange" service="fsMaterialService" method="categorySelected"/>
           </optionfield>
 
 
-          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" showexpression="@linetype == 'ITEM'" requiredexpression="true" dependantfields="storeloc" enableexpression="@storeloc != null">
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" 
+                       showexpression="@linetype == 'ITEM'" requiredexpression="true" enableexpression="@storeloc != null">
             <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
             <event type="afterchange" service="fsMaterialService" method="itemSelected"/>

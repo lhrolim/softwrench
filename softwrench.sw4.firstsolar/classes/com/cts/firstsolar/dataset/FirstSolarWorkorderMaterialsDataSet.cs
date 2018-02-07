@@ -17,10 +17,10 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             var filter = preParams.BASEDto;
             var entity = preParams.OriginalEntity as Entity;
             var storeLoc =  preParams.OriginalEntity.GetStringAttribute("storeloc");
-
             var category = entity?.GetUnMappedAttribute("category");
             var categoryClause = !string.IsNullOrEmpty(category) && !"any".EqualsIc(category) ? $" and inventory.category = '{category}'" : "";
-            filter.AppendWhereClause($"(item.itemnum IN (SELECT inventory.itemnum from inventory inventory where inventory.location = '{storeLoc}' {categoryClause}))");
+
+            filter.AppendWhereClause($"(item.itemnum IN (SELECT inventory.itemnum from inventory inventory where status = 'ACTIVE' and inventory.location = '{storeLoc}' and siteid = '{preParams.OriginalEntity.GetStringAttribute("siteid")}' {categoryClause} ))");
             return filter;
         }
 
