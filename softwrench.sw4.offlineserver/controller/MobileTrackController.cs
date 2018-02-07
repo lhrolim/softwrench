@@ -71,7 +71,7 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpGet]
-        public async Task<AssociationSynchronizationResultDto> AssociationData(string clientOperationId = null, int? userId = null) {
+        public async Task<string> AssociationData(string clientOperationId = null, int? userId = null) {
 
             InMemoryUser user;
 
@@ -104,7 +104,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
             watch.Restart();
             var associationResult = await _syncManager.GetAssociationData(user, assReq);
-            return associationResult;
+            return JsonConvert.SerializeObject(associationResult);
 
         }
 
