@@ -16,14 +16,14 @@ namespace softwrench.sw4.offlineserver.services.util {
             _configFacade.Register(OfflineConstants.AsyncBatchMinSize, new PropertyDefinition {
                 Description = "minimum size of the batch so that it executes asynchronously",
                 StringValue = "2",
-                PropertyDataType = PropertyDataType.LONG,
+                PropertyDataType = PropertyDataType.LONG
             });
 
             _configFacade.Register(OfflineConstants.MaxDownloadSize, new PropertyDefinition {
                 Description = "maximum number of entries to download at a single operation",
                 StringValue = "50000",
                 DefaultValue = "50000",
-                PropertyDataType = PropertyDataType.LONG,
+                PropertyDataType = PropertyDataType.LONG
             });
 
 
@@ -34,15 +34,25 @@ namespace softwrench.sw4.offlineserver.services.util {
                 PropertyDataType = PropertyDataType.INT
             });
 
-            _configFacade.Register(OfflineConstants.SupportContactEmail, new PropertyDefinition() {
+            _configFacade.Register(OfflineConstants.SupportContactEmail, new PropertyDefinition
+            {
                 Description = "Support email the offline app should contact",
                 PropertyDataType = PropertyDataType.STRING,
                 StringValue = "devteam@controltechnologysolutions.com",
                 DefaultValue = "devteam@controltechnologysolutions.com"
             });
 
-            _configFacade.Register(OfflineConstants.EnableAudit, new PropertyDefinition() {
+            _configFacade.Register(OfflineConstants.EnableAudit, new PropertyDefinition
+            {
                 Description = "whether auditing should be enabled for all performed syncs, even the ones with no maximo uploads",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                StringValue = "true",
+                DefaultValue = "true"
+            });
+
+            _configFacade.Register(OfflineConstants.EnableParameterAuditing, new PropertyDefinition
+            {
+                Description = "whether parameter auditing should be enabled for all performed syncs, even the ones with no maximo uploads",
                 PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "true",
                 DefaultValue = "true"
@@ -51,13 +61,13 @@ namespace softwrench.sw4.offlineserver.services.util {
             _configFacade.Register(OfflineConstants.AllowedClientVersions, new PropertyDefinition {
                 Description = "A comma separated list of versions which are allowed for for the offline system. Note that these will be considered as min versions (such as 3.8.0 > 3.7.4)",
                 PropertyDataType = PropertyDataType.STRING,
-                StringValue = "",
+                StringValue = ""
             });
 
             _configFacade.Register(OfflineConstants.AvoidIncrementalSync, new PropertyDefinition {
                 Description = "if true no incremental syncs should take place for the application data",
                 PropertyDataType = PropertyDataType.BOOLEAN,
-                StringValue = "false",
+                StringValue = "false"
             });
         }
     }

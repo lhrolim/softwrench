@@ -13,6 +13,9 @@ using Newtonsoft.Json.Serialization;
 using softwrench.sw4.offlineserver.model;
 using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.model.dto.association;
+using softwrench.sw4.offlineserver.services.util;
+using softWrench.sW4.Configuration.Services;
+using softWrench.sW4.Configuration.Services.Api;
 using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.offlineserver.services {
@@ -21,6 +24,9 @@ namespace softwrench.sw4.offlineserver.services {
 
         [Import]
         public ISWDBHibernateDAO SwdbDAO { get; set; }
+
+        [Import]
+        public IConfigurationFacade ConfigurationFacade { get; set; }
 
         public async Task<SynchronizationRequestDto> ReConstructOperation([NotNull]string clientOperationId) {
             var op = await SwdbDAO.FindSingleByQueryAsync<SyncOperation>(SyncOperation.ByExternalId, clientOperationId);
@@ -85,6 +91,10 @@ namespace softwrench.sw4.offlineserver.services {
 
         public void PopulateTopAppInputs(SyncOperation operation, SynchronizationRequestDto syncRequest) {
 
+            if (!AuditingEnabled()) {
+                return;
+            }
+
             if (syncRequest.RowstampMap != null) {
 
 
@@ -115,7 +125,15 @@ namespace softwrench.sw4.offlineserver.services {
             }
         }
 
+        private bool AuditingEnabled() {
+            return ConfigurationFacade.Lookup<bool>(OfflineConstants.EnableParameterAuditing);
+        }
+
         public void PopulateAssociationInputs(SyncOperation operation, AssociationSynchronizationRequestDto syncRequest) {
+
+            if (!AuditingEnabled()) {
+                return;
+            }
 
             if (syncRequest.RowstampMap != null) {
                 var rm = JsonConvert.SerializeObject(syncRequest.RowstampMap, Newtonsoft.Json.Formatting.None,
