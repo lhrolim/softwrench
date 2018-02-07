@@ -74,6 +74,7 @@ namespace softwrench.sw4.offlineserver.audit {
             var key = SyncOperation.GenerateKey(user, clientOperationId);
             lock (string.Intern(key)) {
                 var operation = RedisManager.Lookup<SyncOperation>(key);
+                var trail = AuditManager.CurrentTrail();
                 if (operation == null) {
                     _log.WarnFormat("could not locate audit sync operation for {0}", key);
                 } else {
@@ -99,6 +100,7 @@ namespace softwrench.sw4.offlineserver.audit {
                     var compositionTotals = compositionCounts.Sum(s => s.Value);
                     operation.TopAppCounts = topAppTotals;
                     operation.CompositionCounts = compositionTotals;
+                    operation.AuditTrail.Queries.AddAll(trail.Queries);
 
                     SynchTracker.PopulateTopAppInputs(operation, syncRequest);
 

@@ -10,14 +10,15 @@ namespace softwrench.sW4.audit.classes.Model {
 
 
     [Class(Table = "aud_query", Lazy = false)]
-    public class AuditQuery : IBaseEntity{
+    public class AuditQuery : IBaseEntity {
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public virtual int? Id { get; set; }
 
-        [Property]
+        [Property(Type = "StringClob")]
         public string Query { get; set; }
+
 
         [Property]
         public string Qualifier { get; set; }
@@ -31,7 +32,8 @@ namespace softwrench.sW4.audit.classes.Model {
         [Property]
         public DateTime? RegisterTime { get; set; }
 
-
-
+        public override string ToString() {
+            return $"Q:{Qualifier} ";
+        }
     }
 }

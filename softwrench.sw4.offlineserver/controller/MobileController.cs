@@ -183,7 +183,10 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpPost]
         public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
-            await _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
             var synchronizationResultDto = await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
             _offlineAuditManager.PopulateSyncOperationWithTopData(synchronizationRequest, synchronizationResultDto);
             return synchronizationResultDto;
@@ -191,7 +194,10 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpPost]
         public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
-            await _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId, request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId, request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
             var associationResult = await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
             _offlineAuditManager.PopulateSyncOperationWithAssociationData(request, associationResult);
             return associationResult;
