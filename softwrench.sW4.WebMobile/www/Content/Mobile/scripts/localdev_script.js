@@ -80,5 +80,6 @@ const fsVpnProdLocalData = {
 
 };
 
-window.localdevdata = fsVpnProdLocalData;
+window.localdevdata = localhostDevData;
+
 

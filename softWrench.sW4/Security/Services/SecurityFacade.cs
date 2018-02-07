@@ -133,6 +133,31 @@ namespace softWrench.sW4.Security.Services {
 
 
         public static InMemoryUser UpdateUserCacheStatic(User dbUser, string userTimezoneOffset) {
+            var inMemoryUser = CreateInMemoryUser(dbUser, userTimezoneOffset);
+            if (Users.ContainsKey(inMemoryUser.Login)) {
+                //some generic properties are evaluated upon login, so we might need to keep the old properties in case we´re not doing a login workflow
+                //TODO: refactor
+                inMemoryUser.Genericproperties = Users[inMemoryUser.Login].Genericproperties;
+                Users.Remove(inMemoryUser.Login);
+            }
+            try {
+                Users.Add(inMemoryUser.Login, inMemoryUser);
+            } catch {
+                Log.Warn("Duplicate user should not happen here " + inMemoryUser.Login);
+            }
+            return inMemoryUser;
+        }
+
+        [CanBeNull]
+        public static InMemoryUser GetInMemoryUser(int id) {
+            var dbUser = UserManager.GetUserById(id);
+            if (dbUser == null) {
+                return null;
+            }
+            return CreateInMemoryUser(dbUser, null);
+        }
+
+        private static InMemoryUser CreateInMemoryUser(User dbUser, string userTimezoneOffset) {
             int? userTimezoneOffsetInt = null;
             int tmp;
             if (int.TryParse(userTimezoneOffset, out tmp)) {
@@ -146,18 +171,8 @@ namespace softWrench.sW4.Security.Services {
             var userPreferences = UserPreferenceManager.FindUserPreferences(dbUser);
             var mergedProfile = _userProfileManager.BuildMergedProfile(profiles);
 
-            var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt, mergedProfile);
-            if (Users.ContainsKey(inMemoryUser.Login)) {
-                //some generic properties are evaluated upon login, so we might need to keep the old properties in case we´re not doing a login workflow
-                //TODO: refactor
-                inMemoryUser.Genericproperties = Users[inMemoryUser.Login].Genericproperties;
-                Users.Remove(inMemoryUser.Login);
-            }
-            try {
-                Users.Add(inMemoryUser.Login, inMemoryUser);
-            } catch {
-                Log.Warn("Duplicate user should not happen here " + inMemoryUser.Login);
-            }
+            var inMemoryUser = new InMemoryUser(dbUser, profiles, gridPreferences, userPreferences, userTimezoneOffsetInt,
+                mergedProfile);
             return inMemoryUser;
         }
 

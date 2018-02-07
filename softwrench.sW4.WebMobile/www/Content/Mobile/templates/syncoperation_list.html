@@ -19,6 +19,7 @@
                     <!-- some info about syncoperation: date, status (formatted), pending items -->
                     <div ng-if="!isPending(operation)" class="col col-60 col-center operation-item-col">
                         <h3>{{operation.formatteddate}}</h3>
+                        <h4>{{operation.clientOperationId}}</h4>
                         <span class="row responsive-sm item-text-wrap operation-status-text">{{operation.formattedstatus}}</span>
                     </div>
                     <div ng-if="isPending(operation)" class="col col-60 col-center operation-item-col">

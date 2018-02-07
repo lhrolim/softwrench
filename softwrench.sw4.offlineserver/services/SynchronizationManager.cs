@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -20,6 +21,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.offlineserver.events;
+using softwrench.sw4.offlineserver.model;
 using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services.util;
@@ -119,7 +121,7 @@ namespace softwrench.sw4.offlineserver.services {
             };
         }
 
-        public virtual async Task<AssociationSynchronizationResultDto> GetAssociationData(InMemoryUser currentUser, AssociationSynchronizationRequestDto request) {
+        public virtual async Task<AssociationSynchronizationResultDto> GetAssociationData(InMemoryUser currentUser, [NotNull]AssociationSynchronizationRequestDto request) {
             _iEventDispatcher.Dispatch(new PreSyncEvent(request));
 
             var applicationsToFetch = BuildAssociationsToFetch(currentUser, request);
@@ -534,10 +536,10 @@ namespace softwrench.sw4.offlineserver.services {
                 return result;
             }
 
-//            if (avoidIncremental) {
-//                result.InsertOrUpdateDataMaps = topLevelAppData;
-//                return result;
-//            }
+            //            if (avoidIncremental) {
+            //                result.InsertOrUpdateDataMaps = topLevelAppData;
+            //                return result;
+            //            }
 
             //            var idRowstampDict = ClientStateJsonConverter.ConvertJSONToDict(rowstampMap);
             foreach (var dataMap in topLevelAppData) {
@@ -640,7 +642,7 @@ namespace softwrench.sw4.offlineserver.services {
             var cacheableItem = !"true".Equals(appMetadata.Schema.GetProperty(OfflineConstants.AvoidCaching));
             var avoidIncrementalApp = "true".Equals(appMetadata.Schema.GetProperty(OfflineConstants.AvoidIncrementalApp));
 
-            if (avoidIncremental && !cacheableItem && avoidIncrementalApp ) {
+            if (avoidIncremental && !cacheableItem && avoidIncrementalApp) {
                 rowstamps = new Rowstamps();
             }
 
@@ -701,5 +703,6 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
 
+        
     }
 }

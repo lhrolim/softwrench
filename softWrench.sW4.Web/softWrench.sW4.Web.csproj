@@ -80,9 +80,6 @@
     <Reference Include="Common.Logging, Version=2.1.2.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.2.1.2\lib\net40\Common.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="cts.commons.persistence, Version=1.5.6582.17201, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\cts.commons.persistence.1.5.6582.17201\lib\net461\cts.commons.persistence.dll</HintPath>
-    </Reference>
     <Reference Include="cts.commons.simpleinjector, Version=1.4.6544.25865, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\cts.commons.simpleinjector.1.4.6544.25865\lib\net461\cts.commons.simpleinjector.dll</HintPath>
     </Reference>
@@ -189,8 +186,8 @@
     <Reference Include="softwrench.sw4.activitystream, Version=1.2.6449.32979, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.activitystream.1.2.6449.32979\lib\net46\softwrench.sw4.activitystream.dll</HintPath>
     </Reference>
-    <Reference Include="softwrench.sW4.audit, Version=2.2.6516.28948, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\softwrench.sW4.audit.2.2.6516.28948\lib\net461\softwrench.sW4.audit.dll</HintPath>
+    <Reference Include="softwrench.sW4.audit, Version=2.2.6612.36419, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\softwrench.sW4.audit.2.2.6612.36419\lib\net461\softwrench.sW4.audit.dll</HintPath>
     </Reference>
     <Reference Include="softwrench.sw4.batch.api, Version=1.2.6585.37454, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\softwrench.sw4.batch.api.1.2.6585.37454\lib\net461\softwrench.sw4.batch.api.dll</HintPath>
@@ -444,6 +441,7 @@
     <Compile Include="DB_Migration\5.9.1\20160629_SWWEB_2604.cs" />
     <Compile Include="DB_Migration\5.9.4\20160817_SWWEB_2714.cs" />
     <Compile Include="DB_Migration\5.17\MigrationSwweb2879.cs" />
+    <Compile Include="DB_Migration\6.3.5\20180206_SWWEB_3402.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\ColumnBase.cs" />
@@ -1578,6 +1576,10 @@
     <Folder Include="Views\SchedulerSetup\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\cts.commons.persistence\cts.commons.persistence.csproj">
+      <Project>{a6a14991-81dd-45b5-b5c8-154e44d84975}</Project>
+      <Name>cts.commons.persistence</Name>
+    </ProjectReference>
     <ProjectReference Include="..\cts.commons.web\cts.commons.web.csproj">
       <Project>{4c79cfad-0861-432d-b89c-1d237fbfc522}</Project>
       <Name>cts.commons.web</Name>

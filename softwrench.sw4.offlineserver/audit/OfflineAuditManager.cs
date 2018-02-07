@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -16,6 +17,7 @@ using softwrench.sw4.offlineserver.model;
 using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.model.exception;
+using softwrench.sw4.offlineserver.services;
 using softwrench.sw4.offlineserver.services.util;
 using softwrench.sW4.audit.classes.Model;
 using softwrench.sW4.audit.Interfaces;
@@ -43,6 +45,9 @@ namespace softwrench.sw4.offlineserver.audit {
         [Import]
         public IAuditManager AuditManager { get; set; }
 
+        [Import]
+        public SynchronizationTracker SynchTracker { get; set; }
+
 
         private readonly ILog _log = LogManager.GetLogger(typeof(OfflineAuditManager));
 
@@ -50,22 +55,26 @@ namespace softwrench.sw4.offlineserver.audit {
 
 
 
+
         /// <summary>
         /// Marks the end of the PullData Operation
         /// </summary>
-        /// <param name="clientOperationId"></param>
+        /// <param name="syncRequest"></param>
         /// <param name="synchronizationResultDto"></param>
-        public void PopulateSyncOperationWithTopData(string clientOperationId, SynchronizationResultDto synchronizationResultDto) {
+        public void PopulateSyncOperationWithTopData(SynchronizationRequestDto syncRequest, SynchronizationResultDto synchronizationResultDto) {
 
             var user = SecurityFacade.CurrentUser();
-            
+
 
             if (!ShouldAudit()) {
                 return;
             }
+
+            var clientOperationId = syncRequest.ClientOperationId;
             var key = SyncOperation.GenerateKey(user, clientOperationId);
             lock (string.Intern(key)) {
                 var operation = RedisManager.Lookup<SyncOperation>(key);
+                var trail = AuditManager.CurrentTrail();
                 if (operation == null) {
                     _log.WarnFormat("could not locate audit sync operation for {0}", key);
                 } else {
@@ -91,6 +100,12 @@ namespace softwrench.sw4.offlineserver.audit {
                     var compositionTotals = compositionCounts.Sum(s => s.Value);
                     operation.TopAppCounts = topAppTotals;
                     operation.CompositionCounts = compositionTotals;
+                    operation.AuditTrail.Queries.AddAll(trail.Queries);
+
+                    SynchTracker.PopulateTopAppInputs(operation, syncRequest);
+
+
+
 
                     if (operation.AssociationCounts != null) {
                         SaveOperation(operation);
@@ -103,23 +118,26 @@ namespace softwrench.sw4.offlineserver.audit {
 
 
 
-        public void PopulateSyncOperationWithAssociationData(string requestClientOperationId, AssociationSynchronizationResultDto associationResult) {
+        public void PopulateSyncOperationWithAssociationData(AssociationSynchronizationRequestDto req, AssociationSynchronizationResultDto associationResult) {
 
             var user = SecurityFacade.CurrentUser();
-            
+
 
             if (!ShouldAudit()) {
                 return;
             }
 
-            var key = SyncOperation.GenerateKey(user, requestClientOperationId);
+            var key = SyncOperation.GenerateKey(user, req.ClientOperationId);
 
             lock (string.Intern(key)) {
                 var operation = RedisManager.Lookup<SyncOperation>(key);
                 if (operation == null) {
                     _log.WarnFormat("could not locate audit sync operation for {0}", key);
                 } else {
+                    operation.InitialLoad = req.InitialLoad;
                     operation.AssociationCounts = associationResult.TotalCount;
+                    SynchTracker.PopulateAssociationInputs(operation, req);
+
                     if (operation.TopAppCounts != null) {
                         SaveOperation(operation);
                         return;
@@ -266,7 +284,7 @@ namespace softwrench.sw4.offlineserver.audit {
 
         public void MarkBatchCompleted(SyncOperation operation) {
             var before = Stopwatch.StartNew();
-            
+
             if (!ShouldAudit(true)) {
                 return;
             }

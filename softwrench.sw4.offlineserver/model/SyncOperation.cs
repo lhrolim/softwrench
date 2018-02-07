@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using cts.commons.persistence;
+using NHibernate.Engine;
 using NHibernate.Mapping.Attributes;
 using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.audit.classes.Model;
@@ -9,6 +11,8 @@ namespace softwrench.sw4.offlineserver.model {
 
     [Class(Table = "OFF_SYNCOPERATION", Lazy = false)]
     public class SyncOperation : IBaseEntity {
+
+        public static string ByExternalId = "from SyncOperation where AuditTrail.ExternalId = ?";
 
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
@@ -26,6 +30,14 @@ namespace softwrench.sw4.offlineserver.model {
         [ManyToOne(Column = "user_id", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False)]
         public User User { get; set; }
 
+
+        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Key(1, Column = "operation_id", NotNull = true)]
+        [OneToMany(2, ClassType = typeof(SyncOperationInput))]
+        public ISet<SyncOperationInput> Inputs { get; set; } = new HashSet<SyncOperationInput>();
+
+
+
         [Property(Column = "user_tzoffset")]
         public int? TimezoneOffset { get; set; }
 
@@ -37,6 +49,9 @@ namespace softwrench.sw4.offlineserver.model {
 
         [Property]
         public int? CompositionCounts { get; set; }
+
+        [Property]
+        public bool InitialLoad { get; set; }
 
         [Property]
         public int? AssociationCounts { get; set; }

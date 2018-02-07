@@ -14,5 +14,7 @@ namespace softwrench.sw4.offlineserver.model.dto {
         /// Id of the operation coming from the client side, to allow grouping all the threads under a single entity
         /// </summary>
         public string ClientOperationId { get; set; }
+
+        public bool InitialLoad { get; set; }
     }
 }

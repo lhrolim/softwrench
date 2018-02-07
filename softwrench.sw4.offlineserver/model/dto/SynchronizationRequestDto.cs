@@ -22,9 +22,6 @@ namespace softwrench.sw4.offlineserver.model.dto {
         public List<string> ClientCurrentTopLevelApps { get; set; }
 
         public bool ReturnNewApps { get; set; }
-
-        
-
         
     }
 }

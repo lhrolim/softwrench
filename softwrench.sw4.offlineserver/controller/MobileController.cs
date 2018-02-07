@@ -65,8 +65,12 @@ namespace softwrench.sw4.offlineserver.controller {
 
         private readonly JavascriptDynamicService _jsService;
 
+        
 
         private readonly OfflineAuditManager _offlineAuditManager;
+
+        private readonly UserManager _userManager;
+        private readonly SynchronizationTracker _synchTracker;
 
         private readonly JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings {
             ContractResolver = new CamelCasePropertyNamesContractResolver()
@@ -74,7 +78,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
         public MobileController(SynchronizationManager syncManager, AppConfigurationProvider appConfigurationProvider,
             OffLineBatchService offLineBatchService, MenuSecurityManager menuManager, IContextLookuper contextLookuper, JavascriptDynamicService jsService,
-            OfflineAuditManager offlineAuditManager) {
+            OfflineAuditManager offlineAuditManager, UserManager userManager, SynchronizationTracker synchTracker) {
             _syncManager = syncManager;
             _appConfigurationProvider = appConfigurationProvider;
             _offLineBatchService = offLineBatchService;
@@ -82,6 +86,8 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper = contextLookuper;
             _jsService = jsService;
             _offlineAuditManager = offlineAuditManager;
+            _userManager = userManager;
+            _synchTracker = synchTracker;
         }
 
         #region  menu
@@ -177,17 +183,23 @@ namespace softwrench.sw4.offlineserver.controller {
 
         [HttpPost]
         public async Task<SynchronizationResultDto> PullNewData([FromBody] SynchronizationRequestDto synchronizationRequest) {
-            await _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(synchronizationRequest.ClientOperationId, synchronizationRequest.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
             var synchronizationResultDto = await _syncManager.GetData(synchronizationRequest, SecurityFacade.CurrentUser());
-            _offlineAuditManager.PopulateSyncOperationWithTopData(synchronizationRequest.ClientOperationId, synchronizationResultDto);
+            _offlineAuditManager.PopulateSyncOperationWithTopData(synchronizationRequest, synchronizationResultDto);
             return synchronizationResultDto;
         }
 
         [HttpPost]
         public async Task<AssociationSynchronizationResultDto> PullAssociationData([FromBody] AssociationSynchronizationRequestDto request) {
-            await _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId, request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(request.ClientOperationId, request.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
             var associationResult = await _syncManager.GetAssociationData(SecurityFacade.CurrentUser(), request);
-            _offlineAuditManager.PopulateSyncOperationWithAssociationData(request.ClientOperationId, associationResult);
+            _offlineAuditManager.PopulateSyncOperationWithAssociationData(request, associationResult);
             return associationResult;
         }
 
@@ -239,8 +251,19 @@ namespace softwrench.sw4.offlineserver.controller {
 
         #region Reporting
         [HttpGet]
-        public async Task<string> Counts() {
-            var user = SecurityFacade.CurrentUser();
+        public async Task<string> Counts(int? userId = null) {
+
+            InMemoryUser user = null;
+
+            if (userId == null) {
+                user = SecurityFacade.CurrentUser();
+            } else {
+                user = SecurityFacade.GetInMemoryUser(userId.Value);
+                if (user == null) {
+                    throw new InvalidOperationException("user not found");
+                }
+            }
+
 
             var req = new SynchronizationRequestDto() {
                 ReturnNewApps = true,
@@ -258,7 +281,7 @@ namespace softwrench.sw4.offlineserver.controller {
             var appEllapsed = watch.ElapsedMilliseconds;
 
             watch.Restart();
-            var associationResult = await _syncManager.GetAssociationData(user, null);
+            var associationResult = await _syncManager.GetAssociationData(user, new AssociationSynchronizationRequestDto());
             watch.Stop();
             var associationEllapsed = watch.ElapsedMilliseconds;
 
@@ -285,6 +308,8 @@ namespace softwrench.sw4.offlineserver.controller {
                 ContractResolver = new CamelCasePropertyNamesContractResolver()
             });
         }
+
+       
 
         public class MobileCountReport {
             public IDictionary<string, int> TopAppCounts = new Dictionary<string, int>();
