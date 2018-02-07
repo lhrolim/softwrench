@@ -36,7 +36,7 @@ namespace softwrench.sw4.offlineserver.controller {
 
 
         [HttpGet]
-        public async Task<SynchronizationResultDto> TopAppData(string clientOperationId = null, int? userId = null) {
+        public async Task<string> TopAppData(string clientOperationId = null, int? userId = null) {
 
             InMemoryUser user;
 
@@ -63,7 +63,7 @@ namespace softwrench.sw4.offlineserver.controller {
             _contextLookuper.AddContext(context);
             var appData = await _syncManager.GetData(req, user);
 
-            return appData;
+            return JsonConvert.SerializeObject(appData);
 
 
 
