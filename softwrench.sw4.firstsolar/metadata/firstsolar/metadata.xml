@@ -163,6 +163,9 @@
 
     <entity name="offlineitem" parententity="item" useridAttribute="itemnum" idAttribute="itemid"
         whereclause="((select count(invx.inventoryid) from inventory invx where invx.itemnum = !@itemnum and invx.siteid=@siteid) > 0)">
+      <attributes>
+        <attribute name="isactive" type="bool"/>
+      </attributes>
     </entity>
 
     <entity name="matusetrans" idAttribute="matusetransid">
@@ -2462,6 +2465,7 @@
           <field attribute="itemtype" label="Type"/>
           <field attribute="rotating" label="Rotating"/>
           <field attribute="commoditygroup" label="Commodity Group"/>
+          <field attribute="isactive" hidden="true"/>
         </list>
       </schemas>
       <properties>
