@@ -416,7 +416,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
             if (!user.Genericproperties.ContainsKey(FirstSolarConstants.FacilitiesProp)) {
                 return "(1!=1)";
             }
-            return $"offlineitem.itemtype = 'ITEM' and offlineitem.status = 'ACTIVE' and offlineitem.rotating = 0 and offlineitem.itemnum in (select inventory.itemnum from inventory inventory where inventory.location in ({BaseSelectFromStoreroom()}))";
+            return $"offlineitem.itemtype = 'ITEM' and offlineitem.isactive = 1 and offlineitem.itemnum in (select inventory.itemnum from inventory inventory where inventory.location in ({BaseSelectFromStoreroom()}))";
         }
     }
 }
