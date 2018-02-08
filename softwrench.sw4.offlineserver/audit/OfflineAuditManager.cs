@@ -176,14 +176,21 @@ namespace softwrench.sw4.offlineserver.audit {
 
 
             var user = SecurityFacade.CurrentUser();
-
+            var validversion = true;
 
             if (deviceData == null) {
                 //playing safe, shouldn´t happen
-                deviceData = new DeviceData{ Model = "FKR", ClientVersion = "FKR",Platform = "FKR", Version = ApplicationConfiguration.SystemVersion};
+                deviceData = new DeviceData {
+                    Model = "FKR",
+                    ClientVersion = "FKR",
+                    Platform = "FKR",
+                    Version = ApplicationConfiguration.SystemVersion
+                };
+            } else {
+                validversion = await ValidateOffLineVersion(deviceData.ClientVersion);
             }
 
-            var validversion = await ValidateOffLineVersion(deviceData.ClientVersion);
+
 
             if (!ShouldAudit(mode == OfflineAuditMode.Batch)) {
                 if (!validversion) {
