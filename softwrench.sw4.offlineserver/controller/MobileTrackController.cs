@@ -10,6 +10,7 @@ using cts.commons.web.Controller;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using softwrench.sw4.offlineserver.audit;
 using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services;
@@ -27,16 +28,18 @@ namespace softwrench.sw4.offlineserver.controller {
         private readonly SynchronizationTracker _synchTracker;
         private readonly IContextLookuper _contextLookuper;
         private readonly SynchronizationManager _syncManager;
+        private readonly OfflineAuditManager _offlineAuditManager;
 
-        public MobileTrackController(SynchronizationTracker synchTracker, IContextLookuper contextLookuper, SynchronizationManager syncManager) {
+        public MobileTrackController(SynchronizationTracker synchTracker, IContextLookuper contextLookuper, SynchronizationManager syncManager, OfflineAuditManager offlineAuditManager) {
             _synchTracker = synchTracker;
             _contextLookuper = contextLookuper;
             _syncManager = syncManager;
+            _offlineAuditManager = offlineAuditManager;
         }
 
 
         [HttpGet]
-        public async Task<string> TopAppData(string clientOperationId = null, int? userId = null) {
+        public async Task<string> TopAppData(string clientOperationId = null, int? userId = null, string customTodayFn = null) {
 
             InMemoryUser user;
 
@@ -60,7 +63,21 @@ namespace softwrench.sw4.offlineserver.controller {
             }
             var context = _contextLookuper.LookupContext();
             context.OfflineMode = true;
+            if (customTodayFn != null) {
+                //TODO make it more generic, allowing passing a date instead of getDate() - 1
+                context.CustomRequestParameters.Add("customtodaydate", customTodayFn);
+            }
+
             _contextLookuper.AddContext(context);
+
+
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(req.ClientOperationId, req.DeviceData, OfflineAuditManager.OfflineAuditMode.Data);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
+            var synchronizationResultDto = await _syncManager.GetData(req, SecurityFacade.CurrentUser());
+            _offlineAuditManager.PopulateSyncOperationWithTopData(req, synchronizationResultDto);
+
             var appData = await _syncManager.GetData(req, user);
 
             return JsonConvert.SerializeObject(appData);
@@ -71,7 +88,7 @@ namespace softwrench.sw4.offlineserver.controller {
         }
 
         [HttpGet]
-        public async Task<string> AssociationData(string clientOperationId = null, int? userId = null) {
+        public async Task<string> AssociationData(string clientOperationId = null, int? userId = null, string customTodayFn = null) {
 
             InMemoryUser user;
 
@@ -99,11 +116,21 @@ namespace softwrench.sw4.offlineserver.controller {
             var context = _contextLookuper.LookupContext();
             context.OfflineMode = true;
             _contextLookuper.AddContext(context);
+            if (customTodayFn != null) {
+                //TODO make it more generic, allowing passing a date instead of getDate() - 1
+                context.CustomRequestParameters.Add("customtodaydate", customTodayFn);
+            }
 
             var watch = Stopwatch.StartNew();
 
             watch.Restart();
+
+            var operation = await _offlineAuditManager.MarkSyncOperationBegin(assReq.ClientOperationId, assReq.DeviceData, OfflineAuditManager.OfflineAuditMode.Association);
+            if (operation != null) {
+                _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
+            }
             var associationResult = await _syncManager.GetAssociationData(user, assReq);
+            _offlineAuditManager.PopulateSyncOperationWithAssociationData(assReq, associationResult);
             return JsonConvert.SerializeObject(associationResult);
 
         }

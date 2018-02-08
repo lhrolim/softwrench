@@ -37,7 +37,7 @@ namespace softwrench.sw4.offlineserver.services.util {
                 }
                 return result;
             }
-            return new List<AppRowstampDTO>() { ParseSingleApp(obj) };
+            return new List<AppRowstampDTO> { ParseSingleApp(obj) };
         }
 
         private static AppRowstampDTO ParseSingleApp(dynamic obj) {
@@ -109,7 +109,8 @@ namespace softwrench.sw4.offlineserver.services.util {
                 }
 
                 //TODO: implement other fields
-                result.Add(application, new ClientAssociationCacheEntry() {
+                result.Add(application, new ClientAssociationCacheEntry
+                {
                     MaxRowstamp = "" + maxRowstamp,
                     MaxUid = "" + maxuid
                 });

@@ -224,7 +224,7 @@ namespace cts.commons.persistence {
                 GetLog().Debug(LoggingUtil.BaseDurationMessageFormat(before, "{0}: done query".Fmt(queryAlias ?? "")));
                 before.Stop();
                 if (queryAlias != null) {
-                    Observers.Where(o => o.IsTurnedOn()).ForEach(o => o.MarkQueryResolution(queryAlias, before.ElapsedMilliseconds));
+                    Observers.Where(o => o.IsTurnedOn()).ForEach(o => o.MarkQueryResolution(queryAlias, before.ElapsedMilliseconds, result.Count));
                 }
 
                 return result;

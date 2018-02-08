@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using cts.commons.simpleinjector;
-using Newtonsoft.Json;
+﻿using cts.commons.simpleinjector;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Util;
 
@@ -25,12 +23,14 @@ namespace softwrench.sw4.offlineserver.services.util {
         }
 
         private JObject BaseConfig() {
-            var serverConfig = new JObject() {
+            var serverConfig = new JObject
+            {
                 {"environment", ApplicationConfiguration.Profile},
                 {"version", ApplicationConfiguration.SystemVersion},
                 {"client", ApplicationConfiguration.ClientName}
             };
-            return new JObject() {
+            return new JObject
+            {
                 { "serverconfig", serverConfig }
             };
         }

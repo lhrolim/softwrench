@@ -76,7 +76,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
         private const string TodayWhereClause =
                 @"(workorder.siteid in ('1803', '1808', '1801', '4801')) and workorder.status not in ('MISSD','COMP','COMP-PEND','CAN','CLOSE') and ({0})
                 and istask = 0 and historyflag = 0 and worktype is not null and workorder.wonum in (select assignment.wonum from assignment where workorder.wonum=assignment.wonum and workorder.orgid=assignment.orgid 
-                and assignment.status='ASSIGNED' and cast (assignment.scheduledate as date) = cast (getdate() as date) and assignment.laborcode in (select labor.laborcode from labor where labor.personid= @personid))";
+                and assignment.status='ASSIGNED' and cast (assignment.scheduledate as date) = cast (getDate() as date) and assignment.laborcode in (select labor.laborcode from labor where labor.personid= @personid))";
 
 
         #region dashwhereclauses
@@ -124,7 +124,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
                 when min(cast(assignment.scheduledate as date))<= min(cast(assignment.startdate as date)) then min(cast(assignment.scheduledate as date)) 
                 when min(cast(assignment.scheduledate as date))> min(cast(assignment.startdate as date)) then min(cast(assignment.startdate as date)) end 
                 from assignment 
-                where workorder.wonum=assignment.wonum and workorder.siteid = assignment.siteid )< cast(getdate() as date) ";
+                where workorder.wonum=assignment.wonum and workorder.siteid = assignment.siteid )< cast(getDate() as date) ";
 
 
         /// <summary>
@@ -244,7 +244,14 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
 
         public string TodayWhereClauseMethod() {
-            return DoBuildQuery(TodayWhereClause, "workorder.location");
+            var todayToUse = TodayWhereClause;
+            var context = _contextLookuper.LookupContext();
+            if (context.CustomRequestParameters.ContainsKey("customtodaydate")) {
+                //ex: getDate() - 1
+                todayToUse = TodayWhereClause.Replace("getDate()", context.CustomRequestParameters["customtodaydate"] as string);
+            }
+
+            return DoBuildQuery(todayToUse, "workorder.location");
         }
 
 
@@ -294,7 +301,15 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.configuration {
 
 
         public string PastWhereClauseMethod() {
-            return DoBuildQuery(PastWhereClause, "workorder.location");
+            var context = _contextLookuper.LookupContext();
+            var pastToUse = PastWhereClause;
+            if (context.CustomRequestParameters.ContainsKey("customtodaydate")) {
+                //ex: getDate() - 1
+                pastToUse = PastWhereClause.Replace("getDate()", context.CustomRequestParameters["customtodaydate"] as string);
+            }
+
+
+            return DoBuildQuery(pastToUse, "workorder.location");
         }
 
         public string SchedWhereClauseMethod() {

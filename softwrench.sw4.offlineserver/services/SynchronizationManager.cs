@@ -560,6 +560,7 @@ namespace softwrench.sw4.offlineserver.services {
                 }
             }
 
+
             Log.DebugFormat("sync: {0} items to delete for application {1}", result.DeletedRecordIds.Count, applicationName);
             result.DeletedRecordIds = idRowstampDict.Keys;
 
