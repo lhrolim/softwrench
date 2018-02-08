@@ -54,14 +54,13 @@ namespace softwrench.sw4.offlineserver.audit {
         private readonly TimeSpan _defaultExpiresIn = TimeSpan.FromMinutes(3);
 
 
-
-
         /// <summary>
         /// Marks the end of the PullData Operation
         /// </summary>
         /// <param name="syncRequest"></param>
         /// <param name="synchronizationResultDto"></param>
-        public void PopulateSyncOperationWithTopData(SynchronizationRequestDto syncRequest, SynchronizationResultDto synchronizationResultDto) {
+        /// <param name="forceSave">if true persists the operation by the end of this method (useful for reports)</param>
+        public void PopulateSyncOperationWithTopData(SynchronizationRequestDto syncRequest, SynchronizationResultDto synchronizationResultDto, bool forceSave = false) {
 
             var user = SecurityFacade.CurrentUser();
 
@@ -107,7 +106,10 @@ namespace softwrench.sw4.offlineserver.audit {
 
 
 
-                    if (operation.AssociationCounts != null) {
+                    if (operation.AssociationCounts != null || forceSave) {
+                        if (forceSave) {
+                            operation.AssociationCounts = -1;
+                        }
                         SaveOperation(operation);
                         return;
                     }
@@ -118,7 +120,7 @@ namespace softwrench.sw4.offlineserver.audit {
 
 
 
-        public void PopulateSyncOperationWithAssociationData(AssociationSynchronizationRequestDto req, AssociationSynchronizationResultDto associationResult) {
+        public void PopulateSyncOperationWithAssociationData(AssociationSynchronizationRequestDto req, AssociationSynchronizationResultDto associationResult, bool forceSave = false) {
 
             var user = SecurityFacade.CurrentUser();
 
@@ -138,7 +140,13 @@ namespace softwrench.sw4.offlineserver.audit {
                     operation.AssociationCounts = associationResult.TotalCount;
                     SynchTracker.PopulateAssociationInputs(operation, req);
 
-                    if (operation.TopAppCounts != null) {
+                    if (operation.TopAppCounts != null || forceSave) {
+                        if (forceSave) {
+                            //a non null is required
+                            operation.TopAppCounts = -1;
+                            operation.CompositionCounts = -1;
+                        }
+
                         SaveOperation(operation);
                         return;
                     }
@@ -172,7 +180,7 @@ namespace softwrench.sw4.offlineserver.audit {
 
             if (deviceData == null) {
                 //playing safe, shouldn´t happen
-                deviceData = new DeviceData();
+                deviceData = new DeviceData{ Model = "FakeReport", ClientVersion = "FakeReport",Platform = "FakeReport", Version = ApplicationConfiguration.SystemVersion};
             }
 
             var validversion = await ValidateOffLineVersion(deviceData.ClientVersion);

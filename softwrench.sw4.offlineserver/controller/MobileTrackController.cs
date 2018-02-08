@@ -76,7 +76,7 @@ namespace softwrench.sw4.offlineserver.controller {
                 _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
             }
             var synchronizationResultDto = await _syncManager.GetData(req, SecurityFacade.CurrentUser());
-            _offlineAuditManager.PopulateSyncOperationWithTopData(req, synchronizationResultDto);
+            _offlineAuditManager.PopulateSyncOperationWithTopData(req, synchronizationResultDto,true);
 
             var appData = await _syncManager.GetData(req, user);
 
@@ -130,7 +130,7 @@ namespace softwrench.sw4.offlineserver.controller {
                 _offlineAuditManager.InitThreadTrail(operation.AuditTrail);
             }
             var associationResult = await _syncManager.GetAssociationData(user, assReq);
-            _offlineAuditManager.PopulateSyncOperationWithAssociationData(assReq, associationResult);
+            _offlineAuditManager.PopulateSyncOperationWithAssociationData(assReq, associationResult,true);
             return JsonConvert.SerializeObject(associationResult);
 
         }
