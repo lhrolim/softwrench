@@ -180,7 +180,7 @@ namespace softwrench.sw4.offlineserver.audit {
 
             if (deviceData == null) {
                 //playing safe, shouldn´t happen
-                deviceData = new DeviceData{ Model = "FakeReport", ClientVersion = "FakeReport",Platform = "FakeReport", Version = ApplicationConfiguration.SystemVersion};
+                deviceData = new DeviceData{ Model = "FKR", ClientVersion = "FKR",Platform = "FKR", Version = ApplicationConfiguration.SystemVersion};
             }
 
             var validversion = await ValidateOffLineVersion(deviceData.ClientVersion);
