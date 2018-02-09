@@ -143,6 +143,7 @@
 
         // builds an array of index values parameters to be stored on client db
         const buildIndexes = function (textIndexes, numericIndexes, dateIndexes, newDataMap) {
+
             const indexesData = {
                 t1: null,
                 t2: null,

@@ -39,7 +39,7 @@
                     const json = datamap.jsonFields || JSON.stringify(datamap);
                     const parsedDM = datamap.jsonFields ? JSON.parse(datamap.jsonFields) : datamap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
-                    const idx = this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, JSON.parse(datamap.jsonFields));
+                    const idx = datamap.indexData || this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, JSON.parse(datamap.jsonFields));
                     const query = { query: this.offlineEntities.CompositionDataEntry.insertionQueryPattern, args: [datamap.application, json, datamap.id, String(datamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
 
 

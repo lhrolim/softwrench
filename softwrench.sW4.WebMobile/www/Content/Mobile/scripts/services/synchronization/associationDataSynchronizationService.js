@@ -32,7 +32,11 @@
                                 const datamap = data.jsonFields ? JSON.parse(data.jsonFields) : data; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
                                 const remoteid = datamap[remoteIdFieldName];
 
-                                const idx = searchIndexService.buildIndexes(textIndexes, numericIndexes, dateIndexes, datamap);
+                                let idx = data.indexData;
+                                if (!data.indexData){
+                                    //legacy mode
+                                    idx = searchIndexService.buildIndexes(textIndexes, numericIndexes, dateIndexes, datamap)
+                                }
                                 const query = { query: queryToUse, args: [data.application, json, String(data.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, remoteid] };
                                 queryArray.push(query);
                             }

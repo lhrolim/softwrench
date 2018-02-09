@@ -158,7 +158,7 @@
                     const newJson = newDataMap.jsonFields || JSON.stringify(newDataMap); //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
                     const datamap = newDataMap.jsonFields ? JSON.parse(newDataMap.jsonFields) : newDataMap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
-                    const idx = this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
+                    const idx = newDataMap.indexData || this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
                     const insertQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [newDataMap.application, newJson, newDataMap.id, String(newDataMap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                     queryArray.push(insertQuery);
                 });
@@ -169,7 +169,7 @@
                     const newJson = insertOrUpdateDatamap.jsonFields || JSON.stringify(insertOrUpdateDatamap); //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
                     const datamap = insertOrUpdateDatamap.jsonFields ? JSON.parse(insertOrUpdateDatamap.jsonFields) : insertOrUpdateDatamap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
-                    const idx = this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
+                    const idx = insertOrUpdateDatamap.indexData || this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
                     const insertOrUpdateQuery = { query: entities.DataEntry.insertOrReplacePattern, args: [insertOrUpdateDatamap.application, newJson, insertOrUpdateDatamap.id, String(insertOrUpdateDatamap.approwstamp), id, idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3] };
                     queryArray.push(insertOrUpdateQuery);
                 });
@@ -178,7 +178,7 @@
                     const updateJson = updateDataMap.jsonFields || JSON.stringify(updateDataMap); // keeping backward compatibility //updateJson = datamapSanitizationService.sanitize(updateJson);
                     const datamap = updateDataMap.jsonFields ? JSON.parse(updateDataMap.jsonFields) : updateDataMap; //keeping backwards compatibility //newJson = datamapSanitizationService.sanitize(newJson);
 
-                    const idx = this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
+                    const idx = updateDataMap.indexData || this.searchIndexService.buildIndexes(application.textIndexes, application.numericIndexes, application.dateIndexes, datamap);
                     const updateQuery = { query: entities.DataEntry.updateQueryPattern, args: [updateJson, String(updateDataMap.approwstamp), idx.t1, idx.t2, idx.t3, idx.t4, idx.t5, idx.n1, idx.n2, idx.d1, idx.d2, idx.d3, updateDataMap.id, updateDataMap.application] };
                     queryArray.push(updateQuery);
                 });

@@ -156,7 +156,7 @@ namespace softwrench.sw4.offlineserver.services {
 
             var results = new AssociationSynchronizationResultDto(chunkLimit);
 
-            HandleIndexes(applicationsArray, results);
+            IndexUtil.HandleIndexes(applicationsArray, results);
 
             if (initialLoad) {
                 var cacheableApplications = completeApplicationMetadataDefinitions.Where(c => !"true".Equals(c.GetProperty(OfflineConstants.AvoidCaching))).ToList();
@@ -172,9 +172,9 @@ namespace softwrench.sw4.offlineserver.services {
             #region Database
 
             var watch = Stopwatch.StartNew();
-            await HandleDatabase(initialLoad, rowstampMap, user, results, completeApplicationMetadataDefinitions, maxThreads);
+            await HandleDatabaseAssociations(initialLoad, rowstampMap, user, results, completeApplicationMetadataDefinitions, maxThreads);
 
-            results = await _syncChunkHandler.HandleMaxSize(results, initialLoad);
+            results = await _syncChunkHandler.HandleMaxSize(results);
 
             if (!results.IncompleteAssociations.Any()) {
                 results.HasMoreData = false;
@@ -210,7 +210,7 @@ namespace softwrench.sw4.offlineserver.services {
             return rowstamp;
         }
 
-        internal async Task HandleDatabase(bool initialLoad, IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user, AssociationSynchronizationResultDto results,
+        internal async Task HandleDatabaseAssociations(bool initialLoad, IDictionary<string, ClientAssociationCacheEntry> rowstampMap, InMemoryUser user, AssociationSynchronizationResultDto results,
             IEnumerable<CompleteApplicationMetadataDefinition> completeApplicationMetadataDefinitions, int maxThreads) {
 
             var hasOverFlownOnCacheOperation = results.IsOverFlown();
@@ -471,7 +471,7 @@ namespace softwrench.sw4.offlineserver.services {
                 var schemas = compositionSchema.Schemas;
                 var anySchema = schemas.List ?? schemas.Detail ?? schemas.Print ?? schemas.Sync;
                 var compositionApp = MetadataProvider.Application(anySchema.ApplicationName);
-                ParseIndexes(resultData.TextIndexes, resultData.NumericIndexes, resultData.DateIndexes, compositionApp);
+                IndexUtil.ParseIndexes(resultData.TextIndexes, resultData.NumericIndexes, resultData.DateIndexes, compositionApp);
 
                 result.AddCompositionData(resultData);
             }
@@ -517,7 +517,7 @@ namespace softwrench.sw4.offlineserver.services {
                 AllData = topLevelAppData.Select(t => t.OriginalDatamap).ToList(),
             };
 
-            ParseIndexes(result.TextIndexes, result.NumericIndexes, result.DateIndexes, topLevelApp);
+            IndexUtil.ParseIndexes(result.TextIndexes, result.NumericIndexes, result.DateIndexes, topLevelApp);
 
             if (rowstampDTO.MaxRowstamp != null || isQuickSync) {
                 //SWOFF-140 
@@ -568,45 +568,9 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-        private static void HandleIndexes(IEnumerable<CompleteApplicationMetadataDefinition> associations, AssociationSynchronizationResultDto results) {
-            associations?.ToList().ForEach(association => {
-                var textIndexes = new List<string>();
-                results.TextIndexes.Add(association.ApplicationName, textIndexes);
+       
 
-                var numericIndexes = new List<string>();
-                results.NumericIndexes.Add(association.ApplicationName, numericIndexes);
-
-                var dateIndexes = new List<string>();
-                results.DateIndexes.Add(association.ApplicationName, dateIndexes);
-
-                ParseIndexes(textIndexes, numericIndexes, dateIndexes, association);
-            });
-        }
-
-        private static void ParseIndexes(IList<string> textIndexes, IList<string> numericIndexes, IList<string> dateIndexes, CompleteApplicationMetadataDefinition topLevelApp) {
-            var indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineTextIndexes);
-            if (!string.IsNullOrEmpty(indexesString)) {
-                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, textIndexes));
-            }
-
-            indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineNumericIndexes);
-            if (!string.IsNullOrEmpty(indexesString)) {
-                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, numericIndexes));
-            }
-
-            indexesString = topLevelApp.GetProperty(ApplicationSchemaPropertiesCatalog.ListOfflineDateIndexes);
-            if (!string.IsNullOrEmpty(indexesString)) {
-                indexesString.Split(',').ToList().ForEach(idx => ParseIndex(idx, dateIndexes));
-            }
-        }
-
-        private static void ParseIndex(string index, IList<string> indexList) {
-            var trimmed = index.Trim();
-            if (string.IsNullOrEmpty(trimmed)) {
-                return;
-            }
-            indexList.Add(trimmed);
-        }
+     
 
 
         protected virtual async Task<List<JSONConvertedDatamap>> FetchData(bool isAssociationData, SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata,
@@ -668,7 +632,7 @@ namespace softwrench.sw4.offlineserver.services {
             var dataMaps = new List<JSONConvertedDatamap>();
             foreach (var row in enumerable) {
                 var dataMap = DataMap.Populate(appMetadata, entityMetadata, row);
-                dataMaps.Add(new JSONConvertedDatamap(dataMap));
+                dataMaps.Add(new JSONConvertedDatamap(dataMap,false, appMetadata));
             }
 
             if (isAssociationData && cacheableItem) {

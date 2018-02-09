@@ -213,6 +213,7 @@
     <Compile Include="model\dto\SynchronizationResultDto.cs" />
     <Compile Include="services\SynchronizationTracker.cs" />
     <Compile Include="services\util\AppConfigurationProvider.cs" />
+    <Compile Include="services\util\IndexUtil.cs" />
     <Compile Include="services\util\OffLineConfigurationRegister.cs" />
     <Compile Include="services\util\OfflineConstants.cs" />
     <Compile Include="services\util\ClientStateJsonConverter.cs" />

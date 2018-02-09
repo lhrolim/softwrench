@@ -36,7 +36,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results, true);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(5, newResult.AssociationData["asset"].Count);
@@ -65,7 +65,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results,true);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("location"));
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
@@ -91,7 +91,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results,true);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(10, newResult.AssociationData["asset"].Count);
@@ -128,7 +128,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results, true);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(7, newResult.AssociationData["asset"].Count);
@@ -168,7 +168,7 @@ namespace softwrench.sW4.test.offline {
             _configMock.Setup(c => c.LookupAsync<int>(OfflineConstants.MaxDownloadSize, null)).ReturnsAsync(10);
 
 
-            var newResult = await _syncChunkHandler.HandleMaxSize(results, true);
+            var newResult = await _syncChunkHandler.HandleMaxSize(results);
             Assert.IsTrue(newResult.HasMoreData);
             Assert.IsTrue(newResult.AssociationData.ContainsKey("asset"));
             Assert.AreEqual(7, newResult.AssociationData["asset"].Count);

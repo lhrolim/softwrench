@@ -39,11 +39,14 @@ namespace softWrench.sW4.Metadata.Applications {
         }
 
 
-        public static ApplicationMetadata FromSchema(ApplicationSchemaDefinition schema,string title="") {
+        public static ApplicationMetadata FromSchema(ApplicationSchemaDefinition schema, string title = "") {
             //workaround adatper for methods that still require an ApplicationMetadata instance
             return new ApplicationMetadata(null, schema.ApplicationName, title, schema.EntityName ?? "", schema.IdFieldName, schema, null, null);
         }
 
-        
+
+        public string GetProperty(string propKey) {
+            return Schema.GetProperty(propKey);
+        }
     }
 }

@@ -55,9 +55,15 @@ namespace softwrench.sw4.offlineserver.model.dto.association {
         [JsonIgnore]
         public IDictionary<string, bool> LimitedAssociations { get; set; } = new ConcurrentDictionary<string, bool>();
 
+
+        #region legacy client side indexes
         public IDictionary<string, IList<string>> TextIndexes { get; set; }
         public IDictionary<string, IList<string>> NumericIndexes { get; set; }
         public IDictionary<string, IList<string>> DateIndexes { get; set; }
+
+        #endregion
+
+
 
         private int ChunkLimit { get; set; }
 

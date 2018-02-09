@@ -23,7 +23,7 @@ namespace softwrench.sw4.offlineserver.services {
             _configurationFacade = configurationFacade;
         }
 
-        public virtual async Task<AssociationSynchronizationResultDto> HandleMaxSize(AssociationSynchronizationResultDto results, bool initialLoad) {
+        public virtual async Task<AssociationSynchronizationResultDto> HandleMaxSize(AssociationSynchronizationResultDto results) {
             var maxSize = await _configurationFacade.LookupAsync<int>(OfflineConstants.MaxDownloadSize);
             var sum = 0;
 
