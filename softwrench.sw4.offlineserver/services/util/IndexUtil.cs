@@ -9,6 +9,7 @@ using softwrench.sW4.Shared2.Metadata;
 using softWrench.sW4.Data;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.offlineserver.services.util {
     public class IndexUtil {
@@ -94,13 +95,13 @@ namespace softwrench.sw4.offlineserver.services.util {
                 var date = datamap.GetAttribute(idx);
                 if (date is DateTime) {
                     var d = (DateTime)date;
-                    result.Add("d" + i++, d.TimeInMillis());
+                    result.Add("d" + i++, d.ToTimeInMillis());
                 } else if (date is DateTimeOffset) {
                     var d = (DateTimeOffset)date;
-                    result.Add("d" + i++, d.DateTime.TimeInMillis());
+                    result.Add("d" + i++, d.DateTime.ToTimeInMillis());
                 } else if (date is string) {
                     var d = DateTime.Parse(date as string);
-                    result.Add("d" + i++, d.TimeInMillis());
+                    result.Add("d" + i++, d.ToTimeInMillis());
                 }
 
             }
