@@ -96,7 +96,7 @@ namespace softWrench.sW4.Email {
             // Send the email message asynchronously
             Task.Run(() => {
                 try {
-                    SendEmail(emailData, smtpClient);
+                    DoSendEmail(emailData, smtpClient);
                     cbck?.Invoke(true);
                 } catch (Exception) {
                     cbck?.Invoke(false);
@@ -111,10 +111,13 @@ namespace softWrench.sW4.Email {
         /// Sends email synchronously
         /// </summary>
         /// <param name="emailData">The email data</param>
-        public virtual void SendEmail(EmailData emailData, SmtpClient smtpClient = null) {
-            if (smtpClient == null) {
-                smtpClient = ConfiguredSmtpClient();
-            }
+        public virtual void SendEmail(EmailData emailData) {
+            var smtpClient = ConfiguredSmtpClient();
+            DoSendEmail(emailData, smtpClient);
+        }
+
+        private void DoSendEmail(EmailData emailData, SmtpClient smtpClient) {
+
 
             try {
                 Log.Info("Sending email to {0} - cc to {1} - bcc to {2}".Fmt(emailData.SendTo, emailData.Cc, emailData.BCc));
@@ -132,15 +135,15 @@ namespace softWrench.sW4.Email {
 
                     return tryAgain;
                 })
-                .WaitAndRetry(TRY_AGAIN_COUNT, retryAttempt =>
-                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
-                )
-                .Execute(() => {
-                    Log.DebugFormat("start sending email");                  
-                    var email = BuildMailMessage(emailData);
-                    // Send the email message synchronously
-                    smtpClient?.Send(email);
-                });
+                    .WaitAndRetry(TRY_AGAIN_COUNT, retryAttempt =>
+                        TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
+                    )
+                    .Execute(() => {
+                        Log.DebugFormat("start sending email");
+                        var email = BuildMailMessage(emailData);
+                        // Send the email message synchronously
+                        smtpClient?.Send(email);
+                    });
             } catch (Exception ex) {
                 Log.Error(ex);
                 throw;
