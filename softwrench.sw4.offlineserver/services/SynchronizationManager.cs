@@ -553,7 +553,7 @@ namespace softwrench.sw4.offlineserver.services {
                     var rowstamp = idRowstampDict[id];
                     if (!rowstamp.Equals(dataMap.Approwstamp.ToString())) {
                         Log.DebugFormat("sync: adding updateable item {0} for application {1}", dataMap.Id, applicationName);
-                        result.UpdatedDataMaps.Add(dataMap);
+                        result.InsertOrUpdateDataMaps.Add(dataMap);
                     }
                     //removing so that the remaining items are the deleted ids --> avoid an extra loop
                     idRowstampDict.Remove(id);
