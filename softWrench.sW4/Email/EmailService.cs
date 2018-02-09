@@ -92,10 +92,11 @@ namespace softWrench.sW4.Email {
         /// <param name="emailData"></param>
         public virtual void SendEmailAsync(EmailData emailData, Action<bool> cbck = null) {
             Log.InfoFormat("sending email asynchronoysly");
+            var smtpClient = ConfiguredSmtpClient();
             // Send the email message asynchronously
             Task.Run(() => {
                 try {
-                    SendEmail(emailData);
+                    SendEmail(emailData, smtpClient);
                     cbck?.Invoke(true);
                 } catch (Exception) {
                     cbck?.Invoke(false);
@@ -110,9 +111,12 @@ namespace softWrench.sW4.Email {
         /// Sends email synchronously
         /// </summary>
         /// <param name="emailData">The email data</param>
-        public virtual void SendEmail(EmailData emailData) {
+        public virtual void SendEmail(EmailData emailData, SmtpClient smtpClient = null) {
+            if (smtpClient == null) {
+                smtpClient = ConfiguredSmtpClient();
+            }
+
             try {
-                var smtpClient = ConfiguredSmtpClient();
                 Log.Info("Sending email to {0} - cc to {1} - bcc to {2}".Fmt(emailData.SendTo, emailData.Cc, emailData.BCc));
                 Policy.Handle<SmtpFailedRecipientsException>(ex => {
                     var tryAgain = CheckEmailClientMailboxBusy(ex.StatusCode);
@@ -132,8 +136,7 @@ namespace softWrench.sW4.Email {
                     TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))
                 )
                 .Execute(() => {
-                    Log.DebugFormat("start sending email");
-                    
+                    Log.DebugFormat("start sending email");                  
                     var email = BuildMailMessage(emailData);
                     // Send the email message synchronously
                     smtpClient?.Send(email);
@@ -261,7 +264,7 @@ namespace softWrench.sW4.Email {
             }
 
             var domain = emailaddress.Split('@')[1];
-            if (!domain.EqualsAny("controltechnologysolutions.com", "softwrenchsolutions.com", "amlabs.com.br", "gmail.com","vtext.com")) {
+            if (!domain.EqualsAny("controltechnologysolutions.com", "softwrenchsolutions.com", "amlabs.com.br", "gmail.com", "vtext.com")) {
                 Log.WarnFormat("This email ( {0}) is not valid for this environment".Fmt(emailaddress));
                 return false;
             }
