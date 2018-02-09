@@ -99,7 +99,9 @@ namespace softwrench.sw4.offlineserver.audit {
                     var compositionTotals = compositionCounts.Sum(s => s.Value);
                     operation.TopAppCounts = topAppTotals;
                     operation.CompositionCounts = compositionTotals;
-                    operation.AuditTrail.Queries.AddAll(trail.Queries);
+                    foreach (var auditQuery in trail.Queries) {
+                        operation.AuditTrail.Queries.Add(auditQuery);
+                    }
 
                     SynchTracker.PopulateTopAppInputs(operation, syncRequest);
 
@@ -140,7 +142,10 @@ namespace softwrench.sw4.offlineserver.audit {
                     operation.InitialLoad = req.InitialLoad;
                     operation.AssociationCounts = associationResult.TotalCount;
                     SynchTracker.PopulateAssociationInputs(operation, req);
-                    operation.AuditTrail.Queries.AddAll(trail.Queries);
+                    foreach (var auditQuery in trail.Queries) {
+                        operation.AuditTrail.Queries.Add(auditQuery);
+                    }
+
 
                     if (operation.TopAppCounts != null || forceSave) {
                         if (forceSave) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -75,7 +76,6 @@ namespace softwrench.sW4.audit.classes.Services {
 
 
             entry.DataStringValue = data;
-
 
             trail?.Entries.Add(entry);
         }

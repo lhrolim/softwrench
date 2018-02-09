@@ -58,17 +58,19 @@ namespace softwrench.sW4.audit.classes.Model {
         [ManyToOne(Column = "sessionId", OuterJoin = OuterJoinStrategy.False, Lazy = Laziness.False, Cascade = "none")]
         public AuditSession Session { get; set; }
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Bag(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "trail_id")]
         [OneToMany(2, ClassType = typeof(AuditEntry))]
-        public ISet<AuditEntry> Entries { get; set; } = new HashSet<AuditEntry>();
+        //using lists due to high concurrency exception scenarios 
+        public IList<AuditEntry> Entries { get; set; } = new List<AuditEntry>();
 
 
 
-        [Set(0, Lazy = CollectionLazy.False, Cascade = "all")]
+        [Bag(0, Lazy = CollectionLazy.False, Cascade = "all")]
         [Key(1, Column = "trail_id", NotNull = true)]
         [OneToMany(2, ClassType = typeof(AuditQuery))]
-        public ISet<AuditQuery> Queries { get; set; } = new HashSet<AuditQuery>();
+        //using lists due to high concurrency exception scenarios 
+        public IList<AuditQuery> Queries { get; set; } = new List<AuditQuery>();
 
 
         private bool _shouldPersist;

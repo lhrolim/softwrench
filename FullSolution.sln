@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2020
+VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{7F0343DC-37A4-41A3-A5E6-773600FA2F1A}"
 	ProjectSection(SolutionItems) = preProject
@@ -138,6 +138,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softwrench.sw4.dynforms", "softwrench.sw4.dynforms\softwrench.sw4.dynforms.csproj", "{825BF88C-0051-415E-82B7-6F9D91E36709}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "softWrench.sw4.nant", "softWrench.sw4.nant\softWrench.sw4.nant.csproj", "{10512EDD-8EC2-4D29-8001-4551A7BC3918}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -475,6 +477,14 @@ Global
 		{10512EDD-8EC2-4D29-8001-4551A7BC3918}.Release|Any CPU.Build.0 = Release|Any CPU
 		{10512EDD-8EC2-4D29-8001-4551A7BC3918}.Release|x64.ActiveCfg = Release|Any CPU
 		{10512EDD-8EC2-4D29-8001-4551A7BC3918}.Release|x64.Build.0 = Release|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Debug|x64.Build.0 = Debug|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -515,6 +525,7 @@ Global
 		{1DA9E338-6F30-4DDF-8321-E1B0524C9A43} = {937C72D2-3D57-4CCA-A900-D923237DB610}
 		{B5B6C7CB-3B3E-43CF-9DEF-A67D26F981CA} = {83D14F98-4C2C-4DFD-986E-CE555983AADF}
 		{10512EDD-8EC2-4D29-8001-4551A7BC3918} = {5E3F5ACE-7544-40EF-8BE9-BFD451A489C7}
+		{91CEF5DD-3E3B-44D8-9CEF-3FDD15C6E7E2} = {1E4B56D9-F11F-40A4-BAF5-51790789122C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0D257E5F-6A8A-416B-AFD4-03D85622E6E8}
