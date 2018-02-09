@@ -80,9 +80,9 @@ namespace softwrench.sw4.offlineserver.audit {
                     var topCountData = new Dictionary<string, int>();
                     synchronizationResultDto.TopApplicationData.OrderBy(a => a.ApplicationName).ForEach(applicationData => {
                         if (!topCountData.ContainsKey(applicationData.ApplicationName)) {
-                            topCountData.Add(applicationData.ApplicationName, applicationData.NewCount);
+                            topCountData.Add(applicationData.ApplicationName, applicationData.TotalCount);
                         } else {
-                            topCountData[applicationData.ApplicationName] = topCountData[applicationData.ApplicationName] + applicationData.NewCount;
+                            topCountData[applicationData.ApplicationName] = topCountData[applicationData.ApplicationName] + applicationData.TotalCount;
                         }
                     });
 
@@ -133,12 +133,14 @@ namespace softwrench.sw4.offlineserver.audit {
 
             lock (string.Intern(key)) {
                 var operation = RedisManager.Lookup<SyncOperation>(key);
+                var trail = AuditManager.CurrentTrail();
                 if (operation == null) {
                     _log.WarnFormat("could not locate audit sync operation for {0}", key);
                 } else {
                     operation.InitialLoad = req.InitialLoad;
                     operation.AssociationCounts = associationResult.TotalCount;
                     SynchTracker.PopulateAssociationInputs(operation, req);
+                    operation.AuditTrail.Queries.AddAll(trail.Queries);
 
                     if (operation.TopAppCounts != null || forceSave) {
                         if (forceSave) {

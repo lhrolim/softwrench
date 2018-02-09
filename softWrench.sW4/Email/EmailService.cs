@@ -112,6 +112,7 @@ namespace softWrench.sW4.Email {
         /// <param name="emailData">The email data</param>
         public virtual void SendEmail(EmailData emailData) {
             try {
+                var smtpClient = ConfiguredSmtpClient();
                 Log.Info("Sending email to {0} - cc to {1} - bcc to {2}".Fmt(emailData.SendTo, emailData.Cc, emailData.BCc));
                 Policy.Handle<SmtpFailedRecipientsException>(ex => {
                     var tryAgain = CheckEmailClientMailboxBusy(ex.StatusCode);
@@ -132,7 +133,7 @@ namespace softWrench.sW4.Email {
                 )
                 .Execute(() => {
                     Log.DebugFormat("start sending email");
-                    var smtpClient = ConfiguredSmtpClient();
+                    
                     var email = BuildMailMessage(emailData);
                     // Send the email message synchronously
                     smtpClient?.Send(email);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using NHibernate.Mapping.Attributes;
 using softWrench.sW4.Data;
 using softWrench.sW4.Metadata.Applications;
 
@@ -95,9 +96,11 @@ namespace softwrench.sw4.offlineserver.model.dto {
 
         public bool HasNewEntries => NewdataMaps.Count > 0;
 
-        public int NewCount => NewdataMaps.Count;
+        public int NewCount => NewdataMaps?.Count ?? 0;
 
-        public int UpdateCount => UpdatedDataMaps.Count;
+        public int UpdateCount => UpdatedDataMaps?.Count ?? 0;
+
+        public int TotalCount => NewCount + UpdateCount + InsertOrUpdateDataMaps?.Count ?? 0;
 
         public override string ToString() {
             return $"{nameof(ApplicationName)}: {ApplicationName}, {nameof(NewCount)}: {NewCount}, {nameof(UpdateCount)}: {UpdateCount}";
