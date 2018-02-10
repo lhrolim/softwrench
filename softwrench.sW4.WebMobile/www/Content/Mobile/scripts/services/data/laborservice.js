@@ -1,7 +1,7 @@
 ﻿(function (angular, _) {
     "use strict";
 
-    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, $log, offlineSchemaService, offlineSaveService, $rootScope, menuModelService,fsLaborOfflineService) {
+    function laborService(dao, securityService, localStorageService, crudContextService, $ionicPopup, $q, $log, offlineSchemaService, offlineSaveService, $rootScope, menuModelService,fsLaborOfflineService, metadataModelService) {
         //#region Utils
 
         const truncateDecimal = value => parseFloat(value.toFixed(2));
@@ -64,7 +64,20 @@
 
         const getLabTransDetailSchema = () => crudContextService.currentCompositionSchemaById("labtrans", "detail");
 
-        const getLabTransMetadata = () => crudContextService.currentCompositionTabByName("labtrans");
+        const getLabTransMetadata = () => {
+            const laborMetadata = crudContextService.currentCompositionTabByName("labtrans");
+            if (laborMetadata){
+                return $q.when(laborMetadata);
+            }
+            const metadataDef = metadataModelService.getCompositionByName("labtrans");
+            //this is an adaptation since the next layers expected to receive the Composition displable definition, rather than the DB application definition
+            //TODO: make it properly
+            metadataDef.attribute = metadataDef.data.role;
+            metadataDef.associationKey = metadataDef.data.role + "_";
+
+            return $q.when(metadataDef);
+
+        }
 
         const insertTsLaborDataEntry = (labor, datamap, runningLabor = false) =>{
             //TODO: check for client
@@ -108,10 +121,9 @@
         }
 
         function saveLabor(parent, labor, inCurrentParent, saveCustomMessage,showConfirmationMessage, starting) {
-            const application = crudContextService.currentApplicationName();
-            const laborMetadata = getLabTransMetadata();
-
-            return offlineSaveService.addAndSaveComposition(application, parent, labor, laborMetadata, saveCustomMessage, showConfirmationMessage)
+            const application = parent != null? parent.application : crudContextService.currentApplicationName();
+            return getLabTransMetadata().then(laborMetadata=>{
+                return offlineSaveService.addAndSaveComposition(application, parent, labor, laborMetadata, saveCustomMessage, showConfirmationMessage)
                 .then(savedParent => {
                     const context = crudContextService.getCrudContext();
                     if (!!inCurrentParent) {
@@ -124,6 +136,8 @@
                     }
                     return labor;
                 }).then(insertTsLaborDataEntry(labor,parent.datamap,starting));
+            })
+     
         }
 
         function doStartLaborTransaction() {
@@ -404,7 +418,7 @@
     //#region Service registration
     angular.module("sw_mobile_services")
         .factory("laborService",
-        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "$log", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService","fsLaborOfflineService", laborService]);
+        ["swdbDAO", "securityService", "localStorageService", "crudContextService", "$ionicPopup", "$q", "$log", "offlineSchemaService", "offlineSaveService", "$rootScope", "menuModelService","fsLaborOfflineService","metadataModelService", laborService]);
     //#endregion
 
 })(angular, _);
