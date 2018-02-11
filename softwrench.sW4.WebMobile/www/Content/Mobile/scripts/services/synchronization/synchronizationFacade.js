@@ -215,6 +215,10 @@
                 throw e;
             }
 
+            if (isString(error)){
+                var error = new Error(error);
+            }
+
             error.title = "Error Synchronizing Data";
             throw error;
         }
