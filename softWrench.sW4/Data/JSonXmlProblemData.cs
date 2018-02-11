@@ -23,6 +23,11 @@ namespace softWrench.sW4.Data {
 
         }
 
+        public JSonXmlProblemData(string xmlCurrentData, string jsonOriginalData) {
+            Xml = xmlCurrentData;
+            Json = JsonConvert.SerializeObject(jsonOriginalData, Formatting.Indented);
+        }
+
         public string Serialize() {
 
             dynamic root = new JObject();
@@ -53,7 +58,7 @@ namespace softWrench.sW4.Data {
             var json = obj.json;
             var jsonContent = json.content.Value;
 
-            return new JSonXmlProblemData(xmlcontent, jsonContent);
+            return new JSonXmlProblemData(xmlcontent as string, jsonContent as string);
         }
     }
 }
