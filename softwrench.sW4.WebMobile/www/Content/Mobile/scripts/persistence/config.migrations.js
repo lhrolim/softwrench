@@ -9,12 +9,12 @@
         migrationGroup.addMigration("table OptionFieldData", {
             up: function () {
                 this.createTable("OptionFieldData", (t) => {
-                     t.text("application");
-                     t.text("schema");
-                     t.text("providerAttribute");
-                     t.text("optionkey");
-                     t.text("optionvalue");
-                     t.json("extraprojectionvalues");
+                    t.text("application");
+                    t.text("schema");
+                    t.text("providerAttribute");
+                    t.text("optionkey");
+                    t.text("optionvalue");
+                    t.json("extraprojectionvalues");
                 });
             },
             down: function () {
@@ -39,7 +39,7 @@
                     t.date("dateindex02");
                     t.date("dateindex03");
                 });
-                
+
             },
             down: function () {
                 this.dropTable("AssociationData");
@@ -157,7 +157,7 @@
                     t.date("dateindex02");
                     t.date("dateindex03");
                 });
-                this.addIndex("DataEntry", ["application","remoteid"], true);
+                this.addIndex("DataEntry", ["application", "remoteid"], true);
             },
             down: function () {
                 this.dropTable("DataEntry");
@@ -372,7 +372,7 @@
 
         migrationGroup.addMigration("add indexes for composition", {
             up: function () {
-                this.addIndex("CompositionDataEntry", ["application", "remoteid"], true);
+                this.addIndex("CompositionDataEntry", ["application", "remoteid"], true,null,false);
             }
         });
 

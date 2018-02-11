@@ -78,9 +78,9 @@
             }
 
             // adding an extra "_" on index name to be the same pattern as indexes created from persistence.js hasOne and hasMany
-            Migration.prototype.addIndex = function (tableName, columnName, unique, indexName) {
+            Migration.prototype.addIndex = function (tableName, columnName, unique, indexName, failOnError = true) {
                 const sql = swdbDAO.addIndexQuery(tableName, columnName, unique, indexName);
-                this.executeSql(sql);
+                this.executeSql(sql, null, failOnError);
             }
         }
 
