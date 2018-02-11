@@ -66,12 +66,11 @@ namespace softwrench.sw4.offlineserver.services {
             if (rowstamp == null) {
                 Log.WarnFormat("rowstamp is null for item {0}", relationshipName);
                 searchRequestDto.AppendWhereClauseFormat(BothQueryTemplateNoRowstamp, columnName, updateIdsForQuery, newIdsForQuery);
-            } else
-            {
+            } else {
                 var typeName = ApplicationConfiguration.IsOracle(DBType.Maximo) ? "NUMBER" : "BIGINT";
-                     
+
                 searchRequestDto.AppendWhereClauseFormat(BothQueryTemplate, columnName, updateIdsForQuery, rowstamp, relationshipName, typeName);
-                searchRequestDto.UnionWhereClauses = new List<string>() {"{0} in ({1})".Fmt(columnName, newIdsForQuery) };
+                searchRequestDto.UnionWhereClauses = new List<string>() { "{0} in ({1})".Fmt(columnName, newIdsForQuery) };
             }
 
         }
@@ -84,15 +83,22 @@ namespace softwrench.sw4.offlineserver.services {
         public class OfflineCollectionResolverParameters : CollectionResolverParameters {
             public OfflineCollectionResolverParameters(ApplicationMetadata applicationMetadata, IEnumerable<DataMap> parentEntities, IDictionary<string, long?> rowstampMap, IEnumerable<DataMap> newEntities, IEnumerable<DataMap> alreadyExisting)
                 : base(applicationMetadata, parentEntities, rowstampMap) {
-                NewEntities = newEntities;
-                ExistingEntities = alreadyExisting;
+                NewEntities = newEntities?.ToList();
+                ExistingEntities = alreadyExisting?.ToList();
             }
 
-            public IEnumerable<DataMap> NewEntities {
+            public List<DataMap> NewEntities {
                 get; set;
             }
-            public IEnumerable<DataMap> ExistingEntities {
+            public List<DataMap> ExistingEntities {
                 get; set;
+            }
+
+            public void Merge(OfflineCollectionResolverParameters other) {
+                ParentEntities.AddRange(other.ParentEntities);
+                NewEntities.AddRange(other.NewEntities);
+                ExistingEntities.AddRange(other.ExistingEntities);
+                RowstampMap.AddRange(other.RowstampMap);
             }
         }
 

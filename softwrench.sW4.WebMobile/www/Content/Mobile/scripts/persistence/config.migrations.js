@@ -370,6 +370,12 @@
             }
         });
 
+        migrationGroup.addMigration("add indexes for composition", {
+            up: function () {
+                this.addIndex("CompositionDataEntry", ["application", "remoteid"], true);
+            }
+        });
+
     }]);
 
 })(angular, persistence);

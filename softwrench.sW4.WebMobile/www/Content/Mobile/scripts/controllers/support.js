@@ -29,9 +29,14 @@
                 sessionStorage.loglevel = callback.item.value;
                 if (callback.item.value.equalIc('debug')) {
                     persistence.debug = true;
+                    $scope.vm.logsql = true;
                 } else {
                     persistence.debug = false;
                 }
+            }
+
+            $scope.changeLogSQl = function (){
+                persistence.debug = $scope.vm.logsql;
             }
 
             $scope.sendLogFiles = function() {

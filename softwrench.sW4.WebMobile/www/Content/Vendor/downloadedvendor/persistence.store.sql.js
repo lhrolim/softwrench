@@ -384,7 +384,7 @@ function config(persistence, dialect) {
                 
             }
         }
-        //let´s use this to have a valid track by value, since the ids might not be unique on a left join operation
+        //letï¿½s use this to have a valid track by value, since the ids might not be unique on a left join operation
         o.generatedRowStamp = persistence.createUUID();
 
         return o;
@@ -489,6 +489,9 @@ function config(persistence, dialect) {
             (queryTuple, next) => {
                 var statement = queryTuple[0];
                 var args = queryTuple[1];
+                if (persistence.debug) {
+                    console.log(statement, args);
+                }
                 tx.executeSql(statement, args,
                     next, // success fn: go to next element
                     err => { // error fn

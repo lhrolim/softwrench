@@ -28,13 +28,15 @@
             }
 
             function initializeList() {
-                $scope.crudlist.moreItemsAvailable = true;
+                
 
                 const context = crudContextHolderService.getCrudContext();
                 context.itemlist = laborThenDirtyItemsFirst(context.itemlist);
 
                 // getting references to elements instead of to the whole list
                 $scope.crudlist.items = context.itemlist.map(i => i);
+                //do not allow infinite scroll for small subset of items preventing a second query to take place upon grid loading
+                $scope.crudlist.moreItemsAvailable = $scope.crudlist.items.length > 4;
             }
 
             function init() {

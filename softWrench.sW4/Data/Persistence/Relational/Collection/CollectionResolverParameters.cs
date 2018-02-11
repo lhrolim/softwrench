@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
@@ -13,7 +14,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         public ApplicationMetadata ApplicationMetadata { get; set; }
 
         public IDictionary<string, long?> RowstampMap { get; set; }
-        public IEnumerable<AttributeHolder> ParentEntities { get; set; }
+        public List<AttributeHolder> ParentEntities { get; set; }
 
         public SlicedEntityMetadata SlicedEntity { get; set; }
 
@@ -22,14 +23,14 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
         public CollectionResolverParameters(IDictionary<string, ApplicationCompositionSchema> compositionSchemas, SlicedEntityMetadata slicedEntity, IEnumerable<AttributeHolder> parentEntities) {
             SlicedEntity = slicedEntity;
             CompositionSchemas = compositionSchemas;
-            ParentEntities = parentEntities;
+            ParentEntities = parentEntities?.ToList();
         }
 
 
         public CollectionResolverParameters(ApplicationMetadata applicationMetadata, IEnumerable<AttributeHolder> parentEntities, IDictionary<string, long?> rowstampMap) {
             ApplicationMetadata = applicationMetadata;
             RowstampMap = rowstampMap;
-            ParentEntities = parentEntities;
+            ParentEntities = parentEntities?.ToList();
             CompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(ApplicationMetadata.Schema);
             SlicedEntity = MetadataProvider.SlicedEntityMetadata(ApplicationMetadata);
         }

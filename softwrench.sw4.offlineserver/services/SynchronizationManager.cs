@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
@@ -21,7 +21,6 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softwrench.sw4.offlineserver.events;
-using softwrench.sw4.offlineserver.model;
 using softwrench.sw4.offlineserver.model.dto;
 using softwrench.sw4.offlineserver.model.dto.association;
 using softwrench.sw4.offlineserver.services.util;
@@ -30,12 +29,10 @@ using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Configuration.Services.Api;
-using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.Offline;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Relational.Cache.Api;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
-using softWrench.sW4.Data.Relationship.Composition;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Stereotypes.Schema;
 using softWrench.sW4.Security.Context;
@@ -82,10 +79,22 @@ namespace softwrench.sw4.offlineserver.services {
             var topLevelApps = GetTopLevelAppsToCollect(request, user);
 
             var tasks = new List<Task>();
+            var compositionsToResolve = new ConcurrentBag<OffLineCollectionResolver.OfflineCollectionResolverParameters>();
+
 
             foreach (var topLevelApp in topLevelApps) {
                 tasks.Add(Task.Run(async () => {
-                    await ResolveApplication(request, user, topLevelApp, result, rowstampMap);
+                    await ResolveApplication(request, user, topLevelApp, result, rowstampMap, compositionsToResolve);
+                }));
+            }
+
+            await Task.WhenAll(tasks.ToArray());
+
+            var mergedParameters = MergeCompositionsToResolve(compositionsToResolve);
+
+            foreach (var compositionToResolveParameters in mergedParameters) {
+                tasks.Add(Task.Run(async () => {
+                    await DoResolveCompositions(result, compositionToResolveParameters);
                 }));
             }
 
@@ -102,6 +111,30 @@ namespace softwrench.sw4.offlineserver.services {
             result.ClientName = ApplicationConfiguration.ClientName;
 
             return result;
+        }
+
+        private Dictionary<string, OffLineCollectionResolver.OfflineCollectionResolverParameters>.ValueCollection MergeCompositionsToResolve(IEnumerable<OffLineCollectionResolver.OfflineCollectionResolverParameters> compositionsToResolve) {
+            var mergedParameters = new Dictionary<string, OffLineCollectionResolver.OfflineCollectionResolverParameters>();
+
+            foreach (var comp in compositionsToResolve) {
+                var metadata = comp.ApplicationMetadata;
+                var appName = metadata.Name;
+                
+                if (!appName.Contains("workorder")) {
+                    //TODO: locate related entries from the metadata property application.original instead 
+                    //and use a more professional logic (i.e ==> these different apps could have different composition sets)
+                    mergedParameters.Add(appName,comp);
+                    continue;
+                }
+
+                if (!mergedParameters.ContainsKey("workorder")) {
+                    mergedParameters.Add("workorder", comp);
+                } else {
+                    mergedParameters["workorder"].Merge(comp);
+                }
+            }
+
+            return mergedParameters.Values;
         }
 
         private async Task<SynchronizationApplicationResultData> GetOfflineConfigs() {
@@ -385,7 +418,8 @@ namespace softwrench.sw4.offlineserver.services {
             results.AddIndividualJsonDatamaps(association.ApplicationName, association.IdFieldName, datamaps);
         }
 
-        protected virtual async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap) {
+        protected virtual async Task ResolveApplication(SynchronizationRequestDto request, InMemoryUser user, CompleteApplicationMetadataDefinition topLevelApp, SynchronizationResultDto result, JObject rowstampMap,
+            ConcurrentBag<OffLineCollectionResolver.OfflineCollectionResolverParameters> compositionsToResolve) {
             var watch = Stopwatch.StartNew();
             //this will return sync schema
             var userAppMetadata = topLevelApp.ApplyPolicies(ApplicationMetadataSchemaKey.GetSyncInstance(), user, ClientPlatform.Mobile);
@@ -412,7 +446,7 @@ namespace softwrench.sw4.offlineserver.services {
             Log.DebugFormat("SYNC:Finished handling top level app. Ellapsed {0}", LoggingUtil.MsDelta(watch));
 
             if (!appResultData.IsEmptyExceptDeletion) {
-                await HandleCompositions(userAppMetadata, appResultData, result, rowstampMap);
+                MarkCompositionsToSolve(userAppMetadata, appResultData, result, rowstampMap, compositionsToResolve);
             }
 
         }
@@ -431,31 +465,41 @@ namespace softwrench.sw4.offlineserver.services {
             return appRowstampDTO;
         }
 
-        /// <summary>
-        /// Brings all composition data related to the main application passed as parameter (i.e only the ones whose parent entites are fetched).
+        ///  <summary>
+        ///  Brings all composition data related to the main application passed as parameter (i.e only the ones whose parent entites are fetched).
+        ///  
+        ///  If there´s no new parent entity, we can safely bring only compositions greater than the max rowstamp cached in the client side; 
+        ///  
+        ///  If new entries appeared, however, for the sake of simplicity we won´t use this strategy since the whereclause might have changed in the process, causing loss of data
+        ///  
         /// 
-        /// If there´s no new parent entity, we can safely bring only compositions greater than the max rowstamp cached in the client side; 
-        /// 
-        /// If new entries appeared, however, for the sake of simplicity we won´t use this strategy since the whereclause might have changed in the process, causing loss of data
-        /// 
-        ///
-        /// </summary>
-        /// <param name="topLevelApp"></param>
-        /// <param name="appResultData"></param>
-        /// <param name="result"></param>
-        /// <param name="rowstampMap"></param>
-        protected virtual async Task HandleCompositions(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap) {
-            var watch = Stopwatch.StartNew();
+        ///  </summary>
+        ///  <param name="topLevelApp"></param>
+        ///  <param name="appResultData"></param>
+        ///  <param name="result"></param>
+        ///  <param name="rowstampMap"></param>
+        /// <param name="toResolve"></param>
+        protected virtual void MarkCompositionsToSolve(ApplicationMetadata topLevelApp, SynchronizationApplicationResultData appResultData, SynchronizationResultDto result, JObject rowstampMap, ConcurrentBag<OffLineCollectionResolver.OfflineCollectionResolverParameters> toResolve) {
+
 
             var compositionMap = ClientStateJsonConverter.GetCompositionRowstampsDict(rowstampMap);
-
-            var parameters = new OffLineCollectionResolver.OfflineCollectionResolverParameters(topLevelApp, appResultData.AllData, compositionMap, appResultData.NewdataMaps.Select(s => s.OriginalDatamap), appResultData.AlreadyExistingDatamaps);
 
             if (!appResultData.AllData.Any()) {
                 return;
             }
-            var compositionData = await _resolver.ResolveCollections(parameters);
 
+            var parameters = new OffLineCollectionResolver.OfflineCollectionResolverParameters(topLevelApp, appResultData.AllData, compositionMap, appResultData.NewdataMaps.Select(s => s.OriginalDatamap), appResultData.AlreadyExistingDatamaps);
+            toResolve.Add(parameters);
+
+
+            //            await DoResolveCompositions(result, parameters, watch);
+        }
+
+        private async Task DoResolveCompositions(SynchronizationResultDto result, OffLineCollectionResolver.OfflineCollectionResolverParameters parameters) {
+
+            var watch = Stopwatch.StartNew();
+
+            var compositionData = await _resolver.ResolveCollections(parameters);
 
 
             foreach (var compositionDict in compositionData) {
@@ -471,12 +515,12 @@ namespace softwrench.sw4.offlineserver.services {
                 var schemas = compositionSchema.Schemas;
                 var anySchema = schemas.List ?? schemas.Detail ?? schemas.Print ?? schemas.Sync;
                 var compositionApp = MetadataProvider.Application(anySchema.ApplicationName);
-                IndexUtil.ParseIndexes(resultData.TextIndexes, resultData.NumericIndexes, resultData.DateIndexes, compositionApp);
+                IndexUtil.ParseIndexes(resultData.TextIndexes, resultData.NumericIndexes, resultData.DateIndexes,
+                    compositionApp);
 
                 result.AddCompositionData(resultData);
             }
             Log.DebugFormat("SYNC:Finished handling compositions. Ellapsed {0}", LoggingUtil.MsDelta(watch));
-
         }
 
         protected virtual IEnumerable<CompleteApplicationMetadataDefinition> GetTopLevelAppsToCollect(SynchronizationRequestDto request, InMemoryUser user) {
@@ -568,9 +612,9 @@ namespace softwrench.sw4.offlineserver.services {
             return result;
         }
 
-       
 
-     
+
+
 
 
         protected virtual async Task<List<JSONConvertedDatamap>> FetchData(bool isAssociationData, SlicedEntityMetadata entityMetadata, ApplicationMetadata appMetadata,
@@ -632,7 +676,7 @@ namespace softwrench.sw4.offlineserver.services {
             var dataMaps = new List<JSONConvertedDatamap>();
             foreach (var row in enumerable) {
                 var dataMap = DataMap.Populate(appMetadata, entityMetadata, row);
-                dataMaps.Add(new JSONConvertedDatamap(dataMap,false, appMetadata));
+                dataMaps.Add(new JSONConvertedDatamap(dataMap, false, appMetadata));
             }
 
             if (isAssociationData && cacheableItem) {
@@ -668,6 +712,6 @@ namespace softwrench.sw4.offlineserver.services {
         }
 
 
-        
+
     }
 }

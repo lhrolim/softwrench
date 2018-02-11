@@ -154,7 +154,7 @@
             dateindex03: "DATE"
         });
 
-        entities.CompositionDataEntry.insertionQueryPattern = "insert into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id,'textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (:p0,:p1,0,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9,:p10,:p11,:p12,:p13,:p14)";
+        entities.CompositionDataEntry.insertionQueryPattern = "insert or replace into CompositionDataEntry (application,datamap,isDirty,remoteId,rowstamp,id,'textindex01','textindex02','textindex03','textindex04','textindex05','numericindex01','numericindex02','dateindex01','dateindex02','dateindex03') values (:p0,:p1,0,:p2,:p3,:p4,:p5,:p6,:p7,:p8,:p9,:p10,:p11,:p12,:p13,:p14)";
         entities.CompositionDataEntry.updateQueryPattern = "update CompositionDataEntry set datamap='{0}' rowstamp={1} where remoteId='{2}' and applicaton='{3}'";
         entities.CompositionDataEntry.syncdeletionQuery = "delete from CompositionDataEntry where application = '{0}' and remoteId in ({1})";
 
