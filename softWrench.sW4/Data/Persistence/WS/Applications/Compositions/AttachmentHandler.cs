@@ -350,7 +350,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     }
                     return Tuple.Create(fileBytes, fileName);
                 } catch (Exception exception) {
-                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ? "No Internal Error Message" : exception.InnerException.Message, exception);
+                    Log.Error("Error Attachment Handler: {0} - {1}".Fmt(exception.Message, exception.InnerException?.Message ?? "No Internal Error Message"), exception);
                     return null;
                 }
             }
