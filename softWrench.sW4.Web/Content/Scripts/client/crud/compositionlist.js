@@ -805,7 +805,16 @@
                 return $q.reject();
             }).then(() => {
                 const promise = modalService.showPromise($scope.compositiondetailschema, angular.copy(item), { title }, $scope.parentdata, $scope.parentschema);
-                return promise.update(modaldatamap => {
+                //check deferredupdate.js
+                if (promise.update) {
+                    //for keeping unit tests working --> using $q.when out there
+                    return promise.update(modaldatamap => {
+                        return $scope.save(modaldatamap, null);
+                    });    
+                }
+                
+
+                return promise.then(modaldatamap => {
                     return $scope.save(modaldatamap, null);
                 });
             });
