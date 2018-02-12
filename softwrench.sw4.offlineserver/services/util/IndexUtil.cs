@@ -93,16 +93,19 @@ namespace softwrench.sw4.offlineserver.services.util {
             i = 1;
             foreach (var idx in repr.DateIndexes) {
                 var date = datamap.GetAttribute(idx);
+                var dt = DateTime.Now;
                 if (date is DateTime) {
-                    var d = (DateTime)date;
-                    result.Add("d" + i++, d.ToTimeInMillis());
+                    dt = (DateTime)date;
                 } else if (date is DateTimeOffset) {
                     var d = (DateTimeOffset)date;
-                    result.Add("d" + i++, d.DateTime.ToTimeInMillis());
+                    dt = d.DateTime;
                 } else if (date is string) {
                     var d = DateTime.Parse(date as string);
-                    result.Add("d" + i++, d.ToTimeInMillis());
+                    dt = d;
                 }
+
+
+                result.Add("d" + i++, dt.ToTimeInMillis());
 
             }
             return result;

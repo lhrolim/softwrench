@@ -36,7 +36,7 @@
 
     <entity name="workorder" idAttribute="workorderid">
       <attributes>
-        <attribute name="schedstartnotime" query="(select DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0) from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
+        <attribute name="schedstartnotime" query="(select DATEADD(hh,12,DATEADD(dd, DATEDIFF(dd, 0, scheduledate), 0)) from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
         <attribute name="schedassigneddate" query="(select scheduledate from assignment where wonum = !@wonum and siteid = !@siteid and orgid = !@orgid and laborcode = @personid)" type="date"/>
         <attribute name="failurelist" query="(select failurelist from failurelist fl where fl.failurecode = !@failurecode and fl.orgid = !@orgid and fl.type is null)" type="varchar"/>
         <attribute name="problemlist" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='PROBLEM' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>

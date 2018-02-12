@@ -216,7 +216,7 @@
             }
 
             if (isString(error)){
-                var error = new Error(error);
+                error = new Error(error);
             }
 
             error.title = "Error Synchronizing Data";
