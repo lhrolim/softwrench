@@ -72,8 +72,8 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                     operationXml = GetOperationXml(operationWrapper, crudConnector, entityMetadata);
                 }
 
-                if (operationWrapper.OperationData().ProblemData != null) {
-                    var operationData = operationWrapper.OperationData();
+                var operationData = operationWrapper.OperationData();
+                if (operationData.ProblemData != null) {
                     return HandleDefaultProblem(operationData, e, xmlCurrentData: operationXml, jsonOriginalData: operationWrapper.JSON);
                 }
             }
@@ -82,10 +82,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         }
 
         private static string GetOperationXml(OperationWrapper operationWrapper, IMaximoCrudConnector crudConnector,
-            EntityMetadata entityMetadata)
-        {
+            EntityMetadata entityMetadata) {
             var proxy = crudConnector.CreateProxy(entityMetadata);
-            var crudOperationData = (CrudOperationData) operationWrapper.OperationData(null);
+            var crudOperationData = (CrudOperationData)operationWrapper.OperationData(null);
             var maximoTemplateData = crudConnector.CreateExecutionContext(proxy, crudOperationData);
             var xml = crudConnector.GenerateXml(maximoTemplateData);
             return xml;
@@ -119,7 +118,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         private TargetResult HandleDefaultProblem(IOperationData operationData,
             [NotNull]System.Exception e, string xmlCurrentData, JObject jsonOriginalData) {
-            Logger.Error(e.Message,e);
+            Logger.Error(e.Message, e);
             var context = _lookuper.LookupContext();
             var problemData = operationData.ProblemData;
             //default problem handling

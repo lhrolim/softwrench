@@ -1,4 +1,5 @@
-﻿using softwrench.sW4.Shared2.Data;
+﻿using JetBrains.Annotations;
+using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Metadata.Applications;
 
 namespace softwrench.sw4.api.classes.integration
@@ -22,7 +23,7 @@ namespace softwrench.sw4.api.classes.integration
         }
 
    
-
+        [CanBeNull]
         OperationProblemData ProblemData {
             get; set;
         }

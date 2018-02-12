@@ -44,6 +44,10 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             // See if association has a schema defined
             string optionApplication;
             string optionSchemaId;
+            if (association == null) {
+                return null;
+            }
+
             association.Schema.RendererParameters.TryGetValueAsString("application", out optionApplication);
             association.Schema.RendererParameters.TryGetValueAsString("schemaId", out optionSchemaId);
 
@@ -258,7 +262,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         private string BuildComplexLabel(AttributeHolder attributeHolder, ApplicationAssociationDefinition association) {
             var fmt = new object[association.LabelFields.Count];
-            for (var i = 0; i < association.LabelFields.Count; i++) {
+            for (var i = 0;i < association.LabelFields.Count;i++) {
                 fmt[i] = attributeHolder.GetAttribute(association.LabelFields[i], true);
             }
             return string.Format(association.LabelPattern, fmt);

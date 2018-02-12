@@ -270,7 +270,7 @@ namespace softwrench.sw4.offlineserver.audit {
             };
             operation.ServerEnv = ApplicationConfiguration.Profile;
             operation.ServerVersion = ApplicationConfiguration.SystemVersion;
-            operation.TimezoneOffset = user.TimezoneOffset;
+            operation.TimezoneOffset = user.TimezoneOffset ?? 0;
             operation.DeviceData = deviceData;
             operation.MetadataDownload = metadataDownload;
             operation.AuditTrail = trail;
