@@ -1,5 +1,7 @@
 ﻿using System;
 using cts.commons.Util;
+using JetBrains.Annotations;
+using log4net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using softwrench.sw4.problem.classes;
@@ -24,7 +26,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
 
         private static IProblemManager _problemManager;
-        private IContextLookuper _lookuper;
+        private readonly IContextLookuper _lookuper;
+
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(MaximoConnectorEngine));
 
 
         public MaximoConnectorEngine(EntityRepository entityRepository, IProblemManager problemManager, IContextLookuper lookuper)
@@ -114,7 +118,8 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         }
 
         private TargetResult HandleDefaultProblem(IOperationData operationData,
-            System.Exception e, string xmlCurrentData, JObject jsonOriginalData) {
+            [NotNull]System.Exception e, string xmlCurrentData, JObject jsonOriginalData) {
+            Logger.Error(e.Message,e);
             var context = _lookuper.LookupContext();
             var problemData = operationData.ProblemData;
             //default problem handling
