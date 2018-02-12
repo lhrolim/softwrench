@@ -377,12 +377,11 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                                                            | SecurityProtocolType.Tls12
                                                            | SecurityProtocolType.Ssl3;
                     var response = await client.GetAsync(finalURL);
-                    var filetype = response.Content.Headers.ContentType.MediaType;
                     var fileBytes = await response.Content.ReadAsByteArrayAsync();
+                    var filetype = response.Content.Headers.ContentType?.MediaType;
                     return Tuple.Create(fileBytes, filetype);
                 } catch (Exception exception) {
-                    Log.ErrorFormat("Error Attachment Handler: {0} - {1}", exception.Message, exception.InnerException == null ?
-                        "No Internal Error Message" : exception.InnerException.Message);
+                    Log.Error("Error Attachment Handler: {0} - {1}".Fmt(exception.Message, exception.InnerException?.Message ?? "No Internal Error Message"),exception);
                     return null;
                 }
             }

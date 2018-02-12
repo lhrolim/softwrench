@@ -158,7 +158,16 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             if (paginatedSearch == null) {
                 //if there´s no pagination needed we can just do one thread-query
                 var dto = searchRequestDto.ShallowCopy();
-                queryResult = await EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
+                var errorOnTimeout = !collectionEntityMetadata.ConnectorParameters.Parameters.ContainsKey("composition.skiptimeout");
+                try {
+                    queryResult = await EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
+                } catch (Exception e) {
+                    if (errorOnTimeout) {
+                        throw;
+                    }
+                    Log.Error(e.Message, e);
+                }
+
             } else {
                 // one thread to fetch results
                 //var ctx = ContextLookuper.LookupContext();

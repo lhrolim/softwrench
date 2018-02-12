@@ -251,6 +251,10 @@
           <relationshipAttribute from="location" to="location" primary="true"/>
         </relationship>
       </relationships>
+
+      <connectorParameters>
+        <connectorParameter key="composition.skiptimeout" value="true" />
+      </connectorParameters>
     </entity>
 
     <entity name="inventory" idAttribute="inventoryid" whereclause="inventory.STATUS = 'ACTIVE'">
