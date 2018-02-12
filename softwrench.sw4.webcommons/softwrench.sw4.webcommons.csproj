@@ -231,6 +231,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="shared_commons.placeholder" />
+    <Content Include="web_content\webcommons\scripts\softwrench\util\angular\deferredupdate.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\softwrench.sw4.Shared2\softwrench.sw4.Shared2.csproj">

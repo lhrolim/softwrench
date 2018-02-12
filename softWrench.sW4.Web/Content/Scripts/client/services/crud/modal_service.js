@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module('sw_layout')
-        .service('modalService', ["$rootScope", "$q", "crudContextHolderService", "$timeout", function ($rootScope, $q, crudContextHolderService, $timeout) {
+        .service('modalService', ["$rootScope", "$q", "crudContextHolderService", "$timeout", "DeferredWithUpdate", function ($rootScope, $q, crudContextHolderService, $timeout, DeferredWithUpdate) {
 
             return {
 
@@ -109,12 +109,18 @@
 
 
                 showPromise: function (schemaorModalData, datamap = {}, properties, parentdata, parentschema) {
-                    var deferred = $q.defer();
+                    var deferred = DeferredWithUpdate.defer();
 
-                    const savefn = (datamap) => {
+                    const savefn = (datamap, schema) => {
                         deferred.resolve(datamap);
                         //timeout to enforce the promise resolution to take place before the hide method execution
-                        $timeout(() => { this.hide();},0,false);
+                        if (!schema.stereotype.equalsAny("CompositionDetail")) {
+                            //not ideal, however for compositions we know for sure that the modal will auto close afterwards, so there´s no reason to close it here
+                            // there´s a bug that the modal is closing in case of server side failure
+                            //TODO: fix it
+                            $timeout(() => { this.hide(); }, 0, false);    
+                        }
+                        
                     }
 
                     const cancelfn = (datamap) => {

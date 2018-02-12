@@ -19,6 +19,7 @@
         "angular-click-outside",
         "pdf",
         "xeditable",
+        "DeferredWithUpdate",
         "sw_lookup",
         "sw_typeahead",
         "sw_scan",

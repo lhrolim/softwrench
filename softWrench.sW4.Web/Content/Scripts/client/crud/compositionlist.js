@@ -804,9 +804,10 @@
                 redirectService.redirectToTab('main');
                 return $q.reject();
             }).then(() => {
-                return modalService.showPromise($scope.compositiondetailschema, angular.copy(item), { title }, $scope.parentdata, $scope.parentschema);
-            }).then(modaldatamap => {
-                return $scope.save(modaldatamap, null);
+                const promise = modalService.showPromise($scope.compositiondetailschema, angular.copy(item), { title }, $scope.parentdata, $scope.parentschema);
+                return promise.update(modaldatamap => {
+                    return $scope.save(modaldatamap, null);
+                });
             });
         }
 
