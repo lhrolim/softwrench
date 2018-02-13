@@ -158,7 +158,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             if (paginatedSearch == null) {
                 //if there´s no pagination needed we can just do one thread-query
                 var dto = searchRequestDto.ShallowCopy();
-                var errorOnTimeout = !collectionEntityMetadata.ConnectorParameters.Parameters.ContainsKey("composition.skiptimeout");
+                var errorOnTimeout = !offLineMode || !collectionEntityMetadata.ConnectorParameters.Parameters.ContainsKey("composition.skiptimeout");
                 try {
                     queryResult = await EntityRepository.GetAsRawDictionary(collectionEntityMetadata, dto, offLineMode);
                 } catch (Exception e) {
@@ -166,6 +166,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                         throw;
                     }
                     Log.Error(e.Message, e);
+                    parameter.Results.Add(collectionAssociation.Qualifier, new EntityRepository.EntityRepository.SearchEntityResult { ResultList = new List<Dictionary<string, object>>(), Timeout = true });
+                    return;
                 }
 
             } else {

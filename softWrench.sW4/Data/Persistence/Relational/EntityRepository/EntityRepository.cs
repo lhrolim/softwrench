@@ -157,6 +157,8 @@ namespace softWrench.sW4.Data.Persistence.Relational.EntityRepository {
             public IList<Dictionary<string, object>> ResultList;
             public long? MaxRowstampReturned;
             public string IdFieldName;
+            public bool Timeout { get; set; }
+
             /// <summary>
             /// Holds the PaginationData for the result
             /// </summary>

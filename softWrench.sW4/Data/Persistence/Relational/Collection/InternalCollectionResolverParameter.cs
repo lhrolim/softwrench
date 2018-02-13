@@ -12,15 +12,11 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
         internal EntityAssociation CollectionAssociation { get; set; }
 
-        internal SlicedEntityMetadata EntityMetadata { get { return ExternalParameters.SlicedEntity; } }
+        internal SlicedEntityMetadata EntityMetadata => ExternalParameters.SlicedEntity;
 
-        internal IDictionary<string, ApplicationCompositionSchema> CompositionSchemas {
-            get {
-                return ExternalParameters.CompositionSchemas;
-            }
-        }
+        internal IDictionary<string, ApplicationCompositionSchema> CompositionSchemas => ExternalParameters.CompositionSchemas;
 
-        internal IEnumerable<AttributeHolder> EntitiesList { get { return ExternalParameters.ParentEntities; } }
+        internal IEnumerable<AttributeHolder> EntitiesList => ExternalParameters.ParentEntities;
 
         public ContextHolder Ctx { get; internal set; }
 
