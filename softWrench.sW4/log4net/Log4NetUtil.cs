@@ -53,7 +53,9 @@ namespace softWrench.sW4.log4net {
                 return;
             }
 
-            LoggingUtil.DefaultLog.InfoFormat("init custom log system for client {0}", ApplicationConfiguration.ClientName);
+            var clientLogName = ApplicationConfiguration.ClientLogFolder;
+
+            LoggingUtil.DefaultLog.InfoFormat("init custom log system for client {0}, logfolder: {1}", ApplicationConfiguration.ClientName, clientLogName);
 
 
             var appenders = LogManager.GetRepository().GetAppenders();
@@ -69,7 +71,7 @@ namespace softWrench.sW4.log4net {
                             "\\logs\\{0}\\".Fmt(ApplicationConfiguration.Profile));
                     } else {
                         rollingFileAppender.File = rollingFileAppender.File.Replace("\\logs\\",
-                        "\\logs\\{0}\\".Fmt(ApplicationConfiguration.ClientName));
+                        "\\logs\\{0}\\".Fmt(clientLogName));
                     }
 
                 } else if (!isDevOrQa) {

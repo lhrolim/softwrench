@@ -6,15 +6,6 @@
 
         //#region Utils
 
-
-        function buildIdsString  (deletedRecordIds) {
-            var ids = [];
-            angular.forEach(deletedRecordIds, function (id) {
-                ids.push("'{0}'".format(id));
-            });
-            return ids;
-        };
-
         function getDownloadDataCount(dataDownloadResult) {
             let count = 0;
             angular.forEach(dataDownloadResult, result => {

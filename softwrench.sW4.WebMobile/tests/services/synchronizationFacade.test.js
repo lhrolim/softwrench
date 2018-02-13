@@ -24,7 +24,9 @@
             var ids = _.map(args[0], function (id) {
                 return (String(id));
             });
-            this.args = [ids, args[1]];
+
+            this.query = "delete from DataEntry where id in ({0}) and application=?".format(buildIdsString(ids));
+            this.args = [args[1]];
         }
 
         return PreparedStatement;
@@ -121,7 +123,7 @@
         $q = _$q_;
         $rootScope = _$rootScope_;
         entities = _offlineEntities_;
-        PreparedStatement.prototype.query = entities.DataEntry.deleteInIdsStatement;
+        // PreparedStatement.prototype.query = entities.DataEntry.deleteInIdsStatement.format(window.buildIdsString)
         // clear statements and store them after the promise is resolved for comparing
         spyOn(swdbDAO, "executeQueries").and.callFake(function (statements) {
             config.statements = [];

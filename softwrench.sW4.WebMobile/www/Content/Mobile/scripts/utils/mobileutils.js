@@ -27,6 +27,14 @@
         //return scope.$parent;
     };
 
+    window.buildIdsString=  (ids) => {
+        var result = [];
+        angular.forEach(ids, function (id) {
+            result.push("'{0}'".format(id));
+        });
+        return result;
+    };
+
     window.Validate = Object.freeze(class {
         static notNull(value, name) {
             if (value === undefined || value === null) throw new Error(`${name || "value"} cannot be null`);

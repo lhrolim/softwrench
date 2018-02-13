@@ -90,6 +90,15 @@ namespace softWrench.sW4.Util {
             }
         }
 
+        public static object ClientLogFolder {
+            get {
+                if (ConfigurationManager.AppSettings["clientlogkey"] != null) {
+                    return ConfigurationManager.AppSettings["clientlogkey"];
+                }
+                return ClientName;
+            }
+        }
+
         public static string TestclientName {
             get {
                 return _testclientName;
