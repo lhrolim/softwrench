@@ -26,6 +26,27 @@
                 window.location = url("/swgasrequestsuccess") + `?id=${result.id}`;
             });
         }
+
+        //#afterchange
+        loadCities() {
+            const datamap = this.crudContextHolderService.rootDataMap();
+            const division = datamap["division"];
+            this.restService.get("SwgasRequestApi", "LoadCities", { division }).then(result => {
+                const data = result.data;
+                this.crudContextHolderService.updateEagerAssociationOptions("#city", data);
+            });
+        }
+
+        //#afterchange
+        loadBuildings() {
+            const datamap = this.crudContextHolderService.rootDataMap();
+            const city = datamap["city"];
+            const division = datamap["division"];
+            this.restService.get("SwgasRequestApi", "LoadBuildings", { division, city }).then(result => {
+                const data = result.data;
+                this.crudContextHolderService.updateEagerAssociationOptions("#locbuilding", data);
+            });
+        }
     }
 
     swgasNoLoginSubmitService.$inject = ["submitService", "crudContextHolderService", "restService", "spinService"];

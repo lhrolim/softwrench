@@ -14,7 +14,9 @@ modules.rootCommons.service('restService', ["$http", "$log","$q", "contextServic
     "UserSetupWebApi/ForgotPassword",
     "UserSetupWebApi/SendActivationEmail",
     "UserSetupWebApi/NewUserRegistration",
-    "FSDBackendController"
+    "FSDBackendController",
+    "SwgasRequestApi/LoadCities",
+    "SwgasRequestApi/LoadBuildings"
 
     ];
 
@@ -100,7 +102,7 @@ modules.rootCommons.service('restService', ["$http", "$log","$q", "contextServic
             const log = $log.getInstance("restService#invokePost",["post","network"]);
             if (contextService.get("anonymous", false, true) && !this.validateAnonymous(controller, action)) {
                 log.warn("mocking call to {0}. consider filtering that request off the stack".format(url));
-                return $q.reject();
+                return $q.reject("method not marked for anonymous invocation");
             } else {
                 log.info("invoking post on url {0}".format(url));
                 return $http.post(url, json, config);

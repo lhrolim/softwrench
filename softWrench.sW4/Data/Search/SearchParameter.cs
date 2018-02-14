@@ -27,7 +27,7 @@ namespace softWrench.sW4.Data.Search {
         private SearchOperator ParseSearchOperator(string rawValue, out object value, out bool searchFilter) {
             searchFilter = false;
             var searchOperator = SearchOperator.EQ;
-            
+
             rawValue = HandleNullScenario(rawValue);
             if (rawValue.Contains(">=") && rawValue.Contains("<=")) {
                 searchOperator = SearchOperator.BETWEEN;
@@ -56,9 +56,8 @@ namespace softWrench.sW4.Data.Search {
             }
 
             value = searchOperator.NormalizedValue(rawValue);
-            if (value is IEnumerable<string>)
-            {
-                var list = (List<string>) value;
+            if (value is IEnumerable<string>) {
+                var list = (List<string>)value;
                 NullOr = list.Remove("NULL") || list.Remove("null");
             }
 
@@ -75,8 +74,10 @@ namespace softWrench.sW4.Data.Search {
             } else if (rawValue.StartsWith("=" + SearchUtils.NullOrPrefix)) {
                 NullOr = true;
                 rawValue = rawValue.Substring(SearchUtils.NullOrPrefix.Length + 1);
-            } 
-            
+            } else if (rawValue.StartsWith("=!")) {
+                rawValue = "!=" + rawValue.Substring(2);
+            }
+
             return rawValue;
         }
 

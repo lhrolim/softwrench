@@ -52,6 +52,7 @@ namespace softWrench.sW4.Web.Common {
                 dto = new OfflineErrorDto(rootException);
             } else {
                 dto = new ErrorDto(rootException);
+                dto.ErrorMessage = e.Message + " -> " + dto.ErrorMessage;
             }
 
             var afterCreationException = e as AfterCreationException;
@@ -65,7 +66,7 @@ namespace softWrench.sW4.Web.Common {
         public override void OnException(HttpActionExecutedContext context) {
             var e = context.Exception;
             var rootException = ExceptionUtil.DigRootException(e);
-            Log.Error(rootException, e);
+            Log.Error(e, rootException);
             var errorDto = BuildErrorDto(e, rootException);
             var errorResponse = context.Request.CreateResponse(CodeOf(rootException), errorDto);
             throw new HttpResponseException(errorResponse);

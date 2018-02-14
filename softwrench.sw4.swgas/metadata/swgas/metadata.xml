@@ -6,7 +6,7 @@
     <template path="@servicerequest.xml"/>
 
     <template path="@quickservicerequest.xml"/>
-    
+
     <!--WorkOrder-->
     <template path="@inventory.xml"/>
     <template path="@workorder.xml"/>
@@ -187,6 +187,8 @@
   </entities>
 
   <applications>
+
+
     <application entity="SR" name="servicerequest" title="Service Request">
       <schemas>
         <schema id="newdetail" platform="web" redeclaring="false">
@@ -200,19 +202,66 @@
 
         <schema id="nologinnewdetail" stereotype="detailnew" title="Service Request Details">
           <reference id="srhiddens"/>
-          <field attribute="name" label="Full Name" requiredexpression="true"/>
-          <field attribute="email" label="Email Address" requiredexpression="true">
-            <renderer type="default" params="valtype=custom;valmessage=An '@swgas.com' email is required.;valflags=i">
-              <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@swgas\.com$"/>
-            </renderer>
-          </field>
-          <field attribute="phoneext" label="Phone Extension" requiredexpression="true">
-            <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone extension is a sequence of four numbers.;valpattern=^\d{4}$"/>
-          </field>
-          <field attribute="customlocation" label="Location" requiredexpression="true"/>
-          <field attribute="description" label="Request Summary" requiredexpression="true">
-            <renderer type="richtext"/>
-          </field>
+          <section orientation="horizontal">
+            <header label="Contact" params="fieldset=true"/>
+            <field attribute="name" label="Name" requiredexpression="true" helpicon="right" tooltip="Please enter your first and last name. "/>
+            <field attribute="email" label="Email Address" requiredexpression="true" helpicon="right" tooltip="Please enter your Southwest Gas email address. ">
+              <renderer type="default" params="valtype=custom;valmessage=An '@swgas.com' email is required.;valflags=i">
+                <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@swgas\.com$"/>
+              </renderer>
+            </field>
+            <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please enter your phone number where you can be reached.">
+              <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone Number should contain ten digits.;valpattern=^\d{10}$"/>
+            </field>
+          </section>
+
+
+          <section>
+            <header label="Details" params="fieldset=true"/>
+            <field attribute="summary" label="Summary" requiredexpression="true" helpicon="right" tooltip="Please enter a brief summary of your work request."/>
+
+            <field attribute="description" label="Description" requiredexpression="true" helpicon="right" tooltip="Please enter as much detail as possible for your work request. ">
+              <renderer type="richtext"/>
+            </field>
+
+            <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. ">
+              <option label="Emergency" value="emergency"/>
+              <option label="Urgency" value="urgency"/>
+              <option label="Routine" value="routine"/>
+              <option label="Scheduled Maintenance" value="schedmaint"/>
+              <option label="Renovation" value="renovation"/>
+              <option label="Deferred" value="deferred"/>
+            </optionfield>
+
+            <field label="Affected Personnel" attribute="affectpersonnel" helpicon="right" tooltip="If you are entering this work request on behalf of someone, please enter their name here. "/>
+            
+          </section>
+
+          <section orientation="horizontal">
+            <header params="fieldset=true" label="Location"></header>
+            <optionfield attribute="division" label="Division" defaultexpression="null" default="null" requiredexpression="true" helpicon="right" tooltip="Please select the division where the work is being requested. ">
+              <option label="CAZ" value="CAZ"/>
+              <option label="CORP" value="CORP"/>
+              <option label="NNV" value="NNV"/>
+              <option label="SAZ" value="SAZ"/>
+              <option label="SCA" value="SCA"/>
+              <option label="SNV" value="SNV"/>
+              <event type="afterchange" service="swgasNoLoginSubmitService" method="loadCities"/>
+            </optionfield>
+
+            <optionfield attribute="city" label="Site" providerattribute="#city" enableexpression="@division!='null'" skipvalidation="true" requiredexpression="true" helpicon="right" tooltip="Please select the site where the work is being requested.">
+              <event type="afterchange" service="swgasNoLoginSubmitService" method="loadBuildings"/>
+            </optionfield>
+
+            <optionfield attribute="locationb" label="Location/Bldg" providerattribute="#locbuilding" enableexpression="@city!=null" skipvalidation="true" requiredexpression="true" helpicon="right" tooltip="Please select the location where the work is being requested."/>
+          </section>
+
+
+
+
+
+
+          <event type="onschemafullyloaded" service="swgasNoLoginSubmitService" method="loadOptionFields"/>
 
           <commandbars>
             <commandgroup position="detail.primary">
@@ -236,7 +285,7 @@
         <property key="list.offline.text.indexlist" value="wonum,asset_.description,status,description"/>
         <property key="list.offline.date.indexlist" value="schedstart"/>
       </properties>
-      
+
       <schemas>
         <schema id="newdetail" platform="web" redeclaring="false">
           <!--<customization position="classstructureid"></customization>-->
@@ -250,7 +299,19 @@
           <customization position="problemcode"></customization>
           <customization position="glaccount"></customization>
         </schema>
-        <schema id="list" redeclaring="false" platform="web">
+        <schema id="list" redeclaring="false" platform="web" stereotype="list">
+          <filters>
+            <optionfilter attribute="worktype">
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="PM" value="pm" />
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Other" value="!pm" />
+            </optionfilter>
+          </filters>
+          
+          <customization position="+siteid">
+            <field attribute="worktype" label="Work Type"/>
+          </customization>
+          
+          
           <properties>
             <property key="list.defaultorderby" value="workorder.reportdate desc"/>
           </properties>
@@ -325,8 +386,8 @@
           </commandbars>
 
         </detail>
-        
-        
+
+
       </schemas>
     </application>
     <application name="labtrans" entity="labtrans" title="Labor">
@@ -432,6 +493,6 @@
         <property key="list.offline.text.indexlist" value="itemnum"/>
       </properties>
     </application>
-    
+
   </applications>
 </metadata>

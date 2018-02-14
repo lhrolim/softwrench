@@ -37,6 +37,7 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.dataset {
             json.ReplaceValue("ld_.ldtext", new JValue(BuildDetails(json)));
             json.ReplaceValue("reportedemail", new JValue(json.StringValue("email")));
             json.ReplaceValue("description", new JValue(BuildSummary(json)));
+            json.ReplaceValue("reportedby", new JValue(json.StringValue("name")));
             return await base.Execute(application, json, id, operation, false, userIdSite,
                 operationDataCustomParameters);
         }
@@ -45,16 +46,22 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.dataset {
             var name = json.StringValue("name");
             var email = json.StringValue("email");
             var phoneext = json.StringValue("phoneext");
-            var reqsummary = json.StringValue("description");
-            var location = json.StringValue("customlocation");
+            var ldescription = json.StringValue("description");
+            var urgency = json.StringValue("requrgency");
+            var personnel = json.StringValue("affectpersonnel");
+            var division = json.StringValue("division");
+            var site = json.StringValue("city");
+            var location = json.StringValue("locationb");
+            var summary = json.StringValue("summary");
             return
-                $"<b>Name:</b> {name}<br/><b>Email:</b> {email}<br/><b>Phone Extension:</b> {phoneext}<br/><b>Location:</b>{location}<br/><br/><b>Request Summary:</b><br/>{reqsummary}";
+                $"<b>Name:</b> {name}<br/><b>Email:</b> {email}<br/><b>Phone:</b> {phoneext}<br/><b>Urgency:</b>{urgency} <br/><b>Affected Personnel:</b>{personnel} <br/><b>Division:</b>{division} <br/><b>Site:</b>{site} <br/><b>Location:</b>{location} <br/><br/><b>Summary:</b>{summary} <br/><br/><b>Description:</b><br/>{ldescription}";
         }
 
         private static string BuildSummary(JObject json) {
             var name = json.StringValue("name");
             var phoneext = json.StringValue("phoneext");
-            return $"[New Request from {name} x{phoneext}]";
+            
+            return $"[New Request from {name} : {phoneext}]";
         }
 
         private static bool IsCreateOrUpdate(string operation) {
