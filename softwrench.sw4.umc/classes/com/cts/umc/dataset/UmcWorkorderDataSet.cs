@@ -4,17 +4,32 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Data.Association;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Util;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
+using softWrench.sW4.Metadata.Applications;
+using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.umc.classes.com.cts.umc.dataset {
     public class UmcWorkorderDataSet : BaseWorkorderDataSet {
 
         public UmcWorkorderDataSet(ISWDBHibernateDAO swdbDao) : base(swdbDao) {
 
+        }
+
+        public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var result = await base.GetApplicationDetail(application, user, request);
+            if (!request.IsEditionRequest) {
+                //https://controltechnologysolutions.atlassian.net/browse/SWWEB-3377
+                var dm =result.ResultObject;
+                dm.SetAttribute("worktype","RO");
+                dm.SetAttribute("classstructureid", "1005");
+                dm.SetAttribute("wopriority", "3");
+            }
+            return result;
         }
 
 
