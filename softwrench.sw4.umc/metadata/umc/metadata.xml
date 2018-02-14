@@ -603,9 +603,9 @@
           <section>
             <renderer type="default" params="class=bottom-border"/>
             
-            <association label="Asset" labelfield="asset_.description" target="asset"/>
-            <association label="Location" labelfield="location_.description" target="location"/>
-            <association label="Job Plan" labelfield="jobplan_.jpnum" target="jobplan"/>
+            <field label="Asset" attribute="asset_.description"/>
+            <field label="Location" attribute="location_.description"/>
+            <field label="Job Plan" attribute="jobplan_.jpnum"/>
           </section>
 
           <section orientation="horizontal">
@@ -617,10 +617,10 @@
               <field label="Work Type" attribute="worktype">
                 <renderer type="default" params="classexpression={'PM':'redbg'}"></renderer>
               </field>
-              <field label="Trade" attribute="trade"/>
-              <field label="Employee" attribute="employee_.displayname"/>
-              <field label="Classification" attribute="classification"/>
-              <field label="Risk Total" attribute=""/>
+              <field label="Trade" attribute="crew_.description"/>
+              <field label="Employee" attribute="employee_.persondisplayname"/>
+              <field label="Classification" attribute="classstructure_.description"/>
+              <field label="Risk Total" attribute="woeq8"/>
             </section>
             <section>
               <field attribute="targstartdate" label="Target Start">
@@ -640,8 +640,8 @@
               
               <field label="Failure Class" attribute="failurecode_.description"/>
               <field label="Problem Code" attribute="problemlist_.description"/>
-              <field label="Cause" attribute="#causelist_.failurelist"/>
-              <field label="Remedy" attribute="#remedylist_.failurelist"/>
+              <field label="Cause" attribute="#causelist_.description"/>
+              <field label="Remedy" attribute="#remedylist_.description"/>
               
             </section>
             

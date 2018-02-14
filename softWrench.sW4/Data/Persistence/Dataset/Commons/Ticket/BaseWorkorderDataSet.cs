@@ -43,32 +43,33 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var baseDetail = await base.GetApplicationDetail(application, user, request);
-            if (request.IsEditionRequest)
-            {
+            if (request.IsEditionRequest) {
                 var siteid = baseDetail.ResultObject["siteid"];
-
-                var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ? and siteid=?",
-                    baseDetail.ResultObject["wonum"],siteid);
-                foreach (var item in items) {
-                    var type = item["type"];
-                    var projectedFieldName = "";
-                    if (type.EqualsIc("PROBLEM")) {
-                        projectedFieldName = "#problemlist_.failurelist";
-                    } else if (type.EqualsIc("CAUSE")) {
-                        projectedFieldName = "#causelist_.failurelist";
-                        baseDetail.ResultObject.SetAttribute("fr1code", item["failurecode"]);
-                    } else {
-                        projectedFieldName = "#remedylist_.failurelist";
-                        baseDetail.ResultObject.SetAttribute("fr2code", item["failurecode"]);
-                    }
-                    baseDetail.ResultObject.SetAttribute(projectedFieldName, item["linenum"]);
-                }
+                await LazyPopulateFailureCodes(baseDetail, siteid);
             }
             return baseDetail;
 
         }
 
-
+        protected virtual async Task LazyPopulateFailureCodes(ApplicationDetailResult baseDetail, object siteid) {
+            var items = await MaxDAO.FindByNativeQueryAsync(
+                "select failurecode,linenum,type from failurereport inner join failure code on  where wonum = ? and siteid=?",
+                baseDetail.ResultObject["wonum"], siteid);
+            foreach (var item in items) {
+                var type = item["type"];
+                var projectedFieldName = "";
+                if (type.EqualsIc("PROBLEM")) {
+                    projectedFieldName = "#problemlist_.failurelist";
+                } else if (type.EqualsIc("CAUSE")) {
+                    projectedFieldName = "#causelist_.failurelist";
+                    baseDetail.ResultObject.SetAttribute("fr1code", item["failurecode"]);
+                } else {
+                    projectedFieldName = "#remedylist_.failurelist";
+                    baseDetail.ResultObject.SetAttribute("fr2code", item["failurecode"]);
+                }
+                baseDetail.ResultObject.SetAttribute(projectedFieldName, item["linenum"]);
+            }
+        }
 
 
         #region Problem, Cause, Remedy Filters
