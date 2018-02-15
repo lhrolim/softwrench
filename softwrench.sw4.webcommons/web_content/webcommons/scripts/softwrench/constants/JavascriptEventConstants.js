@@ -158,7 +158,7 @@ const FORCE_RESIZE = "sw.layout.forceresize";
 
 const REEVAL_DISPLAYABLES = "sw.layout.dynforms.reevaldisplayables";
 
-
+const CHANGE_CURRENT_PROFILE = "sw.security.changeprofile";
 
 //#endregion
 
@@ -412,6 +412,10 @@ class JavascriptEventConstants {
     }
 
     //#endregion
+
+    static get ChangeCurrentProfile() {
+        return CHANGE_CURRENT_PROFILE;
+    }
 
 }
 

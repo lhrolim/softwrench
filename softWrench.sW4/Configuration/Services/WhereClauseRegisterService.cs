@@ -224,6 +224,7 @@ namespace softWrench.sW4.Configuration.Services {
                 //TODO: improve audit solution
                 _auditManager.CreateAuditEntry("update", "whereclause", storedValue.Id.ToString(), storedValue.Id.ToString(), $"<old>{0}</old>" + "<new>{1}</new>".Fmt(storedValue.Value, query));
                 storedValue.Value = query;
+                storedValue.ClientName = ApplicationConfiguration.ClientName;
             }
 
             storedValue = await _dao.SaveAsync(storedValue);
@@ -275,7 +276,7 @@ namespace softWrench.sW4.Configuration.Services {
             }
 
             if (storedCondition != null) {
-                if (wcCreation) {
+                if (wcCreation && !ApplicationConfiguration.IsLocal()) {
                     throw new InvalidOperationException("The exact same condition is already setup for this application, cannot override it");
                 }
                 condition.Id = storedCondition.Id;

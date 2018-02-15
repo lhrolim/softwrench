@@ -4,6 +4,10 @@ using System.Linq;
 using cts.commons.persistence;
 using cts.commons.simpleinjector;
 using cts.commons.simpleinjector.Events;
+using cts.commons.Util;
+using Iesi.Collections.Generic;
+using JetBrains.Annotations;
+using softwrench.sw4.user.classes.entities;
 using softWrench.sW4.Configuration.Definitions;
 using softWrench.sW4.Security.Context;
 using StackExchange.Redis.Extensions.Core.Extensions;
@@ -15,6 +19,10 @@ namespace softWrench.sW4.Configuration.Services {
         // client cache
         private static ConcurrentBag<string> _cachedOnClientKeyCache = null; // keys cache - once app and this is populated for the first time it never changes.
         private static ConcurrentDictionary<string, string> _cachedOnClientCache = null;
+
+        //caching for each given application the set of profiles that have different whereclauses associated to it
+        public IDictionary<string, List<UserProfile>> ProfileByAppCache = new ConcurrentDictionary<string, List<UserProfile>>();
+
         private static long _cachedOnClientTimestamp = 0;
 
         private readonly ISWDBHibernateDAO _dao;
@@ -53,6 +61,7 @@ namespace softWrench.sW4.Configuration.Services {
                 fromContext.Clear();
             }
             ClearCachedOnClientIfNeeded(key);
+            ProfileByAppCache.Clear();
         }
 
         public IEnumerable<string> GetCacheableOnClientKeyCache() {
@@ -106,6 +115,25 @@ namespace softWrench.sW4.Configuration.Services {
 
         public void HandleEvent(ApplicationStartedEvent eventToDispatch) {
             _appStarted = true;
+        }
+
+        [CanBeNull]
+        public List<UserProfile> GetCachedProfiles([NotNull]string applicationName, [NotNull]ICollection<UserProfile> profiles) {
+            var profileKeys = applicationName + ":" + string.Join(",", profiles.Select(s => s.Id));
+
+            if (ProfileByAppCache.ContainsKey(profileKeys)) {
+                return ProfileByAppCache[profileKeys].ToList();
+            }
+            return null;
+
+        }
+
+        public void AddToProfileCache(string applicationName, ICollection<UserProfile> profiles, List<UserProfile> result) {
+            var profileKeys = applicationName + ":" + string.Join(",", profiles.Select(s => s.Id));
+            if (ProfileByAppCache.ContainsKey(profileKeys)) {
+                ProfileByAppCache.Remove(profileKeys);
+            }
+            ProfileByAppCache.Add(profileKeys,result);
         }
     }
 }

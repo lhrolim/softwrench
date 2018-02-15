@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using softwrench.sw4.dashboard.classes.model.entities;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sw4.user.classes.entities;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 
 namespace softwrench.sw4.dashboard.classes.model {
@@ -12,6 +13,8 @@ namespace softwrench.sw4.dashboard.classes.model {
         public IEnumerable<IAssociationOption> Applications { get; set; }
         public ManageDashboardsPermissionDTO Permissions { get; set; }
         public ManageDashboardsSchemasDTO Schemas { get; set; }
+
+        public IDictionary<string, IEnumerable<UserProfile.UserProfileDTO>> AffectedProfiles = new Dictionary<string, IEnumerable<UserProfile.UserProfileDTO>>();
 
         public class ManageDashboardsPermissionDTO {
             public bool CanCreateOwn { get; set; }

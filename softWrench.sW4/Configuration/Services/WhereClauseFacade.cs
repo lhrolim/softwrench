@@ -31,6 +31,7 @@ namespace softWrench.sW4.Configuration.Services {
         private readonly IContextLookuper _contextLookuper;
         private bool _appStarted;
         private readonly WhereClauseRegisterService _whereClauseRegisterService;
+        private readonly ConfigurationCache _configurationCache;
 
 
         private readonly ConcurrentBag<Tuple<string, string, WhereClauseRegisterCondition>> _toRegister = new ConcurrentBag<Tuple<string, string, WhereClauseRegisterCondition>>();
@@ -40,10 +41,14 @@ namespace softWrench.sW4.Configuration.Services {
         private const string WcConfig = "/{0}/{1}/whereclause";
         private const string AppNotFoundEx = "Application/Entity {0} not found, unable to register whereclause";
 
-        public WhereClauseFacade(ConfigurationService configurationService, IContextLookuper contextLookuper, WhereClauseRegisterService whereClauseRegisterService) {
+
+
+
+        public WhereClauseFacade(ConfigurationService configurationService, IContextLookuper contextLookuper, WhereClauseRegisterService whereClauseRegisterService, ConfigurationCache configurationCache) {
             _configurationService = configurationService;
             _contextLookuper = contextLookuper;
             _whereClauseRegisterService = whereClauseRegisterService;
+            _configurationCache = configurationCache;
         }
 
         public WhereClauseResult Lookup(string applicationName, ApplicationLookupContext lookupContext = null, ContextHolder contextHolder = null) {
@@ -142,7 +147,11 @@ namespace softWrench.sW4.Configuration.Services {
             }
             int? defaultId = null;
             var sb = new StringBuilder();
-            var result = new List<UserProfile>();
+            var result = _configurationCache.GetCachedProfiles(applicationName, profiles);
+            if (result != null) {
+                return result.ToHashSet();
+            }
+            result = new List<UserProfile>();
 
             IDictionary<string, UserProfile> profileQueries = new Dictionary<string, UserProfile>();
 
@@ -178,6 +187,7 @@ namespace softWrench.sW4.Configuration.Services {
                 });
 
             }
+            _configurationCache.AddToProfileCache(applicationName, profiles, result);
 
             return new LinkedHashSet<UserProfile>(result);
         }
@@ -212,6 +222,6 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         //execute last
-        public int Order { get { return 100; } }
+        public int Order => 100;
     }
 }

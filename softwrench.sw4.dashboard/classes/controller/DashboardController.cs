@@ -119,7 +119,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpGet]
-        public GenericResponseResult<ManageDashBoardsDTO> Manage(string applicationToFilter = null) {
+        public async Task<GenericResponseResult<ManageDashBoardsDTO>> Manage(string applicationToFilter = null) {
             //TODO: add id checkings on server side
             var user = SecurityFacade.CurrentUser();
             int? preferredDashboardId = null;
@@ -156,7 +156,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsPreferredProperty)) {
                 preferredDashboardId = user.Genericproperties[DashboardConstants.DashBoardsPreferredProperty] as int?;
             }
-           
+
             if (!user.Genericproperties.ContainsKey(DashboardConstants.DashBoardsProperty)) {
                 user.Genericproperties[DashboardConstants.DashBoardsProperty] = _userDashboardManager.LoadUserDashboars(user);
             }
@@ -164,7 +164,8 @@ namespace softwrench.sw4.dashboard.classes.controller {
             if (applicationToFilter != null) {
                 dashboards = dashboards.Where(d => d.Application == null || d.Application.EqualsIc(applicationToFilter));
             }
-            if(preferredDashboardId == null && dashboards.Any()) {
+
+            if (preferredDashboardId == null && dashboards.Any()) {
                 preferredDashboardId = dashboards.First().Id;
             }
 
@@ -186,6 +187,14 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 Applications = applications,
                 Profiles = profiles
             };
+
+            foreach (var d in dashboards.Where(d => d.Application != null)) {
+                var profileByApp = await _whereClauseFacade.ProfilesByApplication(d.Application, user);
+                if (!dto.AffectedProfiles.ContainsKey(d.Application)) {
+                    dto.AffectedProfiles.Add(d.Application, profileByApp.Select(s => s.ToDTO()));
+                }
+            }
+
 
             return new GenericResponseResult<ManageDashBoardsDTO>(dto);
         }
@@ -266,14 +275,14 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
 
         [HttpGet]
-        public IGenericResponseResult LoadPreferred() {
-            var manageDTO = Manage();
+        public async Task<IGenericResponseResult> LoadPreferred() {
+            var manageDTO = await Manage();
             return manageDTO;
         }
 
         [HttpGet]
-        public IGenericResponseResult LoadDashboard(int? dashBoardId, string applicationToFilter = null) {
-            var manageDTO = Manage(applicationToFilter);
+        public async Task<IGenericResponseResult> LoadDashboard(int? dashBoardId, string applicationToFilter = null) {
+            var manageDTO = await Manage(applicationToFilter);
             manageDTO.ResultObject.PreferredId = dashBoardId;
             return manageDTO;
         }
@@ -281,7 +290,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
 
         [HttpGet]
         public async Task<IGenericResponseResult> LoadDashboardByAlias(string alias, string applicationToFilter = null) {
-            var manageDTO = Manage(applicationToFilter);
+            var manageDTO = await Manage(applicationToFilter);
             var dashboard = await _dao.FindSingleByQueryAsync<Dashboard>(Dashboard.By_ALIAS, alias);
             manageDTO.ResultObject.PreferredId = dashboard.Id;
             return manageDTO;
@@ -351,7 +360,7 @@ namespace softwrench.sw4.dashboard.classes.controller {
                 AppContext = new ApplicationLookupContext {
                     MetadataId = metadataId
                 }
-            }, true,false);
+            }, true, false);
         }
 
         public IGenericResponseResult EditDashBoard(DashboardBasePanel dashBoardPanel) {

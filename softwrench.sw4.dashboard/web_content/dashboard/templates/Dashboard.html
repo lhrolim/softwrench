@@ -39,7 +39,8 @@
                     <div class="tab-pane {{getActiveClass(dashboard.id)}}" ng-repeat="dashboard in dashboards track by dashboard.id" id="{{dashboard.id}}">
                         <div class="tab-header clearfix">
                             <div class="title pull-left" ng-show="!isEditing(dashboard.id)">{{dashboard.title}}</div>
-                            <input type="text" class="title pull-left" ng-show="isEditing(dashboard.id)" ng-model="dashboard.title"/>
+                            <grid-multiple-profile metadataid="metadataid" application="{{dashboard.application}}" dashboard="true"></grid-multiple-profile>
+                            <input type="text" class="title pull-left" ng-show="isEditing(dashboard.id)" ng-model="dashboard.title" />
 
 
 

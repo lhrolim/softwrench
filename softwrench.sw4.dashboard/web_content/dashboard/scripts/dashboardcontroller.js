@@ -99,6 +99,9 @@
                 $scope.profiles = $scope.resultData.profiles;
                 $scope.applications = $scope.resultData.applications;
                 $scope.currentdashboardid = $scope.resultData.preferredId;
+//                $scope.affectedProfileMap = $scope.resultData.affectedProfiles;
+
+                crudContextHolderService.loadAffectedProfilesDashboard($scope.resultData.affectedProfiles)
 
                 markDashboardSelected($scope.currentdashboardid);
                 $scope.dashboard = $scope.getCurrentDashboardById($scope.currentdashboardid);
@@ -196,6 +199,10 @@
                     'unit': "minute"
                 }
             };
+
+            $scope.$on(JavascriptEventConstants.ChangeCurrentProfile, (profile) => {
+                $scope.refreshDashboards();
+            });
 
             $scope.refreshDashboards = function (delay) {
                 dashboardAuxService.loadDashboards($scope.currentdashboardid).then(function (data) {

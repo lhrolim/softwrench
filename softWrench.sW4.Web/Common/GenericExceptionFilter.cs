@@ -52,7 +52,10 @@ namespace softWrench.sW4.Web.Common {
                 dto = new OfflineErrorDto(rootException);
             } else {
                 dto = new ErrorDto(rootException);
-                dto.ErrorMessage = e.Message + " -> " + dto.ErrorMessage;
+                if (rootException != e) {
+                    dto.ErrorMessage = e.Message + " -> " + dto.ErrorMessage;
+                }
+
             }
 
             var afterCreationException = e as AfterCreationException;

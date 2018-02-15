@@ -51,6 +51,12 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             var originalResult = await base.GetList(application, searchDto);
             var originalList = originalResult.ResultObject;
             foreach (var datamap in originalList) {
+                if (datamap.ContainsKey("value") && datamap["value"] != null) {
+                    datamap.SetAttribute("#value", datamap["value"]);
+                } else {
+                    datamap.SetAttribute("#value", datamap["systemvalue"]);
+                }
+
                 datamap.SetAttribute("#application", datamap.GetStringAttribute("definition_id").Split('/')[2]);
             }
             return originalResult;
@@ -93,8 +99,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
 
             ValidateSchema(schema, offline, applicationName);
 
-            
-            var registerCondition = WhereClauseRegisterCondition.FromDataOrNull(globalSelectedCondition,metadataId, profileId, offline, schema);
+
+            var registerCondition = WhereClauseRegisterCondition.FromDataOrNull(globalSelectedCondition, metadataId, profileId, offline, schema);
 
             await WhereClauseRegisterService.ValidateWhereClause(applicationName, query, registerCondition);
 
@@ -124,8 +130,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             return applications;
         }
 
-        public IEnumerable<IAssociationOption> GetGlobalConditions(OptionFieldProviderParameters parameter)
-        {
+        public IEnumerable<IAssociationOption> GetGlobalConditions(OptionFieldProviderParameters parameter) {
             var entity = parameter.OriginalEntity;
             var applicationName = entity.GetAttribute("#application");
 

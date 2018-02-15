@@ -20,12 +20,14 @@ namespace softwrench.sW4.test.Configuration.Service {
         private IWhereClauseFacade _facade;
 
         private Mock<ConfigurationService> _service;
+        private Mock<ConfigurationCache> _cache;
 
         [TestInitialize]
         public void Init() {
             _service = TestUtil.CreateMock<ConfigurationService>();
-            TestUtil.ResetMocks(_service);
-            _facade = new WhereClauseFacade(_service.Object, null, null);
+            _cache = TestUtil.CreateMock<ConfigurationCache>();
+            TestUtil.ResetMocks(_service, _cache);
+            _facade = new WhereClauseFacade(_service.Object, null, null,_cache.Object);
         }
 
 

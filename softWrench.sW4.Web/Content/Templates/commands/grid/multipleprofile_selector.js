@@ -11,14 +11,26 @@
 
         $scope.getMultiplesProfiles = function () {
             const panelId = $scope.panelid || null;
+            const isDashboard = $scope.dashboard === "true";
+            if (isDashboard) {
+                return crudContextHolderService.getAffectedProfilesDashboard($scope.application);
+            }
             return crudContextHolderService.getAffectedProfiles(panelId);
         }
 
         $scope.changeCurrentProfile = function () {
             const panelId = $scope.panelid || null;
             const metadataid = $scope.metadataid || null;
+            const isDashboard = $scope.dashboard === "true";
+
             crudContextHolderService.setCurrentSelectedProfile($scope.currentSelectedProfile, panelId);
-            searchService.refreshGrid({}, null, { panelid: panelId, metadataid });
+            if (!isDashboard) {
+                searchService.refreshGrid({}, null, { panelid: panelId, metadataid });
+            } else {
+                crudContextHolderService.adjustChildSelectedProfiles($scope.currentSelectedProfile);
+            }
+            
+            $scope.$emit(JavascriptEventConstants.ChangeCurrentProfile,$scope.currentSelectedProfile,$scope.dashboard === "true");
         }
     }
 
@@ -36,7 +48,9 @@
                 scope: {
                     panelid: '=',
                     metadataid: '=',
-                    lookup: '='
+                    lookup: '=',
+                    dashboard: '@',
+                    application: '@'
                 },
 
                 controller: "GridMultipleProfileController"

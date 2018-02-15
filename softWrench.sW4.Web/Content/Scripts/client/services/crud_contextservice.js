@@ -89,6 +89,9 @@
                 needsServerRefresh: false,
                 //list of profiles to show on screen, when there are multiple whereclauses registered for a given grid
                 affectedProfiles: [],
+                //a map, for each application containing a list of affected profiles for the dashboard
+                affectedProfilesDashboard: {},
+
                 //current profile selected, if multiple are available, considering whereclauses
                 currentSelectedProfile: null,
                 tabRecordCount: {},
@@ -220,6 +223,19 @@
             return this.getContext(panelid).affectedProfiles || [];
         }
 
+        getAffectedProfilesDashboard(application) {
+            return this.getContext().affectedProfileMap[application] || [];
+        }
+
+        loadAffectedProfilesDashboard(affectedProfileMap) {
+            const ctx = this.getContext();
+            ctx.affectedProfileMap = {};
+            Object.keys(affectedProfileMap).forEach(k => {
+                ctx.affectedProfileMap[k] = affectedProfileMap[k];
+            });
+        }
+
+
         getCurrentSelectedProfile(panelid) {
             return this.getContext(panelid).currentSelectedProfile;
         }
@@ -234,6 +250,13 @@
 
         setCurrentSelectedProfile(currentProfile, panelid) {
             return this.getContext(panelid).currentSelectedProfile = currentProfile;
+        }
+
+        adjustChildSelectedProfiles(currentProfile) {
+            Object.keys(this._crudContexts).forEach(panelId => {
+                this._crudContexts[panelId].currentSelectedProfile = currentProfile;
+            });
+
         }
 
         setDirty(panelid) {

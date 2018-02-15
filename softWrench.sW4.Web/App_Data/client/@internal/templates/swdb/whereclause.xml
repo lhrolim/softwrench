@@ -43,6 +43,8 @@
             <filter attribute="#application" whereclause="!@definition_id like !@#value"/>
           </filters>
           <field attribute="id" hidden="true"/>
+          <field attribute="systemvalue" hidden="true"/>
+          <field attribute="value" hidden="true"/>
           <field attribute="definition_id" hidden="true"/>
           <field attribute="propdefinition_.key" hidden="true"/>
           <field attribute="#application" label="Application" attributeToServer="definition_id"/>
@@ -52,6 +54,7 @@
           <field attribute="condition_.offlineonly" label="Offline" tooltip="Whether this whereclause only applies to the offline solution" >
             <renderer type="checkbox"/>
           </field>
+          <field attribute="#value" label="Current Value"/>
           <properties>
             <property key="list.defaultorderby" value="definition_id asc"/>
             <!--            <property key="list.click.service" value="whereClauseService.loadPropertyValue"/>-->
