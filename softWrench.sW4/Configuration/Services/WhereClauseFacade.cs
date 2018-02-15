@@ -176,7 +176,7 @@ namespace softWrench.sW4.Configuration.Services {
                     defaultId = profile.Id;
                 }
             }
-            if (profileQueries.Count > 1) {
+            if (profileQueries.Count > 1 || (profileQueries.Count > 0 && sb.Length > 0)) {
                 result.AddRange(profileQueries.Values);
             }
 

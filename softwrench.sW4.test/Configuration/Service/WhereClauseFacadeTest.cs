@@ -60,6 +60,64 @@ namespace softwrench.sW4.test.Configuration.Service {
             TestUtil.VerifyMocks(_service);
         }
 
+        /// <summary>
+        /// Ensures that if there´s more than one profile matching the app, bu both pointing to the same whereclause, just the default value is returned
+        /// </summary>
+        [TestMethod]
+        public async Task SingleProfile_Disregard() {
+            var user = InMemoryUser.TestInstance();
+            var up = new UserProfile {
+                Name = "new",
+                ApplicationPermissions =
+                    new HashSet<ApplicationPermission> { ApplicationPermission.AllowInstance("assignment") }
+            };
+
+            user.Profiles.Add(up);
+
+            _service.Setup(s => s.Lookup<string>(It.IsAny<string>(), It.IsAny<ContextHolder>(), null)).ReturnsAsync("1=1");
+
+            var result = await _facade.ProfilesByApplication("assignment", user);
+            Assert.AreEqual(0, result.Count);
+
+            TestUtil.VerifyMocks(_service);
+        }
+
+
+        /// <summary>
+        /// Ensures that if there´s more than one profile matching the app, bu both pointing to the same whereclause, just the default value is returned
+        /// </summary>
+        [TestMethod]
+        public async Task Two_Profiles_One_Null_and_AnotherFilled() {
+            var user = InMemoryUser.TestInstance();
+            var up = new UserProfile {
+                Name = "new",
+                Id = 1,
+                ApplicationPermissions =
+                    new HashSet<ApplicationPermission> { ApplicationPermission.AllowInstance("assignment") }
+            };
+
+            var up2 = new UserProfile {
+                Name = "offline",
+                Id=2,
+                ApplicationPermissions =
+                    new HashSet<ApplicationPermission> { ApplicationPermission.AllowInstance("assignment") }
+            };
+
+            user.Profiles.Add(up);
+            user.Profiles.Add(up2);
+
+            var expression = (Expression<Func<ContextHolder, bool>>)(h => h.CurrentSelectedProfile == 1);
+            var expression2 = (Expression<Func<ContextHolder, bool>>)(h => h.CurrentSelectedProfile == 2);
+
+            _service.Setup(s => s.Lookup<string>(It.IsAny<string>(), It.Is(expression),null)).ReturnsAsync("1=1");
+            _service.Setup(s => s.Lookup<string>(It.IsAny<string>(), It.Is(expression2),null)).ReturnsAsync(null);
+
+            var result = await _facade.ProfilesByApplication("assignment", user);
+            Assert.AreEqual(2, result.Count);
+
+            TestUtil.VerifyMocks(_service);
+        }
+
 
         /// <summary>
         /// There´s now 3 sgs. two have exactly the same whereclause while the second one has a different.
