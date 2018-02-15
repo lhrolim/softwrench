@@ -52,9 +52,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
         }
 
         protected virtual async Task LazyPopulateFailureCodes(ApplicationDetailResult baseDetail, object siteid) {
-            var items = await MaxDAO.FindByNativeQueryAsync(
-                "select failurecode,linenum,type from failurereport inner join failure code on  where wonum = ? and siteid=?",
-                baseDetail.ResultObject["wonum"], siteid);
+            var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ? and siteid=?",baseDetail.ResultObject["wonum"], siteid);
             foreach (var item in items) {
                 var type = item["type"];
                 var projectedFieldName = "";
