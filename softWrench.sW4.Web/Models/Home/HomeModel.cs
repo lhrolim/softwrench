@@ -48,6 +48,8 @@ namespace softWrench.sW4.Web.Models.Home {
 
         public bool Anonymous { get; set; }
         public bool PreventPoweredBy => ClientName.Equals("firstsolardispatch");
+        public string H1Header { get; set; }
+        public string H1HeaderStyle { get; set; }
 
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,

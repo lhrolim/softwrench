@@ -43,6 +43,12 @@
                             <img ng-src="{{resourceUrl('/Content/Images/logo-main.png')}}">
                         }
                     </div>
+                @if (@Model.H1Header != null && @Model.H1HeaderStyle == "center") {
+                    <h1 style="float: right; color: white;font-weight: bold;bottom: 10px;position: absolute;left: 36.42%;">
+                        @Model.H1Header
+                    </h1>
+                }
+                 
                 </div>
             </header>
             <div class="content" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode">
