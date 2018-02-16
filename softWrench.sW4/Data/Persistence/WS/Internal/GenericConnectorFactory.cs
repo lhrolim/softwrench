@@ -1,4 +1,5 @@
 ﻿using System;
+using cts.commons.portable.Util;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Data.Persistence.WS.Internal.Constants;
 using softWrench.sW4.Data.Persistence.WS.Mea;
@@ -44,7 +45,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 connectorParams.TryGetValue("customconnector", out customConnectorTypeName);
             }
             var entityName = metadata.Name;
-            if (entityName.Equals("sr")) {
+            if (entityName.EqualsIc("sr")) {
                 entityName = "servicerequest";
             }
 

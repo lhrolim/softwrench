@@ -213,6 +213,25 @@
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details" redeclaring="false">
           <customization position="siteid"/>
+          <commandbars>
+            <commandgroup position="actions">
+              
+              <command id="resolve" icon="fa-check" label="Resolve"
+                       cssclasses="large-button"
+                       tooltip="Change Status to Resolved"
+                       service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,RESOLVED"
+                       showexpression="@status &amp;&amp; @status.equalsAny('APPR','INPRG', 'NEW', 'QUEUED')"
+              />
+              
+            </commandgroup>
+
+            <commandgroup position="detail.primary" removeundeclared="false">
+              <command id="createWO" icon="fa-plus" service="workorderService" method="newWo" label="New" tooltip="New Work Order" cssclasses="large-button" position="-save"/>
+            </commandgroup>
+
+          </commandbars>
+          
+
         </schema>
 
         <schema id="nologinnewdetail" stereotype="detailnew" title="Service Request Details">
