@@ -50,6 +50,7 @@
 
         <relationship to="labor" qualifier="employee">
           <relationshipAttribute from="lead2" to="laborcode" primary="true"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
 
       </relationships>
