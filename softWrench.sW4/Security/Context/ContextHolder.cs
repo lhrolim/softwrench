@@ -69,6 +69,10 @@ namespace softWrench.sW4.Security.Context {
             get; set;
         }
 
+        public bool IgnoreConfigCache {
+            get; set;
+        }
+
         private IDictionary<string, object> _parameters;
 
         public IDictionary<string, object> CustomRequestParameters { get; set; } = new Dictionary<string, object>();

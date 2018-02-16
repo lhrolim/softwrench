@@ -96,16 +96,18 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.SWDB.WhereClause {
             var offline = crudoperationData.GetBooleanAttribute("#offline");
             var schema = crudoperationData.GetStringAttribute("#schema");
             var globalSelectedCondition = crudoperationData.GetIntAttribute("#selectedGlobalCondition");
+            var allowCombining = crudoperationData.GetBooleanAttribute("allowcombining");
 
             ValidateSchema(schema, offline, applicationName);
 
 
-            var registerCondition = WhereClauseRegisterCondition.FromDataOrNull(globalSelectedCondition, metadataId, profileId, offline, schema);
+            var registerCondition = WhereClauseRegisterCondition.FromDataOrNull(globalSelectedCondition, metadataId, profileId, offline, schema, allowCombining);
+
 
             await WhereClauseRegisterService.ValidateWhereClause(applicationName, query, registerCondition);
 
             if (operationData.Operation.Equals(OperationConstants.CRUD_UPDATE)) {
-                await WhereClauseRegisterService.UpdateExisting(int.Parse(crudoperationData.Id), query);
+                await WhereClauseRegisterService.UpdateExisting(int.Parse(crudoperationData.Id), query, allowCombining);
                 return new TargetResult(operationData.Id, operationData.UserId, null);
             }
 

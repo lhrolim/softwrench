@@ -73,6 +73,9 @@
             <field attribute="profile_.name" label="Security Group"
                    attributeToServer="#userprofile"
                    tooltip="This whereclause would only be applied for users that are members of this security group. If multiple whereclauses are match a combobox will be presented" helpicon="right" readonly="true"/>
+            <field attribute="allowcombining" label="Allow Combining" tooltip="if true this whereclause is eligible to be applied together with other whereclauses" helpicon="right">
+              <renderer type="checkbox"/>
+            </field>
           </section>
           <!--          <field attribute="definition_.defaultvalue" hidden="true"/>-->
           <section orientation="horizontal">

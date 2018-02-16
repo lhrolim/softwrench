@@ -20,6 +20,7 @@
                     config.headers['mockerror'] = sessionStorage['mockerror'];
                     config.headers['mockmaximo'] = sessionStorage['mockmaximo'];
                     config.headers['mocksecurity'] = sessionStorage['mocksecurity'];
+                    config.headers['ignoreconfigcache'] = sessionStorage['ignoreconfigcache'];
                     config.headers['requesttime'] = new Date().getTime();
                     config.headers["isajax"] = true;
                     config.headers['cachedschemas'] = schemaCacheService.getSchemaCacheKeys();

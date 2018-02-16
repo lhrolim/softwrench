@@ -9,7 +9,7 @@ using CompressionUtil = softWrench.sW4.Util.CompressionUtil;
 namespace softWrench.sW4.Configuration.Definitions {
 
     [Class(Table = "CONF_PROPERTYVALUE", Lazy = false)]
-    public class PropertyValue {
+    public class PropertyValue : IPropertyValue{
 
         public const string ByCondition = "from PropertyValue where Condition = ?";
 
@@ -64,6 +64,9 @@ namespace softWrench.sW4.Configuration.Definitions {
             get; set;
         }
 
+        [Property]
+        public virtual bool? AllowCombining { get; set; }
+
         /// <summary>
         /// To allow some level of multitenancy, especially at dev environments where the database can be shared across several customers
         /// </summary>
@@ -99,6 +102,8 @@ namespace softWrench.sW4.Configuration.Definitions {
         }
 
         public virtual int? ConditionId => Condition?.Id;
+
+        public virtual string ActualValue => StringValue ?? SystemStringValue;
 
         public virtual string StringValue {
             get {

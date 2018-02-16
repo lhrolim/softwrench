@@ -22,6 +22,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
         private const string ScanMode = "scanmode";
         private const string OfflineMode = "offlinemode";
         private const string MockMaximo = "mockmaximo";
+        private const string IgnoreConfigCache = "ignoreconfigcache";
         private const string MockSecurity = "mocksecurity";
         private const string CurrentMetadataParameterKey = "currentmetadataparameter";
 
@@ -35,6 +36,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
             var scanMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, ScanMode));
             var offlineMode = "true".Equals(RequestUtil.GetValue(actionContext.Request, OfflineMode));
             var mockMaximo = "true".Equals(RequestUtil.GetValue(actionContext.Request, MockMaximo));
+            var mockConfigCache = "true".Equals(RequestUtil.GetValue(actionContext.Request, IgnoreConfigCache));
             var mockSecurity = "true".Equals(RequestUtil.GetValue(actionContext.Request, MockMaximo));
             var currentMetadataParameter = RequestUtil.GetValue(actionContext.Request, CurrentMetadataParameterKey);
             ApplicationLookupContext appCtx = null;
@@ -58,6 +60,7 @@ namespace softWrench.sW4.Web.SPF.Filters {
                 ScanMode = scanMode,
                 OfflineMode = offlineMode,
                 MockMaximo = mockMaximo,
+                IgnoreConfigCache = mockConfigCache,
                 MockSecurity = mockSecurity,
                 CurrentSelectedProfile = string.IsNullOrEmpty(profileAsString) ? (int?)null : int.Parse(profileAsString),
                 ConstrainedProfiles = constrainedProfiles,

@@ -38,7 +38,7 @@ namespace softWrench.sW4.Configuration.Services {
 
         [CanBeNull]
         public virtual async Task<T> Lookup<T>(string configKey, ContextHolder lookupContext, ConfigurationCacheContext cacheContext = null) {
-            var ignoreCache = cacheContext != null && cacheContext.IgnoreCache;
+            var ignoreCache = (cacheContext != null && cacheContext.IgnoreCache) || lookupContext.IgnoreConfigCache;
             var preDefinition = cacheContext?.PreDefinition;
 
             if (!ignoreCache) {
@@ -52,7 +52,7 @@ namespace softWrench.sW4.Configuration.Services {
             if (definition == null) {
                 Log.Debug($"property {configKey} not found");
                 if (!ignoreCache) {
-                    _cache.AddToCache(configKey,lookupContext,null);
+                    _cache.AddToCache(configKey, lookupContext, null);
                 }
                 return default(T);
             }
@@ -110,8 +110,8 @@ namespace softWrench.sW4.Configuration.Services {
 
         private T HandleConditions<T>(IEnumerable<PropertyValue> values, ContextHolder lookupContext, PropertyDefinition definition, bool ignoreCache = false) {
             var resultingValues = BuildResultValues(values, lookupContext);
-            if (resultingValues.Any()) {
-                return ValueMatched<T>(resultingValues.First().Value, definition.FullKey, lookupContext, ignoreCache);
+            if (resultingValues != null) {
+                return ValueMatched<T>(resultingValues, definition.FullKey, lookupContext, ignoreCache);
             }
 
             if (lookupContext.Module != null) {
@@ -123,7 +123,8 @@ namespace softWrench.sW4.Configuration.Services {
             return DefaultValueCase<T>(definition, lookupContext, ignoreCache);
         }
 
-        public static SortedDictionary<ConditionMatchResult, PropertyValue> BuildResultValues(IEnumerable<PropertyValue> values, ContextHolder lookupContext) {
+        [CanBeNull]
+        public static CombinedPropertyValue BuildResultValues(IEnumerable<PropertyValue> values, ContextHolder lookupContext) {
             var resultingValues = new SortedDictionary<ConditionMatchResult, PropertyValue>();
             foreach (var propertyValue in values) {
                 var conditionMatchResult = propertyValue.MatchesConditions(lookupContext, ApplicationConfiguration.ClientName);
@@ -132,12 +133,17 @@ namespace softWrench.sW4.Configuration.Services {
                     resultingValues.Add(conditionMatchResult, propertyValue);
                 }
             }
-            return resultingValues;
+            if (!resultingValues.Any()) {
+                return null;
+            }
+
+            return new CombinedPropertyValue(resultingValues);
+
         }
 
-        private T ValueMatched<T>(PropertyValue propertyValue, string fullKey, ContextHolder configCacheKey, bool ignoreCache = false) {
+        private T ValueMatched<T>(IPropertyValue propertyValue, string fullKey, ContextHolder configCacheKey, bool ignoreCache = false) {
             var value = propertyValue.StringValue;
-            if (string.IsNullOrEmpty(propertyValue.StringValue)) {
+            if (string.IsNullOrEmpty(value)) {
                 value = propertyValue.SystemStringValue;
             }
 
@@ -314,7 +320,7 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
 
-      
+
 
         public void ClearCache(string configKey) {
             _cache.ClearCache(configKey);

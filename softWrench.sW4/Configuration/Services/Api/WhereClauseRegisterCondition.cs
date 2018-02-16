@@ -25,6 +25,8 @@ namespace softWrench.sW4.Configuration.Services.Api {
             get; set;
         }
 
+        public bool? AllowCombining { get; set; }
+
         public string GenerateAlias() {
             if (Alias != null) {
                 return Alias;
@@ -73,12 +75,13 @@ namespace softWrench.sW4.Configuration.Services.Api {
             }
         }
 
-        public static WhereClauseRegisterCondition FromDataOrNull(int? globalSelectedCondition, string metadataId, int? profileId, bool? offline, string schema = null) {
+        public static WhereClauseRegisterCondition FromDataOrNull(int? globalSelectedCondition, string metadataId, int? profileId, bool? offline, string schema = null, bool? allowCombining = false) {
             if (globalSelectedCondition != null) {
                 return new WhereClauseRegisterCondition {
                     Id = globalSelectedCondition,
                     Global = true,
-                    ProfileId = profileId
+                    ProfileId = profileId,
+                    AllowCombining = allowCombining
                 };
             }
 

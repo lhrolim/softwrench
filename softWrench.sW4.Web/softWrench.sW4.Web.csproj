@@ -445,6 +445,7 @@
     <Compile Include="DB_Migration\5.9.4\20160817_SWWEB_2714.cs" />
     <Compile Include="DB_Migration\5.17\MigrationSwweb2879.cs" />
     <Compile Include="DB_Migration\6.3.5\20180206_SWWEB_3402.cs" />
+    <Compile Include="DB_Migration\6.5.1\20180206_SWWEB_3395.cs" />
     <Compile Include="DB_Migration\Batches\Migration2014Swweb533.cs" />
     <Compile Include="DB_Migration\Batches\Migration201410201420Swweb531.cs" />
     <Compile Include="DB_Migration\DB2 FluentMigrator\ColumnBase.cs" />

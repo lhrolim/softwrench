@@ -109,12 +109,13 @@ namespace softWrench.sW4.Configuration.Services {
         }
 
         [Transactional(DBType.Swdb)]
-        public virtual async Task<PropertyValue> UpdateExisting(int propValueId, string newValue) {
+        public virtual async Task<PropertyValue> UpdateExisting(int propValueId, string newValue, bool? allowCombining) {
             var propertyValue = await _dao.FindByPKAsync<PropertyValue>(propValueId);
             if (newValue == "") {
                 newValue = "1=1";
             }
             propertyValue.Value = newValue;
+            propertyValue.AllowCombining = allowCombining;
             _configurationCache.ClearCache(propertyValue.Definition.FullKey);
             return await _dao.SaveAsync(propertyValue);
         }
@@ -202,6 +203,7 @@ namespace softWrench.sW4.Configuration.Services {
                     Module = condition?.Module,
                     UserProfile = profile.Id,
                     ClientName = ApplicationConfiguration.ClientName,
+                    AllowCombining = condition?.AllowCombining
                 };
                 if (systemValueRegister) {
                     //registering a system value will make this whereclaue undeletable
@@ -225,6 +227,7 @@ namespace softWrench.sW4.Configuration.Services {
                 _auditManager.CreateAuditEntry("update", "whereclause", storedValue.Id.ToString(), storedValue.Id.ToString(), $"<old>{0}</old>" + "<new>{1}</new>".Fmt(storedValue.Value, query));
                 storedValue.Value = query;
                 storedValue.ClientName = ApplicationConfiguration.ClientName;
+                storedValue.AllowCombining = condition?.AllowCombining;
             }
 
             storedValue = await _dao.SaveAsync(storedValue);
