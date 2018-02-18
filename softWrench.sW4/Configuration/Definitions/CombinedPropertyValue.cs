@@ -20,6 +20,7 @@ namespace softWrench.sW4.Configuration.Definitions {
             }
 
             var i = 0;
+            var numberCombined = 0;
 
             foreach (var entry in values) {
                 var matchR = entry.Key;
@@ -39,6 +40,7 @@ namespace softWrench.sW4.Configuration.Definitions {
                         break;
                     }
 
+                    numberCombined++;
                     sb.Append("(" + propertyValue.ActualValue + ")").Append(" AND ");
                 }
 
@@ -47,6 +49,10 @@ namespace softWrench.sW4.Configuration.Definitions {
 
             if (sb.Length != 0) {
                 StringValue = sb.ToString().Substring(0, sb.Length - " AND ".Length);
+                if (numberCombined == 1) {
+                    //removing leading and trailing parenthesis for the scenario where just a single value is used
+                    StringValue = StringValue.Substring(1, StringValue.Length - 2);
+                }
             }
 
 
