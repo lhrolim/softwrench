@@ -138,7 +138,7 @@ namespace softwrench.sW4.audit.classes.Services {
                 return;
             }
             var trail = CurrentTrail();
-            var query = trail?.Queries.FirstOrDefault(q => q.Qualifier.EqualsIc(queryAlias));
+            var query = trail?.Queries?.FirstOrDefault(q => queryAlias.EqualsIc(q.Qualifier));
             if (query != null) {
                 query.CountResult = countResult;
                 query.Ellapsedmillis = ellapsedTimeMillis;
