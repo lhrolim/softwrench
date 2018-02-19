@@ -104,7 +104,7 @@
                 }
             }
         }])
-        .directive("crudInputFields", ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", function (contextService, eventService, crud_inputcommons, crudContextHolderService) {
+        .directive("crudInputFields", ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService","$timeout", function (contextService, eventService, crud_inputcommons, crudContextHolderService, $timeout) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -171,12 +171,40 @@
                     //dnd-list cannot be bound to a method: it requires a variable to work
                     scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
 
+
+
                     scope.$on(JavascriptEventConstants.ReevalDisplayables, () => {
                         //whenever a field is added via a dynforms need to recalculate the cached fields 
                         scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
                     });
 
-                    
+                    scope.$on(JavascriptEventConstants.HideModal, () => {
+                        //whenever a field is added via a dynforms need to recalculate the cached fields 
+                        if (scope.ismodal === "true") {
+                            scope.nonTabFieldsCached = [];
+                        }
+                    });
+
+                    scope.$on(JavascriptEventConstants.ModalShown, (modalData) => {
+                        if (scope.ismodal === "true") {
+                            $timeout(() => {
+                                //whenever a field is added via a dynforms need to recalculate the cached fields 
+                                scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
+                            }, 0, false);
+                            
+                            
+                        }
+                        
+                    });
+
+                    scope.nonTabFieldsCachedDelegate = () => {
+                        if (scope.ismodal === "true") {
+                            //avoids caching modal data that could lead to opening up at the wrong schema
+                            return scope.nonTabFields(scope.displayables);
+                        }
+                        //in order for the drag and drop to work;
+                        return scope.nonTabFieldsCached;
+                    }
 
                     scope.fieldMoved = () => {
                         //the nonTabFieldsCached array will be automatically updated by the dnd-list directive however the original displayables need to be updated here

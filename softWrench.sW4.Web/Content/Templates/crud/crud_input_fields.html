@@ -9,7 +9,7 @@
             </div>
 
 
-            <fieldset ng-repeat="fieldMetadata in nonTabFieldsCached"
+            <fieldset ng-repeat="fieldMetadata in nonTabFieldsCachedDelegate()"
                       dnd-draggable="fieldMetadata"
                       dnd-effect-allowed="all"
                       dnd-moved="nonTabFieldsCached.splice($index, 1);fieldMoved()"
