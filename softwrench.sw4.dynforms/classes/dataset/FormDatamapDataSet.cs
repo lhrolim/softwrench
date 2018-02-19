@@ -86,7 +86,7 @@ namespace softwrench.sw4.dynforms.classes.dataset {
 
 
         public override async Task<AssociationMainSchemaLoadResult> BuildAssociationOptions(AttributeHolder dataMap, ApplicationSchemaDefinition schema, IAssociationPrefetcherRequest request) {
-            if (!dataMap.ContainsKey("form_name")) {
+            if (!dataMap.ContainsAttribute("form_name",true)) {
                 return await base.BuildAssociationOptions(dataMap, schema, request);
             }
             var id = dataMap["form_name"] as string;
