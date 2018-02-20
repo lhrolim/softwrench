@@ -4,7 +4,10 @@
 
     function dynFormDetailEditBarController($scope, crudContextHolderService, schemaService, modalService, schemaCacheService, fieldService, alertService, dynFormService) {
 
-      
+
+        $scope.isPreviewMode = function() {
+            return dynFormService.isPreviewMode();
+        }
 
         $scope.isEditAllowed = function () {
             const schema = crudContextHolderService.currentSchema();

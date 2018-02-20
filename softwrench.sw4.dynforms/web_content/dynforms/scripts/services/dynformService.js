@@ -14,6 +14,7 @@
 
 
     let isEditingSection = false;
+    let isPreviewMode = false;
     let currentSelectedFields = [];
     let buildSectionHeader;
 
@@ -38,6 +39,7 @@
             function restoreData() {
                 currentSelectedFields = [];
                 isEditingSection = false;
+                isPreviewMode = false;
             }
 
             this.$rootScope.$on("sw.crud.body.crawlocurred", () => {
@@ -470,8 +472,14 @@
         }
 
         loadFormGridEdition() {
+        }
 
+        isPreviewMode() {
+            return isPreviewMode;
+        }
 
+        setPreviewMode(previewMode) {
+            isPreviewMode = "true"===previewMode;
         }
 
         redirectToForm(form) {

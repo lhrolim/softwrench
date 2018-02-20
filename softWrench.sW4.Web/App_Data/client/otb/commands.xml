@@ -42,6 +42,10 @@
   <commandgroup position="dynformsactions" platform="web">
     <command id="save" icon="fa-plus" service="dynFormService" method="createEnclosingSection" label="Create Section" cssclasses="large-button" tooltip="Create a new enclosing section for the selected fields" showexpression="service:dynFormService.isNotEditingSection"/>
     <command id="save" icon="fa-check" service="dynFormService" method="finishSectionEdition" label="Finish Section" cssclasses="large-button" tooltip="Finishes selection of fields for the section" showexpression="service:dynFormService.isEditingSection"/>
+    <togglecommand id="previewmode" initialstateexpression="false">
+      <offcommand id="onpreviewmode" icon="fa-image" service="dynFormService" method="setPreviewMode" label="Preview" tooltip="Disable previewing" parameters="true" cssclasses="large-button"/>
+      <oncommand id="onpreviewmode" icon="fa-image" service="dynFormService" method="setPreviewMode" label="Preview" tooltip="Turn on preview mode" parameters="false" cssclasses="large-button"/>
+    </togglecommand>
   </commandgroup>
 
 
@@ -49,7 +53,7 @@
   <commandgroup position="detail.secondary" platform="web">
 
   </commandgroup>
-  
+
   <commandgroup position="multiselect.dropdown" platform="web">
 
   </commandgroup>
@@ -97,13 +101,13 @@
     </togglecommand>-->
   </commandgroup>
 
- 
+
   <commandgroup position="commlog" platform="web">
     <command id="reply" icon="fa-mail-reply" label="Reply" tooltip="Reply" service="commlogService" method="reply" parameters="schema,commLogDatamap"/>
     <command id="replyall" icon="fa-mail-reply-all" label="Reply All" tooltip="Reply All" service="commlogService" method="replyAll" parameters="schema,commLogDatamap"/>
     <command id="forward" icon="fa-mail-forward" label="Forward" tooltip="Forward" service="commlogService" method="forward" parameters="schema,commLogDatamap"/>
   </commandgroup>
-  
+
   <commandgroup position="gridfiltertop" platform="web">
     <resourcecommand id="profiles" path="/Content/Templates/commands/grid/multipleprofile_selector.html"/>
     <togglecommand id="toggleselected" position="+profiles">
@@ -160,18 +164,18 @@
     <command id="search" primary="true" icon="fa-search" service="dispatcherService" method="dispatchevent" label="Search" parameters="sw.crud.search,schema,datamap"/>
     <command id="clear" icon="fa-eraser" service="dispatcherService" method="dispatchevent" label="Clear" parameters="sw.crud.search.clear,schema,datamap"/>
   </commandgroup>
-  
+
   <!-- #endregion -->
-  
+
   <!-- #region: mobile -->
   <!-- Floating Action Button position -->
   <commandgroup platform="mobile" position="mobile.fab">
     <container id="detail.container" icon="fa-bolt">
-      <command id="quicksync" 
+      <command id="quicksync"
                service="itemActionService" method="quickSyncCurrentItem"
                showexpression="service:itemActionService.shouldAllowQuickSyncForCurrentItem"
                icon="ion-loop" label="Quick Sync"/>
-      <command id="restoreitem" 
+      <command id="restoreitem"
                service="itemActionService" method="deleteOrRestoreCurrentItem"
                showexpression="service:itemActionService.shouldAllowDeleteOrRestoreForCurrentItem"
                icon="ion-trash-a" label="Delete/Restore" cssclasses="red" />
