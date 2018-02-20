@@ -107,7 +107,7 @@
             const previousValue = item[CompositionConstants.Selected];
 
             //if all items besides the current selected one are already false, it means we are unselecting the current checkbox
-            var isUnselecting = previousValue !== "false" && items.filter(a => a[CompositionConstants.Selected] === "false").length === items.length - 1;
+            const isUnselecting = previousValue !== "false" && items.filter(a => a[CompositionConstants.Selected] === "false").length === items.length - 1;
 
             for (let i = 0; i < items.length; i++) {
 
@@ -120,7 +120,7 @@
             originalcompositiondata()[rowIndex][CompositionConstants.Selected] = "true";
 
 
-            if (isUnselecting) {
+            if (isUnselecting && items.length > 1) {
                 item[CompositionConstants.Selected] = "false";
                 //updating the original item, to make it possible to send custom action selection to server-side
                 originalcompositiondata()[rowIndex][CompositionConstants.Selected] = "false";
