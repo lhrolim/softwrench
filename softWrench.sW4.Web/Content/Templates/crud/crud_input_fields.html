@@ -231,6 +231,7 @@
                                    ng-class="getCheckboxLabelRightClass(fieldMetadata)">
                                 <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
                                 {{i18NInputLabel(fieldMetadata,true)}}
+                                <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='label' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>
                             </label>
                         </div>
                     </div>

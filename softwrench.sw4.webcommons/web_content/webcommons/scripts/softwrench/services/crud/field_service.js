@@ -433,7 +433,7 @@
                             return result;
                         }
                     }
-                    if (displayable === currentField) {
+                    if (displayable === currentField || (displayable.role && currentField.role && displayable.role === currentField.role)) {
                         return { fieldLoop: true, idx: i, container };
                     }
 

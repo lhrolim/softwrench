@@ -293,7 +293,13 @@
                 convertedDatamap.optionsLabel = fieldMetadata.headers[2];
                 convertedDatamap["#checklistrows"] =
                     this.checkListTableBuilderService.convertRowsIntoArray(fieldMetadata);
+            } else if (fieldMetadata.rendererType === "checkbox") {
+                convertedDatamap.fieldtype += "#checkbox";
+                convertedDatamap.fcheckontop = "left" !== fieldMetadata.rendererParameters["layout"];
+            } else if (fieldMetadata.rendererType === "label") {
+                convertedDatamap.fieldtype += "#label";
             }
+
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
                 return that.modalService.showPromise(schema, convertedDatamap, {
