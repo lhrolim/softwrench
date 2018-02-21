@@ -75,9 +75,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
         }
     }
 
-    public class EmailRequestModel : IBaseLayoutModel {
-
-        public bool PreventPoweredBy => false;
+    public class EmailRequestModel : ABaseLayoutModel {
 
         public string WoNum { get; set; }
         public string Action { get; set; }
@@ -85,8 +83,8 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
 
         public string Type { get; set; }
 
-        public string Title { get; set; }
-        public string ClientName {
+        
+        public override string ClientName {
             get { return "firstsolar"; }
             set { }
         }

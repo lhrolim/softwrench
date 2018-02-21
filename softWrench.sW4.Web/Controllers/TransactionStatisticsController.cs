@@ -37,9 +37,9 @@ namespace softWrench.sW4.Web.Controllers {
     }
 
 
-    public class TransactionStatsReportModel : IBaseLayoutModel {
+    public class TransactionStatsReportModel : ABaseLayoutModel {
 
-        public bool PreventPoweredBy => false;
+        public override bool PreventPoweredBy => false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TransactionStatsReportModel"/> class.
@@ -48,9 +48,6 @@ namespace softWrench.sW4.Web.Controllers {
             ClientName = ApplicationConfiguration.ClientName;
         }
 
-        public string ClientName { get; set; }
-
-        public string Title { get; set; }
 
         public List<UserStatistics> Statistics { get; set; }
     }

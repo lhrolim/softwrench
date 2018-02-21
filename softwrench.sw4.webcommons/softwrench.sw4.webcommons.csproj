@@ -128,6 +128,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\api\ABaseLayoutModel.cs" />
     <Compile Include="classes\api\IBaseLayoutModel.cs" />
     <Compile Include="classes\api\RawController.cs" />
     <Compile Include="classes\api\NoMenuController.cs" />

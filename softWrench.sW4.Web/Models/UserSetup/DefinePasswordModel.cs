@@ -2,7 +2,7 @@
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Web.Models.UserSetup {
-    public class DefinePasswordModel : IBaseLayoutModel {
+    public class DefinePasswordModel : ABaseLayoutModel {
 
         public DefinePasswordModel() {
             ClientName = ApplicationConfiguration.ClientName;
@@ -25,12 +25,6 @@ namespace softWrench.sW4.Web.Models.UserSetup {
         public string FullName { get; set; }
 
         public string Username { get; set; }
-
-        public string ClientName { get; set; }
-
-        public string Title { get; set; }
-
-        public bool PreventPoweredBy => ClientName.Equals("firstsolardispatch");
 
     }
 }

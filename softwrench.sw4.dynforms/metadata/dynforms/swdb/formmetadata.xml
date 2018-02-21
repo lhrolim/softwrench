@@ -148,7 +148,7 @@
             <header label="Style" params="fieldset=true" displacement="ontop"/>
             <section orientation="horizontal">
               <field attribute="ffontsize" label="Font Size" default="12">
-                <renderer type="numericinput" params="min=8;max=36"/>
+                <renderer type="numericinput" params="min=8;max=50"/>
               </field>
               <field attribute="fcolor" label="Font Color" >
                 <renderer type="color" />

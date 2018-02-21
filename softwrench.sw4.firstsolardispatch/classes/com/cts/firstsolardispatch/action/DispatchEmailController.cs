@@ -102,16 +102,17 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
         }
     }
 
-    public class EmailRequestModel : IBaseLayoutModel {
+    public class EmailRequestModel : ABaseLayoutModel {
         public int? Id { get; set; }
         public string Status { get; set; }
-        public string Title { get; set; }
-        public string ClientName {
+        
+        public override string ClientName {
             get { return "firstsolardispatch"; }
             set { }
         }
 
-        public bool PreventPoweredBy => true;
+        public override bool PreventPoweredBy => true;
+
     }
 
     public class AcceptedEmailRequestModel : EmailRequestModel {

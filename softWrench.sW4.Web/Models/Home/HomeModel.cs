@@ -8,10 +8,9 @@ using softWrench.sW4.Exceptions;
 using softWrench.sW4.Metadata.Security;
 
 namespace softWrench.sW4.Web.Models.Home {
-    public class HomeModel : IBaseLayoutModel {
+    public class HomeModel : ABaseLayoutModel {
 
         public string Url { get; set; }
-        public string Title { get; set; }
         public bool HasPopupLogo { get; set; }
         public string ConfigJSON { get; set; }
 
@@ -30,7 +29,6 @@ namespace softWrench.sW4.Web.Models.Home {
         public string MessageType { get; set; }
         public string WindowTitle { get; set; }
 
-        public string ClientName { get; set; }
 
         public string ApplicationName { get; set; }
 
@@ -47,9 +45,6 @@ namespace softWrench.sW4.Web.Models.Home {
         public string ResultDataJSON { get; set; }
 
         public bool Anonymous { get; set; }
-        public bool PreventPoweredBy => ClientName.Equals("firstsolardispatch");
-        public string H1Header { get; set; }
-        public string H1HeaderStyle { get; set; }
 
 
         public HomeModel(string url, string title, HomeConfigs configs, MenuModel MenuModel, InMemoryUser user, bool hasLogoPopup,
