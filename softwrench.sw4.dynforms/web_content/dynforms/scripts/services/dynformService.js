@@ -59,7 +59,7 @@
             this.$rootScope.$on(JavascriptEventConstants.FormDoubleClicked, (aEvent, mouseEvent, layoutDispatch) => {
                 const cs = crudContextHolderService.currentSchema();
                 const dm = crudContextHolderService.rootDataMap();
-                if (cs.properties["dynforms.editionallowed"] !== "true") {
+                if (cs.properties["dynforms.editionallowed"] !== "true" || crudContextHolderService.isShowingModal()) {
                     //not on a edition schema mode
                     return;
                 }
@@ -214,6 +214,11 @@
             }
         }
 
+        isChecked(fieldMetadata) {
+            const idx = currentSelectedFields.findIndex(f => f.role === fieldMetadata.role);
+            return idx !== -1;
+        }
+
         buildDisplayable(modalData) {
 
 
@@ -250,6 +255,11 @@
             if (fieldType === "OptionField") {
                 rendererType = modalData["ofrenderer"];
             }
+
+            rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
+            rendererParameters["color"] = modalData.fcolor || "black";
+
+
 
             const resultOb = {
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
@@ -301,6 +311,16 @@
             } else if (fieldMetadata.rendererType === "label") {
                 convertedDatamap.fieldtype += "#label";
             }
+            let fontSize = 13;
+            if (fieldMetadata.rendererParameters["font-size"]) {
+                fontSize = fieldMetadata.rendererParameters["font-size"];
+                if (fontSize.endsWith("px")) {
+                    fontSize = fontSize.substring(0, fontSize.length - 2);
+                }
+            }
+
+            convertedDatamap.ffontsize=  fontSize;
+            convertedDatamap.fcolor=  fieldMetadata.rendererParameters["color"] || "black";
 
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
@@ -410,7 +430,7 @@
 
         validateEditModal(schema, datamap, parameters) {
             const newAttribute = datamap.fattribute;
-            if (newAttribute.indexOf(' ') > 0) {
+            if (newAttribute && newAttribute.indexOf(' ') > 0) {
                 this.alertService.alert("attribute field cannot contain spaces");
                 return false;
             }
@@ -457,6 +477,7 @@
                     this.fieldService.replaceOrRemoveDisplayableByKey(cs, field);
                 });
             }
+            return cs;
         }
 
         finishSectionEdition() {
@@ -464,11 +485,12 @@
                 return this.modalService.showPromise(schema, {}, { cssclass: 'largemodal' });
             }).then(savedData => {
                 return this.doCreateEnclosingSection(savedData);
-            }).then(() => {
+                }).then((cs) => {
+                var d = cs.displayables;
                 isEditingSection = false;
-                currentSelectedFields = [];
+                currentSelectedFields=[];
+                this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
             });
-
         }
 
         loadFormGridEdition() {

@@ -26,13 +26,13 @@
             return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, avoidColon);
         };
 
-        $scope.showLabel
 
         $scope.i18NInputLabelEvaluating = function (fieldMetadata, legendMode = false) {
             if (!$scope.isLabelVisible(fieldMetadata, legendMode)) {
                 return "";
             }
-            return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, false);
+
+            return i18NService.getI18nInputLabel(fieldMetadata, $scope.schema, fieldMetadata.rendererType === "label");
         };
 
         $scope.getBooleanClass = function (item, attribute) {

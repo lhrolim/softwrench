@@ -52,6 +52,10 @@
             dynFormService.toggleSectionSelection($scope.fieldMetadata);
         }
 
+        $scope.isChecked= function () {
+            return dynFormService.isChecked($scope.fieldMetadata);
+        }
+
         $scope.fieldMoved = function (fieldMetadata) {
 //            console.log("ok");
         }

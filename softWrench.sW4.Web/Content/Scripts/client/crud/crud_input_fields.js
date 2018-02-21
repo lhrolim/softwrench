@@ -75,13 +75,13 @@
 
 
                         element.append(
-                            "<crud-input-fields displayables='displayables'"+
+                            "<crud-input-fields displayables='displayables'" +
                             "schema='schema'" +
                             "datamap='datamap'" +
                             "is-dirty='isDirty'" +
                             "ismodal = '{{ismodal}}'" +
                             "panelid = 'panelid'" +
-                            "extraparameters='extraparameters'"+
+                            "extraparameters='extraparameters'" +
                             "blockedassociations='blockedassociations'" +
                             "section-parameters='sectionParameters'" +
                             "elementid='{{elementid}}'" +
@@ -93,18 +93,18 @@
                             "></crud-input-fields>"
                         );
                         $timeout(function () {
-                                // mark data as not resolved since the template has not yet been compiled: can still trigger formatters and default values
-                                // avoiding bugs on the dirty checker this way
-                                crudContextHolderService.clearDetailDataResolved();
-                                $compile(element.contents())(scope);
-                            }, 0, false)
+                            // mark data as not resolved since the template has not yet been compiled: can still trigger formatters and default values
+                            // avoiding bugs on the dirty checker this way
+                            crudContextHolderService.clearDetailDataResolved();
+                            $compile(element.contents())(scope);
+                        }, 0, false)
                             .finally(() => // section already compiled, formatters and default values already triggered: mark data as resolved
                                 crudContextHolderService.setDetailDataResolved());
                     }
                 }
             }
         }])
-        .directive("crudInputFields", ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService","$timeout", function (contextService, eventService, crud_inputcommons, crudContextHolderService, $timeout) {
+        .directive("crudInputFields", ["contextService", "eventService", "crud_inputcommons", "crudContextHolderService", "$timeout", function (contextService, eventService, crud_inputcommons, crudContextHolderService, $timeout) {
             return {
                 restrict: 'E',
                 replace: true,
@@ -162,6 +162,9 @@
                         if (fieldMetadata.rendererType === "email") {
                             return "email";
                         }
+                        else if (fieldMetadata.rendererType === "color") {
+                            return "color";
+                        }
                         else if (fieldMetadata.rendererType === "password") {
                             return "password";
                         }
@@ -175,7 +178,10 @@
 
                     scope.$on(JavascriptEventConstants.ReevalDisplayables, () => {
                         //whenever a field is added via a dynforms need to recalculate the cached fields 
-                        scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
+                        if (scope.ismodal !== "true") {
+                            scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
+                        }
+                        
                     });
 
                     scope.$on(JavascriptEventConstants.HideModal, () => {
@@ -191,10 +197,10 @@
                                 //whenever a field is added via a dynforms need to recalculate the cached fields 
                                 scope.nonTabFieldsCached = scope.nonTabFields(scope.displayables);
                             }, 0, false);
-                            
-                            
+
+
                         }
-                        
+
                     });
 
                     scope.nonTabFieldsCachedDelegate = () => {
@@ -213,9 +219,9 @@
 
                 },
 
-                controller: ["$q", "$scope", "$http","$rootScope", "$element", "$injector", "$timeout", "$log", "alertService",
+                controller: ["$q", "$scope", "$http", "$rootScope", "$element", "$injector", "$timeout", "$log", "alertService",
                     "printService", "compositionService", "commandService", "fieldService", "i18NService",
-                    "associationService", "expressionService", "styleService", "tabsService","focusService",
+                    "associationService", "expressionService", "styleService", "tabsService", "focusService",
                     "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService",
                     "layoutservice", "attachmentService", "richTextService",
                     function ($q, $scope, $http, $rootScope, $element, $injector, $timeout, $log, alertService,
@@ -251,14 +257,14 @@
                             $event.stopImmediatePropagation();
                         }
 
-                     
+
 
 
                         $scope.isPositionLeft = function (fieldMetadata) {
                             return "left".equalIc(fieldMetadata.rendererParameters['position']);
                         }
 
-                     
+
 
                         $scope.$on(JavascriptEventConstants.AssociationUpdated, function (event, associationoptions) {
                             $scope.associationsloaded = true;
@@ -369,7 +375,7 @@
                         };
 
 
-                      
+
 
                         $scope.restoreDefault = function (fieldMetadata) {
                             alertService.confirm("Are you sure you want to restore this field to its default value?").then(r => {
@@ -386,9 +392,9 @@
                                 return false;
                             }
 
-//                            if (fieldMetadata.type === "ApplicationCompositionDefinition") {
-//                                return false;
-//                            }
+                            //                            if (fieldMetadata.type === "ApplicationCompositionDefinition") {
+                            //                                return false;
+                            //                            }
 
                             const originalDatamap = crudContextHolderService.originalDatamap($scope.panelId);
                             const datamap = crudContextHolderService.rootDataMap($scope.panelId);
@@ -416,13 +422,13 @@
                                 //TODO: fix and fix of a decent way to do array comparison
                                 return false;
 
-//                                const arrayComparison = JSON.stringify(original) === JSON.stringify(value);
-//
-//
-//                                if (!arrayComparison && !original && value === []) {
-//                                    //ignoring differences for an undefined vs blank array
-//                                    return false;
-//                                }
+                                //                                const arrayComparison = JSON.stringify(original) === JSON.stringify(value);
+                                //
+                                //
+                                //                                if (!arrayComparison && !original && value === []) {
+                                //                                    //ignoring differences for an undefined vs blank array
+                                //                                    return false;
+                                //                                }
                             }
 
                             return original !== value;
@@ -643,9 +649,11 @@
                         $scope.getLabelStyle = function (fieldMetadata) {
                             const rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
                             const weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');
+                            const size = styleService.getLabelStyle(fieldMetadata, 'font-size');
                             const result = {
                                 'color': rendererColor,
-                                'font-weight': weight
+                                'font-weight': weight,
+                                'font-size': size
                             };
                             return result;
                         }
@@ -731,7 +739,7 @@
                             return $scope.expandeddetails[key];
                         }
 
-                        $scope.isOnDynFormEdition = function() {
+                        $scope.isOnDynFormEdition = function () {
                             return $scope.schema.properties["dynforms.editionallowed"] === "true";
                         }
 
@@ -799,18 +807,18 @@
                         };
 
                         $scope.blurField = function ($event, fieldMetadata) {
-//                            console.log($event);
-//                            $event.currentTarget.blur();
+                            //                            console.log($event);
+                            //                            $event.currentTarget.blur();
                             $event.currentTarget.blur();
                             var result = focusService.moveFocus($scope.datamap, $scope.schema, fieldMetadata.attribute);
-//                            if (!result) {
-//                                
-//                            }
+                            //                            if (!result) {
+                            //                                
+                            //                            }
 
-//                            var fields = $(this).parents('form:eq(0),body').find('input, textarea, select');
-//                            var index = fields.index(this);
-//                            if (index > -1 && (index + 1) < fields.length)
-//                                fields.eq(index + 1).focus();
+                            //                            var fields = $(this).parents('form:eq(0),body').find('input, textarea, select');
+                            //                            var index = fields.index(this);
+                            //                            if (index > -1 && (index + 1) < fields.length)
+                            //                                fields.eq(index + 1).focus();
 
                         }
 

@@ -25,7 +25,7 @@
           ng-if="shouldShowIcon('remove')"
           rel="tooltip" data-html="true" data-original-title="remove field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
 
-    <input type="checkbox" ng-show="isEditingSection()" ng-click="toggleSectionSelection()" />
+    <input type="checkbox" ng-show="isEditingSection()" ng-click="toggleSectionSelection()" ng-checked="isChecked(fieldMetadata)"/>
     
     <label class="control-label" ng-show="fieldMetadata.role != '.'">
         (Field Attribute: {{fieldMetadata.role}})

@@ -110,8 +110,7 @@
               </field>
             </section>
           </section>
-
-
+          
           <section showexpression="@fieldtype == 'OptionField'">
             <optionfield attribute="fprovider" label="Provider" providerattribute="availableOptions">
               <renderer type="combo"/>
@@ -143,12 +142,31 @@
             </section>
           </section>
 
+
+
+          <section showexpression="@fieldtype !== 'pleaseselect'">
+            <header label="Style" params="fieldset=true" displacement="ontop"/>
+            <section orientation="horizontal">
+              <field attribute="ffontsize" label="Font Size" default="12">
+                <renderer type="numericinput" params="min=8;max=36"/>
+              </field>
+              <field attribute="fcolor" label="Font Color" >
+                <renderer type="color" />
+              </field>
+            </section>
+          </section>
+
+
           <section showexpression="@fieldtype == 'checklisttable'">
             <field attribute="yesLabel" label="Yes Label" requiredexpression="true" defaultexpression="'yes'"/>
             <field attribute="noLabel" label="No Label" requiredexpression="true" defaultexpression="'N/A'"/>
             <field attribute="optionsLabel" label="Options Label" requiredexpression="true" />
             <section resourcepath="/Content/Shared/dynforms/htmls/checklisttablerowbuilder.html"/>
           </section>
+
+          
+          
+
 
           <event type="beforesubmit.prevalidation" service="dynFormService" method="validateEditModal"/>
 <!--          <event type="beforesubmit.postvalidation" service="dynFormService" method="applyPostValidationRules"/>-->
