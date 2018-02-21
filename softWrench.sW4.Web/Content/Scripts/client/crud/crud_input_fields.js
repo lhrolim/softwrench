@@ -257,7 +257,9 @@
                             $event.stopImmediatePropagation();
                         }
 
-
+                        $scope.onBlur = function(fieldMetadata) {
+                            eventService.onBlur(fieldMetadata);
+                        }
 
 
                         $scope.isPositionLeft = function (fieldMetadata) {

@@ -1491,6 +1491,7 @@
                   </documentation>
                 </annotation>
               </enumeration>
+              <enumeration value="blur"/>
             </restriction>
           </simpleType>
         </attribute>

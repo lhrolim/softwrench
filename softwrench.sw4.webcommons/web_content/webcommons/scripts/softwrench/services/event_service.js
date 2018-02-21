@@ -135,6 +135,16 @@
                 parameters.fieldMetadata = displayable;
                 return execute(event, { parameters });
             },
+
+            onBlur: function (displayable, parameters = {}) {
+                const event = loadEvent(displayable, "blur");
+                if (!event) {
+                    return null;
+                }
+                parameters.fieldMetadata = displayable;
+                return execute(event, { parameters });
+            },
+
             beforechange: function (displayable, event) {
                 const metadataEvent = loadEvent(displayable, "beforechange");
                 if (!metadataEvent) {

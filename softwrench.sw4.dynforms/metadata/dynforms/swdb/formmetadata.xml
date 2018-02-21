@@ -93,8 +93,10 @@
           </optionfield>
 
           <section showexpression="@fieldtype !== 'pleaseselect'">
+            <field attribute="flabel" label="Label" requiredexpression="true">
+              <event type="blur" service="dynFormService" method="labelInput"/>
+            </field>
             <field attribute="fattribute" label="Attribute" requiredexpression="true" helpicon="right" tooltip="Used to identifiy uniquely this field at the database. No spaces allowed"/>
-            <field attribute="flabel" label="Label" requiredexpression="true"/>
           </section>
 
           <section showexpression="@fieldtype == 'ApplicationFieldDefinition'">

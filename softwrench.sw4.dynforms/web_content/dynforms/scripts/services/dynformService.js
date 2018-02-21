@@ -504,6 +504,13 @@
             isPreviewMode = "true"===previewMode;
         }
 
+        labelInput() {
+            const dm = this.crudContextHolderService.rootDataMap("#modal");
+            if (!dm["fattribute"] && dm["flabel"]) {
+                dm["fattribute"] = "f_"+ dm["flabel"].replace(/\s/g, "_");
+            }
+        }
+
         redirectToForm(form) {
             const applicationname = form.id;
             //            const customParameters = {

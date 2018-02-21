@@ -621,6 +621,7 @@
                                                    data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                                    ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                                    placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
+                                                   ng-blur="onBlur(fieldMetadata)"
                                                    ng-init="initField(fieldMetadata)"
                                                    dynamic-name="fieldMetadata.attribute" />
                                             <input ng-if="inputType !== 'password'"
@@ -636,6 +637,7 @@
                                                    ng-init="initField(fieldMetadata)"
                                                    ng-required="isFieldRequired(fieldMetadata)"
                                                    ng-enter="blurField(event,fieldMetadata)"
+                                                   ng-blur="onBlur(fieldMetadata)"
                                                    dynamic-name="fieldMetadata.attribute" />
                                             <span class="input-group-addon" ng-if="fieldMetadata.rendererParameters['append']!=null">{{fieldMetadata.rendererParameters['append']}}</span>
                                             <p ng-if="fieldMetadata.rendererParameters['valmessage']" ng-show="crudInputForm[fieldMetadata.attribute].$invalid && !crudInputForm[fieldMetadata.attribute].$pristine" style="color: red;">{{fieldMetadata.rendererParameters['valmessage']}}</p>
