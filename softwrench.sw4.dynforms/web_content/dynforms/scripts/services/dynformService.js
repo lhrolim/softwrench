@@ -57,9 +57,10 @@
             var that = this;
 
             this.$rootScope.$on(JavascriptEventConstants.FormDoubleClicked, (aEvent, mouseEvent, layoutDispatch) => {
+
                 const cs = crudContextHolderService.currentSchema();
                 const dm = crudContextHolderService.rootDataMap();
-                if (cs.properties["dynforms.editionallowed"] !== "true" || crudContextHolderService.isShowingModal()) {
+                if (cs.properties["dynforms.editionallowed"] !== "true" || crudContextHolderService.isShowingModal() || isPreviewMode) {
                     //not on a edition schema mode
                     return;
                 }
@@ -178,7 +179,7 @@
                     cssclass: 'largemodal', onloadfn: () => {
                         this.$timeout(() => {
                             this.$rootScope.$broadcast("dynform.checklist.loaddata");
-                        },100,false);
+                        }, 100, false);
 
                     }
                 });
@@ -194,13 +195,8 @@
 
                 return that.doAddDisplayable(currentField, savedData, direction);
             }).then(resultDisplayable => {
-                if (resultDisplayable.type === "OptionField" && resultDisplayable.rendererType === "combo") {
-                    const fieldQualifier = resultDisplayable.qualifier;
-                    const provider = resultDisplayable.providerAttribute;
-
-                    return that.restService.get("FormMetadata", "EagerLoadOptions", { fieldQualifier }).then(httpResult => {
-                        that.crudContextHolderService.updateEagerAssociationOptions(provider, httpResult.data, null, null);
-                    });
+                if (resultDisplayable.type === "OptionField" ) {
+                    return that.updateEagerAssociationOptions(resultDisplayable);
                 }
             });
         }
@@ -254,6 +250,10 @@
 
             if (fieldType === "OptionField") {
                 rendererType = modalData["ofrenderer"];
+                if (rendererType === "checkbox") {
+                    rendererParameters["hide.optionfieldheader"] = "true";
+                }
+
             }
 
             rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
@@ -283,7 +283,9 @@
 
             if (fieldType === "OptionField") {
                 resultOb.qualifier = modalData.fprovider;
-                resultOb.providerAttribute = "formMetadataOptionsProvider.GetAvailableOptions";
+                resultOb.providerAttribute = "formMetadataOptionsProvider.GetAvailableOptions#" + modalData.fprovider;
+                resultOb.target = modalData.fattribute;
+                resultOb.associationKey = resultOb.providerAttribute;
             }
 
             return resultOb;
@@ -305,12 +307,19 @@
                 convertedDatamap.optionsLabel = fieldMetadata.headers[2];
                 convertedDatamap["#checklistrows"] =
                     this.checkListTableBuilderService.convertRowsIntoArray(fieldMetadata);
-            } else if (fieldMetadata.rendererType === "checkbox") {
+            } else if (fieldMetadata.rendererType === "checkbox" && fieldMetadata.type !== "OptionField") {
                 convertedDatamap.fieldtype += "#checkbox";
                 convertedDatamap.fcheckontop = "left" !== fieldMetadata.rendererParameters["layout"];
             } else if (fieldMetadata.rendererType === "label") {
                 convertedDatamap.fieldtype += "#label";
             }
+
+            if (fieldMetadata.type === "OptionField") {
+                convertedDatamap.fprovider = fieldMetadata.qualifier;
+                convertedDatamap.ofrenderer = fieldMetadata.rendererType;
+            }
+
+
             let fontSize = 13;
             if (fieldMetadata.rendererParameters["font-size"]) {
                 fontSize = fieldMetadata.rendererParameters["font-size"];
@@ -319,23 +328,40 @@
                 }
             }
 
-            convertedDatamap.ffontsize=  fontSize;
-            convertedDatamap.fcolor=  fieldMetadata.rendererParameters["color"] || "black";
+            convertedDatamap.ffontsize = fontSize;
+            convertedDatamap.fcolor = fieldMetadata.rendererParameters["color"] || "black";
 
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
-                return that.modalService.showPromise(schema, convertedDatamap, {
-                    cssclass: 'largemodal', onloadfn: () => {
-                        this.$rootScope.$broadcast("dynform.checklist.loaddata");
-                    }
-                });
+                return that.modalService.showPromise(schema,
+                    convertedDatamap,
+                    {
+                        cssclass: 'largemodal',
+                        onloadfn: () => {
+                            this.$rootScope.$broadcast("dynform.checklist.loaddata");
+                        }
+                    });
             }).then(savedData => {
                 if (savedData.fattribute.indexOf(' ') >= 0) {
                     this.alertService.alert("Attribute names cannot contain spaces");
                 }
 
                 return that.doAddDisplayable(fieldMetadata, savedData, "edit");
+            }).then(resultDisplayable => {
+                if (resultDisplayable.type === "OptionField") {
+                    return that.updateEagerAssociationOptions(resultDisplayable);
+                }
             });
+        }
+
+        updateEagerAssociationOptions(resultDisplayable) {
+            const fieldQualifier = resultDisplayable.qualifier;
+            const provider = resultDisplayable.providerAttribute;
+
+            return this.restService.get("FormMetadata", "EagerLoadOptions", { fieldQualifier }).then(
+                httpResult => {
+                    this.crudContextHolderService.updateEagerAssociationOptions(provider, httpResult.data, null, null);
+                });
         }
 
         afterChangeType(event) {
@@ -485,10 +511,10 @@
                 return this.modalService.showPromise(schema, {}, { cssclass: 'largemodal' });
             }).then(savedData => {
                 return this.doCreateEnclosingSection(savedData);
-                }).then((cs) => {
+            }).then((cs) => {
                 var d = cs.displayables;
                 isEditingSection = false;
-                currentSelectedFields=[];
+                currentSelectedFields = [];
                 this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
             });
         }
@@ -501,13 +527,13 @@
         }
 
         setPreviewMode(previewMode) {
-            isPreviewMode = "true"===previewMode;
+            isPreviewMode = "true" === previewMode;
         }
 
         labelInput() {
             const dm = this.crudContextHolderService.rootDataMap("#modal");
             if (!dm["fattribute"] && dm["flabel"]) {
-                dm["fattribute"] = "f_"+ dm["flabel"].replace(/\s/g, "_");
+                dm["fattribute"] = "f_" + dm["flabel"].replace(/\s/g, "_");
             }
         }
 

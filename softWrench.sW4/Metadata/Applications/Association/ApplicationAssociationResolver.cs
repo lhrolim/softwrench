@@ -68,7 +68,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
         public async Task<IEnumerable<IAssociationOption>> ResolveOptions([NotNull]ApplicationSchemaDefinition schema,
             [NotNull]AttributeHolder originalEntity, [NotNull] ApplicationAssociationDefinition association, SearchRequestDto associationFilter) {
             if (!FullSatisfied(association, originalEntity)) {
-                Log.WarnFormat("field {0} has dependant fields which are not fully satisfied, ignoring query");
+                Log.WarnFormat("field {0} has dependant fields which are not fully satisfied, ignoring query", association.Role);
                 return null;
             }
             //TODO: remove this workaround, but need to refactor a bunch of prefilters

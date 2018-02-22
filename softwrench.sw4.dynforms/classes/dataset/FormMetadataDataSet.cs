@@ -63,6 +63,10 @@ namespace softwrench.sw4.dynforms.classes.dataset {
                 schema.Properties["commandbar.top"] = "dynformsedit";
                 schema.Properties["toolbar.detail.actions"] = "dynformsactions";
                 schema.Properties["dynforms.editionallowed"] = "true";
+                if (!schema.SchemaId.EndsWith(detail.Id)) {
+                    //to avoid a wrong javascript schema caching across different forms
+                    schema.SchemaId += "_" + detail.Id;
+                }
 
                 detail.Schema = schema;
             }

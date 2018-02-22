@@ -124,6 +124,7 @@
               <option value="lookup" label="Look Up"/>
               <option value="radio" label="Radio"/>
               <option value="checkbox" label="Check Box"/>
+              <option value="combodropdown" label="Multiple" help="Allows selection of multiple items at once"/>
             </optionfield>
 
             <field attribute="frequired" label="Required">
