@@ -412,7 +412,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 return result;
             }
 
-            IDictionary<string, IEnumerable<IAssociationOption>>
+            ConcurrentDictionary<string, IEnumerable<IAssociationOption>>
                 eagerFetchedOptions = new ConcurrentDictionary<string, IEnumerable<IAssociationOption>>();
 
             IDictionary<string, IDictionary<string, IAssociationOption>>
@@ -512,11 +512,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return result;
         }
 
-        private async Task DoResolveEagerOptions(ApplicationSchemaDefinition schema, AttributeHolder dataMap, OptionField field, IDictionary<string, IEnumerable<IAssociationOption>>
+        private async Task DoResolveEagerOptions(ApplicationSchemaDefinition schema, AttributeHolder dataMap, OptionField field, ConcurrentDictionary<string, IEnumerable<IAssociationOption>>
                 eagerFetchedOptions) {
             var associationOptions = await _dynamicOptionFieldResolver.ResolveOptions(schema, dataMap, field);
             if (!eagerFetchedOptions.ContainsKey(field.AssociationKey)) {
-                eagerFetchedOptions.Add(field.AssociationKey, associationOptions);
+                eagerFetchedOptions.TryAdd(field.AssociationKey, associationOptions);
             }
 
         }
