@@ -53,7 +53,12 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             var methodName = GetMethodName(attribute);
             var application = ApplicationMetadata.FromSchema(schema);
             if (methodName.Contains(".")) {
-                var result = GenericSwMethodInvoker.Invoke<IEnumerable<IAssociationOption>>(schema, attribute,
+                methodName = attribute;
+                if (attribute.Contains("#") && !attribute.StartsWith("#")) {
+                    methodName = attribute.Substring(0, attribute.IndexOf("#", StringComparison.Ordinal));
+                }
+
+                var result = GenericSwMethodInvoker.Invoke<IEnumerable<IAssociationOption>>(schema, methodName,
                     new OptionFieldProviderParameters {
                         OriginalEntity = originalEntity,
                         ApplicationMetadata = application,

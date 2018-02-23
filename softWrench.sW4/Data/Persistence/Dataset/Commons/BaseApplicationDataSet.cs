@@ -458,7 +458,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             #endregion
 
             #region optionfields
-            foreach (var optionField in schema.OptionFields(request.IsShowMoreMode)) {
+
+            var optionFields = schema.OptionFields(request.IsShowMoreMode);
+            foreach (var optionField in optionFields) {
                 if (!associationsToFetch.ShouldResolve(optionField.AssociationKey)) {
                     Log.Debug("ignoring association fetching: {0}".Fmt(optionField.AssociationKey));
                     continue;
@@ -513,7 +515,10 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         private async Task DoResolveEagerOptions(ApplicationSchemaDefinition schema, AttributeHolder dataMap, OptionField field, IDictionary<string, IEnumerable<IAssociationOption>>
                 eagerFetchedOptions) {
             var associationOptions = await _dynamicOptionFieldResolver.ResolveOptions(schema, dataMap, field);
-            eagerFetchedOptions.Add(field.AssociationKey, associationOptions);
+            if (!eagerFetchedOptions.ContainsKey(field.AssociationKey)) {
+                eagerFetchedOptions.Add(field.AssociationKey, associationOptions);
+            }
+
         }
 
 
