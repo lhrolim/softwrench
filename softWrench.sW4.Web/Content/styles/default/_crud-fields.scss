@@ -8,6 +8,10 @@
 
 fieldset.form-group {
     min-height: 59px;
+
+    &.inputfield {
+        min-height: 60px;
+    }
 }
 
 .form-horizontal .form-group {
@@ -15,7 +19,7 @@ fieldset.form-group {
     margin-left: 0;
     padding-right: 15px;
     padding-left: 15px;
-    min-height: 60px;
+    min-height: 0px;
 
     &.haschildren {
         padding-right: 0;
@@ -24,6 +28,10 @@ fieldset.form-group {
         &.tabsection {
             padding-left: 15px;
         }
+    }
+
+    &.inputfield {
+        min-height: 60px;
     }
 
     &.resourcesection {
@@ -473,7 +481,7 @@ input[type="date"], input[type="time"] {
 }
 
 .inline-checkbox {
-    padding-top: 28px;
+    /*padding-top: 28px;*/
 
     [ng-switch-when="checkbox"] {
         .control-label {
@@ -481,6 +489,10 @@ input[type="date"], input[type="time"] {
             position: relative;
         }
     }
+}
+
+.inline-checkbox-side-by-side {
+    padding-top: 28px;
 }
 
 .inline-checkbox-header {

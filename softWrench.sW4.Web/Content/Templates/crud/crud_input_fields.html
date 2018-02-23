@@ -145,7 +145,7 @@
 
                 <!--#endregion -->
 
-                <div ng-if="!isStaticReadOnlyField(fieldMetadata,datamap)"
+                <div ng-if="!isStaticReadOnlyField(fieldMetadata,datamap) &amp;&amp; fieldMetadata.rendererType !== 'label' "
                      ng-show="fieldMetadata.attribute!=schema.idFieldName || fieldMetadata.showExpression === '!false'"
                      ng-switch on="fieldMetadata.rendererType"
                      ng-class="getInputClass(fieldMetadata)">

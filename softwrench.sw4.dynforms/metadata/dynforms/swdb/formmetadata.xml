@@ -139,7 +139,7 @@
               <field attribute="frequired" label="Required">
                 <renderer type="checkbox"/>
               </field>
-              <field attribute="fcheckontop" label="Label on Top?" defaultexpression="true">
+              <field attribute="fcheckontop" label="Label on Top?" >
                 <renderer type="checkbox"/>
               </field>
             </section>
@@ -150,7 +150,7 @@
           <section showexpression="@fieldtype !== 'pleaseselect'">
             <header label="Style" params="fieldset=true" displacement="ontop"/>
             <section orientation="horizontal">
-              <field attribute="ffontsize" label="Font Size" default="12">
+              <field attribute="ffontsize" label="Font Size" default="13">
                 <renderer type="numericinput" params="min=8;max=50"/>
               </field>
               <field attribute="fcolor" label="Font Color" >

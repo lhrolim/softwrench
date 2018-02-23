@@ -32,7 +32,7 @@
                 classes += ' col-md-' + 12 / maxColumns;
             }
 
-            return classes;
+            return { classes, maxColumns };
         };
 
         function getDefaultMaxNumberOfColumns(datamap, schema, displayables, verticalOrientation) {
@@ -112,6 +112,10 @@
             return columnCount;
         };
 
+        function hasLabelOnTop(fieldMetadata) {
+            return fieldMetadata.rendererType !== "label" && !(fieldMetadata.rendererType === "checkbox" && !!fieldMetadata.rendererParameters["layout"]);
+        }
+
         function getFieldClass(fieldMetadata, datamap, schema, displayables, params = {}) {
 
             var cssclass = "";
@@ -155,6 +159,11 @@
                 cssclass += " tabsection";
             }
 
+            if (hasLabelOnTop(fieldMetadata)) {
+                //this class will set a min-height of 60px, which shouldn´t be put if the labels are not on top
+                cssclass += " inputfield";
+            }
+
             //add classes if childinputsize is set
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.childinputsize != null) {
                 cssclass += ' childinputsize ' + fieldMetadata.rendererParameters.childinputsize;
@@ -162,7 +171,9 @@
 
             params.columnCount = getFieldColumnCount(fieldMetadata);
 
-            cssclass += getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params);
+            const result = getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params);
+
+            cssclass += result.classes;
             cssclass += ' row';
 
             //if the field is a checkbox with a layout
@@ -172,10 +183,12 @@
                         cssclass += ' inline-checkbox-header';
                     } else {
                         cssclass += ' inline-checkbox';
+                        if (result.maxColumns > 1) {
+                            cssclass += ' inline-checkbox-side-by-side';
+                        }
                     }
-
-                    
                 }
+
             }
 
             return cssclass;
