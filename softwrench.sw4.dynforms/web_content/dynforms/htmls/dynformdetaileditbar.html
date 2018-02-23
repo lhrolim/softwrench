@@ -3,6 +3,18 @@
           ng-if="shouldShowIcon('edit')"
           ng-click="edit()"
           data-html="true" data-original-title="edit field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
+    
+    <icon class="fa fa-arrow-circle-o-down"
+          ng-if="shouldShowIcon('adddown')"
+          rel="tooltip"
+          ng-click="addField('down')"
+          data-html="true" data-original-title="add field down" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
+    
+    <icon class="fa fa-arrow-circle-o-up"
+          ng-if="shouldShowIcon('addup')"
+          ng-click="addField('top')"
+          rel="tooltip" data-html="true" data-original-title="add field up" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
+
     <icon class="fa fa-arrow-circle-o-left"
           ng-if="shouldShowIcon('addleft')"
           ng-click="addField('left')"
@@ -11,15 +23,7 @@
           ng-if="shouldShowIcon('addright')"
           ng-click="addField('right')"
           data-original-title="add field to the right" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    <icon class="fa fa-arrow-circle-o-up"
-          ng-if="shouldShowIcon('addup')"
-          ng-click="addField('top')"
-          rel="tooltip" data-html="true" data-original-title="add field up" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    <icon class="fa fa-arrow-circle-o-down"
-          ng-if="shouldShowIcon('adddown')"
-          rel="tooltip"
-          ng-click="addField('down')"
-          data-html="true" data-original-title="add field down" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
+  
     <icon class="fa fa-remove"
           ng-click="remove()"
           ng-if="shouldShowIcon('remove')"

@@ -150,7 +150,7 @@
 
             if (direction === "edit") {
                 //                const key = displayable.attribute ? displayable.attribute : displayable.target;
-                this.fieldService.replaceOrRemoveDisplayableByKey(cs, currentField, displayable);
+                this.fieldService.replaceOrRemoveDisplayableByKey(cs, currentField.role, displayable);
             }
 
 
@@ -502,7 +502,7 @@
                 newSection.displayables = currentSelectedFields;
                 cs.displayables.splice(idxToAdd + 1, 0, newSection);
                 currentSelectedFields.forEach(field => {
-                    this.fieldService.replaceOrRemoveDisplayableByKey(cs, field);
+                    this.fieldService.replaceOrRemoveDisplayableByKey(cs, field.role);
                 });
             }
             return cs;

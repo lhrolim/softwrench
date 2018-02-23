@@ -178,9 +178,9 @@
 
         <schema id="sectionenclosingmodal" stereotype="detail.noprint" title="Section Creation">
           <field label="Label" attribute="headerlabel" requiredexpression="true"/>
-          <field attribute="freusable" label="share ?" tooltip="If true this section can be used on other forms later">
-            <renderer type="checkbox"/>
-          </field>
+<!--          <field attribute="freusable" label="share ?" tooltip="If true this section can be used on other forms later">-->
+<!--            <renderer type="checkbox"/>-->
+<!--          </field>-->
           <field label="Section Id" attribute="sectionid" showexpression="@freusable === true" requiredexpression="true"/>
         </schema>
 
