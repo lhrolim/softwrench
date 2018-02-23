@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,7 +89,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
 
 
             if (ticket.Comments != null) {
-                var ticketsCommentLength = (ticket.Comments?.Length ?? 0);
+                var ticketsCommentLength = (ticket.Comments?.Length);
                 if (firstMessage.Length + firstSubject.Length + ticketsCommentLength <= SmsCharLimit) {
                     firstMessage.Append(ticket.Comments);
                 } else {
@@ -103,8 +102,6 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             firstMessage.Append(ticket.Comments);
 
             msgs.Add(new Tuple<string, string>(firstSubject, firstMessage.ToString()));
-
-            int i = 0;
 
             foreach (var inverter in ticket.Inverters) {
                 var sb = new StringBuilder();

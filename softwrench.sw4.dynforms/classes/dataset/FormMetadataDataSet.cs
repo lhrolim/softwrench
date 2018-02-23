@@ -21,18 +21,14 @@ using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
-using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
-using softWrench.sW4.Metadata.Parsing;
 using softWrench.sW4.Metadata.Security;
-using softWrench.sW4.Util;
 
 namespace softwrench.sw4.dynforms.classes.dataset {
 
     public class FormMetadataDataSet : SWDBApplicationDataset {
 
-        private static XmlApplicationMetadataParser _parser;
 
         [Import]
         private DynFormSchemaHandler DynFormSchemaHandler { get; set; }

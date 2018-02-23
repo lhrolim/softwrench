@@ -271,7 +271,7 @@
                 if (fieldService.isNullInvisible(f, datamap)) {
                     return;
                 }
-                if (angular.isArray(f.displayables)) {
+                if (angular.isArray(f.displayables) && !f.resourcepath && f.displayables.length>0) {
                     flattenDisplayables(f.displayables, context, datamap);
                 } else {
                     context.push(f);

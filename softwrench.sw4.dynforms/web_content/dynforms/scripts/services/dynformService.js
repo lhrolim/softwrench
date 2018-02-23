@@ -66,7 +66,9 @@
                 }
                 const fields = schemaService.allNonHiddenDisplayables(dm, cs);
                 const lastField = fields[fields.length - 1];
-                that.addDisplayable(lastField, 'down', true).then(r => {
+                const showPosition = fields.length > 1;
+              
+                that.addDisplayable(lastField, 'down', showPosition).then(r => {
                     $rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
                 });
 
