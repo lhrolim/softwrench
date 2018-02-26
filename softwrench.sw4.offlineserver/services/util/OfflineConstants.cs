@@ -12,6 +12,8 @@
 
         public const string EnableAudit = "/Global/Offline/Sync/Audit";
 
+        public const string EnableOfflineAttachments = "/Global/Offline/Sync/Attachments";
+
         public const string EnableParameterAuditing = "/Global/Offline/Sync/AuditParameters";
 
         public const string AvoidIncrementalSync = "/Global/Offline/Sync/AvoidIncremental";

@@ -69,6 +69,12 @@ namespace softwrench.sw4.offlineserver.services.util {
                 PropertyDataType = PropertyDataType.BOOLEAN,
                 StringValue = "false"
             });
+
+            _configFacade.Register(OfflineConstants.EnableOfflineAttachments, new PropertyDefinition {
+                Description = "if false the attachments won´t be downloaded to the offline application",
+                PropertyDataType = PropertyDataType.BOOLEAN,
+                StringValue = "true"
+            });
         }
     }
 }
