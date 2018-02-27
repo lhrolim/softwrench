@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using cts.commons.persistence.Util;
 using FluentMigrator;
+using softwrench.sw4.api.classes.migration;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.migration {
 
@@ -14,7 +15,10 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
             Alter.Table("DISP_TICKET").AddColumn("primarycontactemail").AsString(MigrationUtil.StringMedium).Nullable();
             Alter.Table("DISP_TICKET").AddColumn("escalationcontactemail").AsString(MigrationUtil.StringMedium).Nullable();
 
-            Execute.Sql("update disp_ticket set primarycontactemail = s.primarycontactemail, escalationcontactemail = s.escalationcontactemail from disp_ticket as t inner join gfed_site s on t.gfedid = s.gfedid");
+            if (MigrationContext.IsSQLServer) {
+                Execute.Sql("update disp_ticket set primarycontactemail = s.primarycontactemail, escalationcontactemail = s.escalationcontactemail from disp_ticket as t inner join gfed_site s on t.gfedid = s.gfedid");
+            }
+
 
         }
 

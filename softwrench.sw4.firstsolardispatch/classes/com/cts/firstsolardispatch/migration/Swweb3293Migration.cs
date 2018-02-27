@@ -28,8 +28,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
     [Migration(201801021011)]
     public class Swweb3293_2Migration : Migration {
         public override void Up() {
-            Execute.Sql("UPDATE dbo.GFED_SITE SET supportemail = 'fssupport@power-electronics.com' where supportemail is null");
-            Execute.Sql("UPDATE dbo.GFED_SITE SET supportphone = '8667947138' where (supportphone is null or supportphone like '(000); 000 0000')");
+            Execute.Sql("UPDATE GFED_SITE SET supportemail = 'fssupport@power-electronics.com' where supportemail is null");
+            Execute.Sql("UPDATE GFED_SITE SET supportphone = '8667947138' where (supportphone is null or supportphone like '(000); 000 0000')");
         }
 
         public override void Down() {
