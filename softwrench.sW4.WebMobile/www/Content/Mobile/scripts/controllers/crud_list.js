@@ -64,7 +64,8 @@
                 }
             }
 
-            $ionicPopover.fromTemplateUrl(getResourcePath("Content/Mobile/templates/griditemoptionsmenu.html"), { scope: $scope }).then(popover => $scope.optionspopover = popover);
+            $ionicPopover.fromTemplateUrl(getResourcePath("Content/Mobile/templates/griditemoptionsmenu.html"), { scope: $scope })
+            .then(popover => $scope.optionspopover = popover);
 
             init();
 

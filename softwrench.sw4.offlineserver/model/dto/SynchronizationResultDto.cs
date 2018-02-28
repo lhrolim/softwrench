@@ -19,6 +19,8 @@ namespace softwrench.sw4.offlineserver.model.dto {
 
         public IList<SynchronizationApplicationResultData> CompositionData { get; set; }
 
+        public int AttachmentCount { get; set; }
+
         public IDictionary<string, object> UserProperties { get; set; }
 
         public bool FacilitiesUpdated { get; set; }

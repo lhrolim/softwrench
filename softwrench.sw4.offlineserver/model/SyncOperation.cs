@@ -60,6 +60,9 @@ namespace softwrench.sw4.offlineserver.model {
         public int? TopAppCounts { get; set; }
 
         [Property]
+        public int? AttachmentCount { get; set; }
+
+        [Property]
         public bool? MetadataDownload { get; set; }
 
         [Property]

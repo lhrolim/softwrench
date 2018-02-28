@@ -1,15 +1,21 @@
 ﻿(function (mobileServices, angular) {
     "use strict";
 
-    function attachmentDataSynchronizationService($q, $log, swdbDAO, entities, restService) {
+    function attachmentDataSynchronizationService($q, $log, $rootScope, swdbDAO, entities, restService) {
         //#region Utils
 
+        //TODO: make this configurable
         const numberOfParallelDownloads = 2;
+
+        let progressData = {
+            progress: 0
+        };
+
 
 
         const matchinfFilesResolver = (matchingFiles, doclinksArray, log) => {
 
-            
+
 
             const updateFiltercondition = syncItem => matchingFiles.some(m => m.id === syncItem.hash && (m.compositionRemoteId == null || m.docinfoRemoteId == null));
 
@@ -23,9 +29,9 @@
             const attachmentsToInsertQuery = doclinksArray.filter(syncItem => !matchingFiles.some(m => (m.docinfoRemoteId == syncItem.docinfoid)))
                 .filter(syncItem => !matchingFiles.some(m => m.id === syncItem.hash && (m.compositionRemoteId == null || m.docinfoRemoteId == null)))
                 .map(item => {
-                //creating the attachments which could not be found for a given composition, excluding the ones that just got updated on the previous condition
-                return { query: entities.Attachment.CreateNewBlankAttachments, args: [item.ownerTable, String(item.ownerId), String(item.compositionRemoteId), String(item.docinfoid), persistence.createUUID()] }
-            });
+                    //creating the attachments which could not be found for a given composition, excluding the ones that just got updated on the previous condition
+                    return { query: entities.Attachment.CreateNewBlankAttachments, args: [item.ownerTable, String(item.ownerId), String(item.compositionRemoteId), String(item.docinfoid), persistence.createUUID()] }
+                });
             const attachmentQueries = attachmentsToUpdateQuery.concat(attachmentsToInsertQuery);
 
             if (attachmentQueries.length === 0) {
@@ -71,7 +77,7 @@
 
             if (ids !== "") {
                 ids = "'" + ids + "'";
-            } 
+            }
 
             log.debug(`determining which attachments should be downloaded amongst ${ids} and remoteids ${docinfoRemoteId} `);
             return swdbDAO.executeQuery(entities.Attachment.NonPendingAttachments.format(ids, docinfoRemoteId)).then((results) => {
@@ -84,6 +90,8 @@
             if (attachmentsToDownload.length === 0) {
                 log.info(`finishing download process for attachments`);
                 originalDeferred.resolve();
+                $rootScope.$broadcast("sync.attachment.end");
+                progressData = { progress: 0 };
                 return;
             }
 
@@ -91,13 +99,16 @@
                 const promiseObj = attachmentsToDownload.shift();
                 promiseDownloadBuffer.push(promiseObj);
             }
-            const promisesToExecute = promiseDownloadBuffer.filter(f=> f != null);
+            const promisesToExecute = promiseDownloadBuffer.filter(f => f != null);
             if (promisesToExecute.length === 0) {
                 originalDeferred.resolve();
                 return;
             }
 
             $q.all(promisesToExecute.map(p => p.promise)).then(function (results) {
+                $rootScope.$broadcast("sync.attachment.progress", numberOfParallelDownloads);
+                progressData.progress += numberOfParallelDownloads;
+
                 const updateQueriesObject = [];
                 for (let i = 0; i < promisesToExecute.length; i++) {
                     const result = results[i];
@@ -129,6 +140,8 @@
                 }
 
                 log.info(`starting download process for ${attachmentsToDownload.length} attachments`);
+                $rootScope.$broadcast("sync.attachment.begin", attachmentsToDownload.length);
+                progressData.total = attachmentsToDownload.length;
 
                 var deferred = $q.defer();
 
@@ -167,7 +180,7 @@
 
             if (ids !== "") {
                 ids = "'" + ids + "'";
-            } 
+            }
 
             const queryObj = { query: entities.Attachment.ByApplicationAndIds.format(ids), args: [applicationName] };
             return swdbDAO.executeQuery(queryObj).then(attachments => {
@@ -197,12 +210,17 @@
 
         }
 
+        const getProgress = function(){
+            return progressData;
+        }
+
         //#endregion
 
         //#region Service Instance
         const service = {
             generateAttachmentsQueryArray,
             downloadAttachments,
+            getProgress,
             mergeAttachmentData
         };
         return service;
@@ -211,7 +229,7 @@
 
     //#region Service registration
 
-    mobileServices.factory("attachmentDataSynchronizationService", ["$q", "$log", "swdbDAO", "offlineEntities", "offlineRestService", attachmentDataSynchronizationService]);
+    mobileServices.factory("attachmentDataSynchronizationService", ["$q", "$log", "$rootScope", "swdbDAO", "offlineEntities", "offlineRestService", attachmentDataSynchronizationService]);
 
     //#endregion
 

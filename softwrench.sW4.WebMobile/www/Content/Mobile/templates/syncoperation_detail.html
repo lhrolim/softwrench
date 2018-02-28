@@ -15,12 +15,23 @@
     
     <ion-nav-buttons side="right">
 
-        <button ng-if="data.isLatestOperation" class="button sync-button" on-tap="fullSynchronize()" on-hold="reset()" ng-disabled="data.isSynching">
+        <button ng-if="data.isLatestOperation" class="button sync-button" on-tap="showSyncModal($event)" on-hold="reset()" ng-disabled="data.isSynching">
             <i class="fa fa-refresh"></i>&ensp;Sync
         </button>
     </ion-nav-buttons>
 
     <ion-content class="has-header" has-bouncing="false" ng-class="{ 'vertical-center' : !data.operation }">
+
+        <div class="card" ng-show="data.attprogressPercent > 0">
+			<div class="item item-text-wrap">
+                Attachment Download Progress
+				<div class="loader" style="width: {{data.attprogressPercent}}%;">
+					<p class="percent">{{data.attprogressPercent}}%</p>
+				</div>
+			</div>
+		</div>
+
+
 
         <!-- has operation to display -->
         <div ng-if="!!data.operation" class="responsive-container lg">
@@ -43,6 +54,9 @@
                     <div class="detail-section" ng-if="!data.operation.ispending">
                         <h5><i class="fa fa-download"></i>&ensp;Application Downloads: {{data.operation.numberofdownloadeditems}}</h5>
                     </div>
+                    <div class="detail-section" ng-if="!data.operation.ispending">
+                            <h5><i class="fa fa-download"></i>&ensp;Attachment Downloads: {{data.operation.numberofdownloadedattachments}}</h5>
+                        </div>
                     <div class="detail-section" ng-if="data.operation.issuccess">
                         <h5><i class="fa fa-download"></i>&ensp;Support Data Downloads: {{data.operation.numberofdownloadedsupportdata}}</h5>
                     </div>
@@ -113,7 +127,7 @@
         <div ng-if="!data.operation">
             <div class="row">
                 <div class="col">
-                    <p class="message-user-sync">Click <span class="highlight" ng-click="fullSynchronize()"><i class="fa fa-refresh"></i>&ensp;Sync</span> to start.</p>
+                    <p class="message-user-sync">Click <span class="highlight" ng-click="showSyncModal()"><i class="fa fa-refresh"></i>&ensp;Sync</span> to start.</p>
                 </div>
             </div>
         </div>

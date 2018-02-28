@@ -306,6 +306,7 @@
             //pending,complete
             status: 'TEXT',
             numberofdownloadeditems: "INT",
+            numberofdownloadedattachments: "INT",
             numberofdownloadedsupportdata: "INT",
             clientOperationId: "TEXT",
             hasProblems: "BOOL",

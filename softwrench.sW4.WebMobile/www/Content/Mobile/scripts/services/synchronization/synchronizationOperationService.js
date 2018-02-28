@@ -81,7 +81,7 @@
             return saveBatchOperation(operation, relatedBatches);
         };
         
-        this.createNonBatchOperation = function (startdate, clientOperationId, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange) {
+        this.createNonBatchOperation = function (startdate, clientOperationId, enddate, numberofdownloadeditems, numberofdownloadedsupportdata, metadatachange, numberofdownloadedattachments) {
             const operation = {
                 clientOperationId,
                 startdate,
@@ -89,7 +89,8 @@
                 status: "COMPLETE",
                 numberofdownloadeditems,
                 numberofdownloadedsupportdata,
-                metadatachange
+                metadatachange,
+                numberofdownloadedattachments
             };
             return swdbDAO.instantiate("SyncOperation", operation).then(item => swdbDAO.save(item));
         }

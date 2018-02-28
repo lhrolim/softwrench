@@ -69,7 +69,7 @@
          * @param {*} compositionMap a map of all compositions rowstamps, to
          * @param {*} clientOperationId for auditing the operation at server side
          */
-        createAppSyncPromise(firstInLoop, app, currentApps, compositionMap, clientOperationId) {
+        createAppSyncPromise(firstInLoop, app, currentApps, compositionMap, clientOperationId,downloadAttachments) {
             var log = this.$log.get("dataSynchronizationService#createAppSyncPromise");
 
             const resultHandlePromise = this.resultHandlePromise.bind(this);
@@ -91,6 +91,7 @@
                         returnNewApps: firstInLoop,
                         clientOperationId,
                         userData: userDataIfChanged(),
+                        downloadAttachments,
                         rowstampMap,
                         deviceData
                     };
@@ -136,8 +137,9 @@
                 log.info("no new data returned from the server");
                 return invokeCustomServicePromise(result, queryArray).then(queryArray => {
                     //interrupting async calls
-                    const numberOfDownloadedItems= 0;
-                    return { queryArray, numberOfDownloadedItems };
+                    const numberOfDownloadedItems = 0;
+                    const numberOfAttachments = 0;
+                    return { queryArray, numberOfDownloadedItems, numberOfAttachments };
                 })
 
             }
@@ -199,15 +201,15 @@
             //test
             // ignoring composition number to SyncOperation table
             const numberOfDownloadedItems = queryArray.length;
+            const numberOfAttachments = data.attachmentCount;
 
             return this.offlineCompositionService.generateSyncQueryArrays(compositionData)
                 .then(compositionQueriesToAppend => queryArray.concat(compositionQueriesToAppend))
                 .then((queryArray) => {
                     return invokeCustomServicePromise(result, queryArray);
                 }).then(queryArray => {
-                    return { queryArray, numberOfDownloadedItems };
+                    return { queryArray, numberOfDownloadedItems, numberOfAttachments };
                 })
-
         }
 
 
@@ -215,7 +217,7 @@
 
             return this.generateQueriesPromise(result).then(result => {
                 return this.swdbDAO.executeQueries(result.queryArray).then(() => {
-                    return result.numberOfDownloadedItems;
+                    return {data:result.numberOfDownloadedItems,attachments:result.numberOfAttachments};
                 })
             });
         }
@@ -227,7 +229,7 @@
          * 
          * @param {String} clientOperationId for storing an offline audit entry at server side
          */
-        syncData(clientOperationId) {
+        syncData(clientOperationId, downloadAttachments) {
 
 
             const resultHandlePromise = this.resultHandlePromise.bind(this);
@@ -246,6 +248,7 @@
                             returnNewApps: true,
                             clientOperationId,
                             deviceData,
+                            downloadAttachments:true,
                             userData: userDataIfChanged()
                         };
                         //single server call
@@ -256,7 +259,7 @@
                     return that.rowstampService.generateCompositionRowstampMap()
                         .then(function (compositionMap) {
                             const httpPromises = [];
-                            const promise = createAppSyncPromise(true, null, currentApps, compositionMap, clientOperationId).catch(errorHandlePromise);
+                            const promise = createAppSyncPromise(true, null, currentApps, compositionMap, clientOperationId,downloadAttachments).catch(errorHandlePromise);
                             httpPromises.push(promise);
 
                             return that.$q.all(httpPromises);
@@ -279,6 +282,7 @@
                         applicationName: app,
                         itemsToDownload: [item.remoteId],
                         userData: userDataIfChanged(),
+                        downloadAttachments:true,
                         rowstampMap,
                         deviceData,
                         clientOperationId

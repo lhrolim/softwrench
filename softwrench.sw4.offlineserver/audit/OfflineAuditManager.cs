@@ -99,6 +99,7 @@ namespace softwrench.sw4.offlineserver.audit {
                     var compositionTotals = compositionCounts.Sum(s => s.Value);
                     operation.TopAppCounts = topAppTotals;
                     operation.CompositionCounts = compositionTotals;
+                    operation.AttachmentCount = synchronizationResultDto.AttachmentCount;
                     foreach (var auditQuery in trail.Queries) {
                         operation.AuditTrail.Queries.Add(auditQuery);
                     }

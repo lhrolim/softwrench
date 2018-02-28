@@ -109,8 +109,19 @@ namespace softwrench.sw4.offlineserver.services {
             }
 
             result.ClientName = ApplicationConfiguration.ClientName;
+            result.AttachmentCount = 0;
+
+            if (request.DownloadAttachments) {
+                result.AttachmentCount = CalculateAttachmentCount(result.CompositionData);
+            }
+
 
             return result;
+        }
+
+        private int CalculateAttachmentCount(IList<SynchronizationApplicationResultData> resultCompositionData) {
+            var attachments = resultCompositionData.FirstOrDefault(a => a.ApplicationName.EqualsIc("attachment_"));
+            return attachments?.TotalCount ?? 0;
         }
 
         private Dictionary<string, OffLineCollectionResolver.OfflineCollectionResolverParameters>.ValueCollection MergeCompositionsToResolve(IEnumerable<OffLineCollectionResolver.OfflineCollectionResolverParameters> compositionsToResolve) {
@@ -119,11 +130,11 @@ namespace softwrench.sw4.offlineserver.services {
             foreach (var comp in compositionsToResolve) {
                 var metadata = comp.ApplicationMetadata;
                 var appName = metadata.Name;
-                
+
                 if (!appName.Contains("workorder")) {
                     //TODO: locate related entries from the metadata property application.original instead 
                     //and use a more professional logic (i.e ==> these different apps could have different composition sets)
-                    mergedParameters.Add(appName,comp);
+                    mergedParameters.Add(appName, comp);
                     continue;
                 }
 

@@ -2,9 +2,10 @@
     "use strict";
 
     softwrench.controller("SyncOperationDetailController",
-        ["$scope", "synchronizationOperationService", "contextService", "routeService","securityService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$timeout", "$ionicPopup",
-            "$ionicScrollDelegate", "loadingService", "attachmentDataSynchronizationService", "metadataModelService", "menuModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", "indexCreatorService", "swdbDAO", "networkConnectionService",
-            function ($scope, service, contextService, routeService, securityService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $timeout, $ionicPopup, $ionicScrollDelegate, loadingService, attachmentDataSynchronizationService, metadataModelService, menuModelService, offlineSchemaService, crudContextService, crudContextHolderService, indexCreatorService, swdbDAO, networkConnectionService) {
+        ["$scope", "synchronizationOperationService", "contextService", "routeService", "securityService", "synchronizationFacade", "swAlertPopup", "$stateParams", "$ionicHistory", "applicationStateService", "$q", "$timeout", "$ionicPopup",
+            "$ionicScrollDelegate", "loadingService", "$ionicPopover", "attachmentDataSynchronizationService", "metadataModelService", "menuModelService", "offlineSchemaService", "crudContextService", "crudContextHolderService", "indexCreatorService", "swdbDAO", "networkConnectionService",
+            function ($scope, service, contextService, routeService, securityService, synchronizationFacade, swAlertPopup, $stateParams, $ionicHistory, applicationStateService, $q, $timeout, $ionicPopup, $ionicScrollDelegate, loadingService, $ionicPopover, attachmentDataSynchronizationService, metadataModelService, menuModelService, offlineSchemaService, crudContextService, crudContextHolderService, indexCreatorService, swdbDAO, networkConnectionService) {
+
 
                 $scope.data = {
                     operation: null,
@@ -12,7 +13,41 @@
                     isLatestOperation: !$stateParams.id,
                     isSynching: false,
                     currentApplicationState: null,
-                    applicationStateCollapsed: true
+                    applicationStateCollapsed: true,
+                    attprogressPercent: 0,
+                    attprogressTotal: 0,
+                    attprogress: 0
+                }
+
+
+
+                $scope.$on("sync.attachment.begin", (ev, count) => {
+                    $scope.data.attprogressTotal = count;
+                })
+
+                $scope.$on("sync.attachment.progress", (ev, increment) => {
+                    $scope.data.attprogress += increment;
+                    const percent = Math.floor(100 * $scope.data.attprogress / $scope.data.attprogressTotal);
+                    $scope.data.attprogressPercent = percent;
+                    // $scope.$digest();
+                })
+
+                $scope.$on("sync.attachment.end", (ev, count) => {
+                    $scope.data.attprogress = 0;
+                    $scope.data.attprogressTotal = 0;
+                    $scope.data.attprogressPercent = 0;
+                })
+
+                const progressData = attachmentDataSynchronizationService.getProgress();
+                $scope.data.attprogress = progressData.progress;
+                $scope.data.attprogressTotal = progressData.total;
+
+                var progress = function () {
+                    return $scope.data.attprogressPercent;
+                }
+
+                var shouldShowAttProgress = function () {
+                    return $scope.data.attprogressPercent > 0 && $scope.data.attprogressPercent < 0;
                 }
 
 
@@ -52,7 +87,8 @@
                         if (value) {
                             //registering first sync call automatically
                             return $timeout(() => {
-                                $scope.fullSynchronize(true);
+                                // $scope.fullSynchronize(true);
+                                $scope.showSyncModal();
                             }, 0, false);
                         } else {
                             loadingService.showDefault();
@@ -99,14 +135,14 @@
                         ].join(" ")
                     }).then((confirmed) => {
                         if (confirmed) {
-                            return securityService.logout(false,false);    
+                            return securityService.logout(false, false);
                         }
                         return $q.reject();
-                    }).then(() => $scope.fullSynchronize());
+                    }).then(() => $scope.fullSynchronize(false));
                 }
 
 
-                $scope.innerFullSynchronize = function() {
+                $scope.innerFullSynchronize = function (downloadAttachments = true) {
                     $scope.data.isSynching = true;
                     loadingService.showDefault();
 
@@ -114,7 +150,7 @@
                     crudContextHolderService.clearGridSearch();
 
                     let needFullResync = false;
-                    return synchronizationFacade.fullSync()
+                    return synchronizationFacade.fullSync(downloadAttachments)
                         .then(function (operation) {
                             return synchronizationFacade.shouldFullResync().then((needsResync) => {
                                 needFullResync = needsResync;
@@ -131,7 +167,9 @@
                         .finally(function () {
                             $scope.data.isSynching = false;
                             loadingService.hide();
-                            attachmentDataSynchronizationService.downloadAttachments();
+                            if (downloadAttachments) {
+                                attachmentDataSynchronizationService.downloadAttachments();
+                            }
                             indexCreatorService.createIndexAfterFirstSync();
                             menuModelService.updateAppsCount();
                             if (!!contextService.get("restartneeded")) {
@@ -140,15 +178,47 @@
                                 window.restartApplication();
                                 return;
                             }
-                        }).then(() => needFullResync ? securityService.logout(false, false) : $q.reject()).then(() => $scope.innerFullSynchronize());
+                        }).then(() => needFullResync ? securityService.logout(false, false) : $q.reject()).then(() => $scope.innerFullSynchronize(downloadAttachments));
                 }
 
-                $scope.fullSynchronize = function () {
+                $scope.showSyncModal = function ($event) {
+
+                    if (attachmentDataSynchronizationService.getProgress().progress !=0){
+                        swAlertPopup.show({
+                            template: "Please sync after attachment download is complete."
+                        });
+                        return;
+                    }
+
+
+                    $scope.popupdata= {
+                        downloadAttachments : false
+                    };
+
+                    $ionicPopup.show({
+                        templateUrl: getResourcePath("Content/Mobile/templates/syncmenu.html"),
+                        title: 'Sync Options',
+                        cssClass: 'syncmodal',
+                        scope: $scope,
+                        buttons: [{
+                          text: 'Sync',
+                          type: 'button-positive',
+                          onTap: function(e) {
+                            $scope.fullSynchronize($scope.popupdata.downloadAttachments)              
+                          }
+                        }]
+                      });
+
+
+                    // $scope.syncMenuPopOver.show($event);
+                }
+
+                $scope.fullSynchronize = function (downloadAttachments = true) {
                     synchronizationFacade.shouldFullResync(true).then((needsResync) => {
                         if (needsResync) {
-                            return securityService.logout(false, false).then(() => $scope.innerFullSynchronize());
+                            return securityService.logout(false, false).then(() => $scope.innerFullSynchronize(downloadAttachments));
                         }
-                        return $scope.innerFullSynchronize();
+                        return $scope.innerFullSynchronize(downloadAttachments);
                     });
                 };
 

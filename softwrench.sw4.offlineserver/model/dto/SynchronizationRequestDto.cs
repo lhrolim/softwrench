@@ -13,7 +13,7 @@ namespace softwrench.sw4.offlineserver.model.dto {
         /// <summary>
         /// If present only the items on this list will be downlaoded, regardless of any rowstamp rules. Used for quick sync
         /// </summary>
-        public List<string> ItemsToDownload { get; set; } 
+        public List<string> ItemsToDownload { get; set; }
 
         /// <summary>
         /// Comma sepparated list of current top level apps that the client has. To be used in conjuction with ReturnNewApps flag, where if true, it would be neededd to bring any extra applications besides the one being requested.
@@ -22,6 +22,8 @@ namespace softwrench.sw4.offlineserver.model.dto {
         public List<string> ClientCurrentTopLevelApps { get; set; }
 
         public bool ReturnNewApps { get; set; }
-        
+
+        public bool DownloadAttachments { get; set; }
+
     }
 }

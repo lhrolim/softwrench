@@ -376,6 +376,12 @@
             }
         });
 
+        migrationGroup.addMigration("adding number of attachments to operation", {
+            up: function () {
+                this.addColumn("SyncOperation", "numberofdownloadedattachments", "numeric");
+            }
+        });
+
     }]);
 
 })(angular, persistence);

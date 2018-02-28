@@ -185,6 +185,7 @@
     <Compile Include="controller\MobileTrackController.cs" />
     <Compile Include="controller\OfflineAttachmentController.cs" />
     <Compile Include="migration\MigrationSwoff258.cs" />
+    <Compile Include="migration\MigrationSwoff385.cs" />
     <Compile Include="migration\MigrationSwweb3402.cs" />
     <Compile Include="model\dto\association\AssociationDataDto.cs" />
     <Compile Include="model\dto\association\AssociationSynchronizationRequestDto.cs" />

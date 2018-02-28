@@ -1,7 +1,7 @@
 ﻿(function (mobileServices, angular, _) {
     "use strict";
 
-    function synchronizationFacade($log, $q, $rootScope, $timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService, synchronizationOperationService, laborService,
+    function synchronizationFacade($log, $q, $rootScope, $timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService,attachmentDataSynchronizationService, synchronizationOperationService, laborService,
         asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService, configurationService) {
 
         //#region Utils
@@ -121,7 +121,7 @@
          * 
          * @returns Promise: resolved with created SyncOperation; rejected with HTTP or Database error 
          */
-        function fullDownload(clientOperationId = persistence.createUUID()) {
+        function fullDownload(clientOperationId = persistence.createUUID(), downloadAttachments = false) {
             if (networkConnectionService.isOffline()) {
                 return $q.reject({ message: "Cannot synchronize application without internet connection" });
             }
@@ -138,7 +138,7 @@
                 metadataSynchronizationService.syncData("1.0", clientOperationId),
                 scriptsSynchronizationService.syncData(),
                 associationDataSynchronizationService.syncData(firstTime, clientOperationId)
-            ].concat(dataSynchronizationService.syncData(clientOperationId));
+            ].concat(dataSynchronizationService.syncData(clientOperationId, downloadAttachments));
 
             return $q.all(httpPromises)
                 .then(results => {
@@ -147,10 +147,15 @@
 
                     const metadataDownloadedResult = results[0];
                     const associationDataDownloaded = results[2];
-                    const dataDownloadedResult = results.subarray(3);
-                    const totalNumber = getDownloadDataCount(dataDownloadedResult);
+                    let dataDownloadedResult = results.subarray(3);
+                    if (angular.isArray(dataDownloadedResult[0])){
+                        dataDownloadedResult = dataDownloadedResult[0];
+                    }
 
-                    return synchronizationOperationService.createNonBatchOperation(start, clientOperationId, end, totalNumber, associationDataDownloaded, metadataDownloadedResult);
+                    const totalNumber = getDownloadDataCount(dataDownloadedResult.map(a => a.data));
+                    const attachmentCount = getDownloadDataCount(dataDownloadedResult.map(a => a.attachments));
+
+                    return synchronizationOperationService.createNonBatchOperation(start, clientOperationId, end, totalNumber, associationDataDownloaded, metadataDownloadedResult, attachmentCount);
                 });
         }
 
@@ -206,7 +211,7 @@
                 throw e;
             }
 
-            if (isString(error)){
+            if (isString(error)) {
                 error = new Error(error);
             }
 
@@ -238,7 +243,7 @@
          * 
          * @returns Promise: resolved with created SyncOperation; rejected with HTTP or Database error
          */
-        function fullSync() {
+        function fullSync(downloadAttachments = false) {
             const log = $log.get("synchronizationFacade#fullSync", ["sync"]);
             log.info("init full synchronization process");
             tracking.trackFullState("synchornizationFacace#fullSync pre-sync");
@@ -254,7 +259,7 @@
                     if (!first) {
                         loadingService.hide(); // workaround - was showing load on stop labor prompt
                         return laborService.finishLaborBeforeSynch();
-                    } 
+                    }
                     return $q.when(true);
                 });
             } else {
@@ -281,7 +286,7 @@
                             // no batches created: full download instead of full sync
                             if (!batches || batches.length <= 0 || !batches.some(s => s != null)) {
                                 log.info("No batches created: Executing full download instead of full sync.");
-                                return fullDownload(clientOperationId);
+                                return fullDownload(clientOperationId, downloadAttachments);
                             }
                             // batches created: submit to server
                             log.info("Batches created locally: submitting to server.");
@@ -302,7 +307,7 @@
                                 return handleDeletableDataEntries(batchResults)
                                     .then(() => problemService.updateHasProblemToDataEntries(batchResults))
                                     .then(() => {
-                                        var httpPromises = [associationDataSynchronizationService.syncData(false, clientOperationId), dataSynchronizationService.syncData(clientOperationId)];
+                                        var httpPromises = [associationDataSynchronizationService.syncData(false, clientOperationId), dataSynchronizationService.syncData(clientOperationId, downloadAttachments)];
                                         return $q.all(httpPromises);
                                     })
                                     .then(downloadResults => {
@@ -361,7 +366,12 @@
                                     var dataCount = getDownloadDataCount(downloadResults[1]);
                                     return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);
                                 }).then(r => {
+
+                                    attachmentDataSynchronizationService.downloadAttachments();
+
                                     $rootScope.$broadcast("sw.sync.quicksyncfinished");
+
+
                                     return r;
                                 });
                         })
@@ -441,7 +451,7 @@
 
     //#region Service registration
     mobileServices.factory("synchronizationFacade", ["$log", "$q", "$rootScope", "$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService", "synchronizationOperationService", "laborService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", synchronizationFacade]);
+        "metadataModelService","attachmentDataSynchronizationService", "synchronizationOperationService", "laborService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

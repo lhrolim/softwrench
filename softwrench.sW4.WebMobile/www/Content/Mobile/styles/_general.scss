@@ -2,6 +2,17 @@
     font-family: "-apple-system", "Helvetica Neue", Roboto, "Segoe UI", sans-serif;
 }
 
+.loader{
+	background:#39b54a !important;
+	border-radius:100px;
+	height:20px;
+	p{
+		text-align:center;
+		color:white !important;
+		text-align:center;
+	}
+}
+
 .center {
     top: 50%;
     -webkit-transform: translateY(-50%);
