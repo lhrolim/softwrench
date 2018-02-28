@@ -1,9 +1,10 @@
 ﻿(function (angular) {
     "use strict";
 
-    angular.module("sw_components").directive("fileexplorer", ["contextService", "dispatcherService", "attachmentService", "fileService", "schemaService", "crudContextHolderService", "alertService", "$timeout",
+    angular.module("sw_components").directive("fileexplorer", ["contextService", "dispatcherService", "attachmentService", "fileService",
+        "schemaService", "crudContextHolderService", "alertService", "restService",
 
-        function (contextService, dispatcherService, attachmentService, fileService, schemaService, crudContextHolderService, alertService) {
+        function (contextService, dispatcherService, attachmentService, fileService, schemaService, crudContextHolderService, alertService, restService) {
             const directive = {
 
                 restrict: "E",
@@ -45,9 +46,9 @@
 
 
                         if (applicationName.equalsIc("_workpackage")) {
-                            ownerId = scope.datamap["#workorder_.workorderid"]; 
-                            userId =scope.datamap["#workorder_.wonum"]; 
-                            ownerTable = "workorder"; 
+                            ownerId = scope.datamap["#workorder_.workorderid"];
+                            userId = scope.datamap["#workorder_.wonum"];
+                            ownerTable = "workorder";
                         } else {
                             ownerId = schemaService.getId(scope.datamap, schema);
                             userId = schemaService.getUserId(scope.datamap, schema);
@@ -118,6 +119,7 @@
 
                     scope.deleteFile = function ($event, item) {
                         $event.stopImmediatePropagation();
+                        var isSwdb = scope.fieldMetadata.schema.isSwDB;
                         //TODO: this was copied from compositionlist.js --> create some sort of inheritance between them
                         return alertService.confirm("Are you sure you want to delete this file").then(() => {
 
@@ -130,7 +132,18 @@
                                     }
                                 });
                             }
-                            throw new Error("not yet implemented");
+
+                            const baseUrl = isSwdb ? "/FileExplorer/Delete" : "/FileExplorer/DownloadAll";
+                            if (!isSwdb) {
+                                throw new Error("not yet implemented");
+                            }
+                            const parameters = {
+                                id: item["doclinksid"]
+                            }
+                            restService.postPromise("FileExplorerApi", "DeleteSwdb", parameters).then(r => {
+                                const idx = scope.files.indexOf(item);
+                                scope.files.splice(idx, 1);
+                            });
                         });
 
                     }

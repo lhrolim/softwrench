@@ -27,7 +27,7 @@ namespace softWrench.sW4.Web.Controllers {
             switch (mode) {
                 case "swdb":
                     var docinfo = await _dao.FindByPKAsync<DocInfo>(int.Parse(id));
-                    fileTuple = new Tuple<byte[], string>(docinfo.Data, docinfo.Document);
+                    fileTuple = new Tuple<byte[], string>(docinfo.DataUncompressed, docinfo.Document);
                     break;
                 case "http":
                     fileTuple = await _attachmentHandler.DownloadViaHttpById(id);

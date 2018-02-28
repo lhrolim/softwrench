@@ -149,7 +149,7 @@
           <section showexpression="@gfedid != null">
             <header displacement="ontop" label="Inverter Information" params="fieldset=true" />
             <composition inline="true" relationship="inverters" label="" detailschema="detailview" printschema="" fetchtype="eager">
-              <collectionproperties listschema="inverterline" autocommit="false" allowremoval="true"/>
+              <collectionproperties listschema="inverterline" autocommit="false" allowremoval="true" allowcreation="true"/>
               <renderer type="TABLE" params="mode=batch;composition.inline.addfunction=fsdInverterService.openModalNew;composition.inline.expandreadonly=true;composition.inline.editfunction=fsdInverterService.openModalEdit;composition.inline.deletefunction=fsdInverterService.deleteRow;composition.inline.forceshowremove=true;composition.inline.addTitle=Inverter"/>
             </composition>
           </section>

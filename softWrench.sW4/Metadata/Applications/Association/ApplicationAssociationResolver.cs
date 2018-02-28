@@ -247,7 +247,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
                 var labelNumber = association.LabelFields.Count;
                 var label = labelNumber == 1
-                                    ? (string)attributeHolder.GetAttribute(association.LabelFields[0])
+                                    ? attributeHolder.GetAttribute(association.LabelFields[0]).ToString()
                                     : BuildComplexLabel(attributeHolder, association);
 
                 if (association.ExtraProjectionFields.Count > 0) {

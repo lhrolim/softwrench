@@ -16,7 +16,9 @@ using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using System.Collections.Async;
+using System.Web.Http;
 using cts.commons.persistence;
+using cts.commons.persistence.Transaction;
 using cts.commons.portable.Util;
 using log4net;
 using Quartz.Util;
@@ -56,6 +58,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return ConvertIntoFileResult(userId, relationship, results);
 
         }
+
 
 
         public async Task<FileContentResult> DownloadAll(string userId, string ownerId, string ownerTable, string relationship) {
@@ -114,4 +117,26 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.action {
             return result;
         }
     }
+
+    public class FileExplorerApiController : ApiController {
+        private readonly ISWDBHibernateDAO _swdbDAO;
+
+        public FileExplorerApiController(ISWDBHibernateDAO swdbDAO) {
+            _swdbDAO = swdbDAO;
+        }
+
+        [System.Web.Http.HttpPost]
+        [Transactional(DBType.Swdb)]
+        public virtual async Task DeleteSwdb(int id) {
+            try {
+                var docLink = await _swdbDAO.FindByPKAsync<DocLink>(id);
+                await _swdbDAO.DeleteAsync(docLink);
+                await _swdbDAO.DeleteAsync(docLink.DocInfo);
+            } catch (Exception e) {
+            }
+
+        }
+
+    }
+
 }
