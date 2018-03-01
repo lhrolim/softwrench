@@ -85,7 +85,7 @@
 
         shouldShowCreateCommand() {
             const dm = this.crudContextHolderService.rootDataMap();
-            return dm["status"] === "ACCEPTED" && this.userService.isSysAdmin();
+            return dm["status"] === "ACCEPTED"; //&& this.userService.isSysAdmin();
         }
 
         doCreateWorkOrder(serverurl,dm, hashsignature) {
