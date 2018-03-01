@@ -229,7 +229,8 @@
                 if (hasDirty) {
                     return $q.when(false);
                 }
-                return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
+                return $q.when(true);
+                // return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
             });
         }
 
