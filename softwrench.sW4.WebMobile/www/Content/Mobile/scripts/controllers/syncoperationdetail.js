@@ -125,6 +125,14 @@
                 };
 
                 $scope.reset = function () {
+
+                    if (attachmentDataSynchronizationService.getProgress().progress !=0){
+                        swAlertPopup.show({
+                            template: "Please sync after attachment download is complete."
+                        });
+                        return;
+                    }
+
                     if (networkConnectionService.isOffline()) {
                         swAlertPopup.show({
                             title: "error",
