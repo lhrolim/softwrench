@@ -465,11 +465,15 @@
                         if (!!currentValue && (!updateFields.hasOwnProperty(composition) ||
                             !angular.isArray(updatedValue))) {
                             updateFields[composition] = currentValue
-                                .filter(function (c) { // filter out just created items
-                                    return !c["_iscreation"];
+                                .filter(function (c) { // filter out just created and just deleted items 
+                                    return !c["_iscreation"] && !c["#isDeleted"];
                                 })
                                 .map(function (c) { // remove `#isDirty` flag from the items
                                     delete c["#isDirty"];
+                                    if (!!c["#newFile"] && !c.persisted) {
+                                        c.persisted = true;
+                                        delete c["#newFile"];
+                                    }
                                     return c;
                                 });
                         }

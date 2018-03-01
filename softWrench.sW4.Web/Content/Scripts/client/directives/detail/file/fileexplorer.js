@@ -141,8 +141,13 @@
                                 id: item["doclinksid"]
                             }
                             restService.postPromise("FileExplorerApi", "DeleteSwdb", parameters).then(r => {
-                                const idx = scope.files.indexOf(item);
+                                let idx = scope.files.indexOf(item);
                                 scope.files.splice(idx, 1);
+
+                                var filesDm = scope.datamap[scope.fieldMetadata.relationship];
+                                idx = filesDm.indexOf(item);
+                                filesDm.splice(idx, 1);
+
                             });
                         });
 
