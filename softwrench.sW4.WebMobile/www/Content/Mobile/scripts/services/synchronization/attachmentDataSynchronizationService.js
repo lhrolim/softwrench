@@ -5,7 +5,7 @@
         //#region Utils
 
         //TODO: make this configurable
-        const numberOfParallelDownloads = 2;
+        const numberOfParallelDownloads = 6;
 
         let progressData = {
             progress: 0
@@ -87,11 +87,11 @@
 
         function bufferedDownload(attachmentsToDownload, originalDeferred, log) {
             const promiseDownloadBuffer = [];
-            if (attachmentsToDownload.length === 0) {
+            if (attachmentsToDownload.length === 0 || progressData.interrupt) {
                 log.info(`finishing download process for attachments`);
                 originalDeferred.resolve();
                 $rootScope.$broadcast("sync.attachment.end");
-                progressData = { progress: 0 };
+                progressData = { progress: 0, total:0, interrupt:false };
                 return;
             }
 
@@ -105,7 +105,9 @@
                 return;
             }
 
-            $q.all(promisesToExecute.map(p => p.promise)).then(function (results) {
+            $q.all(promisesToExecute.map(p => {
+                return restService.get("OfflineAttachment", "DownloadBase64", { id: p.docinfoid });
+            })).then(function (results) {
                 $rootScope.$broadcast("sync.attachment.progress", numberOfParallelDownloads);
                 progressData.progress += numberOfParallelDownloads;
 
@@ -150,8 +152,8 @@
 
                 attachmentsToDownload.forEach(value => {
                     const attachment = value;
-                    const promise = restService.get("OfflineAttachment", "DownloadBase64", { id: attachment.docinfoRemoteId });
-                    fullPromiseBuffer.push({ id: attachment.id, promise: promise });
+                    // const promise = restService.get("OfflineAttachment", "DownloadBase64", { id: attachment.docinfoRemoteId });
+                    fullPromiseBuffer.push({ id: attachment.id, docinfoid: attachment.docinfoRemoteId });
                 });
                 bufferedDownload(fullPromiseBuffer, deferred, log);
 
@@ -210,6 +212,15 @@
 
         }
 
+        const interrupt = function(){
+            if (progressData.total!=0){
+                progressData.interrupt = true;
+                progressData.progress=0;
+                progressData.total=0;
+            }
+            
+        }
+
         const getProgress = function(){
             return progressData;
         }
@@ -221,6 +232,7 @@
             generateAttachmentsQueryArray,
             downloadAttachments,
             getProgress,
+            interrupt,
             mergeAttachmentData
         };
         return service;
