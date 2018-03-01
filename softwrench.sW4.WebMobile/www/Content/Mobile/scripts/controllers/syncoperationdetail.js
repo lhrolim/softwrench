@@ -23,6 +23,7 @@
 
                 $scope.$on("sync.attachment.begin", (ev, count) => {
                     $scope.data.attprogressTotal = count;
+                    $scope.data.attprogressPercent = 0;
                 })
 
                 $scope.$on("sync.attachment.progress", (ev, increment) => {
@@ -41,6 +42,12 @@
                 const progressData = attachmentDataSynchronizationService.getProgress();
                 $scope.data.attprogress = progressData.progress;
                 $scope.data.attprogressTotal = progressData.total;
+                
+                if ($scope.data.attprogressTotal!=0){
+                    const percent = Math.floor(100 * $scope.data.attprogress / $scope.data.attprogressTotal);
+                    $scope.data.attprogressPercent = percent;
+                }
+                
 
                 var progress = function () {
                     return $scope.data.attprogressPercent;
@@ -138,7 +145,7 @@
                             return securityService.logout(false, false);
                         }
                         return $q.reject();
-                    }).then(() => $scope.fullSynchronize(false));
+                    }).then(() => $scope.showSyncModal(true));
                 }
 
 

@@ -22,9 +22,9 @@
 
     <ion-content class="has-header" has-bouncing="false" ng-class="{ 'vertical-center' : !data.operation }">
 
-        <div class="card" ng-show="data.attprogressPercent > 0">
+        <div class="card" ng-show="data.attprogressTotal > 0">
 			<div class="item item-text-wrap">
-                Attachment Download Progress
+                Attachment Download Progress {{data.attprogress}} of {{data.attprogressTotal}}
 				<div class="loader" style="width: {{data.attprogressPercent}}%;">
 					<p class="percent">{{data.attprogressPercent}}%</p>
 				</div>
