@@ -142,7 +142,7 @@
                 }
 
 
-                $scope.innerFullSynchronize = function (downloadAttachments = true) {
+                $scope.innerFullSynchronize = function (downloadAttachments = true, initial=false) {
                     $scope.data.isSynching = true;
                     loadingService.showDefault();
 
@@ -152,7 +152,7 @@
                     let needFullResync = false;
                     return synchronizationFacade.fullSync(downloadAttachments)
                         .then(function (operation) {
-                            return synchronizationFacade.shouldFullResync().then((needsResync) => {
+                            return synchronizationFacade.shouldFullResync(!initial).then((needsResync) => {
                                 needFullResync = needsResync;
                                 if (!needFullResync) {
                                     swAlertPopup.show({
@@ -181,7 +181,7 @@
                         }).then(() => needFullResync ? securityService.logout(false, false) : $q.reject()).then(() => $scope.innerFullSynchronize(downloadAttachments));
                 }
 
-                $scope.showSyncModal = function ($event) {
+                $scope.showSyncModal = function (initial) {
 
                     if (attachmentDataSynchronizationService.getProgress().progress !=0){
                         swAlertPopup.show({
@@ -204,7 +204,7 @@
                           text: 'Sync',
                           type: 'button-positive',
                           onTap: function(e) {
-                            $scope.fullSynchronize($scope.popupdata.downloadAttachments)              
+                            $scope.fullSynchronize($scope.popupdata.downloadAttachments, initial)              
                           }
                         }]
                       });
@@ -213,12 +213,12 @@
                     // $scope.syncMenuPopOver.show($event);
                 }
 
-                $scope.fullSynchronize = function (downloadAttachments = true) {
-                    synchronizationFacade.shouldFullResync(true).then((needsResync) => {
+                $scope.fullSynchronize = function (downloadAttachments = true, initial = false) {
+                    synchronizationFacade.shouldFullResync(true, !initial).then((needsResync) => {
                         if (needsResync) {
                             return securityService.logout(false, false).then(() => $scope.innerFullSynchronize(downloadAttachments));
                         }
-                        return $scope.innerFullSynchronize(downloadAttachments);
+                        return $scope.innerFullSynchronize(downloadAttachments, initial);
                     });
                 };
 

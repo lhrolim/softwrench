@@ -222,15 +222,18 @@
         /**
          * Used when facilies were changed and the user needs a full resync to have only the data related to the new facility set.
          */
-        function shouldFullResync(considerDirty) {
+        function shouldFullResync(considerDirty, forceResync) {
             const dirtyPromise = considerDirty ? hasDataToSync() : $q.when(false);
 
             return dirtyPromise.then(hasDirty => {
                 if (hasDirty) {
                     return $q.when(false);
                 }
-                return $q.when(true);
-                // return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
+                if (forceResync){
+                    return true;
+                }
+
+                return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
             });
         }
 
