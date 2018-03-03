@@ -98,6 +98,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Relationships.Composition
 
         public object Clone() {
             var cloned = new ApplicationCompositionDefinition(From, Relationship, Label, Schema, ShowExpression, ToolTip, isHidden, isPrintEnabled, Header);
+            cloned.Schema = (ApplicationCompositionSchema) cloned.Schema.Clone();
             cloned.SetLazyResolver(LazyEntityAssociation);
             return cloned;
 

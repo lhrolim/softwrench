@@ -1,6 +1,6 @@
 ﻿<div id="dispatchbuttondiv" ng-controller="dispatchbuttonctrl">
 
-    <div class="col-md-6 col-lg-6">
+    <div class="col-md-6 col-lg-6" ng-if="!isOutputMode()">
         <button class="btn btn-success" ng-click="dispatch()">Dispatch</button>
     </div>
 

@@ -131,7 +131,7 @@
 
         function detailLoaded(datamap, schema, result) {
             updateLegacyCrudContext(datamap, schema);
-            crudContextHolderService.detailLoaded();
+            crudContextHolderService.detailLoaded(null, result.mode=== "output");
 
             return fetchRelationshipData(datamap, schema, result);
 

@@ -23,7 +23,11 @@
                 }); 
             });
         }
-    
+
+        $scope.isOutputMode = () => {
+            return crudContextHolderService.isOutputMode();
+        }
+
         $scope.dispatch = () => {
             const dm = crudContextHolderService.rootDataMap();
 

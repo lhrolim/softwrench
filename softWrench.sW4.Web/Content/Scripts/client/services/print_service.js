@@ -166,8 +166,7 @@
                                         shouldPageBreak,
                                         shouldPrintMain,
                                         printCallback,
-                                        printSchema,
-
+                                        printSchema
                                     );
                                 }
 

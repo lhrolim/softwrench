@@ -30,7 +30,8 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             var applicationPermission = profile.GetPermissionByApplication(schema.ApplicationName);
 
             if (schemaFieldsToDisplay == null) {
-                if (applicationPermission == null || (!SchemaRequiresCompositionValidation(schema, applicationPermission) && (!applicationPermission.HasContainerPermissionOfSchema(schema.SchemaId)))) {
+                if (applicationPermission == null || (!SchemaRequiresCompositionValidation(schema, applicationPermission) &&
+                    (!applicationPermission.HasContainerPermissionOfSchema(schema.SchemaId)))) {
                     //no restriction at all. If AllowUpdate isn´t granted, though, we need to modify the compositions
                     Log.DebugFormat("schema {0} requires no further validation, returning all fields", schema.SchemaId);
                     return schema.Displayables;
@@ -87,8 +88,8 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                     //tabs change the ApplicationContainer
                     var tab = (ApplicationTabDefinition)field;
                     var tabPermission = permissions.FirstOrDefault(p => p.ContainerKey.EqualsIc(tab.TabId));
-                    tab.Displayables = GetAllowedFields(applicationPermission,
-                        fieldsToRetain, tab.Displayables, compositionPermissions, permissions, tab.TabId);
+                    tab.Displayables = new List<IApplicationDisplayable>(GetAllowedFields(applicationPermission,
+                        fieldsToRetain, tab.Displayables, compositionPermissions, permissions, tab.TabId));
                     if (tab.Displayables.Any() && (tabPermission == null || tabPermission.AllowView)) {
                         //if at least one field remained and the tab is not set to be hidden, let´s keep the tab
                         resultingFields.Add(tab);
@@ -137,9 +138,10 @@ namespace softWrench.sW4.Metadata.Applications.Security {
                             resultingFields.Add(cloned);
                         }
                     } else if (field is ApplicationSection) {
-                        var section = (ApplicationSection)field;
+                        var os = (ApplicationSection)field;
+                        ApplicationSection section = (ApplicationSection) os.Clone();
 
-                        if (section.Id != null && container!=null) {
+                        if (section.Id != null && container != null) {
                             var sectionPermission = container.SectionPermissions.FirstOrDefault(s => s.SectionId.EqualsIc(section.Id));
                             if (sectionPermission != null && !sectionPermission.AnyPermission) {
                                 continue;
@@ -151,11 +153,13 @@ namespace softWrench.sW4.Metadata.Applications.Security {
 
 
                         var numberOfFieldsBefore = section.Displayables.Count;
-                        section.Displayables = GetAllowedFields(applicationPermission,
-                            fieldsToRetain, section.Displayables, compositionPermissions, permissions, currentContainerKey);
+                        section.Displayables = new List<IApplicationDisplayable>(GetAllowedFields(applicationPermission,
+                            fieldsToRetain, section.Displayables, compositionPermissions, permissions, currentContainerKey));
                         if (section.Displayables.Any() && numberOfFieldsBefore != 0) {
                             //if at least one field remained, let´s keep the section, otherwise it would be discarded as well
                             //unless ít´s a section to import stuf
+                            resultingFields.Add(section);
+                        } else if (section.Resourcepath != null) {
                             resultingFields.Add(section);
                         }
                     } else {

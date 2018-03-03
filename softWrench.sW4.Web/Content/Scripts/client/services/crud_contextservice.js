@@ -378,12 +378,15 @@
             this.$rootScope.$broadcast(JavascriptEventConstants.CrudSaved);
         }
 
-        detailLoaded(panelid) {
+        detailLoaded(panelid,isoutput) {
             this.clearDirty(panelid);
             this.disposeDetail(panelid, false);
-            this.getContext(panelid).needsServerRefresh = false;
+            const ctx = this.getContext(panelid);
+            ctx.needsServerRefresh = false;
+            ctx.isoutput = isoutput;
             this.$log.get("crudContextHolderService#detailLoaded", ["navigation", "detail"]).debug("detail loaded");
             this.$rootScope.$broadcast(JavascriptEventConstants.DetailLoaded);
+
         }
 
         gridLoaded(applicationListResult, panelid) {
@@ -418,6 +421,7 @@
             context.lazytabData = {};
             context._eagerassociationOptions = { "#global": {} };
             context._lazyAssociationOptions = {};
+            context.isoutput = false;
             context.compositionLoadComplete = false;
             context.associationsResolved = false;
             if (!!clearTab) {
@@ -456,7 +460,9 @@
             return !!context.lazytabData[tabid];
         }
 
-
+        isOutputMode() {
+            return this.getContext().isoutput;
+        }
 
         //#endregion
 

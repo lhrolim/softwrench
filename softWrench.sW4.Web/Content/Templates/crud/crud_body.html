@@ -77,7 +77,7 @@
             </div>
             <div class="tab-content">
                 <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="{{getMainTabId()}}">
-                    <ng-switch on="schema.mode.equalsAny('input', 'none') ">
+                    <ng-switch on="isInputMode() ">
                         <div ng-switch-when="true">
                             <crud-input-wrapper
                                                 panelid="{{panelid}}"

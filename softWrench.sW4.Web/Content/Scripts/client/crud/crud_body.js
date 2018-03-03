@@ -76,7 +76,7 @@
                 };
 
                 this.enableSave = function () {
-                    return !genericTicketService.isClosed();
+                    return !crudContextHolderService.isOutputMode() && !genericTicketService.isClosed();
                 };
 
                 this.saveTooltip = function () {
@@ -159,6 +159,13 @@
 
                     $scope.allTabsLoaded(event, firstTabId);
                 });
+
+                $scope.isInputMode = function() {
+                    if (crudContextHolderService.isOutputMode()) {
+                        return false;
+                    }
+                    return $scope.schema.mode.equalsAny('input', 'none')
+                }
 
                 $scope.allTabsLoaded = function (event, firstTabId) {
                     if (!$scope.schema) {

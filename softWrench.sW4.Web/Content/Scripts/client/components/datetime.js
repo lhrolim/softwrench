@@ -162,7 +162,7 @@ angular.module('sw_components')
                         format: dateFormat,
                         locale: attrs.language,
                         maxDate: endDate,
-                        minDate: startDate,
+                        //minDate: startDate, TODO: fix min date support it´s changing the current date
                         sideBySide: true,
                         showClose: showCloseButton,
                         toolbarPlacement: 'top',
