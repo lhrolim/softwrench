@@ -5,7 +5,7 @@
 
     class lookupService {
 
-        constructor($rootScope, $timeout, $http, $log, $q, associationService, schemaService, searchService, crudContextHolderService, datamapSanitizeService) {
+        constructor($rootScope, $timeout, $http, $log, $q, associationService, schemaService, searchService, crudContextHolderService, datamapSanitizeService, i18NService) {
             this.$rootScope = $rootScope;
             this.$timeout = $timeout;
             this.$http = $http;
@@ -16,6 +16,7 @@
             this.searchService = searchService;
             this.crudContextHolderService = crudContextHolderService;
             this.datamapSanitizeService = datamapSanitizeService;
+            this.i18NService = i18NService;
 
             //#region private fns
 
@@ -188,6 +189,45 @@
 
             const associationResult = result;
             lookupObj.schema = associationResult.associationSchemaDefinition;
+            if (!lookupObj.schema && lookupObj.fieldMetadata.type !== "OptionField") {
+                lookupObj.schema = {
+                    schemaid: "#defaultmodal",
+                    displayables: [
+                        {
+                            label: lookupObj.fieldMetadata.label,
+                            attribute: lookupObj.fieldMetadata.attribute,
+                            qualifier: "value",
+                            rendererParameters: {},
+                            type: "ApplicationFieldDefinition"
+                        },
+                        {
+                            label: this.i18NService.getLookUpDescriptionLabel(lookupObj.fieldMetadata),
+                            attribute: lookupObj.fieldMetadata.labelFields[0],
+                            rendererParameters: {},
+                            qualifier: "label",
+                            type: "ApplicationFieldDefinition"
+                        }
+                    ],
+                    properties: {},
+                    schemaFilters: {
+                        filters: [
+                            {
+                                label: lookupObj.fieldMetadata.label,
+                                attribute: lookupObj.fieldMetadata.attribute,
+                                rendererParameters: {},
+                                type: "ApplicationFieldDefinition"
+                            },
+                            {
+                                label: this.i18NService.getLookUpDescriptionLabel(lookupObj.fieldMetadata),
+                                attribute: lookupObj.fieldMetadata.labelFields[0],
+                                rendererParameters: {},
+                                type: "ApplicationFieldDefinition"
+                            }
+                        ]
+                    }
+            }
+            }
+
             lookupObj.options = associationResult.associationData;
 
 
@@ -219,7 +259,7 @@
     }
 
 
-    lookupService.$inject = ['$rootScope', '$timeout', "$http", '$log', '$q', 'associationService', 'schemaService', 'searchService', "crudContextHolderService", "datamapSanitizeService"];
+    lookupService.$inject = ['$rootScope', '$timeout', "$http", '$log', '$q', 'associationService', 'schemaService', 'searchService', "crudContextHolderService", "datamapSanitizeService", "i18NService"];
 
     angular.module("sw_lookup").service('lookupService', lookupService);
 

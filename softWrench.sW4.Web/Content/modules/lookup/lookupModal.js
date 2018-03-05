@@ -183,6 +183,23 @@
                 $scope.getLookUpDescriptionLabel = function (fieldMetadata) {
                     return i18NService.getLookUpDescriptionLabel(fieldMetadata);
                 };
+
+                $scope.getFormattedValueLookup = function (column, option) {
+                    if ("#defaultmodal" === $scope.lookupObj.schema.schemaid) {
+                        if (column.qualifier === "value") {
+                            return option.value;
+                        }
+                        if (column.qualifier === "label") {
+                            return option.label;
+                        }
+                    }
+
+                    let value = (option.extrafields && option.extrafields[column.attribute])
+                        ? option.extrafields[column.attribute]
+                        : option[column.attribute];
+
+                    return $scope.getFormattedValue(value, column, option);
+                };
                 
                 /**
                  * Called when the user hits an option of the lookup modal, selecting the value de facto and closing it.

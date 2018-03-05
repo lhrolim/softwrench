@@ -54,7 +54,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
             if (!string.IsNullOrWhiteSpace(optionApplication) && !string.IsNullOrWhiteSpace(optionSchemaId)) {
                 return MetadataProvider
                     .Application(optionApplication)
-                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web, null);
+                    .ApplyPolicies(new ApplicationMetadataSchemaKey(optionSchemaId), SecurityFacade.CurrentUser(), ClientPlatform.Web);
             }
             return null;
         }
@@ -247,7 +247,7 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
                 var labelNumber = association.LabelFields.Count;
                 var label = labelNumber == 1
-                                    ? attributeHolder.GetAttribute(association.LabelFields[0]).ToString()
+                                    ? attributeHolder.GetAttribute(association.LabelFields[0])?.ToString()
                                     : BuildComplexLabel(attributeHolder, association);
 
                 if (association.ExtraProjectionFields.Count > 0) {
