@@ -211,7 +211,7 @@
               </renderer>
             </field>
             <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please enter your phone number where you can be reached.">
-              <renderer type="default" params="inputmaxlength=4;valtype=custom;valmessage=Phone Number should contain ten digits.;valpattern=^\d{10}$"/>
+              <renderer type="default" params="inputmaxlength=10;valtype=custom;valmessage=Phone Number should contain ten digits.;valpattern=^\d{10}$"/>
             </field>
           </section>
 
@@ -223,6 +223,10 @@
             <field attribute="description" label="Description" requiredexpression="true" helpicon="right" tooltip="Please enter as much detail as possible for your work request. ">
               <renderer type="textarea"/>
             </field>
+
+            <composition inline="true" relationship="#attachments" label="Attachments" detailschema="" fetchtype="lazy">
+              <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;"/>
+            </composition>
 
             <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">
               <option label="Emergency" value="emergency"/>

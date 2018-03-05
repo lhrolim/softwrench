@@ -87,7 +87,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     return _allowedFiles;
                 }
 
-                _allowedFiles = new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf" };
+                _allowedFiles = new[] { "pdf", "zip", "txt", "jpg", "bmp", "doc", "docx", "dwg", "csv", "xls", "xlsx", "ppt", "xml", "xsl", "html", "rtf", "png" };
                 return _allowedFiles;
 
             }
@@ -135,38 +135,87 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var attachments = entity.GetRelationship("attachment");
             if (attachments != null) {
                 // this will only filter new attachments
-                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
-                    var title = attachment.GetAttribute("document").ToString();
-                    var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo", true);
-                    var desc = !string.IsNullOrEmpty(docinfo?.GetStringAttribute("description")) ? docinfo.GetStringAttribute("description") : null;
+                HandleCompositionAttachments(attachments, maximoObj);
+            }
+
+            attachments = entity.GetRelationship("#attachments_");
+            attachments = HandleFileExplorerConversion(attachments);
+            if (attachments != null) {
+                // this will only filter new attachments
+                HandleCompositionAttachments(attachments, maximoObj);
+            }
+        }
+
+        public static IEnumerable<CrudOperationData> HandleFileExplorerConversion(object attachments) {
+
+            IList<CrudOperationData> result = new List<CrudOperationData>();
+
+            foreach (var attachment in ((IEnumerable<CrudOperationData>) attachments).Where(a => a.Id == null && a.GetBooleanAttribute("#newFile") == true)){
+                
+
+                var value = attachment.GetStringAttribute("value");
+                var label = attachment.GetStringAttribute("label");
+
+                // create the attachment to save
+                var toSaveAttachment = new JObject {
+                    new JProperty("#isDirty", true),
+                    new JProperty("createdate", null),
+                    new JProperty("docinfo_.description", label),
+                    new JProperty("document", Guid.NewGuid().ToString().Substring(0,20)),
+                    new JProperty("newattachment", value),
+                    new JProperty("newattachment_path", label),
+                    new JProperty("_iscreation", true)
+                };
+
+                var entity = MetadataProvider.Entity("DOCLINKS");
+                var app = MetadataProvider.Application("attachment");
+                var appMetadata = app.StaticFromSchema("list");
+                var attachCrudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), entity, appMetadata, toSaveAttachment);
+                result.Add(attachCrudOperationData);
+            }
+
+            return result;
 
 
-                    data = attachment.GetUnMappedAttribute("newattachment");
-                    path = attachment.GetUnMappedAttribute("newattachment_path");
-                    var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
-                    //TODO: create a subclass
-                    var filter = attachment.GetUnMappedAttribute("#filter");
-                    var walkdown = attachment.GetBooleanAttribute("#walkdown");
-                    var mainattachments = BuildAttachments(path, data, title, desc, offlinehash);
-                    if (!string.IsNullOrEmpty(filter)) {
-                        mainattachments.ForEach(attch => attch.Filter = filter);
-                    }
-                    if (true == walkdown) {
-                        mainattachments.ForEach(attch => attch.Filter = "swwpkg:walkdown");
-                    }
-                    try {
-                        mainattachments.ForEach(attch => AddAttachment(maximoObj, attch));
-                    } catch (MaximoException e) {
-                        throw new MaximoException(
-                            "Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'",
-                            e, ExceptionUtil.DigRootException(e));
-                    }
+        }
+
+
+        private void HandleCompositionAttachments(object attachments, object maximoObj) {
+            string data;
+            string path;
+            foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.Id == null)) {
+                var title = attachment.GetAttribute("document").ToString();
+                var docinfo = (CrudOperationData)attachment.GetRelationship("docinfo", true);
+                var desc = !string.IsNullOrEmpty(docinfo?.GetStringAttribute("description"))
+                    ? docinfo.GetStringAttribute("description")
+                    : null;
+
+
+                data = attachment.GetUnMappedAttribute("newattachment");
+                path = attachment.GetUnMappedAttribute("newattachment_path");
+                var offlinehash = attachment.GetUnMappedAttribute("#offlinehash");
+                //TODO: create a subclass
+                var filter = attachment.GetUnMappedAttribute("#filter");
+                var walkdown = attachment.GetBooleanAttribute("#walkdown");
+                var mainattachments = BuildAttachments(path, data, title, desc, offlinehash);
+                if (!string.IsNullOrEmpty(filter)) {
+                    mainattachments.ForEach(attch => attch.Filter = filter);
                 }
-
-                foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(a => a.ContainsAttribute("#deleted"))) {
-                    _maxDAO.ExecuteSql("delete from doclinks where doclinksid = ?", attachment.GetAttribute("doclinksid"));
+                if (true == walkdown) {
+                    mainattachments.ForEach(attch => attch.Filter = "swwpkg:walkdown");
                 }
+                try {
+                    mainattachments.ForEach(attch => AddAttachment(maximoObj, attch));
+                } catch (MaximoException e) {
+                    throw new MaximoException(
+                        "Could not attach image file. Please contact support about 'Installation Task [SWWEB-2156]'",
+                        e, ExceptionUtil.DigRootException(e));
+                }
+            }
 
+            foreach (var attachment in ((IEnumerable<CrudOperationData>)attachments).Where(
+                a => a.ContainsAttribute("#deleted"))) {
+                _maxDAO.ExecuteSql("delete from doclinks where doclinksid = ?", attachment.GetAttribute("doclinksid"));
             }
         }
 
@@ -297,8 +346,8 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
 
             if (attachmentDataMap.ContainsKey("description")) {
                 docInfoURL = (string)attachmentDataMap["description"];
-            } else if(attachmentDataMap.ContainsKey("docinfo_.description")) {
-                if (attachmentDataMap["docinfo_.description"] != null) 
+            } else if (attachmentDataMap.ContainsKey("docinfo_.description")) {
+                if (attachmentDataMap["docinfo_.description"] != null)
                     docInfoURL = (string)attachmentDataMap["docinfo_.description"];
             } else if (attachmentDataMap.ContainsKey("urlname")) {
                 //either comes from the application itself, or else, the composition
@@ -381,7 +430,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
                     var filetype = response.Content.Headers.ContentType?.MediaType;
                     return Tuple.Create(fileBytes, filetype);
                 } catch (Exception exception) {
-                    Log.Error("Error Attachment Handler: {0} - {1}".Fmt(exception.Message, exception.InnerException?.Message ?? "No Internal Error Message"),exception);
+                    Log.Error("Error Attachment Handler: {0} - {1}".Fmt(exception.Message, exception.InnerException?.Message ?? "No Internal Error Message"), exception);
                     return null;
                 }
             }
@@ -395,7 +444,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Applications.Compositions {
             var applicationMetadata = MetadataProvider
                 .Application(parentApplication)
                 .ApplyPolicies(new ApplicationMetadataSchemaKey(parentSchemaId), user, ClientPlatform.Web, null);
-            var response = await _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID, false, null,null);
+            var response = await _dataSetProvider.LookupDataSet(parentApplication, applicationMetadata.Schema.SchemaId).Execute(applicationMetadata, new JObject(), parentId, OperationConstants.CRUD_FIND_BY_ID, false, null, null);
 
             var parent = response.ResultObject;
             if (parent != null) {

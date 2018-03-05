@@ -21,6 +21,7 @@ using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.Relational.EntityRepository;
 using softWrench.sW4.Data.Persistence.WS.Applications.Compositions;
 using softWrench.sW4.Metadata;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
     public class FirstSolarWorkPackageAttachmentsHandler : ISingletonComponent {
@@ -108,7 +109,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.opt {
         }
 
         private static void HandleAttachment(JObject attachment, long id, string filterPrefix, CrudOperationData woData) {
-            var isNew = TryGetValue(attachment, "#newFile");
+            var isNew = attachment.TryGetValue("#newFile");
             if (!"true".EqualsIc(isNew)) {
                 return;
             }

@@ -19,6 +19,12 @@ namespace softWrench.sW4.Util {
 
         }
 
+        public static string TryGetValue(this JObject obj, string key) {
+            JToken token;
+            obj.TryGetValue(key, out token);
+            return token?.Value<string>();
+        }
+
         [CanBeNull]
         public static string StringValue(this JObject ob, string propertyName) {
             if (ob is JObjectDatamapAdapter) {
