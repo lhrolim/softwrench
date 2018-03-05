@@ -69,6 +69,8 @@
 
                     };
 
+                 
+
                     function getExt(fileName) {
                         const idx = fileName.indexOf(".");
                         return idx !== -1 ? fileName.substring(idx + 1) : undefined;
@@ -117,7 +119,23 @@
                         }
                     }
 
+                    scope.showDownloadAll= function (fieldMetadata) {
+                        return fieldMetadata.rendererParameters["showdownloadall"] !== "false";
+                    }
+
+
                     scope.deleteFile = function ($event, item) {
+                        if (!item.persisted) {
+                            let idx = scope.files.indexOf(item);
+                            scope.files.splice(idx, 1);
+
+                            var filesDm = scope.datamap[scope.fieldMetadata.relationship];
+                            idx = filesDm.indexOf(item);
+                            filesDm.splice(idx, 1);
+                            return;
+                        }
+
+
                         $event.stopImmediatePropagation();
                         var isSwdb = scope.fieldMetadata.schema.isSwDB;
                         //TODO: this was copied from compositionlist.js --> create some sort of inheritance between them

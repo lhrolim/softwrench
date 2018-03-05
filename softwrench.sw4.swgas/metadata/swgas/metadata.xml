@@ -225,7 +225,7 @@
             </field>
 
             <composition inline="true" relationship="#attachments" label="Attachments" detailschema="" fetchtype="lazy">
-              <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;"/>
+              <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;showdownloadall=false"/>
             </composition>
 
             <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">

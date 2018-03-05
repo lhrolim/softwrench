@@ -9,14 +9,16 @@
 
         <input id="uploadInput" class="upload-input" type="file" multiple="true"
                fileread="fileData" data-file-read-field="fieldMetadata" path="fileNames"
-               data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}"/>
+               data-accepted-extensions="{{ fieldMetadata.rendererParameters['acceptedFileExtensions'] }}" />
 
         <a href="" id="uploadInputLink" ng-click="browseFile($event)">browse</a>
-        
-        <br />
-        <i class="fa fa-download"></i>
-        <a href="" id="DownloadAllLink" ng-click="downloadAll($event)">Download All</a>
-        <br />
+
+        <span ng-show="showDownloadAll(fieldMetadata)">
+            <br />
+            <i class="fa fa-download" ></i>
+            <a href="" id="DownloadAllLink" ng-click="downloadAll($event)">Download All</a>
+            <br />
+        </span>
     </div>
 
 
@@ -25,9 +27,9 @@
             <!--<a style="position: absolute; padding: 5px;"><i class="fa fa-times" ng-if="file.persisted" /></a>-->
             <a class="thumbnail thumbnailiconset text-center" ng-click="fileClick(file)">
                 <div class="item-icon">
-                    <i class="fa fa-file item-extension" data-ext="{{file.extension}}" style="position: relative; top: 1px"/>
-                    <i class="fa fa-times item-delete" ng-if="!!file.persisted"  ng-click="deleteFile($event,file)"/>
-                    <i class="fa fa-refresh item-refresh" ng-if="!file.persisted"/>
+                    <i class="fa fa-file item-extension" data-ext="{{file.extension}}" style="position: relative; top: 1px" />
+                    <i class="fa fa-times item-delete" ng-click="deleteFile($event,file)" />
+                    <i class="fa fa-refresh item-refresh" ng-if="!file.persisted" />
                 </div>
                 {{file.label}}
             </a>
