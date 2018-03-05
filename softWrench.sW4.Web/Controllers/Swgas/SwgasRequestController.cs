@@ -77,6 +77,8 @@ namespace softWrench.sW4.Web.Controllers.Swgas {
             response.RedirectURL = "/Content/Controller/Application.html";
             model.Anonymous = true;
             model.ResultDataJSON = JsonConvert.SerializeObject(response, Newtonsoft.Json.Formatting.None, new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+            model.H1Header = "Facilities Service Request";
+            model.H1HeaderStyle = "center";
 
             return View(Index, model);
         }
