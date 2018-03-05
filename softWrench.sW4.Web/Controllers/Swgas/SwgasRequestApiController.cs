@@ -47,6 +47,7 @@ namespace softWrench.sW4.Web.Controllers.Swgas {
             foreach (var item in list) {
                 result.Add(new AssociationOption(item["building"], item["building"]));
             }
+            result.Add(new AssociationOption(city + " - " + "Other", city + " - " + "Other"));
             return result;
         }
     }
