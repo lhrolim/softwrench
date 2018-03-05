@@ -224,7 +224,7 @@
               <renderer type="richtext"/>
             </field>
 
-            <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. ">
+            <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">
               <option label="Emergency" value="emergency"/>
               <option label="Urgency" value="urgency"/>
               <option label="Routine" value="routine"/>
