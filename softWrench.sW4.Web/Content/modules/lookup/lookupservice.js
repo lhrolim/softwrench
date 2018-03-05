@@ -189,7 +189,7 @@
 
             const associationResult = result;
             lookupObj.schema = associationResult.associationSchemaDefinition;
-            if (!lookupObj.schema && lookupObj.fieldMetadata.type !== "OptionField") {
+            if (!lookupObj.schema && lookupObj.fieldMetadata.type !== "OptionField" && !angular.mock) {
                 lookupObj.schema = {
                     schemaid: "#defaultmodal",
                     displayables: [
