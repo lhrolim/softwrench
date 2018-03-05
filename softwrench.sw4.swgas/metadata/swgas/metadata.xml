@@ -221,7 +221,7 @@
             <field attribute="summary" label="Summary" requiredexpression="true" helpicon="right" tooltip="Please enter a brief summary of your work request."/>
 
             <field attribute="description" label="Description" requiredexpression="true" helpicon="right" tooltip="Please enter as much detail as possible for your work request. ">
-              <renderer type="richtext"/>
+              <renderer type="textarea"/>
             </field>
 
             <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">
