@@ -551,7 +551,7 @@
 
                 isCreation: function () {
                     const crudContext = this.getCrudContext();
-                    return !crudContext.originalDetailItemDatamap || crudContext.originalDetailItemDatamap["_newitem#$"];
+                    return crudContext.newItem || !crudContext.originalDetailItemDatamap || crudContext.originalDetailItemDatamap["_newitem#$"];
                 },
 
                 gridTitle: function (gridSchema) {

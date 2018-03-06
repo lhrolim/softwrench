@@ -149,16 +149,13 @@
             }
 
             if (!datamap) {
-                return "New " + schema.title;
+                return "New " + schema.applicationTitle;
             }
             const fields = datamap;
             if (schema.properties['detail.titleexpression'] != null) {
                 return expressionService.evaluate(schema.properties['detail.titleexpression'], fields);
             }
-            const titleId = schema.idDisplayable;
-            if (titleId == null) {
-                return schema.title;
-            }
+          
             var result;
             var idValue = fields[schema.userIdFieldName];
             if (!idValue) {
@@ -168,7 +165,7 @@
             if (smallDevices) {
                 result = idValue;
             } else {
-                result = titleId + " " + idValue;
+                result = schema.title + " " + idValue;
             }
 
             return result;

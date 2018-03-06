@@ -549,9 +549,13 @@
             <number decimals="0" min="0" max="999" />
           </field>
 
-          <field attribute="assetnum" label="Asset" requiredexpression="true">
+          <field attribute="assetnum" label="Asset">
             <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
           </field>
+          
+          <field attribute="reportedby" label="Reported By" readonly="true"/>
+          <field attribute="reporteddate" label="Reported Date" readonly="true"/>
+          
           <association label="Location" target="location" labelfield="location.description" showexpression="false"/>
 
           <!-- do not remove - added to force the sync of assets -->

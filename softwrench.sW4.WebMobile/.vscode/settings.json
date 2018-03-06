@@ -12,5 +12,21 @@
     "explorer.openEditors.visible": 0,
     "javascript.format.enable": true,
     "editor.codeLens": true,
-    "editor.minimap.enabled": false
+    "editor.minimap.enabled": false,
+
+    "cron.jobs": {
+        "globals": "C://Users//lrolim//workspace//softwrench//softwrench.sW4.WebMobile",
+        "jobs": [
+            {
+                "name": "My Script using specific date",
+                "description": "Runs a script at a specific time.",
+                "time": "*/5 * * * * *",
+                "action": {
+                    "type": "script",
+                    "script": "./.vscode/vscodecron-script.js"
+                }
+            }
+        ]
+    }
+
 }
