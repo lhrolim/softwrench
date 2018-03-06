@@ -474,6 +474,14 @@
         
           <commandbars>
             <commandgroup position="actions">
+
+              <command id="clone" icon="fa-clone" label="Duplicate" position="left"
+                       tooltip="Duplicate current Work Order"
+                       service="genericTicketService" method="clone" parameters="datamap,editdetail,INPRG"
+                       cssclasses="large-button"
+                       showexpression="@wonum != null"
+              />
+
               <command id="inprg" icon="fa-hourglass-2" label="Mark In Progress" position="right"
                        tooltip="Change Status to In Progress"
                        service="genericTicketService" method="changeStatus" parameters="datamap,editdetail,INPRG"

@@ -19,15 +19,15 @@ namespace softWrench.sW4.Data.Persistence.Engine {
         public abstract TargetResult Execute(OperationWrapper operationWrapper);
 
 
-        private readonly EntityRepository _entityRepository;
+        protected readonly EntityRepository EntityRepository;
 
 
         protected AConnectorEngine(EntityRepository entityRepository) {
-            _entityRepository = entityRepository;
+            EntityRepository = entityRepository;
         }
 
         public virtual async Task<int> Count(EntityMetadata entityMetadata, SearchRequestDto searchDto) {
-            return await _entityRepository.Count(entityMetadata, searchDto);
+            return await EntityRepository.Count(entityMetadata, searchDto);
         }
 
         public virtual async Task<AttributeHolder> FindById(SlicedEntityMetadata entityMetadata, string id, Tuple<string, string> userIdSitetuple) {
@@ -35,9 +35,9 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 throw new InvalidOperationException("either id or userid needs to be provided");
             }
             if (id != null) {
-                return await _entityRepository.Get(entityMetadata, id);
+                return await EntityRepository.Get(entityMetadata, id);
             }
-            return await _entityRepository.ByUserIdSite(entityMetadata, userIdSitetuple);
+            return await EntityRepository.ByUserIdSite(entityMetadata, userIdSitetuple);
         }
 
         public virtual async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto) {
@@ -48,7 +48,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
 
         public virtual async Task<IReadOnlyList<AttributeHolder>> Find(SlicedEntityMetadata slicedEntityMetadata, PaginatedSearchRequestDto searchDto,
             IDictionary<string, ApplicationCompositionSchema> compositionSchemas) {
-            var list = await _entityRepository.Get(slicedEntityMetadata, searchDto);
+            var list = await EntityRepository.Get(slicedEntityMetadata, searchDto);
 
 
 

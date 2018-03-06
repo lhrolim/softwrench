@@ -150,6 +150,11 @@
                         s.stop();
                     });
 
+                    if (!$scope.datamap[$scope.schema.idFieldName]) {
+                        //avoiding initing tab spinners whenever there´s no id available. Ex: Clone operation.
+                        return;
+                    }
+
                     tabSpinners.splice(0, tabSpinners.length);
                     $(".tabRecordspin:not(.spinstop)").each((idx, e) => {
                         if (tabsService.hasCount(tabs[idx])) {

@@ -278,6 +278,22 @@
                         return Object.keys(crudContextHolderService.getSelectionModel().selectionBuffer).length > 0;
                     },
 
+                    clone: function () {
+                        const schema = crudContextHolderService.currentSchema();
+                        const dm = crudContextHolderService.rootDataMap();
+                        const id = dm[schema.idFieldName];
+
+                        const customParameters = {};
+                        customParameters[0] = {};
+                        customParameters[0]["key"] = "clone";
+                        customParameters[0]["value"] = true;
+
+                        return redirectService.goToApplication(schema.applicationName,
+                            schema.schemaId,
+                            { id, customParameters });
+
+                    },
+
                     validateBatchStatusChange: function (selectedItems) {
                         // check if user selected at least one entry
                         if (selectedItems.length <= 0) {

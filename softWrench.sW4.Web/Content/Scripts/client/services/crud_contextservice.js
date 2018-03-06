@@ -211,6 +211,13 @@
             return dm[schema.idFieldName];
         }
 
+
+        rootUserId() {
+            const dm = this.rootDataMap();
+            const schema = this.currentSchema();
+            return dm[schema.userIdFieldName];
+        }
+
         originalDatamap(panelid, datamap) {
             const context = this.getContext(panelid);
             if (datamap) {

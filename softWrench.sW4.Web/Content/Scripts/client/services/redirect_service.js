@@ -25,15 +25,25 @@
          */
         function redirectToDetailAfterCreation() {
             const id = crudContextHolderService.rootId();
+            const userId = crudContextHolderService.rootUserId();
 
             const previousURL = $location.path();
             const idx = previousURL.indexOf("/new");
             contextService.deleteFromContext("swGlobalRedirectURL");
             if (idx !== -1) {
-                $location.path(previousURL.substr(0, idx) + "/uid/" + id);
+                if (id) {
+                    $location.path(previousURL.substr(0, idx) + "/uid/" + id);
+                } else {
+                    $location.path(previousURL.substr(0, idx) + "/" + userId);
+                }
+                
             } else {
                 var applicationName = crudContextHolderService.currentSchema().applicationName;
-                $location.path($location.path() + `/web/${applicationName}/uid/${id}`);
+                if (id) {
+                    $location.path($location.path() + `/web/${applicationName}/uid/${id}`);
+                } else {
+                    $location.path($location.path() + `/web/${applicationName}/${userId}`);
+                }
             }
             $location.url($location.path());
         };

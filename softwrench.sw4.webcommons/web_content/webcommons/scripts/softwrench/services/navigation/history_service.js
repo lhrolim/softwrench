@@ -214,7 +214,9 @@
             const id = params["id"];
 
             const newDetailSchema = schemaInfo["newDetailSchema"];
-            if (((newDetailSchema && newDetailSchema === schemaId) || "detailnew".equalsIc(schemaId)) && !id) {
+            //TODO: fix this check
+            const isClone = params["customParameters[0][key]"] === "clone";
+            if ((((newDetailSchema && newDetailSchema === schemaId) || "detailnew".equalsIc(schemaId)) && !id) || isClone ) {
                 return changePath(`${contextPath}/web/${decoratedApplication}/new`);
             }
 

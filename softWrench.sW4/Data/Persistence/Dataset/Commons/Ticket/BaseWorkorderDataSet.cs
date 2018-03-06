@@ -45,14 +45,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             var baseDetail = await base.GetApplicationDetail(application, user, request);
             if (request.IsEditionRequest) {
                 var siteid = baseDetail.ResultObject["siteid"];
-                await LazyPopulateFailureCodes(baseDetail, siteid);
+                await LazyPopulateFailureCodes(baseDetail, request.UserId, siteid);
             }
             return baseDetail;
 
         }
 
-        protected virtual async Task LazyPopulateFailureCodes(ApplicationDetailResult baseDetail, object siteid) {
-            var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ? and siteid=?",baseDetail.ResultObject["wonum"], siteid);
+        protected virtual async Task LazyPopulateFailureCodes(ApplicationDetailResult baseDetail, string wonum, object siteid) {
+            var items = await MaxDAO.FindByNativeQueryAsync("select failurecode,linenum,type from failurereport where wonum = ? and siteid=?", wonum, siteid);
             foreach (var item in items) {
                 var type = item["type"];
                 var projectedFieldName = "";

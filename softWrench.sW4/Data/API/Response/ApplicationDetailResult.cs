@@ -16,11 +16,15 @@ namespace softWrench.sW4.Data.API.Response {
         public ApplicationDetailResult(DataMap dataMap, AssociationMainSchemaLoadResult associationOptions,
             ApplicationSchemaDefinition main, [CanBeNull]IDictionary<string, ApplicationCompositionSchema> compositions, string id)
             : base(dataMap, null) {
-            
+
             AssociationOptions = associationOptions;
             Schema = main;
             Schema.CompositionSchemas = compositions;
             Id = id;
+            if (Schema.UserIdFieldName != null) {
+                UserId = dataMap.GetStringAttribute(Schema.UserIdFieldName);
+            }
+
         }
 
         public AssociationMainSchemaLoadResult AssociationOptions { get; set; }
@@ -35,14 +39,16 @@ namespace softWrench.sW4.Data.API.Response {
 
 
 
-        public string Id { get; }
+        public string Id { get; set; }
+
+        public string UserId { get; set; }
 
         public IErrorDto WarningDto { get; set; }
 
         public IDictionary<string, ApplicationCompositionSchema> Compositions => Schema.CompositionSchemas;
 
         public IEnumerable<KeyValuePair<string, EntityRepository.SearchEntityResult>> EagerCompositionResult { get; set; }
-        
+
 
         public string ApplicationName => Schema.ApplicationName;
 

@@ -93,8 +93,12 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
         public virtual void DoCreate(MaximoOperationExecutionContext maximoTemplateData) {
             var resultData = maximoTemplateData.InvokeProxy();
             maximoTemplateData.ResultObject = resultData;
+           
         }
 
+        private string PopulateId(string resultObjectUserId, string resultObjectSiteId) {
+            throw new NotImplementedException();
+        }
 
 
         public void AfterCreation(MaximoOperationExecutionContext maximoExecutionContext) {

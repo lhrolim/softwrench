@@ -37,7 +37,7 @@
         function handleCompositions(datamap, schema, result) {
             const isEdit = isEditDetail(schema, datamap);
             if (!isEdit) {
-                return $q.when();
+                return $q.when(result.compositions);
             }
 
             //fetch composition data only for edit mode

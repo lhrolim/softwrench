@@ -85,7 +85,7 @@ class SubmitResult {
 
         setIdAfterCreation(serverData, schema, fields) {
             const log = this.$log.get("submitService#setIdAfterCreation", ["submit", "save"]);
-            if (serverData && serverData.id && fields &&
+            if (serverData && (serverData.id  || serverData.userId) && fields &&
                 /* making sure not to update when it's not creation */
                 (!fields.hasOwnProperty(schema.idFieldName) ||
                     !fields[schema.idFieldName])) {

@@ -185,14 +185,21 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var applicationCompositionSchemas = CompositionBuilder.InitializeCompositionSchemas(application.Schema, user);
             DataMap dataMap;
             CompositionFetchResult compositionData = null;
+            var isCloneOperation = request.CustomParameters != null && request.CustomParameters.ContainsKey("clone");
             if (request.IsEditionRequest) {
                 dataMap = await FetchDetailDataMap(application, user, request);
 
                 if (dataMap == null) {
                     return null;
                 }
-                //bringing eagerly, or inline compositions, or those especified at the DetailRequest parameter
-                compositionData = await LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
+
+
+
+                if (!isCloneOperation) {
+                    //bringing eagerly, or inline compositions, or those especified at the DetailRequest parameter
+                    compositionData = await LoadCompositions(application, request, applicationCompositionSchemas, dataMap);
+                }
+
 
 
                 if (request.InitialValues != null) {
@@ -206,6 +213,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             var associationResults = await BuildAssociationOptions(dataMap, application.Schema, request);
             var detailResult = new ApplicationDetailResult(dataMap, associationResults, application.Schema, applicationCompositionSchemas, id);
+            request.UserId = detailResult.UserId;
             if (compositionData != null) {
                 //adding eagerly fetched paginated compositions, in case they exist.
                 //inline, non-paginated compositions will be inserted straight on the datamap
@@ -213,6 +221,15 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 detailResult.EagerCompositionResult =
                     compositionData.ResultObject.Where(c => c.Value.PaginationData != null);
             }
+
+
+            if (isCloneOperation) {
+                detailResult.Id = null;
+                detailResult.Compositions.Clear();
+                detailResult.ResultObject.Remove(detailResult.Schema.IdFieldName);
+                detailResult.ResultObject.Remove(detailResult.Schema.UserIdFieldName);
+            }
+
 
             return detailResult;
         }

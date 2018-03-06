@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using cts.commons.Util;
 using JetBrains.Annotations;
 using log4net;
@@ -103,7 +105,12 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             operationWrapper.UserId = crudOperationData.UserId;
             switch (operationName) {
                 case OperationConstants.CRUD_CREATE:
-                    return crudConnector.Create(crudOperationData, operationWrapper.JSON);
+                    var result = crudConnector.Create(crudOperationData, operationWrapper.JSON);
+                    if (result.Id == null && result.UserId != null && result.SiteId != null) {
+                        //sometimes Maximo does not return the id,we need to query it
+                        result.Id = PopulateId(result.UserId, result.SiteId, operationWrapper);
+                    }
+                    return result;
                 case OperationConstants.CRUD_UPDATE:
                     return crudConnector.Update(crudOperationData, operationWrapper.JSON);
                 case OperationConstants.CRUD_DELETE:
@@ -113,6 +120,12 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             }
 
             return null;
+        }
+
+        private string PopulateId(string userId, string siteId, OperationWrapper operationWrapper) {
+            var dms = AsyncHelper.RunSync(() => EntityRepository.GetIdAndSiteIdByUserId(operationWrapper.EntityMetadata, userId));
+            var item = dms.FirstOrDefault(d => d.ContainsKey("siteid") && d["siteid"].Equals(siteId));
+            return item?.GetStringAttribute(operationWrapper.EntityMetadata.IdFieldName);
         }
 
         private TargetResult HandleDefaultProblem(IOperationData operationData,

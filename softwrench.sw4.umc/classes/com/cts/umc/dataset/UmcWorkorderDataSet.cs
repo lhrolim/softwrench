@@ -32,10 +32,10 @@ namespace softWrench.sW4.umc.classes.com.cts.umc.dataset {
         }
 
 
-        protected override async Task LazyPopulateFailureCodes(ApplicationDetailResult baseDetail, object siteid) {
+        protected override async Task LazyPopulateFailureCodes(ApplicationDetailResult baseDetail, string wonum, object siteid) {
             var items = await MaxDAO.FindByNativeQueryAsync(
                 "select r.failurecode as failurecode,linenum,type,f.description as description from failurereport r inner join failurecode f on (r.failurecode = f.failurecode and r.orgid = f.orgid) where wonum = ? and siteid=?",
-                baseDetail.ResultObject["wonum"], siteid);
+                wonum, siteid);
             foreach (var item in items) {
                 var type = item["type"];
                 var projectedFieldName = "";

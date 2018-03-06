@@ -67,7 +67,8 @@ namespace softWrench.sW4.Web.Controllers.Routing {
                     Id = id,
                     FullRefresh = targetResult.FullRefresh,
                     TimeStamp = DateTime.Now.FromServerToRightKind(),
-                    ResultObject = targetResult.ResultObject
+                    ResultObject = targetResult.ResultObject,
+                    UserId = targetResult.UserId
                 };
             }
 
