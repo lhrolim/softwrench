@@ -174,12 +174,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\com\cts\umc\connector\UmcDispatchOperationHandler.cs" />
     <Compile Include="classes\com\cts\umc\connector\UmcPmBatchConverter.cs" />
     <Compile Include="classes\com\cts\umc\controller\UmcPmBatchController.cs" />
     <Compile Include="classes\com\cts\umc\dataset\PmBatchDataSet.cs" />
     <Compile Include="classes\com\cts\umc\dataset\UmcSRDataSet.cs" />
     <Compile Include="classes\com\cts\umc\dataset\UmcWorkorderDataSet.cs" />
     <Compile Include="classes\com\cts\umc\service\UmcPmBatchService.cs" />
+    <Compile Include="classes\com\cts\umc\util\UmcWorkorderUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

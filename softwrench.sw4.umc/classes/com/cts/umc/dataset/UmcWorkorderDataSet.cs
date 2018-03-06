@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using cts.commons.persistence;
 using cts.commons.portable.Util;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sw4.umc.classes.com.cts.umc.util;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Metadata.Applications.DataSet;
@@ -25,9 +26,7 @@ namespace softWrench.sW4.umc.classes.com.cts.umc.dataset {
             if (!request.IsEditionRequest) {
                 //https://controltechnologysolutions.atlassian.net/browse/SWWEB-3377
                 var dm =result.ResultObject;
-                dm.SetAttribute("worktype","RO");
-                dm.SetAttribute("classstructureid", "1005");
-                dm.SetAttribute("wopriority", "3");
+                UmcWorkorderUtil.PopulateDefaultValues(dm);
             }
             return result;
         }

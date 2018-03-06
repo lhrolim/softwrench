@@ -76,9 +76,8 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                 if (operationData.ProblemData != null) {
                     return HandleDefaultProblem(operationData, e, xmlCurrentData: operationXml, jsonOriginalData: operationWrapper.JSON);
                 }
+                throw;
             }
-
-            return customOperatorEngine.InvokeCustomOperation(operationWrapper);
         }
 
         private static string GetOperationXml(OperationWrapper operationWrapper, IMaximoCrudConnector crudConnector,

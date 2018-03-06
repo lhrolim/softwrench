@@ -213,7 +213,9 @@
         </schema>
 
         <schema id="editdetail" parentschema="adetail" title="Service Request Details" redeclaring="false">
-          <customization position="siteid"/>
+          <customization position="siteid">
+            <field attribute="siteid" hidden="true"/>
+          </customization>
           <commandbars>
             <commandgroup position="actions">
               
