@@ -4,6 +4,9 @@
 
     function workorderOfflineService() {
 
+
+        const day = 24 * 60 * 60 * 1000;
+
         //#region Utils
 
         //#endregion
@@ -20,12 +23,40 @@
             }
         }
 
+
+         //#region Menu whereclauses
+        // dateindex01 = scheduled start date
+        function getTodayWosWhereClause() {
+            const now = new Date();
+            const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
+            const tomorrowTime = todayTime + day;
+            return `\`root\`.dateindex01 >= ${todayTime} and 'root'.dateindex01 < ${tomorrowTime}`;
+        }
+
+        // workorder.dateindex01 = scheduled start date
+        function getPastWosWhereClause() {
+            const now = new Date();
+            const todayTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime();
+            return `\`root\`.dateindex01 < ${todayTime}`;
+        }
+
+        // workorder.dateindex01 = scheduled start date
+        function getFutureWosWhereClause() {
+            const now = new Date();
+            const tomorrowTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0).getTime() + day;
+            return `\`root\`.dateindex01 >= ${tomorrowTime}`;
+        }
+
+
         //#endregion
 
         //#region Service Instance
 
         var service = {
-            preSync: preSync
+            preSync,
+            getFutureWosWhereClause,
+            getPastWosWhereClause,
+            getTodayWosWhereClause
         };
 
         return service;

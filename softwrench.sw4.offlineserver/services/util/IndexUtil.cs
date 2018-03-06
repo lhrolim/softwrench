@@ -93,6 +93,9 @@ namespace softwrench.sw4.offlineserver.services.util {
             i = 1;
             foreach (var idx in repr.DateIndexes) {
                 var date = datamap.GetAttribute(idx);
+                if (date == null) {
+                    continue;
+                }
                 var dt = DateTime.Now;
                 if (date is DateTime) {
                     dt = (DateTime)date;

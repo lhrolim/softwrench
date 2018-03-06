@@ -554,7 +554,7 @@
           </field>
           
           <field attribute="reportedby" label="Reported By" readonly="true"/>
-          <field attribute="reporteddate" label="Reported Date" readonly="true"/>
+          <field attribute="reportdate" label="Reported Date" readonly="true"/>
           
           <association label="Location" target="location" labelfield="location.description" showexpression="false"/>
 
