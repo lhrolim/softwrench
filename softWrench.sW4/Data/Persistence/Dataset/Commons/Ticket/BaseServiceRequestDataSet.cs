@@ -109,6 +109,11 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return GetClassStructureTypeDescription(parameters, "SR");
         }
 
+        public SearchRequestDto FilterQSRWorklogs(CompositionPreFilterFunctionParameters parameter) {
+            parameter.BASEDto.AppendSearchEntry("clientviewable", "1");
+            return parameter.BASEDto;
+        }
+
         public override string ApplicationName() {
             return "servicerequest,quickservicerequest";
         }
