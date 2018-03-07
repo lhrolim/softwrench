@@ -70,13 +70,17 @@
             }
 
             if (currentStatus === "ACCEPTED") {
-                return value === "ARRIVED";
+                return value.equalsAny("ARRIVED","CLOSED", "CANCELLED");
             }
             if (currentStatus === "ARRIVED") {
-                return value === "RESOLVED";
+                return value.equalsAny("RESOLVED", "CANCELLED");
             }
             if (currentStatus === "DISPATCHED") {
-                return value.equalsAny("ACCEPTED", "REJECTED");
+                return value.equalsAny("ACCEPTED", "REJECTED", "CANCELLED");
+            }
+
+            if (currentStatus === "DRAFT") {
+                return value.equalsAny("DRAFT", "CANCELLED");
             }
 
             return false;
