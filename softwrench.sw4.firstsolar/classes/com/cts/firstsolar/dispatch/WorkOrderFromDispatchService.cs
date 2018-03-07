@@ -91,7 +91,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dispatch {
             foreach (var invData in invDatas) {
                 var dict = new Dictionary<string, string>();
                 dict.Add("ASSETNUM", invData.GetStringAttribute("assetnum"));
-                dict.Add("DESCRIPTION_LONGDESCRIPTION", GenerateLongDescription(dispatchData, invData));
+                dict.Add("ld_.ldtext", GenerateLongDescription(dispatchData, invData));
                 var id = invData.GetUnMappedAttribute("id");
 
                 dict.Add("WOEQ10", id);
