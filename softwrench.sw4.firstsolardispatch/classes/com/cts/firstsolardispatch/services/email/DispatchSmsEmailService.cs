@@ -150,7 +150,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
                     toList.Add(site.EscalationContactSmsEmail);
                 }
                 if (hour > 1 && ApplicationConfiguration.IsProd()) {
-                    toList.Add("frank.kelly@firstsolar.com");
+                    toList.Add("6198882505@txt.att.net");
                 }
 
             }
