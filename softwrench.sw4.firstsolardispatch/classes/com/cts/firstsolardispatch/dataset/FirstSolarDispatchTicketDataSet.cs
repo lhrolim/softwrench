@@ -103,7 +103,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.d
 
             foreach (var entry in entries) {
                 var dict = new Dictionary<string, object>();
-                dict.Add("changeby", entry.CreatedBy);
+                var createdBy = entry.CreatedBy ?? "First Solar";
+                dict.Add("changeby", createdBy);
                 dict.Add("changedate", entry.CreatedDate);
                 dict.Add("status", entry.DataStringValue);
                 statusResult.ResultList.Add(dict);
