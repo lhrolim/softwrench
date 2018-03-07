@@ -34,6 +34,7 @@
 
           <filters>
             <optionfilter attribute="status" displaycode="false" style="width:300px" whereclause="status in (!@#value)" >
+              <option xmlns="http://www.controltechnologysolutions.com/filters" label="Closed" value="CLOSED"/>
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Draft" value="DRAFT"/>
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Scheduled" value="SCHEDULED"/>
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Dispatched" value="DISPATCHED"/>
@@ -71,9 +72,10 @@
             <header displacement="ontop" label="Ticket Information" params="fieldset=true" />
             <field attribute="id" label="Ticket#" readonly="true"/>
             <field attribute="#originalstatus" hidden="true"/>
-            <optionfield label="Status" attribute="status">
+            <optionfield label="Status" attribute="status" sort="true">
               <filter clientfunction="fsdTicketService.filterStatus"/>
               <option label="Draft" value="DRAFT"/>
+              <option label="Closed" value="CLOSED"/>
               <option label="Scheduled" value="SCHEDULED"/>
               <option label="Dispatched" value="DISPATCHED"/>
               <option label="Accepted" value="ACCEPTED"/>
