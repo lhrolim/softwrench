@@ -1180,7 +1180,7 @@
           <section orientation="horizontal" >
             <section>
               <header displacement="ontop" label="Customer" params="fieldset=true" />
-              <field attribute="location_.facilityname" label="" />
+              <field attribute="#location_.facilityname" label="" default="Power Electronics" />
             </section>
 
             <section>
@@ -1199,6 +1199,7 @@
                 <renderer type="datetime" />
               </field>
               <field attribute="description" label="Short Description" />
+              <field attribute="wolo1" label="Warranty Claim Number" />
             </section>
             <section>
               <header displacement="ontop" label="Asset Details" params="fieldset=true" />
