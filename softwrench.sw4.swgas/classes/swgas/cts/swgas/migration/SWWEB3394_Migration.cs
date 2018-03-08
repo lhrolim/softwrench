@@ -53,8 +53,6 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.migration {
             Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate','NV','Corp - Bldg A')");
             Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate','NV','Corp - Bldg B')");
             Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate','NV','Corp - Bldg C')");
-            Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate','NV','Apt #1079 Noble Park')");
-            Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate','NV','Apt #1103 Noble Park')");
             Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate-Hangar','NV','Hanger')");
             Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate-Mesa Vista','NV','Mesa Vista')");
             Execute.Sql("Insert into SWG_DIVISION (division,city,state,building) values ('CORP','Corporate-Westwood','NV','Westwood')");

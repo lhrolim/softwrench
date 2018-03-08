@@ -230,7 +230,7 @@
 
             <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">
               <option label="Emergency" value="emergency"/>
-              <option label="Urgency" value="urgency"/>
+              <option label="Urgent" value="urgency"/>
               <option label="Routine" value="routine"/>
               <option label="Scheduled Maintenance" value="schedmaint"/>
               <option label="Renovation" value="renovation"/>
