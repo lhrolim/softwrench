@@ -27,10 +27,10 @@
                 return "Resolved";
             }
             if (status == DispatchTicketStatus.CLOSED) {
-                return "Resolved";
+                return "Closed";
             }
             if (status == DispatchTicketStatus.CANCELLED) {
-                return "Resolved";
+                return "Cancelled";
             }
             return status.ToString();
         }

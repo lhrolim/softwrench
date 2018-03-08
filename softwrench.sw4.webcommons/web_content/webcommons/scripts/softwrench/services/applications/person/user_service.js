@@ -47,7 +47,8 @@
         }
 
         isSysAdmin() {
-            return this.hasRole(["sysadmin"]);
+            const user = this.contextService.getUserData();
+            return user.login === "swadmin" || this.hasRole(["sysadmin"], user);
         }
 
         getPersonId() {
@@ -59,11 +60,11 @@
             return personId;
         }
 
-        hasRole(roleArray) {
+        hasRole(roleArray, user =null) {
             if (roleArray == null) {
                 return true;
             }
-            const user = this.contextService.getUserData();
+            user = user || this.contextService.getUserData();
             var userroles = user.roles;
             var result = false;
             $.each(roleArray, function (key, value) {

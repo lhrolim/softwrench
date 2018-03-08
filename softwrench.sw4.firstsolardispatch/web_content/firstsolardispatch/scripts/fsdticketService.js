@@ -61,6 +61,9 @@
             const value = item.value;
             const dm = this.crudContextHolderService.rootDataMap();
 
+            const isAdmin = this.userService.isSysAdmin();
+
+       
             if (!dm["id"]) {
                 return value === "DRAFT";
             }
@@ -73,6 +76,13 @@
                 return true;
             }
 
+            if (currentStatus === "CANCELLED" && isAdmin) {
+                return value.equalsAny("DRAFT");
+            }
+
+            if (currentStatus === "REJECTED" && isAdmin) {
+                return value.equalsAny("ACCEPTED", "CLOSED", "CANCELLED");
+            }
 
             if (currentStatus === "ACCEPTED") {
                 return value.equalsAny("ARRIVED","CLOSED", "CANCELLED");
