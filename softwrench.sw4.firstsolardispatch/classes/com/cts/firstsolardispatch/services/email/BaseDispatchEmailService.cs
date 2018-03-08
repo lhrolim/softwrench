@@ -43,7 +43,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
             emailService.SendEmailAsync(emailData, async success => {
                 ticket.LastSent = DateTime.Now;
                 if (DispatchTicketStatus.SCHEDULED.Equals(ticket.Status)) {
-                    ticket.Status = DispatchTicketStatus.SCHEDULED;
+                    ticket.Status = DispatchTicketStatus.DISPATCHED;
                 }
                 AfterSend(emailData);
                 await dao.SaveAsync(ticket);
