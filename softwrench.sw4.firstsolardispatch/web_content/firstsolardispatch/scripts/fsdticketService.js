@@ -69,6 +69,11 @@
                 return true;
             }
 
+            if (value === "CANCELLED") {
+                return true;
+            }
+
+
             if (currentStatus === "ACCEPTED") {
                 return value.equalsAny("ARRIVED","CLOSED", "CANCELLED");
             }
