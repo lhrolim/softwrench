@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using cts.commons.persistence;
@@ -11,10 +12,15 @@ using softWrench.sW4.Util;
 using cts.commons.portable.Util;
 using System.Threading.Tasks;
 using softwrench.sw4.api.classes.email;
+using softwrench.sW4.audit.Interfaces;
 using softWrench.sW4.Email;
 
 namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.services.email {
     public abstract class BaseDispatchEmailService : BaseDispatchGenericEmailService {
+
+        [Import]
+        public IAuditManager AuditManager { get; set; }
+
         protected List<object> BuildInverterInfo(DispatchTicket ticket) {
             return ticket.Inverters?.Select(BuildInverterInfo).ToList() ?? new List<object>();
         }
@@ -44,6 +50,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
                 ticket.LastSent = DateTime.Now;
                 if (DispatchTicketStatus.SCHEDULED.Equals(ticket.Status)) {
                     ticket.Status = DispatchTicketStatus.DISPATCHED;
+                    AuditManager.CreateAuditEntry("dispatcher_status", "_dispatchticket", ticket.Id.ToString(), ticket.Id.ToString(), ticket.Status.LabelName(), DateTime.Now);
                 }
                 AfterSend(emailData);
                 await dao.SaveAsync(ticket);

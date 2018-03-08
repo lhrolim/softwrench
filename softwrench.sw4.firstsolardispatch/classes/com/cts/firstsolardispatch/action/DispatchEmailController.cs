@@ -87,7 +87,11 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
 
         private async Task<AcceptedEmailRequestModel> BuildAcceptedModel(DispatchTicket ticket) {
             var hmacKey = await ConfigurationFacade.LookupAsync<string>(ConfigurationConstants.HashKey);
-            var hashKey = AuthUtils.HmacShaEncode(ticket.Id.ToString(), Encoding.ASCII.GetBytes(hmacKey));
+            var hashKey = "";
+            if (hmacKey != null) {
+                hashKey = AuthUtils.HmacShaEncode(ticket.Id.ToString(), Encoding.ASCII.GetBytes(hmacKey));
+            }
+
             var serverurl = await ConfigurationFacade.LookupAsync<string>(FirstSolarDispatchConfigurations.ProductionFsiisEndpoint);
             var gfedSite = await DAO.FindSingleByQueryAsync<GfedSite>(GfedSite.FromGFedId, ticket.GfedId);
             ticket.SiteId = gfedSite.SiteId;
@@ -105,7 +109,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.a
     public class EmailRequestModel : ABaseLayoutModel {
         public int? Id { get; set; }
         public string Status { get; set; }
-        
+
         public override string ClientName {
             get { return "firstsolardispatch"; }
             set { }
