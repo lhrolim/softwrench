@@ -30,6 +30,7 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.s
                     StatusException(old, newone, " It is not possible to reject a ticket after four hours after dispatched.");
                 }
             }
+            if (newone == CANCELLED || newone == CLOSED) return;
             if (old == ACCEPTED && newone == ARRIVED) return;
             if (old == ARRIVED && newone == RESOLVED) return;
             StatusException(old, newone);

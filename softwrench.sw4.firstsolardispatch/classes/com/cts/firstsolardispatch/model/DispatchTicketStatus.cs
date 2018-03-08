@@ -1,6 +1,6 @@
 ﻿namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.model {
     public enum DispatchTicketStatus {
-        DRAFT, SCHEDULED, DISPATCHED, ACCEPTED, REJECTED, ARRIVED, RESOLVED
+        DRAFT, SCHEDULED, DISPATCHED, ACCEPTED, REJECTED, ARRIVED, RESOLVED, CLOSED, CANCELLED
     }
 
     public static class DispatchTicketStatusExtensions {
@@ -24,6 +24,12 @@
                 return "Arrived";
             }
             if (status == DispatchTicketStatus.RESOLVED) {
+                return "Resolved";
+            }
+            if (status == DispatchTicketStatus.CLOSED) {
+                return "Resolved";
+            }
+            if (status == DispatchTicketStatus.CANCELLED) {
                 return "Resolved";
             }
             return status.ToString();
