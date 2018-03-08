@@ -260,9 +260,7 @@
             <optionfield attribute="locationb" label="Location/Bldg" providerattribute="#locbuilding" enableexpression="@city!=null" skipvalidation="true" requiredexpression="true" helpicon="right" tooltip="Please select the location where the work is being requested."/>
           </section>
 
-
-
-
+          <section resourcepath="/Content/Customers/swgas/htmls/templates/submitbutton.html"/>
 
 
           <event type="onschemafullyloaded" service="swgasNoLoginSubmitService" method="loadOptionFields"/>

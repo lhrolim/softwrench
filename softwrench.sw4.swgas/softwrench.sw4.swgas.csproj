@@ -132,6 +132,7 @@
   <ItemGroup>
     <Content Include="metadata\swgas\readme.txt" />
     <Content Include="web_content\swgas\htmls\SubmitSuccess.html" />
+    <Content Include="web_content\swgas\htmls\templates\submitbutton.html" />
     <Content Include="web_content\swgas\images\header-email.jpg" />
     <Content Include="web_content\swgas\images\logo-byline.png" />
     <Content Include="web_content\swgas\images\logo-main.png" />

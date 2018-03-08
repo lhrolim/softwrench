@@ -223,12 +223,12 @@
                     "printService", "compositionService", "commandService", "fieldService", "i18NService",
                     "associationService", "expressionService", "styleService", "tabsService", "focusService",
                     "cmpfacade", "cmpComboDropdown", "redirectService", "validationService", "contextService", "eventService", "formatService", "modalService", "dispatcherService",
-                    "layoutservice", "attachmentService", "richTextService",
+                    "layoutservice", "attachmentService", "richTextService", "submitService",
                     function ($q, $scope, $http, $rootScope, $element, $injector, $timeout, $log, alertService,
                         printService, compositionService, commandService, fieldService, i18NService,
                         associationService, expressionService, styleService, tabsService, focusService,
                         cmpfacade, cmpComboDropdown, redirectService, validationService, contextService, eventService, formatService, modalService, dispatcherService,
-                        layoutservice, attachmentService, richTextService) {
+                        layoutservice, attachmentService, richTextService, submitService) {
 
                         $scope.$name = 'crud_input_fields';
                         $scope.lookupObj = {};
@@ -275,6 +275,11 @@
                             //                            $scope.associationOptions = associationoptions;
                             //                        }
                         });
+
+                        $scope.save = function () {
+                            const schemaToSave = $scope.schema;
+                            return submitService.submit(schemaToSave, $scope.datamap, {});
+                        };
 
                         //$scope.$on("sw.modal.hide", function () {
 
