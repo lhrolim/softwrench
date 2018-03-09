@@ -107,6 +107,11 @@
               <field attribute="freadonly" label="Read Only">
                 <renderer type="checkbox"/>
               </field>
+
+              <field attribute="fcheckontop" label="Label On Top">
+                <renderer type="checkbox"/>
+              </field>
+              
               <field attribute="fmaxlength" label="Max Length">
                 <renderer type="numericinput" />
               </field>

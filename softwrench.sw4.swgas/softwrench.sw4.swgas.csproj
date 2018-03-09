@@ -138,6 +138,7 @@
     <Content Include="web_content\swgas\images\logo-main.png" />
     <Content Include="web_content\swgas\scripts\aaa_swgmodule.js" />
     <Content Include="web_content\swgas\scripts\swgasNoLoginSubmitService.js" />
+    <Content Include="web_content\swgas\scripts\swgasSubmitController.js" />
     <Content Include="web_content\swgas\scripts\swgasRequestController.js" />
   </ItemGroup>
   <ItemGroup>

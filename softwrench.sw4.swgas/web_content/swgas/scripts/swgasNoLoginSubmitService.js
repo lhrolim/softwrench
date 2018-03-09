@@ -51,6 +51,6 @@
 
     swgasNoLoginSubmitService.$inject = ["submitService", "crudContextHolderService", "restService", "spinService"];
 
-    angular.module("swgas").clientfactory("swgasNoLoginSubmitService", swgasNoLoginSubmitService);
+    angular.module("sw_layout").service("swgasNoLoginSubmitService", swgasNoLoginSubmitService);
 
 })(angular);

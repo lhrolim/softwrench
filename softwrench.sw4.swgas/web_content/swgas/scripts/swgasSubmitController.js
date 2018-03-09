@@ -6,15 +6,16 @@
 
         $scope.userid = () => JSON.parse(homeModel.ResultDataJSON).resultObject;
 
-        $scope.submit = ()=> {
+        $scope.submit= () =>  {
             swgasNoLoginSubmitService.submit();
         }
     }
 
-   
+
+
 
     swgasRequestController.$inject = ["$scope", "swgasNoLoginSubmitService"];
 
-    angular.module("sw_layout").controller("SwgasRequestController", swgasRequestController);
+    angular.module("sw_layout").controller("swgasSubmitCtrl", swgasRequestController);
 
 })(angular);
