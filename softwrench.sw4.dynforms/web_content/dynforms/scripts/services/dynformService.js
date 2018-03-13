@@ -258,6 +258,7 @@
 
             rendererParameters["labelposition"] = modalData.flabelposition;
 
+
             if (fieldType === "OptionField") {
                 rendererType = modalData["ofrenderer"];
                 if (rendererType === "checkbox") {
@@ -265,6 +266,10 @@
                 }
 
             }
+
+            rendererParameters["font-weight"] = modalData["fbold"] ? "bolder" : null;
+            rendererParameters["font-style"] = modalData["fitalic"] ? "italic" : null;
+            rendererParameters["text-decoration"] = modalData["funderline"] ? "underline" : null;
 
             rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
             rendererParameters["color"] = modalData.fcolor || "black";
@@ -344,7 +349,9 @@
 
             convertedDatamap.ffontsize = fontSize;
             convertedDatamap.fcolor = fieldMetadata.rendererParameters["color"] || "black";
-
+            convertedDatamap.fbold = fieldMetadata.rendererParameters["font-weight"];
+            convertedDatamap.fitalic = fieldMetadata.rendererParameters["font-style"];
+            convertedDatamap.funderline = fieldMetadata.rendererParameters["text-decoration"];
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
                 return that.modalService.showPromise(schema,

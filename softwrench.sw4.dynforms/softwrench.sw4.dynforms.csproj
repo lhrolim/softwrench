@@ -192,11 +192,13 @@
     <Content Include="metadata\dynforms\swdb\formmetadata.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="web_content\dynforms\htmls\bolditalicunderline.html" />
     <Content Include="web_content\dynforms\htmls\checklisttablerowbuilder.html" />
     <Content Include="web_content\dynforms\htmls\metadataoptionsspreadsheet.html" />
     <Content Include="web_content\dynforms\htmls\dynformdetailblank.html" />
     <Content Include="web_content\dynforms\htmls\dynformdetaileditbar.html" />
     <Content Include="web_content\dynforms\scripts\aaa_dynformsmodule.js" />
+    <Content Include="web_content\dynforms\scripts\controller\bolditalicunderlinecontroller.js" />
     <Content Include="web_content\dynforms\scripts\directives\dynformeditbar.js" />
     <Content Include="web_content\dynforms\scripts\checklistrowbuildercontroller.js" />
     <Content Include="web_content\dynforms\scripts\metadataspreedsheetcontroller.js" />

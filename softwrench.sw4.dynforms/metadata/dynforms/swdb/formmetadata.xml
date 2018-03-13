@@ -160,6 +160,7 @@
               <field attribute="ffontsize" label="Font Size" default="13">
                 <renderer type="numericinput" params="min=8;max=50"/>
               </field>
+              <section resourcepath="/Content/Shared/dynforms/htmls/bolditalicunderline.html" />
               <field attribute="fcolor" label="Font Color" >
                 <renderer type="color" />
               </field>

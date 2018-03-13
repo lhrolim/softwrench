@@ -656,10 +656,14 @@
                         $scope.getLabelStyle = function (fieldMetadata) {
                             const rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
                             const weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');
+                            const fstyle = styleService.getLabelStyle(fieldMetadata, 'font-style');
+                            const textdecoration = styleService.getLabelStyle(fieldMetadata, 'text-decoration');
                             const size = styleService.getLabelStyle(fieldMetadata, 'font-size');
                             const result = {
                                 'color': rendererColor,
                                 'font-weight': weight,
+                                'font-style': fstyle,
+                                'text-decoration': textdecoration,
                                 'font-size': size
                             };
                             return result;
