@@ -108,9 +108,11 @@
                 <renderer type="checkbox"/>
               </field>
 
-              <field attribute="fcheckontop" label="Label On Top">
-                <renderer type="checkbox"/>
-              </field>
+              <optionfield attribute="flabelposition" label="Label Position" default="top">
+                <option label="Top" value="top"/>
+                <option label="Left" value="left"/>
+<!--                <option label="Right" value="right"/>-->
+              </optionfield>
               
               <field attribute="fmaxlength" label="Max Length">
                 <renderer type="numericinput" />

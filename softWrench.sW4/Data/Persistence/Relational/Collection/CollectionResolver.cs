@@ -95,7 +95,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
             return results;
         }
 
-        private InternalCollectionResolverParameter BuildInternalParameter(CollectionResolverParameters parameters, EntityAssociation collectionAssociation, IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> results) {
+        private InternalCollectionResolverParameter BuildInternalParameter(CollectionResolverParameters parameters, EntityAssociation collectionAssociation, ConcurrentDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> results) {
             var ctx = ContextLookuper.LookupContext();
             var compositionRowstamps = parameters.RowstampMap ?? new Dictionary<string, long?>();
             long? rowstamp = null;
@@ -166,7 +166,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                         throw;
                     }
                     Log.Error(e.Message, e);
-                    parameter.Results.Add(collectionAssociation.Qualifier, new EntityRepository.EntityRepository.SearchEntityResult { ResultList = new List<Dictionary<string, object>>(), Timeout = true });
+                    parameter.Results.TryAdd(collectionAssociation.Qualifier, new EntityRepository.EntityRepository.SearchEntityResult { ResultList = new List<Dictionary<string, object>>(), Timeout = true });
                     return;
                 }
 
@@ -212,7 +212,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
             if (offLineMode) {
                 //If on offline mode, we don´t need to match the collections back, we´ll simply return the plain list
-                parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
+                parameter.Results.TryAdd(collectionAssociation.Qualifier, queryResult);
                 return;
             }
 
@@ -225,7 +225,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
                     list.AddRange(queryResult.ResultList);
                 }
 
-                parameter.Results.Add(collectionAssociation.Qualifier, queryResult);
+                parameter.Results.TryAdd(collectionAssociation.Qualifier, queryResult);
                 return;
             }
             MatchResults(queryResult, matchingResultWrapper, targetCollectionAttribute);

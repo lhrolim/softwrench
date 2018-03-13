@@ -21,7 +21,7 @@
                       rel="input-form-repeat"
                       bodyrendered>
 
-                <span>
+                <span ng-class="getLabelSpanClass(fieldMetadata)">
                     <label class="control-label"
                            rel="{{showLabelTooltip(fieldMetadata)}}" ng-class="getLabelClass(fieldMetadata)"
                            data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"

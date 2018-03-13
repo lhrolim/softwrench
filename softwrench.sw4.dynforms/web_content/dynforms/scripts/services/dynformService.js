@@ -65,9 +65,15 @@
                     return;
                 }
                 const fields = schemaService.allNonHiddenDisplayables(dm, cs);
-                const lastField = fields[fields.length - 1];
+                let lastField = fields[fields.length - 1];
+
                 const showPosition = fields.length > 1;
-              
+
+                if (lastField.role === "_FormDatamap." && showPosition) {
+                    //fixing a bug where the empty form section is located at the last field
+                    lastField = fields[fields.length - 2];
+                }
+
                 that.addDisplayable(lastField, 'down', showPosition).then(r => {
                     $rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
                 });
@@ -197,7 +203,7 @@
 
                 return that.doAddDisplayable(currentField, savedData, direction);
             }).then(resultDisplayable => {
-                if (resultDisplayable.type === "OptionField" ) {
+                if (resultDisplayable.type === "OptionField") {
                     return that.updateEagerAssociationOptions(resultDisplayable);
                 }
             });
@@ -249,6 +255,8 @@
             if (!modalData.fcheckontop && rendererType === "checkbox") {
                 rendererParameters["layout"] = "left";
             }
+
+            rendererParameters["labelposition"] = modalData.flabelposition;
 
             if (fieldType === "OptionField") {
                 rendererType = modalData["ofrenderer"];
@@ -328,6 +336,10 @@
                 if (fontSize.endsWith("px")) {
                     fontSize = fontSize.substring(0, fontSize.length - 2);
                 }
+            }
+
+            if (fieldMetadata.rendererParameters["labelposition"]) {
+                convertedDatamap.flabelposition = fieldMetadata.rendererParameters["labelposition"];
             }
 
             convertedDatamap.ffontsize = fontSize;

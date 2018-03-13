@@ -2,7 +2,7 @@
 (function (angular) {
     'use strict';
 
-    function layoutservice($log,fieldService) {
+    function layoutservice($log, fieldService, dynFormService) {
       
 
         function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
@@ -113,6 +113,12 @@
         };
 
         function hasLabelOnTop(fieldMetadata) {
+            fieldMetadata.rendererParameters = fieldMetadata.rendererParameters || {};
+            const onTop =  fieldMetadata.rendererParameters["labelposition"];
+            if (onTop && onTop !== "top") {
+                return false;
+            }
+
             return fieldMetadata.rendererType !== "label" && !(fieldMetadata.rendererType === "checkbox" && !!fieldMetadata.rendererParameters["layout"]);
         }
 
@@ -216,10 +222,28 @@
                 return cssclass;
             }
 
-            cssclass += ' col-xs-12';
+            fieldMetadata.rendererParameters = fieldMetadata.rendererParameters || {};
+
+            const onTop = fieldMetadata.rendererParameters["labelposition"];
+            if (!onTop || onTop === "top") {
+                cssclass += ' col-xs-12';
+            } else {
+                cssclass += dynFormService.isPreviewMode() ? "col-xs-11" : "col-xs-10";
+            }
 
             return cssclass;
         };
+
+        function getLabelSpanClass(fieldMetadata) {
+            if (!fieldMetadata.rendererParameters) {
+                return null;
+            }
+            const onTop = fieldMetadata.rendererParameters["labelposition"];
+            if (!onTop || onTop === "top") {
+                return null;
+            }
+            return dynFormService.isPreviewMode() ? "col-xs-1" : "col-xs-2";
+        }
 
         function getLabelClass (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
@@ -252,7 +276,7 @@
             returnClass += 'col-xs-12';
 
             //fix SWWEB-732, blank lable adding extra space
-            if (returnClass == 'col-xs-12' && fieldMetadata.label === null) {
+            if (returnClass === 'col-xs-12' && fieldMetadata.label === null) {
                 returnClass = cssclass + ' ' + returnClass + ' ng-hide';
             }
 
@@ -284,6 +308,7 @@
             getInputClass,
             getLabelClass,
             hasSameLineLabel,
+            getLabelSpanClass,
             getCheckboxLabelLeftClass,
             getCheckboxLabelRightClass
         };
@@ -293,6 +318,6 @@
 
     angular
       .module('sw_layout')
-      .service('layoutservice', ['$log', "fieldService", layoutservice]);
+        .service('layoutservice', ['$log', "fieldService", "dynFormService", layoutservice]);
 
 })(angular);

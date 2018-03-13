@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Security.Context;
 using softwrench.sW4.Shared2.Data;
@@ -20,7 +21,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.Collection {
 
         public ContextHolder Ctx { get; internal set; }
 
-        internal IDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> Results { get; set; }
+        internal ConcurrentDictionary<string, EntityRepository.EntityRepository.SearchEntityResult> Results { get; set; }
         public long? Rowstamp { get; set; }
 
 

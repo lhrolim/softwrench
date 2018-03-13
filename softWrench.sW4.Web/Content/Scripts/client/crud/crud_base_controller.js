@@ -292,6 +292,10 @@
             return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
 
+        $scope.getLabelSpanClass = function(fieldMetadata) {
+            return layoutservice.getLabelSpanClass(fieldMetadata)
+        }
+
         $scope.getInputClass = function (fieldMetadata) {
             return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
