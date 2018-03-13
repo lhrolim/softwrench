@@ -22,13 +22,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
                 ActionID = taskId,
                 ActionLogSummary = jsonObject.GetUnMappedAttribute("#tasksummary")
             };
+            var fail = jsonObject.ContainsAttribute("#selectedAction") && "FAIL".EqualsIc(jsonObject.GetAttribute("#selectedAction") as string);
+
             var ownergroup = jsonObject.GetUnMappedAttribute("activityownergroup");
             var sequence = jsonObject.GetUnMappedAttribute("activitysequence");
-            activity.FlexFields = ArrayUtil.PushRange(activity.FlexFields, BuildFlexFields(ownergroup, sequence));
+            activity.FlexFields = ArrayUtil.PushRange(activity.FlexFields, BuildFlexFields(ownergroup, sequence, !fail));
             serviceIncident.Activity = ArrayUtil.Push(serviceIncident.Activity, activity);
 
-            if (jsonObject.ContainsAttribute("#selectedAction") &&
-                "FAIL".EqualsIc(jsonObject.GetAttribute("#selectedAction") as string)) {
+            if (fail) {
                 serviceIncident.Activity = PushExtraActivitiesForFailure(serviceIncident.Activity, jsonObject);
                 var user = SecurityFacade.CurrentUser();
                 var wlActivity = new Activity {
@@ -53,7 +54,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
         private Activity[] PushExtraActivitiesForFailure(Activity[] serviceIncidentActivity, CrudOperationData jsonObject) {
             var activity = new Activity {
                 type = "WOActivity",
-                ActionID = jsonObject.GetUnMappedAttribute("WoActivityId"),
                 ActionLogSummary = "Check Customer Input"
             };
             var sequence = int.Parse(jsonObject.GetUnMappedAttribute("activitysequence"));
@@ -83,7 +83,6 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
             activity = new Activity {
                 type = "WOActivity",
-                ActionID = jsonObject.GetUnMappedAttribute("WoActivityId"),
                 ActionLogSummary = jsonObject.GetUnMappedAttribute("#tasksummary")
             };
 
@@ -110,12 +109,14 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Imac {
 
         }
 
-        private static List<FlexFieldsFlexField> BuildFlexFields(string ownergroup, string sequence) {
+        private static List<FlexFieldsFlexField> BuildFlexFields(string ownergroup, string sequence, bool completed) {
+            var statusVal = completed ? "COMP" : "FAIL";
+
             var flexFields = new List<FlexFieldsFlexField>();
             flexFields.Add(new FlexFieldsFlexField {
                 id = "0",
                 mappedTo = "STATUS",
-                Value = "COMP",
+                Value = statusVal,
             });
             //
             flexFields.Add(new FlexFieldsFlexField {

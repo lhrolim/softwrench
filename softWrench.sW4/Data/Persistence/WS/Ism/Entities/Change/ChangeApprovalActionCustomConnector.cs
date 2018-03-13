@@ -61,14 +61,32 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
                 LogDateTime = DateTime.Now
             };
 
+            worklogList.Add(changeLog);
+
             if (!approved) {
                 var reason = jsonObject.GetAttribute("#reasonreject") as string;
-                changeLog.FlexFields = new[]{
+
+                //                R0033
+                //                correct implemented, but: didnt realised that the Approval and Reject worklogs are not displayed at ServiceIT
+                //                    Please create a seperate Worklog entry with Summary:
+                //                Reject Reason for group YYY
+                //                Type: REASON REJECTING
+                var changeLog2 = new ChangeLog {
+                    Log = "Reject Reason for group " + groupName,
+                    ActionID = actionid,
+                    UserID = ISMConstants.AddEmailIfNeeded(user.MaximoPersonId),
+                    LogDateTimeSpecified = true,
+                    LogDateTime = DateTime.Now
+                };
+                
+                changeLog2.FlexFields = new[]{
                     new FlexFieldsFlexField { mappedTo = "WLLongDesc", id = "0",Value = reason }
                 };
+
+                worklogList.Add(changeLog2);
             }
 
-            worklogList.Add(changeLog);
+
             changeRequest.ChangeLog = ArrayUtil.PushRange(changeRequest.ChangeLog, worklogList);
         }
     }
