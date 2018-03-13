@@ -76,12 +76,13 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
                     ActionID = actionid,
                     UserID = ISMConstants.AddEmailIfNeeded(user.MaximoPersonId),
                     LogDateTimeSpecified = true,
-                    LogDateTime = DateTime.Now
+                    LogDateTime = DateTime.Now,
+                    FlexFields = new[]
+                    {
+                        new FlexFieldsFlexField {mappedTo = "WLLongDesc", id = "0", Value = reason}
+                    }
                 };
-                
-                changeLog2.FlexFields = new[]{
-                    new FlexFieldsFlexField { mappedTo = "WLLongDesc", id = "0",Value = reason }
-                };
+
 
                 worklogList.Add(changeLog2);
             }
