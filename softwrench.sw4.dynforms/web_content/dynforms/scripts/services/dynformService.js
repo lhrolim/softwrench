@@ -257,6 +257,8 @@
             }
 
             rendererParameters["labelposition"] = modalData.flabelposition;
+            rendererParameters["maxlength"] = modalData.fmaxlength;
+            rendererParameters["padding-left"] = modalData.fpaddingleft;
 
 
             if (fieldType === "OptionField") {
@@ -343,6 +345,9 @@
                 }
             }
 
+            convertedDatamap.fmaxlength = fieldMetadata.rendererParameters["maxlength"];
+            
+
             if (fieldMetadata.rendererParameters["labelposition"]) {
                 convertedDatamap.flabelposition = fieldMetadata.rendererParameters["labelposition"];
             }
@@ -352,6 +357,7 @@
             convertedDatamap.fbold = fieldMetadata.rendererParameters["font-weight"];
             convertedDatamap.fitalic = fieldMetadata.rendererParameters["font-style"];
             convertedDatamap.funderline = fieldMetadata.rendererParameters["text-decoration"];
+            convertedDatamap["fpaddingleft"] = fieldMetadata.rendererParameters["padding-left"];
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
                 return that.modalService.showPromise(schema,
