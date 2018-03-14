@@ -43,7 +43,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.connector {
                 var nowServer = DateTime.Now.FromServerToRightKind();
                 WsUtil.SetValue(root, "SCHEDSTART", nowServer);
 
-                AssignmentHandler.CreateNewAssignmentForToday(root, nowServer);
+//                AssignmentHandler.CreateNewAssignmentForToday(root, nowServer);
             }
         }
 

@@ -13,6 +13,11 @@ namespace softWrench.sW4.Metadata.Applications.Association {
 
         protected bool FullSatisfied(IDependableField dependableField, AttributeHolder originalEntity) {
             //TODO: rethink of this implementation
+            if (dependableField == null) {
+                //TODO: investigate, shouldn´t happen
+                return true;
+            }
+
             var dependantFields = dependableField.DependantFields;
             if (dependantFields.Count == 0) {
                 return true;

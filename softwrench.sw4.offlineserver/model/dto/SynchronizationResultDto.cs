@@ -26,17 +26,21 @@ namespace softwrench.sw4.offlineserver.model.dto {
         public bool FacilitiesUpdated { get; set; }
 
         public void AddTopApplicationData(SynchronizationApplicationResultData newResultData) {
-            if (TopApplicationData == null) {
-                TopApplicationData = new List<SynchronizationApplicationResultData>();
+            lock (string.Intern("lock:addtopdata")) {
+                if (TopApplicationData == null) {
+                    TopApplicationData = new List<SynchronizationApplicationResultData>();
+                }
+                TopApplicationData.Add(newResultData);
             }
-            TopApplicationData.Add(newResultData);
         }
 
         public void AddCompositionData(SynchronizationApplicationResultData newResultData) {
-            if (CompositionData == null) {
-                CompositionData = new List<SynchronizationApplicationResultData>();
+            lock (string.Intern("lock:addcompdata")) {
+                if (CompositionData == null) {
+                    CompositionData = new List<SynchronizationApplicationResultData>();
+                }
+                CompositionData.Add(newResultData);
             }
-            CompositionData.Add(newResultData);
         }
 
         public bool IsEmpty {
