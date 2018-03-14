@@ -42,7 +42,7 @@
             return 'fa-square-o';
         }
 
-        $scope.secondaryContent = function(fieldMetadata,schema) {
+        $scope.secondaryContent = function (fieldMetadata, schema) {
             return !!fieldMetadata.secondaryContent && schema.properties["detail.disablesecondarycontent"] !== "true";
         }
 
@@ -292,7 +292,7 @@
             return layoutservice.getLabelClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
 
-        $scope.getLabelSpanClass = function(fieldMetadata) {
+        $scope.getLabelSpanClass = function (fieldMetadata) {
             return layoutservice.getLabelSpanClass(fieldMetadata)
         }
 
@@ -315,6 +315,14 @@
 
         $scope.isCheckboxItemReadOnlyField = function (fieldMetadata, option, datamap) {
             return $scope.isReadOnlyField(fieldMetadata, datamap) || $scope.isReadOnlyField(option, datamap);
+        }
+
+        $scope.fieldSetStyle = function (fieldMetadata) {
+            if (fieldMetadata.rendererParameters["padding-left"]) {
+                return {
+                    "padding-left": fieldMetadata.rendererParameters["padding-left"] + "px"
+                }
+            }
         }
 
         $scope.isStaticReadOnlyField = function (fieldMetadata, datamap) {
@@ -359,7 +367,7 @@
             }
             var header = fieldMetadata.header;
             if (!header) {
-                return !legendEvaluationMode && fieldMetadata.type !=="ApplicationSection";
+                return !legendEvaluationMode && fieldMetadata.type !== "ApplicationSection";
             }
             var isVisible = expressionService.evaluate(header.showExpression, $scope.datamap);
             var isFieldSet = header.parameters != null && "true" === header.parameters['fieldset'];

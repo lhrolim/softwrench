@@ -1,4 +1,4 @@
-﻿<span style="padding-left: 10px;" ng-show="!isPreviewMode()">
+﻿<span style="padding-left: 10px;" ng-show="!isPreviewMode()" ng-mouseup="finishidentation()">
     <icon class="fa fa-edit" rel="tooltip"
           ng-if="shouldShowIcon('edit')"
           ng-click="edit()"
@@ -31,8 +31,20 @@
 
     <input type="checkbox" ng-show="isEditingSection()" ng-click="toggleSectionSelection()" ng-checked="isChecked(fieldMetadata)"/>
     
+    <icon class="fa fa-chevron-circle-left" rel="tooltip" data-html="true"
+          ng-if="shouldShowIcon('addright')"
+          ng-mousedown="addidentation('left')"
+          data-original-title="ident left" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
+    
+    <icon class="fa fa-chevron-circle-right" rel="tooltip" data-html="true"
+          ng-if="shouldShowIcon('addright')"
+          ng-mousedown="addidentation('right')"
+          data-original-title="ident right" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
+    
     <label class="control-label" ng-show="fieldMetadata.role != '.'">
         (Field Attribute: {{fieldMetadata.role}})
     </label>
+    
+  
 
 </span>

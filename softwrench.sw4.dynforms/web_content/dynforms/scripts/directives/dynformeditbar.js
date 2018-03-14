@@ -2,8 +2,9 @@
     'use strict';
 
 
-    function dynFormDetailEditBarController($scope, crudContextHolderService, schemaService, modalService, schemaCacheService, fieldService, alertService, dynFormService) {
+    function dynFormDetailEditBarController($scope,$interval, crudContextHolderService, schemaService, modalService, schemaCacheService, fieldService, alertService, dynFormService) {
 
+        let mouseHoldPromise = null;
 
         $scope.isPreviewMode = function() {
             return dynFormService.isPreviewMode();
@@ -60,11 +61,48 @@
 //            console.log("ok");
         }
 
+        $scope.addidentation = function (direction) {
+
+            if (mouseHoldPromise) {
+                $interval.cancel(mouseHoldPromise);
+            }
+
+            let delta = 5;
+            if (direction === "left") {
+                delta = -1 * delta;
+            }
+            $scope.fieldMetadata.rendererParameters = $scope.fieldMetadata.rendererParameters || {};
+            var padding = $scope.fieldMetadata.rendererParameters["padding-left"];
+            if (!padding) {
+                padding = 15;
+            }
+
+            const adjust = function() {
+                console.log(" adjusting padding " + delta);
+                padding += delta;
+                if (padding >= 15) {
+                    $scope.fieldMetadata.rendererParameters["padding-left"] = padding;
+                }
+                
+            }
+            adjust();
+
+            mouseHoldPromise = $interval(adjust, 100);
+            
+
+        }
+
+        $scope.finishidentation = function () {
+            $interval.cancel(mouseHoldPromise);
+            mouseHoldPromise = null;
+
+        }
+
 
     }
 
 
-    dynFormDetailEditBarController.$inject = ['$scope', "crudContextHolderService", "schemaService", "modalService", "schemaCacheService", "fieldService", "alertService","dynFormService"];
+    dynFormDetailEditBarController.$inject = ['$scope','$interval', "crudContextHolderService", "schemaService", "modalService", "schemaCacheService", "fieldService", "alertService","dynFormService"];
 
     angular.module("dynforms").controller('dynformDetailEditBarSharedCtrl', dynFormDetailEditBarController);
 
