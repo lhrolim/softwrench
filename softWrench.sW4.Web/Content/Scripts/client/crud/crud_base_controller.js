@@ -318,7 +318,7 @@
         }
 
         $scope.fieldSetStyle = function (fieldMetadata) {
-            if (fieldMetadata.rendererParameters["padding-left"]) {
+            if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["padding-left"]) {
                 return {
                     "padding-left": fieldMetadata.rendererParameters["padding-left"] + "px"
                 }

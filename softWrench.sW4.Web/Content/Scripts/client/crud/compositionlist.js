@@ -38,6 +38,7 @@
         }
 
         $scope.filterApplied = function () {
+            $scope.paginationData = $scope.paginationData || {};
             $scope.paginationData.pageNumber = 1;
             const searchDTO = searchService.buildSearchDTO($scope.searchData, $scope.searchSort, $scope.searchOperator, null, $scope.paginationData);
             compositionService.searchCompositionList($scope.relationship, $scope.parentschema, $scope.parentdata, searchDTO).then(

@@ -6,6 +6,11 @@
     function detailService($log, $q, $timeout, $rootScope, associationService, eventService, compositionService, fieldService, schemaService, contextService, crudContextHolderService) {
 
         function isEditDetail(schema, datamap) {
+            if (schema.applicationName === "_configuration" && schema.stereotype.equalsIc("detail")) {
+                //TODO: fix this workaround, improving the overall logic, but this was causing the configuration screen to behave badly
+                return true;
+            }
+
             return (fieldService.getId(datamap, schema) != undefined && "output" !== schema.mode);
         };
 
