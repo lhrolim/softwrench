@@ -59,8 +59,8 @@
 
   <environment key="prod">
     <property key="basewsURL" value="http://10.2.8.239:9080/meaweb/wsdl/" />
-    <property key="maximo_DB_url" value="Data Source=EDR1SQL01V304\MAXIMO_120_V304;Initial Catalog=MaxProd;User Id=zService_softwrench;password=v2Arh6NEd;" />
-    <property key="swdb_url" value="Data Source=EDR1SQL01V304\MAXIMO_120_V304;Initial Catalog=SWDB_MaxProd;User Id=zService_softwrench;password=v2Arh6NEd;" />
+    <property key="maximo_DB_url" value="Data Source=EDR1SQL01V304\MAXIMO_120_V304;Initial Catalog=MaxProd;User Id=zService_softwrench;password=v2Arh6NEd;MultipleActiveResultSets=True" />
+    <property key="swdb_url" value="Data Source=EDR1SQL01V304\MAXIMO_120_V304;Initial Catalog=SWDB_MaxProd;User Id=zService_softwrench;password=v2Arh6NEd;MultipleActiveResultSets=True" />
     <property key="ldapServer" value="10.1.20.101"/>
     <property key="ldapPortNumber" value="389"/>
     <property key="ldapBaseDn" value="OU=Users,OU=NorthAmerica,DC=FS,DC=LOCAL"/>
