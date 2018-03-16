@@ -112,7 +112,7 @@
         //#region Public methods
 
         function hasDataToSync() {
-            return dao.countByQuery("DataEntry", "isDirty=1 and pending=0").then(count => count > 0);
+            return dao.countByQuery("DataEntry", "(isDirty=1 or hasProblem=1) and pending=0").then(count => count > 0);
         }
 
         /**
@@ -197,6 +197,10 @@
         }
 
         function handleError(error) {
+            if (error==null){
+                return;
+            }
+
             var message = "";
             let requestSupportReport = true;
             let notifyException = true;
@@ -315,6 +319,10 @@
                                         return $q.all(httpPromises);
                                     })
                                     .then(downloadResults => {
+                                        if (angular.isArray(downloadResults[1])){
+                                            downloadResults = downloadResults[1];
+                                        }
+
                                         log.debug("Batch returned synchronously --> performing download");
                                         var dataCount = getDownloadDataCount(downloadResults[1]);
                                         return synchronizationOperationService.createSynchronousBatchOperation(start, clientOperationId, dataCount, batchResults);

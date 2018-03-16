@@ -59,6 +59,11 @@
 
             extraWhereClause = extraWhereClause || "1=1";
 
+            $log.get("menumodelService#buildListQuery",["menu","grid"]).debug("building menu query for item {0}".format(menuId));
+            if (menuId === "PRWO" || menuId === "CWO"){
+                //TODO: make this more generic
+                return "`root`.application like '%workorder%' and ({1}) and ({2}) ".format(appName, menuWc, extraWhereClause);    
+            }
             //appending root prefix, since a left join could be present leading to ambiguity amongst columns
             return "`root`.application = '{0}' and ({1}) and ({2}) ".format(appName, menuWc, extraWhereClause);
         }

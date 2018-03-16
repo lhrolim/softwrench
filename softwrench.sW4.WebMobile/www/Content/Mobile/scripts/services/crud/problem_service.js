@@ -19,7 +19,8 @@
             if (quickSyncItem && quickSyncItem.hasProblem) {
                 // forces the promise chain to stop and avoid 
                 // overriding a problem item with its previous state in case of an update
-                return $q.reject("It was not possible to sync.");
+                //rejecting with a null to avoid throwing an extra error to the client
+                return $q.reject(null);
             }
             return $q.when(null);
         }

@@ -256,6 +256,11 @@
             return `assignment_.dateindex01 >= ${todayTime} and assignment_.dateindex01 < ${tomorrowTime} and assignment_.textindex02 = '${laborcode}'`;
         }
 
+        
+        getProblematicWosWhereClause(){
+            return "`root`.hasProblem = 1";
+        }
+
         getBaseWhereClause() {
             const laborcode = this.laborCode();
             return `assignment_.textindex02 = '${laborcode}'`;

@@ -1286,6 +1286,8 @@
           </properties>
         </list>
 
+        <schema id="listgeneral" parentschema="list" stereotype="list"/>
+
         <schema id="basedetail" title="Work Order" abstract="true" stereotype="detail" platform="mobile">
           <reference id="detailhiddensoffline"/>
           <!--          <field attribute="failurelistonly_.failurelist" hidden="true"></field>-->

@@ -25,7 +25,8 @@
     <application id="UWO" title="Unassigned" ref="otherworkorderunassigned" schema="list" icon="fa-table" parameters="offlinegridtitle=Unassigned"/>
   </container>
 
-  <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=Created Work Orders"/>
+  <application id="CWO" title="Created" ref="workorder" schema="listgeneral" icon="fa-plus" parameters="offlinemenuwc=fsWorkorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=Created Work Orders"/>
+  <application id="PRWO" title="Problems" ref="workorder" schema="listgeneral" icon="fa-warning" parameters="offlinemenuwc=fsWorkorderOfflineService.getProblematicWosWhereClause;offlinegridtitle=Work Orders With Problems"/>
 
 
   <container id="timesheets" title="Time Sheets" icon="fa-clock-o" >

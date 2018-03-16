@@ -24,10 +24,12 @@
                     crudContextService.refreshGrid();
                 }).catch(function (error) {
                     synchronizationFacade.handleError(error);
+                    return false;
                 }).then(r => {
+                    const message = r=== false ? "Sync Failed" : "Sync Successful";
                     $ionicPopup.alert({
                         title: "Quick Sync",
-                        template: alertService.buildCenteredTemplate("Sync Successful")
+                        template: alertService.buildCenteredTemplate(message)
                     });
                 }).finally(() => {
                     loadingService.hide();
@@ -42,6 +44,7 @@
                     .then(res => res ? crudContextService.refreshGrid() : null)
                     .finally(() => {
                         $scope.$emit("sw_griditemoperationperformed");
+                        menuModelService.updateAppsCount();
                     });
             };
 
