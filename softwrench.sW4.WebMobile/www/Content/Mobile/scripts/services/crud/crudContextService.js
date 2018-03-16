@@ -63,6 +63,20 @@
                     return crudContextHolderService.currentTitle();
                 },
 
+                itemTitle: function(item){
+                    const currentTitle = this.currentTitle();
+                    if (!item || !item.datamap){
+                        return currentTitle;
+                    }
+                    const ctx = this.getCrudContext();
+                    const currentApp = ctx.currentApplication;
+                    if (!currentApp){
+                        return currentTitle;
+                    }
+                    const userIdFieldName = currentApp.data.userIdFieldName;
+                    return currentTitle + " " + item.datamap[userIdFieldName];
+                },
+
                 currentApplicationName: function () {
                     return crudContextHolderService.currentApplicationName();
                 },

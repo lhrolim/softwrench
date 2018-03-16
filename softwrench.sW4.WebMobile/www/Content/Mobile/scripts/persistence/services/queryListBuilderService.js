@@ -106,6 +106,9 @@
          * @returns {} 
          */
         function buildJoinParameters(listSchema) {
+            if (listSchema.applicationName === "otherworkorderunassigned"){
+                return {};
+            }
 
 
             const joinedfields = listSchema.displayables.filter(a => a.attribute.startsWith("#") && a.attribute.contains(".")).map(a => a.attribute);

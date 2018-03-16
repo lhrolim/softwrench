@@ -486,7 +486,7 @@
           <field label="Start Date" attribute="startdate" default="@now" requiredexpression="true">
             <renderer type="datetime" params="format=MM/dd/yyyy HH:mm;showtime=true;allowfuture=false" />
           </field>
-          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="1">
+          <field attribute="regularhrs" label="Regular Hours" requiredexpression="true" default="0.01">
             <event type="afterchange" service="laborService" method="updateLineCost"/>
             <renderer type="numericinput" params="min=0.01;step=0.01;numberType=double;formatter=doubletotime"/>
           </field>

@@ -6,7 +6,9 @@
 
 
             $scope.quicksync = function () {
-                const item = crudContextService.getCrudContext().currentPopOverItem;
+                const ctx = crudContextService.getCrudContext();
+                const item = ctx.currentPopOverItem;
+                const currentTitle = crudContextService.itemTitle(item);
                 if (!item.isDirty) {
                     return;
                 }
@@ -26,7 +28,8 @@
                     synchronizationFacade.handleError(error);
                     return false;
                 }).then(r => {
-                    const message = r=== false ? "Sync Failed" : "Sync Successful";
+                    var i = item;
+                    const message = r=== false ? "Sync Failed" : "{0} Synced Successfully".format(currentTitle);
                     $ionicPopup.alert({
                         title: "Quick Sync",
                         template: alertService.buildCenteredTemplate(message)

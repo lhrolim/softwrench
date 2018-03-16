@@ -1862,7 +1862,7 @@
         <property key="application.maindetailschema" value="detail"/>
         <property key="application.maindetailnewschema" value="newdetail"/>
         <property key="list.offline.text.indexlist" value="wonum,wopriority,description,location"/>
-        <property key="list.offline.date.indexlist" value="schedstartnotime"/>
+        <property key="list.offline.date.indexlist" value="schedstartnotime,schedstart"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
         <property key="attachments.skiprelatedattachments" value="true"/>
         <property key="application.securitytitle" value="Unassigned Work Orders"/>
@@ -1874,6 +1874,7 @@
         <schema id="list" platform="mobile" redeclaring="false">
           <properties>
             <property key="application.originalschema" value="list"/>
+            <property key="list.defaultorderby" value="schedstart is null asc, schedstart desc, wopriority"/>
           </properties>
         </schema>
 
