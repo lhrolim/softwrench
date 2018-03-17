@@ -63,6 +63,44 @@ namespace softwrench.sW4.Shared2.Util {
             return resultingDisplayables;
         }
 
+        public static IApplicationDisplayable GetDisplayableByKey(string key, IEnumerable<IApplicationDisplayable> originalDisplayables, SchemaFetchMode schemaFetchMode = SchemaFetchMode.All) {
+            if (key == null) {
+                return null;
+            }
+
+            foreach (IApplicationDisplayable displayable in originalDisplayables) {
+
+                if (displayable.Role.Equals(key)) {
+                    return displayable;
+                }
+
+                if (displayable is IApplicationIndentifiedDisplayable && key.EqualsIc(((IApplicationIndentifiedDisplayable)displayable).Attribute)) {
+                    return displayable;
+                }
+
+
+                if (displayable is IApplicationDisplayableContainer &&
+                        SchemaFetchMode.FirstLevelOnly != schemaFetchMode) {
+                    var container = displayable as IApplicationDisplayableContainer;
+                    var section = container as ApplicationSection;
+                    var isSecondarySection = section != null && section.SecondaryContent;
+                    if (isSecondarySection && SchemaFetchMode.MainContent.Equals(schemaFetchMode)) {
+                        //under some circustances we might not be interested in returning the secondary content displayables
+                        continue;
+                    }
+
+                    var result = GetDisplayableByKey(key, container.Displayables, schemaFetchMode);
+                    if (result != null) {
+                        return result;
+                    }
+
+                }
+            }
+            return null;
+        }
+
+
+
         public static List<IApplicationDisplayable> PerformReferenceReplacement(IEnumerable<IApplicationDisplayable> displayables, ApplicationSchemaDefinition schema,
             ApplicationSchemaDefinition.LazyComponentDisplayableResolver componentDisplayableResolver, IEnumerable<DisplayableComponent> components = null) {
 

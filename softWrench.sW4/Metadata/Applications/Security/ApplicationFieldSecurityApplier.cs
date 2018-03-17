@@ -86,7 +86,7 @@ namespace softWrench.sW4.Metadata.Applications.Security {
             foreach (var field in displayables) {
                 if (field is ApplicationTabDefinition) {
                     //tabs change the ApplicationContainer
-                    var tab = (ApplicationTabDefinition)field;
+                    var tab = ((ApplicationTabDefinition)field).Clone();
                     var tabPermission = permissions.FirstOrDefault(p => p.ContainerKey.EqualsIc(tab.TabId));
                     tab.Displayables = new List<IApplicationDisplayable>(GetAllowedFields(applicationPermission,
                         fieldsToRetain, tab.Displayables, compositionPermissions, permissions, tab.TabId));

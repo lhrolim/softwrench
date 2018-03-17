@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema.Interfaces;
 using softwrench.sw4.Shared2.Metadata.Applications.Schema.Interfaces;
+using softwrench.sW4.Shared2.Metadata.Applications.Relationships.Compositions;
 
 namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
     public class ApplicationTabDefinition : IApplicationIndentifiedDisplayable, IApplicationIdentifier, IApplicationDisplayableContainer {
@@ -28,7 +29,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         private string _role;
 
         public ApplicationTabDefinition(string id, string applicationName, string label, List<IApplicationDisplayable> displayables, string toolTip,
-            string showExpression,string enableExpression, string icon, string role, string countRelathionship, bool lazy) {
+            string showExpression, string enableExpression, string icon, string role, string countRelathionship, bool lazy) {
             Id = id;
             ApplicationName = applicationName;
             Label = label;
@@ -43,16 +44,9 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
         }
 
 
-        public string RendererType {
-            get {
-                return null;
-            }
-        }
-        public string Type {
-            get {
-                return typeof(ApplicationTabDefinition).Name;
-            }
-        }
+        public string RendererType => null;
+
+        public string Type => typeof(ApplicationTabDefinition).Name;
 
         public string Role {
             get {
@@ -87,11 +81,7 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             set {
             }
         }
-        public string TabId {
-            get {
-                return Id;
-            }
-        }
+        public string TabId => Id;
 
         public string CountRelationship {
             get; set;
@@ -113,5 +103,16 @@ namespace softwrench.sw4.Shared2.Metadata.Applications.UI {
             set {
             }
         }
+
+        public override string ToString() {
+            return TabId;
+        }
+
+        public ApplicationTabDefinition Clone() {
+            var cloned = new ApplicationTabDefinition(Id,ApplicationName,Label,Displayables,ToolTip,ShowExpression,EnableExpression,Icon,Role,CountRelationship,Lazy);
+            return cloned;
+
+        }
+
     }
 }

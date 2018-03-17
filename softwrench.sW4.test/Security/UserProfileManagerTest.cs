@@ -53,8 +53,6 @@ namespace softwrench.sW4.test.Security {
             Assert.IsTrue(woPermission.AllowUpdate);
             Assert.IsFalse(woPermission.AllowCreation);
 
-
-
         }
     }
 }

@@ -138,7 +138,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// Schema to be consumed for Detailed List Printing.
         /// </summary>
         public string PrintDetailedListSchemaId { get; set; }
-        
+
         /// <summary>
         /// Schema to be consumed for List Printing.
         /// </summary>
@@ -148,7 +148,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         /// Schema to be consumed for Detail Printing.
         /// </summary>
         public string PrintDetailSchemaId { get; set; }
-     
+
         public ApplicationCommandSchema CommandSchema {
             get; set;
         }
@@ -517,7 +517,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
 
         private IEnumerable<int> GetCompositionIdx(bool inline) {
             var list = new List<int>();
-            for (var i = 0; i < Displayables.Count; i++) {
+            for (var i = 0;i < Displayables.Count;i++) {
                 var displayable = Displayables[i];
                 if (displayable is ApplicationCompositionDefinition &&
                     ((ApplicationCompositionDefinition)displayable).Inline == inline) {
@@ -696,5 +696,8 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         [JsonIgnore]
         public DBType DbType => IsSwDbApplication ? DBType.Swdb : DBType.Maximo;
 
+        public IApplicationDisplayable LocateFieldByKey(string key) {
+            return DisplayableUtil.GetDisplayableByKey(key, Displayables);
+        }
     }
 }
