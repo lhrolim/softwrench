@@ -16,7 +16,7 @@
 
                 controller: ["$scope", function ($scope) {
                     // workaround
-                    if ($scope.fieldMetadata && $scope.fieldMetadata.schema && !$scope.fieldMetadata.rendererParameters) {
+                    if ($scope.fieldMetadata && $scope.fieldMetadata.schema) {
                         $scope.fieldMetadata.rendererParameters = $scope.fieldMetadata.schema.rendererParameters;
                     }
 
