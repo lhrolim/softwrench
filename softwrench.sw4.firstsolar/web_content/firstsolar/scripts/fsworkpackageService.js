@@ -401,6 +401,7 @@
                 Object.keys(resultWo).forEach(k => {
                     currentDatamap["#workorder_." + k] = resultWo[k];
                 });
+                currentDatamap["wooutreq"] = resultWo["outreq"];
                 const wonum = resultWo["wonum"];
                 currentDatamap["wpnum"] = wonum && wonum.startsWith("NA") ? "WP" + wonum.substring(2) : wonum;
             });
