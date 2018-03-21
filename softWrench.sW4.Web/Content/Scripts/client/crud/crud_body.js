@@ -152,6 +152,8 @@
 
                     if (!$scope.datamap[$scope.schema.idFieldName]) {
                         //avoiding initing tab spinners whenever there´s no id available. Ex: Clone operation.
+                        // https://controltechnologysolutions.atlassian.net/browse/SWWEB-3439
+                        $scope.allTabsLoaded(event, firstTabId);
                         return;
                     }
 
