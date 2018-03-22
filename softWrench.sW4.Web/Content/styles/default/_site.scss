@@ -383,6 +383,16 @@ fieldset {
     cursor: initial !important;
 }
 
+.dynformtreeinput-delete {
+    position: relative;
+    top: -13px;
+    right: 14px;
+    font-size: 10px;
+    cursor:pointer;
+    color: gray;
+    cursor: pointer !important;
+}
+
 .optionfieldheader {
     padding-bottom: 10px;
     padding-left: 10px;

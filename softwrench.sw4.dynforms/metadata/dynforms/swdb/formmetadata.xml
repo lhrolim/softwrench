@@ -89,14 +89,15 @@
             <option label="Options" value="OptionField"/>
             <option label="Section" value="ApplicationSection"/>
             <option label="Checklist Table" value="checklisttable"/>
+            <option label="Numbered List" value="numberedlist"/>
             <event type="afterchange" service="dynFormService" method="afterChangeType" />
           </optionfield>
 
           <section showexpression="@fieldtype !== 'pleaseselect'">
-            <field attribute="flabel" label="Label" requiredexpression="true">
+            <field attribute="flabel" label="Field Text" requiredexpression="true">
               <event type="blur" service="dynFormService" method="labelInput"/>
             </field>
-            <field attribute="fattribute" label="Attribute" requiredexpression="true" helpicon="right" tooltip="Used to identifiy uniquely this field at the database. No spaces allowed"/>
+            <field attribute="fattribute" label="Field (Database Name)" requiredexpression="true" helpicon="right" tooltip="Used to identifiy uniquely this field at the database. No spaces allowed"/>
           </section>
 
           <section showexpression="@fieldtype == 'ApplicationFieldDefinition'">
@@ -153,6 +154,24 @@
           </section>
 
 
+          <section showexpression="@fieldtype == 'numberedlist'">
+            <header label="Advanced" params="fieldset=true" displacement="ontop"/>
+            <field attribute="startIndex" label="Start Index" defaultexpression="1"  helpicon="right" tooltip="Specify at which index should the numbered list begin. Useful when there are multiple lists on the screen and one should continue from a certain point">
+              <renderer type="numericinput" params="inputsize=small"/>
+            </field>
+            <optionfield attribute="treeTemplate" label="Template">
+              <option label="Basic Checklist (default)" value="checklist"/>
+              <option label="Input Checklist" value="inputchecklist"/>
+            </optionfield>
+            <optionfield attribute="extraHeaderStyle" label="Extra Header" helpicon="right" tooltip="if true an extra header line will be placed before the list start. It can be fully customized" default="none">
+              <option label="None" value="none"/>
+              <option label="Label" value="label"/>
+              <option label="Input" value="input"/>
+            </optionfield>
+            <field attribute="extraHeaderLabel" label="Extra Header Label" showexpression="@extraHeaderStyle !== 'none'"/>
+
+          </section>
+
 
           <section showexpression="@fieldtype !== 'pleaseselect'">
             <header label="Style" params="fieldset=true" displacement="ontop"/>
@@ -175,6 +194,7 @@
             <section resourcepath="/Content/Shared/dynforms/htmls/checklisttablerowbuilder.html"/>
           </section>
 
+       
           
           
 

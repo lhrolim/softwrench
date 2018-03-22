@@ -48,10 +48,8 @@
   </tree>
 
   <tree attribute="task2" label="Task 2 – Array Inspection (25% per week)" listtype="number" startindex="3">
-    <field attribute="notearraylabel" defaultexpression="'Note Array(s) inspected:'">
-      <renderer type="label"/>
-    </field>
-    <field attribute="notearray" label=""/>
+    <field attribute="notearraylabel" label="Note Array(s) inspected:"/>
+<!--    <field attribute="notearray" label=""/>-->
     <node attribute="verify" label="VERIFY the following:" listtype="letterdot">
       <node attribute="freeofdebris" label="General area is clean and free of debris."/>
       <node attribute="combinergood" label="Combiner box is in good condition."/>
@@ -157,6 +155,7 @@
       <node attribute="h2o" label="H2O/Moisture">
         <field attribute="h2ovalue" label=""/>
       </node>
+      
       <node attribute="h2" label="H2">
         <field attribute="h2value" label=""/>
       </node>
