@@ -67,7 +67,7 @@
 
 
 
-    function LayoutController($scope, $http, $log, $templateCache, $q, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService, crudContextHolderService) {
+    function LayoutController($scope, $http, $log, $templateCache, $q, $rootScope, $timeout, fixHeaderService, redirectService, i18NService, menuService, contextService, spinService, schemaCacheService, logoutService, crudContextHolderService, schemaService) {
 
         $scope.$name = 'LayoutController';
         schemaCacheService.wipeSchemaCacheIfNeeded();
@@ -174,6 +174,51 @@
         //#endregion
 
 
+
+        var rectangleselectiondiv = document.getElementById('rectangleselectiondiv'), x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+
+        function reCalc() {
+            const x3 = Math.min(x1, x2);
+            const x4 = Math.max(x1, x2);
+            const y3 = Math.min(y1, y2);
+            const y4 = Math.max(y1, y2);
+            rectangleselectiondiv.style.left = x3 + 'px';
+            rectangleselectiondiv.style.top = y3 + 'px';
+            rectangleselectiondiv.style.width = x4 - x3 + 'px';
+            rectangleselectiondiv.style.height = y4 - y3 + 'px';
+        }
+
+        $scope.mousedown = function (e) {
+            if (!schemaService.isPropertyTrue(crudContextHolderService.currentSchema(), "dynforms.editionallowed")) {
+                //only on dynamic form edition we shall allow this for now
+                return;
+            }
+
+            rectangleselectiondiv.hidden = 0;
+            x1 = e.clientX;
+            y1 = e.clientY;
+            reCalc();
+        }
+
+        $scope.mouseup = function (e) {
+            rectangleselectiondiv.hidden = 1;
+            const points = {
+                x1,
+                x2,
+                y1,
+                y2
+            }
+            $rootScope.$broadcast("sw_rectangleselection_finished", points);
+            x1 = 0, y1 = 0, x2 = 0, y2 = 0;
+        }
+
+        $scope.mousemove = function (e) {
+            x2 = e.clientX;
+            y2 = e.clientY;
+            reCalc();
+        }
+
+
         $scope.AjaxResult = function (result) {
             const log = $log.getInstance('layoutcontroller#AjaxResult', ["redirect","navigation","route"]);
             const newUrl = url(result.redirectURL);
@@ -242,6 +287,6 @@
         initController();
     }
 
-    app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$q", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService", "crudContextHolderService", LayoutController]);
+    app.controller("LayoutController", ["$scope", "$http", "$log", "$templateCache", "$q", "$rootScope", "$timeout", "fixHeaderService", "redirectService", "i18NService", "menuService", "contextService", "spinService", "schemaCacheService", "logoutService", "crudContextHolderService","schemaService", LayoutController]);
 
 })(angular);

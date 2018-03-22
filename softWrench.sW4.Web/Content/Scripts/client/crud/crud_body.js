@@ -476,7 +476,6 @@
                 };
 
 
-
                 // adds a padding right to not be behind side panels handles
                 $scope.sidePanelStyle = function () {
                     const style = {};

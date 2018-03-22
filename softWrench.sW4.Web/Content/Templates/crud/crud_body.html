@@ -1,22 +1,22 @@
 <div>
-    <section class="container hiddenonprint" ng-if="isList" >
+    
+    <section class="container hiddenonprint" ng-if="isList">
         <crud-list datamap="datamap"
                    schema="schema"
                    is-list="isList"
                    extraparameters="extraparameters"
                    ismodal="{{ismodal}}"
-                   timestamp="{{timestamp}}"
-                   />
+                   timestamp="{{timestamp}}" />
     </section>
 
     <div id="affixpagination" class="hiddenonprint toolbar-primary" ng-class="{'affix-pagination' : ismodal !== 'true' }" ng-if="ismodal !== 'true'">
         <div class="context clearfix header-menu" ng-if="showTopToolbar()" ng-class="schema.stereotypeAttr" ng-init="showdirbutons = showdirectionButtons()">
             <div class="row tool-row main-commands">
                 <div class="left">
-                    <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'commandbar.top','detail.primary')}}" schema="schema" class="detail-primary"/>
-                    <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema" class="detail-secondary"/>
+                    <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'commandbar.top','detail.primary')}}" schema="schema" class="detail-primary" />
+                    <crudbodydetailtoolbar datamap="datamap" position="{{getPosition(schema,'toolbar.detail.secondary','detail.secondary')}}" schema="schema" class="detail-secondary" />
                     <div class="separator large-button" ng-if="ismodal !== 'true'" ng-show="showActionSeparator(getPosition(schema,'toolbar.detail.actions','actions'))">&nbsp;</div>
-                    <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema"/>
+                    <crudbodydetailtoolbar datamap="datamap" mode="'input'" position="{{getPosition(schema,'toolbar.detail.actions','actions')}}" schema="schema" />
                 </div>
                 <div class="right large-button" ng-show="ismodal !== 'true' && showdirbutons">
                     <div class="group pagination">
@@ -28,7 +28,7 @@
             </div>
         </div>
     </div>
-    <form id="crudbodyform" 
+    <form id="crudbodyform"
           name="crudbodyform"
           class="form-horizontal clearfix"
           data-application="{{schema.applicationName}}"
@@ -36,7 +36,8 @@
           data-modal="{{ismodal}}"
           method="post"
           enctype="multipart/form-data"
-          ng-if="isDetail">
+          ng-if="isDetail"
+          >
 
         <div ng-init="setForm(crudbodyform)" />
 
@@ -50,9 +51,9 @@
 
         <div class="hiddenonprint detail-body">
             <!--Adding this div, just to dispatch the tabsrendered event, making the framework consistent for the 0 tab scenario-->
-            <div ng-if="!hasTabs(schema)" tabsrendered/>
+            <div ng-if="!hasTabs(schema)" tabsrendered />
 
-            
+
 
             <div class="detail-header clearfix" ng-if="hasTabs(schema)" ng-style="sidePanelStyle()">
                 <ul class="nav nav-tabs compositiondetailtab hapag-composition">
@@ -79,8 +80,7 @@
                 <div class="tab-pane" ng-class="{'active': hasAnyFieldOnMainTab(schema)}" id="{{getMainTabId()}}">
                     <ng-switch on="isInputMode() ">
                         <div ng-switch-when="true">
-                            <crud-input-wrapper
-                                                panelid="{{panelid}}"
+                            <crud-input-wrapper panelid="{{panelid}}"
                                                 ismodal="{{ismodal}}"
                                                 extraparameters="extraparameters"
                                                 elementid="crudInputMainComposition"
@@ -91,19 +91,19 @@
                                                 displayables="schema.displayables"
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
-                                                previousschema="previousschema" 
+                                                previousschema="previousschema"
                                                 parentdata="parentdata"
                                                 previousdata="previousdata"
-                                                is-main-tab='true' tabid="main"/>
+                                                is-main-tab='true' tabid="main" />
 
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap"
                                                  displayables="schema.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" 
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema"
                                                  parentdata="parentdata"
-                                                 previousdata="previousdata" is-main-tab='true' tabid="main"/>
+                                                 previousdata="previousdata" is-main-tab='true' tabid="main" />
                         </div>
                     </ng-switch>
                 </div>
@@ -117,12 +117,12 @@
                                                       metadata="tab"
                                                       mode="{{schema.mode}}"
                                                       tabid="{{tab.tabId}}"
-                                                      ismodal="{{ismodal}}"/>
+                                                      ismodal="{{ismodal}}" />
                         </div>
                         <div ng-switch-when="false">
                         </div>
                     </div>
-                    
+
                     <div class="tab-pane" ng-switch-when="ApplicationTabDefinition" ng-switch on="schema.mode.equalsAny('input', 'none')">
                         <div ng-switch-when="true">
                             <crud-input-wrapper ismodal="{{ismodal}}"
@@ -133,13 +133,13 @@
                                                 blockedassociations="blockedassociations"
                                                 cancelfn="cancel(data,schema)"
                                                 savefn="save(selecteditem, parameters)"
-                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
+                                                previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                         </div>
                         <div ng-switch-when="false">
                             <crud-output-wrapper extraparameters="extraparameters"
                                                  schema="schema" datamap="datamap"
                                                  displayables="tab.displayables"
-                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}"/>
+                                                 cancelfn="cancel(data,schema)" previousschema="previousschema" previousdata="previousdata" tabid="{{tab.tabId}}" />
                         </div>
                     </div>
                 </div>
@@ -153,7 +153,7 @@
         <print-modal schema="schema" datamap="datamap" />
     </div>
     <div ng-if="schema != null && (!ismodal || ismodal !== 'true')">
-        <print-section schema="schema" datamap="datamap"/>
+        <print-section schema="schema" datamap="datamap" />
     </div>
 
     <!--

@@ -223,9 +223,39 @@
               <field attribute="ffontsize" label="Font Size" default="13">
                 <renderer type="numericinput" params="min=8;max=50"/>
               </field>
+              <field attribute="fontKeep" label="Keep Original" tooltip="if checked this value won´t be applied to the bulk update" helpicon="right">
+                <renderer type="checkbox"/>
+              </field>
+            </section>
+
+            <section orientation="horizontal">
               <section resourcepath="/Content/Shared/dynforms/htmls/bolditalicunderline.html" />
+              <field attribute="boldKeep" label="Keep Original" tooltip="if checked this value won´t be applied to the bulk update" helpicon="right">
+                <renderer type="checkbox"/>
+              </field>
+            </section>
+
+            <section orientation="horizontal">
+
               <field attribute="fcolor" label="Font Color" >
                 <renderer type="color" />
+              </field>
+              <field attribute="colorKeep" label="Keep Original" tooltip="if checked this value won´t be applied to the bulk update" helpicon="right">
+                <renderer type="checkbox"/>
+              </field>
+            </section>
+
+
+            <section orientation="horizontal">
+              <field attribute="padding" label="Move (px)" >
+                <renderer type="numericinput" />
+              </field>
+              <optionfield attribute="movedirection" label="" default="right">
+                <option label="Left" value="left"/>
+                <option label="Right" value="right"/>
+              </optionfield>
+              <field attribute="paddingKeep" label="Keep Original" tooltip="if checked this value won´t be applied to the bulk update" helpicon="right" default="true">
+                <renderer type="checkbox"/>
               </field>
             </section>
           </section>

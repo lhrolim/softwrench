@@ -1,4 +1,4 @@
-﻿<span style="padding-left: 10px;" ng-show="!isPreviewMode()" ng-mouseup="finishidentation()">
+﻿<span style="padding-left: 10px;" ng-show="!isPreviewMode()" ng-mouseup="finishidentation()" data-role="{{fieldMetadata.role}}" data-class="dynformbar">
     <icon class="fa fa-edit" rel="tooltip"
           ng-if="shouldShowIcon('edit')"
           ng-click="edit()"

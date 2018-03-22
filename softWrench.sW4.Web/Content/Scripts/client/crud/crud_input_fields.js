@@ -750,6 +750,9 @@
                             return $scope.expandeddetails[key];
                         }
 
+
+                 
+
                         $scope.isOnDynFormEdition = function () {
                             return $scope.schema.properties["dynforms.editionallowed"] === "true" && contextService.get("dynform_previewmode",false,true) !== true;
                         }

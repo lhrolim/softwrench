@@ -56,6 +56,38 @@
                 restoreData();
             });
 
+            var that = this;
+            this.$rootScope.$on("sw_rectangleselection_finished", (event, points) => {
+                var elements = [];
+                const arr = $("[data-class='dynformbar']").toArray();
+                const { x1, x2, y1, y2 } = points;
+                arr.forEach((t) => {
+                    const $this = $(t);
+                    const offset = $this.offset();
+                    const x = offset.left;
+                    const y = offset.top;
+                    const w = $this.width();
+                    const h = $this.height();
+
+                    if (x >= x1
+                        && y >= y1
+                        && x + w <= x2
+                        && y + h <= y2) {
+                        // this element fits inside the selection rectangle
+                        elements.push($this.data("role"));
+                    }
+                });
+                if (elements.length > 0) {
+                    isUpdatingMultiple = true;
+                    currentSelectedFields = [];
+                    elements.forEach(el => {
+                        that.toggleSectionSelection(el);
+                    });
+                }
+
+                
+            });
+
             this.$rootScope.$on(JavascriptEventConstants.ApplicationRedirected, () => {
                 restoreData();
             });
@@ -182,7 +214,7 @@
             const schema = this.crudContextHolderService.currentSchema();
             const rootDm = this.crudContextHolderService.rootDataMap();
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
-                let dm = {}
+                const dm = {};
                 if (showposition) {
                     dm['showposition'] = showposition;
                     dm['refposition'] = 'down';
@@ -215,8 +247,24 @@
             });
         }
 
-        toggleSectionSelection(fieldMetadata) {
-            const idx = currentSelectedFields.findIndex(f => f.role === fieldMetadata.role);
+        toggleSectionSelection(fieldMetadataOrRole) {
+
+            let role, fieldMetadata;
+
+            if (isString(fieldMetadataOrRole)) {
+                const cs = this.crudContextHolderService.currentSchema();
+                //adapting for jquery rectangle selection
+                fieldMetadata = this.fieldService.getDisplayableByKey(cs, fieldMetadataOrRole);
+                if (fieldMetadata == null) {
+                    return;
+                }
+                role = fieldMetadataOrRole;
+            } else {
+                role = fieldMetadataOrRole.role;
+                fieldMetadata = fieldMetadataOrRole;
+            }
+
+            const idx = currentSelectedFields.findIndex(f => f.role === role);
             if (idx === -1) {
                 currentSelectedFields.push(fieldMetadata);
             } else {
@@ -261,8 +309,10 @@
 
         buildDisplayable(modalData) {
 
+            let role = null;
 
             if (modalData === "ApplicationSection") {
+                //this applies to section creation
                 modalData = {
                     fattribute: null,
                     flabel: null,
@@ -270,6 +320,9 @@
                     freadonly: false,
                     fieldtype: "ApplicationSection"
                 }
+                role = "generated_" + Date.now().getTime();
+            } else {
+                role = modalData.fattribute;
             }
 
             let fieldType = modalData.fieldtype;
@@ -297,7 +350,7 @@
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
                 "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${fieldType}, softwrench.sw4.Shared2`,
                 attribute: modalData.fattribute,
-                role: modalData.fattribute,
+                role,
                 label: modalData.flabel,
                 requiredExpression: modalData.frequired ? "true" : "false",
                 isReadOnly: modalData.freadonly,
@@ -574,13 +627,29 @@
 
 
             currentSelectedFields.forEach(f => {
-                let rendererParameters = f.rendererParameters || {};
-                rendererParameters["font-weight"] = modalData["fbold"] ? "bolder" : null;
-                rendererParameters["font-style"] = modalData["fitalic"] ? "italic" : null;
-                rendererParameters["text-decoration"] = modalData["funderline"] ? "underline" : null;
+                const rendererParameters = f.rendererParameters || {};
 
-                rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
-                rendererParameters["color"] = modalData.fcolor || "black";
+                if (!modalData.boldKeep) {
+                    rendererParameters["font-weight"] = modalData["fbold"] ? "bolder" : null;
+                    rendererParameters["font-style"] = modalData["fitalic"] ? "italic" : null;
+                    rendererParameters["text-decoration"] = modalData["funderline"] ? "underline" : null;
+                }
+
+                if (!modalData.fontKeep) {
+                    rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
+                }
+
+                if (!modalData.colorKeep) {
+                    rendererParameters["color"] = modalData.fcolor || "black";
+                }
+
+                if (!modalData.paddingKeep) {
+                    const padding = modalData["padding"] * (modalData["movedirection"] === "right" ? 1 : -1);
+                    let currentPadding = rendererParameters["padding-left"] || 0;
+                    currentPadding += padding;
+                    rendererParameters["padding-left"] = currentPadding;
+                }
+                
             });
         }
 
