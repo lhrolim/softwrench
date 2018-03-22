@@ -40,6 +40,9 @@
 
 
   <commandgroup position="dynformsactions" platform="web">
+    <command id="bulkupdate" icon="fa-edit" service="dynFormService" method="startBulkUpdate" label="Bulk Update" cssclasses="large-button" tooltip="Update Multiple fields at once" showexpression="service:dynFormService.isNotUpdatingMultiple"/>
+    <command id="finshbulkupdate" icon="fa-check" service="dynFormService" method="stopBulkUpdate" label="Finish Bulk Update" cssclasses="large-button" tooltip="Update Multiple fields at once" showexpression="service:dynFormService.isUpdatingMultiple"/>
+
     <command id="save" icon="fa-plus" service="dynFormService" method="createEnclosingSection" label="Create Section" cssclasses="large-button" tooltip="Create a new enclosing section for the selected fields" showexpression="service:dynFormService.isNotEditingSection"/>
     <command id="save" icon="fa-check" service="dynFormService" method="finishSectionEdition" label="Finish Section" cssclasses="large-button" tooltip="Finishes selection of fields for the section" showexpression="service:dynFormService.isEditingSection"/>
     <togglecommand id="previewmode" initialstateexpression="false">

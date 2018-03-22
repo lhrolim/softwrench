@@ -29,7 +29,7 @@
           ng-if="shouldShowIcon('remove')"
           rel="tooltip" data-html="true" data-original-title="remove field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
 
-    <input type="checkbox" ng-show="isEditingSection()" ng-click="toggleSectionSelection()" ng-checked="isChecked(fieldMetadata)"/>
+    <input type="checkbox" ng-show="isEditingSection() || isUpdatingMultiple()" ng-click="toggleSectionSelection()" ng-checked="isChecked(fieldMetadata)"/>
     
     <icon class="fa fa-chevron-circle-left" rel="tooltip" data-html="true"
           ng-if="shouldShowIcon('addright')"

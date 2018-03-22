@@ -49,6 +49,10 @@
             return dynFormService.isEditingSection();
         }
 
+        $scope.isUpdatingMultiple= function () {
+            return dynFormService.isUpdatingMultiple();
+        }
+
         $scope.toggleSectionSelection = function() {
             dynFormService.toggleSectionSelection($scope.fieldMetadata);
         }

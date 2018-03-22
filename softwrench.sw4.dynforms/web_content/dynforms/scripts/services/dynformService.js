@@ -14,6 +14,7 @@
 
 
     let isEditingSection = false;
+    let isUpdatingMultiple = false;
     let isPreviewMode = false;
     let currentSelectedFields = [];
     let buildSectionHeader;
@@ -43,6 +44,7 @@
             function restoreData() {
                 currentSelectedFields = [];
                 isEditingSection = false;
+                isUpdatingMultiple = false;
                 isPreviewMode = false;
             }
 
@@ -424,6 +426,14 @@
             return isEditingSection;
         }
 
+        isUpdatingMultiple() {
+            return isUpdatingMultiple;
+        }
+
+        isNotUpdatingMultiple() {
+            return !isUpdatingMultiple;
+        }
+
         isNotEditingSection() {
             return !isEditingSection;
         }
@@ -540,6 +550,41 @@
         createEnclosingSection() {
             isEditingSection = true;
         }
+
+        startBulkUpdate() {
+            isUpdatingMultiple = true;
+        }
+
+        stopBulkUpdate() {
+            return this.schemaCacheService.fetchSchema("_FormMetadata", "stylebulkupdate").then(schema => {
+                return this.modalService.showPromise(schema, {}, { cssclass: 'largemodal' });
+            }).then(savedData => {
+                return this.doApplyStyleUpdate(savedData);
+            }).then((cs) => {
+                this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
+            }).finally(r => {
+                isUpdatingMultiple = false;
+                currentSelectedFields = [];
+            });
+        }
+
+        doApplyStyleUpdate(modalData) {
+            const cs = this.crudContextHolderService.currentSchema();
+            currentSelectedFields = this.fieldService.sortBySchemaIdx(cs, currentSelectedFields);
+
+
+            currentSelectedFields.forEach(f => {
+                let rendererParameters = f.rendererParameters || {};
+                rendererParameters["font-weight"] = modalData["fbold"] ? "bolder" : null;
+                rendererParameters["font-style"] = modalData["fitalic"] ? "italic" : null;
+                rendererParameters["text-decoration"] = modalData["funderline"] ? "underline" : null;
+
+                rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
+                rendererParameters["color"] = modalData.fcolor || "black";
+            });
+        }
+
+
 
         doCreateEnclosingSection(savedData) {
             const cs = this.crudContextHolderService.currentSchema();

@@ -75,7 +75,7 @@
               <option value="down" label="Bottom (of)"/>
               <option value="left" label="Left (of)"/>
               <option value="right" label="Right (of)"/>
-              
+
             </optionfield>
 
             <field attribute="reffield" label="Field"></field>
@@ -112,15 +112,15 @@
               <optionfield attribute="flabelposition" label="Label Position" default="top">
                 <option label="Top" value="top"/>
                 <option label="Left" value="left"/>
-<!--                <option label="Right" value="right"/>-->
+                <!--                <option label="Right" value="right"/>-->
               </optionfield>
-              
+
               <field attribute="fmaxlength" label="Max Length">
                 <renderer type="numericinput" />
               </field>
             </section>
           </section>
-          
+
           <section showexpression="@fieldtype == 'OptionField'">
             <optionfield attribute="fprovider" label="Provider" providerattribute="availableOptions">
               <renderer type="combo"/>
@@ -194,13 +194,13 @@
             <section resourcepath="/Content/Shared/dynforms/htmls/checklisttablerowbuilder.html"/>
           </section>
 
-       
-          
-          
+
+
+
 
 
           <event type="beforesubmit.prevalidation" service="dynFormService" method="validateEditModal"/>
-<!--          <event type="beforesubmit.postvalidation" service="dynFormService" method="applyPostValidationRules"/>-->
+          <!--          <event type="beforesubmit.postvalidation" service="dynFormService" method="applyPostValidationRules"/>-->
 
         </schema>
 
@@ -210,10 +210,25 @@
             <option label="Vertical" value="vertical"/>
             <option label="Horizontal" value="horizontal"/>
           </optionfield>
-<!--          <field attribute="freusable" label="share ?" tooltip="If true this section can be used on other forms later">-->
-<!--            <renderer type="checkbox"/>-->
-<!--          </field>-->
+          <!--          <field attribute="freusable" label="share ?" tooltip="If true this section can be used on other forms later">-->
+          <!--            <renderer type="checkbox"/>-->
+          <!--          </field>-->
           <field label="Section Id" attribute="sectionid" showexpression="@freusable === true" requiredexpression="true"/>
+        </schema>
+
+        <schema id="stylebulkupdate" stereotype="detail.noprint" title="Style Update">
+          <section showexpression="@fieldtype !== 'pleaseselect'">
+            <header label="Style" params="fieldset=true" displacement="ontop"/>
+            <section orientation="horizontal">
+              <field attribute="ffontsize" label="Font Size" default="13">
+                <renderer type="numericinput" params="min=8;max=50"/>
+              </field>
+              <section resourcepath="/Content/Shared/dynforms/htmls/bolditalicunderline.html" />
+              <field attribute="fcolor" label="Font Color" >
+                <renderer type="color" />
+              </field>
+            </section>
+          </section>
         </schema>
 
         <schema id="new" stereotype="detailnew.redirecttolist" parentschema="detail" title="Form Details">
