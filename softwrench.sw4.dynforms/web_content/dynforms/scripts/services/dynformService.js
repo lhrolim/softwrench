@@ -21,20 +21,24 @@
 
     class dynFormService {
 
-        constructor($q, $timeout, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, fieldService, alertService, schemaService, associationService, checkListTableBuilderService) {
+        constructor($q, $timeout, $rootScope, schemaCacheService, restService, modalService, redirectService, applicationService, crudContextHolderService, contextService,
+            fieldService, alertService, schemaService, associationService, checkListTableBuilderService, numberedListBuilderService) {
             this.$q = $q;
             this.$timeout = $timeout;
             this.$rootScope = $rootScope;
             this.modalService = modalService;
             this.schemaCacheService = schemaCacheService;
+            this.schemaService = schemaService;
             this.restService = restService;
             this.redirectService = redirectService;
             this.applicationService = applicationService;
             this.crudContextHolderService = crudContextHolderService;
+            this.contextService = contextService;
             this.fieldService = fieldService;
             this.alertService = alertService;
             this.associationService = associationService;
             this.checkListTableBuilderService = checkListTableBuilderService;
+            this.numberedListBuilderService = numberedListBuilderService;
 
             function restoreData() {
                 currentSelectedFields = [];
@@ -223,33 +227,7 @@
             return idx !== -1;
         }
 
-        buildDisplayable(modalData) {
-
-
-            if (modalData === "ApplicationSection") {
-                modalData = {
-                    fattribute: null,
-                    flabel: null,
-                    frequired: false,
-                    freadonly: false,
-                    fieldtype: "ApplicationSection"
-                }
-            }
-
-            let fieldType = modalData.fieldtype;
-            let rendererType = "default";
-            if (fieldType.indexOf("#") !== -1) {
-                const types = fieldType.split("#");
-                fieldType = types[0];
-                rendererType = types[1];
-            }
-
-            if (fieldType === "checklisttable") {
-                const tableMetadata = this.checkListTableBuilderService.createTable(modalData);
-                this.$rootScope.$broadcast("dynform.checklist.onsavemodal", modalData, tableMetadata);
-                return tableMetadata;
-            }
-
+        buildStyleRendererParameters(fieldType,rendererType,modalData) {
             const rendererParameters = {};
 
             if (!modalData.fcheckontop && rendererType === "checkbox") {
@@ -275,7 +253,42 @@
 
             rendererParameters["font-size"] = (modalData.ffontsize) ? (modalData.ffontsize + "px") : "13px";
             rendererParameters["color"] = modalData.fcolor || "black";
+            return rendererParameters;
 
+        }
+
+        buildDisplayable(modalData) {
+
+
+            if (modalData === "ApplicationSection") {
+                modalData = {
+                    fattribute: null,
+                    flabel: null,
+                    frequired: false,
+                    freadonly: false,
+                    fieldtype: "ApplicationSection"
+                }
+            }
+
+            let fieldType = modalData.fieldtype;
+            let rendererType = "default";
+            if (fieldType.indexOf("#") !== -1) {
+                const types = fieldType.split("#");
+                fieldType = types[0];
+                rendererType = types[1];
+            }
+
+            const rendererParameters = this.buildStyleRendererParameters(fieldType, rendererType, modalData);
+
+            if (fieldType === "numberedlist") {
+                const listMetadata = this.numberedListBuilderService.createList(modalData, rendererParameters);
+                this.$rootScope.$broadcast("dynform.checklist.onsavemodal", modalData, listMetadata);
+                return listMetadata;
+            } else if (fieldType === "checklisttable") {
+                const tableMetadata = this.checkListTableBuilderService.createTable(modalData);
+                this.$rootScope.$broadcast("dynform.checklist.onsavemodal", modalData, tableMetadata);
+                return tableMetadata;
+            }
 
 
             const resultOb = {
@@ -329,6 +342,14 @@
                 convertedDatamap.fcheckontop = "left" !== fieldMetadata.rendererParameters["layout"];
             } else if (fieldMetadata.rendererType === "label") {
                 convertedDatamap.fieldtype += "#label";
+            } else if (fieldMetadata.type === "TreeDefinition") {
+                convertedDatamap.fieldtype = "numberedlist";
+                convertedDatamap.displayables = fieldMetadata.displayables;
+                convertedDatamap.startIndex = fieldMetadata.startIndex;
+                convertedDatamap.nodes = fieldMetadata.nodes;
+                convertedDatamap.treeTemplate = fieldMetadata.rendererParameters["template"];
+                convertedDatamap.extraHeaderStyle = fieldMetadata.rendererParameters["extraheaderstyle"];
+                convertedDatamap.extraHeaderLabel = fieldMetadata.rendererParameters["extraheaderlabel"];
             }
 
             if (fieldMetadata.type === "OptionField") {
@@ -346,7 +367,7 @@
             }
 
             convertedDatamap.fmaxlength = fieldMetadata.rendererParameters["maxlength"];
-            
+
 
             if (fieldMetadata.rendererParameters["labelposition"]) {
                 convertedDatamap.flabelposition = fieldMetadata.rendererParameters["labelposition"];
@@ -467,8 +488,18 @@
             //.net cannot convert flawlessly these items, so we´ll pass them as a JSON and use a custom deserialization process
             //            const newFields = cs.displayables.slice(2);
             const newFields = cs.displayables;
-            //to ensure $type is present at all fields every time
+            //to ensure $type is present at all fields every time, otherwise NEWTONSOFT serialization fails. 
+            
+            const trees = this.fieldService.getDisplayablesOfTypes(cs.displayables, ["TreeDefinition"]);
+
+//            this.numberedListBuilderService.injectServerTypesIntoDisplayables(trees);
+            if (!this.numberedListBuilderService.validateTrees(trees)) {
+                return this.$q.reject("validation error");
+            }
+
+
             this.fieldService.injectServerTypesIntoDisplayables({ displayables: newFields });
+
             dm["#newFieldsJSON"] = JSON.stringify(newFields);
             dm["#name"] = dm.name;
 
@@ -553,8 +584,15 @@
             return isPreviewMode;
         }
 
+        isEditing () {
+            const schema = this.crudContextHolderService.currentSchema();
+            return this.schemaService.isPropertyTrue(schema, "dynforms.editionallowed") && !this.isPreviewMode();
+        }
+
+
         setPreviewMode(previewMode) {
             isPreviewMode = "true" === previewMode;
+            this.contextService.set("dynform_previewmode", isPreviewMode,true);
         }
 
         labelInput() {
@@ -589,7 +627,8 @@
     }
 
 
-    dynFormService["$inject"] = ["$q", "$timeout", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService"];
+    dynFormService["$inject"] = ["$q", "$timeout", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService","contextService",
+        "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService", "numberedListBuilderService"];
 
     angular.module("sw_layout").service("dynFormService", dynFormService);
 

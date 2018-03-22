@@ -12,6 +12,7 @@
                 listtype: "=",
                 nodeindex: "=",
                 startindex: "=",
+                rootTree: "=",
                 level: "@"
             },
 
@@ -19,8 +20,8 @@
 
             },
 
-            controller: ["$scope", "$injector", "i18NService", "fieldService", "formatService", "layoutservice", "expressionService",
-                function ($scope, $injector, i18NService, fieldService, formatService, layoutservice, expressionService) {
+            controller: ["$scope", "$injector", "$timeout", "i18NService", "fieldService", "formatService", "layoutservice", "expressionService", "dynFormService","numberedListBuilderService",
+                function ($scope, $injector, $timeout, i18NService, fieldService, formatService, layoutservice, expressionService, dynFormService, numberedListBuilderService) {
                     $injector.invoke(BaseController, this, {
                         $scope: $scope,
                         i18NService: i18NService,
@@ -30,16 +31,13 @@
                         expressionService: expressionService
                     });
 
-                    const calcIndex = function () {
-                        if (!$scope.listtype) return "";
-                        const index = 1 + $scope.nodeindex + ($scope.startindex ? Number.parseInt($scope.startindex) : 0);
-                        if ($scope.listtype === "number") return index;
-                        if ($scope.listtype === "letterdot") return String.fromCharCode(index + 96) + ".";
-                        return "";
-                    }
-
+                
                     $scope.hasIndex = !!$scope.listtype;
-                    $scope.index = calcIndex();
+                    if ($scope.startIndex === 1) {
+                        $scope.startIndex = 2;
+                    }
+                    $scope.index = numberedListBuilderService.calcIndex($scope.listtype, $scope.nodeindex, $scope.startindex -1);
+
                     $scope.childrenLevel = Number.parseInt($scope.level) + 1;
                     $scope.indentationStyle = {
                         display: "inline-block",
@@ -52,6 +50,54 @@
                         const nodes = $scope.safe($scope.datamap, "nodes");
                         return $scope.safe(nodes, nodeMetadata.attribute);
                     }
+
+                    $scope.removeInputFromNode = function(node) {
+                        node.displayables = [];
+                    }
+
+                    $scope.addInputToNode = function (node) {
+                        numberedListBuilderService.addNodeInput(node);
+                    }
+
+                    $scope.isEditing = function() {
+                        return dynFormService.isEditing();
+                    }
+
+//                    $scope.addRow = function(fieldMetadata) {
+//                       
+//                    }
+
+                    $scope.evalKeyBoardPress = function (event) {
+                        if (event.which === 40 || event.which === 38) {
+                            numberedListBuilderService.advanceFocus(event.which === 40);
+                        }
+                        if (event.which === 9) {
+                            if (event.shiftKey) {
+                                numberedListBuilderService.identDown($scope.rootTree, $scope.fieldMetadata);
+                            } else {
+                                numberedListBuilderService.identUp($scope.rootTree, $scope.fieldMetadata);
+                            }
+                        }
+                        if ((event.which === 46 || event.which === 8) && $scope.fieldMetadata.label === "" ) {
+                            numberedListBuilderService.removeNode($scope.rootTree, $scope.fieldMetadata);
+                        }
+                        if (event.which === 13) {
+                            numberedListBuilderService.addRow($scope.rootTree, $scope.fieldMetadata);
+                            $timeout(() => {
+                                numberedListBuilderService.advanceFocus(true);
+                            },0,false);
+                            
+                        }
+
+                    }
+
+                    $scope.$watch('nodeindex', (newValue,o) => {
+                        if (o !== newValue) {
+                            numberedListBuilderService.adjustAttributeName($scope.rootTree, $scope.fieldMetadata, newValue + 1);
+                            $scope.index = numberedListBuilderService.calcIndex($scope.listtype, $scope.nodeindex, $scope.startindex);
+                        }
+                        
+                    });
 
                     const init = function () {
                         if (!$scope.fieldMetadata.fields || $scope.fieldMetadata.fields.length === 0) return;

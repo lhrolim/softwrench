@@ -70,6 +70,10 @@
             loadData();
 
             $scope.$on("dynform.checklist.onsavemodal", (event, modalData, tableMetadata) => {
+                if (tableMetadata.type !== "TableDefinition") {
+                    return;
+                }
+
                 const dm = crudContextHolderService.rootDataMap("#modal");
 
                 var grid = $scope.gridApi.grid;

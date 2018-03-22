@@ -3,8 +3,27 @@
         <span ng-style="indentationStyle" />
         <input type="checkbox" ng-model="datamap.checked" style="margin-right: 6px; position: relative; top: 2px;" />
         <span ng-if="hasIndex" style="display: inline-block; min-width: 20px">{{index}}</span>
-        {{fieldMetadata.label}}
-        <ng-switch ng-repeat="field in fieldMetadata.fields" on="field.type">
+        <span ng-show="!isEditing()">{{fieldMetadata.label}}</span>
+        <span ng-show="isEditing()">
+            <input style="display: inline; width: auto; margin-left: 10px;border:none"
+                   type="text"
+                   ng-model="fieldMetadata.label" class="hidden-phone form-control"
+                   ng-model-options="{ debounce: 300 }"
+                   data-field="{{field.label}}"
+                   ng-keydown="evalKeyBoardPress($event)"
+                   data-metadatatype="nodeedition"
+            />
+        </span>
+        
+        <span ng-if="isEditing() &amp;&amp; fieldMetadata.displayables.length==0">
+            <button class="applicationcommand btn-context ng-scope btn" ng-click="addInputToNode(fieldMetadata)">
+                <i class="fa fa-plus" ></i>
+                <span class="text">Add Input</span>
+            </button>
+            
+        </span>
+
+        <ng-switch ng-repeat="field in fieldMetadata.displayables" on="field.type">
             <ng-switch ng-switch-default on="field.rendererType">
                 <span ng-switch-when="label" ng-style="{ 'color' : field.rendererParameters['color'], 'font-weight' : field.rendererParameters['font-weight']}">
                     {{fieldsDatamap[field.attribute]}}
@@ -19,10 +38,13 @@
                        ng-maxlength="{{field.rendererParameters['maxlength']}}"
                        maxlength="{{field.rendererParameters['inputmaxlength']}}"
                        placeholder="{{field.rendererParameters['placeholder']}}" />
+                
+                <i class="fa fa-times dynformtreeinput-delete" ng-click="removeInputFromNode(fieldMetadata)" ng-if="isEditing()"></i>
+
             </ng-switch>
         </ng-switch>
     </div>
     <div ng-repeat="(nodeindex, node) in fieldMetadata.nodes">
-        <crud-tree-node field-metadata="node" schema="schema" datamap="nodeDatamap(node)" listtype="fieldMetadata.listType" nodeindex="nodeindex" startindex="fieldMetadata.startIndex" level="{{childrenLevel}}" />
+        <crud-tree-node field-metadata="node" schema="schema" datamap="nodeDatamap(node)" listtype="fieldMetadata.listType" nodeindex="nodeindex" startindex="fieldMetadata.startIndex" level="{{childrenLevel}}" root-tree="rootTree" />
     </div>
 </div>

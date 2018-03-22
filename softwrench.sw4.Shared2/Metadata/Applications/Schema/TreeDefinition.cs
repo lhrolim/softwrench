@@ -17,7 +17,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             ListType = listtype;
             StartIndex = startIndex;
             Nodes = nodes;
-            Fields = fields;
+            Displayables = fields;
         }
 
         public string RendererType { get; set; }
@@ -30,7 +30,11 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         public string Role { get; set; }
         public string ListType { get; set; }
         public string StartIndex { get; set; }
+        public IDictionary<string, object> RendererParameters { get; set; }
+
         public List<TreeNode> Nodes { get; set; }
-        public List<IApplicationDisplayable> Fields { get; set; }
+        
+        //TODO: rename HeaderFields
+        public List<IApplicationDisplayable> Displayables { get; set; }
     }
 }

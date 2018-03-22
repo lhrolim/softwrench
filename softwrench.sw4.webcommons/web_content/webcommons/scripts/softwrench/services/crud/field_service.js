@@ -449,8 +449,9 @@
                     const associationOptionType = `softwrench.sw4.Shared2.Data.Association.AssociationOption, softwrench.sw4.Shared2`;
                     //TODO: updgrade newtonsoft.json so that this is no longer needed
                     displayable["$type"] = type;
+                    var partialFakeContainerDisplayablesResult = [];
                     if (displayable.type === "TableDefinition") {
-                        var partialFakeContainerDisplayablesResult = [];
+                        
                         displayable.rows.forEach(row => {
                             var partialFakeContainerDisplayables = [];
                             row.forEach(column => {
@@ -463,6 +464,27 @@
                         displayable.rows = partialFakeContainerDisplayablesResult;
 
                     }
+
+                    if (displayable.type === "TreeDefinition") {
+
+                        const handleTreeNodes = (nodes => {
+                            if (!nodes) {
+                                return [];
+                            }
+
+                            let nodeResult = [];
+                            nodes.forEach(node => {
+                                this.injectServerTypesIntoDisplayables(node);
+                                nodeResult.push(node);
+                                node.nodes = handleTreeNodes(node.nodes);
+                            });
+                            return nodeResult;
+                        });
+                        displayable.nodes = handleTreeNodes(displayable.nodes);
+                        
+
+                    }
+
                     if (displayable.type === "OptionField" && displayable.options) {
                         const injectedOptions = [];
                         displayable.options.forEach(o => {
