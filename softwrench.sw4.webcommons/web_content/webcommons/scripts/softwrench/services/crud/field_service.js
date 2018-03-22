@@ -526,6 +526,10 @@
                     return container.jscache.alldisplayables;
                 }
                 const displayables = container.displayables;
+                if (!displayables) {
+                    return [];
+                }
+
                 var result = [];
                 for (let i = 0; i < displayables.length; i++) {
                     const displayable = displayables[i];

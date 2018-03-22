@@ -223,6 +223,8 @@
             return idx !== -1;
         }
 
+        buildStyleRendererParameters(fieldType,rendererType,modalData) {
+        buildStyleRendererParameters(fieldType, rendererType, modalData) {
         buildDisplayable(modalData) {
 
 
@@ -467,6 +469,26 @@
             //.net cannot convert flawlessly these items, so we´ll pass them as a JSON and use a custom deserialization process
             //            const newFields = cs.displayables.slice(2);
             const newFields = cs.displayables;
+            //to ensure $type is present at all fields every time, otherwise NEWTONSOFT serialization fails. 
+            
+            const trees = this.fieldService.getDisplayablesOfTypes(cs.displayables, ["TreeDefinition"]);
+
+//            this.numberedListBuilderService.injectServerTypesIntoDisplayables(trees);
+            if (!this.numberedListBuilderService.validateTrees(trees)) {
+                return this.$q.reject("validation error");
+            }
+
+
+            //to ensure $type is present at all fields every time, otherwise NEWTONSOFT serialization fails. 
+
+            const trees = this.fieldService.getDisplayablesOfTypes(cs.displayables, ["TreeDefinition"]);
+
+            //            this.numberedListBuilderService.injectServerTypesIntoDisplayables(trees);
+            if (!this.numberedListBuilderService.validateTrees(trees)) {
+                return this.$q.reject("validation error");
+            }
+
+
             //to ensure $type is present at all fields every time
             this.fieldService.injectServerTypesIntoDisplayables({ displayables: newFields });
             dm["#newFieldsJSON"] = JSON.stringify(newFields);
@@ -523,6 +545,7 @@
             }
             else {
                 const newSection = this.buildDisplayable("ApplicationSection");
+                newSection.orientation = savedData["sectionorientation"];
                 newSection.header = buildSectionHeader(savedData.headerlabel);
                 newSection.displayables = currentSelectedFields;
                 cs.displayables.splice(idxToAdd + 1, 0, newSection);
@@ -539,10 +562,10 @@
             }).then(savedData => {
                 return this.doCreateEnclosingSection(savedData);
             }).then((cs) => {
-                var d = cs.displayables;
+                this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
+            }).finally(r => {
                 isEditingSection = false;
                 currentSelectedFields = [];
-                this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
             });
         }
 
@@ -553,8 +576,22 @@
             return isPreviewMode;
         }
 
+        isEditing () {
+            const schema = this.crudContextHolderService.currentSchema();
+            return this.schemaService.isPropertyTrue(schema, "dynforms.editionallowed") && !this.isPreviewMode();
+        }
+
+
+        isEditing() {
+            const schema = this.crudContextHolderService.currentSchema();
+            return this.schemaService.isPropertyTrue(schema, "dynforms.editionallowed") && !this.isPreviewMode();
+        }
+
+
         setPreviewMode(previewMode) {
             isPreviewMode = "true" === previewMode;
+            this.contextService.set("dynform_previewmode", isPreviewMode,true);
+            this.contextService.set("dynform_previewmode", isPreviewMode, true);
         }
 
         labelInput() {
@@ -589,6 +626,10 @@
     }
 
 
+    dynFormService["$inject"] = ["$q", "$timeout", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService","contextService",
+        "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService", "numberedListBuilderService"];
+    dynFormService["$inject"] = ["$q", "$timeout", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "contextService",
+        "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService", "numberedListBuilderService"];
     dynFormService["$inject"] = ["$q", "$timeout", "$rootScope", "schemaCacheService", "restService", "modalService", "redirectService", "applicationService", "crudContextHolderService", "fieldService", "alertService", "schemaService", "associationService", "checkListTableBuilderService"];
 
     angular.module("sw_layout").service("dynFormService", dynFormService);

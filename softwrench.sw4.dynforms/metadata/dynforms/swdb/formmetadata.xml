@@ -186,6 +186,10 @@
 
         <schema id="sectionenclosingmodal" stereotype="detail.noprint" title="Section Creation">
           <field label="Label" attribute="headerlabel" requiredexpression="true"/>
+          <optionfield label="Orientation" attribute="sectionorientation" default="vertical">
+            <option label="Vertical" value="vertical"/>
+            <option label="Horizontal" value="horizontal"/>
+          </optionfield>
 <!--          <field attribute="freusable" label="share ?" tooltip="If true this section can be used on other forms later">-->
 <!--            <renderer type="checkbox"/>-->
 <!--          </field>-->
