@@ -27,7 +27,7 @@
                            rel="{{showLabelTooltip(fieldMetadata)}}" ng-class="getLabelClass(fieldMetadata)"
                            data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
                            ng-if="isLabelVisible(fieldMetadata,false)">
-                        <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark">* </span>
+                        <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark" ng-style="getLabelRequiredStyle(fieldMetadata)">* </span>
                         <icon class="fa fa-undo" ng-if="showUndoIcon(fieldMetadata)" ng-click="restoreDefault(fieldMetadata)" style="cursor: pointer" rel="tooltip" data-original-title="Restore to original value" data-html="true"></icon>
                         <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                         <span ng-style="getLabelStyle(fieldMetadata)">

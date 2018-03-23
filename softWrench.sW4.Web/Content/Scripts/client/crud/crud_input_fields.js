@@ -653,6 +653,13 @@
                         $scope.isIE = function () {
                             return isIE();
                         };
+
+                        $scope.getLabelRequiredStyle = function (fieldMetadata) {
+                            const styleOb = $scope.getLabelStyle(fieldMetadata);
+                            styleOb["text-decoration-color"] = "black";
+                            return styleOb;
+                        }
+
                         $scope.getLabelStyle = function (fieldMetadata) {
                             const rendererColor = styleService.getLabelStyle(fieldMetadata, 'color');
                             const weight = styleService.getLabelStyle(fieldMetadata, 'font-weight');
