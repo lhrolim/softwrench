@@ -137,7 +137,6 @@
 
         schema.displayables[1] = verticalSection;
 
-        debugger;
         const result = fieldService.locateCommonContainer(schema, [spaceField, f1, f2, f3, f4]);
         expect(result.container).toBe(schema);
         expect(result.idx).toBe(0);
@@ -168,7 +167,6 @@
         const f4 = FieldMetadataPojo.Ordinary("f4", "f4");
 
         var schema = SchemaPojo.WithIdAndDisplayables("detail22", [spaceField, f1, f2, f3, f4], "test");
-        debugger;
         const result = fieldService.sortBySchemaIdx(schema, [f2, f1, f4, f3]);
         expect(result.map(a => a.attribute)).toEqual([f1,f2,f3,f4].map(a=>a.attribute));
     });

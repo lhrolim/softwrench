@@ -82,6 +82,7 @@
     <Content Include="tests\customers\firstsolar\services\batchWoService_test.js" />
     <Content Include="tests\directives\crud_body_modal_test.js" />
     <Content Include="tests\directives\composition_list_test.js" />
+    <Content Include="tests\dynform\dynform_service_test.js" />
     <Content Include="tests\HelloWorldKarma.js" />
     <Content Include="tests\pojos\DatamapPojo.js" />
     <Content Include="tests\pojos\SectionPojo.js" />

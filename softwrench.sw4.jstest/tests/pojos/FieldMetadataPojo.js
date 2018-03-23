@@ -1,7 +1,7 @@
 ﻿
 class FieldMetadataPojo {
 
-    static ForAssociation(associationKey,target, extraFields = []) {
+    static ForAssociation(associationKey, target, extraFields = []) {
 
         return {
             associationKey,
@@ -9,7 +9,7 @@ class FieldMetadataPojo {
             target: target || associationKey,
             type: "ApplicationAssociationDefinition",
             rendererType: "lookup",
-            extraProjectionFields : extraFields
+            extraProjectionFields: extraFields
         };
     }
 
@@ -17,43 +17,59 @@ class FieldMetadataPojo {
 
         return {
             attribute,
-            isHidden:true
+            isHidden: true
         };
     }
 
-    static Required(attribute,label) {
+    static Required(attribute, label) {
         label = label || attribute;
 
         return {
             attribute,
             label,
-            requiredExpression: true
+            requiredExpression: true,
+            type: "ApplicationFieldDefinition"
         };
     }
 
-    static Ordinary(attribute,label) {
+    static Ordinary(attribute, label) {
         label = label || attribute;
 
         return {
             attribute,
-            label
+            role:attribute,
+            label,
+            type: "ApplicationFieldDefinition"
         };
     }
 
-    static Section(displayables, orientation = "vertical") {
+    static Section(displayables, orientation = "vertical", label = null) {
 
         if (!(displayables instanceof Array)) {
             displayables = [displayables];
         }
 
-        return {
+        const section = {
             displayables,
             orientation,
-            type:"ApplicationSection"
+            type: "ApplicationSection"
         };
+
+        if (label) {
+            section.header = {
+                displacement: "ontop",
+                label,
+                showExpression: "true",
+                parameters: {
+                    fieldset: "true"
+                }
+            }
+        }
+
+        return section;
     }
 
 
 
-   
+
 }

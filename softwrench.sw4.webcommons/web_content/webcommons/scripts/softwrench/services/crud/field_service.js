@@ -382,6 +382,10 @@
 
 
             locateCommonContainer: function (container, fields) {
+                if (!fields || fields.length === 0) {
+                    return { container, idx: -1 };
+                }
+
                 const results = new Set();
                 let minIdx = 1000;
 

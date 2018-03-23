@@ -248,6 +248,8 @@
             });
         }
 
+        
+
         toggleSectionSelection(fieldMetadataOrRole) {
 
             let role, fieldMetadata;
@@ -312,7 +314,7 @@
 
             if (modalData === "ApplicationSection") {
                 //this applies to a new section creation
-                
+
                 modalData = {
                     flabel: null,
                     frequired: false,
@@ -549,7 +551,7 @@
 
             this.alertService.confirm("Are you sure you want to delete this form").then(r => {
                 return this.applicationService.save({ operation: "crud_delete" });
-            })
+            });
 
 
         }
@@ -630,9 +632,14 @@
             }).then((cs) => {
                 this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
             }).finally(r => {
-                isUpdatingMultiple = false;
-                currentSelectedFields = [];
+                this.resetUpdateMode();
             });
+        }
+
+        resetUpdateMode() {
+            isUpdatingMultiple = false;
+            isEditingSection = false;
+            currentSelectedFields = [];
         }
 
         doApplyStyleUpdate(modalData) {
@@ -677,19 +684,19 @@
             const container = commonContainerResult.container;
             const idxToAdd = commonContainerResult.idx;
             //<header displacement="ontop" label="Failure Reporting" params="fieldset=true" />
-            if (container.type === "ApplicationSection") {
-                container.header = buildSectionHeader(savedData.headerlabel);
-            }
-            else {
-                const newSection = this.buildDisplayable("ApplicationSection");
-                newSection.orientation = savedData["sectionorientation"];
-                newSection.header = buildSectionHeader(savedData.headerlabel);
-                newSection.displayables = currentSelectedFields;
-                cs.displayables.splice(idxToAdd + 1, 0, newSection);
-                currentSelectedFields.forEach(field => {
-                    this.fieldService.replaceOrRemoveDisplayableByKey(cs, field.role);
-                });
-            }
+            //            if (container.type === "ApplicationSection") {
+            //                container.header = buildSectionHeader(savedData.headerlabel);
+            //            }
+            //            else {
+            const newSection = this.buildDisplayable("ApplicationSection");
+            newSection.orientation = savedData["sectionorientation"];
+            newSection.header = buildSectionHeader(savedData.headerlabel);
+            newSection.displayables = currentSelectedFields;
+            container.displayables.splice(idxToAdd + 1, 0, newSection);
+            currentSelectedFields.forEach(field => {
+                this.fieldService.replaceOrRemoveDisplayableByKey(cs, field.role);
+            });
+            //            }
             return cs;
         }
 

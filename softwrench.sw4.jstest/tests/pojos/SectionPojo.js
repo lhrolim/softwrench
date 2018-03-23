@@ -2,8 +2,9 @@
 class SectionPojo {
 
 
-    static WithDisplayables(displayables) {
-        return FieldMetadataPojo.Section(displayables);
+    static WithDisplayables(displayables,label) {
+        return FieldMetadataPojo.Section(displayables,"vertical",label);
+        
     }
 
     static HorizontalWithDisplayables(displayables) {
