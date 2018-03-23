@@ -149,11 +149,13 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
             } else {
                 OrientationEnum = ApplicationSectionOrientation.vertical;
             }
+
+            Orientation = orientation;
         }
 
         public string Type => GetType().Name;
 
-        public string Orientation => OrientationEnum.ToString().ToLower();
+        public string Orientation { get; set; }
 
         public string Role {
             get {

@@ -15,7 +15,7 @@
             />
         </span>
         
-        <span ng-if="isEditing() &amp;&amp; fieldMetadata.displayables.length==0">
+        <span ng-if="isEditing() &amp;&amp; (fieldMetadata.displayables == null || fieldMetadata.displayables.length==0 )">
             <button class="applicationcommand btn-context ng-scope btn" ng-click="addInputToNode(fieldMetadata)">
                 <i class="fa fa-plus" ></i>
                 <span class="text">Add Input</span>

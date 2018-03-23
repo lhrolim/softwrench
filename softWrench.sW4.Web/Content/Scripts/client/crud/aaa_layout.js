@@ -189,7 +189,7 @@
         }
 
         $scope.mousedown = function (e) {
-            if (!schemaService.isPropertyTrue(crudContextHolderService.currentSchema(), "dynforms.editionallowed")) {
+            if (!schemaService.isPropertyTrue(crudContextHolderService.currentSchema(), "dynforms.editionallowed") || crudContextHolderService.isShowingModal()) {
                 //only on dynamic form edition we shall allow this for now
                 return;
             }
@@ -201,6 +201,11 @@
         }
 
         $scope.mouseup = function (e) {
+            if (!schemaService.isPropertyTrue(crudContextHolderService.currentSchema(), "dynforms.editionallowed") || crudContextHolderService.isShowingModal()) {
+                //only on dynamic form edition we shall allow this for now
+                return;
+            }
+
             rectangleselectiondiv.hidden = 1;
             const points = {
                 x1,

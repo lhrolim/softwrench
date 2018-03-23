@@ -20,8 +20,8 @@
 
             },
 
-            controller: ["$scope", "$injector", "$timeout", "i18NService", "fieldService", "formatService", "layoutservice", "expressionService", "dynFormService","numberedListBuilderService",
-                function ($scope, $injector, $timeout, i18NService, fieldService, formatService, layoutservice, expressionService, dynFormService, numberedListBuilderService) {
+            controller: ["$rootScope","$scope", "$injector", "$timeout", "i18NService", "fieldService", "formatService", "layoutservice", "expressionService", "dynFormService","numberedListBuilderService",
+                function ($rootScope,$scope, $injector, $timeout, i18NService, fieldService, formatService, layoutservice, expressionService, dynFormService, numberedListBuilderService) {
                     $injector.invoke(BaseController, this, {
                         $scope: $scope,
                         i18NService: i18NService,
@@ -31,7 +31,6 @@
                         expressionService: expressionService
                     });
 
-                
                     $scope.hasIndex = !!$scope.listtype;
                     if ($scope.startIndex === 1) {
                         $scope.startIndex = 2;
@@ -56,7 +55,11 @@
                     }
 
                     $scope.addInputToNode = function (node) {
-                        numberedListBuilderService.addNodeInput(node);
+                        if (!$rootScope["treenode_isEvaluatingEnter"]) {
+                            //workaround because jquery is wrongly triggering the ng-click upon keyboard enter
+                            numberedListBuilderService.addNodeInput(node);
+                        }
+                        
                     }
 
                     $scope.isEditing = function() {
@@ -80,13 +83,18 @@
                         }
                         if ((event.which === 46 || event.which === 8) && $scope.fieldMetadata.label === "" ) {
                             numberedListBuilderService.removeNode($scope.rootTree, $scope.fieldMetadata);
+                            $timeout(() => {
+                                numberedListBuilderService.advanceFocus(false);
+                            }, 0, false);
                         }
                         if (event.which === 13) {
+                            $rootScope["treenode_isEvaluatingEnter"]= true;
                             numberedListBuilderService.addRow($scope.rootTree, $scope.fieldMetadata);
                             $timeout(() => {
                                 numberedListBuilderService.advanceFocus(true);
-                            },0,false);
-                            
+                                $rootScope["treenode_isEvaluatingEnter"] = false;
+                            }, 0, false);
+
                         }
 
                     }

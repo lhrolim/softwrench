@@ -71,7 +71,7 @@
 
                     if (x >= x1
                         && y >= y1
-                        && x + w <= x2
+                        //&& x + w <= x2
                         && y + h <= y2) {
                         // this element fits inside the selection rectangle
                         elements.push($this.data("role"));
@@ -79,13 +79,14 @@
                 });
                 if (elements.length > 0) {
                     isUpdatingMultiple = true;
+                    isEditingSection = true;
                     currentSelectedFields = [];
                     elements.forEach(el => {
                         that.toggleSectionSelection(el);
                     });
                 }
 
-                
+
             });
 
             this.$rootScope.$on(JavascriptEventConstants.ApplicationRedirected, () => {
@@ -309,20 +310,15 @@
 
         buildDisplayable(modalData) {
 
-            let role = null;
-
             if (modalData === "ApplicationSection") {
-                //this applies to section creation
+                //this applies to a new section creation
+                
                 modalData = {
-                    fattribute: null,
                     flabel: null,
                     frequired: false,
                     freadonly: false,
                     fieldtype: "ApplicationSection"
                 }
-                role = "generated_" + Date.now().getTime();
-            } else {
-                role = modalData.fattribute;
             }
 
             let fieldType = modalData.fieldtype;
@@ -343,6 +339,9 @@
                 const tableMetadata = this.checkListTableBuilderService.createTable(modalData);
                 this.$rootScope.$broadcast("dynform.checklist.onsavemodal", modalData, tableMetadata);
                 return tableMetadata;
+            } else if (fieldType === "ApplicationSection") {
+                const genAttribute = "generated_" + Date.now().getTime();
+                modalData.fattribute = genAttribute;
             }
 
 
@@ -350,7 +349,7 @@
                 //has to be first field, until we´re able to migrate to newtonsoft 10.0.0 and use https://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_MetadataPropertyHandling.htm
                 "$type": `softwrench.sW4.Shared2.Metadata.Applications.Schema.${fieldType}, softwrench.sw4.Shared2`,
                 attribute: modalData.fattribute,
-                role,
+                role: modalData.fattribute,
                 label: modalData.flabel,
                 requiredExpression: modalData.frequired ? "true" : "false",
                 isReadOnly: modalData.freadonly,
@@ -360,11 +359,17 @@
                     parameters: rendererParameters
                 },
                 rendererType,
+                displayables: modalData.displayables,
                 rendererParameters: rendererParameters,
                 showExpression: "true",
                 enableExpression: modalData.freadonly ? "false" : "true",
                 "type": fieldType
             };
+
+            if (fieldType === "ApplicationSection") {
+                resultOb.header = buildSectionHeader(modalData.flabel);
+                resultOb.orientation = modalData.sectionorientation;
+            }
 
             if (fieldType === "OptionField") {
                 resultOb.qualifier = modalData.fprovider;
@@ -376,8 +381,7 @@
             return resultOb;
         }
 
-        editDisplayable(fieldMetadata) {
-            var that = this;
+        convertDataMapForEdition(fieldMetadata) {
             const convertedDatamap = {
                 fieldtype: fieldMetadata.type,
                 fattribute: fieldMetadata.attribute,
@@ -386,6 +390,9 @@
                 freadonly: !!fieldMetadata.isReadOnly,
                 "#isEditing": true
             }
+            //either for section or trees or any sort of containers, if any displayables are attached, keep them
+            convertedDatamap.displayables = fieldMetadata.displayables;
+
             if (fieldMetadata.type === "TableDefinition") {
                 //TODO: allow other kinds of table
                 convertedDatamap.fieldtype = "checklisttable";
@@ -399,20 +406,21 @@
                 convertedDatamap.fieldtype += "#label";
             } else if (fieldMetadata.type === "TreeDefinition") {
                 convertedDatamap.fieldtype = "numberedlist";
-                convertedDatamap.displayables = fieldMetadata.displayables;
                 convertedDatamap.startIndex = fieldMetadata.startIndex;
                 convertedDatamap.nodes = fieldMetadata.nodes;
                 convertedDatamap.treeTemplate = fieldMetadata.rendererParameters["template"];
                 convertedDatamap.extraHeaderStyle = fieldMetadata.rendererParameters["extraheaderstyle"];
                 convertedDatamap.extraHeaderLabel = fieldMetadata.rendererParameters["extraheaderlabel"];
+            } else if (fieldMetadata.type === "ApplicationSection") {
+                convertedDatamap.flabel = fieldMetadata.header.label;
+                convertedDatamap.sectionorientation = fieldMetadata.orientation;
             }
-
             if (fieldMetadata.type === "OptionField") {
                 convertedDatamap.fprovider = fieldMetadata.qualifier;
                 convertedDatamap.ofrenderer = fieldMetadata.rendererType;
             }
 
-
+            //#region style
             let fontSize = 13;
             if (fieldMetadata.rendererParameters["font-size"]) {
                 fontSize = fieldMetadata.rendererParameters["font-size"];
@@ -420,20 +428,25 @@
                     fontSize = fontSize.substring(0, fontSize.length - 2);
                 }
             }
-
             convertedDatamap.fmaxlength = fieldMetadata.rendererParameters["maxlength"];
-
-
             if (fieldMetadata.rendererParameters["labelposition"]) {
                 convertedDatamap.flabelposition = fieldMetadata.rendererParameters["labelposition"];
             }
-
             convertedDatamap.ffontsize = fontSize;
             convertedDatamap.fcolor = fieldMetadata.rendererParameters["color"] || "black";
             convertedDatamap.fbold = fieldMetadata.rendererParameters["font-weight"];
             convertedDatamap.fitalic = fieldMetadata.rendererParameters["font-style"];
             convertedDatamap.funderline = fieldMetadata.rendererParameters["text-decoration"];
             convertedDatamap["fpaddingleft"] = fieldMetadata.rendererParameters["padding-left"];
+
+            //#endregion 
+
+            return convertedDatamap;
+        }
+
+        editDisplayable(fieldMetadata) {
+            var that = this;
+            const convertedDatamap = this.convertDataMapForEdition(fieldMetadata);
 
             return this.schemaCacheService.fetchSchema("_FormMetadata", "fieldEditModal").then(schema => {
                 return that.modalService.showPromise(schema,
@@ -445,8 +458,9 @@
                         }
                     });
             }).then(savedData => {
-                if (savedData.fattribute.indexOf(' ') >= 0) {
+                if (savedData.fieldtype !== "ApplicationSection" && savedData.fattribute.indexOf(' ') >= 0) {
                     this.alertService.alert("Attribute names cannot contain spaces");
+                    return this.$q.reject();
                 }
 
                 return that.doAddDisplayable(fieldMetadata, savedData, "edit");
@@ -649,7 +663,7 @@
                     currentPadding += padding;
                     rendererParameters["padding-left"] = currentPadding;
                 }
-                
+
             });
         }
 
@@ -688,6 +702,7 @@
                 this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
             }).finally(r => {
                 isEditingSection = false;
+                isUpdatingMultiple = false;
                 currentSelectedFields = [];
             });
         }

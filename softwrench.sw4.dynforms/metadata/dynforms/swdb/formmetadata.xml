@@ -97,7 +97,14 @@
             <field attribute="flabel" label="Field Text" requiredexpression="true">
               <event type="blur" service="dynFormService" method="labelInput"/>
             </field>
-            <field attribute="fattribute" label="Field (Database Name)" requiredexpression="true" helpicon="right" tooltip="Used to identifiy uniquely this field at the database. No spaces allowed"/>
+            <field attribute="fattribute" label="Field (Database Name)" requiredexpression="true" helpicon="right" tooltip="Used to identifiy uniquely this field at the database. No spaces allowed" showexpression="@fieldtype !== 'ApplicationSection'"/>
+          </section>
+
+          <section showexpression="@fieldtype == 'ApplicationSection'">
+            <optionfield label="Orientation" attribute="sectionorientation" default="vertical">
+              <option label="Vertical" value="vertical"/>
+              <option label="Horizontal" value="horizontal"/>
+            </optionfield>
           </section>
 
           <section showexpression="@fieldtype == 'ApplicationFieldDefinition'">
