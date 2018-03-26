@@ -224,7 +224,7 @@
         </schema>
 
         <schema id="stylebulkupdate" stereotype="detail.noprint" title="Style Update">
-          <section showexpression="@fieldtype !== 'pleaseselect'">
+          <section >
             <header label="Style" params="fieldset=true" displacement="ontop"/>
             <section orientation="horizontal">
               <field attribute="ffontsize" label="Font Size" default="13">

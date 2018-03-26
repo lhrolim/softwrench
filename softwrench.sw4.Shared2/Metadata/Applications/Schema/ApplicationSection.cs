@@ -150,7 +150,7 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                 OrientationEnum = ApplicationSectionOrientation.vertical;
             }
 
-            Orientation = orientation;
+            Orientation = OrientationEnum.ToString().ToLower();
         }
 
         public string Type => GetType().Name;
