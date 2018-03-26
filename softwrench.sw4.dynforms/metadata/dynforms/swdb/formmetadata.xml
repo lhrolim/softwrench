@@ -190,7 +190,18 @@
               <field attribute="fcolor" label="Font Color" >
                 <renderer type="color" />
               </field>
+
+
             </section>
+
+            <section orientation="horizontal">
+              <renderer params="inputsize=medium" type="default"/>
+              <field attribute="fpaddingleft" label="Identation (px)"  tooltip="the distance in pixels from the left side of the form, restricted to the number of columns available on the screen">
+                <renderer type="numericinput" />
+              </field>
+            </section>
+
+
           </section>
 
 

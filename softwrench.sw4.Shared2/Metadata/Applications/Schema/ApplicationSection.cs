@@ -76,7 +76,10 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
         private string _role;
         public string RendererType => Renderer?.RendererType;
 
-        public IDictionary<string, object> RendererParameters => Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary();
+
+        public IDictionary<string, object> RendererParameters { get; set; }
+
+        
 
         public FieldRenderer Renderer { get; set; }
 
@@ -131,9 +134,9 @@ namespace softwrench.sW4.Shared2.Metadata.Applications.Schema {
                         : displayable.ShowExpression + "&& @" + Attribute;
                 }
             }
+            RendererParameters = Renderer == null ? new Dictionary<string, object>() : Renderer.ParametersAsDictionary();
 
 
-            
 
 
         }

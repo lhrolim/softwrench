@@ -203,7 +203,7 @@
         function getInputClass (fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
-            if (fieldMetadata.type == 'ApplicationSection') {
+            if (fieldMetadata.type === 'ApplicationSection') {
                 return ' col-xs-12';
             }
 
