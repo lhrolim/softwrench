@@ -232,9 +232,7 @@
               <option label="Emergency" value="emergency"/>
               <option label="Urgent" value="urgency"/>
               <option label="Routine" value="routine"/>
-              <option label="Scheduled Maintenance" value="schedmaint"/>
               <option label="Renovation" value="renovation"/>
-              <option label="Deferred" value="deferred"/>
             </optionfield>
 
             <field label="Affected Personnel" attribute="affectpersonnel" helpicon="right" tooltip="If you are entering this work request on behalf of someone, please enter their name here. "/>
