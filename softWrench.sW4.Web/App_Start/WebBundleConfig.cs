@@ -91,7 +91,8 @@ namespace softWrench.sW4.Web {
                     "~/Content/vendor/scripts/angular/angular-file-upload.js",
                     "~/Content/vendor/scripts/angular/angular-drag-and-drop-lists.js",
                     "~/Content/vendor/scripts/angular/sortable.js",
-                    "~/Content/vendor/scripts/angular/clickoutside.directive.js"
+                    "~/Content/vendor/scripts/angular/clickoutside.directive.js",
+                    "~/Content/vendor/scripts/angular/ui-mask.js"
                 ).Include(
                     "~/Content/vendor/scripts/angular-ui-grid/ui-grid.js"
                 )

@@ -38,7 +38,8 @@
         'ui.grid',
         'ui.grid.pagination',
         'ui.grid.edit',
-        'ui.grid.cellNav'
+        'ui.grid.cellNav',
+        'ui.mask'
     ]);
 
     app.run(["editableOptions", function (editableOptions) {

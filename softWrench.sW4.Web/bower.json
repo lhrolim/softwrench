@@ -50,7 +50,8 @@
     "angular-ui-grid": "^4.2.2",
     "angular-click-outside": "^2.10.2",
     "angular-pdf": "^1.5.1",
-    "moment-timezone": "^0.5.13"
+    "moment-timezone": "^0.5.13",
+    "angular-ui-mask": "^1.8.7"
   },
   "resolutions": {
     "angular": "1.6.4"

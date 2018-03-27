@@ -211,7 +211,7 @@
               </renderer>
             </field>
             <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please enter your phone number where you can be reached.">
-              <renderer type="default" params="inputmaxlength=10;valtype=custom;valmessage=Phone Number should contain ten digits.;valpattern=^\d{10}$"/>
+              <renderer type="default" params="inputmaxlength=10;mask=(999) 999-9999;mask-modelvalue=true"/>
             </field>
           </section>
 

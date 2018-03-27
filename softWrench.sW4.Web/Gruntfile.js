@@ -107,6 +107,7 @@ module.exports = function (grunt) {
                     // bootstrap
                     "bootstrap/bootstrap.js": "bootstrap/dist/js/bootstrap.js",
                     // angular
+                    "angular/ui-mask.js": "angular-ui-mask/dist/mask.js",
                     "angular/angular.js": "angular/angular.js",
                     "angular/angular-sanitize.js": "angular-sanitize/angular-sanitize.js",
                     "angular/angular-strap.js": "angular-strap/dist/angular-strap.js",
@@ -139,6 +140,7 @@ module.exports = function (grunt) {
                     "utils/moment-locale-es.js": "moment/locale/es.js",
                     "utils/spin.js": "spin.js/spin.js",
                     "utils/lz-string.js": "lz-string/libs/lz-string.js"
+
                 }
             }
         },

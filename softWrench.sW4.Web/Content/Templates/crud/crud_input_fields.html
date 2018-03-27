@@ -638,6 +638,8 @@
                                                    ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"
                                                    placeholder="{{fieldMetadata.rendererParameters['placeholder']}}"
                                                    ng-pattern="pattern"
+                                                   ui-mask="{{fieldMetadata.rendererParameters['mask']}}"
+                                                   model-view-value="{{fieldMetadata.rendererParameters['mask-modelvalue']}}"
                                                    ng-init="initField(fieldMetadata)"
                                                    ng-required="isFieldRequired(fieldMetadata)"
                                                    ng-enter="blurField(event,fieldMetadata)"
