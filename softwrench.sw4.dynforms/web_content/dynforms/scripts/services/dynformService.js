@@ -378,6 +378,10 @@
                 resultOb.providerAttribute = "formMetadataOptionsProvider.GetAvailableOptions#" + modalData.fprovider;
                 resultOb.target = modalData.fattribute;
                 resultOb.associationKey = resultOb.providerAttribute;
+                resultOb.rendererType = modalData["ofrenderer"];
+                if (rendererType === "checkbox") {
+                    resultOb.rendererParameters["hide.optionfieldheader"] = "true";
+                }
             }
 
             return resultOb;
