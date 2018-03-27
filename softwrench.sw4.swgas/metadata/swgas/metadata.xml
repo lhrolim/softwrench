@@ -210,7 +210,7 @@
                 <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@swgas\.com$"/>
               </renderer>
             </field>
-            <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please enter your phone number where you can be reached.">
+            <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please provide the phone number that the technician can reach you at if they have any questions about the work">
               <renderer type="default" params="inputmaxlength=10;mask=(999) 999-9999;mask-modelvalue=true"/>
             </field>
           </section>
@@ -220,7 +220,7 @@
             <header label="Details" params="fieldset=true"/>
             <field attribute="summary" label="Summary" requiredexpression="true" helpicon="right" tooltip="Please enter a brief summary of your work request."/>
 
-            <field attribute="description" label="Description" requiredexpression="true" helpicon="right" tooltip="Please enter as much detail as possible for your work request. ">
+            <field attribute="description" label="Description" requiredexpression="true" helpicon="right" tooltip="To ensure the best customer service, please provide the technician with the best details of the work requested">
               <renderer type="textarea"/>
             </field>
 
