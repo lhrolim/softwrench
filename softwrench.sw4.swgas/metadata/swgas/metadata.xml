@@ -353,6 +353,10 @@
           <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
+          <field label="Reported Date" attribute="reportdate" readonly="true">
+            <renderer type="date"/>
+          </field>
+
           <field label="Scheduled Start Date" attribute="schedstart" readonly="true">
             <renderer type="date"/>
           </field>
