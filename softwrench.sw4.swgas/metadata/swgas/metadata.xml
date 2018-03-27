@@ -308,9 +308,18 @@
               <option xmlns="http://www.controltechnologysolutions.com/filters" label="Other" value="!pm" />
             </optionfilter>
           </filters>
+
+          <customization position="description">
+            <field attribute="description" label="Summary">
+              <renderer type="default" params="excelwidth=50;width=20%" />
+            </field>
+          </customization>
           
           <customization position="+siteid">
             <field attribute="worktype" label="Work Type"/>
+            <field attribute="schedstart" label="Scheduled Start Date">
+              <renderer type="datetime" params="width=10%"/>
+            </field>
           </customization>
           
           
