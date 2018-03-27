@@ -30,6 +30,10 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             get; set;
         }
 
+        public string OrgId {
+            get; set;
+        }
+
         [NotNull]
         public ICommonOperationData GetOperationData => OperationData();
 
@@ -80,7 +84,7 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             }
 
             var isCrud = OperationConstants.IsCrud(OperationName) || typeof(CrudOperationData) == type;
-            if (isCrud || type== null) {
+            if (isCrud || type == null) {
                 var crudOperationData = EntityBuilder.BuildFromJson<CrudOperationData>(typeof(CrudOperationData), _entityMetadata, ApplicationMetadata, JSON, Id, EntityBuilderOptions);
                 if (UserId != null && crudOperationData.UserId == null) {
                     crudOperationData.UserId = UserId;
@@ -89,7 +93,20 @@ namespace softWrench.sW4.Data.Persistence.Operation {
                     //fallback logic to picksiteid from json
                     SiteId = crudOperationData.GetStringAttribute("siteid");
                 }
+                if (OrgId == null) {
+                    //fallback logic to picksiteid from json
+                    OrgId = crudOperationData.GetStringAttribute("orgid");
+                }
 
+                if (UserId == null) {
+                    UserId = crudOperationData.UserId;
+                }
+
+                if (Id == null) {
+                    Id = crudOperationData.Id;
+                }
+
+                crudOperationData.OrgId = OrgId;
                 crudOperationData.SiteId = SiteId;
                 _operationData = crudOperationData;
                 return crudOperationData;

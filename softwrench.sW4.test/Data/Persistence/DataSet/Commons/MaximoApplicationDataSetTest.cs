@@ -73,6 +73,20 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
 
         }
 
+        [TestMethod]
+        public void TestOperationWrapperUpdate() {
+
+            var json = JSonUtil.FromRelativePath("jsons\\sr\\update1.json");
+
+            var ow = new OperationWrapper(_applicationMetadata, MetadataProvider.Entity("sr"), OperationConstants.CRUD_UPDATE, json,null);
+            var operationData = ow.OperationData();
+            Assert.AreEqual("BEDFORD",ow.SiteId);
+            Assert.AreEqual("EAGLENA",ow.OrgId);
+            Assert.AreEqual("400",ow.Id);
+            Assert.AreEqual("135",ow.UserId);
+
+        }
+
 
         [TestMethod]
         public async Task TestExecuteCreationReturningNullEntity() {
@@ -100,7 +114,7 @@ namespace softwrench.sW4.test.Data.Persistence.DataSet.Commons {
             public override async Task<TargetResult> DoExecute(OperationWrapper operationWrapper) {
                 var data = operationWrapper.OperationData() as CrudOperationData;
                 data.ReloadMode = ReloadMode.MainDetail;
-                return new TargetResult("100", "100", null);
+                return new TargetResult("100", "100", null) {SiteId = "BEDFORD"};
             }
 #pragma warning restore 1998
 

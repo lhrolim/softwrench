@@ -130,8 +130,9 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
 
         [Transactional(DBType.Swdb)]
         public override async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
-            if (request.UserId != null && request.UserIdSitetuple == null) {
-                request.UserIdSitetuple = new Tuple<string, string>(request.UserId, null);
+            if (request.UserId != null && request.UserIdSitetuple == null)
+            {
+                request.UserIdSitetuple = new UserIdSiteOrg {UserId = request.UserId};
             }
 
             var detail = await base.GetApplicationDetail(application, user, request);
@@ -139,7 +140,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
             // Shouldn't happen for actual maximo users.
             if (detail == null) {
                 var defaultDataMap = DefaultValuesBuilder.BuildDefaultValuesDataMap(application, request.InitialValues, MetadataProvider.SlicedEntityMetadata(application).Schema.MappingType);
-                defaultDataMap.SetAttribute("personid", request.UserIdSitetuple.Item1);
+                defaultDataMap.SetAttribute("personid", request.UserIdSitetuple.UserId);
                 var associationResults = await BuildAssociationOptions(defaultDataMap, application.Schema, request);
                 detail = new ApplicationDetailResult(defaultDataMap, associationResults, application.Schema, CompositionBuilder.InitializeCompositionSchemas(application.Schema, user), request.Id);
             }
@@ -245,7 +246,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Person {
         /// <param name="operationDataCustomParameters"></param>
         /// <returns></returns>
         [Transactional(DBType.Swdb)]
-        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> operationDataCustomParameters) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, UserIdSiteOrg userIdSite, IDictionary<string, object> operationDataCustomParameters) {
             var isactive = json.StringValue("isactive").EqualsAny("1", "true");
             var isLocked = json.StringValue("locked").EqualsAny("1", "true");
             var primaryEmail = json.StringValue("#primaryemail");

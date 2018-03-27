@@ -15,6 +15,7 @@ using softWrench.sW4.Data.API.Association.SchemaLoading;
 using softWrench.sW4.Data.API.Composition;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata.Security;
 
@@ -47,7 +48,7 @@ namespace softWrench.sW4.Metadata.Applications.DataSet {
 
 
         //        SynchronizationApplicationData Sync(ApplicationMetadata applicationMetadata, SynchronizationRequestDto.ApplicationSyncData applicationSyncData);
-        Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch,[CanBeNull]Tuple<string,string>userIdSite, IDictionary<string,object>customParameters );
+        Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, Boolean isBatch,[CanBeNull]UserIdSiteOrg userIdSite, IDictionary<string,object>customParameters );
 
         Task<TargetResult> Execute(ApplicationMetadata application, JObject json, OperationDataRequest operationData);
 

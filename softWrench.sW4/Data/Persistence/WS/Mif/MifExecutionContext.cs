@@ -60,6 +60,7 @@ namespace softWrench.sW4.Data.Persistence.WS.Mif {
             r.InstantiateProperty(integrationObject, "ORGID", new {
                 Value = curUser.OrgId
             });
+            //TODO investigate this, there was an issue with deletion of workorders
             r.InstantiateProperty(integrationObject, "SITEID", new {
                 Value = curUser.SiteId
             });

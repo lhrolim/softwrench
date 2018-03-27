@@ -35,6 +35,10 @@ namespace softWrench.sW4.Data.API {
             get; set;
         }
 
+        public string OrgId {
+            get; set;
+        }
+
         public ClientPlatform Platform {
             get; set;
         }

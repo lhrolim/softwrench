@@ -61,7 +61,7 @@ namespace softwrench.sw4.kongsberg.classes.com.cts.kongsberg.dataset {
             // Get the classspec's for the classification
             var classspecs = _maximoDao.FindByNativeQuery(classspecQuery);
             var ticketuid = request.Id;
-            var ticketid = request.UserIdSitetuple != null ? request.UserIdSitetuple.Item1 : null;
+            var ticketid = request.UserIdSitetuple != null ? request.UserIdSitetuple.UserId : null;
             // Get the ticketspec's (if any) for the current ticket
             var ticketspecs = ticketuid != null ? _maximoDao.FindByNativeQuery(ticketspecByUidQuery.Fmt(ticketuid)) : _maximoDao.FindByNativeQuery(ticketspecByIdQuery.Fmt(ticketid));
             foreach(var classspeckey in TicketspecHandler.ClassspecMap) {

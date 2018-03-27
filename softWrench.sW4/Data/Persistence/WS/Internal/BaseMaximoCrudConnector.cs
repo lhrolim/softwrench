@@ -73,6 +73,10 @@ namespace softWrench.sW4.Data.Persistence.WS.Internal {
                 w.SetValueIfNull(integrationObject, "siteid", operationData.SiteId);
             }
 
+            if (!string.IsNullOrEmpty(operationData.OrgId)) {
+                w.SetValueIfNull(integrationObject, "orgid", operationData.OrgId);
+            }
+
             var curUser = SecurityFacade.CurrentUser();
             w.SetValueIfNull(integrationObject, "ORGID", curUser.OrgId);
             w.SetValueIfNull(integrationObject, "SITEID", curUser.SiteId);

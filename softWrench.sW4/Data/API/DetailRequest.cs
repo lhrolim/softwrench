@@ -5,6 +5,7 @@ using softWrench.sW4.Metadata;
 using softWrench.sW4.Metadata.Applications;
 using System;
 using System.Collections.Generic;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 
 namespace softWrench.sW4.Data.API {
     public class DetailRequest : IDataRequest, IAssociationPrefetcherRequest {
@@ -90,7 +91,7 @@ namespace softWrench.sW4.Data.API {
 
         public string UserId { get; set; }
 
-        public Tuple<string, string> UserIdSitetuple {
+        public UserIdSiteOrg UserIdSitetuple {
             get; set;
         }
 
@@ -106,7 +107,11 @@ namespace softWrench.sW4.Data.API {
                 CustomParameters = adapter.CustomParameters
             };
             if (adapter.SiteId != null && adapter.UserId != null) {
-                request.UserIdSitetuple = new Tuple<string, string>(adapter.UserId, adapter.SiteId);
+                request.UserIdSitetuple = new UserIdSiteOrg {
+                    UserId = adapter.UserId,
+                    SiteId = adapter.SiteId,
+                    OrgId = adapter.OrgId
+                };
             }
             request.UserId = adapter.UserId;
 

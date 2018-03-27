@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -12,7 +13,7 @@ using softWrench.sW4.Util;
 namespace softWrench.sW4.umc.classes.com.cts.umc.dataset {
     public class UmcSRDataSet : BaseServiceRequestDataSet {
 
-        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> operationDataCustomParameters) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, UserIdSiteOrg userIdSite, IDictionary<string, object> operationDataCustomParameters) {
             var schemaid = application.Schema.SchemaId;
             if (IsCreateOrUpdate(operation) && !isBatch) {
                 json.ReplaceValue("siteid", new JValue("UMCSITE"));

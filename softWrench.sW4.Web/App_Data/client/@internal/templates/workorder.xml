@@ -76,7 +76,7 @@
           <relationshipAttribute from="glaccount" to="glaccount" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid" />
         </relationship>
-       
+
         <relationship to="longdescription" qualifier="ld">
           <relationshipAttribute from="workorderid" to="ldkey" primary="true"/>
           <relationshipAttribute to="ldownertable" literal="WORKORDER" quoteLiteral="true" />
@@ -100,16 +100,16 @@
           <relationshipAttribute from="wonum" to="recordkey" primary="true"/>
           <relationshipAttribute to="class" literal="WORKORDER" quoteLiteral="true"/>
         </relationship>
-        
+
         <relationship to="failurelistonly" qualifier="failurelist" >
           <relationshipAttribute from="failurecode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
-<!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
+          <!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
         </relationship>
         <relationship to="problemlist" qualifier="problemlist">
           <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
           <relationshipAttribute from="orgid" to="orgid"/>
-<!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
+          <!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
         </relationship>
         <relationship to="person" qualifier="ownerperson">
           <relationshipAttribute from="owner" to="personid" primary="true"/>
@@ -139,8 +139,8 @@
           <relationshipAttribute from="plantmanager" to="personid" primary="true"/>
           <relationshipAttribute from="siteid" to="locationsite"/>
         </relationship>
-        
-        
+
+
 
         <relationship to ="persongroup">
           <relationshipAttribute from ="ownergroup" to ="persongroup" primary="true"/>
@@ -220,8 +220,8 @@
           <relationshipAttribute from="pmnum" to="pmnum" primary="true"/>
           <relationshipAttribute from="siteid" to="siteid"/>
         </relationship>
-        
-        
+
+
       </relationships>
       <connectorParameters>
         <connectorParameter key="integration_interface" value="SWWO" />
@@ -230,7 +230,7 @@
         <connectorParameter key="customconnector" value="softWrench.sW4.Data.Persistence.WS.Applications.Workorder.BaseWorkOrderCrudConnector" />
       </connectorParameters>
     </entity>
-    
+
     <entity name ="problemlist" parententity="failurelist" idAttribute="failurelist" whereclause="((problemlist.TYPE like 'PROBLEM')) " >
       <attributes>
         <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
@@ -248,7 +248,7 @@
         <attribute name="description" query="(select description from failurecode where failurecode = !@failurecode and orgid = !@orgid)" type="varchar"/>
       </attributes>
     </entity>
-    
+
   </entities>
 
   <applications>
@@ -280,39 +280,39 @@
           <field attribute="wonum" hidden="true" />
           <field attribute="reportdate" label="Reported On" default="@now" hidden="true"/>
           <field attribute="changeby" label="Changed By" hidden="true"/>
-          
+
           <field attribute="estdur"            hidden="true"/>
           <field attribute="estlabhrs"         hidden="true"/>
           <field attribute="estmatcost"        hidden="true"/>
           <field attribute="estintlabhrs"      hidden="true"/>
           <field attribute="estintlabcost"     hidden="true"/>
           <field attribute="estatapprlabhrs"   hidden="true"/>
-          
+
           <field attribute="estatapprmatcost"  hidden="true"/>
           <field attribute="estatapprlabcost"  hidden="true"/>
           <field attribute="estatapprtoolcost" hidden="true"/>
           <field attribute="estatapprservcost" hidden="true"/>
-          
+
           <field attribute="estapprlabhrs"     hidden="true"/>
           <field attribute="estapprmatcost"    hidden="true"/>
           <field attribute="estapprlabcost"    hidden="true"/>
-          
+
           <field attribute="estlabcost"        hidden="true"/>
           <field attribute="esttoolcost"       hidden="true"/>
           <field attribute="estservcost"       hidden="true"/>
-          
+
           <field attribute="actlabhrs"         hidden="true"/>
           <field attribute="actlabcost"        hidden="true"/>
           <field attribute="actservcost"       hidden="true"/>
           <field attribute="actmatcost"        hidden="true"/>
           <field attribute="acttoolcost"       hidden="true"/>
-          
+
           <field attribute="outlabcost"        hidden="true"/>
           <field attribute="outmatcost"        hidden="true"/>
           <field attribute="outtoolcost"       hidden="true"/>
           <field attribute="outservcost"       hidden="true"/>
           <field attribute="originalstatus" hidden="true"/>
-          
+
         </componentdisplayable>
 
         <componentdisplayable id="statuslookup">
@@ -322,14 +322,14 @@
           </association>
         </componentdisplayable>
 
-        
 
-        
+
+
       </components>
 
-      
-      
-      
+
+
+
       <properties>
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
@@ -338,7 +338,7 @@
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
       </properties>
-      
+
       <schemas>
         <schema id="list" stereotype="list.selection" title="Work Order Grid" platform="web">
           <filters>
@@ -403,7 +403,7 @@
                        parameters="schema,datamap" cssclasses="large-button"/>
             </commandgroup>
           </commandbars>
-          
+
         </schema>
 
         <schema id="batchStatusChangeModal" stereotype="detail.modal" title="Change Status" platform="web">
@@ -501,17 +501,17 @@
           <field attribute="workorderid" hidden="true"/>
           <field attribute="orgid"  requiredexpression="true" readonly="true" hidden="true"/>
           <field attribute="woclass" hidden="true"/>
-          
+
 
           <!--TODO: investigate hidden fields on customizations not being added-->
-<!--          <field attribute="crewid" hidden="true"/>-->
+          <!--          <field attribute="crewid" hidden="true"/>-->
 
           <field attribute="class" hidden="true"/>
           <field attribute="synstatus_.maxvalue"  readonly="true" hidden="true"/>
           <field hidden="true" attribute="failurelist_.failurelist"/>
           <field hidden="true" attribute="#problemlist_.failurelist" attributeToServer="problemlist_.failurelist"/>
           <field hidden="true" attribute="#causelist_.failurelist" attributeToServer="causelist_.failurelist"/>
-          
+
           <field attribute="pmnum"  hidden="true"/>
           <field attribute="cinum"  hidden="true"/>
           <!--          <field attribute="failurecode"  hidden="true"/>-->
@@ -546,8 +546,8 @@
 
               <section orientation="horizontal">
                 <renderer type="default" params="childinputsize=large" />
-                <association label="Location" target="location" labelfield="location_.description"  
-                             dependantfields="siteid" enableexpression="!@siteid != null" 
+                <association label="Location" target="location" labelfield="location_.description"
+                             dependantfields="siteid" enableexpression="!@siteid != null"
                              extraprojectionvalues="serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
                   <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
                   <renderer type="lookup" />
@@ -559,12 +559,12 @@
                 </association>
               </section>
 
-             <section orientation="horizontal" id="classsection">              
-               <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureTypeDescription">
-                 <renderer type="lookup" params="inputsize=large" />
-               </optionfield>
+              <section orientation="horizontal" id="classsection">
+                <optionfield attribute="classstructureid" label="Classification" providerattribute="_WOClassStructureTypeDescription">
+                  <renderer type="lookup" params="inputsize=large" />
+                </optionfield>
 
-                
+
 
                 <association label="Work Type" target="worktype" labelfield="worktype_.wtypedesc" orderbyfield="worktype asc">
                   <renderer type="lookup" params="inputsize=small"/>
@@ -573,7 +573,7 @@
                 <optionfield attribute="wopriority" label="Priority" providerattribute="_SWPriorityType">
                   <renderer type="lookup" params="inputsize=small"/>
                 </optionfield>
-                
+
               </section>
               <!-- field used to base custmozations for UMC from -->
               <field attribute="hiddenfield" hidden="true"/>
@@ -593,7 +593,7 @@
               <association label="Reported By" target="reportedby" labelfield="reportedbyperson_.displayname" default="@personid" orderbyfield="personid asc" >
                 <renderer type="lookup" params="columnlabel=Name;"/>
               </association>
-              
+
               <field label="Reported Date &amp; Time" attribute="reportdate" readonly="true" default="@currentdatetime">
                 <renderer type="datetime" />
               </field>
@@ -680,6 +680,8 @@
           <section id="compositions"/>
 
 
+
+
         </schema>
 
         <schema id="newdetail" parentschema="adetail" title="New Work Order"  platform="web" stereotype="detailnew">
@@ -746,7 +748,7 @@
             <composition relationship="assignment" label="Assignments" detailschema="compositiondetail" outputschema="" printschema="">
               <collectionproperties allowupdate="true" allowcreation="@status!='CLOSE'" listschema="compositionlist"   />
             </composition>
-            
+
             <composition relationship="matusetrans" label="Material">
               <collectionproperties allowupdate="false" allowcreation="@status!='CLOSE'" />
             </composition>
@@ -793,14 +795,21 @@
           <!--            </commandgroup>-->
           <!--          </commandbars>-->
           <commandbars>
+
+            
+
             <commandgroup position="actions">
-<!--              <container label="Workflow" id="actioncontainer" icon="fa-bolt">-->
+              <!--              <container label="Workflow" id="actioncontainer" icon="fa-bolt">-->
               <command id="initiateWorkflow" icon="fa-play" label="Initiate Workflow" parameters="schema,datamap" service="workflowService" method="initiateWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
               <command id="routeWorkflow" icon="fa-step-forward" label="Route Workflow" service="workflowService" method="routeWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
               <command id="stopWorkflow" icon="fa-stop" label="Stop WorkFlow" service="workflowService" method="stopWorkflow" permissionexpression="@maximoVersionEvaluator.Is76" cssclasses="large-button"/>
+              <command id="crud_delete" label="Delete" service="crudextraService" method="deletefn" parameters="schema,datamap"
+                       showexpression="service:workorderService.isDeleteAllowed" successmessage="SR deleted" cssclasses="large-button" icon="fa-remove"/>
               <!-- Create new SR as Related Record -->
+              
               <command id="createrelated" icon="fa-ticket" label="Create Request" service="workorderService" method="createRelatedSr" parameters="schema,datamap" cssclasses="large-button" enableexpression="$scope:enableSave"/>
-<!--              </container>-->
+
+              <!--              </container>-->
             </commandgroup>
           </commandbars>
           <event type="beforesubmit.postvalidation" service="genericTicketService" method="handleStatusChange"/>
@@ -834,7 +843,7 @@
           <field attribute="siteid" hidden="true"/>
           <field attribute="orgid" hidden="true"/>
         </schema>
-        
+
         <!-- region: mobile-->
         <list platform="mobile" title="Work Order Grid">
           <field attribute="wonum" label="Number" qualifier="title"/>
@@ -859,12 +868,12 @@
             <renderer type="richtext"/>
           </field>
         </schema>
-        
+
         <detail platform="mobile" title="Work Order">
           <reference id="detailhiddensoffline"/>
-          
+
           <field attribute="owner" label="Owner"  readonly="true"/>
-          
+
           <reference id="statuslookup"/>
           <field attribute="wopriority" label="Priority">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
@@ -879,7 +888,7 @@
           <field label="Details" attribute="ld_.ldtext">
             <renderer type="richtext"/>
           </field>
-          
+
           <composition relationship="worklog" label="Work Logs" />
           <composition relationship="labtrans" label="Labor">
             <event type="beforedelete" service="laborService" method="confirmPossibleTimer"/>
@@ -892,18 +901,18 @@
 
           <commandbars>
             <commandgroup platform="mobile" position="mobile.fab">
-              <command id="startlabtrans" service="laborService" method="startLaborTransaction" 
+              <command id="startlabtrans" service="laborService" method="startLaborTransaction"
                        icon="ion-play" showexpression="service:laborService.shouldAllowLaborStart" label="Start Labor Report" cssclasses="green" />
-              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction" 
+              <command id="finishlabtrans" service="laborService" method="finishLaborTransaction"
                        icon="ion-stop" showexpression="service:laborService.shouldAllowLaborFinish" label="Finish Labor Report" cssclasses="red"/>
             </commandgroup>
           </commandbars>
-          
+
         </detail>
         <!-- endregion -->
 
       </schemas>
-    
+
     </application>
 
 

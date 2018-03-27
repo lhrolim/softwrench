@@ -7,12 +7,15 @@
                 deletefn: function (schema, datamap, extraParameters, skipAlert) {
                     const fields = datamap;
                     const idFieldName = schema.idFieldName;
+                    const userIdFieldName = schema.userIdFieldName;
                     const applicationName = schema.applicationName;
                     const id = fields[idFieldName];
+                    const userId = fields[userIdFieldName];
 
                     const request = () => {
                         var parameters = submitServiceCommons.createSubmissionParameters(fields, schema, null, id);
                         parameters.siteId = fields["siteid"];
+                        parameters.orgId = fields["orgid"];
                         if (extraParameters) {
                             parameters = $.extend({}, parameters, extraParameters);
                         }
@@ -27,7 +30,7 @@
                     if (skipAlert) {
                         request();
                     } else {
-                        alertService.confirm(null, applicationName, id).then(request);
+                        alertService.confirm(null, applicationName, userId).then(request);
                     }
                 },
 

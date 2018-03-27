@@ -5,6 +5,7 @@ using cts.commons.persistence;
 using cts.commons.Util;
 using Newtonsoft.Json.Linq;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.WS.API;
@@ -19,7 +20,7 @@ namespace softwrench.sw4.chicago.classes.com.cts.chicago.dataset {
 
 
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch,
-            Tuple<string, string> userIdSite, IDictionary<string,object>customParameters) {
+            UserIdSiteOrg userIdSite, IDictionary<string,object>customParameters) {
             var result = await base.Execute(application, json, id, operation, isBatch, userIdSite, customParameters);
 
             if ("servicerequest".Equals(application.Name) && "crud_update".Equals(operation)) {

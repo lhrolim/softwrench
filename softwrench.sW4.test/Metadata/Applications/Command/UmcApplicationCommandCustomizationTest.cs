@@ -21,7 +21,7 @@ namespace softwrench.sW4.test.Metadata.Applications.Command {
             Assert.IsTrue(cs.ApplicationCommands.ContainsKey("#actions"));
             var actions = cs.ApplicationCommands["#actions"];
             var originalCount = actions.Commands.Count;
-            Assert.AreEqual(originalCount, 4);
+            Assert.AreEqual(originalCount, 5);
             ApplicationConfiguration.TestclientName = "test4";
             MetadataProvider.StubReset();
 

@@ -18,7 +18,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
     public class BaseLabtransDataSet : MaximoApplicationDataSet {
 
         [Transactional(DBType.Maximo)]
-        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> customParameters) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, UserIdSiteOrg userIdSite, IDictionary<string, object> customParameters) {
 
             TargetResult result;
 

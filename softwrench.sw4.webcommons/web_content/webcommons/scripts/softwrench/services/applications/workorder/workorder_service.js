@@ -3,7 +3,7 @@
     'use strict';
 
 
-    function workorderService($log, redirectService, crudContextHolderService, applicationService, restService, compositionService, alertService, $http, $rootScope, submitService) {
+    function workorderService($log, redirectService, crudContextHolderService, applicationService, restService, compositionService, alertService, $http, $rootScope, submitService, userService) {
 
         function setLocationFromAsset() {
             const dm = crudContextHolderService.rootDataMap();
@@ -51,6 +51,10 @@
             return redirectService.goToApplicationView("workorder", "newdetail", null, null, {});
         }
 
+        function isDeleteAllowed (datamap, schema) {
+            return datamap['status'].equalsAny("NEW", "WAPPR") && datamap['reportedby'] === userService.getPersonId().toUpperCase();
+        }
+
         function createRelatedSr(schema, datamap) {
             var composition = 'relatedrecord_';
             // Make related record for workorder to SR and add to datamap, setting #createSr to true so related record handler will make the SR before the related record
@@ -88,6 +92,7 @@
         const service = {
             goToDetail,
             newWo,
+            isDeleteAllowed,
             openNewDetailModal,
             setLocationFromAsset,
             createRelatedSr,
@@ -99,6 +104,6 @@
 
 
 
-    angular.module('sw_layout').service('workorderService', ["$log", "redirectService", 'crudContextHolderService', 'applicationService', 'restService', 'compositionService', 'alertService', '$http', '$rootScope', 'submitService', workorderService]);
+    angular.module('sw_layout').service('workorderService', ["$log", "redirectService", 'crudContextHolderService', 'applicationService', 'restService', 'compositionService', 'alertService', '$http', '$rootScope', 'submitService', 'userService', workorderService]);
 }
 )(angular);

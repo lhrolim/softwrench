@@ -51,7 +51,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
             return parameter.BASEDto;
         }
 
-        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> customParameters) {
+        public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, UserIdSiteOrg userIdSite, IDictionary<string, object> customParameters) {
             if (!string.Equals(operation, OperationConstants.CRUD_CREATE) || isBatch) {
                 return await base.Execute(application, json, id, operation, isBatch, userIdSite, customParameters);
             }

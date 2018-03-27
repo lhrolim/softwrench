@@ -58,7 +58,7 @@ namespace softwrench.sw4.tgcs.classes.com.cts.tgcs.services {
                 NormalizeISMPerson(ismPerson);
                 var ds = _dsProvider.LookupDataSet("person", "newPersonDetail");
                 Log.InfoFormat("creating person and user on the fly on Maximo");
-                var result = await ds.Execute(_applicationMetadata, new JObjectDatamapAdapter(ismPerson), null, OperationConstants.CRUD_CREATE, false, new Tuple<string, string>(ismPerson.GetStringAttribute("personid"), ismPerson.GetStringAttribute("siteid")),null);
+                var result = await ds.Execute(_applicationMetadata, new JObjectDatamapAdapter(ismPerson), null, OperationConstants.CRUD_CREATE, false, new UserIdSiteOrg{UserId = ismPerson.GetStringAttribute("personid"), SiteId = ismPerson.GetStringAttribute("siteid")}, null);
                 return (User)result.ResultObject;
             }
 

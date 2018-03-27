@@ -176,7 +176,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
         /// <returns></returns>
         protected virtual async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(application);
-            return (DataMap)await Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple);
+            return (DataMap)await Engine().FindById(entityMetadata, request.Id, request.UserIdSitetuple?.ToUserIdSite);
         }
 
         public virtual async Task<ApplicationDetailResult> GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
@@ -622,14 +622,14 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (compositionData == null || compositionData.Operation == null || !compositionData.Operation.EqualsAny(OperationConstants.CRUD_DELETE, OperationConstants.CRUD_UPDATE)) {
                 //not a composition deletion/update, no need for any further checking
                 return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                    new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
+                    new UserIdSiteOrg(operationData), operationData.CustomParameters);
             }
 
             var clientComposition = compositionData.DispatcherComposition;
             var composition = application.Schema.Compositions().FirstOrDefault(f => f.Relationship.Equals(EntityUtil.GetRelationshipName(clientComposition)));
             if (composition == null) {
                 return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                  new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
+                    new UserIdSiteOrg(operationData), operationData.CustomParameters);
             }
             var compositionListSchema = composition.Schema.Schemas.List;
             var compositionEntityName = compositionListSchema.EntityName;
@@ -637,8 +637,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             var maximoWebServiceName = compositionEntity.ConnectorParameters.GetWSEntityKey();
             if (maximoWebServiceName == null) {
                 //let parent web-service handle it
-                return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                    new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
+                return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch, new UserIdSiteOrg(operationData)
+                    , operationData.CustomParameters);
             }
 
             if (compositionEntity.ConnectorParameters.Parameters.ContainsKey("integration_interface_operations")) {
@@ -646,7 +646,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
                 if (!validOperations.Any(a => a.EqualsIc(compositionData.Operation))) {
                     //not to be handled by composed web-service either
                     return await Execute(application, json, operationData.Id, operationData.Operation, operationData.Batch,
-                        new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
+                        new UserIdSiteOrg(operationData), operationData.CustomParameters);
                 }
 
             }
@@ -662,7 +662,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (ds.GetType() != typeof(BaseApplicationDataSet)) {
                 //if there´s an overriden DataSet for the composition, let´s use it
                 var targetResult = await ds.Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
-                    operationData.Batch, new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
+                    operationData.Batch, new UserIdSiteOrg(operationData), operationData.CustomParameters);
 
                 //let's make sure the success message receives the right userId, which is the parent userid
                 targetResult.UserId = operationData.UserId;
@@ -671,8 +671,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             }
             //otherwise let´s stick with the main app dataset
             return await Execute(compositionApplication, GetCompositionJson(json, compositionData), compositionData.Id, compositionData.Operation,
-                operationData.Batch,
-                new Tuple<string, string>(operationData.UserId, operationData.SiteId), operationData.CustomParameters);
+                operationData.Batch,new UserIdSiteOrg(operationData), operationData.CustomParameters);
 
         }
 
@@ -688,12 +687,13 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             return val[0] as JObject;
         }
 
-        public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, Tuple<string, string> userIdSite, IDictionary<string, object> customParameters) {
+        public virtual async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id, string operation, bool isBatch, UserIdSiteOrg userIdSite, IDictionary<string, object> customParameters) {
             var entityMetadata = MetadataProvider.Entity(application.Entity);
             var operationWrapper = BuildOperationWrapper(application, json, id, operation, entityMetadata);
             if (userIdSite != null) {
-                operationWrapper.UserId = userIdSite.Item1;
-                operationWrapper.SiteId = userIdSite.Item2;
+                operationWrapper.UserId = userIdSite.UserId;
+                operationWrapper.SiteId = userIdSite.SiteId;
+                operationWrapper.OrgId = userIdSite.OrgId;
             }
             operationWrapper.CustomParameters = customParameters;
 
@@ -723,7 +723,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons {
             if (OperationConstants.CRUD_CREATE.Equals(operation)) {
                 id = result.Id;
                 var siteId = result.SiteId ?? crudOperationData.SiteId;
-                userIdSite = new Tuple<string, string>(result.UserId, siteId);
+                userIdSite = new UserIdSiteOrg {SiteId = siteId, UserId = result.UserId};
             }
 
             if (id == null && userIdSite == null) {

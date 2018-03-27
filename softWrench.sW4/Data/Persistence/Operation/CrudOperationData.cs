@@ -15,6 +15,9 @@ namespace softWrench.sW4.Data.Persistence.Operation {
         private readonly string _userIdAttributeName;
         public ReloadMode ReloadMode { get; set; } = ReloadMode.None;
 
+        private string _siteId;
+        private string _orgId;
+
 
         public CrudOperationData([CanBeNull] string id, [NotNull] IDictionary<string, object> attributes,
             [NotNull] IDictionary<string, object> associationAttributes, EntityMetadata metadata, ApplicationMetadata applicationMetadata)
@@ -27,20 +30,40 @@ namespace softWrench.sW4.Data.Persistence.Operation {
 
         public new string Id { get; set; }
 
-        public string SiteId {get; set;}
+        public string SiteId {
+            get { return _siteId; }
+            set {
+                this._siteId = value;
+                if (value != null) {
+                    SetAttribute("siteid", value);
+                }
+
+            }
+        }
+
+        [CanBeNull]
+        public string OrgId {
+            get { return _orgId; }
+            set {
+                this._orgId = value;
+                if (value != null) {
+                    SetAttribute("orgid", value);
+                }
+            }
+        }
 
 
         public string UserId {
             get { return GetAttribute(_userIdAttributeName) == null ? null : GetAttribute(_userIdAttributeName).ToString(); }
             set { SetAttribute(_userIdAttributeName, value); }
         }
-        public string Class { get { return EntityMetadata.GetTableName(); } }
-        
+        public string Class => EntityMetadata.GetTableName();
+
         [JsonIgnore]
         public EntityMetadata EntityMetadata { get; set; }
         public OperationType OperationType { get; set; }
         public OperationProblemData ProblemData { get; set; }
-        public AttributeHolder Holder { get { return this; } }
+        public AttributeHolder Holder => this;
 
         public ApplicationMetadata ApplicationMetadata { get; set; }
 
@@ -48,27 +71,18 @@ namespace softWrench.sW4.Data.Persistence.Operation {
             return new List<CrudOperationData>();
         }
 
-        public IDictionary<string, object> Fields {
-            get { return this; }
-        }
+        public IDictionary<string, object> Fields => this;
 
-        public string TableName {
-            get { return EntityMetadata.GetTableName().ToUpper(); }
-        }
+        public string TableName => EntityMetadata.GetTableName().ToUpper();
 
-        public bool IsDirty {
-            get { return UnmappedAttributes.ContainsKey("#isDirty"); }
-        }
+        public bool IsDirty => UnmappedAttributes.ContainsKey("#isDirty");
 
-        public bool IsCompositionCreation {
-            get { return UnmappedAttributes.ContainsKey("_iscreation"); }
-        }
+        public bool IsCompositionCreation => UnmappedAttributes.ContainsKey("_iscreation");
 
         public CrudOperationData Clone() {
             var atributes = new Dictionary<string, object>(this);
             var assocAtributes = new Dictionary<string, object>(AssociationAttributes);
-            var clone = new CrudOperationData(Id, atributes, assocAtributes, EntityMetadata, ApplicationMetadata)
-            {
+            var clone = new CrudOperationData(Id, atributes, assocAtributes, EntityMetadata, ApplicationMetadata) {
                 SiteId = SiteId,
                 OperationType = OperationType,
                 ReloadMode = ReloadMode

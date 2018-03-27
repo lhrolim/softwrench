@@ -49,11 +49,11 @@ namespace softWrench.sW4.Web.Controllers.Routing {
             var targetMocked = routerParameter.TargetMocked;
             var targetResult = routerParameter.TargetResult;
             string id = null;
-            Tuple<string, string> userIdSiteTuple = null;
+            UserIdSiteOrg userIdSiteTuple = null;
             if (targetResult != null) {
                 id = targetResult.Id;
                 if (id == null) {
-                    userIdSiteTuple = new Tuple<string, string>(targetResult.UserId, targetResult.SiteId);
+                    userIdSiteTuple = new UserIdSiteOrg(targetResult);
                 }
             }
 

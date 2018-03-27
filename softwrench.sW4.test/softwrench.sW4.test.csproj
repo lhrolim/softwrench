@@ -462,6 +462,9 @@
     <Content Include="App_data\jsons\person\update1.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="App_data\jsons\sr\update1.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="App_data\jsons\workpackage\schemaloading.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
