@@ -379,7 +379,7 @@
                 resultOb.target = modalData.fattribute;
                 resultOb.associationKey = resultOb.providerAttribute;
                 resultOb.rendererType = modalData["ofrenderer"];
-                if (rendererType === "checkbox") {
+                if (resultOb.rendererType === "checkbox") {
                     resultOb.rendererParameters["hide.optionfieldheader"] = "true";
                 }
             }
