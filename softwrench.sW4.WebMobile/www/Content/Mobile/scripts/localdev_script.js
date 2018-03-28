@@ -65,6 +65,20 @@ const qaLocalData = {
     debuglogs: ["init"]
 };
 
+const qaswgasLocalData = {
+    //set to true to allow starting the app at the login screen
+    showlogin: false,
+    //    username: "fs112894",
+    username: "lrolim",
+    password: "maguila",
+    //    password: "$@$Pass2",
+    serverurl: {
+        ripple: "http://qa.softwrench.net/swgas",
+        device: "http://qa.softwrench.net/swgas"
+    },
+    debuglogs: ["init"]
+};
+
 
 
 const fsVpnProdLocalData = {
@@ -80,6 +94,6 @@ const fsVpnProdLocalData = {
 
 };
 
-window.localdevdata = localhostDevData;
+window.localdevdata = qaLocalData;
 
 

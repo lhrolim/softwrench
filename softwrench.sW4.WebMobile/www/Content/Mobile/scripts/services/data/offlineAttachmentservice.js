@@ -43,6 +43,8 @@
             var deferred = $q.defer();
             const log = $log.get("attachmentService#createFile", ["attachment"]);
 
+            log.debug(`start create file method for ${fileName} with mime ${mimeType} `);
+
             window.requestFileSystem(window.TEMPORARY, 5 * 1024 * 1024, function (fs) {
                 log.debug('file system open directory: ' + fs.name);
 
@@ -54,6 +56,7 @@
                             deferred.resolve(fileEntry);
                         };
                         fileWriter.onerror = function (e) {
+                            log.error(e);
                             deferred.reject();
                         };
                         fileWriter.write(base64ToBlob(base64Data, mimeType));
