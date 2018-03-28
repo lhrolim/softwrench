@@ -191,7 +191,7 @@
                         crudContext.composition.currentListSchema = tab.schema.schemas.list;
                         crudContext.composition.currentDetailSchema = tab.schema.schemas.detail;
                         crudContext.composition.currentDetailItem = null;
-                        contextService.insertIntoContext("crudcontext", crudContext);
+                        contextService.insertIf("crudcontext", crudContext,false, isRippleEmulator);
                         return routeService.go("main.cruddetail.compositionlist");
                     });
                 },
@@ -214,7 +214,7 @@
                     //for compositions item will be the datamap itself
                     crudContext.composition.currentDetailItem = item;
                     crudContext.composition.originalDetailItemDatamap = angular.copy(item);
-                    contextService.insertIntoContext("crudcontext", crudContext);
+                    contextService.insertIf("crudcontext", crudContext,false, isRippleEmulator);
                     return routeService.go("main.cruddetail.compositiondetail");
                 },
 
@@ -246,7 +246,7 @@
                         //to make this new item always dirty!!!
                         "_newitem#$": true
                     };
-                    contextService.insertIntoContext("crudcontext", crudContext);
+                    contextService.insertIf("crudcontext", crudContext,false, isRippleEmulator);
                     return routeService.go("main.cruddetail.compositiondetail");
                 },
 
@@ -343,7 +343,7 @@
                         })
                         .then(saved => {
                             applicationName = saved.application;
-                            contextService.insertIntoContext("crudcontext", crudContext);
+                            contextService.insertIf("crudcontext", crudContext,false, isRippleEmulator);
                             if (!crudContext.newItem) {
                                 //                            crudContext.originalDetailItemDatamap = angular.copy(saved.datamap);
                                 return this.refreshIfLeftJoinPresent(crudContext, saved);
@@ -445,7 +445,7 @@
                             return $q.when();
                         }
                         log.debug("application grid refreshed");
-                        contextService.insertIntoContext("crudcontext", crudContext);
+                        contextService.insertIf("crudcontext", crudContext, false, isRippleEmulator);
                         return routeService.go("main.crudlist");
                     });
                 },
@@ -629,7 +629,7 @@
                         crudContext.originalDetailItemDatamap = angular.copy(crudContext.currentDetailItem.datamap);
                         crudContextHolderService.setPreviousAndNextItems(item);
                         if (isRippleEmulator()) {
-                            contextService.insertIntoContext("crudcontext", crudContext);
+                            contextService.insertIf("crudcontext", crudContext, false, isRippleEmulator);
                         }
 
 

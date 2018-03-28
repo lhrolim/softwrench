@@ -4,8 +4,8 @@
     // crudContextHolderService, redirectService, restService, alertService
 
     angular.module('sw_layout')
-        .service('genericTicketService', ["$q", "alertService", "crudContextHolderService", "searchService", "userService", "applicationService", "redirectService", "restService", "$log", "lookupService",
-            function ($q, alertService, crudContextHolderService, searchService, userService, applicationService, redirectService, restService, $log, lookupService) {
+        .service('genericTicketService', ["$q", "alertService", "crudContextHolderService", "searchService", "userService", "applicationService", "redirectService", "restService", "$log", "lookupService","contextService",
+            function ($q, alertService, crudContextHolderService, searchService, userService, applicationService, redirectService, restService, $log, lookupService, contextService) {
 
                 var updateTicketStatus = function (datamap) {
                     // If the status is new and the user has set the owner/owner group, update the status to queued
@@ -258,6 +258,10 @@
 
 
                     isDeleteAllowed: function (datamap, schema) {
+                        if (contextService.isClient("swgas")) {
+                            return true;
+                        }
+
                         return datamap['status'] === 'NEW' && datamap['reportedby'] === userService.getPersonId().toUpperCase();
                     },
 

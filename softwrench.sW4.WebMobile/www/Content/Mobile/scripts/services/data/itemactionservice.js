@@ -1,7 +1,7 @@
 ﻿(function (angular) {
     "use strict";
 
-    function itemActionService($q,$rootScope, synchronizationFacade, crudContextService, $ionicPopup, laborService, alertService) {
+    function itemActionService($q, $rootScope, synchronizationFacade, crudContextService, $ionicPopup, laborService, alertService) {
         //#region Utils
         //#endregion
 
@@ -47,10 +47,13 @@
                     title: "Quick Sync",
                     template: alertService.buildCenteredTemplate("Sync Successful")
                 }))
-                .catch(error => $ionicPopup.alert({
-                    title: "Quick Sync",
-                    template: alertService.buildCenteredTemplate(error.message || "An error happened during sync")
-                }));
+                .catch(error => {
+                    const message = error && error.message ? error.message : "An error happened during sync";
+                    $ionicPopup.alert({
+                        title: "Quick Sync",
+                        template: alertService.buildCenteredTemplate(message)
+                    })
+                });
         }
 
         /**
@@ -84,7 +87,7 @@
 
                 return promise
                     .then(() => $ionicPopup.alert({ title: `${currentTitle} was successfuly ${restorable ? "restored" : "deleted"}` }))
-                    .then(()=> $rootScope.$broadcast("sw_itemrestored",item))
+                    .then(() => $rootScope.$broadcast("sw_itemrestored", item))
                     .then(() => true);
             });
         }
@@ -117,7 +120,7 @@
     //#region Service registration
 
     angular.module("sw_mobile_services")
-        .factory("itemActionService", ["$q","$rootScope", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", "alertService", itemActionService]);
+        .factory("itemActionService", ["$q", "$rootScope", "synchronizationFacade", "crudContextService", "$ionicPopup", "laborService", "alertService", itemActionService]);
 
     //#endregion
 

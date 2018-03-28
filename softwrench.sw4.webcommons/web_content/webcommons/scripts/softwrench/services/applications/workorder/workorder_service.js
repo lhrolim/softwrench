@@ -3,7 +3,7 @@
     'use strict';
 
 
-    function workorderService($log, redirectService, crudContextHolderService, applicationService, restService, compositionService, alertService, $http, $rootScope, submitService, userService) {
+    function workorderService($log, redirectService, crudContextHolderService, applicationService, restService, compositionService, alertService, $http, $rootScope, submitService, userService, contextService) {
 
         function setLocationFromAsset() {
             const dm = crudContextHolderService.rootDataMap();
@@ -51,7 +51,11 @@
             return redirectService.goToApplicationView("workorder", "newdetail", null, null, {});
         }
 
-        function isDeleteAllowed (datamap, schema) {
+        function isDeleteAllowed(datamap, schema) {
+            if (contextService.isClient("swgas")) {
+                return true;
+            }
+
             return datamap['status'].equalsAny("NEW", "WAPPR") && datamap['reportedby'] === userService.getPersonId().toUpperCase();
         }
 
@@ -104,6 +108,6 @@
 
 
 
-    angular.module('sw_layout').service('workorderService', ["$log", "redirectService", 'crudContextHolderService', 'applicationService', 'restService', 'compositionService', 'alertService', '$http', '$rootScope', 'submitService', 'userService', workorderService]);
+    angular.module('sw_layout').service('workorderService', ["$log", "redirectService", 'crudContextHolderService', 'applicationService', 'restService', 'compositionService', 'alertService', '$http', '$rootScope', 'submitService', 'userService', 'contextService', workorderService]);
 }
 )(angular);

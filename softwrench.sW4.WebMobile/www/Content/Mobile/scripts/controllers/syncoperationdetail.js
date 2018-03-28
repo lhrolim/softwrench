@@ -95,7 +95,7 @@
                             //registering first sync call automatically
                             return $timeout(() => {
                                 // $scope.fullSynchronize(true);
-                                $scope.showSyncModal();
+                                $scope.showSyncModal(value);
                             }, 0, false);
                         } else {
                             loadingService.showDefault();
@@ -167,7 +167,7 @@
                     let needFullResync = false;
                     return synchronizationFacade.fullSync(downloadAttachments)
                         .then(function (operation) {
-                            return synchronizationFacade.shouldFullResync(!initial).then((needsResync) => {
+                            return synchronizationFacade.shouldFullResync(!initial,initial).then((needsResync) => {
                                 needFullResync = needsResync;
                                 if (!needFullResync) {
                                     swAlertPopup.show({
@@ -229,7 +229,7 @@
                 }
 
                 $scope.fullSynchronize = function (downloadAttachments = true, initial = false) {
-                    synchronizationFacade.shouldFullResync(true, !initial).then((needsResync) => {
+                    synchronizationFacade.shouldFullResync(true, initial).then((needsResync) => {
                         if (needsResync) {
                             return securityService.logout(false, false).then(() => $scope.innerFullSynchronize(downloadAttachments));
                         }

@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="classes\swgas\cts\swgas\configuration\SwgasWhereClauseRegistry.cs" />
     <Compile Include="classes\swgas\cts\swgas\dataset\SwgasSrDataSet.cs" />
     <Compile Include="classes\swgas\cts\swgas\migration\SWWEB3394_Migration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -147,7 +148,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="classes\swgas\cts\swgas\configuration\" />
     <Folder Include="classes\swgas\cts\swgas\connector\" />
     <Folder Include="classes\swgas\cts\swgas\model\" />
   </ItemGroup>

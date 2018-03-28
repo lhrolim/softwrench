@@ -332,7 +332,7 @@
 
 
       <properties>
-        <property key="mobile.fetchlimit" value="300"/>
+<!--        <property key="mobile.fetchlimit" value="300"/>-->
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
         <property key="icon.composition.tab" value="fa fa-wrench"/>
         <property key="list.offline.text.indexlist" value="wonum,description,status,location,asset_.description,wopriority"/>
@@ -884,7 +884,15 @@
             <number decimals="0" min="0" max="999" />
           </field>
           <association label="Location" target="location" labelfield="location.description" />
-          <association label="Asset" target="assetnum" labelfield="asset.description" />
+          <field attribute="assetnum" label="Asset">
+            <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
+          </field>
+
+          <association label="Asset" target="assetnum" labelfield="asset.description" showexpression="false"/>
+          
+          
+          
+
           <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />

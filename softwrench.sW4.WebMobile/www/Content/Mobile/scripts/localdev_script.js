@@ -3,8 +3,8 @@ const localhostDevData = {
     //set to true to allow starting the app at the login screen
     showlogin: false,
     //    username: "fs112894",
-    username: "tcottier",
-    password: "password",
+    username: "lrolim",
+    password: "maguila",
     //    password: "$@$Pass2",
     serverurl: {
         ripple: "http://localhost:8080/sw4",
@@ -80,6 +80,6 @@ const fsVpnProdLocalData = {
 
 };
 
-window.localdevdata = fsVpnProdLocalData;
+window.localdevdata = localhostDevData;
 
 

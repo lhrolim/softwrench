@@ -15,7 +15,7 @@
     "editor.minimap.enabled": false,
 
     "cron.jobs": {
-        "globals": "C://Users//lrolim//workspace//softwrench//softwrench.sW4.WebMobile",
+        "globals": "C://Users//luizh//workspace//softwrench//softwrench.sW4.WebMobile",
         "jobs": [
             {
                 "name": "My Script using specific date",

@@ -47,6 +47,14 @@
             return `\`root\`.dateindex01 >= ${tomorrowTime}`;
         }
 
+        function getProblematicWosWhereClause() {
+            return "`root`.hasProblem = 1";
+        }
+
+        function getCreatedWosWhereClause() {
+            return "`root`.remoteId is null";
+        }
+
 
         //#endregion
 
@@ -56,6 +64,8 @@
             preSync,
             getFutureWosWhereClause,
             getPastWosWhereClause,
+            getProblematicWosWhereClause,
+            getCreatedWosWhereClause,
             getTodayWosWhereClause
         };
 

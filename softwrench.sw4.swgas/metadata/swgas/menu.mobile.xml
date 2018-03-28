@@ -6,5 +6,8 @@
     <application id="TWO" title="Current Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=workorderOfflineService.getTodayWosWhereClause;offlinegridtitle=Current Assignments"/>
     <application id="FWO" title="Future Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinemenuwc=workorderOfflineService.getFutureWosWhereClause;offlinegridtitle=Future Assignments"/>
     <application id="AWO" title="All Assignments" ref="workorder" schema="list" icon="fa-table" parameters="offlinegridtitle=All Assignments"/>
+    <application id="CWO" title="Created" ref="workorder" schema="list" icon="fa-plus" parameters="offlinemenuwc=workorderOfflineService.getCreatedWosWhereClause;offlinegridtitle=Created Work Orders"/>
+    <application id="PRWO" title="Problems" ref="workorder" schema="list" icon="fa-warning" parameters="offlinemenuwc=workorderOfflineService.getProblematicWosWhereClause;offlinegridtitle=Work Orders With Problems"/>
   </container>
+
 </Menu>

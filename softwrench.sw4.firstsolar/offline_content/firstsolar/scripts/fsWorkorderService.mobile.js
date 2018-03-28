@@ -1,7 +1,9 @@
 ﻿
+//TODO: unify some methods with workorder_offline_service.j
 (function (angular, _) {
     "use strict";
 
+    
     const day = 24 * 60 * 60 * 1000;
 
     //#region WhereClauses

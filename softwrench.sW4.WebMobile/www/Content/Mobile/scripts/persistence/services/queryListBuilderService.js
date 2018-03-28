@@ -106,6 +106,11 @@
          * @returns {} 
          */
         function buildJoinParameters(listSchema) {
+            if (!listSchema){
+                log.warn("list schema is null, shouldn´t happen here...");
+                return {};
+            }
+
             if (listSchema.applicationName === "otherworkorderunassigned"){
                 return {};
             }

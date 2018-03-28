@@ -19,6 +19,12 @@
                 return value;
             },
 
+            insertIf: function (key, value, userootscope, lambdaFn) {
+                if (lambdaFn && lambdaFn()){
+                    this.insertIntoContext(key,value,userootscope);    
+                }
+            },
+
             set: function (key, value, userootscope) {
                 return this.insertIntoContext(key, value, userootscope);
             },

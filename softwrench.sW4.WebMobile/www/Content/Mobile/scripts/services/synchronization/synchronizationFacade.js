@@ -226,18 +226,26 @@
         /**
          * Used when facilies were changed and the user needs a full resync to have only the data related to the new facility set.
          */
-        function shouldFullResync(considerDirty, forceResync) {
+        function shouldFullResync(considerDirty, initialSync) {
+            if (initialSync){
+                return $q.when(false);
+            }
+
+
             const dirtyPromise = considerDirty ? hasDataToSync() : $q.when(false);
 
             return dirtyPromise.then(hasDirty => {
-                if (hasDirty) {
-                    return $q.when(false);
+                if (hasDirty){
+                    //at initial sync, or if there´s something to be uploaded (dirty) regardless we should not do a full resync
+                    return false;
                 }
-                if (forceResync){
-                    return true;
-                }
-
-                return configurationService.getConfig(ConfigurationKeys.FacilitiesChanged).then(facilitiesChanged => !!facilitiesChanged);
+                return configurationService.getConfigs([ConfigurationKeys.FacilitiesChanged,ConfigurationKeys.ServerConfig]).then(configs =>{
+                    if (configs[ConfigurationKeys.ServerConfig]["client"] === "firstsolar"){
+                        //First solar has been using (controversially) full reset due to a bug on assingment dates
+                        return true;
+                    }
+                    return !!configs[ConfigurationKeys.FacilitiesChanged];
+                })
             });
         }
 

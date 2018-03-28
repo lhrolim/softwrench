@@ -210,9 +210,16 @@
                 <parameter key="valpattern" value="^(([^&lt;&gt;()\[\]\.,;:\s@\&quot;]+(\.[^&lt;&gt;()\[\]\.,;:\s@\&quot;]+)*)|(\&quot;.+\&quot;))@swgas\.com$"/>
               </renderer>
             </field>
-            <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please provide the phone number that the technician can reach you at if they have any questions about the work">
-              <renderer type="default" params="inputmaxlength=10;mask=(999) 999-9999;mask-modelvalue=true"/>
-            </field>
+
+            <section>
+
+              <field attribute="phoneext" label="Phone Number" requiredexpression="true" helpicon="right" tooltip="Please provide the phone number that the technician can reach you at if they have any questions about the work">
+                <renderer type="default" params="inputmaxlength=10;mask=(999) 999-9999;mask-modelvalue=true"/>
+              </field>
+              <field label="Please provide a phone number where a technician may reach you" attribute="#phonelabel">
+                <renderer type="label"/>
+              </field>
+            </section>
           </section>
 
 
@@ -220,9 +227,15 @@
             <header label="Details" params="fieldset=true"/>
             <field attribute="summary" label="Summary" requiredexpression="true" helpicon="right" tooltip="Please enter a brief summary of your work request."/>
 
+            <field label="To ensure the best customer service, please provide the technician with the best details of the work requested" attribute="#desclabel">
+              <renderer type="label"/>
+            </field>
+
             <field attribute="description" label="Description" requiredexpression="true" helpicon="right" tooltip="To ensure the best customer service, please provide the technician with the best details of the work requested">
               <renderer type="textarea"/>
             </field>
+            
+
 
             <composition inline="true" relationship="#attachments" label="Attachments" detailschema="" fetchtype="lazy">
               <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;showdownloadall=false"/>
@@ -236,7 +249,7 @@
             </optionfield>
 
             <field label="Affected Personnel" attribute="affectpersonnel" helpicon="right" tooltip="If you are entering this work request on behalf of someone, please enter their name here. "/>
-            
+
           </section>
 
           <section orientation="horizontal">
@@ -312,15 +325,15 @@
               <renderer type="default" params="excelwidth=50;width=20%" />
             </field>
           </customization>
-          
+
           <customization position="+siteid">
             <field attribute="worktype" label="Work Type"/>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="width=10%"/>
             </field>
           </customization>
-          
-          
+
+
           <properties>
             <property key="list.defaultorderby" value="workorder.reportdate desc"/>
           </properties>
@@ -399,6 +412,26 @@
           </commandbars>
 
         </detail>
+
+        <schema id="newdetail" stereotype="detailnew" platform="mobile" redeclaring="true">
+          <field attribute="wopriority" label="Priority" default="1">
+            <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
+            <number decimals="0" min="0" max="5" />
+          </field>
+
+          <field attribute="assetnum" label="Asset">
+            <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
+          </field>
+          <association label="Location" target="location" labelfield="location.description" showexpression="false"/>
+
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
+          <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
+          <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
+          <field attribute="description" label="Description" />
+          <field label="Details" attribute="ld_.ldtext">
+            <renderer type="richtext"/>
+          </field>
+        </schema>
 
 
       </schemas>
