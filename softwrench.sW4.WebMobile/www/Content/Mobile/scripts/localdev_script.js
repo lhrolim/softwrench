@@ -3,8 +3,8 @@ const localhostDevData = {
     //set to true to allow starting the app at the login screen
     showlogin: false,
     //    username: "fs112894",
-    username: "lrolim",
-    password: "maguila",
+    username: "tcottier",
+    password: "password",
     //    password: "$@$Pass2",
     serverurl: {
         ripple: "http://localhost:8080/sw4",

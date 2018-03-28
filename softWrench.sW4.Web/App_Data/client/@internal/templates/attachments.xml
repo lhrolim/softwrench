@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <metadata xmlns="http://www.controltechnologysolutions.com/metadata">
 
- 
+
+  <entities>
+    <entity name="DOCINFO" idAttribute="docinfoid">
+      <attributes>
+        <attribute name="parseddescription" query="SUBSTRING(!@description,CHARINDEX('\',!@description)+1,LEN(!@description))" type="varchar"/>
+        <attribute name="extension" query="SUBSTRING(!@description,LEN(!@description) - CHARINDEX('.',REVERSE(!@description)) + 2,LEN(!@description))" type="varchar"/>
+      </attributes>
+    </entity>
+  </entities>
   
   <applications>
     
@@ -18,8 +26,10 @@
           <field label="Id" hidden="true" attribute="docinfoid"/>
           <field hidden="true" attribute="ownerid"/>
           <field hidden="true" attribute="doclinksid"/>
-          <field label="Document" attribute="document" qualifier="title"/>
-          <field label="Created Date" attribute="createdate" qualifier="subtitle"/>
+          <field hidden="true" attribute="document" />
+          <field label="Document" attribute="description" qualifier="title"/>
+          <field label="extension" attribute="extension" qualifier="subtitle"/>
+          <field label="Created Date" attribute="createdate" qualifier="featured"/>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>
           <!--this shall hold the hash of the file to prevent a second offline download -->

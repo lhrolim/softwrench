@@ -2,7 +2,7 @@
     "use strict";
 
     function synchronizationFacade($log, $q, $rootScope, $timeout, dataSynchronizationService, metadataSynchronizationService, scriptsSynchronizationService, associationDataSynchronizationService, batchService, metadataModelService,attachmentDataSynchronizationService, synchronizationOperationService, laborService,
-        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService, configurationService) {
+        asyncSynchronizationService, synchronizationNotificationService, offlineAuditService, dao, loadingService, $ionicPopup, crudConstants, entities, problemService, tracking, menuModelService, networkConnectionService, restService, securityService, configurationService, synchronizationResyncService) {
 
         //#region Utils
 
@@ -112,7 +112,7 @@
         //#region Public methods
 
         function hasDataToSync() {
-            return dao.countByQuery("DataEntry", "(isDirty=1 or hasProblem=1) and pending=0").then(count => count > 0);
+            return synchronizationResyncService.hasDataToSync();
         }
 
         /**
@@ -227,26 +227,7 @@
          * Used when facilies were changed and the user needs a full resync to have only the data related to the new facility set.
          */
         function shouldFullResync(considerDirty, initialSync) {
-            if (initialSync){
-                return $q.when(false);
-            }
-
-
-            const dirtyPromise = considerDirty ? hasDataToSync() : $q.when(false);
-
-            return dirtyPromise.then(hasDirty => {
-                if (hasDirty){
-                    //at initial sync, or if there´s something to be uploaded (dirty) regardless we should not do a full resync
-                    return false;
-                }
-                return configurationService.getConfigs([ConfigurationKeys.FacilitiesChanged,ConfigurationKeys.ServerConfig]).then(configs =>{
-                    if (configs[ConfigurationKeys.ServerConfig]["client"] === "firstsolar"){
-                        //First solar has been using (controversially) full reset due to a bug on assingment dates
-                        return true;
-                    }
-                    return !!configs[ConfigurationKeys.FacilitiesChanged];
-                })
-            });
+            return synchronizationResyncService.shouldFullResync(considerDirty, initialSync);
         }
 
 
@@ -471,7 +452,7 @@
 
     //#region Service registration
     mobileServices.factory("synchronizationFacade", ["$log", "$q", "$rootScope", "$timeout", "dataSynchronizationService", "metadataSynchronizationService", "scriptsSynchronizationService", "associationDataSynchronizationService", "batchService",
-        "metadataModelService","attachmentDataSynchronizationService", "synchronizationOperationService", "laborService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", synchronizationFacade]);
+        "metadataModelService","attachmentDataSynchronizationService", "synchronizationOperationService", "laborService", "asyncSynchronizationService", "synchronizationNotificationService", "offlineAuditService", "swdbDAO", "loadingService", "$ionicPopup", "crudConstants", "offlineEntities", "problemService", "trackingService", "menuModelService", "networkConnectionService", "offlineRestService", "securityService", "configurationService", "synchronizationResyncService", synchronizationFacade]);
     //#endregion
 
 })(mobileServices, angular, _);

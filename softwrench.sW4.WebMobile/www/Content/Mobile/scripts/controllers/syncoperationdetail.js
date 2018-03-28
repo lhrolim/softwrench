@@ -167,14 +167,14 @@
                     let needFullResync = false;
                     return synchronizationFacade.fullSync(downloadAttachments)
                         .then(function (operation) {
-                            return synchronizationFacade.shouldFullResync(!initial,initial).then((needsResync) => {
+                            return synchronizationFacade.shouldFullResync(!initial).then((needsResync) => {
                                 needFullResync = needsResync;
                                 if (!needFullResync) {
                                     swAlertPopup.show({
                                         title: "Synchronization Succeeded" //TODO: maybe create a message for the popup?
                                     });
                                 }
-                            }).then(() => loadData());
+                            }).then(() => loadData(initial));
                         })
                         .catch(function (error) {
                             synchronizationFacade.handleError(error);
@@ -229,7 +229,7 @@
                 }
 
                 $scope.fullSynchronize = function (downloadAttachments = true, initial = false) {
-                    synchronizationFacade.shouldFullResync(true, initial).then((needsResync) => {
+                    synchronizationFacade.shouldFullResync(true, !initial).then((needsResync) => {
                         if (needsResync) {
                             return securityService.logout(false, false).then(() => $scope.innerFullSynchronize(downloadAttachments));
                         }
