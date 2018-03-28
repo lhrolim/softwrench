@@ -3,9 +3,9 @@
 
 
   <entities>
-    <entity name="DOCINFO" idAttribute="docinfoid">
+    <entity name="docinfo" idAttribute="docinfoid">
       <attributes>
-        <attribute name="parseddescription" query="SUBSTRING(!@description,CHARINDEX('\',!@description)+1,LEN(!@description))" type="varchar"/>
+        <attribute name="parseddescription" query="SUBSTRING(!@description,LEN(!@description) - CHARINDEX('\',REVERSE(!@description)) + 2,LEN(!@description))" type="varchar"/>
         <attribute name="extension" query="SUBSTRING(!@description,LEN(!@description) - CHARINDEX('.',REVERSE(!@description)) + 2,LEN(!@description))" type="varchar"/>
       </attributes>
     </entity>
@@ -27,8 +27,8 @@
           <field hidden="true" attribute="ownerid"/>
           <field hidden="true" attribute="doclinksid"/>
           <field hidden="true" attribute="document" />
-          <field label="Document" attribute="description" qualifier="title"/>
-          <field label="extension" attribute="extension" qualifier="subtitle"/>
+          <field label="Document" attribute="docinfo_.parseddescription" qualifier="title"/>
+          <field label="extension" attribute="docinfo_.extension" qualifier="subtitle"/>
           <field label="Created Date" attribute="createdate" qualifier="featured"/>
           <field hidden="true" attribute="docinfo_.urlname"/>
           <field hidden="true" attribute="maximoURL"/>

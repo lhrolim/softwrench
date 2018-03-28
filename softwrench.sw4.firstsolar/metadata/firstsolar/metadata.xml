@@ -2446,7 +2446,14 @@
             <field attribute="#walkdown" label="Walk Down Photo">
               <renderer type="checkbox"/>
             </field>
+
+            <field label="Document" attribute="docinfo_.parseddescription" hidden="true"/>
+            <field label="extension" attribute="docinfo_.extension" hidden="true"/>
+
           </customization>
+          
+          
+
         </schema>
 
       </schemas>
