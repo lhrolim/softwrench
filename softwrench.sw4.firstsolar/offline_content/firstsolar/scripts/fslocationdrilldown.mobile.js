@@ -58,6 +58,9 @@
             const datamap = crudContextService.currentDetailItemDataMap();
             datamap.assetnum = asset.datamap.assetnum;
             datamap.location = asset.datamap.location;
+            if (asset.datamap.siteid){
+                datamap.siteid = asset.datamap.siteid;
+            }
             const failurecode = asset.datamap.failurecode;
             datamap["failurecode"] = failurecode;
             if (!!failurecode) {
