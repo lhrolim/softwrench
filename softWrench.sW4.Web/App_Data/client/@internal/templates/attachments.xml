@@ -5,10 +5,18 @@
   <entities>
     <entity name="docinfo" idAttribute="docinfoid">
       <attributes>
-        <attribute name="parseddescription" query="SUBSTRING(!@description,LEN(!@description) - CHARINDEX('\',REVERSE(!@description)) + 2,LEN(!@description))" type="varchar"/>
-        <attribute name="extension" query="SUBSTRING(!@description,LEN(!@description) - CHARINDEX('.',REVERSE(!@description)) + 2,LEN(!@description))" type="varchar"/>
+        <attribute name="parseddescription" query="SUBSTRING(!@urlname,LEN(!@urlname) - CHARINDEX('\',REVERSE(!@urlname)) + 2,LEN(!@urlname))" type="varchar"/>
+        <attribute name="extension" query="SUBSTRING(!@urlname,LEN(!@urlname) - CHARINDEX('.',REVERSE(!@urlname)) + 2,LEN(!@urlname))" type="varchar"/>
       </attributes>
     </entity>
+
+    <entity name="DOCLINKS" idAttribute="doclinksid">
+      <attributes>
+        <!--workaround to make sure that the name of the document which will be used at the offline IOS contains the extension-->
+        <attribute name="document" query="(select SUBSTRING(urlname,LEN(urlname) - CHARINDEX('\',REVERSE(urlname)) + 2,LEN(urlname)) from docinfo where docinfoid = !@docinfoid)" type="varchar"/>
+      </attributes>
+    </entity>
+
   </entities>
   
   <applications>
