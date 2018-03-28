@@ -354,11 +354,11 @@
             <renderer type="richtext"/>
           </field>
           <field label="Reported Date" attribute="reportdate" readonly="true">
-            <renderer type="date"/>
+            <renderer type="datetime"/>
           </field>
 
           <field label="Scheduled Start Date" attribute="schedstart" readonly="true">
-            <renderer type="date"/>
+            <renderer type="datetime"/>
           </field>
 
           <composition relationship="labtrans" label="Labor">

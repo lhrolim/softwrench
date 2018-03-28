@@ -32,6 +32,7 @@
       <attributes>
         <attribute name="class" type="varchar" required="true" query="woclass"/>
         <attribute name="originalstatus" query="!@status" type="varchar"/>
+        <attribute name="schedstartnotime" query="(select DATEADD(hh,12,DATEADD(dd,DATEDIFF(dd,0,schedstart),0)))" type="date"/>
       </attributes>
       <relationships>
         <relationship to="worklog" collection="true">
@@ -334,7 +335,7 @@
         <property key="mobile.fetchlimit" value="300"/>
         <property key="mobile.presyncservice" value="workorderOfflineService.preSync"/>
         <property key="icon.composition.tab" value="fa fa-wrench"/>
-        <property key="list.offline.text.indexlist" value="wonum,description,status,location,asset_.description"/>
+        <property key="list.offline.text.indexlist" value="wonum,description,status,location,asset_.description,wopriority"/>
         <property key="list.offline.date.indexlist" value="schedstartnotime"/>
         <property key="mobile.icon.provider" value="laborTimerIconProvider"/>
       </properties>
@@ -847,9 +848,12 @@
         <!-- region: mobile-->
         <list platform="mobile" title="Work Order Grid">
           <field attribute="wonum" label="Number" qualifier="title"/>
-          <field attribute="asset_.description" label="Asset" qualifier="subtitle"/>
-          <field attribute="status" label="Status" qualifier="featured"/>
+          <field attribute="status" label="Asset" qualifier="subtitle"/>
+          <field attribute="schedstartnotime" qualifier="featured"/>
           <field attribute="description" label="Description" qualifier="excerpt"/>
+          <properties>
+            <property key="list.defaultorderby" value="schedstart is null asc, schedstart desc"/>
+          </properties>
         </list>
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew">
