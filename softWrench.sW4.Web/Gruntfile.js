@@ -10,6 +10,8 @@ module.exports = function (grunt) {
             customers: "Content/Customers",
             tests: "../softwrench.sw4.jstest",
             fsscripts: "../softwrench.sw4.firstsolar/web_content/firstsolar/scripts",
+            dynforms: "../softwrench.sw4.dynforms/web_content/dynforms/scripts",
+            webcommonsoriginal: "../softwrench.sw4.webcommons/web_content/webcommons/scripts",
         },
         //#endregion
 
@@ -197,8 +199,20 @@ module.exports = function (grunt) {
                     // modules
                     "<%= app.webcommons %>/scripts/softwrench/sharedservices_module.js", // webcommons
                     "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
+                    
                     // webcommons
-                    "<%= app.content %>/Shared/**/*.js",
+                    //TODO: symlinks not working here...
+                    //"<%= app.content %>/Shared/
+                    "<%= app.webcommonsoriginal %>/**/*.js",
+                    "<%= app.content %>/Shared/activitystream/**/*.js",
+                    "<%= app.content %>/Shared/audit/**/*.js",
+                    "<%= app.content %>/Shared/dashboard/**/*.js",
+                    "<%= app.content %>/Shared/problems/**/*.js",
+//                    "<%= app.content %>/Shared/webcommons/**/*.js",
+//                    "<%= app.webcommonsoriginal %>/**/*.js",
+
+                  
+
                     // sw
                     "<%= app.content %>/Scripts/client/crud/**/*!(aaa_layout).js",
                     "<%= app.content %>/Scripts/client/services/**/*.js",
@@ -219,7 +233,8 @@ module.exports = function (grunt) {
                     "<%= app.content %>/Scripts/customers/shared/*.js",
                     // customers: outer build process guarantees there's only the selected customer in the path
 //                    "<%= app.customers %>/**/scripts/**/*.js",
-                    "<%= app.fsscripts %>/*.js",
+                    "<%= app.fsscripts %>/**/*.js",
+                    "<%= app.dynforms %>/**/*.js",
 
                     // templates
                     "<%= app.content %>/Templates/**/*.html",
