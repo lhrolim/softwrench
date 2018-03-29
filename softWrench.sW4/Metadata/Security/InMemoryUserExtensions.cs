@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
@@ -56,15 +57,15 @@ namespace softWrench.sW4.Metadata.Security {
         public static ApplicationMetadata CachedSchema(this InMemoryUser user, String applicationName, ApplicationMetadataSchemaKey key) {
 
             if (!user.Genericproperties.ContainsKey("schemas")) {
-                user.Genericproperties["schemas"] = new Dictionary<ApplicationMetadataSchemaKey, ApplicationMetadata>();
+                user.Genericproperties["schemas"] = new ConcurrentDictionary<ApplicationMetadataSchemaKey, ApplicationMetadata>();
             }
-            var cache = (IDictionary<ApplicationMetadataSchemaKey, ApplicationMetadata>)user.Genericproperties["schemas"];
+            var cache = (ConcurrentDictionary<ApplicationMetadataSchemaKey, ApplicationMetadata>)user.Genericproperties["schemas"];
             if (cache.ContainsKey(key)) {
                 return cache[key];
             }
             var platform = key.Platform.HasValue ? key.Platform.Value : ClientPlatform.Web;
             var application = MetadataProvider.Application(applicationName).ApplyPolicies(key, user, platform);
-            cache.Add(key, application);
+            cache.TryAdd(key, application);
             return application;
 
         }

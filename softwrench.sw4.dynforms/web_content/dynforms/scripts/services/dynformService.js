@@ -174,7 +174,7 @@
                     }
                     containerToAdd.displayables.splice(idxToSplice, 0, displayable);
                 } else {
-                    const newSection = this.buildDisplayable("ApplicationSection");
+                    const newSection = this.buildDisplayable(this.buildSectionModalData(false));
                     newSection.orientation = "horizontal";
                     if (direction === "right") {
                         newSection.displayables = [
@@ -310,18 +310,20 @@
 
         }
 
-        buildDisplayable(modalData) {
-
-            if (modalData === "ApplicationSection") {
-                //this applies to a new section creation
-
-                modalData = {
-                    flabel: null,
-                    frequired: false,
-                    freadonly: false,
-                    fieldtype: "ApplicationSection"
-                }
+        buildSectionModalData(includeHeader) {
+            const modalData = {
+                flabel: null,
+                frequired: false,
+                freadonly: false,
+                fieldtype: "ApplicationSection",
+                sectionincludeheader: includeHeader
             }
+
+            
+            return modalData;
+        }
+
+        buildDisplayable(modalData) {
 
             let fieldType = modalData.fieldtype;
             let rendererType = "default";
@@ -369,7 +371,9 @@
             };
 
             if (fieldType === "ApplicationSection") {
-                resultOb.header = buildSectionHeader(modalData.flabel);
+                if (modalData.sectionincludeheader) {
+                    resultOb.header = buildSectionHeader(modalData.flabel);
+                }
                 resultOb.orientation = modalData.sectionorientation;
             }
 
@@ -378,12 +382,13 @@
                 resultOb.providerAttribute = "formMetadataOptionsProvider.GetAvailableOptions#" + modalData.fprovider;
                 resultOb.target = modalData.fattribute;
                 resultOb.associationKey = resultOb.providerAttribute;
-                resultOb.rendererType = modalData["ofrenderer"];
-                if (resultOb.rendererType === "checkbox") {
-                    resultOb.rendererParameters["hide.optionfieldheader"] = "true";
+                rendererType = modalData["ofrenderer"];
+                if (rendererType === "checkbox") {
+                    rendererParameters["hide.optionfieldheader"] = "true";
                 }
             }
-
+			
+			
             return resultOb;
         }
 
@@ -692,7 +697,8 @@
             //                container.header = buildSectionHeader(savedData.headerlabel);
             //            }
             //            else {
-            const newSection = this.buildDisplayable("ApplicationSection");
+            //TODO: allow sections without the header
+            const newSection = this.buildDisplayable(this.buildSectionModalData(true));
             newSection.orientation = savedData["sectionorientation"];
             newSection.header = buildSectionHeader(savedData.headerlabel);
             newSection.displayables = currentSelectedFields;
