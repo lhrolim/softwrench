@@ -201,14 +201,18 @@ module.exports = function (grunt) {
                     "<%= app.content %>/Scripts/client/crud/aaa_layout.js", // sw
                     
                     // webcommons
+   // webcommons
                     //TODO: symlinks not working here...
-                    "<%= app.content %>/Shared/**/*.js",
-//                    "<%= app.content %>/Shared/activitystream/**/*.js",
-//                    "<%= app.content %>/Shared/audit/**/*.js",
-//                    "<%= app.content %>/Shared/dashboard/**/*.js",
-//                    "<%= app.content %>/Shared/problems/**/*.js",
+                    //"<%= app.content %>/Shared/
+                    "<%= app.webcommonsoriginal %>/**/*.js",
+                    "<%= app.content %>/Shared/activitystream/**/*.js",
+                    "<%= app.content %>/Shared/audit/**/*.js",
+                    "<%= app.content %>/Shared/dashboard/**/*.js",
+                    "<%= app.content %>/Shared/problems/**/*.js",
 //                    "<%= app.content %>/Shared/webcommons/**/*.js",
 //                    "<%= app.webcommonsoriginal %>/**/*.js",
+                 
+
 
                   
 
