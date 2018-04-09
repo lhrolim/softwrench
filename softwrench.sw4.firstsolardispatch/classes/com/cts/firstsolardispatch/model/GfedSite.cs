@@ -7,6 +7,8 @@ namespace softwrench.sw4.firstsolardispatch.classes.com.cts.firstsolardispatch.m
     public class GfedSite : IBaseEntity {
         public const string FromGFedId = "from GfedSite where GfedId = ?";
 
+        public const string PrefixedQuery = "from GfedSite where facilityname = ?";
+
         [Id(0, Name = "Id")]
         [Generator(1, Class = "native")]
         public int? Id {

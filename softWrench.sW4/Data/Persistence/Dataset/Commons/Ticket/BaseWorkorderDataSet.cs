@@ -22,10 +22,8 @@ using softWrench.sW4.Security.Services;
 namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
     public class BaseWorkorderDataSet : BaseTicketDataSet {
-        private readonly ISWDBHibernateDAO _swdbDao;
-
         public BaseWorkorderDataSet(ISWDBHibernateDAO swdbDao) {
-            _swdbDao = swdbDao;
+            SwDAO = swdbDao;
         }
 
         public SearchRequestDto FilterStatusCodes(AssociationPreFilterFunctionParameters parameters) {
@@ -247,6 +245,8 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket {
 
             return parameter.BASEDto;
         }
+
+        protected ISWDBHibernateDAO SwDAO { get; }
 
 
         public override string ApplicationName() {

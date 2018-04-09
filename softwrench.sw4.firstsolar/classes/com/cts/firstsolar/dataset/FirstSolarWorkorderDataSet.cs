@@ -15,6 +15,7 @@ using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
 using softWrench.sW4.Data;
+using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
@@ -29,6 +30,7 @@ using softWrench.sW4.Metadata.Applications;
 using softWrench.sW4.Metadata.Applications.DataSet;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Entities.Sliced;
+using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
@@ -63,6 +65,21 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return await base.GetList(application, searchDto);
         }
 
+        protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
+            var baseDetail = await base.FetchDetailDataMap(application, user, request);
+            if ("fsservicereport".EqualsIc(application.Schema.SchemaId) && baseDetail.GetStringAttribute("facilityname") != null) {
+                var items = await SwDAO.FindByNativeQueryAsync("select facilitytitle, singlelineaddress from gfed_site where facilityname = ?", baseDetail.GetStringAttribute("facilityname"));
+                var facilityData = items.FirstOrDefault();
+                if (facilityData != null) {
+                    baseDetail.SetAttribute("#facilitytitle", facilityData["facilitytitle"]);
+                    baseDetail.SetAttribute("#singlelineaddress", facilityData["singlelineaddress"]);
+                } else {
+                    baseDetail.SetAttribute("#facilitytitle", baseDetail.GetStringAttribute("facilityname"));
+                }
+            }
+
+            return baseDetail;
+        }
 
 
         public override SearchRequestDto FilterAssets(AssociationPreFilterFunctionParameters parameters) {
@@ -112,7 +129,7 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
             return parameter.BASEDto;
         }
 
-      
+
 
         #region maintenance dash
         private bool IsMaintenanceBuildDash() {

@@ -1175,17 +1175,18 @@
         <schema id="fsservicereport" title="First Solar Service Report" platform="web" mode="output" redeclaring="false" stereotype="detail">
 
           <field attribute="siteid" hidden="true"/>
+          <field attribute="facilityname" hidden="true"/>
           <!--<field attribute="wonum" hidden="true"/>-->
 
           <section orientation="horizontal" >
             <section>
               <header displacement="ontop" label="Customer" params="fieldset=true" />
-              <field attribute="#location_.facilityname" label="" default="Power Electronics" />
+              <field attribute="#xxx" label="" default="Power Electronics" />
             </section>
 
             <section>
               <header displacement="ontop" label="Plant Address" params="fieldset=true" />
-              <field attribute="location" label="" />
+              <field attribute="#singlelineaddress" label="" />
             </section>
 
           </section>
@@ -1193,7 +1194,7 @@
           <section orientation="horizontal">
             <section>
               <header displacement="ontop" label="Job Details" params="fieldset=true" />
-              <field attribute="location_.facilitynam" label="Plant Name"  />
+              <field attribute="#facilitytitle" label="Plant Name"  />
               <field attribute="wonum" label="Workorder #"  />
               <field attribute="reportdate" label="Issue Report Date" >
                 <renderer type="datetime" />
