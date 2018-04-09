@@ -32,6 +32,7 @@ using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softWrench.sW4.Metadata.Entities.Sliced;
 using softWrench.sW4.Metadata.Security;
 using softWrench.sW4.Security.Services;
+using softWrench.sW4.Util;
 
 namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
     public class FirstSolarWorkorderDataSet : BaseWorkorderDataSet {
@@ -67,15 +68,35 @@ namespace softwrench.sw4.firstsolar.classes.com.cts.firstsolar.dataset {
 
         protected override async Task<DataMap> FetchDetailDataMap(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
             var baseDetail = await base.FetchDetailDataMap(application, user, request);
-            if ("fsservicereport".EqualsIc(application.Schema.SchemaId) && baseDetail.GetStringAttribute("facilityname") != null) {
-                var items = await SwDAO.FindByNativeQueryAsync("select facilitytitle, singlelineaddress from gfed_site where facilityname = ?", baseDetail.GetStringAttribute("facilityname"));
+            var facilityName = baseDetail.GetStringAttribute("facilityname");
+            if ("fsservicereport".EqualsIc(application.Schema.SchemaId) && facilityName != null) {
+
+
+                var isPRod = ApplicationConfiguration.IsProd();
+
+                List<Dictionary<string, string>> items = null;
+
+                if (isPRod) {
+                    items = await MaxDAO.FindByNativeQueryAsync(
+                        "select assettitle as facilitytitle, [street address line 1] +coalesce([street address line 2],'') +' ' + coalesce([city],'') +' ' + coalesce([state code],'') +' ' + coalesce([postal code],'') as singlelineaddress from GLOBALFEDPRODUCTION.GlobalFed.Business.vwsites s where scada_guid =?",
+                        facilityName);
+                }
+
+                if (items == null) {
+                    items = await SwDAO.FindByNativeQueryAsync("select facilitytitle, singlelineaddress from gfed_site where facilityname = ?", facilityName);
+                }
+
+
                 var facilityData = items.FirstOrDefault();
                 if (facilityData != null) {
                     baseDetail.SetAttribute("#facilitytitle", facilityData["facilitytitle"]);
                     baseDetail.SetAttribute("#singlelineaddress", facilityData["singlelineaddress"]);
-                } else {
-                    baseDetail.SetAttribute("#facilitytitle", baseDetail.GetStringAttribute("facilityname"));
+
                 }
+                return baseDetail;
+
+
+
             }
 
             return baseDetail;
