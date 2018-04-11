@@ -242,10 +242,10 @@
             </composition>
 
             <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">
-              <option label="Emergency" value="emergency"/>
-              <option label="Urgent" value="urgency"/>
-              <option label="Routine" value="routine"/>
-              <option label="Renovation" value="renovation"/>
+              <option label="Routine (ex: light replacement / 3-5 days)" value="routine"/>
+              <option label="Urgent (ex: bathroom leaking / 1 day)" value="urgency"/>
+              <option label="Emergency (ex: flooding / NOW or today)" value="emergency"/>
+              <option label="Renovation (ex: new office)" value="renovation"/>
             </optionfield>
 
             <field label="Affected Personnel" attribute="affectpersonnel" helpicon="right" tooltip="If you are entering this work request on behalf of someone, please enter their name here. "/>
