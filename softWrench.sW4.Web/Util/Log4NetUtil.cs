@@ -51,6 +51,8 @@ namespace softWrench.sW4.Web.Util {
 
             var swdbUrl = MetadataProvider.GlobalProperties.GlobalProperty("swdb_url");
             //Data Source=localhost;Initial Catalog=swdb;User Id=swdb;password=pIGmkLPTJF6T;
+          
+
 
             var items = swdbUrl.Split(';');
 

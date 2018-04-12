@@ -3086,7 +3086,155 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Usage" attribute="usage">
             <renderer type="default" params="minwidth=80px;excelwidth=20"/>
           </field>
+        </schema>
 
+
+
+        <schema id="R0042Export" stereotype="list">
+          <field label="assetid" attribute="assetid" hidden="true"/>
+          <field label="assetnum" attribute="assetnum" hidden="true"/>
+
+          <field label="ITC_Name" attribute="primaryuser_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+          <field label="User Id" attribute="aucisowner_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Location Description" attribute="location_.description">
+            <renderer type="default" params="minwidth=100px;excelwidth=40"/>
+          </field>
+         
+          <field label="Department" attribute="assetglaccount_.displaycostcenter">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="Floor" attribute="location_.floor">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Room" attribute="location_.room">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Serial Number"  attribute="serialnum">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="EOS_Date" attribute="assetspeceosdate_.alnvalue">
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
+          </field>
+
+          <field label="Usage" attribute="usage">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+
+          <field label="Status" attribute="status">
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
+          </field>
+       
+          <field label="Mac Address" attribute="assetspecmacaddress_.alnvalue">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          
+          <field label="ChangeDate" attribute="changedate"/>
+
+          <field label="rowstamp" attribute="rowstamp" hidden="true"/>
+        </schema>
+
+        <schema id="R0042ExportExcel" stereotype="list">
+          <field label="assetid" attribute="assetid" hidden="true"/>
+          <field label="assetnum" attribute="assetnum" hidden="true"/>
+
+          <field label="ITC_Name - old " attribute="#old_puser_displayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=20;excelcolor=red"/>
+          </field>
+
+          <field label="ITC_Name" attribute="primaryuser_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+
+          <field label="User Id - old" attribute="#old_aucisow_displayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="User Id" attribute="aucisowner_.hlagdisplayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="Location Description - old" attribute="#old_loc_description">
+            <renderer type="default" params="minwidth=100px;excelwidth=40;excelcolor=red"/>
+          </field>
+
+          <field label="Location Description" attribute="location_.description">
+            <renderer type="default" params="minwidth=100px;excelwidth=40"/>
+          </field>
+
+          <field label="Department - old" attribute="#old_department">
+            <renderer type="default" params="minwidth=80px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="Department" attribute="assetglaccount_.displaycostcenter">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="Floor - old" attribute="#old_location_floor">
+            <renderer type="default" params="minwidth=80px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="Floor" attribute="location_.floor">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="Room -old" attribute="#old_location_room">
+            <renderer type="default" params="minwidth=80px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="Room" attribute="location_.room">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+
+          <field label="Serial Number - old"  attribute="#old_serialnum">
+            <renderer type="default" params="minwidth=80px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="Serial Number"  attribute="serialnum">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+
+          <field label="EOS_Date - old" attribute="#old_assetspeceosdate_alnvalue">
+            <renderer type="default" params="minwidth=100px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="EOS_Date" attribute="assetspeceosdate_.alnvalue">
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
+          </field>
+
+          <field label="Usage - old" attribute="#old_usage">
+            <renderer type="default" params="minwidth=80px;excelwidth=20;excelcolor=red"/>
+          </field>
+
+          <field label="Usage" attribute="usage">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+
+
+          <field label="Status - old" attribute="#old_status">
+            <renderer type="default" params="minwidth=100px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="Status" attribute="status">
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
+          </field>
+
+          <field label="Mac Address - old" attribute="#old_assetspecmacaddress_alnvalue">
+            <renderer type="default" params="minwidth=80px;excelwidth=15;excelcolor=red"/>
+          </field>
+
+          <field label="Mac Address" attribute="assetspecmacaddress_.alnvalue">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="ChangeDate" attribute="changedate"/>
         </schema>
 
         <schema id="RI104Export" stereotype="list">

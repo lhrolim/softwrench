@@ -241,6 +241,7 @@ namespace softWrench.sW4.Data.Persistence.SWDB {
                 configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(ExtraAttributes)));
                 configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(HistWorkorder)));
                 configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(HistTicket)));
+                configuration.AddInputStream(NHibernate.Mapping.Attributes.HbmSerializer.Default.Serialize(typeof(R0042AssetHistory)));
 
                 _sessionFactory = configuration.BuildSessionFactory();
             }

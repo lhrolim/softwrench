@@ -64,6 +64,13 @@ namespace softWrench.sW4.Data.Configuration {
                 Contextualized = false
             });
 
+            facade.Register(ConfigurationConstants.R0042Rowstamp, new PropertyDefinition {
+                Description = "current rowstamp to be used to filter assets for the job",
+                StringValue = "0",
+                DataType = "long",
+                Contextualized = false
+            });
+
             //            facade.Register(ConfigurationConstants.LdapAuthNonMaximoUsers, new PropertyDefinition() {
             //                Description = "Allow non maximo users to login into the system",
             //                StringValue = "true",

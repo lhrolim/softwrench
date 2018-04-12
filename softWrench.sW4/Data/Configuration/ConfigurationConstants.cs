@@ -4,6 +4,9 @@
         public const string UserRowstampKey = "/Global/Rowstamps/User";
         public const string MaxQuerySizeChunk = "/Global/Query/MaxQueryChunk";
         public const string PersonGroupRowstampKey = "/Global/Rowstamps/PersonGroup";
+
+        public const string R0042Rowstamp = "/Global/Rowstamps/R0042Rowstamap";
+
         public const string PersonGroupAssociationRowstampKey = "/Global/Rowstamps/PersonGroupAssociation";
         public const string MainIconKey = "/Global/Icons/Main";
 

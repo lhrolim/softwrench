@@ -73,14 +73,15 @@ namespace softWrench.sW4.Data.Persistence.WS.Ism.Entities.Change {
                 //                Type: REASON REJECTING
                 var changeLog2 = new ChangeLog {
                     Log = "Reject Reason for group " + groupName,
-                    ActionID = actionid,
+                    ActionID = "UPDATE",
                     UserID = ISMConstants.AddEmailIfNeeded(user.MaximoPersonId),
                     LogDateTimeSpecified = true,
                     LogDateTime = DateTime.Now,
                     FlexFields = new[]
                     {
                         new FlexFieldsFlexField {mappedTo = "WLLongDesc", id = "0", Value = reason}
-                    }
+                    },
+                    
                 };
 
 

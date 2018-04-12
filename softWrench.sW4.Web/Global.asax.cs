@@ -24,6 +24,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
+using softWrench.sW4.AUTH;
 using softWrench.sW4.Web.Util;
 
 
@@ -44,7 +45,6 @@ namespace softWrench.sW4.Web {
             ViewEngines.Engines.Clear();
             ViewEngines.Engines.Add(new ClientAwareRazorViewEngine());
             ViewEngines.Engines.Add(new FixedWebFormViewEngine()); // to render the reports user controls (.ascx)            
-
 
             AreaRegistration.RegisterAllAreas();
             MetadataProvider.DoInit();

@@ -123,6 +123,7 @@
     <Compile Include="Data\Scheduler\Jobs\Helper\R104ExtractorHelper.cs" />
     <Compile Include="Data\Scheduler\Jobs\Helper\R102ExtractorHelper.cs" />
     <Compile Include="Data\Scheduler\Jobs\Helper\R101ExtractorHelper.cs" />
+    <Compile Include="Data\Scheduler\Jobs\R0042ExtractorJob.cs" />
     <Compile Include="Data\Scheduler\Jobs\RI104ExtractorJob.cs" />
     <Compile Include="Data\Scheduler\Jobs\RI102ExtractorJob.cs" />
     <Compile Include="Data\Scheduler\Jobs\RI101ExtractorJob.cs" />

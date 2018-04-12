@@ -199,6 +199,11 @@ namespace softWrench.sW4.Metadata {
             return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(applicationMetadata.Schema.GetSchemaKey(), applicationMetadata.Entity)];
         }
 
+        public static SlicedEntityMetadata SlicedEntityMetadata(ApplicationMetadataSchemaKey key, string entityName) {
+            return SlicedEntityMetadataCache[new SlicedEntityMetadataKey(key, entityName)];
+        }
+
+
         [NotNull]
         public StreamReader GetStream(string resource) {
             return MetadataParsingUtils.GetStreamImpl(resource);
