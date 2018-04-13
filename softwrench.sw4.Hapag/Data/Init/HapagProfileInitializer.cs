@@ -50,6 +50,7 @@ namespace softwrench.sw4.Hapag.Data.Init {
                         ordinaryRoles[RoleType.IncidentDetailsReport],
                         ordinaryRoles[RoleType.IncidentPerLocationReport],
                         ordinaryRoles[RoleType.AssetCategoriesReport],
+                        ordinaryRoles[RoleType.AssetCompareReport],
                         ordinaryRoles[RoleType.ITCReport]
                     };
                     break;

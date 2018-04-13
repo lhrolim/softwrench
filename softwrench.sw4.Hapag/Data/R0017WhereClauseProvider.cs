@@ -53,7 +53,7 @@ namespace softwrench.sw4.Hapag.Data {
             var sb = new StringBuilder();
             var isWWUser = SecurityFacade.CurrentUser().IsWWUser();
             var ctx = _contextLookuper.LookupContext();
-            if (isWWUser && ctx.IsInModule(FunctionalRole.XItc)) {
+            if (isWWUser && ctx.IsInModule(FunctionalRole.XItc) || (ctx.ApplicationLookupContext != null && "r0042ExportExcel".EqualsIc(ctx.ApplicationLookupContext.Schema))) {
                 return "1=1";
             }
 

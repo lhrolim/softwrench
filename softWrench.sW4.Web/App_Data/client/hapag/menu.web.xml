@@ -113,6 +113,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" 
             parameters="application=asset;reportName=CategoriesReport;key.schemaId=categories" role="assetcategoriesreport" target="new" />
     <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" role="itcreport"/>
+    <application id="assetcomparereport" title="Asset Comparison Report" tooltip="Click to view your Asset Comparison Report" schema="assetcomparefilters" ref="asset"/>
 
     <application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident"  modulealias="sso" modulename="sso" role="sso"/>
     <application id="incidentdetailreport" title="Incident Detail Report" tooltip="Click to view Incident Detail Report" schema="incidentdetailreportfilters" ref="incident"  modulealias="tui" modulename="tui" role="tui"/>

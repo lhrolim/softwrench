@@ -1,4 +1,5 @@
-﻿using softWrench.sW4.Data.Search;
+﻿using System;
+using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Applications.DataSet.Filter;
 using softwrench.sW4.Shared2.Data;
 using softwrench.sW4.Shared2.Metadata.Applications.Schema;
@@ -13,6 +14,12 @@ using softWrench.sW4.Security.Services;
 using softWrench.sW4.SimpleInjector;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using softwrench.sw4.Hapag.Data.DataSet.Helper;
+using softwrench.sW4.Shared2.Util;
+using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagAssetDataSet : BaseApplicationDataSet {
@@ -41,11 +48,48 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         }
 
         protected override ApplicationListResult GetList(ApplicationMetadata application, softWrench.sW4.Data.Pagination.PaginatedSearchRequestDto searchDto) {
+            var schemaId = application.Schema.SchemaId;
+            if ("r0042ExportExcel" == schemaId) {
+                return R0042Export(application, searchDto);
+            }
+
             var dbList = base.GetList(application, searchDto);
             var resultObject = dbList.ResultObject;
-            SchemaIdHandler(application.Schema.SchemaId, resultObject);
+
+            SchemaIdHandler(schemaId, resultObject);
             return dbList;
         }
+
+        private ApplicationListResult R0042Export(ApplicationMetadata application, PaginatedSearchRequestDto dto) {
+            var refDate = dto.SearchValues;
+            var dates = refDate.Split('/'); // comes as 04/2018
+            var newDto = new PaginatedSearchRequestDto { NeedsCountUpdate = false };
+            var year = int.Parse(dates[1]);
+            var month = int.Parse(dates[0]);
+
+            var extractionDate = new DateTime(year, month, 1);
+
+            newDto.AppendWhereClauseFormat("month(asset.changedate) = {0} and year(asset.changedate) = {1}", month, year);
+            newDto.AppendSearchEntry("status", "!=DECOMMISSIONED");
+            var dbList = base.GetList(application, newDto);
+
+            if (!dbList.ResultObject.Any()) {
+                return dbList;
+            }
+
+            var map = R0042QueryHelper.BuildIdMap(dbList);
+            var ids = BaseQueryUtil.GenerateInString(map.Keys);
+
+            var historicData = GetDAO().FindByNativeQuery(
+                "select * from HIST_ASSETR0042 m inner join (select assetid,max(extractiondate) as max_date from HIST_ASSETR0042 where assetid in (:p0) and ExtractionDate <= :p1 group by assetid)i on (m.assetid = i.assetid and m.extractiondate = i.max_date) where m.assetid in (:p0) and m.extractiondate <= :p1", map.Keys, extractionDate);
+
+            R0042QueryHelper.MergeData(map, historicData);
+
+
+
+            return dbList;
+        }
+
 
         private static void SchemaIdHandler(string schemaId, IEnumerable<AttributeHolder> resultObject) {
             if (string.IsNullOrEmpty(schemaId)) {
@@ -92,13 +136,13 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             var histTickets = resultObject.GetAttribute("histticket");
 
             // The workorder grid was replaced by IMAC grid
-             
+
             var woData = GetDAO().FindByQuery<HistWorkorder>(HistWorkorder.ByAssetnum, assetId.ToString());
             foreach (var row in woData) {
                 var list = (IList<Dictionary<string, object>>)resultObject.Attributes["imac_"];
                 list.Add(row.toAttributeHolder());
             }
-             
+
 
             var ticketData = GetDAO().FindByQuery<HistTicket>(HistTicket.ByAssetnum, assetId.ToString());
             var ticketList = (IList<Dictionary<string, object>>)resultObject.Attributes["ticket_"];
@@ -146,7 +190,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             dto.SearchParams = null;
             var assetNum = preFilter.OriginalEntity.GetAttribute("assetnum");
             dto.AppendWhereClauseFormat("ticketid in (select recordkey from MULTIASSETLOCCI multi where multi.assetnum = '{0}' and RECORDCLASS in ({1}) )", assetNum, "'CHANGE','INCIDENT','PROBLEM','SR'");
-            
+
             return dto;
         }
 

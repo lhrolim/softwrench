@@ -81,7 +81,7 @@ namespace softWrench.sW4.Util {
         }
 
 
-        public byte[] ConvertGridToCsv(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows, Func<AttributeHolder, ApplicationFieldDefinition,string, string> ColumnValueDelegate = null) {
+        public byte[] ConvertGridToCsv(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows, Func<AttributeHolder, ApplicationFieldDefinition, string, string> ColumnValueDelegate = null) {
             var csv = new StringBuilder();
             var enumerableFields = schema.Fields.Where(ShouldShowField());
             var fields = enumerableFields as IList<ApplicationFieldDefinition> ?? enumerableFields.ToList();
@@ -94,7 +94,7 @@ namespace softWrench.sW4.Util {
                 var values = fields.Select(field => {
                     var data = GetValueAsString(item, field);
                     if (ColumnValueDelegate != null) {
-                        data = ColumnValueDelegate(item, field,data);
+                        data = ColumnValueDelegate(item, field, data);
                     }
                     var displayableData = AsDisplayableData(data, field, user);
                     return AsCsvCompliantData(displayableData);
@@ -104,7 +104,7 @@ namespace softWrench.sW4.Util {
             });
             // dump to byte array
             return Encoding.UTF8.GetBytes(csv.ToString());
-//            return csv.ToString().GetBytes();
+            //            return csv.ToString().GetBytes();
         }
 
         public byte[] ConvertGridToExcel(InMemoryUser user, ApplicationSchemaDefinition schema, IEnumerable<AttributeHolder> rows) {
@@ -123,7 +123,7 @@ namespace softWrench.sW4.Util {
                 var worksheetpart = Setup(xl, out writer, out rowIdx, schema);
 
                 // create header row
-                CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name);
+                CreateHeaderRow(applicationFields, writer, rowIdx, schema.Name, schema.SchemaId);
                 //count up row
                 rowIdx++;
 
@@ -344,24 +344,30 @@ namespace softWrench.sW4.Util {
             };
         }
 
-        private void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, string schemaId) {
+        private void CreateHeaderRow(IEnumerable<ApplicationFieldDefinition> applicationFields, OpenXmlWriter writer, int rowIdx, string applicationName, string schemaId) {
             var xmlAttributes = new List<OpenXmlAttribute>
             {
                 new OpenXmlAttribute("r", null, rowIdx.ToString(CultureInfo.InvariantCulture))
             };
             writer.WriteStartElement(new Row(), xmlAttributes);
             foreach (var applicationField in applicationFields.Where(ShouldShowField())) {
+
+                var headerStyleId = "8";
+                if (applicationField.Attribute.StartsWith("#old") && ApplicationConfiguration.ClientName == "hapag" && "r0042ExportExcel".Equals(schemaId)) {
+                    headerStyleId = "2";
+                }
                 //Exporting to Excel, even if field is hidden
                 xmlAttributes = new List<OpenXmlAttribute>{
                     // add new datatype for cell
                     new OpenXmlAttribute("t", null, "str"),
                     // add header style
-                    new OpenXmlAttribute("s", null, "8")
+                    new OpenXmlAttribute("s", null, headerStyleId)
                 };
 
 
+
                 writer.WriteStartElement(new Cell(), xmlAttributes);
-                writer.WriteElement(new CellValue(GetI18NLabel(applicationField, schemaId)));
+                writer.WriteElement(new CellValue(GetI18NLabel(applicationField, applicationName)));
 
                 // this is for Cell
                 writer.WriteEndElement();

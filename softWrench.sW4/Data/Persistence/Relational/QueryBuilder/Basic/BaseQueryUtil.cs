@@ -9,7 +9,7 @@ using softWrench.sW4.SimpleInjector;
 using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
-    class BaseQueryUtil {
+    public class BaseQueryUtil {
 
         public const string LiteralDelimiter = "'";
 
@@ -21,6 +21,24 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
         }
 
 
+        public static string GenerateInString(IEnumerable<string> items) {
+            if (items == null) {
+                return "";
+            }
+            var enumerable = items.ToList();
+
+            if (!enumerable.Any()) {
+                return "";
+            }
+
+            var sb = new StringBuilder();
+            foreach (var item in enumerable) {
+                var escapedItem = item.Replace("'", "''");
+                sb.Append("'").Append(escapedItem).Append("'");
+                sb.Append(",");
+            }
+            return sb.ToString(0, sb.Length - 1);
+        }
 
         public static string QualifyAttribute(EntityMetadata entityMetadata, EntityAttribute attribute) {
             return attribute.IsAssociated

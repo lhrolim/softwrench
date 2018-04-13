@@ -1,6 +1,6 @@
 ﻿var app = angular.module('sw_layout');
 
-app.factory('reportservice', function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService) {
+app.factory('reportservice', function ($http, alertService, fieldService, searchService, redirectService, printService, contextService, validationService, fileService, restService) {
 
     "ngInject";
 
@@ -51,14 +51,14 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
             var displayable = filters[i];
             var attribute = displayable.attribute;
             var operationId = displayable.filter.operation;
-                
+
             var operation;
             if (operationId != null) {
                 operation = searchService.getSearchOperationById(operationId);
                 if (operation == null) {
                     operation = searchService.defaultSearchOperation();
                 }
-                
+
                 if (attribute.endsWith("___start")) {
                     // set between operator on 'start' attribute
                     var betweenOperatorAttr = attribute.substring(0, attribute.length - 8);
@@ -80,13 +80,13 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
         return searchService.buildSearchDTO(searchData, {}, searchOperators, {});
     }
 
-    var generateReport = function(currentschema, searchDTO) {
+    var generateReport = function (currentschema, searchDTO) {
         var parameters = {};
 
         var reportSchema = currentschema.properties["nextschema.schemaid"];
         var reportName = currentschema.properties["report.reportName"];
 
-        parameters.searchDTO = searchDTO;        
+        parameters.searchDTO = searchDTO;
         parameters.title = currentschema.title;
         parameters.reportName = reportName;
         parameters.application = currentschema.applicationName;
@@ -96,7 +96,7 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
         parameters.currentmodule = contextService.retrieveFromContext('currentmodule');
         parameters.currentmetadata = contextService.retrieveFromContext('currentmetadata');
 
-        var reportUrl = removeEncoding(url("Report/Index?" + $.param(parameters) + "&Key.schemaId=" + reportSchema));        
+        var reportUrl = removeEncoding(url("Report/Index?" + $.param(parameters) + "&Key.schemaId=" + reportSchema));
         redirectService.redirectNewWindow(reportUrl, isIe9());
     }
 
@@ -124,7 +124,7 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
             defaultOperator["status"] = searchService.getSearchOperationById('EQ');
             defaultOperator["pluspcustomer"] = searchService.getSearchOperationById('CONTAINS');
             defaultOperator["commodities_description"] = searchService.getSearchOperationById('STARTWITH');
-            
+
             var searchDTO = searchService.buildSearchDTO({
                 "reportdate___start": datamap.reportdate___start,
                 "reportdate___end": datamap.reportdate___end,
@@ -133,12 +133,12 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
                 "pluspcustomer": datamap.pluspcustomer,
                 "commodities_.description": datamap.description
             }, {}, {
-                "reportdate": defaultOperator["reportdate"],
-                "internalpriority": defaultOperator["internalpriority"],
-                "status": defaultOperator["status"],
-                "pluspcustomer": defaultOperator["pluspcustomer"],
-                "commodities_description": defaultOperator["commodities_description"]
-            }, {});
+                    "reportdate": defaultOperator["reportdate"],
+                    "internalpriority": defaultOperator["internalpriority"],
+                    "status": defaultOperator["status"],
+                    "pluspcustomer": defaultOperator["pluspcustomer"],
+                    "commodities_description": defaultOperator["commodities_description"]
+                }, {});
 
             generateReport(schema, searchDTO);
         },
@@ -146,7 +146,7 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
         viewIncidentReport: function (datamap, schema) {
             //TODO: FIX THIS
             datamap["commodities_.description"] = getCommodityDescription(datamap);
-            
+
             var searchDTO = generateSearchDTO(datamap, schema);
 
             if (schema.schemaId == "incidentperlocationreportfilters") {
@@ -161,12 +161,12 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
                 contextService.insertReportSearchDTO(reportSchema, searchDTO);
 
                 redirectService.goToApplicationView(appName, reportSchema, null, schema.title, parameters);
-            }            
+            }
         },
 
         viewITCReport: function (datamap, schema) {
 
-            var validationErrors = validationService.validate(schema,schema.displayables, datamap);
+            var validationErrors = validationService.validate(schema, schema.displayables, datamap);
             if (validationErrors.length > 0) {
                 //interrupting here, can´t be done inside service
                 return;
@@ -176,6 +176,31 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
             searchDTO.searchSort = "resppartygroup";
 
             generateReport(schema, searchDTO);
+        },
+
+
+        exportR0042Report: function (datamap, schema) {
+            var parameters = {
+                application: "asset"
+            };
+
+            parameters.key = {
+                schemaId: "r0042ExportExcel",
+                mode: "output",
+                platform: "web"
+            };
+
+            parameters.searchDTO = {
+                searchParams: "refmonth",
+                searchValues: datamap["refmonth"]
+            }
+
+
+            restService.getPromise("ExtendedData", "PingServer").then(function () {
+                fileService.download(url("/Excel/Export" + "?" + $.param(parameters)), function (html, url) { }, function (html, url) {
+                    alertService.alert("Error generating the asset comparison report. Please contact your administrator");
+                });
+            });
         },
 
         selectAll: function (schema, datamap) {
@@ -192,8 +217,8 @@ app.factory('reportservice', function ($http, alertService, fieldService, search
             }
         },
 
-        printSelected: function (schema, datamap,searchSort) {
-            printService.printDetailedList(schema, datamap,searchSort);
+        printSelected: function (schema, datamap, searchSort) {
+            printService.printDetailedList(schema, datamap, searchSort);
         }
     };
 });

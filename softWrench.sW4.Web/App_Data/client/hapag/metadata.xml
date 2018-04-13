@@ -3139,7 +3139,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="rowstamp" attribute="rowstamp" hidden="true"/>
         </schema>
 
-        <schema id="R0042ExportExcel" stereotype="list">
+        <schema id="r0042ExportExcel" stereotype="list">
           <field label="assetid" attribute="assetid" hidden="true"/>
           <field label="assetnum" attribute="assetnum" hidden="true"/>
 
@@ -3408,6 +3408,25 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Area" attribute="assetarea" />
           <field attribute="aucisnotowner_person_.displayname" hidden="true" />
         </schema>
+
+
+        <schema id="assetcomparefilters" stereotype="detail" title="Asset Comparison Report">
+          <properties>
+            <property key="report.reportName" value="IncidentPerLocationSCIMReport"/>
+            <property key="nextschema.schemaid" value="incidentdetail"/>
+          </properties>
+
+          <field label="Reference Month" attribute="refmonth">
+            <renderer type="datetime" params="format=MM/yyyy;showtime=false;showdays=false"/>
+            <filter operation="btw" default="@MIN_DATE"/>
+          </field>
+         
+          <commands removeundeclared="true">
+            <command id="viewassetcomparisonreport" label="Generate Report" method="exportR0042Report" service="reportservice" parameters="datamap,schema"/>
+          </commands>
+        </schema>
+
+
 
         <schema id="updateassetdata" stereotype="compositiondetail">
           <field attribute="assetnum" label="" qualifier="title" hidden="true"/>

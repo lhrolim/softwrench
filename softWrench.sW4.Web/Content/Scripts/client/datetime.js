@@ -39,6 +39,7 @@
                 }
 
                 var showTime = parseBooleanValue(attrs.showTime);
+                var showDays = parseBooleanValue(attrs.showDays);
                 var showIgnoreTime = attrs.showIgnoretime === "true";
                 var originalAttribute = attrs.originalAttribute;
                 var showDate = parseBooleanValue(attrs.showDate);
@@ -228,6 +229,7 @@
 
                         if (!!attrs.minDateexpression) startDate = watchForStartDate("datepicker");
                         initialDate = startDate === defaultStartDate ? null : startDate;
+                        var startView = !showDays ? 1 : 0;
 
                         element.datepicker({
                             initialDate: initialDate,
@@ -236,6 +238,8 @@
                             format: dateFormat,
                             autoclose: true,
                             language: attrs.language,
+                            startView: startView,
+                            minViewMode: startView,
                             maxView: 3,
                             showMeridian: false,
                             readonly: isReadOnly
