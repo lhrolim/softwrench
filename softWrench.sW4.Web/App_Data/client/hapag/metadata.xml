@@ -1091,6 +1091,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
               <option label="Windows Server 2008 Standard Edition" value="2008se"/>
               <option label="Windows Server 2008 Enterprise Edition" value="2008ee"/>
               <option label="Windows Server 2012 Standard Edition" value="2012se"/>
+	      <option label="Windows Server 2016 Standard Edition" value="2016se"/>
             </optionfield>
             <optionfield label="IIS" attribute="iis" tooltip="Wählen Sie hier ob die Microsoft IIS Serverrolle installiert werden soll." required="true">
               <option label="Yes" value="yes"/>
@@ -1113,6 +1114,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <section id="specificdata">
             <optionfield label="OS" attribute="os" tooltip="Wählen Sie hier das gewünschte Betriebssystem.">
               <option label="SUSE Linux Enterprise Server 11" value="suse11"/>
+	      <option label="SUSE Linux Enterprise Server 12" value="suse12"/>
             </optionfield>
           </section>
         </schema>

@@ -454,8 +454,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
 
         //for each assetnum/site tuple the
-        public IDictionary<R0042AssetKey, IList<string>> GetClosedImacIdsForR0042(List<string> assetIds, int month, int year) {
-            var result = new Dictionary<R0042AssetKey, IList<string>>();
+        public IDictionary<R0042AssetKey, ISet<string>> GetClosedImacIdsForR0042(List<string> assetIds, int month, int year) {
+            var result = new Dictionary<R0042AssetKey, ISet<string>>();
 
             var compAppMetadata = MetadataProvider.Application(ApplicationName());
             var dto = new PaginatedSearchRequestDto {
@@ -467,7 +467,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             dto.ProjectionFields.Add(ProjectionField.Default("siteid"));
             dto.ProjectionFields.Add(ProjectionField.Default("woactivity_.OWNERGROUP"));
 
-            dto.AppendWhereClauseFormat("woactivity_.OWNERGROUP = 'I-EUS-DE-CSC-SDK-ASSET' and month(woactivity_.ACTFINISH) = {0} and year(woactivity_.ACTFINISH) = {1} and assetnum in ({0})", month, year, BaseQueryUtil.GenerateInString(assetIds));
+            dto.AppendWhereClauseFormat("woactivity_.OWNERGROUP = 'I-EUS-DE-CSC-SDK-ASSET' and month(woactivity_.ACTFINISH) = {0} and year(woactivity_.ACTFINISH) = {1} and imac.assetnum in ({2})", month, year, BaseQueryUtil.GenerateInString(assetIds));
             var entityMetadata = MetadataProvider.SlicedEntityMetadata(new ApplicationMetadataSchemaKey("detail"), "imac");
             var searchEntityResult = EntityRepository.GetAsRawDictionary(entityMetadata, dto);
 
@@ -481,7 +481,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                 if (result.ContainsKey(key)) {
                     result[key].Add(imac["ticketid"].ToString());
                 } else {
-                    result[key] = new List<string> { imac["ticketid"].ToString() };
+                    result[key] = new HashSet<string> { imac["ticketid"].ToString() };
                 }
 
             }

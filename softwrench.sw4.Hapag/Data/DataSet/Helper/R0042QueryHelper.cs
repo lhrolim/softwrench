@@ -48,7 +48,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
             return map;
         }
 
-        public static void MergeImacData(IDictionary<R0042AssetKey, DataMap> map, IDictionary<R0042AssetKey, IList<string>> imacs) {
+        public static void MergeImacData(IDictionary<R0042AssetKey, DataMap> map, IDictionary<R0042AssetKey, ISet<string>> imacs) {
             foreach (var imac in imacs) {
                 DataMap dm;
                 map.TryGetValue(imac.Key, out dm);
