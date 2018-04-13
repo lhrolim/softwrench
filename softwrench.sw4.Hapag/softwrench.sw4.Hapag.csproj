@@ -87,6 +87,7 @@
     <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
     <Compile Include="Data\DataSet\Helper\ChangeDetailUnionQueryGenerator.cs" />
     <Compile Include="Data\DataSet\Helper\ChangeGridUnionQueryGenerator.cs" />
+    <Compile Include="Data\DataSet\Helper\R0042AssetKey.cs" />
     <Compile Include="Data\DataSet\Helper\R0042QueryHelper.cs" />
     <Compile Include="Data\ExternalUser\ExternalUserWhereClauseProvider.cs" />
     <Compile Include="Data\InMemoryUserExtensions.cs" />

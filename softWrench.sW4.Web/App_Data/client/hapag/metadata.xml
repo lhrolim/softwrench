@@ -3234,6 +3234,10 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
 
+          <field label="Closed Imacs" attribute="#imacids">
+            <renderer type="default" params="minwidth=80px;excelwidth=30"/>
+          </field>
+
           <field label="ChangeDate" attribute="changedate"/>
         </schema>
 

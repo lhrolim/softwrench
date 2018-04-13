@@ -92,9 +92,10 @@ namespace softwrench.sw4.Hapag.Data {
         private string InnerTicketWhereClause(string ticketQualifier = "SR") {
             var isWWUser = SecurityFacade.CurrentUser().IsWWUser();
             var ctx = _contextLookuper.LookupContext();
-            if (isWWUser && ctx.IsInModule(FunctionalRole.XItc)) {
+            if (isWWUser && ctx.IsInModule(FunctionalRole.XItc) || ctx.ApplicationLookupContext != null &&
+                "r0042ExportExcel".EqualsIc(ctx.ApplicationLookupContext.Schema)) {
                 return "1=1";
-            }
+            } 
             var sb = new StringBuilder();
             sb.AppendFormat("{0}.pluspcustomer = 'HLC-00' or", ticketQualifier);
             var locations = _locationManager.GetLocationsOfLoggedUser();

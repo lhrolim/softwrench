@@ -97,7 +97,7 @@ namespace softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic {
             if (innerMetadata == null) {
                 return null;
             }
-            var attribute = innerMetadata.Attributes(NoCollections).FirstOrDefault(f => f.Name.Equals(resultName));
+            var attribute = innerMetadata.Attributes(NoCollections).FirstOrDefault(f => f.Name.EqualsIc(resultName));
             return new Tuple<EntityAttribute, string>(attribute, context);
         }
 

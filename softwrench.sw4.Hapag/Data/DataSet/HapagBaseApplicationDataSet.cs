@@ -43,7 +43,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         public EntityRepository EntityRepository {
             get {
-                return EntityRepository;
+                return _entityRepository;
             }
         }
 

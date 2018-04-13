@@ -13,10 +13,10 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
 
 
 
-        public static void MergeData(IDictionary<string, DataMap> map, IList<dynamic> historicData) {
+        public static void MergeData(IDictionary<R0042AssetKey, DataMap> map, IList<dynamic> historicData) {
             foreach (var hist in historicData) {
                 DataMap dm;
-                map.TryGetValue(hist.assetid, out dm);
+                map.TryGetValue(new R0042AssetKey{AssetId = hist.assetid}, out dm);
                 if (dm == null) {
                     continue;
                 }
@@ -34,14 +34,30 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         }
 
 
-        public static IDictionary<string, DataMap> BuildIdMap(ApplicationListResult dbList) {
-            IDictionary<string, DataMap> map = new Dictionary<string, DataMap>();
+        public static IDictionary<R0042AssetKey, DataMap> BuildIdMap(ApplicationListResult dbList) {
+            IDictionary<R0042AssetKey, DataMap> map = new Dictionary<R0042AssetKey, DataMap>();
 
             foreach (var attributeHolder in dbList.ResultObject) {
-                map.Add(attributeHolder.GetAttribute("assetid").ToString(),(DataMap) attributeHolder);
+                var assetId = attributeHolder.GetAttribute("assetid").ToString();
+                var siteid = attributeHolder.GetAttribute("siteid").ToString();
+                var assetnum = attributeHolder.GetAttribute("assetnum").ToString();
+
+                map.Add(new R0042AssetKey { AssetId = assetId, AssetNum = assetnum, SiteId = siteid }, (DataMap)attributeHolder);
             }
 
             return map;
+        }
+
+        public static void MergeImacData(IDictionary<R0042AssetKey, DataMap> map, IDictionary<R0042AssetKey, IList<string>> imacs) {
+            foreach (var imac in imacs) {
+                DataMap dm;
+                map.TryGetValue(imac.Key, out dm);
+                if (dm == null) {
+                    continue;
+                }
+                dm.SetAttribute("#imacids", string.Join(" , ", imac.Value));
+
+            }
         }
     }
 }

@@ -19,6 +19,7 @@ using softwrench.sw4.Hapag.Data.DataSet.Helper;
 using softwrench.sW4.Shared2.Util;
 using softWrench.sW4.Data.Pagination;
 using softWrench.sW4.Data.Persistence;
+using softWrench.sW4.Data.Persistence.Relational;
 using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
@@ -78,11 +79,18 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
 
             var map = R0042QueryHelper.BuildIdMap(dbList);
-            var ids = BaseQueryUtil.GenerateInString(map.Keys);
+
+            var assetIds = map.Keys.Select(s => s.AssetId).ToList();
+            var assetNums = map.Keys.Select(s => s.AssetNum).ToList();
 
             var historicData = GetDAO().FindByNativeQuery(
-                "select * from HIST_ASSETR0042 m inner join (select assetid,max(extractiondate) as max_date from HIST_ASSETR0042 where assetid in (:p0) and ExtractionDate <= :p1 group by assetid)i on (m.assetid = i.assetid and m.extractiondate = i.max_date) where m.assetid in (:p0) and m.extractiondate <= :p1", map.Keys, extractionDate);
+                "select * from HIST_ASSETR0042 m inner join (select assetid,max(extractiondate) as max_date from HIST_ASSETR0042 where assetid in (:p0) and ExtractionDate <= :p1 group by assetid)i on (m.assetid = i.assetid and m.extractiondate = i.max_date) where m.assetid in (:p0) and m.extractiondate <= :p1", assetIds, extractionDate);
 
+
+            var imacDataSet = GetImacDataSet();
+            var imacs = imacDataSet.GetClosedImacIdsForR0042(assetNums, month,year);
+
+            R0042QueryHelper.MergeImacData(map,imacs);
             R0042QueryHelper.MergeData(map, historicData);
 
 

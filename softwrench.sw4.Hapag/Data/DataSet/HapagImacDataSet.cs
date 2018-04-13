@@ -26,6 +26,7 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagImacDataSet : HapagBaseApplicationDataSet {
@@ -451,6 +452,42 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             return "imac";
         }
 
+
+        //for each assetnum/site tuple the
+        public IDictionary<R0042AssetKey, IList<string>> GetClosedImacIdsForR0042(List<string> assetIds, int month, int year) {
+            var result = new Dictionary<R0042AssetKey, IList<string>>();
+
+            var compAppMetadata = MetadataProvider.Application(ApplicationName());
+            var dto = new PaginatedSearchRequestDto {
+                NeedsCountUpdate = false
+            };
+            dto.ProjectionFields.Add(ProjectionField.Default("ticketid"));
+            dto.ProjectionFields.Add(ProjectionField.Default("ticketuid"));
+            dto.ProjectionFields.Add(ProjectionField.Default("assetnum"));
+            dto.ProjectionFields.Add(ProjectionField.Default("siteid"));
+            dto.ProjectionFields.Add(ProjectionField.Default("woactivity_.OWNERGROUP"));
+
+            dto.AppendWhereClauseFormat("woactivity_.OWNERGROUP = 'I-EUS-DE-CSC-SDK-ASSET' and month(woactivity_.ACTFINISH) = {0} and year(woactivity_.ACTFINISH) = {1} and assetnum in ({0})", month, year, BaseQueryUtil.GenerateInString(assetIds));
+            var entityMetadata = MetadataProvider.SlicedEntityMetadata(new ApplicationMetadataSchemaKey("detail"), "imac");
+            var searchEntityResult = EntityRepository.GetAsRawDictionary(entityMetadata, dto);
+
+
+            foreach (var imac in searchEntityResult.ResultList) {
+
+                var key = new R0042AssetKey {
+                    AssetNum = imac["assetnum"].ToString(),
+                    SiteId = imac["siteid"].ToString()
+                };
+                if (result.ContainsKey(key)) {
+                    result[key].Add(imac["ticketid"].ToString());
+                } else {
+                    result[key] = new List<string> { imac["ticketid"].ToString() };
+                }
+
+            }
+
+            return result;
+        }
 
     }
 }
