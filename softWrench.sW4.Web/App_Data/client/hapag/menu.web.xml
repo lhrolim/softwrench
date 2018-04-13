@@ -275,6 +275,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
       <application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
       <action id="categoriesreport" title="Asset Categories" tooltip="Click here to view Asset Categories report" controller="Report" action="Index" parameters="application=asset;reportName=CategoriesReportXITC;key.schemaId=categories" target="new" />
       <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" />
+      <application id="assetcomparereport" title="Asset Comparison Report" tooltip="Click to view your Asset Comparison Report" schema="assetcomparefilters" ref="asset"/>
 		</container>
     
 		<resourceref path="/Content/Templates/hapag/hapagsearch.html"
@@ -329,6 +330,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" />
 			<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
       <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" />
+		  <application id="assetcomparereport" title="Asset Comparison Report" tooltip="Click to view your Asset Comparison Report" schema="assetcomparefilters" ref="asset"/>
       <action id="escalationhlagincidentreport" title="Escalation HLAG Incident Report" controller="Report" action="Index" tooltip="Click to view Escalation HLAG Incident Report" 
               parameters="application=incident;reportName=EscalationIncidentReport;key.schemaId=escalationincident" target="new" />
       <application id="groupreport" title="Group Report" tooltip="Click to view Group Report" schema="groupreport" ref="persongroupview"/>
@@ -382,6 +384,7 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 			<application id="hardwarerepairreport" title="Hardware Repair Report" tooltip="Click to view Hardware Repair Report" schema="hardwarerepairreportfilters" ref="incident" />
 			<application id="tapebackupreport" title="Tape BackUp Report" tooltip="Click to view Tape Back Up Report" schema="tapebackupreport" ref="incident" />
       <application id="itcreport" title="ITC Report" tooltip="Click to view ITC Report" schema="itcreportfilters" ref="persongroupview" />
+		  <application id="assetcomparereport" title="Asset Comparison Report" tooltip="Click to view your Asset Comparison Report" schema="assetcomparefilters" ref="asset"/>
       <action id="escalationhlagincidentreport" title="Escalation HLAG Incident Report" controller="Report" action="Index" tooltip="Click to view Escalation HLAG Incident Report" 
               parameters="application=incident;reportName=EscalationIncidentReport;key.schemaId=escalationincident" target="new" />
       <application id="groupreport" title="Group Report" tooltip="Click to view Group Report" schema="groupreport" ref="persongroupview"/>
