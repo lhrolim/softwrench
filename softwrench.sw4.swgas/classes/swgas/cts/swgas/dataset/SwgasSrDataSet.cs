@@ -8,8 +8,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using softwrench.sW4.Shared2.Metadata.Applications.Schema;
+using softWrench.sW4.Data;
 using softWrench.sW4.Data.Persistence.Dataset.Commons;
 using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket;
+using softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest;
 using softWrench.sW4.Data.Persistence.Operation;
 using softWrench.sW4.Data.Persistence.WS.API;
 using softWrench.sW4.Metadata;
@@ -20,12 +23,12 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.dataset {
 
     public class SwgasSrDataSet : BaseServiceRequestDataSet {
 
+
         public override async Task<TargetResult> Execute(ApplicationMetadata application, JObject json, string id,
             string operation, bool isBatch, UserIdSiteOrg userIdSite,
             IDictionary<string, object> operationDataCustomParameters) {
             var schemaid = application.Schema.SchemaId;
-            if (IsCreateOrUpdate(operation) && !isBatch)
-            {
+            if (IsCreateOrUpdate(operation) && !isBatch) {
                 var defaultOrg = MetadataProvider.GlobalProperty("defaultOrgId");
                 var defaultSite = MetadataProvider.GlobalProperty("defaultSiteId");
                 json.ReplaceValue("siteid", new JValue(defaultSite));
@@ -39,8 +42,27 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.dataset {
             json.ReplaceValue("reportedemail", new JValue(json.StringValue("email")));
             json.ReplaceValue("description", new JValue(BuildSummary(json)));
             json.ReplaceValue("reportedby", new JValue(json.StringValue("name")));
-            return await base.Execute(application, json, id, operation, false, userIdSite,
-                operationDataCustomParameters);
+            var result = await base.Execute(application, json, id, operation, false, userIdSite, operationDataCustomParameters);
+            var ow = await BuildDispathWorkorderInputWrapper(result);
+            Engine().Execute(ow);
+
+
+            return result;
+        }
+
+        private async Task<OperationWrapper> BuildDispathWorkorderInputWrapper(TargetResult tr) {
+            var schema = MetadataProvider.Application("servicerequest").Schema(new ApplicationMetadataSchemaKey("editdetail"));
+            var sem = MetadataProvider.SlicedEntityMetadata(schema);
+
+            DataMap dm = (DataMap)await Engine().FindById(sem, tr.Id, new Tuple<string, string>(tr.UserId, tr.SiteId));
+            dynamic fields = new JObject();
+            fields = JObject.FromObject(dm.Fields);
+         
+            dynamic jo = new JObject();
+            jo.crud = fields;
+
+
+            return new OperationWrapper(ApplicationMetadata.FromSchema(schema), sem, "DispatchWO", jo, null);
         }
 
         private static string BuildDetails(JObject json) {
@@ -61,7 +83,7 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.dataset {
         private static string BuildSummary(JObject json) {
             var name = json.StringValue("name");
             var phoneext = json.StringValue("phoneext");
-            
+
             return $"[New Request from {name} : {phoneext}]";
         }
 

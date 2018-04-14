@@ -94,6 +94,6 @@ const fsVpnProdLocalData = {
 
 };
 
-window.localdevdata = qaLocalData;
+window.localdevdata = localhostDevData;
 
 

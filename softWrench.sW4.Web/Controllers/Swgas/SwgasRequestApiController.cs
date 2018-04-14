@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using cts.commons.persistence;
 using softwrench.sw4.Shared2.Data.Association;
+using softwrench.sW4.Shared2.Metadata.Applications;
 using softWrench.sW4.Data.API;
 using softWrench.sW4.Data.API.Response;
 using softWrench.sW4.Util;
@@ -25,6 +26,7 @@ namespace softWrench.sW4.Web.Controllers.Swgas {
                 return null;
             }
             var response = await DataController.Post(wrapper) as ApplicationDetailResult;
+
             return new BlankApplicationResponse() {
                 Id = response?.ResultObject.GetStringAttribute("ticketid")
             };

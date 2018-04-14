@@ -104,9 +104,6 @@
     <engine name="android" spec="^6.3.0" />
     <engine name="ios" spec="^4.4.0" />
     <plugin name="com.cordova.plugins.cookiemaster" spec="~1.0.0" />
-    <plugin name="cordova-android-support-gradle-release" spec="^1.2.1">
-        <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
-    </plugin>
     <plugin name="cordova-plugin-app-event" spec="~1.2.0" />
     <plugin name="cordova-plugin-app-version" spec="~0.1.8" />
     <plugin name="cordova-plugin-camera" spec="~2.2.0" />
@@ -124,4 +121,7 @@
     <plugin name="cordova-sqlite-evcore-extbuild-free" spec="https://github.com/litehelpers/Cordova-sqlite-evcore-extbuild-free" />
     <plugin name="de.appplant.cordova.plugin.local-notification" spec="~0.8.4" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <plugin name="cordova-android-support-gradle-release" spec="^1.2.1">
+        <variable name="ANDROID_SUPPORT_VERSION" value="27.+" />
+    </plugin>
 </widget>

@@ -70,7 +70,7 @@ namespace softWrench.sW4.Data.Persistence.Dataset.Commons.Ticket.ServiceRequest 
             woCrudData.SetAttribute("statusdate", DateTime.Now.FromServerToRightKind());
             woCrudData.SetAttribute("reportdate", DateTime.Now.FromServerToRightKind());
             woCrudData.SetAttribute("woclass", "WORKORDER");
-            woCrudData.SetAttribute("origrecordid", srCrudData.Id);
+            woCrudData.SetAttribute("origrecordid", srCrudData.UserId);
             woCrudData.SetAttribute("origrecordclass", "SR");
             woCrudData.SetAttribute("siteid", srCrudData.GetStringAttribute("siteid"));
             woCrudData.SetAttribute("orgid", srCrudData.GetStringAttribute("orgid"));
