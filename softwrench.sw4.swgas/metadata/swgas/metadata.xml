@@ -307,6 +307,10 @@
           <customization position="glaccount"></customization>
         </schema>
         <schema id="editdetail" platform="web" redeclaring="false">
+          <properties>
+            <property key="detail.disablesecondarycontent" value="true"/>
+          </properties>
+
           <!--<customization position="classstructureid"></customization>-->
           <customization position="failurecode"></customization>
           <customization position="problemcode"></customization>
@@ -328,6 +332,9 @@
 
           <customization position="+siteid">
             <field attribute="worktype" label="Work Type"/>
+            <field attribute="reportdate" label="Reported Date">
+              <renderer type="datetime" params="width=15%"/>
+            </field>
             <field attribute="schedstart" label="Scheduled Start Date">
               <renderer type="datetime" params="width=10%"/>
             </field>
