@@ -376,7 +376,7 @@
               </section>
             </tab>
 
-            <tab label="Daily Outage Update" icon="fa-clock-o" id="dailyoutage" showexpression="@#workorder_.worktype == null || @#workorder_.worktype !== 'PM'" enableexpression="@id!=null" countrelationship="" haslazydata="true">
+            <tab label="Daily Outage Update" icon="fa-clock-o" id="dailyoutage" enableexpression="@id!=null" countrelationship="" haslazydata="true">
               <reference id="dailyoutage"/>
             </tab>
 
