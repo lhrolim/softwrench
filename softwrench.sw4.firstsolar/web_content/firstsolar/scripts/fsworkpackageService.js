@@ -36,6 +36,14 @@
                 dm["newlycreatedtests"] = [];
             });
 
+            this.$rootScope.$on("sw.crud.composition.dataresolved", () => {
+                const dm = this.crudContextHolderService.rootDataMap();
+                const schema = crudContextHolderService.currentSchema();
+                angular.forEach(testsMap, (tests, component) => {
+                    angular.forEach(tests, (test) => this.testLoad(schema, dm, test, component));
+                });
+            });
+
             testsMap = {
                 "GSU": ["gsuimmediatetests", "gsutests"],
                 "SF6": ["sf6tests"],
@@ -801,9 +809,9 @@
             //to correct SWWEB-3012
             wipeDynamicSections();
 
-            angular.forEach(testsMap, (tests, component) => {
-                angular.forEach(tests, (test) => this.testLoad(rootSchema, datamap, test, component));
-            });
+//            angular.forEach(testsMap, (tests, component) => {
+//                angular.forEach(tests, (test) => this.testLoad(rootSchema, datamap, test, component));
+//            });
 
         }
 
