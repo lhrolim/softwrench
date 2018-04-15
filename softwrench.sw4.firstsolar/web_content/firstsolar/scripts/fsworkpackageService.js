@@ -534,6 +534,7 @@
             this.reevaluateSections(eventParameters);
             const field = eventParameters.fieldMetadata;
             const option = eventParameters.option;
+            this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
             return this.createOutageActionEntry(field, option);
         }
 
