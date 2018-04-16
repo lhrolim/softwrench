@@ -45,7 +45,12 @@ namespace softWrench.sW4.Web.Controllers.Security {
 
             Log.InfoFormat("new cookie set for: {0}, expires on {1}",userName,ticket.Expiration);
 
-            cookie.Expires = newTicket.Expiration;
+            if (!ApplicationConfiguration.IsLocal()){
+                //TODO: investigate crazy bug related to ticket expiration that took me the entire morning to figure out...
+                // related to timezone issues on windows/ubuntu dual boot where windows clocks get the wrong hours
+                cookie.Expires = newTicket.Expiration;
+            }
+
             cookie.Value = encTicket;
 
             response.Cookies.Add(cookie);

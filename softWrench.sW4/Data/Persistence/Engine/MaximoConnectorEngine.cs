@@ -45,6 +45,8 @@ namespace softWrench.sW4.Data.Persistence.Engine {
             var connector = GenericConnectorFactory.GetConnector(entityMetadata, operationWrapper.OperationName, operationWrapper.Wsprovider);
             var operationName = operationWrapper.OperationName;
 
+
+
             var result = DoExecuteCrud(operationWrapper, connector);
             if (result != null) {
                 return result;
@@ -112,7 +114,13 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                     }
                     return result;
                 case OperationConstants.CRUD_UPDATE:
-                    return crudConnector.Update(crudOperationData, operationWrapper.JSON);
+                    var id = operationWrapper.Id;
+                    var applicationName = operationWrapper.ApplicationMetadata.Name;
+                    lock (string.Intern(applicationName + ":" + id)) {
+                        //making sure only a single update is performed at the same time for a given row as maximo is not able to handle it correctly
+                        var update = crudConnector.Update(crudOperationData, operationWrapper.JSON);
+                        return update;
+                    }
                 case OperationConstants.CRUD_DELETE:
                     return crudConnector.Delete(crudOperationData);
                 case OperationConstants.CRUD_FIND_BY_ID:
