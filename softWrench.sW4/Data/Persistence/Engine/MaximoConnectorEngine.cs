@@ -115,7 +115,7 @@ namespace softWrench.sW4.Data.Persistence.Engine {
                     return result;
                 case OperationConstants.CRUD_UPDATE:
                     var id = operationWrapper.Id;
-                    var applicationName = operationWrapper.ApplicationMetadata.Name;
+                    var applicationName = operationWrapper.EntityMetadata.Name;
                     lock (string.Intern(applicationName + ":" + id)) {
                         //making sure only a single update is performed at the same time for a given row as maximo is not able to handle it correctly
                         var update = crudConnector.Update(crudOperationData, operationWrapper.JSON);
