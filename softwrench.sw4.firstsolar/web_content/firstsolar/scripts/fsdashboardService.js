@@ -21,19 +21,23 @@
         }
 
         incomingDashClick(datamap, schema) {
+            const popupmode = arguments[5];
             this.redirectService.goToApplicationView("_WorkPackage", "newdetail", "input", null, null, { wonum: datamap["wonum"], workorderid: datamap["workorderid"] });
         }
 
         buildDashClick(datamap, schema) {
-            this.redirectService.goToApplicationView("_WorkPackage", "adetail", "input", null, { id: datamap["#id"] });
+            const popupmode = arguments[5];
+            this.redirectService.goToApplicationView("_WorkPackage", "adetail", "input", null, { id: datamap["#id"], popupmode });
         }
 
         techDashClick(datamap, schema) {
-            this.redirectService.goToApplicationView("workorder", "detail", "input", null, { id: datamap["workorder_.workorderid"] });
+            const popupmode = arguments[5];
+            this.redirectService.goToApplicationView("workorder", "detail", "input", null, { id: datamap["workorder_.workorderid"], popupmode });
         }
 
         techwoDashClick(datamap, schema) {
-            this.redirectService.goToApplicationView("workorder", "detail", "input", null, { id: datamap["workorderid"] });
+            const popupmode = arguments[5];
+            this.redirectService.goToApplicationView("workorder", "detail", "input", null, { id: datamap["workorderid"], popupmode });
         }
 
 

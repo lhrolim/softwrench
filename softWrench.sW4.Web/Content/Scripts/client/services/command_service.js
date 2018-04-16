@@ -158,7 +158,7 @@ angular.module('sw_layout')
         },
 
         //TODO: make it generic
-        executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid, newValue) {
+        executeClickCustomCommand: function (fullServiceName, rowdm, column, schema, panelid, newValue, popupmode) {
             if (fullServiceName.startsWith("service:")) {
                 fullServiceName = fullServiceName.substr(8);
             }
@@ -178,6 +178,7 @@ angular.module('sw_layout')
             args.push(schema);
             args.push(panelid);
             args.push(newValue);
+            args.push(popupmode);
 
             return method.apply(service, args);
         },

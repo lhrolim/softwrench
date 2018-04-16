@@ -29,7 +29,7 @@
 
         if (getSelection().toString() === "" && !hasSelection) {
             if (scope.showDetail) {
-                scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition);
+                scope.showDetail(scope.datamap[rowNumber], columnAttribute, forceEdition, !!event.ctrlKey);
             }
         } else {
             hasSelection = true;

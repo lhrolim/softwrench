@@ -84,7 +84,10 @@
         };
 
         $scope.goToApplicationView = function (applicationName, schemaId, mode, title, parameters, $event) {
-            menuService.setActiveLeaf($event.target,null);
+            if ($event) {
+                menuService.setActiveLeaf($event.target, null);
+            }
+            
             redirectService.goToApplicationView(applicationName, schemaId, mode, title, parameters);
         };
 

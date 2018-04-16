@@ -36,7 +36,7 @@
                 } else {
                     $location.path(previousURL.substr(0, idx) + "/" + userId);
                 }
-                
+
             } else {
                 var applicationName = crudContextHolderService.currentSchema().applicationName;
                 if (id) {
@@ -113,7 +113,7 @@
                 }
                 const tab = $('a[href="#' + tabId + '"]');
                 tab.trigger('click');
-//                $location.hash("tabid=" + tabId);
+                //                $location.hash("tabid=" + tabId);
             }, 0, false);
         };
 
@@ -175,9 +175,9 @@
             const urlToUse = url("/api/Data/{0}?{1}".format(applicationName, queryString));
             log.info("invoking url {0}".format(urlToUse));
             var jsonData = {};
-            
+
             return $http.get(urlToUse).then(function (response) {
-                historyService.addToHistory(urlToUse,{aliasUrl: response.aliasURL});
+                historyService.addToHistory(urlToUse, { aliasUrl: response.aliasURL });
                 const data = response.data;
                 jsonData = data;
                 innerGoToApplicationGet(data, null, null, mode, applicationName, null, extraParameters);
@@ -243,7 +243,7 @@
                 if (!currentSchema || nextSchema.applicationName === currentSchema.applicationName) {
                     crudContextHolderService.updateCrudContext(nextSchema, serverResponse.resultObject);
                 } else {
-                    crudContextHolderService.applicationChanged(nextSchema, serverResponse.resultObject,null,isEmpty(serverResponse.extraParameters));
+                    crudContextHolderService.applicationChanged(nextSchema, serverResponse.resultObject, null, isEmpty(serverResponse.extraParameters));
                 }
             }
 
@@ -274,7 +274,13 @@
             var popupMode = parameters.popupmode;
 
             if (popupMode === "browser") {
+                //                if (jsonData) {
+                //                    contextService.set("redirect_json_data", jsonData, false);
+                //                    window.open(redirectUrl);
+                //                } else {
                 window.open(redirectUrl);
+                //                }
+
 
                 //to keep promise consitent
                 return $q.when();
@@ -284,7 +290,7 @@
             $rootScope.popupmode = popupMode;
             fixHeaderService.unfix();
 
-         
+
 
             if (jsonData == undefined) {
                 log.info('invoking get on datacontroller for {0}'.format(applicationName));

@@ -134,7 +134,7 @@
             commandService.executeClickCustomCommand(clickService, rowdm, column, $scope.schema, $scope.panelid, newValue);
         };
 
-        $scope.showDetail = function (rowdm, attribute, forceEdition) {
+        $scope.showDetail = function (rowdm, attribute, forceEdition, opensecondtab) {
 
             var mode = $scope.schema.properties['list.click.mode'];
             var popupmode = $scope.schema.properties['list.click.popupmode'];
@@ -166,6 +166,10 @@
                 return $q.when();
             }
 
+            if (opensecondtab) {
+                popupmode = "browser";
+            }
+
             if (mode && !mode.equalsAny('none', 'output', 'input')) {
                 mode = expressionService.evaluate(mode, rowdm);
             }
@@ -175,7 +179,7 @@
             }
             // TODO: Result from custom list click MUST be false to stop execution of default list click?
             if (fullServiceName != null) {
-                commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm, column, $scope.schema, $scope.panelid);
+                commandResult = commandService.executeClickCustomCommand(fullServiceName, rowdm, column, $scope.schema, $scope.panelid, null, popupmode);
                 if (!commandResult) {
                     return $q.when();
                 } else if (commandResult.then) {
