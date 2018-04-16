@@ -15,7 +15,7 @@
     <application id="NWO" icon="fa fa-plus" title="New FSOC Work Order" ref="fsocworkorder" schema="fsocnewdetail" tooltip="Click to Create a New FSOC Work Order"/>
     <!--    <application id="WOB" title="Manage Batch" ref="_wobatch" schema="list" role="allowwobatches" tooltip="Manage Work Order batch"/>-->
   </container>
-  <container id="workpackage" title="Work Packages" icon="fa fa-arrow-circle-down" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.pmmaintenance;applicationToFilter=_WorkPackage" hasmainaction="true">
+  <container id="workpackage" title="Work Packages" icon="fa fa-arrow-circle-down" controller="Dashboard" action="LoadDashboardByAlias" parameters="alias=fs.cmmaintenance;applicationToFilter=_WorkPackage" hasmainaction="true">
     <application id="WP" icon="fa fa-table" title="Work Packages (CM)" ref="workorder" schema="wplist" tooltip="Click to view your Work Packages"/>
     <application id="WPPM" icon="fa fa-table" title="Work Packages (PM)" ref="workorder" schema="wppmlist" tooltip="Click to view your Work Packages PM"/>
     <application id="NWP" icon="fa fa-plus" title="New Work Package" ref="_workpackage" schema="newdetail" tooltip="Click to Create a New Work Package"/>
