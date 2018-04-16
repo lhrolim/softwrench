@@ -161,10 +161,10 @@
                 return null;
             }
 
-            if ("featured" === qualifier && ("datetime" === displayable.dataType || "timestamp" === displayable.dataType || "datetime" === displayable.rendererType )) {
+            if (("featured" === qualifier || "featured2" === qualifier  )&& ("datetime" === displayable.dataType || "timestamp" === displayable.dataType || "datetime" === displayable.rendererType )) {
                 return formatDate(item[displayable.attribute], true, true);
             }
-            if ("featured" === qualifier && ("date" === displayable.dataType || "date" === displayable.rendererType)) {
+            if (("featured" === qualifier || "featured2" === qualifier  ) && ("date" === displayable.dataType || "date" === displayable.rendererType)) {
                 return formatDate(item[displayable.attribute], false, false);
             }
 

@@ -1,9 +1,11 @@
 <ion-view>
 
     <ion-nav-buttons side="left">
-        <button class="button-icon" menu-toggle="left"><i class="fa fa-bars"></i></button>
+        <button class="button-icon" menu-toggle="left">
+            <i class="fa fa-bars"></i>
+        </button>
     </ion-nav-buttons>
-    
+
     <ion-nav-title>
         <div>{{title()}}</div>
     </ion-nav-title>
@@ -11,37 +13,51 @@
 
     <ion-header-bar class="bar-subheader bar-dark" align-title="left">
         <div ng-if="!isOnDrillDown()" class="buttons" style="padding-left: 5px">
-            <button class="button" ng-show="shouldShowBack()" ng-click="navigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
-            <button class="button" ng-show="hasDirtyChanges() && !shouldShowWizardBack()" ng-click="cancelChanges()"><i class="fa fa-times-circle"></i>&ensp;Cancel</button>
-            <button class="button" ng-show="shouldShowWizardBack()" ng-click="wizardNavigateBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
+            <button class="button" ng-show="shouldShowBack()" ng-click="navigateBack()">
+                <i class="fa fa-arrow-left"></i>&ensp;Back</button>
+            <button class="button" ng-show="hasDirtyChanges() && !shouldShowWizardBack()" ng-click="cancelChanges()">
+                <i class="fa fa-times-circle"></i>&ensp;Cancel</button>
+            <button class="button" ng-show="shouldShowWizardBack()" ng-click="wizardNavigateBack()">
+                <i class="fa fa-arrow-left"></i>&ensp;Back</button>
         </div>
         <!-- empty title to position the buttons correctly -->
         <h1 ng-if="!isOnDrillDown()" class="title"></h1>
         <div ng-if="!isOnDrillDown()" class="buttons" style="white-space: nowrap">
-            <button class="button navigate" ng-click="navigatePrevious()" ng-if="showNavigation() && hasPreviousItem()"><i class="fa fa-chevron-left"></i></button>
-            <button class="button navigate" ng-click="navigateNext()" ng-if="showNavigation() && hasNextItem()"><i class="fa fa-chevron-right"></i></button>
+            <button class="button navigate" ng-click="navigatePrevious()" ng-if="showNavigation() && hasPreviousItem()">
+                <i class="fa fa-chevron-left"></i>
+            </button>
+            <button class="button navigate" ng-click="navigateNext()" ng-if="showNavigation() && hasNextItem()">
+                <i class="fa fa-chevron-right"></i>
+            </button>
             <div class="seperator" ng-if="!hasDirtyChanges() && hasAnyComposition() && showNavigation()"></div>
-            <button class="button" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()"><i class="fa fa-th"></i></button>
-            <button class="button" ng-click="saveChanges()" ng-if="hasDirtyChanges() && !shouldShowWizardForward()"><i class="fa fa-check"></i>&ensp;Save</button>
-            <button class="button" ng-click="wizardNavigateForward()" ng-if="shouldShowWizardForward()"><i class="fa fa-arrow-right"></i>&ensp;Next</button>
+            <button class="button" ng-click="expandCompositions($event)" ng-if="!hasDirtyChanges() && hasAnyComposition()">
+                <i class="fa fa-th"></i>
+            </button>
+            <button class="button" ng-click="saveChanges()" ng-if="hasDirtyChanges() && !shouldShowWizardForward()">
+                <i class="fa fa-check"></i>&ensp;Save</button>
+            <button class="button" ng-click="wizardNavigateForward()" ng-if="shouldShowWizardForward()">
+                <i class="fa fa-arrow-right"></i>&ensp;Next</button>
         </div>
 
         <div ng-if="isOnDrillDown()">
             <div class="buttons" style="padding-left: 5px">
-                <button class="button" ng-click="drillDownBack()"><i class="fa fa-arrow-left"></i>&ensp;Back</button>
+                <button class="button" ng-click="drillDownBack()">
+                    <i class="fa fa-arrow-left"></i>&ensp;Back</button>
             </div>
 
             <h3 class="title">{{isDrillDownAssetView() ? "Asset" : "Location"}}</h3>
 
             <div class="buttons" style="white-space: nowrap">
-                <button class="button" ng-click="drillDownAssetView()" ng-if="!isDrillDownAssetView()">Assets&ensp;<i class="fa fa-arrow-right"></i></button>
+                <button class="button" ng-click="drillDownAssetView()" ng-if="!isDrillDownAssetView()">Assets&ensp;
+                    <i class="fa fa-arrow-right"></i>
+                </button>
             </div>
         </div>
 
     </ion-header-bar>
 
-    <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" 
-                 on-swipe-left="onSwipeLeft()" on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
+    <ion-content class="crud-details" has-header="true" has-subheader="true" has-bouncing="false" on-swipe-left="onSwipeLeft()"
+        on-swipe-right="onSwipeRight()" on-scroll="onScroll()" delegate-handle="detailHandler">
         <div class="crud-title" ng-if="!isOnDrillDown()">
             <div class="row" on-hold="showDirtyOptions($event)">
                 <div class="col col-25 crud-icon">
@@ -49,7 +65,11 @@
                 </div>
                 <div class="col">
                     <ul>
-                        <li class="featured">{{detailFeatured()}}</li>
+                        <div class="featured">
+                            <li>{{detailFeatured()}}</li>
+                            <li>{{detailFeatured2()}}</li>
+                        </div>
+
                         <li class="title">{{detailTitle()}}</li>
                         <li class="subtitle">{{detailSubTitle()}}</li>
                         <li class="excerpt">{{detailSummary()}}</li>

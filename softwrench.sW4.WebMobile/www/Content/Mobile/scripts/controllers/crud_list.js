@@ -152,6 +152,10 @@
                 return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "featured", item);
             }
 
+            $scope.itemFeatured2 = function (item) {
+                return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "featured2", item);
+            }
+
             $scope.itemExcerpt = function (item) {
                 return offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "excerpt", item);
             }

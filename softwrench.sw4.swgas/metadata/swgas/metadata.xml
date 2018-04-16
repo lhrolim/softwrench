@@ -347,6 +347,17 @@
         </schema>
 
 
+        <list platform="mobile" title="Work Order Grid" redeclaring="true">
+          <field attribute="wonum" label="Number" qualifier="title"/>
+          <field attribute="status" label="Asset" qualifier="subtitle"/>
+          <field attribute="schedstartnotime" qualifier="featured"/>
+          <field attribute="reportdatenotime" qualifier="featured2"/>
+          <field attribute="description" label="Description" qualifier="excerpt"/>
+          <properties>
+            <property key="list.defaultorderby" value="schedstart is null asc, schedstart desc"/>
+          </properties>
+        </list>
+
         <detail platform="mobile" title="Work Order">
           <reference id="detailhiddensoffline"/>
 

@@ -33,6 +33,7 @@
         <attribute name="class" type="varchar" required="true" query="woclass"/>
         <attribute name="originalstatus" query="!@status" type="varchar"/>
         <attribute name="schedstartnotime" query="(select DATEADD(hh,12,DATEADD(dd,DATEDIFF(dd,0,schedstart),0)))" type="date"/>
+        <attribute name="reportdatenotime" query="(select DATEADD(hh,12,DATEADD(dd,DATEDIFF(dd,0,reportdate),0)))" type="date"/>
       </attributes>
       <relationships>
         <relationship to="worklog" collection="true">

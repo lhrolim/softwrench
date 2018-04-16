@@ -186,6 +186,12 @@
                     : offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "featured", $scope.datamap);
             };
 
+            $scope.detailFeatured2 = function (item) {
+                return crudContextService.isCreation()
+                    ? null
+                    : offlineSchemaService.buildDisplayValue(crudContextService.currentListSchema(), "featured2", $scope.datamap);
+            };
+
             $scope.detailTitle = function () {
                 const datamap = crudContextService.isCreation() ? null : $scope.datamap; // workaround to force new title
                 return schemaService.getTitle(crudContextService.currentDetailSchema(), datamap, true);

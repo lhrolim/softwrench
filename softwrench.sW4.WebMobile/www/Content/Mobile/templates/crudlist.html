@@ -1,56 +1,73 @@
 <ion-view cache-view="false">
 
     <ion-nav-buttons side="left">
-        <button class="button-icon show-phone" menu-toggle="left"><i class="fa fa-bars"></i></button>
+        <button class="button-icon show-phone" menu-toggle="left">
+            <i class="fa fa-bars"></i>
+        </button>
     </ion-nav-buttons>
 
     <ion-nav-title>
         <div ng-show="!isSearching()">{{gridTitle()}}
             <div class="buttons" style="position: absolute; right: 5px; top:5px" ng-show="isList()">
-                <button class="button" ng-click="showFilterOptions($event)"><i class="fa fa-fa-ellipsis-v"></i></button>
+                <button class="button" ng-click="showFilterOptions($event)">
+                    <i class="fa fa-fa-ellipsis-v"></i>
+                </button>
             </div>
         </div>
 
         <div class="list-search-bar item-input-inset" ng-show="isSearching() && isList()">
             <label class="item-input-wrapper">
                 <i class="placeholder-icon fa fa-search"></i>
-                <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search" ng-model-options="{ debounce: 500 }"/>
-                <button class="button-icon search-disable-button" ng-touchstart="disableSearch(true)"><i class="fa fa-times-circle"></i></button>
-            </label>            
+                <input type="search" class="ion-autocomplete-search" ng-model="quickSearch.value" ng-change="filter()" placeholder="Quick Search"
+                    ng-model-options="{ debounce: 500 }" />
+                <button class="button-icon search-disable-button" ng-touchstart="disableSearch(true)">
+                    <i class="fa fa-times-circle"></i>
+                </button>
+            </label>
         </div>
     </ion-nav-title>
 
-   
+
     <ion-nav-buttons side="right">
-        <button class="button-icon" ng-show="isList() && isSearching()" ng-touchstart="goToAdvancedFilter()"><i class="fa fa-sliders"></i></button>
+        <button class="button-icon" ng-show="isList() && isSearching()" ng-touchstart="goToAdvancedFilter()">
+            <i class="fa fa-sliders"></i>
+        </button>
         <!--this ng-show is needed due to a possible bug on ionic/ angular ui-router where the button shows on detail-->
-        <button class="button-icon" ng-show="isList() && !isSearching()" ng-touchstart="enableSearch()"><i class="fa fa-search"></i></button>
+        <button class="button-icon" ng-show="isList() && !isSearching()" ng-touchstart="enableSearch()">
+            <i class="fa fa-search"></i>
+        </button>
     </ion-nav-buttons>
 
-    <ion-content has-header="true" has-bouncing="false" on-swipe-right="toggleMenu()" >
+    <ion-content has-header="true" has-bouncing="false" on-swipe-right="toggleMenu()">
 
         <div class="row" ng-if="crudlist.items.length == 0">
             <div class="col col-center text-center">
-                <h5 class="gray"><i class="fa fa-info-circle"></i>&ensp;No records to display</h5>
+                <h5 class="gray">
+                    <i class="fa fa-info-circle"></i>&ensp;No records to display</h5>
             </div>
         </div>
 
-        <ion-list class="has-header crud-list" ng-if="crudlist.items.length >0" >
+        <ion-list class="has-header crud-list" ng-if="crudlist.items.length >0">
             <!--generatedRowStamp is a transient column generated on persistence (persistence.store.sql) entity hydratation to allow multiple rows with same id (left joins...) -->
-            <ion-item class="crud-item"
-                      ng-repeat="item in crudlist.items track by item.generatedRowStamp"
-                      item="item"
-                      on-swipe-left="showGridItemOptions($event,item)">
+            <ion-item class="crud-item" ng-repeat="item in crudlist.items track by item.generatedRowStamp" item="item" on-swipe-left="showGridItemOptions($event,item)">
                 <div class="row" ng-click="openDetail(item)">
                     <div class="col col-25 crud-icon">
                         <crud-icon item="item"></crud-icon>
                     </div>
                     <div class="col">
                         <ul>
-                            <li class="featured"style="white-space: pre-line;max-width: 80px;">{{itemFeatured(item.datamap)}}&ensp;<span class="details"></span></li>
+                            <div class="featured">
+                                <li style="max-width: 80px;">{{itemFeatured(item.datamap)}}&ensp;
+                                    <span class="details"></span>
+                                </li>
+                                <li style="max-width: 80px; color:goldenrod" >{{itemFeatured2(item.datamap)}}&ensp;
+                                    <span class="details"></span>
+                                </li>
+                            </div>
+
                             <li class="title">{{itemTitle(item.datamap)}}</li>
                             <li class="subtitle">{{itemSubTitle(item.datamap)}}</li>
-                            <li class="excerpt" >{{itemExcerpt(item.datamap)}}</li>
+                            <li class="excerpt">{{itemExcerpt(item.datamap)}}</li>
                         </ul>
                     </div>
                 </div>
