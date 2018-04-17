@@ -241,7 +241,7 @@
               <renderer type="fileexplorer" params="acceptedFileExtensions=sw_all_types;showdownloadall=false"/>
             </composition>
 
-            <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " sort="true" default="routine">
+            <optionfield attribute="requrgency" label="Request Urgency" requiredexpression="true" helpicon="right" tooltip="Please enter the work request urgency. " default="routine">
               <option label="Routine (ex: light replacement / 3-5 days)" value="routine"/>
               <option label="Urgent (ex: bathroom leaking / 1 day)" value="urgency"/>
               <option label="Emergency (ex: flooding / NOW or today)" value="emergency"/>
