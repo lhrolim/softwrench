@@ -520,6 +520,7 @@
     <Content Include="Content\templates\crud\crud_table.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\nugetexample.js" />
     <Content Include="web_content\audit\readme.txt" />
     <Content Include="web_content\problem\templates\problemsection.html" />
     <None Include="Content\customVendor\scripts\jquery\jquery-ui.js.bck" />
