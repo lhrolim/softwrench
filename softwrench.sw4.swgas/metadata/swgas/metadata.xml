@@ -245,6 +245,7 @@
               <option label="Routine (ex: light replacement / 3-5 days)" value="routine"/>
               <option label="Urgent (ex: bathroom leaking / 1 day)" value="urgency"/>
               <option label="Emergency (ex: flooding / NOW or today)" value="emergency"/>
+              <option label="Meeting Room Setup (2 days)" value="meeting"/>
               <option label="Renovation (ex: new office)" value="renovation"/>
             </optionfield>
 
