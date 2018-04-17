@@ -3422,8 +3422,8 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <property key="nextschema.schemaid" value="incidentdetail"/>
           </properties>
 
-          <field label="Reference Month" attribute="refmonth">
-            <renderer type="datetime" params="format=MM/yyyy;showtime=false;showdays=false"/>
+          <field label="Reference Month" attribute="refmonth" tooltip="The month to check for asset changes. Available only for dates after 05/2018">
+            <renderer type="datetime" params="format=MM/yyyy;showtime=false;showdays=false;mindate=05/2018"/>
             <filter operation="btw" default="@MIN_DATE"/>
           </field>
          

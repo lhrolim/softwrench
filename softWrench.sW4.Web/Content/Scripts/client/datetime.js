@@ -39,6 +39,7 @@
                 }
 
                 var showTime = parseBooleanValue(attrs.showTime);
+                var minDate = parseBooleanValue(attrs.minDate);
                 var showDays = parseBooleanValue(attrs.showDays);
                 var showIgnoreTime = attrs.showIgnoretime === "true";
                 var originalAttribute = attrs.originalAttribute;
@@ -81,6 +82,9 @@
                         var localStartDate = expressionService.evaluate(minStartDateExpression, datamap);
                         localStartDate = formatService.formatDate(localStartDate, originalDateFormat);
                         var variablesToWatch = expressionService.getVariablesForWatch(minStartDateExpression);
+                        if (minDate) {
+                            localStartDate = formatService.formatDate(minDate, originalDateFormat);
+                        }
                         scope.$watchCollection(variablesToWatch, function (newVal, oldVal) {
                             if (newVal !== oldVal) {
                                 localStartDate = expressionService.evaluate(minStartDateExpression, datamap);
@@ -91,6 +95,11 @@
                                 datePicker.initialDate = datePicker.startDate;
                             }
                         });
+                        return Date.parse(localStartDate);
+                    }
+
+                    function evaluateStartDate() {
+                        var localStartDate = formatService.formatDate(minDate, originalDateFormat);
                         return Date.parse(localStartDate);
                     }
 
@@ -206,7 +215,11 @@
                             showMeridian = dateFormat.startsWith("MM");
                         }
 
-                        if (!!attrs.minDateexpression) startDate = watchForStartDate("datetimepicker");
+                        if (!!attrs.minDateexpression) {
+                            startDate = watchForStartDate("datetimepicker");
+                        } else if (!!attrs.minDate) {
+                            startDate = evaluateStartDate()
+                        }
                         initialDate = startDate === defaultStartDate ? null : startDate;
 
                         element.datetimepicker({
@@ -227,7 +240,11 @@
 
                     } else {
 
-                        if (!!attrs.minDateexpression) startDate = watchForStartDate("datepicker");
+                        if (!!attrs.minDateexpression) {
+                            startDate = watchForStartDate("datepicker");
+                        } else if (!!attrs.minDate) {
+                            startDate = evaluateStartDate();
+                        }
                         initialDate = startDate === defaultStartDate ? null : startDate;
                         var startView = !showDays ? 1 : 0;
 
