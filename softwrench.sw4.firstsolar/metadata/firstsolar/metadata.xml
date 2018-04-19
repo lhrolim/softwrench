@@ -43,6 +43,7 @@
         <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
         <attribute name="fr1code" query="@firstSolarWhereClauseRegistry.Fr1CodeQuery" type="varchar"/>
+        <attribute name="assetpriority" query="(select priority from asset oa where oa.assetnum = !@assetnum)" type="varchar"/>
         <attribute name="fr2code" query="@firstSolarWhereClauseRegistry.Fr2CodeQuery" type="varchar"/>
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
         <attribute name="daysleftcm" query="(DATEDIFF(day,GETDATE(),!@reportdate))" type="smallint"/>
@@ -1314,6 +1315,8 @@
           <field attribute="assetnum" label="Asset" requiredexpression="true">
             <renderer type="custom" params="resourcepath=Content/Customers/firstsolar_offline/templates/fslocationdrilldownbutton.html"/>
           </field>
+          <field attribute="assetpriority" label="Asset Priority" readonly="true"/>
+
           <field attribute="location" label="Location" requiredexpression="true" hidden="true"/>
 
           <!-- do not remove - added to force the sync of assets -->
@@ -2626,6 +2629,7 @@
       <schemas>
         <list platform="mobile">
           <field attribute="assetnum" label="Asset"/>
+          <field attribute="priority" label="Asset"/>
           <field attribute="location" label="Location"/>
           <field attribute="failurecode" hidden="true"/>
           <field attribute="description" label="Description"/>

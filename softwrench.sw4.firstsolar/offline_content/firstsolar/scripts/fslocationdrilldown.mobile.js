@@ -61,6 +61,9 @@
             if (asset.datamap.siteid){
                 datamap.siteid = asset.datamap.siteid;
             }
+            if (asset.datamap.priority){
+                datamap["assetpriority"] = asset.datamap.priority;
+            }
             const failurecode = asset.datamap.failurecode;
             datamap["failurecode"] = failurecode;
             if (!!failurecode) {
