@@ -43,7 +43,7 @@
         <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>
         <!--        <attribute name="fr1list" query="(select CONVERT(varchar(10), linenum) + ';' +  failurecode from failurereport fr where fr.wonum = !@wonum and fr.type='CAUSE' and fr.orgid = !@orgid and fr.siteid = !@siteid)" type="varchar"/>-->
         <attribute name="fr1code" query="@firstSolarWhereClauseRegistry.Fr1CodeQuery" type="varchar"/>
-        <attribute name="assetpriority" query="(select priority from asset oa where oa.assetnum = !@assetnum)" type="varchar"/>
+        <attribute name="assetpriority" query="(select priority from asset oa where oa.assetnum = !@assetnum and oa.siteid = !@siteid)" type="varchar"/>
         <attribute name="fr2code" query="@firstSolarWhereClauseRegistry.Fr2CodeQuery" type="varchar"/>
         <attribute name="daysleft" query="(60 - DATEDIFF(day,!@reportdate,GETDATE()))" type="smallint"/>
         <attribute name="daysleftcm" query="(DATEDIFF(day,GETDATE(),!@reportdate))" type="smallint"/>
