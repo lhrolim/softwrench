@@ -42,13 +42,64 @@
                     return row;
                 }
 
+
+                const balanceColumns = (widths, param) =>{
+
+                    const totalColumns = Object.keys(widths).length;
+                    var totalWidth = 0;
+                    var withWidth = 0;
+
+                    //total all the column widths
+                    angular.forEach(widths, function (val) {
+                        if (val[param] === -1) {
+                            withWidth++;
+                        } else if (val[param] > 0) {
+                            totalWidth = totalWidth + val[param];
+                            withWidth++;
+                        }
+                    });
+
+                    log.debug(`total width declared ${totalWidth}`)
+
+                    var remainingWidth, balanceWidth;
+                    //if there are columns without widths assigned
+                    if (withWidth < totalColumns) {
+
+                        //if the total metadata widths are less than 100 calc the remainder, else fallback to equal width columns
+                        if (totalWidth <= 100) {
+                            remainingWidth = 100 - totalWidth;
+                            balanceWidth = remainingWidth / (totalColumns - withWidth);
+                        } else {
+                            remainingWidth = 0;
+                            balanceWidth = 100 / totalColumns;
+                        }
+
+                        //update the columns without widths
+                        angular.forEach(widths, function (val) {
+                            if (remainingWidth > 0) {
+                                const currentWidth = val[param];
+                                if (currentWidth === 0) {
+                                    val[param] = balanceWidth;
+                                }
+                            } else {
+                                val[param] = balanceWidth;
+                            }
+                        });
+                    }
+                }
+
                 const buildCss = function (widths) {
                     //log.debug('Widths Found', widths);
 
                     //balance remaining width between missing column widths
+                    log.debug('Widths before balancing array', Object.values(widths).map(a => { return { [a.class]: a.width } }));
                     balanceColumns(widths, 'width');
+                    log.debug('Widths after balancing array', Object.values(widths).map(a => { return { [a.class] : a.width } }));
 
                     log.debug('Widths Found', widths);
+                    
+
+
 
                     //build css rules
                     var css = '';
@@ -58,7 +109,7 @@
                     css += getViewRules(widths, 'width', '1px', 'print', scope.schema, tableAttr);
 
                     if (css) {
-                        //log.debug(css);
+                        log.trace(css);
 
                         //output css rules to html
                         element.html(css);
@@ -144,50 +195,8 @@
         }
     });
 
-    function balanceColumns(widths, param) {
+  
 
-        const totalColumns = Object.keys(widths).length;
-        var totalWidth = 0;
-        var withWidth = 0;
-
-        //total all the column widths
-        angular.forEach(widths, function (val) {
-            if (val[param] === -1) {
-                withWidth++;
-            } else if (val[param] > 0) {
-                totalWidth = totalWidth + val[param];
-                withWidth++;
-            }
-        });
-
-        var remainingWidth, balanceWidth;
-        //if there are columns without widths assigned
-        if (withWidth < totalColumns) {
-
-            //if the total metadata widths are less than 100 calc the remainder, else fallback to equal width columns
-            if (totalWidth <= 100) {
-                remainingWidth = 100 - totalWidth;
-                balanceWidth = remainingWidth / (totalColumns - withWidth);
-            } else {
-                remainingWidth = 0;
-                balanceWidth = 100 / totalColumns;
-            }
-
-            //update the columns without widths
-            angular.forEach(widths, function (val) {
-                if (remainingWidth > 0) {
-                    const currentWidth = val[param];
-                    if (currentWidth === 0) {
-                        val[param] = balanceWidth;
-                    }
-                } else {
-                    val[param] = balanceWidth;
-                }
-            });
-        }
-    }
-
-    window.balanceColumns = balanceColumns;
 
     function getViewRules(widths, param, viewWidth, media, schema, tableAttr) {
         var newCSS = '';
@@ -249,8 +258,6 @@
         }
     }
 
-    window.buildCSSrule = buildCSSrule;
-
     function buildCSSselector(columnIndex, columnClass, element, schema, targetWrapper, tableAttr) {
         const gridtype = getGridType(schema);
         var selector = `#${gridtype}[data-application="${schema.applicationName}"][data-schema="${schema.schemaId}"]`;
@@ -273,8 +280,6 @@
         return selector;
     }
 
-    window.buildCSSselector = buildCSSselector;
-
     function buildMinWidthCSS(schema, inline, minWidth) {
 
 
@@ -296,8 +301,6 @@
 
         return css;
     }
-
-    window.buildMinWidthCSS = buildMinWidthCSS;
 
     function getGridType(schema) {
         if (schema.stereotype === 'List') {
@@ -329,6 +332,5 @@
         }
     }
 
-    window.removePercent = removePercent;
 
 })(angular);

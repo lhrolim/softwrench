@@ -119,6 +119,7 @@
                 .then(function (label) {
                     scope.log.debug("setting initial text of typeahead component {0} to {1}".format(scope.displayablepath, label));
                     element.typeahead('val', label);
+                    scope.label = label;
                 });
 
         }
@@ -255,6 +256,12 @@
                 scope.magnetClicked({ text: scope.getText() });
             }
 
+            scope.tooltip = function () {
+                if (!!scope.fieldMetadata.rendererParameters["showtooltip"]) {
+                    return scope.getText();
+                }
+            }
+
             scope.getText = function () {
                 return scope.jelement.typeahead("val");
             }
@@ -338,7 +345,7 @@
             template:
                 '<div class="input-group lazy-search">' +
                 '<input type="search" class="hidden-phone form-control typeahead" ng-enabled="isModifiableEnabled(fieldMetadata)" placeholder="Find {{placeholder}}" ' +
-                'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}" data-field="{{provider}}"/>' +
+                'data-association-key="{{provider}}" data-displayablepath="{{displayablepath}}" data-field="{{provider}}" rel="tooltip" data-original-title="{{tooltip()}}"/>' +
                 '<span class="input-group-addon last" ng-click="!isModifiableEnabled(fieldMetadata) || executeMagnetSearch()" ng-if="shouldShowModal()">' +
                 '<i class="fa fa-search"></i>' +
                 '</span>' +

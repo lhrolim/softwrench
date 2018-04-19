@@ -211,7 +211,7 @@
 
                 <field label="Site Name" attribute="#workorder_.facilityname" readonly="true"/>
 
-                <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location,isnercst" >
+                <association label="Asset" target="#workorder_.assetnum" labelfield="#workorder_.asset_.description" extraprojectionvalues="location,isnercst,priority" >
                   <renderer type="lookup" params="largemodal=true;application=asset;schemaId=assetLookupList;hidecode=true"/>
                   <!--                  <dataprovider prefilterfunction="FilterAssets"/>-->
                   <event type="afterchange" service="genericTicketService" method="afterChangeAsset"/>
@@ -232,9 +232,15 @@
                 <!--                  <renderer type="lookup" />-->
                 <!--                </association>-->
 
-                <field attribute="#workorder_.schedstart" label="Scheduled Start">
-                  <renderer type="datetime"/>
-                </field>
+                <section orientation="horizontal">
+                  <field attribute="#workorder_.asset_.priority" label="Asset Priority" readonly="true"/>
+
+                  <field attribute="#workorder_.schedstart" label="Scheduled Start">
+                    <renderer type="datetime"/>
+                  </field>
+                </section>
+
+
 
                 <field label="Build Complete?" attribute="buildcomplete" defaultexpression="false" default="false">
                   <renderer type="checkbox"/>

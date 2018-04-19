@@ -182,7 +182,7 @@
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
           <relationshipAttribute to="isactive" literal="1" />
-<!--          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>-->
+          <!--          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>-->
         </relationship>
 
         <relationship to="item">
@@ -190,7 +190,7 @@
           <relationshipAttribute from="itemsetid" to="itemsetid"/>
           <relationshipAttribute to="itemtype" literal="ITEM" quoteLiteral="true"/>
           <relationshipAttribute to="isactive" literal="1" />
-<!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
+          <!--          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>-->
           <!--          <relationshipAttribute to="rotating" literal="0" quoteLiteral="true"/>-->
         </relationship>
 
@@ -852,16 +852,25 @@
 
         <!--#region Online-->
         <schema id="list" redeclaring="false" platform="web">
-          <!--<properties>
-            <property key="list.click.schema" value="fsservicereport"/>
-            <property key="list.click.mode" value="output"/>
-          </properties>-->
+          <properties>
+            <property key="list.percentagewidths" value=""/>
+          </properties>
+          <customization position="+asset_.description">
+            <field attribute="asset_.priority" label="Asset Priority">
+              <renderer type="default" params="width=6%" />
+            </field>
+          </customization>
           <customization position="+status">
             <field attribute="facilityname" label="Facility Name"/>
           </customization>
         </schema>
 
         <schema id="adetail" redeclaring="false">
+
+          <properties>
+            <property key="detail.fixedmedwidths" value="location=5;assetnum=5;asset_.priority=2;"/>
+          </properties>
+
           <customization position="+#reportdateplaceholder">
             <field attribute="woeq10" label="#Inverter Id" helpicon="right" tooltip="The inverter id that originated this workorder"/>
           </customization>
@@ -873,16 +882,22 @@
                          dependantfields="siteid" enableexpression="!@siteid != null"
                          extraprojectionvalues="facilityname, serviceaddress_.latitudey, serviceaddress_.longitudex, serviceaddress_.addresscode, serviceaddress_.description, serviceaddress_.streetaddress, serviceaddress_.city, serviceaddress_.stateprovince, serviceaddress_.country">
               <event type="beforechange" service="genericTicketService" method="beforeChangeLocation"/>
-              <renderer type="lookup" />
+              <renderer type="lookup" params="inputsize=large"/>
             </association>
+          </customization>
+
+          <customization position="+assetnum">
+            <field label="Asset Priority" attribute="asset_.priority" readonly="true">
+              <renderer type="default" params="inputsize=xsmall;showtooltip=true"/>
+            </field>
           </customization>
 
           <customization position="wopriority">
             <association label="Priority" target="wopriority" labelfield="realpriority_.description">
-              <renderer type="lookup" params="inputsize=small"/>
+              <renderer type="lookup" params="inputsize=xsmall;showtooltip=true"/>
             </association>
           </customization>
-          
+
 
           <customization position="secondary">
             <section>
@@ -2321,7 +2336,7 @@
           </optionfield>
 
 
-          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description" 
+          <association label="Item" target="itemnum" labelfield="item_.description" extraprojectionvalues="description"
                        showexpression="@linetype == 'ITEM'" requiredexpression="true" enableexpression="@storeloc != null">
             <dataprovider prefilterfunction="filterItems"/>
             <renderer type="lookup"/>
@@ -2452,8 +2467,8 @@
             <field label="extension" attribute="docinfo_.extension" hidden="true"/>
 
           </customization>
-          
-          
+
+
 
         </schema>
 

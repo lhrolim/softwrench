@@ -1630,7 +1630,7 @@
                 hint = this.input.getHint();
                 query = this.input.getQuery();
                 isCursorAtEnd = laxCursor || this.input.isCursorAtEnd();
-                if (hint != null && query !== hint && isCursorAtEnd) {
+                if (hint != null && hint!=="" && query !== hint && isCursorAtEnd) {
                     datum = this.dropdown.getDatumForCursor();
                     if (datum == null) {
                         datum = this.dropdown.getDatumForTopSuggestion();    

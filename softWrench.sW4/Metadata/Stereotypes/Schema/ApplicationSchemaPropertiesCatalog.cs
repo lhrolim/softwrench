@@ -236,6 +236,8 @@
         public const string PreventNoResultsNew = "list.preventnoresultsnew";
 
 
+        public const string ListWidths = "list.percentagewidths";
+
 
         /// <summary>
         /// property to specify what´s the next schema that should be routed from the current schema
