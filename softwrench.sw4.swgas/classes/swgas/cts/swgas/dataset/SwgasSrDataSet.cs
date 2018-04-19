@@ -42,6 +42,7 @@ namespace softwrench.sw4.swgas.classes.swgas.cts.swgas.dataset {
             json.ReplaceValue("reportedemail", new JValue(json.StringValue("email")));
             json.ReplaceValue("description", new JValue(BuildSummary(json)));
             json.ReplaceValue("reportedby", new JValue(json.StringValue("name")));
+            json.ReplaceValue("siteid",new JValue(json.StringValue("division")));
             var result = await base.Execute(application, json, id, operation, false, userIdSite, operationDataCustomParameters);
             var ow = await BuildDispathWorkorderInputWrapper(result);
             Engine().Execute(ow);
