@@ -493,8 +493,48 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
       </relationships>
     </entity>
 
-    <entity name="ci" idAttribute="ciid" whereclause="pluspcustomer like 'HLC%'">
+    <entity name="ci" idAttribute="ciid">
+      <attributes>
+        <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
+        <!--        <attribute name="sourceciname" type="varchar" query="(select ciname from ci cis where cis.cinum = (select sourceci from cirelation )"/>-->
+      </attributes>
+      <relationships>
+        <relationship to="cirelation" qualifier="sourceci">
+          <relationshipAttribute from="cinum" to="sourceci" primary="true"/>
+        </relationship>
+
+        <relationship to="cirelation" qualifier="iamparent">
+          <relationshipAttribute from="cinum" to="parentci" primary="true"/>
+        </relationship>
+
+        <relationship to="location" qualifier="cilocation">
+          <relationshipAttribute from="cilocation" to="location" primary="true"/>
+          <relationshipAttribute from="assetlocsiteid" to="siteid" />
+        </relationship>
+
+        <relationship to="classstructure">
+          <relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
+        </relationship>
+
+        <relationship to="ticket" collection="true">
+          <relationshipAttribute from="cinum" to="cinum" primary="true"/>
+        </relationship>
+
+        <relationship to="wochange" collection="true" qualifier="change">
+          <relationshipAttribute from="cinum" to="cinum" primary="true"/>
+        </relationship>
+
+        <relationship to="cispec" collection="true" qualifier="cispec">
+          <relationshipAttribute from="cinum" to="cinum" primary="true"/>
+          <relationshipAttribute from="classstructureid" to="classstructureid"/>
+        </relationship>
+
+      </relationships>
+      <connectorParameters>
+        <connectorParameter key="saveremarks_customconnector" value="softWrench.sW4.Data.Persistence.WS.Commons.SaveRemarkCrudConnector" />
+      </connectorParameters>
     </entity>
+
   </entities>
 
   <applications>
@@ -1089,7 +1129,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <section id="specificdata">
             <optionfield label="OS" attribute="os" tooltip="Wählen Sie hier das gewünschte Betriebssystem." required="true">
               <option label="Windows Server 2012 Standard Edition" value="2012se"/>
-	            <option label="Windows Server 2016 Standard Edition" value="2016se"/>
+              <option label="Windows Server 2016 Standard Edition" value="2016se"/>
             </optionfield>
             <optionfield label="IIS" attribute="iis" tooltip="Wählen Sie hier ob die Microsoft IIS Serverrolle installiert werden soll." required="true">
               <option label="Yes" value="yes"/>
@@ -1314,7 +1354,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         </detail>
 
         <schema id="changedetail" mode="output" parentschema="detail"/>
-        
+
         <schema id="AnewSR" abstract="true" stereotype="detail" mode="input" title="Service Request">
           <properties>
             <property key="nextschema.schemaid" value="creationSummary"/>
@@ -1892,6 +1932,23 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <command id="duplicate" label="Duplicate" method="duplicate" service="changeservice" parameters="schema,datamap" />
           </commands>
         </detail>
+
+        <schema stereotype="compositionlist" id="ci_change_composition">
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
+            <property key="list.click.service" value="changeservice.opendetail"/>
+          </properties>
+          <field label="Change ID" attribute="wonum"/>
+          <field label="Summary" attribute="description"/>
+          <field label="Change Type" attribute="pmchgtype"/>
+          <field label="Schedule Start" attribute="schedstart">
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+          </field>
+          <field label="Change Category" attribute="worktype"/>
+          <field label="Status" attribute="status"/>
+        </schema>
+
       </schemas>
     </application>
 
@@ -2030,11 +2087,11 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         </componentdisplayable>
 
         <componentdisplayable id="itccostcentersection">
-            <section showexpression="@prop:showcostcenter=false">
-              <reference id="itccostcenter"  showexpression="@toitc!=null" />
-            </section>
+          <section showexpression="@prop:showcostcenter=false">
+            <reference id="itccostcenter"  showexpression="@toitc!=null" />
+          </section>
         </componentdisplayable>
-          
+
         <componentdisplayable id="baseattributesection">
 
           <section parameters="detaildescription=Service Attributes">
@@ -2086,9 +2143,9 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         </componentdisplayable>
 
         <componentdisplayable id="itccostcenter">
-          <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,toitc" 
+          <optionfield label="Cost Center" attribute="costcenter" required="true" dependantfields="asset,toitc"
                        providerattribute="costCentersByToItc" qualifier="costcenterOriginal_new"/>
-        <field hidden="true" attribute="costcenterOriginal" label="Cost Center"/>
+          <field hidden="true" attribute="costcenterOriginal" label="Cost Center"/>
         </componentdisplayable>
 
 
@@ -2628,7 +2685,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <field attribute="#originaluser_label"  hidden="true" label="User ID" qualifier="nodescription"/>
 
 
-            <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname" 
+            <association label="User ID:" target="userid" labelfield="person_.hlagdisplayname"
                          showexpression="@asset!=null &amp;&amp; @usage != null &amp;&amp; !@usage.equalsAny('EDUCATION','POOL', 'MEETING')"
                          required="@usage != null &amp;&amp; @usage.equalsAny('STANDARD','MOBILE HOME')"
                          qualifier="originaluser_new">
@@ -3102,7 +3159,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Location Description" attribute="location_.description">
             <renderer type="default" params="minwidth=100px;excelwidth=40"/>
           </field>
-         
+
           <field label="Department" attribute="assetglaccount_.displaycostcenter">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
@@ -3128,11 +3185,11 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Status" attribute="status">
             <renderer type="default" params="minwidth=100px;excelwidth=15"/>
           </field>
-       
+
           <field label="Mac Address" attribute="assetspecmacaddress_.alnvalue">
             <renderer type="default" params="minwidth=80px;excelwidth=15"/>
           </field>
-          
+
           <field label="ChangeDate" attribute="changedate"/>
 
           <field label="rowstamp" attribute="rowstamp" hidden="true"/>
@@ -3423,7 +3480,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="datetime" params="format=MM/yyyy;showtime=false;showdays=false;mindate=05/2018"/>
             <filter operation="btw" default="@MIN_DATE"/>
           </field>
-         
+
           <commands removeundeclared="true">
             <command id="viewassetcomparisonreport" label="Generate Report" method="exportR0042Report" service="reportservice" parameters="datamap,schema"/>
           </commands>
@@ -3510,6 +3567,27 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="siteid" hidden="true"/>
         </schema>
       </schemas>
+    </application>
+
+
+    <application name="cispec" title="" entity="cispec">
+      <schemas>
+        <schema stereotype="compositionlist" id="ci_composition">
+          <properties>
+            <property key="detail.cancel.lbl" value="Close"/>
+            <property key="expansible" value="false"/>
+          </properties>
+          <field label="Attribute" attribute="assetattrid"/>
+          <field attribute="assetattribute_.description" hidden="true"/>
+          <field label="Description" attribute="#normalizedattribute" hidden="true"/>
+          <field label="Data Type" attribute="assetattribute_.datatype"/>
+          <field label="AlphaNumeric Value" attribute="alnvalue"/>
+          <field label="Numeric Value" attribute="numvalue"/>
+          <field label="Measure of Unit" attribute="measureunitid"/>
+          <field label="Section" attribute="section"/>
+        </schema>
+      </schemas>
+
     </application>
 
     <application name="assetcustodian" entity="AssetUserCust" title="Custodian">
@@ -3685,6 +3763,8 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Owner Group" attribute="ownergroup"/>
           <field label="History" attribute="history"/>
         </schema>
+
+        <schema id="ci_ticket_composition" parentschema="asset_composition" stereotype="compositionlist"/>
       </schemas>
     </application>
 
@@ -4135,6 +4215,64 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="status" hidden="true"/>
           <field attribute="changedate" hidden="true"/>
         </list>
+      </schemas>
+    </application>
+
+
+    <application name="ci" entity="ci" title="CI">
+      <schemas>
+        <list>
+          <field label="Hostname" attribute="ciname"/>
+          <field label="Description" attribute="description"/>
+          <field label="Parent CI" attribute="sourceci_parent_.ciname"/>
+          <field label="Status" attribute="status"/>
+          <field label="Site ID" attribute="hlagpluspcustomer"/>
+        </list>
+        <detail>
+          <field label="cinum" attribute="cinum" hidden="true"/>
+          <field label="Hostname" attribute="ciname"/>
+          <field label="Description" attribute="description"/>
+          <field label="Location Information" attribute="hlagpluspcustomer"/>
+          <field label="Location" attribute="cilocation_.description"/>
+          <field label="Classification" attribute="classstructure_.classificationid"/>
+          <field label="Status" attribute="status"/>
+          <field label="Operating Environment" attribute="itdcioperatingenv"/>
+          <section id="ciremarks" resourcepath="/Content/Templates/hapag/ciremarks.html"  >
+            <header label="CI Remarks" />
+          </section>
+          <field label="HW Owner" attribute="itdcimanagedby"/>
+          <field label="Responsible" attribute="businessownerpersonid"/>
+          <field label="System Owner" attribute="itdcisupportgroup"/>
+          <!--          <field label="Parent CIs" attribute="ITDCISUPPORTGROUP"/>-->
+          <!--          <field label="Child CIs" attribute="ITDCISUPPORTGROUP"/>-->
+
+          <section id="createoutof" resourcepath="/Content/Templates/hapag/createfromci.html" >
+            <header label="Create New" />
+          </section>
+
+
+          <tab label="Specification" id="specification">
+            <field label="Hostname" attribute="ciname"/>
+            <field label="Location Information" attribute="hlagpluspcustomer"/>
+            <field label="Location" attribute="cilocation_.description"/>
+            <composition relationship="cispec" inline="true" label="" detailschema="">
+              <collectionproperties listschema="ci_composition" allowcreation="false" allowremoval="false" allowupdate="false"/>
+            </composition>
+          </tab>
+
+          <tab label="History" id="history">
+            <composition relationship="ticket" inline="true" label="" detailschema="" fetchtype="eager">
+              <header label="Tickets" displacement="ontop"/>
+              <collectionproperties listschema="ci_ticket_composition" allowcreation="false" allowremoval="false" allowupdate="false" />
+            </composition>
+            <composition relationship="change" inline="true" label="" detailschema="" fetchtype="eager">
+              <header label="Change" displacement="ontop"/>
+              <collectionproperties listschema="ci_change_composition" allowcreation="false" allowremoval="false" allowupdate="false" />
+            </composition>
+          </tab>
+
+
+        </detail>
       </schemas>
     </application>
 

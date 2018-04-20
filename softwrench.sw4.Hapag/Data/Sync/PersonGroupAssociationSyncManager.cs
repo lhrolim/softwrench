@@ -113,6 +113,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             }
 
             user = _hapagHelper.HandleSsotuiModulesMerge(user);
+            user = _hapagHelper.HandleTomItomModulesMerge(user);
             user = _hapagHelper.RemoveOrphanEntities(user);
 
             if (hasDeletedAssociation || hasNewAssociation) {

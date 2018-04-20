@@ -16,6 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using softwrench.sw4.Hapag.Data.Sync;
+using softWrench.sW4.Data.Entities;
+using softWrench.sW4.Data.Persistence.WS.Ism.Base;
 
 namespace softwrench.sw4.Hapag.Data.DataSet {
     class HapagNewChangeDataSet : HapagBaseApplicationDataSet {
@@ -55,6 +58,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             if (resultObject == null) {
                 //it happens only if we´re pointint to a database different then the ws impl
                 return dbDetail;
+
             }
 
             if (application.Schema.SchemaId == "creationSummary") {

@@ -313,11 +313,12 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		</container>
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
-		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />	
+		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
     <application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs"/>
     <container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac">
       <application id="newdecommissionimac" title="Decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
     </container>
+	  <application id="CIMenu" title="CI Grid" ref="ci"  tooltip="Click here to view your CI Records" role="ci"/>
     <application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
 		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
     
@@ -368,10 +369,12 @@ xsi:schemaLocation="http://www.example.org/Menu ../../Schema/Menu.xsd "  mainmen
 		<application id="IN" title="Incident Grid" ref="incident" schema="list" tooltip="Click to view your Incidents" />
     <application id="PROBLEM" title="Problem Grid" ref="problem" schema="list" tooltip="Click to view your Problems"/>
 		<application id="AssetMenu" title="Asset Grid" ref="asset"  tooltip="Click here to view your Assets" />
+	  
     <application id="ImacGrid" title="IMAC Grid" ref="imac" schema="list" tooltip="Click to view your Imacs" />
     <container title="New IMAC Request" tooltip="Click to create a new IMAC Request" id="newimac">
       <application id="newdecommissionimac" title="Decommission" tooltip="Click to create a new decommission IMAC Request" schema="decommission" ref="imac" parameters="popupmode=browser"/>
     </container>
+	  <application id="CIMenu" title="CI Grid" ref="ci"  tooltip="Click here to view your CI Records" role="ci"/>
 		<application id="CHGRID" title="Change Grid" ref="change" schema="list" tooltip="Click to view your Changes"/>
 		<application id="CHNEW" title="New Change" ref="newchange" schema="newchange" tooltip="Click to Create a New Changes" parameters="popupmode=browser"/>
     

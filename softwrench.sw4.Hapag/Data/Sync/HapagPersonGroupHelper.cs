@@ -68,29 +68,30 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             roles.Add(RoleType.Defaultsrgrid, FindRole(RoleType.Defaultsrgrid));
             roles.Add(RoleType.Defaultssrsearch, FindRole(RoleType.Defaultssrsearch));
             roles.Add(RoleType.IncidentDetailsReport, FindRole(RoleType.IncidentDetailsReport));
+            roles.Add(RoleType.Ci, FindRole(RoleType.Ci));
             return roles;
         }
 
         private IDictionary<string, Role> GetHapagModules() {
             IDictionary<string, Role> resultDict = new Dictionary<string, Role>();
-            resultDict[HapagPersonGroupConstants.ActrlRam] = FindRole(FunctionalRole.AssetRamControl);
-            resultDict[HapagPersonGroupConstants.Actrl] = FindRole(FunctionalRole.AssetControl);
-            resultDict[HapagPersonGroupConstants.XITC] = FindRole(FunctionalRole.XItc);
-            resultDict[HapagPersonGroupConstants.Purchase] = FindRole(FunctionalRole.Purchase);
-            resultDict[HapagPersonGroupConstants.Ad] = FindRole(FunctionalRole.Ad);
-            resultDict[HapagPersonGroupConstants.Tom] = FindRole(FunctionalRole.Tom);
-            resultDict[HapagPersonGroupConstants.Itom] = FindRole(FunctionalRole.Itom);
-            resultDict[HapagPersonGroupConstants.Change] = FindRole(FunctionalRole.Change);
-            resultDict[HapagPersonGroupConstants.Offering] = FindRole(FunctionalRole.Offering);
-            resultDict[HapagPersonGroupConstants.SSO] = FindRole(FunctionalRole.Sso);
-            resultDict[HapagPersonGroupConstants.Tui] = FindRole(FunctionalRole.Tui);
+            resultDict[c.ActrlRam] = FindRole(FunctionalRole.AssetRamControl);
+            resultDict[c.Actrl] = FindRole(FunctionalRole.AssetControl);
+            resultDict[c.XITC] = FindRole(FunctionalRole.XItc);
+            resultDict[c.Purchase] = FindRole(FunctionalRole.Purchase);
+            resultDict[c.Ad] = FindRole(FunctionalRole.Ad);
+            resultDict[c.Tom] = FindRole(FunctionalRole.Tom);
+            resultDict[c.Itom] = FindRole(FunctionalRole.Itom);
+            resultDict[c.Change] = FindRole(FunctionalRole.Change);
+            resultDict[c.Offering] = FindRole(FunctionalRole.Offering);
+            resultDict[c.SSO] = FindRole(FunctionalRole.Sso);
+            resultDict[c.Tui] = FindRole(FunctionalRole.Tui);
             return resultDict;
         }
 
         private IDictionary<string, UserProfile> GetHapagProfiles() {
             IDictionary<string, UserProfile> resultDict = new Dictionary<string, UserProfile>();
             //            resultDict[HapagPersonGroupConstants.HEu] = FindUserProfile(ProfileType.EndUser);
-            resultDict[HapagPersonGroupConstants.HITC] = FindUserProfile(ProfileType.Itc);
+            resultDict[c.HITC] = FindUserProfile(ProfileType.Itc);
             return resultDict;
         }
 
@@ -181,7 +182,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         /// <returns></returns>
         public InMemoryUser HandleExternalUser(InMemoryUser user) {
             var isExternalUser =
-                user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.HExternalUser));
+                user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(c.HExternalUser));
             var prefixToInactivate = isExternalUser ? c.InternalRolesPrefix : c.ExternalRolesPrefix;
             if (!isEndUserOrITC(user)) {
                 //not external, nor enduser(with roles), nor itc... user is ordinary enduser!
@@ -215,9 +216,9 @@ namespace softwrench.sw4.Hapag.Data.Sync {
         /// <param name="user"></param>
         /// <returns></returns>
         public InMemoryUser HandleSsotuiModulesMerge(InMemoryUser user) {
-            var isExternalUser = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.HExternalUser));
-            var isSSO = isExternalUser && user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.SSO));
-            var isTui = isExternalUser && user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(HapagPersonGroupConstants.Tui));
+            var isExternalUser = user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(c.HExternalUser));
+            var isSSO = isExternalUser && user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(c.SSO));
+            var isTui = isExternalUser && user.PersonGroups.Any(f => f.PersonGroup.Name.Equals(c.Tui));
 
 
             var dbUser = user.DBUser;
@@ -240,6 +241,18 @@ namespace softwrench.sw4.Hapag.Data.Sync {
                 //remove it due to legacy data on swdb
                 RemoveCustomRole(user, RoleType.IncidentDetailsReport);
             }
+            return user;
+        }
+
+        public InMemoryUser HandleTomItomModulesMerge(InMemoryUser user) {
+            var isTomOrITom = user.PersonGroups.Any(f => f.PersonGroup.Name.EqualsAny(c.Tom, c.Itom));
+            var isEUOrITC = user.PersonGroups.Any(f => f.PersonGroup.Name.EqualsAny(c.HEu, c.HITC));
+            if (isEUOrITC && isTomOrITom) {
+                AddCustomRole(user, RoleType.Ci);
+            } else {
+                RemoveCustomRole(user, RoleType.Ci);
+            }
+
             return user;
         }
 
@@ -273,5 +286,7 @@ namespace softwrench.sw4.Hapag.Data.Sync {
             }
             return false;
         }
+
+
     }
 }

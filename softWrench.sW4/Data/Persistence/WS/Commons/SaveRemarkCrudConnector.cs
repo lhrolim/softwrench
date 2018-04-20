@@ -12,14 +12,16 @@ namespace softWrench.sW4.Data.Persistence.WS.Commons {
             _dao = SimpleInjectorGenericFactory.Instance.GetObject<SWDBHibernateDAO>(typeof(SWDBHibernateDAO));
         }
 
-        public object SaveRemarks(AssetRemarkContainer assetRemark) {
-            var extraField = _dao.FindSingleByQuery<ExtraAttributes>(ExtraAttributes.ByMaximoTABLEIdAndAttribute, "asset", assetRemark.Id,
+        public object SaveRemarks(AssetRemarkContainer assetRemark)
+        {
+            var maximoTable = assetRemark.EntityMetadata.Name;
+            var extraField = _dao.FindSingleByQuery<ExtraAttributes>(ExtraAttributes.ByMaximoTABLEIdAndAttribute, maximoTable, assetRemark.Id,
                 "remarks");
             if (extraField == null) {
                 extraField = new ExtraAttributes {
                     AttributeName = "remarks",
                     MaximoId = assetRemark.Id,
-                    MaximoTable = "asset"
+                    MaximoTable = maximoTable
                 };
             }
             extraField.AttributeValue = assetRemark.Remark;

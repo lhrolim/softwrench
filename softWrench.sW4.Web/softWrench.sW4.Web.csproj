@@ -541,7 +541,9 @@
     <Content Include="Content\Scripts\client\services\print_service.js" />
     <Content Include="Content\Scripts\client\services\format_service.js" />
     <Content Include="Content\Scripts\customers\gric\sr_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\ci_remarks.js" />
     <Content Include="Content\Scripts\customers\hapag\attachment_service.js" />
+    <Content Include="Content\Scripts\customers\hapag\createFromCI.js" />
     <Content Include="Content\Scripts\customers\hapag\offering_service.js" />
     <Content Include="Content\Scripts\customers\hapag\createFromAsset.js" />
     <Content Include="Content\Scripts\customers\hapag\change_service.js" />
@@ -708,6 +710,8 @@
     <Content Include="Content\Templates\crud\crud_input_fields.html" />
     <Content Include="Content\Templates\crud\crud_output_fields.html" />
     <Content Include="Content\Templates\directives\printSection.html" />
+    <Content Include="Content\Templates\hapag\ciremarks.html" />
+    <Content Include="Content\Templates\hapag\createfromci.html" />
     <Content Include="Content\Templates\hapag\embeddedofferingpdf.html" />
     <Content Include="Content\Templates\hapag\embeddedpdf.html" />
     <Content Include="Content\Templates\hapag\Actionentry.html" />

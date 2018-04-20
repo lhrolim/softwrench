@@ -399,7 +399,66 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 			</connectorParameters>
 		</entity>
 
-		<entity name="imac" idAttribute="ticketid" parententity="SR" whereclause="imac.classificationid like '8151%'">
+
+    <entity name="cirelation" idAttribute="cirelationid">
+      <attributes>
+        <attribute name="cirelationid" type="bigint" required="true" />
+        <attribute name="sourceci" type="varchar" required="true" />
+        <attribute name="targetci" type="varchar" required="true" />
+        <attribute name="relationnum" type="varchar" required="true" />
+        <attribute name="changeby" type="varchar" required="false" />
+        <attribute name="changedate" type="datetime" required="false" />
+        <attribute name="ancestorci" type="varchar" required="false" />
+        <attribute name="parentci" type="varchar" required="false" />
+        <attribute name="rowstamp" type="timestamp" required="true" />
+      </attributes>
+      <relationships>
+        <relationship to="ci" qualifier="parent">
+          <relationshipAttribute from="parentci" to="cinum"/>
+        </relationship>
+        <relationship to="ci" qualifier="child">
+          <relationshipAttribute from="targetci" to="cinum"/>
+        </relationship>
+      </relationships>
+
+      <connectorParameters>
+        <connectorParameter key="dbtable" value="cirelation" />
+      </connectorParameters>
+    </entity>
+
+	  <entity name="cispec" idAttribute="cispecid">
+	    <attributes>
+	      <attribute name="cispecid" type="bigint" required="true" />
+	      <attribute name="alnvalue" type="varchar" required="false" />
+	      <attribute name="assetattrid" type="varchar" required="true" />
+	      <attribute name="cinum" type="varchar" required="true" />
+	      <attribute name="changeby" type="varchar" required="true" />
+	      <attribute name="changedate" type="datetime" required="true" />
+	      <attribute name="classstructureid" type="varchar" required="true" />
+	      <attribute name="displaysequence" type="smallint" required="true" />
+	      <attribute name="linkedtoattribute" type="varchar" required="false" />
+	      <attribute name="linkedtosection" type="varchar" required="false" />
+	      <attribute name="measureunitid" type="varchar" required="false" />
+	      <attribute name="numvalue" type="decimal" required="false" />
+	      <attribute name="section" type="varchar" required="false" />
+	      <attribute name="refobjectid" type="bigint" required="false" />
+	      <attribute name="refobjectname" type="varchar" required="false" />
+	      <attribute name="classspecid" type="bigint" required="false" />
+	      <attribute name="mandatory" type="smallint" required="true" />
+	      <attribute name="tablevalue" type="varchar" required="false" />
+	      <attribute name="rowstamp" type="timestamp" required="true" />
+	    </attributes>
+	    <relationships>
+	      <relationship to="assetattribute">
+	        <relationshipAttribute from="assetattrid" to="assetattrid" primary="true"/>
+	      </relationship>
+	    </relationships>
+	    <connectorParameters>
+	      <connectorParameter key="dbtable" value="cispec" />
+	    </connectorParameters>
+	  </entity>
+
+    <entity name="imac" idAttribute="ticketid" parententity="SR" whereclause="imac.classificationid like '8151%'">
 			<relationships>
 				<relationship to="classstructure">
 					<relationshipAttribute from="classstructureid" to="classstructureid" primary="true"/>
@@ -3265,6 +3324,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<attribute name="shiftnum" type="varchar" required="false" />
 				<attribute name="status" type="varchar" required="true" />
 				<attribute name="statusdate" type="timestamp" required="true" />
+        <attribute type="varchar" name="itdcimanagedby"/>
+        <attribute type="varchar" name="businessownerpersonid"/>
+        <attribute type="varchar" name="itdcisupportgroup"/>
+        <attribute type="varchar" name="itdcioperatingenv"/>
 			</attributes>
 			<connectorParameters>
 				<connectorParameter key="dbtable" value="ci" />

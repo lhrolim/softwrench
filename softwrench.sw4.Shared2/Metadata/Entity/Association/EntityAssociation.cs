@@ -57,6 +57,10 @@ namespace softwrench.sW4.Shared2.Metadata.Entity.Association {
         }
 
         public EntityAssociationAttribute PrimaryAttribute() {
+            if (_attributes.Count() == 1) {
+                return _attributes.First();
+            }
+
             return _attributes.First(r => r.Primary);
         }
 

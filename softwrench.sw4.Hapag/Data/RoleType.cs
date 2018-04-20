@@ -10,6 +10,7 @@ namespace softwrench.sw4.Hapag.Data {
     
         Incident,
         Asset,
+        Ci,
         ITCSearch,
         Faq,
         NewImac,

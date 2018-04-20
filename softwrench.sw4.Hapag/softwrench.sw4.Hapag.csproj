@@ -83,6 +83,7 @@
     <Compile Include="Data\Configuration\HapagQueryConstants.cs" />
     <Compile Include="Data\Configuration\HapagQueryUtils.cs" />
     <Compile Include="Data\Connector\Imac\ImacServicePlanHelper.cs" />
+    <Compile Include="Data\DataSet\HapagCIDataSet.cs" />
     <Compile Include="Data\DataSet\HapagOfferingDataSet.cs" />
     <Compile Include="Data\DataSet\Helper\ApproverConstants.cs" />
     <Compile Include="Data\DataSet\Helper\ChangeDetailUnionQueryGenerator.cs" />
