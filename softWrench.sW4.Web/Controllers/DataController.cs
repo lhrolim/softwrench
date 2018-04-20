@@ -69,7 +69,7 @@ namespace softWrench.sW4.Web.Controllers {
             }
             RequestUtil.ValidateMockError(Request);
 
-            if (!"solution".EqualsIc(application)) {
+            if (!"solution".EqualsIc(application) && !"ci".EqualsIc(application)) {
                 ValidateHashSecurity(request);
             }
             

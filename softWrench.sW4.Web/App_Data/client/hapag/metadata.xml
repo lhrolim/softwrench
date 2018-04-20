@@ -499,11 +499,11 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <!--        <attribute name="sourceciname" type="varchar" query="(select ciname from ci cis where cis.cinum = (select sourceci from cirelation )"/>-->
       </attributes>
       <relationships>
-        <relationship to="cirelation" qualifier="sourceci">
+        <relationship to="cirelation" qualifier="sourceci" collection="true">
           <relationshipAttribute from="cinum" to="sourceci" primary="true"/>
         </relationship>
 
-        <relationship to="cirelation" qualifier="iamparent">
+        <relationship to="cirelation" qualifier="iamparent" collection="true">
           <relationshipAttribute from="cinum" to="parentci" primary="true"/>
         </relationship>
 
@@ -3577,9 +3577,10 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <property key="detail.cancel.lbl" value="Close"/>
             <property key="expansible" value="false"/>
           </properties>
-          <field label="Attribute" attribute="assetattrid"/>
-          <field attribute="assetattribute_.description" hidden="true"/>
-          <field label="Description" attribute="#normalizedattribute" hidden="true"/>
+          <field label="Attribute" attribute="assetattrid" hidden="true"/>
+          <field label="Attribute" attribute="#normalizedattribute" />
+          <field attribute="assetattribute_.description" label="Description"/>
+<!--          <field label="Description" attribute="#normalizedattribute"/>-->
           <field label="Data Type" attribute="assetattribute_.datatype"/>
           <field label="AlphaNumeric Value" attribute="alnvalue"/>
           <field label="Numeric Value" attribute="numvalue"/>
@@ -4243,6 +4244,16 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="HW Owner" attribute="itdcimanagedby"/>
           <field label="Responsible" attribute="businessownerpersonid"/>
           <field label="System Owner" attribute="itdcisupportgroup"/>
+          
+          
+          <composition relationship="sourceci" label="Parent CIs" inline="true" detailschema="" >
+            <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=parent_.ciname;onClickService=relatedrecordservice.openParentCI;showaslink=true" />
+          </composition>
+          
+          <composition relationship="iamparent" label="Child CIs" inline="true" detailschema="">
+            <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=child_.ciname;onClickService=relatedrecordservice.openChildCI;showaslink=true" />
+          </composition>
+
           <!--          <field label="Parent CIs" attribute="ITDCISUPPORTGROUP"/>-->
           <!--          <field label="Child CIs" attribute="ITDCISUPPORTGROUP"/>-->
 
@@ -4273,6 +4284,19 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
 
         </detail>
+      </schemas>
+    </application>
+
+    <application name="cirelation" entity="cirelation" title="cirelation">
+      <schemas>
+        <schema id="list" stereotype="compositionlist">
+          <field attribute="sourceci" hidden="true"/>
+          <field attribute="targetci" hidden="true"/>
+          <field attribute="parent_.ciname" hidden="true"/>
+          <field attribute="parent_.ciid" hidden="true"/>
+          <field attribute="child_.ciname" hidden="true"/>
+          <field attribute="child_.ciid" hidden="true"/>
+        </schema>
       </schemas>
     </application>
 

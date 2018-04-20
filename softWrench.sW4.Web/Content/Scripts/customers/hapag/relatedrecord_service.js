@@ -33,7 +33,23 @@ app.factory('relatedrecordservice', function ($http, redirectService, alertServi
             } else {
                 alertService.alert('This Application {0} is not supported'.format(entity));
             }
+        },
+
+        openChildCI: function (datamap, schema) {
+            var id = datamap['child_.ciid'];
+            var hmachash = datamap['hmachash'];
+            var parameters = { id: id, hmachash: hmachash, popupmode: 'browser' };
+            redirectService.goToApplicationView("ci", 'detail', 'output', null, parameters);
+        },
+
+        openParentCI: function (datamap, schema) {
+
+            var id = datamap['parent_.ciid'];
+            var hmachash = datamap['hmachash'];
+            var parameters = { id: id, hmachash: hmachash, popupmode: 'browser' };
+            redirectService.goToApplicationView("ci", 'detail', 'output', null, parameters);
         }
+
     };
 
 
