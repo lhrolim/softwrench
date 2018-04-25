@@ -15,7 +15,7 @@ function griditemclick(rowNumber, columnNumber, element) {
     }
 }
 
-function buildStyle(minWidth, maxWidth, width,isdiv) {
+function buildStyle(minWidth, maxWidth, width,isdiv, backcolor) {
     if (minWidth == undefined && maxWidth == undefined && width == undefined) {
         return "";
     }
@@ -29,6 +29,9 @@ function buildStyle(minWidth, maxWidth, width,isdiv) {
     }
     if (width != undefined) {
         style += 'width:' + width + ";";
+    }
+    if (backcolor != null) {
+        style += "background-color:" + backcolor + ";";
     }
     return style + " \"";
 };
@@ -112,8 +115,9 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                 var t0 = new Date().getTime();;
                 var columnarray = scope.columnarray = [];
                 var hiddencolumnArray = [];
+                var column = null;
                 for (var j = 0; j < schema.displayables.length; j++) {
-                    var column = schema.displayables[j];
+                    column = schema.displayables[j];
                     columnarray.push(column);
                     hiddencolumnArray.push(scope.isFieldHidden(schema, column));
                 }
@@ -146,7 +150,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         var isHidden = hiddencolumnArray[j];
                         html += "<td {2} onclick='griditemclick({0},{1},this)'".format(i, j, isHidden ? 'style="display:none"' : '');
                         if (!isHidden) {
-                            html += buildStyle(minWidth, maxWidth, width,false);
+                            html += buildStyle(minWidth, maxWidth, width, false, dm.fields["#_{0}_paintcolor".format(column.attribute)]);
                         } 
                         html += ">";
                         if (column.rendererType == 'color') {
@@ -163,7 +167,7 @@ app.directive('crudtbody', function (contextService, $compile, $parse, formatSer
                         }else if (column.type == 'ApplicationFieldDefinition') {
                             html += "<div class='gridcolumnvalue'".format(columnst);
                             if (!isHidden) {
-                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv, true);
+                                html += buildStyle(minwidthDiv, maxwidthDiv, widthDiv, true, dm.fields["#_paintcolor"]);
                             }
                             html += ">";
                             html += formattedText;

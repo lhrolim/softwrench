@@ -28,12 +28,12 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         //        protected readonly EntityRepository EntityRepository = new EntityRepository();
 
-        private readonly MaximoHibernateDAO _maxDao;
+        protected readonly MaximoHibernateDAO MaxDao;
 
         public HapagBaseApplicationDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao) {
             _locationManager = locationManager;
             _entityRepository = entityRepository;
-            _maxDao = maxDao;
+            MaxDao = maxDao;
         }
 
 
@@ -57,7 +57,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
 
         protected MaximoHibernateDAO MaxDAO {
             get {
-                return _maxDao;
+                return MaxDao;
             }
         }
 

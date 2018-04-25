@@ -23,6 +23,8 @@ namespace softwrench.sw4.Hapag.Data.DataSet.Helper {
         const string NonTicketUnions =
             @"UNION ALL
 select wochange.workorderid   AS workorderid, 
+       wochange.risk as risk,
+       wochange.pmchgtype as pmchgtype,
        NULL AS sr_ticketid, 
        NULL AS relatedsr_recordkey, 
        NULL AS relatedsr_sr_ticketid, 
@@ -57,6 +59,8 @@ FROM   wochange AS wochange
     UNION ALL
       select wochange.workorderid   AS workorderid, 
        NULL AS sr_ticketid, 
+       wochange.risk as risk,
+       wochange.pmchgtype as pmchgtype,
        NULL AS relatedsr_recordkey, 
        NULL AS relatedsr_sr_ticketid, 
        wochange.wonum         AS wonum, 
@@ -119,6 +123,8 @@ FROM   wochange AS wochange
         const string BaseQuery =
       @"select
       wochange.workorderid AS workorderid,
+      wochange.risk AS risk,
+      wochange.pmchgtype as pmchgtype,
       sr_.ticketid AS sr_ticketid,
       relatedsr_.recordkey AS relatedsr_recordkey,
       relatedsr_sr_.ticketid AS relatedsr_sr_ticketid,
@@ -168,6 +174,8 @@ FROM   wochange AS wochange
       UNION ALL
       select
       wochange.workorderid AS workorderid,
+      wochange.risk AS risk,
+      wochange.pmchgtype as pmchgtype,
       sr_.ticketid AS sr_ticketid,
       relatedsr_.recordkey AS relatedsr_recordkey,
       relatedsr_sr_.ticketid AS relatedsr_sr_ticketid,
@@ -219,6 +227,8 @@ FROM   wochange AS wochange
       UNION
       ALL
       SELECT
+      NULL,
+      NULL,
       NULL,
       NULL,
       NULL,

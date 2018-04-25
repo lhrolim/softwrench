@@ -504,7 +504,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         </relationship>
 
         <relationship to="cirelation" qualifier="iamparent" collection="true">
-          <relationshipAttribute from="cinum" to="parentci" primary="true"/>
+          <relationshipAttribute from="cinum" to="targetci" primary="true"/>
         </relationship>
 
         <relationship to="location" qualifier="cilocation">
@@ -1721,6 +1721,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         <schema abstract="true" id="parentgrid">
           <field attribute="workorderid" hidden="true" />
           <field attribute="sr_.ticketid" hidden="true" />
+          <field attribute="risk" hidden="true" />
           <field attribute="relatedsr_.recordkey" hidden="true" />
           <field attribute="relatedsr_sr_.ticketid" hidden="true" />
 
@@ -1731,12 +1732,13 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="ci_.ciname" label="Asset">
             <renderer type="default" params="minwidth=100px;maxwidth=100px;excelwidth=30" />
           </field>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="default" params="minwidth=60px;maxwidth=60px" />
+          <field attribute="pmchgtype" label="Change Type">
+            <renderer type="default" params="minwidth=30px;maxwidth=60px;excelwidth=30" />
           </field>
           <field attribute="schedstart" label="Scheduled Start">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=true" />
           </field>
+
           <field attribute="hlagpluspcustomer" label="Site ID">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
@@ -1764,7 +1766,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             </field>
           </section>
           <section id="reportedby">
-            <field attribute="hlagreportedby" label="Reported By">
+            <field attribute="hlagreportedby" label="Reported By" hidden="true">
               <renderer type="default" params="minwidth=100px;maxwidth=100px" />
             </field>
           </section>
@@ -1799,6 +1801,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <!--Used for viewAll click from Dashboard with SR union-->
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
+
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
               <renderer type="default" params="minwidth=81px;maxwidth=81px;excelwidth=50;wordwrap=break-word" />
@@ -1808,7 +1811,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             </field>
           </section>
           <section id="reportedby">
-            <field attribute="hlagreportedby" label="Reported By">
+            <field attribute="hlagreportedby" label="Reported By" hidden="true">
               <renderer type="default" params="minwidth=100px;maxwidth=100px" />
             </field>
           </section>
@@ -1820,6 +1823,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <schema id="changeApprovalsDashboardList" stereotype="list">
           <field attribute="workorderid" hidden="true" />
+          <field attribute="risk" hidden="true" />
           <field attribute="wonum" label="Change ID">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
@@ -1829,12 +1833,17 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="ci_.ciname" label="Asset">
             <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=30" />
           </field>
-          <field attribute="wopriority" label="Priority">
-            <renderer type="default" params="minwidth=60px;maxwidth=60px" />
+          <field attribute="pmchgtype" label="Change Type">
+            <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=30" />
           </field>
+
           <field attribute="schedstart" label="Scheduled Start">
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
           </field>
+          <field attribute="#targetapprovaldate" label="Target Approval Date">
+            <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=30" />
+          </field>
+
           <field attribute="hlagpluspcustomer" label="Site ID">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
@@ -1854,56 +1863,71 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <detail id="detail" mode="output" title="Change Details">
           <field attribute="workorderid" hidden="true" />
-          <field attribute="wonum" label="Change Id"/>
-          <field attribute="ownergroup" label="Owner Group"/>
-          <field attribute="location" label="Location"/>
           <field attribute="pluspcustomer" hidden="true"/>
-          <field attribute="hlagpluspcustomer" label="Site"/>
-          <field attribute="description" label="Summary"/>
-          <field attribute="hlagreportedby" label="Reported By"/>
-          <field attribute="classstructureid" label="Classification"/>
           <field attribute="cinum" hidden="true"/>
-          <field attribute="ci_.ciname" label="Asset"/>
-          <field attribute="sr_asset_.serialnum" label="Serial Number"/>
           <field attribute="pmchgapprovallevel" hidden="true"/>
-          <field attribute="worktype" label="Category"/>
-          <field attribute="pmcomimpact" label="Impact"/>
-          <field attribute="pmcomurgency" label="Urgency"/>
-          <field attribute="reasonforchange" label="Reason"/>
-          <field attribute="reasonforchange_.ldtext" label="Reason Details"/>
-          <field attribute="itdchgbusimpct" label="Business Impact"/>
-          <field attribute="verification" label="Verification"/>
-          <field attribute="itdbckoutdur" label="Backout Duration">
-            <renderer type="default" params="formatter=doubleToTime"/>
-          </field>
-          <field attribute="backoutplan" label="Back Out Plan"/>
-          <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
-          <field attribute="itdchgpretstdtl" label="Pretest"/>
-          <field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
-          <field attribute="schedstart" label="Scheduled Start Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
-          </field>
-          <field attribute="schedfinish" label="Scheduled Finish Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
-          </field>
-          <field attribute="targstartdate" label="Target Start Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
-          </field>
-          <field attribute="targcompdate" label="Target Finish Date">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
-          </field>
-          <field attribute="itdcreatedate" label="CR Activation Date/Time">
-            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
-          </field>
           <field attribute="statusdate" hidden="true"/>
-          <field attribute="wopriority" label="Priority"/>
-          <field attribute="status" label="Status"/>
-          <field attribute="longdescription_.ldtext" label="Remarks"/>
-          <field attribute="itdclosurecode" label="Implementation Result"/>
+          <!--              <field attribute="ownergroup" label="Owner Group"/>-->
+          <!--              <field attribute="location" label="Location"/>-->
+          <!--              <field attribute="hlagreportedby" label="Reported By"/>-->
+          <!--              <field attribute="ci_.ciname" label="Asset"/>-->
+          <section orientation="horizontal">
+            <section>
+              <field attribute="wonum" label="Change Id"/>
+              <field attribute="description" label="Summary"/>
 
-          <composition relationship="relatedrecord" label="Related Records" inline="true" >
-            <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
-          </composition>
+              <field attribute="hlagpluspcustomer" label="Site"/>
+              <field attribute="schedstart" label="Scheduled Start Date">
+                <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+              </field>
+              <field attribute="schedfinish" label="Scheduled Finish Date">
+                <renderer type="datetime" params="format=dd/MM/yyyy HH:mm"/>
+              </field>
+              <field label="Change Responsible" attribute="onbehalfofid"/>
+              <field label="CR Activation Date/Time" attribute="#lastchangeacccat"/>
+              <field label="Lead Time in Days" attribute="itdleadtimedays"/>
+              <field attribute="reasonforchange" label="Reason"/>
+              <field attribute="reasonforchange_.ldtext" label="Reason Details"/>
+              <field attribute="itdchgpretstdtl" label="Pretest"/>
+              <field attribute="pretestdetail_.ldtext" label="Pretest Details"/>
+              <field attribute="verification" label="Verification"/>
+              <field attribute="itdbckoutdur" label="Backout Duration">
+                <renderer type="default" params="formatter=doubleToTime"/>
+              </field>
+              <field attribute="backoutplan" label="Back Out Plan"/>
+              <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
+            </section>
+            <section>
+              <field attribute="worktype" label="Category"/>
+              <field attribute="pmchgtype" label="Type"/>
+              <field attribute="status" label="Status"/>
+              <field attribute="risk" label="Risk"/>
+              <field attribute="pmchgprobabilityfailure" label="Failure Probability"/>
+              <field attribute="pmcomimpact" label="Impact"/>
+              <field attribute="pmcomurgency" label="Urgency"/>
+              <field attribute="wopriority" label="Priority"/>
+              <field attribute="itdchgbusimpct" label="Business Impact"/>
+
+              <field attribute="sr_asset_.serialnum" label="Serial Number"/>
+              <field attribute="classstructureid" label="Classification"/>
+            </section>
+          </section>
+          
+          <!-- bottom section-->
+          <section>
+           
+            <field attribute="longdescription_.ldtext" label="Remarks"/>
+            <composition relationship="relatedrecord" label="Related Records" inline="true" >
+              <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
+            </composition>
+            <field attribute="actfinish" label="Actual Finish">
+              <renderer type="datetime" params="format=dd/MM/yyyy HH:mm" />
+            </field>
+            <field attribute="itdclosurecode" label="Implementation Result"/>
+          </section>
+
+
+
 
           <composition relationship="worklog" label="Work Log" printschema="printschema" >
             <collectionproperties allowcreation="true" prefilterfunction="AppendRelatedRecordWCToWorklog"/>
@@ -3198,6 +3222,105 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
         <schema id="r0042ExportExcel" stereotype="list">
           <field label="assetid" attribute="assetid" hidden="true"/>
           <field label="assetnum" attribute="assetnum" hidden="true"/>
+          
+          
+           <field label="Region" attribute="aucisnotownerexternal_person_.department">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Country" attribute="location_pluspservaddr_.country">
+            <renderer type="default" params="minwidth=100px;excelwidth=15"/>
+          </field>
+          <field label="Area" attribute="aucisnotownerexternal_person_.displayname">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Location Code" attribute="hlagpluspcustomer">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Building" attribute="hlagpluspcustomer">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Floor" attribute="location_.floor">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Room" attribute="location_.room">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+                
+          
+          <field label="Computer Name" attribute="computername">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Category" attribute="classstructure_category_.description">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Sub Category" attribute="classstructure_.description">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Manufacturer" attribute="item_invvendor_.manufacturer">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+          <field label="Product" attribute="hlagdescription">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Model" attribute="item_.itdmodel">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Type" attribute="itdmachtype">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          
+          <field label="NO_ID" attribute="noid">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="IBM Asset Num" attribute="assetnum">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+          <field label="HL Invent Num" attribute="itdalttag">
+            <renderer type="default" params="minwidth=80px;excelwidth=20"/>
+          </field>
+          <field label="Install Date" attribute="installdate">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          
+          <field label="Billable" attribute="warrantyasset_warrantyview_.description">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+
+          <field label="Owned by" attribute="alclistreport_.siteid" hidden="true"/>
+
+          <field label="Owned by" attribute="ownedby">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          
+          <field label="SWD" attribute="hlagswd">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Scan Client" attribute="hlagscanclient">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          <field label="Comment" attribute="assetspeccomment_.alnvalue">
+            <renderer type="default" params="minwidth=100px;excelwidth=40"/>
+          </field>
+          <field label="IP Address" attribute="assetspecipaddress_.alnvalue">
+            <renderer type="default" params="minwidth=80px;excelwidth=15"/>
+          </field>
+          
+          <field attribute="description" hidden="true" />
+          <field attribute="location_.serviceaddresscode" hidden="true" />
+          <field attribute="pluspcustomer" hidden="true" />
+          <field attribute="glaccount" hidden="true" />
+          <field attribute="assetglaccount_.accountname" hidden="true" />
+          <field attribute="classstructure_.classificationid" hidden="true" />
+          <field attribute="item_.itemnum" hidden="true"/>
+          <field attribute="parent" hidden="true" />
+          <field attribute="companies_.company" hidden="true" />
+          <field attribute="assetloccommswd_.assetnum" hidden="true" />
+          <field attribute="assetloccommscanclient_.assetnum" hidden="true" />
+
+          <!--					<field attribute="assetloccommownedby_.assetnum" hidden="true" />-->
+          <!--					<field attribute="assetloccommownedby_commodities_.description" hidden="true"/>-->
+          
+
 
           <field label="ITC_Name - old " attribute="#old_puser_displayname">
             <renderer type="default" params="minwidth=80px;excelwidth=20;excelcolor=red"/>
@@ -3580,7 +3703,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="Attribute" attribute="assetattrid" hidden="true"/>
           <field label="Attribute" attribute="#normalizedattribute" />
           <field attribute="assetattribute_.description" label="Description"/>
-<!--          <field label="Description" attribute="#normalizedattribute"/>-->
+          <!--          <field label="Description" attribute="#normalizedattribute"/>-->
           <field label="Data Type" attribute="assetattribute_.datatype"/>
           <field label="AlphaNumeric Value" attribute="alnvalue"/>
           <field label="Numeric Value" attribute="numvalue"/>
@@ -4244,12 +4367,12 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field label="HW Owner" attribute="itdcimanagedby"/>
           <field label="Responsible" attribute="businessownerpersonid"/>
           <field label="System Owner" attribute="itdcisupportgroup"/>
-          
-          
+
+
           <composition relationship="sourceci" label="Parent CIs" inline="true" detailschema="" >
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=parent_.ciname;onClickService=relatedrecordservice.openParentCI;showaslink=true" />
           </composition>
-          
+
           <composition relationship="iamparent" label="Child CIs" inline="true" detailschema="">
             <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=child_.ciname;onClickService=relatedrecordservice.openChildCI;showaslink=true" />
           </composition>

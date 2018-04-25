@@ -414,10 +414,10 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
       </attributes>
       <relationships>
         <relationship to="ci" qualifier="parent">
-          <relationshipAttribute from="parentci" to="cinum"/>
+          <relationshipAttribute from="targetci" to="cinum"/>
         </relationship>
         <relationship to="ci" qualifier="child">
-          <relationshipAttribute from="targetci" to="cinum"/>
+          <relationshipAttribute from="sourceci" to="cinum"/>
         </relationship>
       </relationships>
 
@@ -735,6 +735,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<attribute name="itdchgbusimpct" type="integer" required="true" />
 				<attribute name="itdchgpretstdtl" type="varchar" required="false" />
 				<attribute name="itdclosurecode" type="varchar" required="false" />
+				<attribute name="itdleadtimedays" type="integer" required="false" />
 				<attribute name="itdcreatedate" type="timestamp" required="false" />
 				<attribute name="jobtaskid" type="integer" required="false" />
 				<attribute name="jpnum" type="varchar" required="false" />
@@ -810,6 +811,8 @@ xsi:schemaLocation="http://www.example.org/metadata ../../../Schema/Metadata.xsd
 				<attribute name="plusptimezone" type="varchar" required="false" />
 				<attribute name="pmchgapprovallevel" type="integer" required="false" />
 				<attribute name="pmcombpelactname" type="varchar" required="false" />
+				<attribute name="pmchgtype" type="varchar" required="false" />
+				<attribute name="pmchgprobabilityfailure" type="integer" required="false" />
 				<attribute name="pmcombpelenabled" type="integer" required="false" />
 				<attribute name="pmcombpelinprog" type="integer" required="false" />
 				<attribute name="pmcomimpact" type="integer" required="false" />

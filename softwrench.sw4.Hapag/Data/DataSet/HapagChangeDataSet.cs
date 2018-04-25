@@ -14,8 +14,11 @@ using softWrench.sW4.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using softwrench.sw4.Shared2.Util;
 using softwrench.sW4.Shared2.Data;
 using softWrench.sW4.Data.API;
+using softWrench.sW4.Data.Pagination;
+using softWrench.sW4.Data.Persistence.Relational.QueryBuilder.Basic;
 using softWrench.sW4.Data.Search;
 using softWrench.sW4.Metadata.Entities;
 using softWrench.sW4.Security.Context;
@@ -27,13 +30,89 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
         private readonly ChangeGridUnionQueryGenerator _changeGridUnionQueryGenerator;
         private readonly ChangeDetailUnionQueryGenerator _changeDetailGenerator;
         private IContextLookuper _context;
+        private ChangeWhereClauseProvider _changeWhereClauseProvider;
+
 
         public HapagChangeDataSet(IHlagLocationManager locationManager, EntityRepository entityRepository, MaximoHibernateDAO maxDao,
-            ChangeGridUnionQueryGenerator changeGridUnionQueryGenerator, ChangeDetailUnionQueryGenerator changeDetailGenerator, IContextLookuper context)
+            ChangeGridUnionQueryGenerator changeGridUnionQueryGenerator, ChangeDetailUnionQueryGenerator changeDetailGenerator, IContextLookuper context, ChangeWhereClauseProvider changeWhereClauseProvider)
             : base(locationManager, entityRepository, maxDao) {
             _changeGridUnionQueryGenerator = changeGridUnionQueryGenerator;
             _changeDetailGenerator = changeDetailGenerator;
             _context = context;
+            _changeWhereClauseProvider = changeWhereClauseProvider;
+        }
+
+        protected override ApplicationListResult GetList(ApplicationMetadata application, PaginatedSearchRequestDto searchDto) {
+            var listResult = base.GetList(application, searchDto);
+            HandleApprovalLeadTime(application.Schema.SchemaId, listResult.ResultObject);
+            return listResult;
+        }
+
+        private void HandleApprovalLeadTime(string schemaId, IEnumerable<AttributeHolder> listResultResultObject) {
+            var toBeCheckedApprovals = new Dictionary<string, List<AttributeHolder>>();
+
+            foreach (var listItem in listResultResultObject) {
+                var risk = listItem.GetAttribute("risk");
+                var workDays = CalculateFromRisk(risk == null ? null : risk.ToString());
+                var targetDate = listItem.GetAttribute("schedstart") as DateTime?;
+                if (targetDate.HasValue) {
+                    DateTime approvalDate = targetDate.Value.SubtractBusinessDays(workDays);
+                    listItem.SetAttribute("#targetapprovaldate", approvalDate);
+                    if (DateUtil.BeginOfDay(approvalDate.SubtractBusinessDays(2)) <= DateUtil.BeginOfDay(DateTime.Now) && "AUTH".EqualsIc(listItem.GetAttribute("status").ToString())) {
+                        //from R0043 changes which are yet to be approved (hence AUTH) should be painted yellow if the approvaldate is within a 2 business days range from current date
+                        // since the query is expensive we´ll just do it for the items that have a chance to require it
+                        var workorderId = listItem.GetAttribute("workorderid").ToString();
+                        if (!toBeCheckedApprovals.ContainsKey(workorderId)) {
+                            toBeCheckedApprovals.Add(workorderId, new List<AttributeHolder> { listItem });
+                        } else {
+                            toBeCheckedApprovals[workorderId].Add(listItem);
+                        }
+                    }
+                }
+            }
+
+            if (toBeCheckedApprovals.Any() && !"changeApprovalsDashboardList".Equals(schemaId)) {
+                HandleGridPainting(toBeCheckedApprovals);
+            }
+        }
+
+        //https://controltechnologysolutions.atlassian.net/browse/HAP-1176
+        private void HandleGridPainting(Dictionary<string, List<AttributeHolder>> toBeCheckedApprovals) {
+            var baseQuery = @"select wochange.workorderid as workorderid from wochange as wochange
+            left join pmchgotherapprovers as dashapprovals_ on
+            (
+                wochange.wonum = dashapprovals_.wonum
+            and wochange.pmchgapprovallevel = dashapprovals_.approvallevel
+            and {0} )
+            where wochange.workorderid in ({1}) and wochange.pluspcustomer like 'HLC-%'and ({2})";
+            var groups = _changeWhereClauseProvider.GetPersonGroupsForQuery();
+            var approvalsWhereClause = _changeWhereClauseProvider.DashboardChangeApprovalsWhereClause();
+            var finalQuery = baseQuery.Fmt(groups, BaseQueryUtil.GenerateInString(toBeCheckedApprovals.Keys), approvalsWhereClause);
+            var items = MaxDAO.FindByNativeQuery(finalQuery);
+            foreach (dynamic item in items) {
+                var workorderid = item.WORKORDERID.ToString();
+                if (toBeCheckedApprovals.ContainsKey(workorderid)) {
+                    List<AttributeHolder> hs = toBeCheckedApprovals[workorderid];
+                    foreach (AttributeHolder h in hs) {
+                        h.SetAttribute("#_wonum_paintcolor", "yellow");
+                    }
+                }
+            }
+        }
+
+        private int CalculateFromRisk(string risk) {
+            switch (risk) {
+                case "1":
+                    return 4;
+                case "2":
+                    return 2;
+                case "3":
+                    return 1;
+                case "4":
+                    return 1;
+                default:
+                    return 0;
+            }
         }
 
         protected override ApplicationDetailResult GetApplicationDetail(ApplicationMetadata application, InMemoryUser user, DetailRequest request) {
