@@ -66,6 +66,26 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
             }
         }
 
+        public SearchRequestDto AppendMultiLocciTicketHistoryQuery(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            var ciNum= preFilter.OriginalEntity.GetAttribute("cinum");
+            dto.AppendWhereClauseFormat("ticketid in (select recordkey from maximo.multiassetlocci where((cinum = '{0}')) and(recordkey = ticket.ticketid and recordclass = ticket.class))".Fmt(ciNum));
+
+            return dto;
+        }
+
+        public SearchRequestDto AppendMultiLocciChangeHistoryQuery(CompositionPreFilterFunctionParameters preFilter) {
+            var dto = preFilter.BASEDto;
+            dto.SearchValues = null;
+            dto.SearchParams = null;
+            var ciNum = preFilter.OriginalEntity.GetAttribute("cinum");
+            dto.AppendWhereClauseFormat("wonum in (select recordkey from maximo.multiassetlocci where((cinum = '{0}')) and(recordkey = wochange.wonum and recordclass = 'CHANGE'))".Fmt(ciNum));
+
+            return dto;
+        }
+
         public override string ApplicationName() {
             return "ci";
         }

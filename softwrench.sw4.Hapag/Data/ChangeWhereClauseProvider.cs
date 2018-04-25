@@ -12,8 +12,7 @@ namespace softwrench.sw4.Hapag.Data {
 
         private readonly IContextLookuper _contextLookuper;
 
-        public ChangeWhereClauseProvider(IContextLookuper contextLookuper)
-        {
+        public ChangeWhereClauseProvider(IContextLookuper contextLookuper) {
             _contextLookuper = contextLookuper;
         }
 
@@ -39,10 +38,10 @@ namespace softwrench.sw4.Hapag.Data {
         }
 
 
-//        public String ChangeDetailQuery() {
-//            var user = SecurityFacade.CurrentUser();
-//            return _changeDetailGenerator.GenerateQuery();
-//        }
+        //        public String ChangeDetailQuery() {
+        //            var user = SecurityFacade.CurrentUser();
+        //            return _changeDetailGenerator.GenerateQuery();
+        //        }
 
         //used on the sr union schema
         public String ChangeSRUnionGridQuery() {
@@ -78,6 +77,16 @@ namespace softwrench.sw4.Hapag.Data {
             var groups = user.GetPersonGroupsForQuery();
             return @"dashapprovals_.approvergroup IN ({0})".Fmt(groups);
         }
+
+        public string GetOnBehalfofIdQuery() {
+            var localOrDev = ApplicationConfiguration.IsLocal() || ApplicationConfiguration.IsDev();
+            if (localOrDev) {
+                //column doesn´t exist on wochange view locally and cannot be easily created cause it´s a calculated field
+                return "1";
+            }
+            return "wochange.onbehalfofid";
+        }
+
 
         public string DashboardChangeApprovalsWhereClause() {
             var user = SecurityFacade.CurrentUser();

@@ -211,7 +211,7 @@ app.factory('redirectService', function ($http, $rootScope, $log, contextService
 
         redirectNewWindow: function (newWindowURL, needReload, initialData) {
             restService.getPromise("ExtendedData", "PingServer").then(function () {
-                if ($rootScope.isLocal) {
+                if ($rootScope.isLocal && !sessionStorage.mockrealbrowser) {
                     //easier to debug on chrome like this
                     var w = window.open(newWindowURL);
                     w.moveTo(0, 0);

@@ -353,6 +353,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
         <attribute name="hlagpluspcustomer" type="varchar" required="false" query="ref:pluspcustomer"/>
         <attribute name="hlagsrid" type="varchar" required="false" query="CASE WHEN !@ORIGRECORDCLASS IS NOT NULL AND !@ORIGRECORDCLASS = 'SR' THEN !@ORIGRECORDID ELSE '' END"/>
         <attribute name="hlagreportedby" type="varchar" required="false" query="ref:reportedbycustom"/>
+        <attribute name="onbehalfofid" type="varchar" required="false" query="@changeWhereClauseProvider.GetOnBehalfofIdQuery"/>
       </attributes>
       <relationships>
         <relationship to="sr">
@@ -1873,6 +1874,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <!--              <field attribute="ci_.ciname" label="Asset"/>-->
           <section orientation="horizontal">
             <section>
+              <renderer type="default" params="labelwidth=6"/>
               <field attribute="wonum" label="Change Id"/>
               <field attribute="description" label="Summary"/>
 
@@ -1898,6 +1900,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
               <field attribute="backoutplan_.ldtext" label="Back Out Plan Detail"/>
             </section>
             <section>
+              <renderer type="default" params="labelwidth=6"/>
               <field attribute="worktype" label="Category"/>
               <field attribute="pmchgtype" label="Type"/>
               <field attribute="status" label="Status"/>
@@ -1907,15 +1910,16 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
               <field attribute="pmcomurgency" label="Urgency"/>
               <field attribute="wopriority" label="Priority"/>
               <field attribute="itdchgbusimpct" label="Business Impact"/>
+              <field attribute="cinum" label="Asset"/>
 
-              <field attribute="sr_asset_.serialnum" label="Serial Number"/>
+<!--              <field attribute="sr_asset_.serialnum" label="Serial Number"/>-->
               <field attribute="classstructureid" label="Classification"/>
             </section>
           </section>
           
           <!-- bottom section-->
           <section>
-           
+            <renderer type="default" params="class=changebottomsection"/>
             <field attribute="longdescription_.ldtext" label="Remarks"/>
             <composition relationship="relatedrecord" label="Related Records" inline="true" >
               <renderer type="custom" params="resourcepath=/Content/Templates/hapag/commaseparatedcomposition.html;attributeToDisplay=relatedreckey;onClickService=relatedrecordservice.opendetail;showaslink=true" />
@@ -1955,6 +1959,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <commands>
             <command id="duplicate" label="Duplicate" method="duplicate" service="changeservice" parameters="schema,datamap" />
           </commands>
+        
         </detail>
 
         <schema stereotype="compositionlist" id="ci_change_composition">
@@ -4397,11 +4402,11 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <tab label="History" id="history">
             <composition relationship="ticket" inline="true" label="" detailschema="" fetchtype="eager">
               <header label="Tickets" displacement="ontop"/>
-              <collectionproperties listschema="ci_ticket_composition" allowcreation="false" allowremoval="false" allowupdate="false" />
+              <collectionproperties listschema="ci_ticket_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendMultiLocciTicketHistoryQuery"/>
             </composition>
-            <composition relationship="change" inline="true" label="" detailschema="" fetchtype="eager">
+            <composition relationship="change" inline="true" label="" detailschema="" fetchtype="eager" >
               <header label="Change" displacement="ontop"/>
-              <collectionproperties listschema="ci_change_composition" allowcreation="false" allowremoval="false" allowupdate="false" />
+              <collectionproperties listschema="ci_change_composition" allowcreation="false" allowremoval="false" allowupdate="false" prefilterfunction="AppendMultiLocciChangeHistoryQuery" />
             </composition>
           </tab>
 

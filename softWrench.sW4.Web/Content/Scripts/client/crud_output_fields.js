@@ -7,16 +7,23 @@
             schema: '=',
             datamap: '=',
             displayables: '=',
+            fieldMetadata: '=',
             orientation: '@'
         },
         template: "<div></div>",
         link: function (scope, element, attrs) {
             if (angular.isArray(scope.displayables)) {
+                scope.labelWidth = "3";
+                if (scope.fieldMetadata) {
+                    scope.fieldMetadata.rendererParameters = scope.fieldMetadata.rendererParameters || {};
+                    scope.labelWidth = scope.fieldMetadata.rendererParameters["labelwidth"] || "3";
+                }
                 element.append(
                     "<crud-output-fields schema='schema'" +
-                                    "datamap='datamap'" +
-                                    "displayables='displayables'" +
-                                    "orientation='{{orientation}}'></crud-output-fields>"
+                    "datamap='datamap'" +
+                    "label-width='labelWidth'" +
+                    "displayables='displayables'" +
+                    "orientation='{{orientation}}'></crud-output-fields>"
                 );
                 $compile(element.contents())(scope);
             }
@@ -34,6 +41,7 @@ app.directive('crudOutputFields', function (contextService) {
             schema: '=',
             datamap: '=',
             displayables: '=',
+            labelWidth: '=',
             orientation: '@'
         },
 
@@ -43,6 +51,14 @@ app.directive('crudOutputFields', function (contextService) {
             $scope.contextPath = function (path) {
                 return url(path);
             };
+
+            $scope.getLabelClass = function (fieldMetadata) {
+                if (!$scope.hasSameLineLabel(fieldMetadata)) {
+                    return 'col-xs-12';
+                }
+
+                return $scope.labelWidth ? "col-xs-" + $scope.labelWidth : "col-xs-3";
+            }
 
             $scope.i18NLabel = $scope.i18NLabel || function (fieldMetadata) {
                 var label = i18NService.getI18nLabel(fieldMetadata, $scope.schema);
@@ -73,37 +89,41 @@ app.directive('crudOutputFields', function (contextService) {
 
 
 
-            $scope.getSectionStyle = function (fieldMetadata) {
-                var style = {};
+                $scope.getSectionStyle = function (fieldMetadata) {
+                    var style = {};
 
-                if (fieldMetadata.parameters != null) {
-                    for (i in fieldMetadata.parameters) {
-                        style[i] = fieldMetadata.parameters[i];
+                    if (fieldMetadata.parameters != null) {
+                        for (i in fieldMetadata.parameters) {
+                            style[i] = fieldMetadata.parameters[i];
+                        }
                     }
-                }
 
-                if (fieldMetadata.rendererParameters != null) {
-                    for (i in fieldMetadata.rendererParameters) {
-                        style[i] = fieldMetadata.rendererParameters[i];
+                    if (fieldMetadata.rendererParameters != null) {
+                        for (i in fieldMetadata.rendererParameters) {
+                            style[i] = fieldMetadata.rendererParameters[i];
+                        }
                     }
-                }
 
-                if (style.width == null && !$scope.isVerticalOrientation() && $scope.countVisibleDisplayables > 0) {
-                    style.width = (100 / $scope.countVisibleDisplayables) + '%';
-                }
+                    if (style.width == null && !$scope.isVerticalOrientation() && $scope.countVisibleDisplayables > 0) {
+                        style.width = (100 / $scope.countVisibleDisplayables) + '%';
+                    }
 
-                return style;
-            };
+                    return style;
+                };
 
-     
+
 
 
             $scope.getFieldClass = function (fieldMetadata) {
                 if ($scope.hasSameLineLabel(fieldMetadata)) {
+                    if ($scope.labelWidth) {
+                        return 'col-xs-' + $scope.labelWidth;
+                    }
+
                     return 'col-xs-9';
                 }
 
-                if (fieldMetadata.rendererType== "TABLE") {
+                if (fieldMetadata.rendererType == "TABLE") {
                     //workaround because compositions are appending "" as default label values, but we dont want it!
                     return null;
                 }

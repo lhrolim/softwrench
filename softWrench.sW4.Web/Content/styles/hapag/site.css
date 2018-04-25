@@ -28,6 +28,12 @@ body {
     z-index: 2000;
 }
 
+.changebottomsection {
+    padding-left: 35px;
+    padding-top: 380px;
+    padding-right: 40px
+}
+
 .col-side-bar {
     float: left;
     width: 195px;

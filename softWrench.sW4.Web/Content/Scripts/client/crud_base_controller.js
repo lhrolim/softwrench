@@ -96,6 +96,10 @@ function BaseController($scope, i18NService, fieldService,commandService) {
 
 
     $scope.getSectionClass = function (fieldMetadata) {
+        if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["class"]) {
+            return fieldMetadata.rendererParameters["class"];
+        }
+
         if (fieldMetadata.rendererType == "TABLE") {
             //workaround because compositions are appending "" as default label values, but we dont want it!
             return null;

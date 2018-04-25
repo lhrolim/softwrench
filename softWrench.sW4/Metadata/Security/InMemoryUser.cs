@@ -12,6 +12,7 @@ using softWrench.sW4.Security.Entities;
 using softwrench.sW4.Shared2.Metadata.Applications;
 using softwrench.sW4.Shared2.Metadata.Menu.Containers;
 using softwrench.sW4.Shared2.Metadata.Menu.Interfaces;
+using softWrench.sW4.Util;
 
 namespace softWrench.sW4.Metadata.Security {
     public class InMemoryUser : IPrincipal {
@@ -47,7 +48,7 @@ namespace softWrench.sW4.Metadata.Security {
             _roles = new List<Role>();
         }
 
-        
+
 
         public InMemoryUser(User dbUser, IEnumerable<UserProfile> initializedProfiles, int? timezoneOffset) {
             DBUser = dbUser;
@@ -240,6 +241,8 @@ namespace softWrench.sW4.Metadata.Security {
             strPersonGroups = "'" + strPersonGroups + "'";
             return strPersonGroups;
         }
+
+       
 
 
     }
