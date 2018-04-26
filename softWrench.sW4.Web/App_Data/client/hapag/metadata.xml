@@ -956,13 +956,15 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#null2" hidden="true"/>
           <field attribute="#null3" hidden="true"/>
           <field attribute="#null4" hidden="true"/>
+          <field attribute="#null5" hidden="true"/>
+          <field attribute="#null6" hidden="true"/>
 
           <field attribute="zeroedattr" hidden="true"/>
           <field attribute="hlagchangesummary" hidden="true"/>
           <field attribute="ticketid" hidden="true"/>
           <field attribute="asset_.description" hidden="true"/>
-          <field attribute="#null5" hidden="true"/>
-          <field attribute="#null6" hidden="true"/>
+          <field attribute="#null7" hidden="true"/>
+          <field attribute="#null8" hidden="true"/>
           <field attribute="hlagpluspcustomer" hidden="true"/>
           <field attribute="hlagreportedby" hidden="true"/>
           <field attribute="status" hidden="true"/>
@@ -1723,6 +1725,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="workorderid" hidden="true" />
           <field attribute="sr_.ticketid" hidden="true" />
           <field attribute="risk" hidden="true" />
+          <field attribute="pmchgtype" hidden="true" />
           <field attribute="relatedsr_.recordkey" hidden="true" />
           <field attribute="relatedsr_sr_.ticketid" hidden="true" />
 
