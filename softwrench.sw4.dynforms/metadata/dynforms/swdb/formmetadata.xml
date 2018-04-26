@@ -11,6 +11,7 @@
           <field attribute="formtitle" label="Alias"/>
           <field attribute="description" label="Description"/>
           <field attribute="formstatus" label="Status"/>
+          <field attribute="changedate" label="Last Updated"/>
         </schema >
 
         <schema id="detail" stereotype="detail.redirecttolist" title="Form Details">

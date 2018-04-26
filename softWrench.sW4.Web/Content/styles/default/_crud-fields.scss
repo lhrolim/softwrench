@@ -492,7 +492,7 @@ input[type="date"], input[type="time"] {
 }
 
 .inline-checkbox-side-by-side {
-    padding-top: 28px;
+    padding-top: 2px;
 }
 
 .inline-checkbox-header {
@@ -502,7 +502,7 @@ input[type="date"], input[type="time"] {
 
     [ng-switch-when="checkbox"] {
         .control-label {
-            top: -2px;
+            top: -3px;
             position: relative;
             color: white
         }

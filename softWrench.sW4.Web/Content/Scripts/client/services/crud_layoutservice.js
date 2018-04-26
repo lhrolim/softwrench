@@ -3,7 +3,7 @@
     'use strict';
 
     function layoutservice($log, fieldService, dynFormService) {
-      
+
 
         function getDefaultColumnClassesForFieldSet(datamap, schema, displayables, params) {
             const log = $log.getInstance("layoutservice#getDefaultColumnClassesForFieldSet", ["layout"]);
@@ -114,7 +114,7 @@
 
         function hasLabelOnTop(fieldMetadata) {
             fieldMetadata.rendererParameters = fieldMetadata.rendererParameters || {};
-            const onTop =  fieldMetadata.rendererParameters["labelposition"];
+            const onTop = fieldMetadata.rendererParameters["labelposition"];
             if (onTop && onTop !== "top") {
                 return false;
             }
@@ -126,15 +126,15 @@
 
             var cssclass = "";
             if (fieldMetadata.rendererParameters && fieldMetadata.rendererParameters["class"]) {
-                cssclass =  fieldMetadata.rendererParameters["class"] + " ";
+                cssclass = fieldMetadata.rendererParameters["class"] + " ";
             }
 
             if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters['fieldclass'] != null) {
                 cssclass += fieldMetadata.rendererParameters['fieldclass'];
             } else {
                 if (fieldMetadata.schema != null &&
-                fieldMetadata.schema.rendererParameters != null &&
-                fieldMetadata.schema.rendererParameters['fieldclass'] != null) {
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['fieldclass'] != null) {
                     cssclass += fieldMetadata.schema.rendererParameters['fieldclass'];
                 }
             }
@@ -143,7 +143,7 @@
             if (fieldMetadata.type === "ApplicationSection") {
                 if (fieldMetadata.rendererParameters != null && fieldMetadata.rendererParameters.inputsize != null) {
                     cssclass += ' sidebyside';
-                }                
+                }
             }
 
             //add class if section has header
@@ -200,7 +200,7 @@
             return cssclass;
         };
 
-        function getInputClass (fieldMetadata, datamap, schema, displayables, params) {
+        function getInputClass(fieldMetadata, datamap, schema, displayablesCount, params) {
             var cssclass = "";
 
             if (fieldMetadata.type === 'ApplicationSection') {
@@ -211,8 +211,8 @@
                 cssclass += fieldMetadata.rendererParameters['inputclass'];
             } else {
                 if (fieldMetadata.schema != null &&
-                fieldMetadata.schema.rendererParameters != null &&
-                fieldMetadata.schema.rendererParameters['inputclass'] != null) {
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['inputclass'] != null) {
                     cssclass += fieldMetadata.schema.rendererParameters['inputclass'];
                 }
             }
@@ -228,13 +228,20 @@
             if (!onTop || onTop === "top") {
                 cssclass += ' col-xs-12';
             } else {
-                cssclass += dynFormService.isPreviewMode() ? "col-xs-11" : "col-xs-10";
+                if (displayablesCount === 1) {
+                    //single column
+                    cssclass += dynFormService.isPreviewMode() ? "col-xs-11" : "col-xs-10";
+                } else if (displayablesCount === 2) {
+                    cssclass += dynFormService.isPreviewMode() ? "col-xs-10" : "col-xs-8";
+                } else if (displayablesCount === 3) {
+                    cssclass += dynFormService.isPreviewMode() ? "col-xs-9" : "col-xs-6";
+                }
             }
 
             return cssclass;
         };
 
-        function getLabelSpanClass(fieldMetadata) {
+        function getLabelSpanClass(fieldMetadata, numberOfDisplayablesInSection) {
             if (!fieldMetadata.rendererParameters) {
                 return null;
             }
@@ -242,10 +249,19 @@
             if (!onTop || onTop === "top") {
                 return null;
             }
-            return dynFormService.isPreviewMode() ? "col-xs-1" : "col-xs-2";
+            const isPreview = dynFormService.isPreviewMode();
+            if (numberOfDisplayablesInSection === 1) {
+                return  isPreview ? "col-xs-1" : "col-xs-2";
+            }
+            if (numberOfDisplayablesInSection === 2) {
+                return isPreview ? "col-xs-2" : "col-xs-4";
+            }
+
+            return isPreview ? "col-xs-3" : "col-xs-6";
+
         }
 
-        function getLabelClass (fieldMetadata, datamap, schema, displayables, params) {
+        function getLabelClass(fieldMetadata, datamap, schema, displayables, params) {
             var cssclass = "";
 
             if (fieldMetadata.rendererType === 'checkbox') {
@@ -260,8 +276,8 @@
                 cssclass += fieldMetadata.rendererParameters['labelclass'];
             } else {
                 if (fieldMetadata.schema != null &&
-                fieldMetadata.schema.rendererParameters != null &&
-                fieldMetadata.schema.rendererParameters['labelclass'] != null) {
+                    fieldMetadata.schema.rendererParameters != null &&
+                    fieldMetadata.schema.rendererParameters['labelclass'] != null) {
                     cssclass += fieldMetadata.schema.rendererParameters['labelclass'];
                 }
             }
@@ -296,9 +312,9 @@
         }
 
 
-        function hasSameLineLabel (fieldMetadata) {
+        function hasSameLineLabel(fieldMetadata) {
             return (fieldMetadata.header != null && fieldMetadata.header.displacement != 'ontop') ||
-            (fieldMetadata.header == null);
+                (fieldMetadata.header == null);
 
         };
 
@@ -317,7 +333,7 @@
     }
 
     angular
-      .module('sw_layout')
+        .module('sw_layout')
         .service('layoutservice', ['$log', "fieldService", "dynFormService", layoutservice]);
 
 })(angular);

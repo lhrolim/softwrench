@@ -283,11 +283,13 @@
         buildStyleRendererParameters(fieldType, rendererType, modalData) {
             const rendererParameters = {};
 
+            rendererParameters["labelposition"] = modalData.flabelposition;
             if (!modalData.fcheckontop && rendererType === "checkbox") {
                 rendererParameters["layout"] = "left";
+                rendererParameters["labelposition"] = "left";
             }
 
-            rendererParameters["labelposition"] = modalData.flabelposition;
+            
             rendererParameters["maxlength"] = modalData.fmaxlength;
             rendererParameters["padding-left"] = modalData.fpaddingleft;
 

@@ -293,11 +293,15 @@
         }
 
         $scope.getLabelSpanClass = function (fieldMetadata) {
-            return layoutservice.getLabelSpanClass(fieldMetadata)
+            const insideSection = $scope.issection === "true";
+            const numberOfDisplayables = insideSection ? $scope.displayables.length : 1;
+            return layoutservice.getLabelSpanClass(fieldMetadata, numberOfDisplayables);
         }
 
         $scope.getInputClass = function (fieldMetadata) {
-            return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, $scope.displayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
+            const insideSection = $scope.issection === "true";
+            const numberOfDisplayables = insideSection ? $scope.displayables.length : 1;
+            return layoutservice.getInputClass(fieldMetadata, $scope.datamap, $scope.schema, numberOfDisplayables, { sectionparameters: $scope.sectionParameters, isVerticalOrientation: this.isVerticalOrientation() });
         }
 
         $scope.isReadOnlyField = function (fieldMetadata, datamap, staticCheck = false) {
