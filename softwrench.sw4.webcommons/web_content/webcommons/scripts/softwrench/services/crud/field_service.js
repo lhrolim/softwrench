@@ -412,6 +412,46 @@
 
             },
 
+            cloneFields: function (fields) {
+                const results = [];
+                fields.forEach(field => {
+                    let clonedAttributeName = field.attribute.startsWith("generated_") ? "generated_" + Date.now().getTime() : field.attribute + Date.now().getTime();
+                    //removing fields from old position
+                    const cloned = Object.assign({}, field, { attribute: clonedAttributeName, role: clonedAttributeName, $$hashKey: null });
+                    if (cloned.displayables) {
+                        cloned.displayables = this.cloneFields(cloned.displayables);
+                    } 
+                    
+                    results.push(cloned);
+                });
+                return results;
+            },
+
+            groupToContainers: function (container, fields) {
+                if (!fields || fields.length === 0) {
+                    return { container, idx: -1 };
+                }
+
+                const results = new Set();
+                let minIdx = 1000;
+
+                for (let i = 0; i < fields.length; i++) {
+                    const field = fields[i];
+                    const outerContainerResult = this.locateOuterSection(container, field);
+                    const outerContainer = outerContainerResult ? outerContainerResult.container : null;
+                    minIdx = outerContainerResult.idx < minIdx ? outerContainerResult.idx : minIdx;
+                    if (outerContainer.type === "ApplicationSection") {
+                        results.add(outerContainer);
+                    } else {
+                        results.add(field);
+                    }
+
+                }
+                const arr = Array.from(results);
+                return arr;
+
+            },
+
             /**
              * Given a container (schema or section) and a field, returns the container that encloses the given field (either a section or the root schema itself)
              * @param {} container 
@@ -455,7 +495,7 @@
                     displayable["$type"] = type;
                     var partialFakeContainerDisplayablesResult = [];
                     if (displayable.type === "TableDefinition") {
-                        
+
                         displayable.rows.forEach(row => {
                             var partialFakeContainerDisplayables = [];
                             row.forEach(column => {
@@ -485,7 +525,7 @@
                             return nodeResult;
                         });
                         displayable.nodes = handleTreeNodes(displayable.nodes);
-                        
+
 
                     }
 

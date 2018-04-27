@@ -248,7 +248,7 @@
             });
         }
 
-        
+
 
         toggleSectionSelection(fieldMetadataOrRole) {
 
@@ -289,7 +289,7 @@
                 rendererParameters["labelposition"] = "left";
             }
 
-            
+
             rendererParameters["maxlength"] = modalData.fmaxlength;
             rendererParameters["padding-left"] = modalData.fpaddingleft;
 
@@ -321,7 +321,7 @@
                 sectionincludeheader: includeHeader
             }
 
-            
+
             return modalData;
         }
 
@@ -389,8 +389,8 @@
                     rendererParameters["hide.optionfieldheader"] = "true";
                 }
             }
-			
-			
+
+
             return resultOb;
         }
 
@@ -706,6 +706,7 @@
             newSection.displayables = currentSelectedFields;
             container.displayables.splice(idxToAdd + 1, 0, newSection);
             currentSelectedFields.forEach(field => {
+                //removing fields from old position
                 this.fieldService.replaceOrRemoveDisplayableByKey(cs, field.role);
             });
             //            }
@@ -724,6 +725,47 @@
                 isUpdatingMultiple = false;
                 currentSelectedFields = [];
             });
+        }
+
+
+
+        copyFields() {
+
+            return this.schemaCacheService.fetchSchema("_FormMetadata", "copymodal").then(schema => {
+                return this.modalService.showPromise(schema, {}, { cssclass: 'largemodal' });
+            }).then(savedData => {
+                const direction = savedData["direction"];
+                const cs = this.crudContextHolderService.currentSchema();
+                currentSelectedFields = this.fieldService.sortBySchemaIdx(cs, currentSelectedFields);
+
+                //converting the selected fields into their corresponding sections if any
+                const groupedContainers = this.fieldService.groupToContainers(cs, currentSelectedFields);
+                // either head or tail of the selected indexes
+                const idxToConsider = direction === "down" ? groupedContainers.length - 1 : 0; 
+                const lastFieldPos = this.fieldService.locateOuterSection(cs, groupedContainers[idxToConsider]).idx;
+                const newFields = this.fieldService.cloneFields(groupedContainers);
+                const positionIncrement = direction === "down" ? 1 : 0;
+
+                
+                if (lastFieldPos + positionIncrement > cs.displayables.length) {
+                    //last position
+                    cs.displayables = cs.displayables.concat(newFields);
+                } else {
+                    const newArray = cs.displayables.slice(0, lastFieldPos+1).concat(newFields, cs.displayables.slice(lastFieldPos+1));
+                    //we have to keep the same array
+                    cs.displayables.splice(0, cs.displayables.length);
+                    newArray.forEach(item => {
+                        cs.displayables.push(item);
+                    });
+                }
+                return cs;
+            }).then(cs => {
+                this.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
+            }).finally(r => {
+                this.resetUpdateMode();
+            })
+
+
         }
 
         loadFormGridEdition() {

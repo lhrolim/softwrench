@@ -12,6 +12,9 @@
           <field attribute="description" label="Description"/>
           <field attribute="formstatus" label="Status"/>
           <field attribute="changedate" label="Last Updated"/>
+          <properties>
+            <property key="list.defaultorderby" value="changedate desc"/>
+          </properties>
         </schema >
 
         <schema id="detail" stereotype="detail.redirecttolist" title="Form Details">
@@ -234,6 +237,14 @@
           <!--          </field>-->
           <field label="Section Id" attribute="sectionid" showexpression="@freusable === true" requiredexpression="true"/>
         </schema>
+
+        <schema id="copymodal" stereotype="detail.noprint" title="Select Direction">
+          <optionfield label="Direction" attribute="direction" default="down">
+            <option label="Up" value="up"/>
+            <option label="Down" value="down"/>
+          </optionfield>
+        </schema>
+
 
         <schema id="stylebulkupdate" stereotype="detail.noprint" title="Style Update">
           <section >

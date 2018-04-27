@@ -45,6 +45,7 @@
 
     <command id="save" icon="fa-plus" service="dynFormService" method="createEnclosingSection" label="Create Section" cssclasses="large-button" tooltip="Create a new enclosing section for the selected fields" showexpression="service:dynFormService.isNotEditingSection"/>
     <command id="save" icon="fa-check" service="dynFormService" method="finishSectionEdition" label="Finish Section" cssclasses="large-button" tooltip="Finishes selection of fields for the section" showexpression="service:dynFormService.isEditingSection"/>
+    <command id="copy" icon="fa-copy" service="dynFormService" method="copyFields" label="Duplicate" cssclasses="large-button" tooltip="Copy Current Fields" showexpression="service:dynFormService.isEditingSection"/>
     <togglecommand id="previewmode" initialstateexpression="false">
       <offcommand id="onpreviewmode" icon="fa-image" service="dynFormService" method="setPreviewMode" label="Preview" tooltip="Disable previewing" parameters="true" cssclasses="large-button"/>
       <oncommand id="onpreviewmode" icon="fa-image" service="dynFormService" method="setPreviewMode" label="Preview" tooltip="Turn on preview mode" parameters="false" cssclasses="large-button"/>
