@@ -26,6 +26,9 @@
             });
         }
 
+
+
+
         $scope.shouldShowBlankCommand = function () {
             const cs = crudContextHolderService.currentSchema();
             const numItems = cs.displayables.length;
@@ -34,9 +37,23 @@
         }
 
         $scope.addField = function (direction) {
+            if (!direction) {
+                return schemaCacheService.fetchSchema("_FormMetadata", "addfieldmodal").then(schema => {
+                    return modalService.showPromise(schema, {}, {autoClose:false});
+                }).then(modal => {
+//                    modalService.hide();
+                    return dynFormService.addDisplayable($scope.fieldMetadata, modal.direction).then(r => {
+                        return $scope.$emit(JavascriptEventConstants.ReevalDisplayables);
+                    });
+                });
+            }
+
             return dynFormService.addDisplayable($scope.fieldMetadata, direction).then(r => {
                 return $scope.$emit(JavascriptEventConstants.ReevalDisplayables);
             });
+
+
+            
         }
 
         $scope.edit = function () {

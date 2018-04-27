@@ -5,6 +5,8 @@ const crudSaved = "sw.crud.detail.savecompleted";
 const CrudSubmitData = "sw.crud.detail.submit";
 const FormDoubleClicked = "sw.crud.detail.doubleclick";
 
+const LabelClicked = "sw.crud.detail.labelclicked";
+
 const BodyRendered = "sw.crud.body.rendered";
 
 //internal event to indicate that all tabs of the crud_body have rendered
@@ -302,6 +304,10 @@ class JavascriptEventConstants {
 
     static get FormDoubleClicked() {
         return FormDoubleClicked;
+    }
+
+    static get LabelClicked() {
+        return LabelClicked;
     }
 
 

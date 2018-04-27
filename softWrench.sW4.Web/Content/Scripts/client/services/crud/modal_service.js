@@ -108,13 +108,13 @@
                 },
 
 
-                showPromise: function (schemaorModalData, datamap = {}, properties, parentdata, parentschema) {
+                showPromise: function (schemaorModalData, datamap = {}, properties = {}, parentdata, parentschema) {
                     var deferred = DeferredWithUpdate.defer();
 
                     const savefn = (datamap, schema) => {
                         deferred.resolve(datamap);
                         //timeout to enforce the promise resolution to take place before the hide method execution
-                        if (!schema.stereotype.equalsAny("CompositionDetail")) {
+                        if (!schema.stereotype.equalsAny("CompositionDetail") && crudContextHolderService.isShowingModal() && properties.autoClose !== false) {
                             //not ideal, however for compositions we know for sure that the modal will auto close afterwards, so there´s no reason to close it here
                             // there´s a bug that the modal is closing in case of server side failure
                             //TODO: fix it

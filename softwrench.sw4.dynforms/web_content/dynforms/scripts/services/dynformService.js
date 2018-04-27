@@ -1,5 +1,5 @@
 ﻿
-(function (angular) {
+(function (angular, bootbox) {
     "use strict";
 
     const formsInfo = {
@@ -116,6 +116,31 @@
                 that.addDisplayable(lastField, 'down', showPosition).then(r => {
                     $rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
                 });
+
+            });
+
+
+            this.$rootScope.$on(JavascriptEventConstants.LabelClicked, (aEvent, mouseEvent, fieldMetadata) => {
+                const cs = crudContextHolderService.currentSchema();
+                const dm = crudContextHolderService.rootDataMap();
+                if (cs.properties["dynforms.editionallowed"] !== "true" || crudContextHolderService.isShowingModal() || isPreviewMode) {
+                    //not on a edition schema mode
+                    return;
+                }
+                var that = this;
+                if (!!mouseEvent.ctrlKey) {
+                    bootbox.prompt("New Label Name:",
+                        function (result) {
+                            if (result) {
+                                const convertedDatamap = that.convertDataMapForEdition(fieldMetadata);
+                                convertedDatamap.flabel = result;
+                                const field= that.doAddDisplayable(fieldMetadata, convertedDatamap, "edit");
+                                that.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
+                            }
+
+                        });
+                }
+
 
             });
 
@@ -747,12 +772,12 @@
                 //converting the selected fields into their corresponding sections if any
                 const groupedContainers = this.fieldService.groupToContainers(cs, currentSelectedFields);
                 // either head or tail of the selected indexes
-                const idxToConsider = direction === "down" ? groupedContainers.length - 1 : 0; 
+                const idxToConsider = direction === "down" ? groupedContainers.length - 1 : 0;
                 const lastFieldPos = this.fieldService.locateOuterSection(cs, groupedContainers[idxToConsider]).idx;
                 const newFields = this.fieldService.cloneFields(groupedContainers);
                 const positionIncrement = direction === "down" ? 1 : 0;
 
-                
+
                 if (lastFieldPos + positionIncrement > cs.displayables.length) {
                     //last position
                     cs.displayables = cs.displayables.concat(newFields);
@@ -829,4 +854,4 @@
 
     angular.module("sw_layout").service("dynFormService", dynFormService);
 
-})(angular);
+})(angular, bootbox);

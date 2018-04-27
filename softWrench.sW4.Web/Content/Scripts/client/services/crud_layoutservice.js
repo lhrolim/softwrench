@@ -278,7 +278,6 @@
                         if (numberOfDisplayablesInSection === 1) {
                             return dynFormService.isPreviewMode() ? "col-xs-1" : "col-xs-2";
                         }
-
                         return "col-xs-3";
                     case "large":
                         return "col-xs-4";

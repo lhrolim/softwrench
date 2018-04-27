@@ -26,14 +26,30 @@
                     <label class="control-label"
                            rel="{{showLabelTooltip(fieldMetadata)}}" ng-class="getLabelClass(fieldMetadata)"
                            data-original-title="{{i18NLabelTooltip(fieldMetadata)}}"
-                           ng-if="isLabelVisible(fieldMetadata,false)">
+                           ng-if="isLabelVisible(fieldMetadata,false)"
+                           ng-mouseup="labelClicked($event,fieldMetadata)"
+                           >
                         <span ng-show="isFieldRequired(fieldMetadata)" class="requiredfieldmark" ng-style="getLabelRequiredStyle(fieldMetadata)">* </span>
                         <icon class="fa fa-undo" ng-if="showUndoIcon(fieldMetadata)" ng-click="restoreDefault(fieldMetadata)" style="cursor: pointer" rel="tooltip" data-original-title="Restore to original value" data-html="true"></icon>
                         <icon ng-show="{{showHelpIcon(fieldMetadata, 'left')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                         <span ng-style="getLabelStyle(fieldMetadata)">
                             <!--this will bring either label or header in case of section-->
                             &nbsp;{{i18NInputLabelEvaluating(fieldMetadata,false)}}
+<!--                            -->
+<!--                            <input style="display: inline; width: auto; margin-left: 10px;border:none"-->
+<!--                                   type="text"-->
+<!--                                   ng-model="fieldMetadata.label" class="hidden-phone form-control"-->
+<!--                                   ng-model-options="{ debounce: 300 }"-->
+<!--                                   data-field="{{fieldMetadata.attribute}}"-->
+<!--                                   data-ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"-->
+<!--                                   ng-maxlength="{{fieldMetadata.rendererParameters['maxlength']}}"-->
+<!--                                   maxlength="{{fieldMetadata.rendererParameters['inputmaxlength']}}"-->
+<!--                                   placeholder="{{fieldMetadata.rendererParameters['placeholder']}}" />-->
+
+
                         </span>
+                        
+                      
                         <dynform-detail-edit-bar-wrapper fieldMetadata="fieldMetadata" mode='label' extraparameters="extraparameters" schema="schema"></dynform-detail-edit-bar-wrapper>
                         <icon ng-show="{{showHelpIcon(fieldMetadata, 'right')}}" class="fa fa-question-circle" rel="tooltip" data-html="true" data-original-title="{{helpToolTip(fieldMetadata)}}"></icon>
                     </label>

@@ -3,48 +3,61 @@
           ng-if="shouldShowIcon('edit')"
           ng-click="edit()"
           data-html="true" data-original-title="edit field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    
+
+
+    <!--        <icon class="fa fa-plus"-->
+    <!--              ng-if="shouldShowIcon('add')"-->
+    <!--              rel="tooltip"-->
+    <!--              ng-click="addField()"-->
+    <!--              data-html="true" data-original-title="Add field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>-->
+    <!--    <span>-->
+
     <icon class="fa fa-arrow-circle-o-down"
           ng-if="shouldShowIcon('adddown')"
           rel="tooltip"
           ng-click="addField('down')"
           data-html="true" data-original-title="add field down" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    
+
     <icon class="fa fa-arrow-circle-o-up"
           ng-if="shouldShowIcon('addup')"
           ng-click="addField('top')"
           rel="tooltip" data-html="true" data-original-title="add field up" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
 
+
     <icon class="fa fa-arrow-circle-o-left"
           ng-if="shouldShowIcon('addleft')"
           ng-click="addField('left')"
           rel="tooltip" data-html="true" data-original-title="add field to the left" style="cursor: pointer; padding-right: 10px;font-size: 16px"></icon>
+
+
     <icon class="fa fa-arrow-circle-o-right" rel="tooltip" data-html="true"
           ng-if="shouldShowIcon('addright')"
           ng-click="addField('right')"
           data-original-title="add field to the right" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-  
+
+    <!--    </span>-->
+
     <icon class="fa fa-remove"
           ng-click="remove()"
           ng-if="shouldShowIcon('remove')"
           rel="tooltip" data-html="true" data-original-title="remove field" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
 
-    <input type="checkbox" ng-show="isEditingSection() || isUpdatingMultiple()" ng-click="toggleSectionSelection()" ng-checked="isChecked(fieldMetadata)"/>
-    
+    <input type="checkbox" ng-show="isEditingSection() || isUpdatingMultiple()" ng-click="toggleSectionSelection()" ng-checked="isChecked(fieldMetadata)" />
+
     <icon class="fa fa-chevron-circle-left" rel="tooltip" data-html="true"
           ng-if="shouldShowIcon('addright')"
           ng-mousedown="addidentation('left')"
           data-original-title="ident left" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    
+
     <icon class="fa fa-chevron-circle-right" rel="tooltip" data-html="true"
           ng-if="shouldShowIcon('addright')"
           ng-mousedown="addidentation('right')"
           data-original-title="ident right" style="cursor: pointer; font-size: 16px;padding-right: 10px"></icon>
-    
+
     <label class="control-label" ng-show="fieldMetadata.role != '.'">
         (Field Attribute: {{fieldMetadata.role}})
     </label>
-    
-  
+
+
 
 </span>

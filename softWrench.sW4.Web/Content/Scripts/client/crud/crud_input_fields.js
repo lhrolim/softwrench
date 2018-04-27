@@ -257,6 +257,11 @@
                             $event.stopImmediatePropagation();
                         }
 
+                        $scope.labelClicked = function ($event, fieldMetadata) {
+                            $rootScope.$broadcast(JavascriptEventConstants.LabelClicked, $event, fieldMetadata);
+                            $event.stopImmediatePropagation();
+                        }
+
                         $scope.onBlur = function(fieldMetadata) {
                             eventService.onBlur(fieldMetadata);
                         }

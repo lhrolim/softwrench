@@ -253,6 +253,15 @@
           </optionfield>
         </schema>
 
+        <schema id="addfieldmodal" stereotype="detail.noprint" title="Select Direction">
+          <optionfield label="Direction" attribute="direction" default="down">
+            <option label="Up" value="up"/>
+            <option label="Down" value="down"/>
+            <option label="Left" value="left"/>
+            <option label="Right" value="right"/>
+          </optionfield>
+        </schema>
+
 
         <schema id="stylebulkupdate" stereotype="detail.noprint" title="Style Update">
           <section >

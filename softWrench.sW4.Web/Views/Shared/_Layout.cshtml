@@ -63,7 +63,7 @@
             </div>
         </header>
         <div class="content clearfix" ng-class="{'hapag-body': popupmode == 'none', 'hapag-body-popup': popupmode != 'none'}" ng-show="!ajaxmode" ng-dblclick="doubleClickDispatched($event)"
-             ng-mousedown="mousedown($event)" ng-mouseup="mouseup($event)" ng-mousemove="mousemove($event)">
+             ng-mousedown="mousedown($event)" ng-mouseup="mouseup($event)" ng-mousemove="mousemove($event)" ng-keydown="handlekeyboard($event)">
             <div id="rectangleselectiondiv" hidden style="border: 1px dotted #000;position: absolute;"></div>
             @RenderBody()
         </div>
