@@ -134,7 +134,7 @@
                             if (result) {
                                 const convertedDatamap = that.convertDataMapForEdition(fieldMetadata);
                                 convertedDatamap.flabel = result;
-                                const field= that.doAddDisplayable(fieldMetadata, convertedDatamap, "edit");
+                                that.doAddDisplayable(fieldMetadata, convertedDatamap, "edit");
                                 that.$rootScope.$broadcast(JavascriptEventConstants.ReevalDisplayables);
                             }
 
