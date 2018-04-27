@@ -228,13 +228,31 @@
             if (!onTop || onTop === "top") {
                 cssclass += ' col-xs-12';
             } else {
+
+                const declaredInputSize = fieldMetadata.rendererParameters["inputratiosize"];
+                if (declaredInputSize && fieldMetadata.rendererType !== "checkbox") {
+                    switch (declaredInputSize) {
+                        case "default":
+                            if (displayablesCount === 1) {
+                                return dynFormService.isPreviewMode() ? "col-xs-11" : "col-xs-10";
+                            }
+                            return "col-xs-9";
+                        case "large":
+                            return "col-xs-8";
+                        case "medium":
+                            return "col-xs-6";
+                        case "small":
+                            return "col-xs-3";
+                    }
+                }
+
                 if (displayablesCount === 1) {
                     //single column
                     cssclass += dynFormService.isPreviewMode() ? "col-xs-11" : "col-xs-10";
                 } else if (displayablesCount === 2) {
                     cssclass += dynFormService.isPreviewMode() ? "col-xs-10" : "col-xs-8";
                 } else if (displayablesCount === 3) {
-                    cssclass += dynFormService.isPreviewMode() ? "col-xs-9" : "col-xs-6";
+                    cssclass += "col-xs-9";
                 }
             }
 
@@ -249,15 +267,38 @@
             if (!onTop || onTop === "top") {
                 return null;
             }
+            if (fieldMetadata.rendererType === "checkbox") {
+                return null;
+            }
+
+            const declaredInputSize = fieldMetadata.rendererParameters["inputratiosize"];
+            if (declaredInputSize && fieldMetadata.rendererType!=="checkbox") {
+                switch (declaredInputSize) {
+                    case "default":
+                        if (numberOfDisplayablesInSection === 1) {
+                            return dynFormService.isPreviewMode() ? "col-xs-1" : "col-xs-2";
+                        }
+
+                        return "col-xs-3";
+                    case "large":
+                        return "col-xs-4";
+                    case "medium":
+                        return "col-xs-6";
+                    case "small":
+                        return "col-xs-9";
+                }
+            }
+
+
             const isPreview = dynFormService.isPreviewMode();
             if (numberOfDisplayablesInSection === 1) {
-                return  isPreview ? "col-xs-1" : "col-xs-2";
+                return isPreview ? "col-xs-1" : "col-xs-2";
             }
             if (numberOfDisplayablesInSection === 2) {
                 return isPreview ? "col-xs-2" : "col-xs-4";
             }
 
-            return isPreview ? "col-xs-3" : "col-xs-6";
+            return "col-xs-3";
 
         }
 

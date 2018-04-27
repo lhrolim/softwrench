@@ -199,10 +199,18 @@
             </section>
 
             <section orientation="horizontal">
-              <renderer params="inputsize=medium" type="default"/>
+<!--              <renderer params="inputsize=medium" type="default"/>-->
               <field attribute="fpaddingleft" label="Identation (px)"  tooltip="the distance in pixels from the left side of the form, restricted to the number of columns available on the screen">
                 <renderer type="numericinput" />
               </field>
+              
+              <optionfield label="Input Size" attribute="finputratiosize" helpicon="right" tooltip="The size of the input field next to the label. The larger the input is the lesser space will be available for the label" default="default">
+                <option value="default" label="Default (75% of the column width)"/>
+                <option value="large" label="Large (66% of the column width)"/>
+                <option value="medium" label="Medium (50% of the column width)"/>
+                <option value="small" label="Small (25% of the column width)"/>
+              </optionfield>
+
             </section>
 
 
@@ -288,6 +296,21 @@
                 <renderer type="checkbox"/>
               </field>
             </section>
+
+            <section orientation="horizontal">
+              
+              <optionfield label="Input Size" attribute="finputratiosize" helpicon="right" tooltip="The size of the input field next to the label. The larger the input is the lesser space will be available for the label" default="default">
+                <option value="default" label="Default (75% of the column width)"/>
+                <option value="large" label="Large (66% of the column width)"/>
+                <option value="medium" label="Medium (50% of the column width)"/>
+                <option value="small" label="Small (25% of the column width)"/>
+              </optionfield>
+              
+              <field attribute="inputsizeratioKeep" label="Keep Original" tooltip="if checked this value won´t be applied to the bulk update" helpicon="right" default="true">
+                <renderer type="checkbox"/>
+              </field>
+            </section>
+
           </section>
         </schema>
 

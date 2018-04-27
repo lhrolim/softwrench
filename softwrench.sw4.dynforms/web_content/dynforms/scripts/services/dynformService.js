@@ -289,6 +289,7 @@
                 rendererParameters["labelposition"] = "left";
             }
 
+            rendererParameters["inputratiosize"] = modalData.finputratiosize || "default";
 
             rendererParameters["maxlength"] = modalData.fmaxlength;
             rendererParameters["padding-left"] = modalData.fpaddingleft;
@@ -401,6 +402,7 @@
                 flabel: fieldMetadata.label,
                 frequired: fieldMetadata.requiredExpression === "true",
                 freadonly: !!fieldMetadata.isReadOnly,
+                finputratiosize: fieldMetadata.rendererParameters["inputratiosize"],
                 "#isEditing": true
             }
             //either for section or trees or any sort of containers, if any displayables are attached, keep them
@@ -680,6 +682,10 @@
                     let currentPadding = rendererParameters["padding-left"] || 0;
                     currentPadding += padding;
                     rendererParameters["padding-left"] = currentPadding;
+                }
+
+                if (!modalData.inputsizeratioKeep) {
+                    rendererParameters["inputratiosize"] = modalData.finputratiosize || "default";
                 }
 
             });
