@@ -751,7 +751,7 @@
                     //last position
                     cs.displayables = cs.displayables.concat(newFields);
                 } else {
-                    const newArray = cs.displayables.slice(0, lastFieldPos+1).concat(newFields, cs.displayables.slice(lastFieldPos+1));
+                    const newArray = cs.displayables.slice(0, lastFieldPos + positionIncrement).concat(newFields, cs.displayables.slice(lastFieldPos + positionIncrement));
                     //we have to keep the same array
                     cs.displayables.splice(0, cs.displayables.length);
                     newArray.forEach(item => {
