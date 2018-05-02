@@ -187,6 +187,10 @@ namespace softWrench.sW4.Util {
                 return Convert.ToDecimal(value, new CultureInfo("en-US"));
             }
 
+            if ("Double".EqualsIc(propertyType.Name)) {
+                return Convert.ToDouble(value, new CultureInfo("en-US"));
+            }
+
             return value;
         }
 
