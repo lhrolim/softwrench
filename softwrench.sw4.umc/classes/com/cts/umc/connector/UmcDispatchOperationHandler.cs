@@ -14,6 +14,7 @@ namespace softwrench.sw4.umc.classes.com.cts.umc.connector {
             var dm = base.CreateWoCrudData(srCrudData);
             //TODO: move to some so
             UmcWorkorderUtil.PopulateDefaultValues(dm);
+            dm.SetAttribute("status", "WAPPR");
             return dm;
         }
 
