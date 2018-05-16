@@ -325,6 +325,7 @@
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,asset_.description,status,description"/>
         <property key="list.offline.date.indexlist" value="schedstart"/>
+        <property key="mobile.fetchlimit" value="500"/>
       </properties>
 
       <schemas>
@@ -540,11 +541,18 @@
         </schema>
 
         <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
+          <customization position="wopriority">
+            <field attribute="wopriority" label="Priority" default="3">
+              <renderer type="numericinput" params="min=1;max=5;decimals=0"/> 
+              <number decimals="0" min="0" max="999"/>
+            </field>
+          </customization>
           <customization position="ld_.ldtext">
             <field label="Details/Location" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
           </customization>
+          
         </schema>
 
 
@@ -556,7 +564,7 @@
           <reference id="statuslookup"/>
           <field attribute="wopriority" label="Priority">
             <renderer type="numericinput" params="min=1;max=5;decimals=0"/>
-            <number decimals="0" min="0" max="999" />
+            <number decimals="0" min="0" max="999"/>
           </field>
 
           <field attribute="assetnum" label="Asset">
