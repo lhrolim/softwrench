@@ -325,7 +325,7 @@
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,asset_.description,status,description"/>
         <property key="list.offline.date.indexlist" value="schedstart"/>
-        <property key="mobile.fetchlimit" value="500"/>
+        <property key="mobile.fetchlimit" value="1000"/>
       </properties>
 
       <schemas>
@@ -539,13 +539,17 @@
           </customization>
 
         </schema>
-
+ 
+        
         <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
           <customization position="wopriority">
             <field attribute="wopriority" label="Priority" default="3">
               <renderer type="numericinput" params="min=1;max=5;decimals=0"/> 
               <number decimals="0" min="0" max="999"/>
             </field>
+          </customization>
+          <customization position="worktype">
+            <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" default="RO"/>
           </customization>
           <customization position="ld_.ldtext">
             <field label="Details/Location" attribute="ld_.ldtext">
