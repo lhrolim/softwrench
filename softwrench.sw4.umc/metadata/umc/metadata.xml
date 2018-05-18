@@ -52,6 +52,18 @@
           <relationshipAttribute from="lead2" to="laborcode" primary="true"/>
           <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
         </relationship>
+        
+        <relationship to="problemlist" qualifier="offlineproblemlist">
+          <relationshipAttribute from="problemcode" to="failurecode" primary="true"/>
+          <relationshipAttribute from="failurelistonly_.failurelist" to="parent"/>
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
+        
+        <relationship to="causelist" qualifier="offlinecauselist">
+          <relationshipAttribute from="fr1code" to="failurecode" primary="true"/>
+          <relationshipAttribute from="offlineproblemlist_.failurelist" to="parent" />
+          <relationshipAttribute to="status" literal="ACTIVE" quoteLiteral="true"/>
+        </relationship>
 
       </relationships>
     </entity>
@@ -324,7 +336,7 @@
 
       <properties>
         <property key="list.offline.text.indexlist" value="wonum,asset_.description,status,description"/>
-        <property key="list.offline.date.indexlist" value="schedstart"/>
+        <property key="list.offline.date.indexlist" value="schedstart, reportdate"/>
         <property key="mobile.fetchlimit" value="1000"/>
       </properties>
 
@@ -540,6 +552,11 @@
 
         </schema>
  
+        <schema id="list" platform="mobile" title="Work Order Grid" redeclaring="false" >
+          <properties>
+            <property key="list.defaultorderby" value="reportdate desc"/>
+          </properties>
+        </schema>
         
         <schema id="newdetail" platform="mobile" stereotype="detailnew" redeclaring="false">
           <customization position="wopriority">
@@ -551,12 +568,21 @@
           <customization position="worktype">
             <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" default="RO"/>
           </customization>
+          <customization position="location">
+            <association label="Location" target="location" labelfield="location.description" showexpression="false" default="UMC"/>
+          </customization>
+          <customization position="failurecode">
+            <association label="Failure Class" target="failurecode" labelfield="failurecode.description" default="MISC" showexpression="false"/>
+            <association label="Problem Code" target="problemcode" labelfield="offlineproblemlist_.description" default="MISCELLANEOUS" showexpression="false"/>
+          </customization>
           <customization position="ld_.ldtext">
             <field label="Details/Location" attribute="ld_.ldtext">
               <renderer type="richtext"/>
             </field>
           </customization>
-          
+          <customization position="+description">
+            <field label="Trade" attribute="crewid" default="EN" hidden="true" />
+          </customization>
         </schema>
 
 
@@ -583,7 +609,7 @@
           <!-- do not remove - added to force the sync of assets -->
           <association label="Asset" target="assetnum" labelfield="asset.description" showexpression="false"/>
 
-          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" />
+          <association label="Failure Class" target="failurecode" labelfield="failurecode.description" showexpression="false" />
           <association label="Work Type" target="worktype" labelfield="worktype.wtypedesc" />
           <association label="GL Account" target="glaccount" labelfield="chartofaccounts.accountname" />
           <field attribute="description" label="Description" />
