@@ -734,7 +734,7 @@
           
 
           <properties>
-            <property key="print.styleprops" value="@page{size:landscape; margin-left:0;margin-right:0; margin-top:0  }"/>
+            <property key="print.styleprops" value="@page{size:landscape; margin-left:0.5cm;margin-right:0.5cm; margin-top:0.5cm;margin-bottom:0.5cm  }"/>
             <property key="print.customheader" value="/Content/Customers/umc/htmls/woreport/umcreportheader.html"/>
           </properties>
 
