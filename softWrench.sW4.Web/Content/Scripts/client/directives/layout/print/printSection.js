@@ -219,7 +219,16 @@
                     $scope.compositionstoprint = compositionstoprint;
                     let datamapToUse = printDatamap ? printDatamap : $scope.datamap;
 
-                    $scope.printDatamap = Array.isArray(datamapToUse) ? datamapToUse : new Array(datamapToUse);
+                    let mapArray = Array.isArray(datamapToUse) ? datamapToUse : new Array(datamapToUse);
+
+                    //remove datamap duplicates
+                    var seen = {};
+                    let filtered = mapArray.filter(function(item) {
+                        var k = JSON.stringify(item);
+                        return seen.hasOwnProperty(k) ? false : (seen[k] = true);
+                    });
+
+                    $scope.printDatamap = filtered;
                     buildDisplayableID();
                     $scope.printCallback = printCallback;
                     $scope.showPrintSection = true;

@@ -668,7 +668,7 @@
             </field>
 
             <field attribute="ld_.ldtext">
-              <renderer type="richtext" params="class=bottom-border"/>
+              <renderer type="richtext" params="class=ldtext"/>
             </field>
           </section>
 
@@ -679,7 +679,7 @@
             <field label="Location" attribute="location_.description"/>
             <field label="Job Plan" attribute="jobplan_.jpnum"/>
           </section>
-
+          
           <section orientation="horizontal">
             <section>
               <field attribute="wonum" label="WO"/>
@@ -734,7 +734,7 @@
           
 
           <properties>
-            <property key="print.styleprops" value="@page{size:landscape; margin-left:0.5cm;margin-right:0.5cm; margin-top:0.5cm;margin-bottom:0.5cm  }"/>
+            <property key="print.styleprops" value="@page{size:landscape; margin-left:0.1cm;margin-right:0.1cm; margin-top:0.2cm;margin-bottom:0.1cm  }"/>
             <property key="print.customheader" value="/Content/Customers/umc/htmls/woreport/umcreportheader.html"/>
           </properties>
 

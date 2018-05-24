@@ -16,7 +16,7 @@
             </div>
 
             <div ng-if="!isList">
-                <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered ng-class="{'pagebreak-after': shouldPageBreak}">
+                <div id="rootprintdiv" ng-repeat="item in printDatamap" printsectionrendered ng-class="{'pagebreak-before': shouldPageBreak}"> &nbsp;
                     
                     
 
@@ -68,7 +68,6 @@
                     <div ng-if="hasCustomFooter">
                         <ng-include src="customFooterURL" onload="footerLoaded()" id="printfootersection"/>
                     </div>
-
                 </div>
             </div>
         </div>
