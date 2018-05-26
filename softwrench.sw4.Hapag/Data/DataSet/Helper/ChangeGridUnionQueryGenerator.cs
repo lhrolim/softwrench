@@ -47,6 +47,7 @@ select wochange.workorderid   AS workorderid,
          Substr(wochange.reportedby, 1, Locate('@', wochange.reportedby) - 1) 
          ELSE wochange.reportedby 
        END                    AS hlagreportedby, 
+       wochange.worktype as worktype,
        wochange.status        AS status 
 FROM   wochange AS wochange
        INNER JOIN pmchgotherapprovers approvals_ 
@@ -82,6 +83,7 @@ FROM   wochange AS wochange
          Substr(wochange.reportedby, 1, Locate('@', wochange.reportedby) - 1) 
          ELSE wochange.reportedby 
        END                    AS hlagreportedby, 
+       wochange.worktype as worktype,
        wochange.status        AS status 
        FROM   wochange AS wochange
        INNER JOIN  woactivity AS woactivity_ 
@@ -138,6 +140,7 @@ FROM   wochange AS wochange
       AND wochange.pluspcustomer = 'HLC-00' THEN 'HLAG' WHEN wochange.pluspcustomer IS NOT NULL
       AND Length(wochange.pluspcustomer) >= 3 THEN Substr(wochange.pluspcustomer, Length(wochange.pluspcustomer) - 2, 3) ELSE '' END AS hlagpluspcustomer,
       CASE WHEN Locate('@', wochange.reportedby) > 0 THEN Substr(wochange.reportedby, 1, Locate('@', wochange.reportedby) - 1) ELSE wochange.reportedby END AS hlagreportedby,
+      wochange.worktype as worktype,
       wochange.status AS status
       FROM wochange AS wochange
       INNER JOIN sr AS sr_ ON
@@ -189,6 +192,7 @@ FROM   wochange AS wochange
       AND wochange.pluspcustomer = 'HLC-00' THEN 'HLAG' WHEN wochange.pluspcustomer IS NOT NULL
       AND Length(wochange.pluspcustomer) >= 3 THEN Substr(wochange.pluspcustomer, Length(wochange.pluspcustomer) - 2, 3) ELSE '' END AS hlagpluspcustomer,
       CASE WHEN Locate('@', wochange.reportedby) > 0 THEN Substr(wochange.reportedby, 1, Locate('@', wochange.reportedby) - 1) ELSE wochange.reportedby END AS hlagreportedby,
+      wochange.worktype as worktype,
       wochange.status AS status
       FROM wochange AS wochange
       INNER JOIN sr AS sr_ ON
@@ -243,6 +247,7 @@ FROM   wochange AS wochange
       AND srforchange.pluspcustomer = 'HLC-00' THEN 'HLAG' WHEN srforchange.pluspcustomer IS NOT NULL
       AND Length(srforchange.pluspcustomer) >= 3 THEN Substr( srforchange.pluspcustomer, Length( srforchange.pluspcustomer) - 2, 3) ELSE '' END AS hlagpluspcustomer,
       CASE WHEN Locate('@', srforchange.reportedby) > 0 THEN Substr( srforchange.reportedby, 1, Locate('@', srforchange.reportedby) - 1) ELSE srforchange.reportedby END AS hlagreportedby,
+      null,
       srforchange.status AS status
       FROM sr AS srforchange
       LEFT JOIN asset AS asset_ ON

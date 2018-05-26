@@ -967,6 +967,7 @@ xsi:schemaLocation="http://www.example.org/metadata ../../Schema/Metadata.xsd ">
           <field attribute="#null8" hidden="true"/>
           <field attribute="hlagpluspcustomer" hidden="true"/>
           <field attribute="hlagreportedby" hidden="true"/>
+          <field attribute="#null9" hidden="true"/>
           <field attribute="status" hidden="true"/>
         </schema>
       </schemas>
@@ -1752,6 +1753,8 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=100px;width=100px" />
           </field>
+          <section id="category"/>
+          
           <field attribute="#color" label="">
             <renderer type="color" params="grid=change;column=status"/>
           </field>
@@ -1805,6 +1808,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
 
         <!--Used for viewAll click from Dashboard with SR union-->
         <list title="Change Grid" unionschema="srforchange.changeunionschema" parentschema="parentgrid">
+      
 
           <section id="srId">
             <field attribute="hlagchangesummary" label="Summary">
@@ -1818,6 +1822,9 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <field attribute="hlagreportedby" label="Reported By" hidden="true">
               <renderer type="default" params="minwidth=100px;maxwidth=100px" />
             </field>
+          </section>
+          <section id="category">
+            <field attribute="worktype" label="Category"/>
           </section>
           <properties>
             <property key="list.click.service" value="changeservice.opendetail"/>
@@ -1845,7 +1852,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
             <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=100px;maxwidth=100px;showtime=false" />
           </field>
           <field attribute="#targetapprovaldate" label="Target Approval Date">
-            <renderer type="default" params="minwidth=120px;maxwidth=120px;excelwidth=30" />
+            <renderer type="datetime" params="format=dd/MM/yyyy HH:mm;minwidth=120px;maxwidth=120px;excelwidth=30"/>
           </field>
 
           <field attribute="hlagpluspcustomer" label="Site ID">
@@ -1854,6 +1861,7 @@ Applikationen (zusätzlich zur Grundinstallation)" attribute="disksizec" require
           <field attribute="dashapprovals_.approvergroup" label="Approver Group">
             <renderer type="default" params="minwidth=80px;maxwidth=80px" />
           </field>
+          
           <!--<field attribute="dashapprovals_apprwo_.recordkey" hidden="true"/>-->
           <field attribute="status" label="Status">
             <renderer type="default" params="minwidth=100px;maxwidth=100px" />

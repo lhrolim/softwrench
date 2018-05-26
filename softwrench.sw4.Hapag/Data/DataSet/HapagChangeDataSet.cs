@@ -95,6 +95,7 @@ namespace softwrench.sw4.Hapag.Data.DataSet {
                     List<AttributeHolder> hs = toBeCheckedApprovals[workorderid];
                     foreach (AttributeHolder h in hs) {
                         h.SetAttribute("#_wonum_paintcolor", "yellow");
+                        h.SetAttribute("##leadt", "yellow");
                     }
                 }
             }
